@@ -143,7 +143,7 @@ const IndexingTab: Component = () => {
   const knownKiloModel = (model: string | null | undefined) =>
     getKiloEmbeddingModel(model ?? undefined, embeds.catalog())?.id
   const kiloValue = () => knownKiloModel(cfg().model) ?? kiloDefault()
-  const kiloAvailable = () => !!server.profileData() || provider.authStates()[KILO_PROVIDER_ID] !== undefined
+  const kiloAvailable = () => false
   const selectedProvider = () => cfg().provider ?? (kiloAvailable() ? "kilo" : undefined)
   const staleKiloModel = () => selectedProvider() === "kilo" && !!cfg().model && !knownKiloModel(cfg().model)
   const providers = createMemo(() =>
