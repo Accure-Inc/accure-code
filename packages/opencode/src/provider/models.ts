@@ -89,6 +89,32 @@ export const layer: Layer.Layer<Service, never, Core.Service | Config.Service | 
           models,
         }
         if (Object.keys(models).length === 0) yield* cache.refresh("kilo", fetch).pipe(Effect.ignore, Effect.forkDetach)
+        
+        const accureIqxUrl = process.env.VLLM_BASE_URL || process.env.ACCUREIQX_API_URL || "http://localhost:8000/v1"
+        const accureIqxUrlNormalized = accureIqxUrl.endsWith("/") ? accureIqxUrl : `${accureIqxUrl}/`
+        providers.accureiqx = {
+          id: "accureiqx",
+          name: "AccureIQx",
+          env: ["ACCUREIQX_API_KEY"],
+          api: accureIqxUrlNormalized,
+          npm: "@ai-sdk/openai-compatible",
+          models: {
+            "accureiqx-default": {
+              id: "accureiqx-default",
+              name: "AccureIQx Default",
+              family: "openai",
+              cost: { input: 0, output: 0 },
+              limit: { context: 16384, output: 4096 },
+              attachment: true,
+              reasoning: false,
+              temperature: true,
+              tool_call: true,
+              release_date: "",
+              modalities: { input: ["text", "image"], output: ["text"] },
+            }
+          }
+        }
+
         yield* addApertis()
         return providers
       })

@@ -469,6 +469,48 @@ export function patchAgents(
     native: true,
   }
 
+  // Add AccureIQx App Builder agent
+  agents.accureiqx_app_builder = {
+    name: "accureiqx_app_builder",
+    displayName: "AccureIQx App Builder",
+    description: "Design, configure, and orchestrate expert AI panels and workflows in the AccureIQx workspace.",
+    prompt: "You are AccureIQx App Builder, a specialized agentic assistant for designing, configuring, and assembling expert AI panels and workflows on the AccureIQx platform. You help developers write custom tools, configure Milvus schemas, set instruction hierarchies, and integrate EUCG context registries. Perform structured operations, edit configuration manifests, execute validation tests, and ensure correct routing settings.",
+    options: {},
+    permission: Permission.merge(
+      defaults,
+      Permission.fromConfig({
+        question: "allow",
+        suggest: "allow",
+        plan_enter: "allow",
+        semantic_search: "allow",
+      }),
+      user,
+    ),
+    mode: "primary",
+    native: true,
+  }
+
+  // Add AccureIQx Debug agent
+  agents.accureiqx_debug = {
+    name: "accureiqx_debug",
+    displayName: "AccureIQx Debug",
+    description: "Diagnose database drifts, OIDC authentication failures, and runtime pod/SSE stream anomalies.",
+    prompt: "You are AccureIQx Debug, an expert debugging agent specialized in finding root causes for platform issues like SSE streaming disconnects, keycloak/OIDC login failures, MongoDB/Postgres persistence drift, and container sandbox crashes. Check log tables, systematic stack traces, environment variables, database mappings, and offer targeted fixes.",
+    options: {},
+    permission: Permission.merge(
+      defaults,
+      Permission.fromConfig({
+        question: "allow",
+        suggest: "allow",
+        plan_enter: "allow",
+        semantic_search: "allow",
+      }),
+      user,
+    ),
+    mode: "primary",
+    native: true,
+  }
+
   hardenSystemAgents(agents)
 }
 
