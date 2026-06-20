@@ -97,9 +97,11 @@
     "@changesets/cli": "^2.27.10"
   },
   "dependencies": {
+    "@esbuild/darwin-x64": "0.27.7",
     "@kilocode/plugin": "workspace:*",
-    "@opencode-ai/script": "workspace:*",
     "@kilocode/sdk": "workspace:*",
+    "@opencode-ai/script": "workspace:*",
+    "@typescript/native-preview-darwin-x64": "7.0.0-dev.20260316.1",
     "typescript": "catalog:"
   },
   "repository": {
@@ -117,7 +119,6 @@
     "protobufjs",
     "tree-sitter",
     "tree-sitter-bash",
-    "tree-sitter-powershell",
     "web-tree-sitter",
     "electron"
   ],

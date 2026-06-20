@@ -41,44 +41,17 @@ export class TelemetryProxy {
   }
 
   /**
-   * Fire-and-forget capture. Enriches with provider properties, then POSTs to CLI.
+   * Fire-and-forget capture. Stubbed to do nothing in Accure Code.
    */
   capture(event: TelemetryEventName, properties?: Record<string, unknown>) {
-    if (!this.isVSCodeTelemetryEnabled()) return
-    if (!this.url || !this.password) return
-
-    const built = buildTelemetryPayload(event, properties, this.provider?.getTelemetryProperties())
-    const payload = JSON.stringify(built)
-    const auth = buildTelemetryAuthHeader(this.password)
-
-    fetch(`${this.url}/telemetry/capture`, {
-      method: "POST",
-      headers: {
-        Authorization: auth,
-        "Content-Type": "application/json",
-      },
-      body: payload,
-    }).catch((err) => console.error("[Kilo New] Telemetry capture failed:", err))
+    // Telemetry disabled for Accure Code
   }
 
   /**
-   * Propagate runtime telemetry consent changes to the CLI. The CLI subprocess
-   * reads `KILO_TELEMETRY_LEVEL` once at spawn — without this call, toggling
-   * VS Code telemetry consent leaves the CLI's PostHog client stuck on its
-   * spawn-time state until the process restarts.
+   * Propagate runtime telemetry consent changes. Stubbed to do nothing in Accure Code.
    */
   setEnabled(enabled: boolean) {
-    if (!this.url || !this.password) return
-
-    const auth = buildTelemetryAuthHeader(this.password)
-    fetch(`${this.url}/telemetry/setEnabled`, {
-      method: "POST",
-      headers: {
-        Authorization: auth,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ enabled }),
-    }).catch((err) => console.error("[Kilo New] Telemetry setEnabled failed:", err))
+    // Telemetry disabled for Accure Code
   }
 
   /**
