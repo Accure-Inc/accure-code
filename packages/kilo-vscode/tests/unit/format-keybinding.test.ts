@@ -73,7 +73,7 @@ describe("formatKeybinding", () => {
 
 describe("buildKeybindingMap", () => {
   it("maps the configurable Agent Manager search shortcut", () => {
-    const bindings = [{ command: "kilo-code.new.agentManager.search", key: "ctrl+f", mac: "cmd+f" }]
+    const bindings = [{ command: "accure-code.agentManager.search", key: "ctrl+f", mac: "cmd+f" }]
     expect(buildKeybindingMap(bindings, true).search).toBe("⌘F")
     expect(buildKeybindingMap(bindings, false).search).toBe("Ctrl+F")
   })

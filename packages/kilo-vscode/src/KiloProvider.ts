@@ -280,7 +280,7 @@ export function unwrapSyncEvent(event: GlobalEvent["payload"] | RawSyncPayload):
 }
 
 export class KiloProvider implements vscode.WebviewViewProvider, TelemetryPropertiesProvider {
-  public static readonly viewType = "kilo-code.SidebarProvider"
+  public static readonly viewType = "accure-code.SidebarProvider"
   private readonly instanceId = crypto.randomUUID()
 
   private webview: vscode.Webview | null = null
@@ -291,7 +291,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   private loginAttempt = 0
   private isWebviewReady = false
   private readonly extensionVersion =
-    vscode.extensions.getExtension("kilocode.kilo-code")?.packageJSON?.version ?? "unknown"
+    vscode.extensions.getExtension("accure.accure-code")?.packageJSON?.version ?? "unknown"
   private cachedProvidersMessage: unknown = null
   /**
    * Provider API keys retained extension-side for authenticated model
@@ -468,7 +468,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
   getTelemetryProperties(): Record<string, unknown> {
     return {
-      appName: "kilo-code",
+      appName: "accure-code",
       appVersion: this.extensionVersion,
       platform: "vscode",
       editorName: vscode.env.appName,
@@ -564,7 +564,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
     // Re-send ready so the webview can recover after refresh.
     if (serverInfo) {
-      const langConfig = vscode.workspace.getConfiguration("kilo-code.new")
+      const langConfig = vscode.workspace.getConfiguration("accure-code")
       this.postMessage({
         type: "ready",
         serverInfo,
@@ -652,7 +652,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
   private setSidebarVisible(visible: boolean): void {
     this.setStreamVisibility(visible)
-    vscode.commands.executeCommand("setContext", "kilo-code.new.sidebarVisible", visible)
+    vscode.commands.executeCommand("setContext", "accure-code.sidebarVisible", visible)
   }
 
   /** Resolve a WebviewPanel for displaying Kilo in an editor tab. */
@@ -833,10 +833,10 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       if (
         await handleSidebarWorktreeMessage(message, {
           post: (msg) => this.postMessage(msg),
-          openAgentManager: () => vscode.commands.executeCommand("kilo-code.new.agentManagerOpen"),
-          openAdvancedWorktree: () => vscode.commands.executeCommand("kilo-code.new.agentManager.advancedWorktree"),
+          openAgentManager: () => vscode.commands.executeCommand("accure-code.agentManagerOpen"),
+          openAdvancedWorktree: () => vscode.commands.executeCommand("accure-code.agentManager.advancedWorktree"),
           openChanges: (sessionId?: string, turnId?: string) =>
-            vscode.commands.executeCommand("kilo-code.new.showChanges", { sessionId, turnId }),
+            vscode.commands.executeCommand("accure-code.showChanges", { sessionId, turnId }),
           currentSessionId: this.currentSession?.id,
           createWorktree: async (baseBranch, branchName) => {
             await this.createWorktreeHandler?.(baseBranch, branchName)
@@ -963,7 +963,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           await handleRefreshProfile(this.authCtx)
           break
         case "openSettingsPanel":
-          vscode.commands.executeCommand("kilo-code.new.settingsButtonClicked", message.tab)
+          vscode.commands.executeCommand("accure-code.settingsButtonClicked", message.tab)
           break
         case "openVSCodeSettings":
           vscode.commands.executeCommand("workbench.action.openSettings", message.query)
@@ -972,7 +972,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           await openConfig(message.scope, message.labels, this.getProjectDirectory(this.currentSession?.id))
           break
         case "openMarketplacePanel":
-          vscode.commands.executeCommand("kilo-code.new.marketplaceButtonClicked", this.projectDirectory)
+          vscode.commands.executeCommand("accure-code.marketplaceButtonClicked", this.projectDirectory)
           break
         case "forkSession":
           handleForkSession(this.forkCtx, message.sessionId, message.messageId).catch((e) =>
@@ -986,7 +986,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           )
           break
         case "openSubAgentViewer":
-          vscode.commands.executeCommand("kilo-code.new.openSubAgentViewer", message.sessionID, message.title)
+          vscode.commands.executeCommand("accure-code.openSubAgentViewer", message.sessionID, message.title)
           break
         case "saveImage":
           return saveImage(this.getWorkspaceDirectory(this.currentSession?.id), message)
@@ -1095,12 +1095,12 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           break
         case "openSettingsTab":
           if (message.tab === "indexing") {
-            await vscode.commands.executeCommand("kilo-code.new.openIndexingSettings")
+            await vscode.commands.executeCommand("accure-code.openIndexingSettings")
           }
           break
         case "setLanguage":
           await vscode.workspace
-            .getConfiguration("kilo-code.new")
+            .getConfiguration("accure-code")
             .update("language", message.locale || undefined, vscode.ConfigurationTarget.Global)
           this.connectionService.notifyLanguageChanged(message.locale as string)
           break
@@ -1448,7 +1448,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.connectionState = this.connectionService.getConnectionState()
 
       if (serverInfo) {
-        const langConfig = vscode.workspace.getConfiguration("kilo-code.new")
+        const langConfig = vscode.workspace.getConfiguration("accure-code")
         this.postMessage({
           type: "ready",
           serverInfo,
@@ -1906,7 +1906,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
             continue
           }
           this.storedProviderKeys = storedKeys
-          const settings = vscode.workspace.getConfiguration("kilo-code.new.model")
+          const settings = vscode.workspace.getConfiguration("accure-code.model")
           const message = {
             type: "providersLoaded",
             providers: indexProvidersById(response.all),
@@ -2422,7 +2422,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
   /** Read attention settings from VS Code config and push to webview. */
   private sendNotificationSettings(): void {
-    const attention = vscode.workspace.getConfiguration("kilo-code.new.attention")
+    const attention = vscode.workspace.getConfiguration("accure-code.attention")
     this.postMessage({
       type: "notificationSettingsLoaded",
       settings: {
@@ -2433,7 +2433,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   }
 
   private sendTimelineSetting(): void {
-    const config = vscode.workspace.getConfiguration("kilo-code.new")
+    const config = vscode.workspace.getConfiguration("accure-code")
     this.postMessage({
       type: "timelineSettingLoaded",
       visible: config.get<boolean>("showTaskTimeline", true),
@@ -2993,12 +2993,12 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
   /**
    * Handle a generic setting update from the webview.
-   * The key uses dot notation relative to `kilo-code.new` (e.g. "browserAutomation.enabled").
+   * The key uses dot notation relative to `accure-code` (e.g. "browserAutomation.enabled").
    */
   private async handleUpdateSetting(key: string, value: unknown): Promise<void> {
     const { section, leaf } = buildSettingPath(key)
     if (section === "autocomplete" && !validAutocompleteSetting(leaf, value)) return
-    const config = vscode.workspace.getConfiguration(`kilo-code.new${section ? `.${section}` : ""}`)
+    const config = vscode.workspace.getConfiguration(`accure-code${section ? `.${section}` : ""}`)
     // Normalize a webview-side clear to `undefined` so VS Code removes the
     // key from settings.json rather than persisting a literal `null`. This
     // lets the runtime fall back to the resolved default.
@@ -3008,22 +3008,22 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   }
 
   /**
-   * Reset all "kilo-code.new.*" extension settings to their defaults by reading
+   * Reset all "accure-code.*" extension settings to their defaults by reading
    * contributes.configuration from the extension's package.json at runtime.
-   * Only resets settings under the "kilo-code.new." namespace to avoid touching
+   * Only resets settings under the "accure-code." namespace to avoid touching
    * settings from the previous version of the extension which shares the same
-   * extension ID and "kilo-code.*" namespace.
+   * extension ID and "accure-code.*" namespace.
    */
   private async handleResetAllSettings(): Promise<void> {
     const confirmed = await vscode.window.showWarningMessage(
-      "Reset all Kilo Code extension settings to defaults?",
+      "Reset all Accure Code extension settings to defaults?",
       { modal: true },
       "Reset",
     )
     if (confirmed !== "Reset") return
 
-    const prefix = "kilo-code.new."
-    const ext = vscode.extensions.getExtension("kilocode.kilo-code")
+    const prefix = "accure-code."
+    const ext = vscode.extensions.getExtension("accure.accure-code")
     const properties = ext?.packageJSON?.contributes?.configuration?.properties as Record<string, unknown> | undefined
     if (!properties) return
 
@@ -3057,14 +3057,14 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     // Re-fetch notifications to reflect cleared dismissed IDs
     await this.fetchAndSendNotifications()
 
-    vscode.window.showInformationMessage("Kilo Code settings have been reset to defaults.")
+    vscode.window.showInformationMessage("Accure Code settings have been reset to defaults.")
   }
 
   /**
    * Read the current browser automation settings and push them to the webview.
    */
   private sendBrowserSettings(): void {
-    const config = vscode.workspace.getConfiguration("kilo-code.new.browserAutomation")
+    const config = vscode.workspace.getConfiguration("accure-code.browserAutomation")
     this.postMessage({
       type: "browserSettingsLoaded",
       settings: {
@@ -3079,7 +3079,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
    * Read the current Claude Code compatibility setting and push it to the webview.
    */
   private sendClaudeCompatSetting(): void {
-    const enabled = vscode.workspace.getConfiguration("kilo-code.new").get<boolean>("claudeCodeCompat", false)
+    const enabled = vscode.workspace.getConfiguration("accure-code").get<boolean>("claudeCodeCompat", false)
     this.postMessage({
       type: "claudeCompatSettingLoaded",
       enabled: enabled ?? false,
@@ -3568,7 +3568,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       styleUri: webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "dist", "webview.css")),
       iconsBaseUri: webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "assets", "icons")),
       workerUri: webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "dist", "shiki-worker.js")),
-      title: "Kilo Code",
+      title: "Accure Code",
       port: this.connectionService.getServerInfo()?.port,
       extraStyles: `.container { height: 100%; display: flex; flex-direction: column; height: 100vh; border-right: 1px solid var(--border-weak-base); }`,
     })

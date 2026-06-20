@@ -4,7 +4,7 @@ import type { AutocompleteStatusBarStateProps } from "./types"
 import { humanFormatSessionCost, formatTime } from "./statusbar-utils"
 
 const SUPPORTED_PROVIDER_DISPLAY_NAME = "Kilo Gateway"
-const SETTINGS_COMMAND = `command:kilo-code.new.settingsButtonClicked?${encodeURIComponent(JSON.stringify(["autocomplete"]))}`
+const SETTINGS_COMMAND = `command:accure-code.settingsButtonClicked?${encodeURIComponent(JSON.stringify(["autocomplete"]))}`
 
 export class AutocompleteStatusBar {
   statusBar: vscode.StatusBarItem
@@ -18,8 +18,8 @@ export class AutocompleteStatusBar {
   }
 
   private init() {
-    this.statusBar.text = t("kilocode:autocomplete.statusBar.enabled")
-    this.statusBar.tooltip = this.createMarkdownTooltip(t("kilocode:autocomplete.statusBar.tooltip.basic"))
+    this.statusBar.text = t("accure:autocomplete.statusBar.enabled")
+    this.statusBar.tooltip = this.createMarkdownTooltip(t("accure:autocomplete.statusBar.tooltip.basic"))
     this.statusBar.show()
   }
 
@@ -62,19 +62,19 @@ export class AutocompleteStatusBar {
     const sessionStartTime = this.formatTime(this.props.sessionStartTime)
     const now = this.formatTime(Date.now())
 
-    const snoozedSuffix = this.props.snoozed ? ` (${t("kilocode:autocomplete.statusBar.snoozed")})` : ""
-    this.statusBar.text = `${t("kilocode:autocomplete.statusBar.enabled")} (${this.props.completionCount})${snoozedSuffix}`
+    const snoozedSuffix = this.props.snoozed ? ` (${t("accure:autocomplete.statusBar.snoozed")})` : ""
+    this.statusBar.text = `${t("accure:autocomplete.statusBar.enabled")} (${this.props.completionCount})${snoozedSuffix}`
 
     this.statusBar.tooltip = this.createMarkdownTooltip(
       [
-        t("kilocode:autocomplete.statusBar.tooltip.completionSummary", {
+        t("accure:autocomplete.statusBar.tooltip.completionSummary", {
           count: this.props.completionCount,
           startTime: sessionStartTime,
           endTime: now,
           cost: this.humanFormatSessionCost(),
         }),
         this.props.model && this.props.provider
-          ? t("kilocode:autocomplete.statusBar.tooltip.providerInfo", {
+          ? t("accure:autocomplete.statusBar.tooltip.providerInfo", {
               model: this.props.model,
               provider: this.props.provider,
             })
@@ -93,9 +93,9 @@ export class AutocompleteStatusBar {
   }
 
   private renderNoUsableProviderError() {
-    this.statusBar.text = t("kilocode:autocomplete.statusBar.warning")
+    this.statusBar.text = t("accure:autocomplete.statusBar.warning")
     this.statusBar.tooltip = this.createMarkdownTooltip(
-      t("kilocode:autocomplete.statusBar.tooltip.noUsableProvider", {
+      t("accure:autocomplete.statusBar.tooltip.noUsableProvider", {
         providers: SUPPORTED_PROVIDER_DISPLAY_NAME,
         command: SETTINGS_COMMAND,
       }),

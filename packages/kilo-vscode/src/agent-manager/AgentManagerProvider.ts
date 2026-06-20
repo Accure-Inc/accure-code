@@ -53,7 +53,7 @@ import type { Host, PanelContext, OutputHandle, Disposable } from "./host"
  * SESSIONS (bottom) with unassociated local sessions.
  */
 export class AgentManagerProvider implements Disposable {
-  public static readonly viewType = "kilo-code.new.AgentManagerPanel"
+  public static readonly viewType = "accure-code.AgentManagerPanel"
 
   private panel: PanelContext | undefined
   private outputChannel: OutputHandle
