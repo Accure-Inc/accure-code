@@ -867,12 +867,12 @@
         },
         "accure-code.model.providerID": {
           "type": "string",
-          "default": "kilo",
+          "default": "accureiqx",
           "description": "Default model provider ID for new sessions"
         },
         "accure-code.model.modelID": {
           "type": "string",
-          "default": "kilo-auto/free",
+          "default": "accureiqx-default",
           "description": "Default model ID for new sessions"
         },
         "accure-code.autocomplete.model": {
