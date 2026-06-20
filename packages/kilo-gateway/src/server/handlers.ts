@@ -104,87 +104,13 @@ export async function setOrganization(deps: OrganizationDeps, organizationId: st
 }
 
 export async function getClawStatus(auth: AuthStore) {
-  const info = await auth.get("kilo")
-  const token = getToken(info)
-  if (!token) throw new UnauthorizedError("No valid token found")
-
-  const headers: Record<string, string> = {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  }
-  const org = getOrganizationId(info)
-  if (org) headers[HEADER_ORGANIZATIONID] = org
-
-  const response = await fetch(`${KILO_API_BASE}/api/kiloclaw/status`, { headers })
-  if (!response.ok) throw new GatewayError(await response.text(), response.status)
-  return response.json()
+  return { status: null }
 }
 
 export async function getClawChatCredentials(auth: AuthStore): Promise<ClawChatCredentials> {
-  const info = await auth.get("kilo")
-  const token = getToken(info)
-  if (!token) throw new UnauthorizedError("No valid token found")
-
-  const expires = info?.type === "oauth" ? info.expires : Date.now() + 365 * 24 * 60 * 60 * 1000
-  return {
-    token,
-    expiresAt: new Date(expires).toISOString(),
-    kiloChatUrl: KILO_CHAT_URL,
-    eventServiceUrl: KILO_EVENT_SERVICE_URL,
-  }
+  throw new UnauthorizedError("KiloClaw features are disabled for Accure Code")
 }
 
 export async function getCloudSessions(token: string, input: CloudSessionsInput) {
-  const query: Record<string, unknown> = {}
-  if (input.cursor) query.cursor = input.cursor
-  if (input.limit) query.limit = input.limit
-  if (input.gitUrl) query.gitUrl = input.gitUrl
-
-  const params = new URLSearchParams({
-    batch: "1",
-    input: JSON.stringify({ "0": query }),
-  })
-
-  const response = await fetch(`${KILO_API_BASE}/api/trpc/cliSessionsV2.list?${params.toString()}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      ...buildKiloHeaders(),
-    },
-  })
-
-  if (!response.ok) {
-    const text = await response.text()
-    console.error("[Kilo Gateway] cloud-sessions: tRPC request failed", {
-      status: response.status,
-      body: text.slice(0, 500),
-    })
-    throw new GatewayError(`Cloud sessions fetch failed: ${response.status}`, response.status)
-  }
-
-  const raw = await response.text()
-  const json = JSON.parse(raw)
-  const data = Array.isArray(json) ? json[0]?.result?.data : null
-  const result = data?.json ?? data
-  if (!result) return { cliSessions: [], nextCursor: null }
-
-  const cliSessions = (result.cliSessions ?? []).map((item: any) => ({
-    session_id: item.session_id,
-    title: item.title ?? null,
-    created_at:
-      typeof item.created_at === "string"
-        ? item.created_at
-        : item.created_at
-          ? new Date(item.created_at).toISOString()
-          : new Date().toISOString(),
-    updated_at:
-      typeof item.updated_at === "string"
-        ? item.updated_at
-        : item.updated_at
-          ? new Date(item.updated_at).toISOString()
-          : new Date().toISOString(),
-    version: item.version ?? 0,
-  }))
-
-  return { cliSessions, nextCursor: result.nextCursor ?? null }
+  return { cliSessions: [], nextCursor: null }
 }

@@ -159,7 +159,7 @@ const ProvidersTab: Component = () => {
 
   return (
     <div>
-      <Show when={!disabledIds().has(KILO_PROVIDER_ID)}>
+      <Show when={false}>
         {/* Kilo Gateway — always at the top, not editable */}
         <Card>
           <div

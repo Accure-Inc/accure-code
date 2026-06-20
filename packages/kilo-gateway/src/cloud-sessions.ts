@@ -18,42 +18,11 @@ function exportUrl(sessionId: string) {
 export type FetchResult = { ok: true; data: any } | { ok: false; status: number; error: string }
 
 export async function fetchCloudSession(token: string, sessionId: string): Promise<FetchResult> {
-  const response = await fetch(exportUrl(sessionId), {
-    signal: AbortSignal.timeout(TIMEOUT),
-    headers: {
-      Authorization: `Bearer ${token}`,
-      ...buildKiloHeaders(),
-    },
-  })
-
-  if (response.status === 404) return { ok: false, status: 404, error: "Session not found" }
-  if (!response.ok) return { ok: false, status: response.status, error: "Failed to fetch session" }
-
-  const data = await response.json()
-  return { ok: true, data }
+  return { ok: false, status: 404, error: "Cloud features disabled for Accure Code" }
 }
 
 export async function fetchCloudSessionForImport(token: string, sessionId: string): Promise<FetchResult> {
-  const response = await fetch(exportUrl(sessionId), {
-    signal: AbortSignal.timeout(TIMEOUT),
-    headers: {
-      Authorization: `Bearer ${token}`,
-      ...buildKiloHeaders(),
-    },
-  })
-
-  if (response.status === 404) return { ok: false, status: 404, error: "Session not found in cloud" }
-  if (!response.ok) {
-    const text = await response.text()
-    console.error("[Kilo Gateway] cloud/session/import: export failed", {
-      status: response.status,
-      body: text.slice(0, 500),
-    })
-    return { ok: false, status: response.status, error: `Import failed: ${response.status}` }
-  }
-
-  const data = await response.json()
-  return { ok: true, data }
+  return { ok: false, status: 404, error: "Cloud features disabled for Accure Code" }
 }
 
 export interface ImportDeps {

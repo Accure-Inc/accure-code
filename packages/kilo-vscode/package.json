@@ -484,7 +484,7 @@
         {
           "command": "kilo-code.new.sidebarTitle.kiloClawOpen",
           "group": "navigation@3",
-          "when": "view == kilo-code.SidebarProvider"
+          "when": "false"
         },
         {
           "command": "kilo-code.new.sidebarTitle.marketplaceButtonClicked",
