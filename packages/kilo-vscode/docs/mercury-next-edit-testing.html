@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Mercury Next Edit — Testing Playground (Kilo Code)</title>
+    <title>Mercury Next Edit — Testing Playground (Accure Code)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       :root {
@@ -222,7 +222,7 @@
     <div class="wrap">
       <h1>Mercury Next Edit — Testing Playground</h1>
       <p class="muted">
-        A walk-through guide for Kilo Code reviewers to validate the new
+        A walk-through guide for Accure Code reviewers to validate the new
         <strong>Next Edit Suggestion</strong> integration powered by Mercury Edit 2 from Inception Labs.
       </p>
 
@@ -246,7 +246,7 @@
         position, and recent edit history. It typically responds in under 250 ms.
       </p>
       <p>
-        This PR adds Mercury Next Edit as a <strong>new, opt-in</strong> autocomplete option in Kilo Code. It lives
+        This PR adds Mercury Next Edit as a <strong>new, opt-in</strong> autocomplete option in Accure Code. It lives
         alongside everything that's already shipping &mdash; Codestral FIM and Mercury Edit 2 via the Kilo gateway are
         bit-for-bit unchanged. Selecting <strong>Mercury Next Edit (Inception)</strong> from the model dropdown switches
         to a separate render pipeline:
@@ -334,7 +334,7 @@ bun run watch</code></pre>
       </p>
 
       <h3>6. Configure NES</h3>
-      <p>Settings (<kbd>Cmd</kbd>+<kbd>,</kbd>) in the Dev Host, search <code>kilo-code.new.autocomplete</code>:</p>
+      <p>Settings (<kbd>Cmd</kbd>+<kbd>,</kbd>) in the Dev Host, search <code>accure-code.autocomplete</code>:</p>
       <ul>
         <li>
           <code>model</code> → <strong>Mercury Next Edit (Inception)</strong> &mdash; <em>not</em> "Mercury Edit 2",
@@ -350,14 +350,14 @@ bun run watch</code></pre>
       <h3>7. Watch the pipeline live</h3>
       <p>
         In the Dev Host: <strong>View → Output</strong> → in the dropdown, select
-        <strong>"Kilo Code · Next Edit"</strong>. Every request, response, and render decision is logged here with
+        <strong>"Accure Code · Next Edit"</strong>. Every request, response, and render decision is logged here with
         timestamps. Keep this panel visible while testing &mdash; it's the single best diagnostic.
       </p>
 
       <p>You're set. Skip to the <a href="#tests">test cases</a> below.</p>
 
       <h2 id="setup">Enabling the feature (settings reference)</h2>
-      <p>In VSCode Settings (<kbd>Cmd</kbd>+<kbd>,</kbd>), search <code>kilo-code.new.autocomplete</code>:</p>
+      <p>In VSCode Settings (<kbd>Cmd</kbd>+<kbd>,</kbd>), search <code>accure-code.autocomplete</code>:</p>
       <table>
         <tr>
           <th>Setting</th>
@@ -389,7 +389,7 @@ bun run watch</code></pre>
       </table>
       <p>
         To watch the pipeline live: <strong>View → Output</strong> in the Dev Host, choose the
-        <strong>"Kilo Code · Next Edit"</strong> channel.
+        <strong>"Accure Code · Next Edit"</strong> channel.
       </p>
 
       <h2 id="flow">How the integration works</h2>
@@ -421,7 +421,7 @@ bun run watch</code></pre>
         <li>
           Branches: same-line diff → <code>InlineCompletionItem</code>; off-cursor diff →
           <code>NextEditSuggestionManager</code> with a decoration + Tab/Esc keybinding gated on a context flag
-          (<code>kilo-code.nextEdit.hasPendingSuggestion</code>).
+          (<code>accure-code.nextEdit.hasPendingSuggestion</code>).
         </li>
       </ol>
 
@@ -1027,7 +1027,7 @@ a rename — rather than generating new files from scratch.</code></pre>
       <h2 id="troubleshooting">Troubleshooting</h2>
       <blockquote class="warn">
         <p>
-          If nothing happens when you type, open <strong>View → Output → "Kilo Code · Next Edit"</strong> and watch the
+          If nothing happens when you type, open <strong>View → Output → "Accure Code · Next Edit"</strong> and watch the
           log. The pipeline is verbose enough that 90% of issues are obvious from the first few lines.
         </p>
       </blockquote>
@@ -1098,7 +1098,7 @@ a rename — rather than generating new files from scratch.</code></pre>
 
       <div class="footer">
         <p>
-          Mercury Next Edit integration for Kilo Code &mdash; prepared by the Inception Labs team.<br />
+          Mercury Next Edit integration for Accure Code &mdash; prepared by the Inception Labs team.<br />
           Questions / bug reports: <a href="mailto:firas@inceptionlabs.ai">firas@inceptionlabs.ai</a>.
         </p>
       </div>

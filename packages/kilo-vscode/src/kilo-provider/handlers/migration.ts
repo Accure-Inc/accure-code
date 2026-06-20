@@ -1,7 +1,7 @@
 /**
  * Legacy migration handlers — extracted from KiloProvider.
  *
- * Manages the migration wizard for users upgrading from Kilo Code v5.x.
+ * Manages the migration wizard for users upgrading from Accure Code v5.x.
  * VS Code access is limited to migration service helpers and injected context.
  */
 

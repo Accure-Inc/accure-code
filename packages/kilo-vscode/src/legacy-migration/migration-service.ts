@@ -1,7 +1,7 @@
 /**
  * legacy-migration - Core migration service.
  *
- * Reads legacy Kilo Code v5.x data from VS Code SecretStorage and the extension's
+ * Reads legacy Accure Code v5.x data from VS Code SecretStorage and the extension's
  * global storage directory, then writes it to the new CLI backend via the SDK.
  */
 
@@ -328,15 +328,15 @@ export async function clearLegacyData(context: vscode.ExtensionContext): Promise
   await context.secrets.delete(CODEX_OAUTH_SECRET_KEY)
 
   const legacyStateKeys = [
-    "kilo-code.allowedCommands",
-    "kilo-code.deniedCommands",
-    "kilo-code.autoApprovalEnabled",
-    "kilo-code.fuzzyMatchThreshold",
-    "kilo-code.diffEnabled",
-    "kilo-code.language",
-    "kilo-code.customModes",
-    "kilo-code.firstInstallCompleted",
-    "kilo-code.telemetrySetting",
+    "accure-code.allowedCommands",
+    "accure-code.deniedCommands",
+    "accure-code.autoApprovalEnabled",
+    "accure-code.fuzzyMatchThreshold",
+    "accure-code.diffEnabled",
+    "accure-code.language",
+    "accure-code.customModes",
+    "accure-code.firstInstallCompleted",
+    "accure-code.telemetrySetting",
     "ghostServiceSettings",
     // Fine-grained auto-approval keys (no prefix in legacy globalState)
     "alwaysAllowReadOnly",
@@ -357,7 +357,7 @@ export async function clearLegacyData(context: vscode.ExtensionContext): Promise
     await context.globalState.update(key, undefined)
   }
 
-  // Clear legacy VS Code settings registered under the "kilo-code" configuration scope.
+  // Clear legacy VS Code settings registered under the "accure-code" configuration scope.
   // These are set via the old extension's contributes.configuration and persist in the
   // user's settings.json even after the extension is uninstalled.
   const legacyVscodeSettings = [
@@ -378,7 +378,7 @@ export async function clearLegacyData(context: vscode.ExtensionContext): Promise
     "toolProtocol",
     "debug",
   ]
-  const cfg = vscode.workspace.getConfiguration("kilo-code")
+  const cfg = vscode.workspace.getConfiguration("accure-code")
   for (const key of legacyVscodeSettings) {
     await cfg.update(key, undefined, vscode.ConfigurationTarget.Global)
   }
@@ -689,7 +689,7 @@ async function migrateAutoApproval(
 
 async function migrateAutocomplete(settings: LegacyAutocompleteSettings): Promise<MigrationResultItem> {
   try {
-    const config = vscode.workspace.getConfiguration("kilo-code.new.autocomplete")
+    const config = vscode.workspace.getConfiguration("accure-code.autocomplete")
     if (settings.enableAutoTrigger !== undefined) {
       await config.update("enableAutoTrigger", settings.enableAutoTrigger, vscode.ConfigurationTarget.Global)
     }
@@ -749,7 +749,7 @@ async function migrateLanguage(language: string): Promise<MigrationResultItem> {
     }
   }
   try {
-    const config = vscode.workspace.getConfiguration("kilo-code.new")
+    const config = vscode.workspace.getConfiguration("accure-code")
     await config.update("language", mapped, vscode.ConfigurationTarget.Global)
     return { item: "Language preference", category: "settings", status: "success" }
   } catch (err) {
@@ -953,9 +953,9 @@ function readLegacySettings(context: vscode.ExtensionContext): LegacySettings {
       : undefined
 
   return {
-    autoApprovalEnabled: context.globalState.get<boolean>("kilo-code.autoApprovalEnabled"),
-    allowedCommands: context.globalState.get<string[]>("kilo-code.allowedCommands"),
-    deniedCommands: context.globalState.get<string[]>("kilo-code.deniedCommands"),
+    autoApprovalEnabled: context.globalState.get<boolean>("accure-code.autoApprovalEnabled"),
+    allowedCommands: context.globalState.get<string[]>("accure-code.allowedCommands"),
+    deniedCommands: context.globalState.get<string[]>("accure-code.deniedCommands"),
     // Fine-grained auto-approval — stored without prefix in legacy globalState
     alwaysAllowReadOnly: context.globalState.get<boolean>("alwaysAllowReadOnly"),
     alwaysAllowReadOnlyOutsideWorkspace: context.globalState.get<boolean>("alwaysAllowReadOnlyOutsideWorkspace"),
@@ -964,7 +964,7 @@ function readLegacySettings(context: vscode.ExtensionContext): LegacySettings {
     alwaysAllowMcp: context.globalState.get<boolean>("alwaysAllowMcp"),
     alwaysAllowModeSwitch: context.globalState.get<boolean>("alwaysAllowModeSwitch"),
     alwaysAllowSubtasks: context.globalState.get<boolean>("alwaysAllowSubtasks"),
-    language: context.globalState.get<string>("kilo-code.language"),
+    language: context.globalState.get<string>("accure-code.language"),
     autocomplete: hasAutocompleteData(autocomplete) ? autocomplete : undefined,
   }
 }

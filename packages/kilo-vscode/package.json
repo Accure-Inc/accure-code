@@ -1,6 +1,6 @@
 {
-  "name": "kilo-code",
-  "displayName": "Kilo Code: AI Coding Agent, Copilot, and Autocomplete",
+  "name": "accure-code",
+  "displayName": "Accure Code: AI Coding Agent, Copilot, and Autocomplete",
   "description": "Open Source AI coding agent that generates code from natural language, automates tasks, and runs terminal commands. Features inline autocomplete, browser automation, automated refactoring, and custom modes for planning, coding, and debugging. Supports 500+ AI models including Claude (Anthropic), Gemini, Grok, GPT, Codex and GLM.",
   "version": "7.3.50",
   "icon": "assets/icons/logo-outline-black.png",
@@ -8,7 +8,7 @@
     "color": "#FFFFFF",
     "theme": "light"
   },
-  "publisher": "kilocode",
+  "publisher": "accure",
   "repository": {
     "type": "git",
     "url": "https://github.com/Kilo-Org/kilocode.git",
@@ -19,7 +19,7 @@
   },
   "license": "MIT",
   "author": {
-    "name": "Kilo Code"
+    "name": "Accure Code"
   },
   "categories": [
     "AI",
@@ -31,7 +31,7 @@
   ],
   "keywords": [
     "kilo",
-    "Kilo Code",
+    "Accure Code",
     "kilocode",
     "ai",
     "agent",
@@ -71,8 +71,8 @@
       }
     ],
     "icons": {
-      "kilo-logo": {
-        "description": "Kilo Code logo",
+      "accure-logo": {
+        "description": "Accure Code logo",
         "default": {
           "fontPath": "assets/icons/kilo-icon-font.woff2",
           "fontCharacter": "\\F101"
@@ -82,742 +82,742 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "kilo-code-ActivityBar",
-          "title": "Kilo Code",
+          "id": "accure-code-ActivityBar",
+          "title": "Accure Code",
           "icon": "assets/icons/kilo-light.png",
           "darkIcon": "assets/icons/kilo-dark.png"
         }
       ]
     },
     "views": {
-      "kilo-code-ActivityBar": [
+      "accure-code-ActivityBar": [
         {
           "type": "webview",
-          "id": "kilo-code.SidebarProvider",
-          "name": "Kilo Code"
+          "id": "accure-code.SidebarProvider",
+          "name": "Accure Code"
         }
       ]
     },
     "commands": [
       {
-        "command": "kilo-code.new.plusButtonClicked",
+        "command": "accure-code.plusButtonClicked",
         "title": "New Task",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": "$(add)"
       },
       {
-        "command": "kilo-code.new.agentManagerOpen",
+        "command": "accure-code.agentManagerOpen",
         "title": "Agent Manager",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": "$(organization)"
       },
       {
-        "command": "kilo-code.new.kiloClawOpen",
+        "command": "accure-code.kiloClawOpen",
         "title": "KiloClaw",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": "$(comment-discussion)"
       },
       {
-        "command": "kilo-code.new.marketplaceButtonClicked",
+        "command": "accure-code.marketplaceButtonClicked",
         "title": "Marketplace",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": "$(extensions)"
       },
       {
-        "command": "kilo-code.new.historyButtonClicked",
+        "command": "accure-code.historyButtonClicked",
         "title": "History",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": "$(history)"
       },
       {
-        "command": "kilo-code.new.profileButtonClicked",
+        "command": "accure-code.profileButtonClicked",
         "title": "Profile",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": "$(account)"
       },
       {
-        "command": "kilo-code.new.settingsButtonClicked",
+        "command": "accure-code.settingsButtonClicked",
         "title": "Settings",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": "$(settings-gear)"
       },
       {
-        "command": "kilo-code.new.sidebarTitle.plusButtonClicked",
+        "command": "accure-code.sidebarTitle.plusButtonClicked",
         "title": "New Task",
         "icon": "$(add)"
       },
       {
-        "command": "kilo-code.new.sidebarTitle.agentManagerOpen",
+        "command": "accure-code.sidebarTitle.agentManagerOpen",
         "title": "Agent Manager",
         "icon": "$(organization)"
       },
       {
-        "command": "kilo-code.new.sidebarTitle.kiloClawOpen",
+        "command": "accure-code.sidebarTitle.kiloClawOpen",
         "title": "KiloClaw",
         "icon": "$(comment-discussion)"
       },
       {
-        "command": "kilo-code.new.sidebarTitle.marketplaceButtonClicked",
+        "command": "accure-code.sidebarTitle.marketplaceButtonClicked",
         "title": "Marketplace",
         "icon": "$(extensions)"
       },
       {
-        "command": "kilo-code.new.sidebarTitle.historyButtonClicked",
+        "command": "accure-code.sidebarTitle.historyButtonClicked",
         "title": "History",
         "icon": "$(history)"
       },
       {
-        "command": "kilo-code.new.sidebarTitle.profileButtonClicked",
+        "command": "accure-code.sidebarTitle.profileButtonClicked",
         "title": "Profile",
         "icon": "$(account)"
       },
       {
-        "command": "kilo-code.new.sidebarTitle.settingsButtonClicked",
+        "command": "accure-code.sidebarTitle.settingsButtonClicked",
         "title": "Settings",
         "icon": "$(settings-gear)"
       },
       {
-        "command": "kilo-code.new.openInTab",
+        "command": "accure-code.openInTab",
         "title": "Open in Tab",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": {
           "light": "assets/icons/kilo-light.svg",
           "dark": "assets/icons/kilo-dark.svg"
         }
       },
       {
-        "command": "kilo-code.new.showChanges",
+        "command": "accure-code.showChanges",
         "title": "Show Changes",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.openMigrationWizard",
+        "command": "accure-code.openMigrationWizard",
         "title": "Migrate Settings from Legacy Version",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.autocomplete.generateSuggestions",
+        "command": "accure-code.autocomplete.generateSuggestions",
         "title": "Generate Suggested Edits",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.autocomplete.cancelSuggestions",
+        "command": "accure-code.autocomplete.cancelSuggestions",
         "title": "Cancel Suggested Edits",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.autocomplete.nextEdit.acceptOrJump",
+        "command": "accure-code.autocomplete.nextEdit.acceptOrJump",
         "title": "Next Edit: Accept or Jump to Suggested Edit",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.autocomplete.nextEdit.dismiss",
+        "command": "accure-code.autocomplete.nextEdit.dismiss",
         "title": "Next Edit: Dismiss Pending Suggestion",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.previousSession",
+        "command": "accure-code.agentManager.previousSession",
         "title": "Agent Manager: Previous Session",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.nextSession",
+        "command": "accure-code.agentManager.nextSession",
         "title": "Agent Manager: Next Session",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.previousTab",
+        "command": "accure-code.agentManager.previousTab",
         "title": "Agent Manager: Previous Tab",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.nextTab",
+        "command": "accure-code.agentManager.nextTab",
         "title": "Agent Manager: Next Tab",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.search",
+        "command": "accure-code.agentManager.search",
         "title": "Agent Manager: Search Worktrees and Sessions",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.showTerminal",
+        "command": "accure-code.agentManager.showTerminal",
         "title": "Agent Manager: Focus Terminal",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": "$(terminal)"
       },
       {
-        "command": "kilo-code.new.agentManager.runScript",
+        "command": "accure-code.agentManager.runScript",
         "title": "Agent Manager: Run Script",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": "$(play)"
       },
       {
-        "command": "kilo-code.new.agentManager.toggleDiff",
+        "command": "accure-code.agentManager.toggleDiff",
         "title": "Agent Manager: Toggle Diff Panel",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": "$(diff)"
       },
       {
-        "command": "kilo-code.new.agentManager.showShortcuts",
+        "command": "accure-code.agentManager.showShortcuts",
         "title": "Agent Manager: Show Keyboard Shortcuts",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": "$(keyboard)"
       },
       {
-        "command": "kilo-code.new.agentManager.newTab",
+        "command": "accure-code.agentManager.newTab",
         "title": "Agent Manager: New Tab",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.newTerminal",
+        "command": "accure-code.agentManager.newTerminal",
         "title": "Agent Manager: New Terminal Tab (Experimental)",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.closeTab",
+        "command": "accure-code.agentManager.closeTab",
         "title": "Agent Manager: Close Tab",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.newWorktree",
+        "command": "accure-code.agentManager.newWorktree",
         "title": "Agent Manager: New Worktree",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.openWorktree",
+        "command": "accure-code.agentManager.openWorktree",
         "title": "Agent Manager: Open Worktree",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.openPR",
+        "command": "accure-code.agentManager.openPR",
         "title": "Agent Manager: Open Pull Request",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.closeWorktree",
+        "command": "accure-code.agentManager.closeWorktree",
         "title": "Agent Manager: Close Worktree",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.advancedWorktree",
+        "command": "accure-code.agentManager.advancedWorktree",
         "title": "Agent Manager: Advanced New Worktree",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo1",
+        "command": "accure-code.agentManager.jumpTo1",
         "title": "Agent Manager: Jump to Item 1",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo2",
+        "command": "accure-code.agentManager.jumpTo2",
         "title": "Agent Manager: Jump to Item 2",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo3",
+        "command": "accure-code.agentManager.jumpTo3",
         "title": "Agent Manager: Jump to Item 3",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo4",
+        "command": "accure-code.agentManager.jumpTo4",
         "title": "Agent Manager: Jump to Item 4",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo5",
+        "command": "accure-code.agentManager.jumpTo5",
         "title": "Agent Manager: Jump to Item 5",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo6",
+        "command": "accure-code.agentManager.jumpTo6",
         "title": "Agent Manager: Jump to Item 6",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo7",
+        "command": "accure-code.agentManager.jumpTo7",
         "title": "Agent Manager: Jump to Item 7",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo8",
+        "command": "accure-code.agentManager.jumpTo8",
         "title": "Agent Manager: Jump to Item 8",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo9",
+        "command": "accure-code.agentManager.jumpTo9",
         "title": "Agent Manager: Jump to Item 9",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.generateCommitMessage",
+        "command": "accure-code.generateCommitMessage",
         "title": "Generate Commit Message",
-        "category": "Kilo Code",
+        "category": "Accure Code",
         "icon": {
           "light": "assets/icons/kilo-light.svg",
           "dark": "assets/icons/kilo-dark.svg"
         }
       },
       {
-        "command": "kilo-code.new.explainCode",
+        "command": "accure-code.explainCode",
         "title": "Explain Code",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.fixCode",
+        "command": "accure-code.fixCode",
         "title": "Fix Code",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.improveCode",
+        "command": "accure-code.improveCode",
         "title": "Improve Code",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.addToContext",
+        "command": "accure-code.addToContext",
         "title": "Add to Context",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.terminalAddToContext",
+        "command": "accure-code.terminalAddToContext",
         "title": "Add Terminal Content to Context",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.terminalFixCommand",
+        "command": "accure-code.terminalFixCommand",
         "title": "Fix This Command",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.terminalExplainCommand",
+        "command": "accure-code.terminalExplainCommand",
         "title": "Explain This Command",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.focusChatInput",
+        "command": "accure-code.focusChatInput",
         "title": "Focus Chat Input",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.cycleAgentMode",
+        "command": "accure-code.cycleAgentMode",
         "title": "Cycle Agent Mode",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.cyclePreviousAgentMode",
+        "command": "accure-code.cyclePreviousAgentMode",
         "title": "Cycle Previous Agent Mode",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.toggleAutoApprove",
+        "command": "accure-code.toggleAutoApprove",
         "title": "Toggle Auto-Approve",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.generateTerminalCommand",
+        "command": "accure-code.generateTerminalCommand",
         "title": "Generate Terminal Command",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       },
       {
-        "command": "kilo-code.new.takeHeapSnapshot",
+        "command": "accure-code.takeHeapSnapshot",
         "title": "Take Heap Snapshot",
-        "category": "Kilo Code"
+        "category": "Accure Code"
       }
     ],
     "submenus": [
       {
-        "id": "kilo-code.new.editorContextMenu",
-        "label": "Kilo Code"
+        "id": "accure-code.editorContextMenu",
+        "label": "Accure Code"
       },
       {
-        "id": "kilo-code.new.terminalContextMenu",
-        "label": "Kilo Code"
+        "id": "accure-code.terminalContextMenu",
+        "label": "Accure Code"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "kilo-code.new.sidebarTitle.plusButtonClicked",
+          "command": "accure-code.sidebarTitle.plusButtonClicked",
           "when": "false"
         },
         {
-          "command": "kilo-code.new.sidebarTitle.historyButtonClicked",
+          "command": "accure-code.sidebarTitle.historyButtonClicked",
           "when": "false"
         },
         {
-          "command": "kilo-code.new.sidebarTitle.agentManagerOpen",
+          "command": "accure-code.sidebarTitle.agentManagerOpen",
           "when": "false"
         },
         {
-          "command": "kilo-code.new.sidebarTitle.kiloClawOpen",
+          "command": "accure-code.sidebarTitle.kiloClawOpen",
           "when": "false"
         },
         {
-          "command": "kilo-code.new.sidebarTitle.marketplaceButtonClicked",
+          "command": "accure-code.sidebarTitle.marketplaceButtonClicked",
           "when": "false"
         },
         {
-          "command": "kilo-code.new.sidebarTitle.profileButtonClicked",
+          "command": "accure-code.sidebarTitle.profileButtonClicked",
           "when": "false"
         },
         {
-          "command": "kilo-code.new.sidebarTitle.settingsButtonClicked",
+          "command": "accure-code.sidebarTitle.settingsButtonClicked",
           "when": "false"
         }
       ],
       "view/title": [
         {
-          "command": "kilo-code.new.sidebarTitle.plusButtonClicked",
+          "command": "accure-code.sidebarTitle.plusButtonClicked",
           "group": "navigation@0",
-          "when": "view == kilo-code.SidebarProvider"
+          "when": "view == accure-code.SidebarProvider"
         },
         {
-          "command": "kilo-code.new.sidebarTitle.historyButtonClicked",
+          "command": "accure-code.sidebarTitle.historyButtonClicked",
           "group": "navigation@1",
-          "when": "view == kilo-code.SidebarProvider"
+          "when": "view == accure-code.SidebarProvider"
         },
         {
-          "command": "kilo-code.new.sidebarTitle.agentManagerOpen",
+          "command": "accure-code.sidebarTitle.agentManagerOpen",
           "group": "navigation@2",
-          "when": "view == kilo-code.SidebarProvider"
+          "when": "view == accure-code.SidebarProvider"
         },
         {
-          "command": "kilo-code.new.sidebarTitle.kiloClawOpen",
+          "command": "accure-code.sidebarTitle.kiloClawOpen",
           "group": "navigation@3",
           "when": "false"
         },
         {
-          "command": "kilo-code.new.sidebarTitle.marketplaceButtonClicked",
+          "command": "accure-code.sidebarTitle.marketplaceButtonClicked",
           "group": "navigation@4",
-          "when": "view == kilo-code.SidebarProvider"
+          "when": "view == accure-code.SidebarProvider"
         },
         {
-          "command": "kilo-code.new.sidebarTitle.profileButtonClicked",
+          "command": "accure-code.sidebarTitle.profileButtonClicked",
           "group": "navigation@5",
-          "when": "view == kilo-code.SidebarProvider"
+          "when": "view == accure-code.SidebarProvider"
         },
         {
-          "command": "kilo-code.new.sidebarTitle.settingsButtonClicked",
+          "command": "accure-code.sidebarTitle.settingsButtonClicked",
           "group": "navigation@6",
-          "when": "view == kilo-code.SidebarProvider"
+          "when": "view == accure-code.SidebarProvider"
         }
       ],
       "scm/title": [
         {
-          "command": "kilo-code.new.generateCommitMessage",
+          "command": "accure-code.generateCommitMessage",
           "group": "navigation",
           "when": "scmProvider == git"
         }
       ],
       "scm/input": [
         {
-          "command": "kilo-code.new.generateCommitMessage",
+          "command": "accure-code.generateCommitMessage",
           "group": "navigation",
           "when": "scmProvider == git"
         }
       ],
       "editor/title": [
         {
-          "command": "kilo-code.new.openInTab",
+          "command": "accure-code.openInTab",
           "group": "navigation",
           "when": "true"
         },
         {
-          "command": "kilo-code.new.plusButtonClicked",
+          "command": "accure-code.plusButtonClicked",
           "group": "navigation@0",
-          "when": "activeWebviewPanelId == kilo-code.new.TabPanel"
+          "when": "activeWebviewPanelId == accure-code.TabPanel"
         },
         {
-          "command": "kilo-code.new.historyButtonClicked",
+          "command": "accure-code.historyButtonClicked",
           "group": "navigation@1",
-          "when": "activeWebviewPanelId == kilo-code.new.TabPanel"
+          "when": "activeWebviewPanelId == accure-code.TabPanel"
         },
         {
-          "command": "kilo-code.new.profileButtonClicked",
+          "command": "accure-code.profileButtonClicked",
           "group": "navigation@2",
-          "when": "activeWebviewPanelId == kilo-code.new.TabPanel"
+          "when": "activeWebviewPanelId == accure-code.TabPanel"
         },
         {
-          "command": "kilo-code.new.settingsButtonClicked",
+          "command": "accure-code.settingsButtonClicked",
           "group": "navigation@3",
-          "when": "activeWebviewPanelId == kilo-code.new.TabPanel"
+          "when": "activeWebviewPanelId == accure-code.TabPanel"
         }
       ],
       "editor/context": [
         {
-          "submenu": "kilo-code.new.editorContextMenu",
+          "submenu": "accure-code.editorContextMenu",
           "group": "1_kilocode"
         }
       ],
-      "kilo-code.new.editorContextMenu": [
+      "accure-code.editorContextMenu": [
         {
-          "command": "kilo-code.new.explainCode",
+          "command": "accure-code.explainCode",
           "group": "1_actions@1"
         },
         {
-          "command": "kilo-code.new.fixCode",
+          "command": "accure-code.fixCode",
           "group": "1_actions@2"
         },
         {
-          "command": "kilo-code.new.improveCode",
+          "command": "accure-code.improveCode",
           "group": "1_actions@3"
         },
         {
-          "command": "kilo-code.new.addToContext",
+          "command": "accure-code.addToContext",
           "group": "1_actions@4"
         }
       ],
       "terminal/context": [
         {
-          "submenu": "kilo-code.new.terminalContextMenu",
+          "submenu": "accure-code.terminalContextMenu",
           "group": "2_kilocode"
         }
       ],
-      "kilo-code.new.terminalContextMenu": [
+      "accure-code.terminalContextMenu": [
         {
-          "command": "kilo-code.new.terminalAddToContext",
+          "command": "accure-code.terminalAddToContext",
           "group": "1_actions@1"
         },
         {
-          "command": "kilo-code.new.terminalFixCommand",
+          "command": "accure-code.terminalFixCommand",
           "group": "1_actions@2"
         },
         {
-          "command": "kilo-code.new.terminalExplainCommand",
+          "command": "accure-code.terminalExplainCommand",
           "group": "1_actions@3"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "kilo-code.new.focusChatInput",
+        "command": "accure-code.focusChatInput",
         "key": "ctrl+shift+a",
         "mac": "cmd+shift+a"
       },
       {
-        "command": "kilo-code.new.toggleAutoApprove",
+        "command": "accure-code.toggleAutoApprove",
         "key": "ctrl+alt+a",
         "mac": "cmd+alt+a"
       },
       {
-        "command": "kilo-code.new.generateTerminalCommand",
+        "command": "accure-code.generateTerminalCommand",
         "key": "ctrl+shift+g",
         "mac": "cmd+shift+g"
       },
       {
-        "command": "kilo-code.new.agentManagerOpen",
+        "command": "accure-code.agentManagerOpen",
         "key": "ctrl+shift+m",
         "mac": "cmd+shift+m"
       },
       {
-        "command": "kilo-code.new.addToContext",
+        "command": "accure-code.addToContext",
         "key": "ctrl+k ctrl+a",
         "mac": "cmd+k cmd+a",
         "when": "editorTextFocus && editorHasSelection"
       },
       {
-        "command": "kilo-code.new.agentManager.previousSession",
+        "command": "accure-code.agentManager.previousSession",
         "key": "ctrl+alt+up",
         "mac": "cmd+alt+up",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.nextSession",
+        "command": "accure-code.agentManager.nextSession",
         "key": "ctrl+alt+down",
         "mac": "cmd+alt+down",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.previousTab",
+        "command": "accure-code.agentManager.previousTab",
         "key": "ctrl+alt+left",
         "mac": "cmd+alt+left",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.nextTab",
+        "command": "accure-code.agentManager.nextTab",
         "key": "ctrl+alt+right",
         "mac": "cmd+alt+right",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.search",
+        "command": "accure-code.agentManager.search",
         "key": "ctrl+f",
         "mac": "cmd+f",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel' && !terminalFocus"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel' && !terminalFocus"
       },
       {
-        "command": "kilo-code.new.agentManager.showTerminal",
+        "command": "accure-code.agentManager.showTerminal",
         "key": "ctrl+/",
         "mac": "cmd+/",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.runScript",
+        "command": "accure-code.agentManager.runScript",
         "key": "ctrl+e",
         "mac": "cmd+e",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel' && (isMac || !terminalFocus)"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel' && (isMac || !terminalFocus)"
       },
       {
-        "command": "kilo-code.new.agentManager.toggleDiff",
+        "command": "accure-code.agentManager.toggleDiff",
         "key": "ctrl+d",
         "mac": "cmd+d",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.showShortcuts",
+        "command": "accure-code.agentManager.showShortcuts",
         "key": "ctrl+shift+/",
         "mac": "cmd+shift+/",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.newTab",
+        "command": "accure-code.agentManager.newTab",
         "key": "ctrl+t",
         "mac": "cmd+t",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.newTerminal",
+        "command": "accure-code.agentManager.newTerminal",
         "key": "ctrl+shift+t",
         "mac": "cmd+shift+t",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.closeTab",
+        "command": "accure-code.agentManager.closeTab",
         "key": "ctrl+w",
         "mac": "cmd+w",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.newWorktree",
+        "command": "accure-code.agentManager.newWorktree",
         "key": "ctrl+n",
         "mac": "cmd+n",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.openWorktree",
+        "command": "accure-code.agentManager.openWorktree",
         "key": "ctrl+shift+o",
         "mac": "cmd+shift+o",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.openPR",
+        "command": "accure-code.agentManager.openPR",
         "key": "ctrl+shift+r",
         "mac": "cmd+shift+r",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.closeWorktree",
+        "command": "accure-code.agentManager.closeWorktree",
         "key": "ctrl+shift+w",
         "mac": "cmd+shift+w",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.advancedWorktree",
+        "command": "accure-code.agentManager.advancedWorktree",
         "key": "ctrl+shift+n",
         "mac": "cmd+shift+n",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo1",
+        "command": "accure-code.agentManager.jumpTo1",
         "key": "ctrl+1",
         "mac": "cmd+1",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo2",
+        "command": "accure-code.agentManager.jumpTo2",
         "key": "ctrl+2",
         "mac": "cmd+2",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo3",
+        "command": "accure-code.agentManager.jumpTo3",
         "key": "ctrl+3",
         "mac": "cmd+3",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo4",
+        "command": "accure-code.agentManager.jumpTo4",
         "key": "ctrl+4",
         "mac": "cmd+4",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo5",
+        "command": "accure-code.agentManager.jumpTo5",
         "key": "ctrl+5",
         "mac": "cmd+5",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo6",
+        "command": "accure-code.agentManager.jumpTo6",
         "key": "ctrl+6",
         "mac": "cmd+6",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo7",
+        "command": "accure-code.agentManager.jumpTo7",
         "key": "ctrl+7",
         "mac": "cmd+7",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo8",
+        "command": "accure-code.agentManager.jumpTo8",
         "key": "ctrl+8",
         "mac": "cmd+8",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.agentManager.jumpTo9",
+        "command": "accure-code.agentManager.jumpTo9",
         "key": "ctrl+9",
         "mac": "cmd+9",
-        "when": "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'"
+        "when": "activeWebviewPanelId == 'accure-code.AgentManagerPanel'"
       },
       {
-        "command": "kilo-code.new.cycleAgentMode",
+        "command": "accure-code.cycleAgentMode",
         "key": "ctrl+.",
         "mac": "cmd+.",
-        "when": "sideBarFocus && kilo-code.new.sidebarVisible || activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel' || activeWebviewPanelId == 'kilo-code.new.TabPanel'"
+        "when": "sideBarFocus && accure-code.sidebarVisible || activeWebviewPanelId == 'accure-code.AgentManagerPanel' || activeWebviewPanelId == 'accure-code.TabPanel'"
       },
       {
-        "command": "kilo-code.new.cyclePreviousAgentMode",
+        "command": "accure-code.cyclePreviousAgentMode",
         "key": "ctrl+shift+.",
         "mac": "cmd+shift+.",
-        "when": "sideBarFocus && kilo-code.new.sidebarVisible || activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel' || activeWebviewPanelId == 'kilo-code.new.TabPanel'"
+        "when": "sideBarFocus && accure-code.sidebarVisible || activeWebviewPanelId == 'accure-code.AgentManagerPanel' || activeWebviewPanelId == 'accure-code.TabPanel'"
       },
       {
-        "command": "kilo-code.new.autocomplete.cancelSuggestions",
+        "command": "accure-code.autocomplete.cancelSuggestions",
         "key": "escape",
-        "when": "editorTextFocus && !editorTabMovesFocus && !inSnippetMode && kilo-code.new.autocomplete.hasSuggestions"
+        "when": "editorTextFocus && !editorTabMovesFocus && !inSnippetMode && accure-code.autocomplete.hasSuggestions"
       },
       {
-        "command": "kilo-code.new.autocomplete.generateSuggestions",
+        "command": "accure-code.autocomplete.generateSuggestions",
         "key": "ctrl+l",
         "mac": "cmd+l",
-        "when": "editorTextFocus && !editorTabMovesFocus && !inSnippetMode && kilocode.autocomplete.enableSmartInlineTaskKeybinding && !github.copilot.completions.enabled"
+        "when": "editorTextFocus && !editorTabMovesFocus && !inSnippetMode && accure.autocomplete.enableSmartInlineTaskKeybinding && !github.copilot.completions.enabled"
       },
       {
-        "command": "kilo-code.new.autocomplete.showIncompatibilityExtensionPopup",
+        "command": "accure-code.autocomplete.showIncompatibilityExtensionPopup",
         "key": "ctrl+l",
         "mac": "cmd+l",
-        "when": "editorTextFocus && !editorTabMovesFocus && !inSnippetMode && kilocode.autocomplete.enableSmartInlineTaskKeybinding && github.copilot.completions.enabled"
+        "when": "editorTextFocus && !editorTabMovesFocus && !inSnippetMode && accure.autocomplete.enableSmartInlineTaskKeybinding && github.copilot.completions.enabled"
       },
       {
-        "command": "kilo-code.new.autocomplete.nextEdit.acceptOrJump",
+        "command": "accure-code.autocomplete.nextEdit.acceptOrJump",
         "key": "tab",
-        "when": "editorTextFocus && !editorTabMovesFocus && !inSnippetMode && !suggestWidgetVisible && kilo-code.nextEdit.hasPendingSuggestion"
+        "when": "editorTextFocus && !editorTabMovesFocus && !inSnippetMode && !suggestWidgetVisible && accure-code.nextEdit.hasPendingSuggestion"
       },
       {
-        "command": "kilo-code.new.autocomplete.nextEdit.dismiss",
+        "command": "accure-code.autocomplete.nextEdit.dismiss",
         "key": "escape",
-        "when": "editorTextFocus && !editorTabMovesFocus && !inSnippetMode && kilo-code.nextEdit.hasPendingSuggestion"
+        "when": "editorTextFocus && !editorTabMovesFocus && !inSnippetMode && accure-code.nextEdit.hasPendingSuggestion"
       }
     ],
     "configuration": {
-      "title": "Kilo Code",
+      "title": "Accure Code",
       "properties": {
-        "kilo-code.new.language": {
+        "accure-code.language": {
           "type": "string",
           "default": "",
-          "description": "Override the UI language for Kilo Code (e.g. en, de, ja). Empty means use VS Code's display language.",
+          "description": "Override the UI language for Accure Code (e.g. en, de, ja). Empty means use VS Code's display language.",
           "enum": [
             "",
             "en",
@@ -865,17 +865,17 @@
             "Italiano"
           ]
         },
-        "kilo-code.new.model.providerID": {
+        "accure-code.model.providerID": {
           "type": "string",
           "default": "kilo",
           "description": "Default model provider ID for new sessions"
         },
-        "kilo-code.new.model.modelID": {
+        "accure-code.model.modelID": {
           "type": "string",
           "default": "kilo-auto/free",
           "description": "Default model ID for new sessions"
         },
-        "kilo-code.new.autocomplete.model": {
+        "accure-code.autocomplete.model": {
           "type": "string",
           "enum": [
             "mistralai/codestral-2508",
@@ -895,7 +895,7 @@
           ],
           "description": "Model to use for inline autocomplete suggestions. If unset, the recommended default is used."
         },
-        "kilo-code.new.autocomplete.provider": {
+        "accure-code.autocomplete.provider": {
           "type": "string",
           "enum": [
             "kilo",
@@ -909,64 +909,64 @@
           ],
           "description": "Provider to use for inline autocomplete suggestions. If unset, Kilo Gateway is used."
         },
-        "kilo-code.new.autocomplete.enableAutoTrigger": {
+        "accure-code.autocomplete.enableAutoTrigger": {
           "type": "boolean",
           "default": true,
           "description": "Enable automatic inline completion suggestions"
         },
-        "kilo-code.new.autocomplete.enableSmartInlineTaskKeybinding": {
+        "accure-code.autocomplete.enableSmartInlineTaskKeybinding": {
           "type": "boolean",
           "default": false,
           "description": "Enable smart inline task keybinding"
         },
-        "kilo-code.new.autocomplete.enableChatAutocomplete": {
+        "accure-code.autocomplete.enableChatAutocomplete": {
           "type": "boolean",
           "default": false,
           "description": "Enable chat textarea autocomplete"
         },
-        "kilo-code.new.claudeCodeCompat": {
+        "accure-code.claudeCodeCompat": {
           "type": "boolean",
           "default": false,
           "description": "Load CLAUDE.md instructions and skills from your Claude Code configuration directory into Kilo sessions. Enable this if you want Kilo to use your Claude Code instructions and skills."
         },
-        "kilo-code.new.extraCaCerts": {
+        "accure-code.extraCaCerts": {
           "type": "string",
           "default": "",
           "description": "Absolute path to a PEM file containing extra CA certificates to trust when the Kilo backend makes HTTPS requests (sets NODE_EXTRA_CA_CERTS on the CLI process). Use this if you're behind a corporate proxy that performs SSL inspection. Leave empty to rely on the OS trust store."
         },
-        "kilo-code.new.autoApprove.enabled": {
+        "accure-code.autoApprove.enabled": {
           "type": "boolean",
           "default": false,
-          "description": "Start Kilo Code with the main auto-approve toggle enabled. When enabled, permission prompts are approved automatically."
+          "description": "Start Accure Code with the main auto-approve toggle enabled. When enabled, permission prompts are approved automatically."
         },
-        "kilo-code.new.fontSize": {
+        "accure-code.fontSize": {
           "type": "number",
           "default": 13,
           "minimum": 10,
           "maximum": 24,
-          "description": "Font size in pixels for the Kilo Code webview UI."
+          "description": "Font size in pixels for the Accure Code webview UI."
         },
-        "kilo-code.new.browserAutomation.enabled": {
+        "accure-code.browserAutomation.enabled": {
           "type": "boolean",
           "default": false,
           "description": "Enable browser automation powered by Playwright. When enabled, the AI agent can interact with web pages in a visible Chrome window."
         },
-        "kilo-code.new.browserAutomation.useSystemChrome": {
+        "accure-code.browserAutomation.useSystemChrome": {
           "type": "boolean",
           "default": true,
           "description": "Use your system's installed Chrome browser instead of downloading a separate Chromium instance."
         },
-        "kilo-code.new.browserAutomation.headless": {
+        "accure-code.browserAutomation.headless": {
           "type": "boolean",
           "default": false,
           "description": "Run browser automation in headless mode (no visible window). When disabled, you can watch the agent interact with the browser."
         },
-        "kilo-code.new.attention.enabled": {
+        "accure-code.attention.enabled": {
           "type": "boolean",
           "default": false,
           "description": "Play sounds when sessions complete, error, or need input"
         },
-        "kilo-code.new.attention.sound": {
+        "accure-code.attention.sound": {
           "type": "string",
           "default": "default",
           "enum": [
@@ -1020,12 +1020,12 @@
           ],
           "description": "Use different sounds for completion, input, and errors, or choose one sound for every event"
         },
-        "kilo-code.new.showTaskTimeline": {
+        "accure-code.showTaskTimeline": {
           "type": "boolean",
           "default": true,
           "description": "Show the task timeline graph in the chat header"
         },
-        "kilo-code.new.agentWorkStyle": {
+        "accure-code.agentWorkStyle": {
           "type": "string",
           "scope": "application",
           "default": "unset",
@@ -1043,7 +1043,7 @@
           ],
           "description": "Preferred agent work style. Set to Unset to show the onboarding flow again."
         },
-        "kilo-code.new.diff.renderMarkdown": {
+        "accure-code.diff.renderMarkdown": {
           "type": "boolean",
           "default": false,
           "description": "Render Markdown files in Kilo diff viewers by default. Toggle this from a Markdown file header in the diff viewer."

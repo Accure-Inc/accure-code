@@ -142,12 +142,12 @@ describe("attention defaults", () => {
     }
     const properties = manifest.contributes.configuration.properties
 
-    expect(properties["kilo-code.new.attention.enabled"]?.default).toBe(false)
-    expect(properties["kilo-code.new.attention.sound"]?.default).toBe("default")
-    expect(properties["kilo-code.new.attention.sound"]?.enum).toEqual(["default", "system", ...CustomSoundIDs])
-    expect(properties["kilo-code.new.sounds.agentEnabled"]).toBeUndefined()
-    expect(properties["kilo-code.new.sounds.permissionsEnabled"]).toBeUndefined()
-    expect(properties["kilo-code.new.sounds.errorsEnabled"]).toBeUndefined()
+    expect(properties["accure-code.attention.enabled"]?.default).toBe(false)
+    expect(properties["accure-code.attention.sound"]?.default).toBe("default")
+    expect(properties["accure-code.attention.sound"]?.enum).toEqual(["default", "system", ...CustomSoundIDs])
+    expect(properties["accure-code.sounds.agentEnabled"]).toBeUndefined()
+    expect(properties["accure-code.sounds.permissionsEnabled"]).toBeUndefined()
+    expect(properties["accure-code.sounds.errorsEnabled"]).toBeUndefined()
   })
 
   it("resolves global sound choices safely", () => {

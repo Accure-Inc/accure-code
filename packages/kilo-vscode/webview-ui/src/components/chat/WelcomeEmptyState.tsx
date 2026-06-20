@@ -19,8 +19,8 @@ export const KiloLogo = () => {
   const file = light ? "kilo-light.svg" : "kilo-dark.svg"
 
   return (
-    <div class="kilo-logo">
-      <img src={`${icons}/${file}`} alt="Kilo Code" />
+    <div class="accure-logo">
+      <img src={`${icons}/${file}`} alt="Accure Code" />
     </div>
   )
 }

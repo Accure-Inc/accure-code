@@ -1108,7 +1108,7 @@ export const dict = {
   "deviceAuth.toast.codeCopied": "คัดลอกรหัสไปยังคลิปบอร์ดแล้ว",
   "deviceAuth.toast.errorCopied": "คัดลอกข้อผิดพลาดไปยังคลิปบอร์ดแล้ว",
   "deviceAuth.status.initiating": "กำลังเริ่มเข้าสู่ระบบ...",
-  "deviceAuth.title": "เข้าสู่ระบบ Kilo Code",
+  "deviceAuth.title": "เข้าสู่ระบบ Accure Code",
   "deviceAuth.step1": "ขั้นตอนที่ 1: เปิด URL นี้",
   "deviceAuth.action.copyUrl": "คัดลอก URL",
   "deviceAuth.action.openBrowser": "เปิดเบราว์เซอร์",
@@ -1129,7 +1129,7 @@ export const dict = {
 
   "profile.title": "โปรไฟล์",
   "profile.notLoggedIn": "ยังไม่ได้เข้าสู่ระบบ",
-  "profile.action.login": "เข้าสู่ระบบด้วย Kilo Code",
+  "profile.action.login": "เข้าสู่ระบบด้วย Accure Code",
   "profile.balance.title": "ยอดคงเหลือ",
   "profile.balance.refresh": "รีเฟรชยอดคงเหลือ",
   "profile.action.dashboard": "แดชบอร์ด",
@@ -1149,10 +1149,10 @@ export const dict = {
 
   "settings.experimental.title": "ทดลอง",
   "settings.language.title": "ภาษา",
-  "settings.aboutKiloCode.title": "เกี่ยวกับ Kilo Code",
+  "settings.aboutKiloCode.title": "เกี่ยวกับ Accure Code",
 
   "session.messages.empty": "เริ่มการสนทนาโดยพิมพ์ข้อความด้านล่าง",
-  "session.messages.welcome": "Kilo Code เป็นผู้ช่วยเขียนโค้ด AI ขอให้สร้างฟีเจอร์ แก้ไขบัก หรืออธิบายโค้ดเบสของคุณ",
+  "session.messages.welcome": "Accure Code เป็นผู้ช่วยเขียนโค้ด AI ขอให้สร้างฟีเจอร์ แก้ไขบัก หรืออธิบายโค้ดเบสของคุณ",
   "session.messages.scrollToBottom": "เลื่อนไปด้านล่าง",
   "session.messages.initializing": "กำลังเริ่มต้น...",
   "session.messages.taskStarting": "กำลังเริ่มทำงาน...",
@@ -1204,7 +1204,7 @@ export const dict = {
   "settings.aboutKiloCode.port.label": "พอร์ต:",
   "settings.aboutKiloCode.versionInfo": "ข้อมูลเวอร์ชัน",
   "settings.aboutKiloCode.version.label": "เวอร์ชัน:",
-  "settings.aboutKiloCode.extensionName": "ส่วนขยาย Kilo Code",
+  "settings.aboutKiloCode.extensionName": "ส่วนขยาย Accure Code",
   "settings.aboutKiloCode.community": "ชุมชนและการสนับสนุน",
   "settings.aboutKiloCode.feedback.prefix": "หากคุณมีคำถามหรือข้อเสนอแนะ สามารถเปิด issue ได้ที่",
   "settings.aboutKiloCode.feedback.or": "หรือ",
@@ -1245,7 +1245,7 @@ export const dict = {
   "settings.browser.headless.title": "โหมด Headless",
   "settings.browser.headless.description": "ทำงานในโหมด headless (ไม่มีหน้าต่างเบราว์เซอร์ที่มองเห็นได้)",
 
-  "settings.language.description": 'เลือกภาษาสำหรับ UI ของ Kilo Code "อัตโนมัติ" จะใช้ภาษาการแสดงผลของ VS Code',
+  "settings.language.description": 'เลือกภาษาสำหรับ UI ของ Accure Code "อัตโนมัติ" จะใช้ภาษาการแสดงผลของ VS Code',
   "settings.language.auto": "อัตโนมัติ (ภาษา VS Code)",
   "settings.language.current": "ปัจจุบัน:",
 
@@ -1524,12 +1524,12 @@ export const dict = {
   "settings.legacyMigration.link": "ย้ายข้อมูลจากเวอร์ชันดั้งเดิม",
   "settings.aboutKiloCode.legacyMigration.title": "การย้ายข้อมูลจากเวอร์ชันดั้งเดิม",
   "settings.aboutKiloCode.legacyMigration.description":
-    "ย้ายการตั้งค่าจากการติดตั้ง Kilo Code ก่อนหน้านี้ รวมถึงคีย์ API ของผู้ให้บริการและโมเดลเริ่มต้น",
+    "ย้ายการตั้งค่าจากการติดตั้ง Accure Code ก่อนหน้านี้ รวมถึงคีย์ API ของผู้ให้บริการและโมเดลเริ่มต้น",
   "settings.aboutKiloCode.rooImport.description": "นำเข้าประวัติการสนทนาจากการติดตั้ง Roo Code",
   "settings.aboutKiloCode.rooImport.button": "นำเข้าเซสชันจาก Roo Code",
 
   // Screen 1 — What's New
-  "migration.whatsNew.title": "มีอะไรใหม่ใน Kilo Code",
+  "migration.whatsNew.title": "มีอะไรใหม่ใน Accure Code",
   "migration.whatsNew.subtitle": "เราได้สร้างส่วนขยายใหม่บนรากฐานที่เร็วและมีประสิทธิภาพมากขึ้น",
   "migration.whatsNew.features.performance.title": "ประสิทธิภาพเอเจนต์ที่เร็วขึ้น",
   "migration.whatsNew.features.performance.detail":

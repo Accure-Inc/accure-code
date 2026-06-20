@@ -4,7 +4,7 @@ This file provides guidance to agents when working with code in this repository.
 
 ## Product Context
 
-Kilo Code is an open source AI coding agent platform. It ships as a CLI and editor clients that all build on the same backend. This package (`packages/kilo-vscode/`) is the **VS Code extension**.
+Accure Code is an open source AI coding agent platform. It ships as a CLI and editor clients that all build on the same backend. This package (`packages/kilo-vscode/`) is the **VS Code extension**.
 
 ### Products and How They Relate
 
@@ -36,7 +36,7 @@ Every client spawns or connects to a `kilo serve` process and communicates via H
 
 | Package | Name | Role |
 |---|---|---|
-| `packages/kilo-vscode/` | `kilo-code` | **This package.** VS Code extension. |
+| `packages/kilo-vscode/` | `accure-code` | **This package.** VS Code extension. |
 | `packages/kilo-gateway/` | `@kilocode/kilo-gateway` | Auth (device flow), AI provider routing (OpenRouter), Kilo API integration (profile, balance, teams) |
 | `packages/kilo-ui/` | `@kilocode/kilo-ui` | SolidJS component library (40+ components, built on `@kobalte/core`). Shared by this extension's webview and docs screenshot stories |
 | `packages/kilo-telemetry/` | `@kilocode/kilo-telemetry` | PostHog analytics + OpenTelemetry tracing for the CLI |
@@ -202,8 +202,8 @@ Generated screenshot baselines live under `packages/kilo-docs/public/img/screens
 
 ## Naming Conventions
 
-- All VSCode commands must use `kilo-code.new.` prefix (not `kilo-code.`)
-- All view IDs must use `kilo-code.new.` prefix, **except** the sidebar view which uses `kilo-code.SidebarProvider` to preserve user sidebar position when upgrading from the legacy extension
+- All VSCode commands must use `accure-code.` prefix (not `accure-code.`)
+- All view IDs must use `accure-code.` prefix, **except** the sidebar view which uses `accure-code.SidebarProvider` to preserve user sidebar position when upgrading from the legacy extension
 
 ## Kilocode Change Markers
 

@@ -14,7 +14,7 @@ import type { KiloConnectionService } from "../cli-backend"
 import { hasValidCredentials } from "./fim"
 import { DEFAULT_AUTOCOMPLETE_MODEL, getAutocompleteModel } from "../../shared/autocomplete-models"
 
-const CONFIG_SECTION = "kilo-code.new.autocomplete"
+const CONFIG_SECTION = "accure-code.autocomplete"
 
 export interface AutocompleteServiceSettings {
   enableAutoTrigger?: boolean
@@ -349,7 +349,7 @@ export class AutocompleteServiceManager {
   private async updateGlobalContext() {
     await vscode.commands.executeCommand(
       "setContext",
-      "kilocode.autocomplete.enableSmartInlineTaskKeybinding",
+      "accure.autocomplete.enableSmartInlineTaskKeybinding",
       this.settings?.enableSmartInlineTaskKeybinding || false,
     )
   }
@@ -386,12 +386,12 @@ export class AutocompleteServiceManager {
   private handleFatalAutocompleteError(status: number | null): void {
     const msg =
       status === 402
-        ? t("kilocode:autocomplete.creditsExhausted.message")
-        : t("kilocode:autocomplete.authError.message")
+        ? t("accure:autocomplete.creditsExhausted.message")
+        : t("accure:autocomplete.authError.message")
 
     if (status === 402) {
-      vscode.window.showWarningMessage(msg, t("kilocode:autocomplete.creditsExhausted.addCredits")).then((choice) => {
-        if (choice === t("kilocode:autocomplete.creditsExhausted.addCredits")) {
+      vscode.window.showWarningMessage(msg, t("accure:autocomplete.creditsExhausted.addCredits")).then((choice) => {
+        if (choice === t("accure:autocomplete.creditsExhausted.addCredits")) {
           vscode.env.openExternal(vscode.Uri.parse("https://app.kilo.ai/credits"))
         }
       })
@@ -424,15 +424,15 @@ export class AutocompleteServiceManager {
   }
 
   public async showIncompatibilityExtensionPopup() {
-    const message = t("kilocode:autocomplete.incompatibilityExtensionPopup.message")
-    const disableCopilot = t("kilocode:autocomplete.incompatibilityExtensionPopup.disableCopilot")
-    const disableInlineAssist = t("kilocode:autocomplete.incompatibilityExtensionPopup.disableInlineAssist")
+    const message = t("accure:autocomplete.incompatibilityExtensionPopup.message")
+    const disableCopilot = t("accure:autocomplete.incompatibilityExtensionPopup.disableCopilot")
+    const disableInlineAssist = t("accure:autocomplete.incompatibilityExtensionPopup.disableInlineAssist")
     const response = await vscode.window.showErrorMessage(message, disableCopilot, disableInlineAssist)
 
     if (response === disableCopilot) {
       await vscode.commands.executeCommand("github.copilot.completions.disable")
     } else if (response === disableInlineAssist) {
-      await vscode.commands.executeCommand("kilo-code.new.autocomplete.disable")
+      await vscode.commands.executeCommand("accure-code.autocomplete.disable")
     }
   }
 

@@ -6,26 +6,26 @@ export namespace KilocodePaths {
   const home = () => process.env.HOME || process.env.USERPROFILE || os.homedir()
 
   /**
-   * Get the platform-specific VSCode global storage path for Kilocode extension.
-   * - macOS: ~/Library/Application Support/Code/User/globalStorage/kilocode.kilo-code
-   * - Windows: %APPDATA%/Code/User/globalStorage/kilocode.kilo-code
-   * - Linux: ~/.config/Code/User/globalStorage/kilocode.kilo-code
+   * Get the platform-specific VSCode global storage path for Accure Code extension.
+   * - macOS: ~/Library/Application Support/Code/User/globalStorage/accure.accure-code
+   * - Windows: %APPDATA%/Code/User/globalStorage/accure.accure-code
+   * - Linux: ~/.config/Code/User/globalStorage/accure.accure-code
    */
   export function vscodeGlobalStorage(): string {
     const home = os.homedir()
     switch (process.platform) {
       case "darwin":
-        return path.join(home, "Library", "Application Support", "Code", "User", "globalStorage", "kilocode.kilo-code")
+        return path.join(home, "Library", "Application Support", "Code", "User", "globalStorage", "accure.accure-code")
       case "win32":
         return path.join(
           process.env.APPDATA || path.join(home, "AppData", "Roaming"),
           "Code",
           "User",
           "globalStorage",
-          "kilocode.kilo-code",
+          "accure.accure-code",
         )
       default:
-        return path.join(home, ".config", "Code", "User", "globalStorage", "kilocode.kilo-code")
+        return path.join(home, ".config", "Code", "User", "globalStorage", "accure.accure-code")
     }
   }
 

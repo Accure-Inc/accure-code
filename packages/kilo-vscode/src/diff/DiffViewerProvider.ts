@@ -21,7 +21,7 @@ export interface DiffViewerProviderOptions {
  * DiffSource.
  */
 export class DiffViewerProvider implements vscode.Disposable {
-  public static readonly viewType = "kilo-code.new.DiffViewerPanel"
+  public static readonly viewType = "accure-code.DiffViewerPanel"
 
   private panel: vscode.WebviewPanel | undefined
   private ctx: PanelContext | undefined
@@ -62,7 +62,7 @@ export class DiffViewerProvider implements vscode.Disposable {
   }
 
   /**
-   * Entry point for the `kilo-code.new.showChanges` command. Composes the
+   * Entry point for the `accure-code.showChanges` command. Composes the
    * PanelContext from the arg + injected session/workspace lookups so
    * callers don't have to know about it.
    *
@@ -210,7 +210,7 @@ export class DiffViewerProvider implements vscode.Disposable {
     void this.panel.webview.postMessage({
       type: "ready",
       vscodeLanguage: vscode.env.language,
-      languageOverride: vscode.workspace.getConfiguration("kilo-code.new").get<string>("language"),
+      languageOverride: vscode.workspace.getConfiguration("accure-code").get<string>("language"),
       fontSize: getWebviewFontSize(),
       workspaceDirectory: getWorkspaceRoot(),
     })

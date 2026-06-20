@@ -34,13 +34,13 @@ export function formatKeybinding(raw: string, mac: boolean): string {
 }
 
 /** Agent Manager command prefix for keybinding extraction. */
-const AM_PREFIX = "kilo-code.new.agentManager."
+const AM_PREFIX = "accure-code.agentManager."
 
 /** Global commands whose keybindings are forwarded to the webview. */
 const GLOBAL_KEYBINDINGS: Record<string, string> = {
-  "kilo-code.new.agentManagerOpen": "agentManagerOpen",
-  "kilo-code.new.cycleAgentMode": "cycleAgentMode",
-  "kilo-code.new.cyclePreviousAgentMode": "cyclePreviousAgentMode",
+  "accure-code.agentManagerOpen": "agentManagerOpen",
+  "accure-code.cycleAgentMode": "cycleAgentMode",
+  "accure-code.cyclePreviousAgentMode": "cyclePreviousAgentMode",
 }
 
 /**
