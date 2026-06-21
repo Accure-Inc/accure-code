@@ -101,6 +101,7 @@
     "@kilocode/plugin": "workspace:*",
     "@kilocode/sdk": "workspace:*",
     "@opencode-ai/script": "workspace:*",
+    "@rollup/rollup-darwin-x64": "4.61.1",
     "@typescript/native-preview-darwin-x64": "7.0.0-dev.20260316.1",
     "typescript": "catalog:"
   },
