@@ -586,8 +586,8 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
         autoload: false,
         options: {
           headers: {
-            "HTTP-Referer": "https://kilo.ai/", // kilocode_change
-            "X-Title": "Kilo Code", // kilocode_change
+            "HTTP-Referer": "https://accure.ai/", // kilocode_change
+            "X-Title": "Accure Code", // kilocode_change
           },
         },
       }),
