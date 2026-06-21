@@ -393,6 +393,6 @@ Action: Learn More -> https://docs.kilo.ai/skills
 
 ## Related Files
 
-- [`notifications.ts`](../../../../kilo-gateway/src/api/notifications.ts) - Fetch function and types
-- [`routes.ts`](../../../../kilo-gateway/src/server/routes.ts) - Server endpoint `/kilo/notifications`
+- [`notifications.ts`](../../../../accure-gateway/src/api/notifications.ts) - Fetch function and types
+- [`routes.ts`](../../../../accure-gateway/src/server/routes.ts) - Server endpoint `/kilo/notifications`
 - [`app.tsx`](../../cli/cmd/tui/app.tsx) - TUI notification display logic

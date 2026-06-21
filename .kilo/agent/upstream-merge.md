@@ -248,7 +248,7 @@ be broken. Check every auto-merged file for:
 - `bun run script/check-opencode-annotations.ts` if `packages/opencode/` shared
   files changed. Note that this tool compares against the merge base via `HEAD`
   and will be silent until the merge commit lands
-- other CI guards that touched files imply (knip for `kilo-vscode/`,
+- other CI guards that touched files imply (knip for `accure-vscode/`,
   `check-kilocode-change`, source-links, visual regression,
   `script/check-forbidden-strings.ts`)
 - if you encounter a hardcoded upstream URL, repo path, or attribution string
@@ -333,7 +333,7 @@ git commit -m "chore: resync versions after upstream merge"
 ```
 
 The script rewrites every top-level `"version"` in `package.json` files
-(excluding `node_modules`, hidden dirs, and `packages/kilo-jetbrains/` which
+(excluding `node_modules`, hidden dirs, and `packages/accure-jetbrains/` which
 tracks its own cadence), plus the Zed extension toml. It is idempotent — rerun
 it any time to rebase the version back onto Kilo main (useful during
 long-running upstream merges where `main` releases in the meantime).

@@ -1,5 +1,5 @@
 import type { Command } from "@/command"
-import type { ReviewCommand } from "@kilocode/kilo-telemetry"
+import type { ReviewCommand } from "@kilocode/accure-telemetry"
 import LOCAL_REVIEW from "./local-review.txt"
 import LOCAL_REVIEW_UNCOMMITTED from "./local-review-uncommitted.txt"
 

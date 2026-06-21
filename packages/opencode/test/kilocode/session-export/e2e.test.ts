@@ -86,7 +86,7 @@ function envelope(posted: unknown[], type: ExportEvent["type"]): ExportEvent | u
 
 function request(sessionId: string): Parameters<Capture["beforeRequest"]>[0] {
   return {
-    input: { model: { api: { npm: "@kilocode/kilo-gateway" }, isFree: true }, org: { type: "personal" } },
+    input: { model: { api: { npm: "@kilocode/accure-gateway" }, isFree: true }, org: { type: "personal" } },
     requestMeta: {
       sessionId,
       rootSessionId: sessionId,

@@ -5,8 +5,8 @@ import { $ } from "bun"
 import semver from "semver"
 import { parseArgs } from "util"
 
-const props = new URL("../packages/kilo-jetbrains/gradle.properties", import.meta.url).pathname
-const log = new URL("../packages/kilo-jetbrains/CHANGELOG.md", import.meta.url).pathname
+const props = new URL("../packages/accure-jetbrains/gradle.properties", import.meta.url).pathname
+const log = new URL("../packages/accure-jetbrains/CHANGELOG.md", import.meta.url).pathname
 const repo = process.env.GH_REPO ?? process.env.GITHUB_REPOSITORY ?? "Kilo-Org/kilocode"
 
 const { values } = parseArgs({
@@ -69,7 +69,7 @@ if (dry) {
 await $`git checkout -B ${branch} ${sha}`
 await writeprops(ver)
 await writelog(ver, entry)
-await $`git add packages/kilo-jetbrains/gradle.properties packages/kilo-jetbrains/CHANGELOG.md`
+await $`git add packages/accure-jetbrains/gradle.properties packages/accure-jetbrains/CHANGELOG.md`
 
 const changed = await $`git diff --cached --quiet`.nothrow()
 if (changed.exitCode !== 0) await $`git commit -m ${`release(jetbrains): v${ver}`}`
@@ -236,7 +236,7 @@ function regex(ver: string) {
 function body(ver: string, kind: string, from: string, tag: string, sha: string, notes: string) {
   return `## Summary
 - Prepare JetBrains ${kind} release ${ver}.
-- Review \`packages/kilo-jetbrains/gradle.properties\` and edit \`packages/kilo-jetbrains/CHANGELOG.md\` before merging.
+- Review \`packages/accure-jetbrains/gradle.properties\` and edit \`packages/accure-jetbrains/CHANGELOG.md\` before merging.
 
 JetBrains-Version: ${ver}
 JetBrains-Kind: ${kind}

@@ -244,8 +244,8 @@ const PACKAGE_NAME_MAP: Record<string, string> = {
 const KILO_DEPENDENCIES: Record<string, Record<string, string>> = {
   // packages/opencode/package.json needs these
   "packages/opencode/package.json": {
-    "@kilocode/kilo-gateway": "workspace:*",
-    "@kilocode/kilo-telemetry": "workspace:*",
+    "@kilocode/accure-gateway": "workspace:*",
+    "@kilocode/accure-telemetry": "workspace:*",
   },
 }
 

@@ -116,7 +116,7 @@ paru -S kilo-bin
 | Linux x64 | `kilo-linux-x64.tar.gz` |
 | Linux ARM | `kilo-linux-arm64.tar.gz` |
 
-ملاحظات: `x64-baseline` هو بناء توافق للمعالجات القديمة التي لا تدعم AVX. `musl` هو البناء المرتبط ثابتًا لـ Alpine أو صور Docker البسيطة من دون glibc. `kilo-vscode-*.vsix` هو حزمة إضافة VS Code وليس CLI. أرشيفات `Source code` مخصصة للبناء من المصدر.
+ملاحظات: `x64-baseline` هو بناء توافق للمعالجات القديمة التي لا تدعم AVX. `musl` هو البناء المرتبط ثابتًا لـ Alpine أو صور Docker البسيطة من دون glibc. `accure-vscode-*.vsix` هو حزمة إضافة VS Code وليس CLI. أرشيفات `Source code` مخصصة للبناء من المصدر.
 
 </details>
 
@@ -157,7 +157,7 @@ kilo run --auto "run tests and fix any failures"
 
 ### المساهمة
 
-نرحب بمساهمات المطورين والكتّاب والجميع. ابدأ بـ [Contributing Guide](/CONTRIBUTING.md) لإعداد البيئة ومعايير الكود وكيفية فتح pull request. راجع [RELEASING.md](RELEASING.md) لعملية إصدار إضافة VS Code وCLI، و[packages/kilo-jetbrains/RELEASING.md](packages/kilo-jetbrains/RELEASING.md) لإضافة JetBrains.
+نرحب بمساهمات المطورين والكتّاب والجميع. ابدأ بـ [Contributing Guide](/CONTRIBUTING.md) لإعداد البيئة ومعايير الكود وكيفية فتح pull request. راجع [RELEASING.md](RELEASING.md) لعملية إصدار إضافة VS Code وCLI، و[packages/accure-jetbrains/RELEASING.md](packages/accure-jetbrains/RELEASING.md) لإضافة JetBrains.
 
 يرجى قراءة [Code of Conduct](/CODE_OF_CONDUCT.md) قبل المشاركة.
 

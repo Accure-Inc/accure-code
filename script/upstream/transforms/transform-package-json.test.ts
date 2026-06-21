@@ -14,7 +14,7 @@ test("fixScripts preserves Kilo-only root scripts from base", () => {
     scripts: {
       "dev-setup": "kilo dev-setup",
       postinstall: "bun run --cwd packages/opencode fix-node-pty && bun run script/setup-git.ts",
-      extension: "bun --cwd packages/kilo-vscode script/launch.ts",
+      extension: "bun --cwd packages/accure-vscode script/launch.ts",
     },
   }
   const pkg: Record<string, unknown> = {

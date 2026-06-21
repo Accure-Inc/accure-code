@@ -4,7 +4,7 @@ import { $ } from "bun"
 import { parseArgs } from "util"
 
 const repo = process.env.GH_REPO ?? process.env.GITHUB_REPOSITORY ?? "Kilo-Org/kilocode"
-const path = "packages/kilo-jetbrains/CHANGELOG.md"
+const path = "packages/accure-jetbrains/CHANGELOG.md"
 const { values } = parseArgs({
   args: Bun.argv.slice(2),
   options: {
@@ -78,7 +78,7 @@ function regex(ver: string) {
 }
 
 async function temp(body: object) {
-  const file = `/tmp/kilo-jetbrains-changelog-${Date.now()}.json`
+  const file = `/tmp/accure-jetbrains-changelog-${Date.now()}.json`
   await Bun.write(file, JSON.stringify(body))
   return file
 }

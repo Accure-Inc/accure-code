@@ -45,7 +45,7 @@ function sdkKey(npm: string): string | undefined {
       return "gateway"
     case "@openrouter/ai-sdk-provider":
       return "openrouter"
-    case "@kilocode/kilo-gateway": // kilocode_change
+    case "@kilocode/accure-gateway": // kilocode_change
       return "openrouter"
     case "ai-gateway-provider":
       // ai-gateway-provider/unified wraps createOpenAICompatible({ name: "Unified" }),
@@ -631,7 +631,7 @@ function googleThinkingBudgetMax(apiId: string) {
 export function variants(model: Provider.Model): Record<string, Record<string, any>> {
   // kilocode_change start
   if (
-    ["@kilocode/kilo-gateway", "@ai-sdk/openai-compatible"].includes(model.api.npm) &&
+    ["@kilocode/accure-gateway", "@ai-sdk/openai-compatible"].includes(model.api.npm) &&
     model.variants &&
     Object.keys(model.variants).length > 0
   ) {
@@ -661,7 +661,7 @@ export function variants(model: Provider.Model): Record<string, Record<string, a
 
   // see: https://docs.x.ai/docs/guides/reasoning#control-how-hard-the-model-thinks
   if (id.includes("grok") && id.includes("grok-3-mini")) {
-    if (model.api.npm === "@openrouter/ai-sdk-provider" || model.api.npm === "@kilocode/kilo-gateway") {
+    if (model.api.npm === "@openrouter/ai-sdk-provider" || model.api.npm === "@kilocode/accure-gateway") {
       // kilocode_change - add Kilo Gateway support
       return {
         low: { reasoning: { effort: "low" } },
@@ -676,7 +676,7 @@ export function variants(model: Provider.Model): Record<string, Record<string, a
   if (id.includes("grok")) return {}
 
   switch (model.api.npm) {
-    case "@kilocode/kilo-gateway": // kilocode_change
+    case "@kilocode/accure-gateway": // kilocode_change
     case "@openrouter/ai-sdk-provider":
       // kilocode_change start
       if (id.includes("glm") || id.includes("kimi") || id.includes("qwen") || id.includes("minimax")) {
@@ -694,7 +694,7 @@ export function variants(model: Provider.Model): Record<string, Record<string, a
       )
         return {}
       return Object.fromEntries(
-        (model.api.npm === "@kilocode/kilo-gateway" || !id.includes("gpt") // kilocode_change
+        (model.api.npm === "@kilocode/accure-gateway" || !id.includes("gpt") // kilocode_change
           ? OPENAI_EFFORTS
           : openaiCompatibleReasoningEfforts(id)
         ).map((effort) => [effort, { reasoning: { effort } }]),
@@ -1121,7 +1121,7 @@ export function options(input: {
   if (
     input.model.api.npm === "@openrouter/ai-sdk-provider" ||
     input.model.api.npm === "@llmgateway/ai-sdk-provider" ||
-    input.model.api.npm === "@kilocode/kilo-gateway" // kilocode_change
+    input.model.api.npm === "@kilocode/accure-gateway" // kilocode_change
   ) {
     result["usage"] = {
       include: true,
@@ -1202,7 +1202,7 @@ export function options(input: {
         input.model.api.npm === "@ai-sdk/azure" ||
         input.model.api.npm === "@ai-sdk/github-copilot" || // kilocode_change
         input.model.api.npm === "@openrouter/ai-sdk-provider" || // kilocode_change
-        input.model.api.npm === "@kilocode/kilo-gateway" // kilocode_change
+        input.model.api.npm === "@kilocode/accure-gateway" // kilocode_change
       ) {
         result["reasoningSummary"] = "auto"
       }
@@ -1214,7 +1214,7 @@ export function options(input: {
         input.model.api.npm === "@ai-sdk/azure" ||
         input.model.api.npm === "@ai-sdk/github-copilot" ||
         input.model.api.npm === "@openrouter/ai-sdk-provider" ||
-        input.model.api.npm === "@kilocode/kilo-gateway") &&
+        input.model.api.npm === "@kilocode/accure-gateway") &&
       // kilocode_change end
       input.model.api.id.includes("gpt-5.") &&
       !input.model.api.id.includes("codex") &&
@@ -1260,7 +1260,7 @@ export function smallOptions(model: Provider.Model) {
   if (
     model.providerID === "openrouter" ||
     model.providerID === "llmgateway" ||
-    model.api.npm === "@kilocode/kilo-gateway" // kilocode_change
+    model.api.npm === "@kilocode/accure-gateway" // kilocode_change
   ) {
     if (!model.capabilities.reasoning) return {} // kilocode_change - omit unsupported reasoning options
     return { reasoning: { enabled: true } } // kilocode_change - use the model's supported default effort
@@ -1312,7 +1312,7 @@ export function providerOptions(model: Provider.Model, options: { [x: string]: a
   }
 
   // kilocode_change start
-  if (model.api.npm === "@kilocode/kilo-gateway") {
+  if (model.api.npm === "@kilocode/accure-gateway") {
     return kiloProviderOptions(options)
   }
   // kilocode_change end

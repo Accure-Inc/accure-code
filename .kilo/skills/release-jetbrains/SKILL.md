@@ -14,7 +14,7 @@ This skill drives the existing JetBrains release workflows. It must not move, de
 - Run from the repository root.
 - `gh` must be authenticated for `Kilo-Org/kilocode` with permission to dispatch workflows, read PRs, and write contents. Merge permission is only required if the user asks the skill to merge the release PR automatically.
 - Check auth with `gh auth status`. For GitHub CLI OAuth, refresh common release scopes with `gh auth refresh -s repo -s workflow`; `repo` covers private-repo contents and PR operations, and `workflow` allows workflow dispatch. If using a fine-grained token instead, grant repository permissions for Actions read/write, Contents read/write, and Pull requests read/write. Merging still requires normal repository collaborator permission or a token/user allowed by branch protection.
-- Reference `packages/kilo-jetbrains/RELEASING.md` for manual recovery rules.
+- Reference `packages/accure-jetbrains/RELEASING.md` for manual recovery rules.
 - Do not locally check out the generated release branch. The helper scripts update the release branch through GitHub to avoid disturbing the current worktree.
 
 ## Version Resolution
@@ -67,7 +67,7 @@ git fetch origin refs/tags/<from-tag>:refs/tags/<from-tag> refs/tags/<tag>:refs/
 4. Use the release range and path filter as the primary relevance signal:
 
 ```bash
-git log --oneline <from-tag>..<tag> -- packages/opencode packages/kilo-jetbrains
+git log --oneline <from-tag>..<tag> -- packages/opencode packages/accure-jetbrains
 ```
 
 Keep JetBrains and CLI/runtime changes. Drop unrelated VS Code, docs, gateway, telemetry, i18n, desktop, and webview-only changes unless they affect the CLI bundled into the JetBrains plugin.
@@ -81,7 +81,7 @@ Rewrite terse commit or PR titles into user-facing bullets grouped under `### Ad
 Write the editable draft to:
 
 ```text
-packages/kilo-jetbrains/build/release/<version>-changelog.md
+packages/accure-jetbrains/build/release/<version>-changelog.md
 ```
 
 Include source context in an HTML comment so it is easy to edit but not shipped:
@@ -103,7 +103,7 @@ After the user confirms the draft is ready, strip the `<!-- CONTEXT ... -->` blo
 bun .kilo/skills/release-jetbrains/script/update-changelog.ts --version 7.0.1-rc.7 --file /path/to/clean-section.md
 ```
 
-The script updates `packages/kilo-jetbrains/CHANGELOG.md` on `jetbrains/release/v<version>` through the GitHub contents API and commits with:
+The script updates `packages/accure-jetbrains/CHANGELOG.md` on `jetbrains/release/v<version>` through the GitHub contents API and commits with:
 
 ```text
 docs(jetbrains): edit changelog for v<version>
@@ -112,7 +112,7 @@ docs(jetbrains): edit changelog for v<version>
 If `update-changelog.ts` fails with `gh: Not Found (HTTP 404)`, verify the release branch and changelog path with:
 
 ```bash
-gh api "repos/Kilo-Org/kilocode/contents/packages/kilo-jetbrains/CHANGELOG.md?ref=jetbrains/release/v<version>"
+gh api "repos/Kilo-Org/kilocode/contents/packages/accure-jetbrains/CHANGELOG.md?ref=jetbrains/release/v<version>"
 ```
 
 Then either fix and retry the helper, or perform the equivalent contents API update using `ref` in the query string.

@@ -42,10 +42,10 @@ The `publish.yml` workflow runs four jobs sequentially:
 ### 3. Build VS Code Extension (`build-vscode`)
 
 - Downloads the CLI artifacts from the previous job.
-- Runs `packages/kilo-vscode/script/build.ts` to build VSIX packages for all target platforms:
+- Runs `packages/accure-vscode/script/build.ts` to build VSIX packages for all target platforms:
   - `linux-x64`, `linux-arm64`, `alpine-x64`, `alpine-arm64`, `darwin-x64`, `darwin-arm64`, `win32-x64`, `win32-arm64`
 - Each VSIX bundles the platform-specific CLI binary.
-- Uploads the VSIX files as a workflow artifact (`kilo-vscode`).
+- Uploads the VSIX files as a workflow artifact (`accure-vscode`).
 
 ### 4. Publish (`publish`)
 

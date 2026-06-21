@@ -8,7 +8,7 @@ import { ProviderID } from "./schema"
 import { Array as Arr, Effect, Layer, Record, Result, Context, Schema } from "effect"
 
 // kilocode_change start
-import { Telemetry } from "@kilocode/kilo-telemetry"
+import { Telemetry } from "@kilocode/accure-telemetry"
 import { ModelCache } from "./model-cache"
 // kilocode_change end
 

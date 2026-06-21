@@ -54,9 +54,9 @@ Keep JetBrains markdown layout compact while making markdown colors and backgrou
 
 ## Verification
 
-- From `packages/kilo-jetbrains/`, run `./gradlew frontend:test --tests '*MdView*'`.
-- From `packages/kilo-jetbrains/`, run `./gradlew frontend:test --tests '*PlanExitViewTest*'` if the focused test is not covered by the MdView filter.
-- From `packages/kilo-jetbrains/`, run `bun run typecheck`.
+- From `packages/accure-jetbrains/`, run `./gradlew frontend:test --tests '*MdView*'`.
+- From `packages/accure-jetbrains/`, run `./gradlew frontend:test --tests '*PlanExitViewTest*'` if the focused test is not covered by the MdView filter.
+- From `packages/accure-jetbrains/`, run `bun run typecheck`.
 
 ## Constraints
 

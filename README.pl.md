@@ -114,7 +114,7 @@ Pobierz najnowszy plik binarny ze [strony Releases](https://github.com/Kilo-Org/
 | Linux x64 | `kilo-linux-x64.tar.gz` |
 | Linux ARM | `kilo-linux-arm64.tar.gz` |
 
-Uwagi: `x64-baseline` to build zgodności dla starszych CPU bez AVX. `musl` to statycznie linkowany build dla Alpine lub minimalnych obrazów Docker bez glibc. `kilo-vscode-*.vsix` to pakiet rozszerzenia VS Code, nie CLI. Archiwa `Source code` służą do budowania ze źródeł.
+Uwagi: `x64-baseline` to build zgodności dla starszych CPU bez AVX. `musl` to statycznie linkowany build dla Alpine lub minimalnych obrazów Docker bez glibc. `accure-vscode-*.vsix` to pakiet rozszerzenia VS Code, nie CLI. Archiwa `Source code` służą do budowania ze źródeł.
 
 </details>
 
@@ -155,7 +155,7 @@ Konfigurację i wszystko inne znajdziesz w [dokumentacji](https://kilo.ai/docs).
 
 ### Wkład
 
-Zapraszamy do wkładu programistów, autorów i wszystkich innych. Zacznij od [Contributing Guide](/CONTRIBUTING.md), aby skonfigurować środowisko, poznać standardy kodowania i sposób otwierania pull requestów. Zobacz [RELEASING.md](RELEASING.md) dla procesu wydawania rozszerzenia VS Code i CLI oraz [packages/kilo-jetbrains/RELEASING.md](packages/kilo-jetbrains/RELEASING.md) dla pluginu JetBrains.
+Zapraszamy do wkładu programistów, autorów i wszystkich innych. Zacznij od [Contributing Guide](/CONTRIBUTING.md), aby skonfigurować środowisko, poznać standardy kodowania i sposób otwierania pull requestów. Zobacz [RELEASING.md](RELEASING.md) dla procesu wydawania rozszerzenia VS Code i CLI oraz [packages/accure-jetbrains/RELEASING.md](packages/accure-jetbrains/RELEASING.md) dla pluginu JetBrains.
 
 Przed zaangażowaniem przeczytaj nasz [Code of Conduct](/CODE_OF_CONDUCT.md).
 

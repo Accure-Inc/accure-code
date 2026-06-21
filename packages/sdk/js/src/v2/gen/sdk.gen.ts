@@ -7715,7 +7715,7 @@ export class Telemetry extends HeyApiClient {
   /**
    * Capture telemetry event
    *
-   * Forward a telemetry event to PostHog via kilo-telemetry.
+   * Forward a telemetry event to PostHog via accure-telemetry.
    */
   public capture<ThrowOnError extends boolean = false>(
     parameters?: {

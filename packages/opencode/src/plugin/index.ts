@@ -26,7 +26,7 @@ import { InstanceState } from "@/effect/instance-state"
 import { errorMessage } from "@/util/error"
 import { PluginLoader } from "./loader"
 import { parsePluginSpecifier, readPluginId, readV1Plugin, resolvePluginId } from "./shared"
-import { KiloAuthPlugin } from "@kilocode/kilo-gateway" // kilocode_change
+import { KiloAuthPlugin } from "@kilocode/accure-gateway" // kilocode_change
 import { AtomicChatPlugin } from "@kilocode/plugin-atomic-chat" // kilocode_change
 import { registerAdapter } from "@/control-plane/adapters"
 import type { WorkspaceAdapter } from "@/control-plane/types"

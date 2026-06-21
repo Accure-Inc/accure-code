@@ -1,0 +1,190 @@
+@media (max-width: 980px) {
+  .accure-console .app-header {
+    grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr) auto;
+  }
+
+  .accure-console .config-page-header,
+  .accure-console .config-toolbar,
+  .accure-console .models-filter-primary,
+  .accure-console .overview-details,
+  .accure-console .ui-form,
+  .accure-console .model-controls,
+  .accure-console .builder,
+  .accure-console .provider-form,
+  .accure-console .mcp-market-filters,
+  .accure-console .mcp-market-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .accure-console .confirm-body {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .accure-console .confirm-actions {
+    justify-content: stretch;
+  }
+
+  .accure-console .confirm-actions [data-component="button"] {
+    flex: 1 1 auto;
+  }
+
+  .accure-console .provider,
+  .accure-console .configured-provider {
+    grid-template-columns: 1fr;
+  }
+
+  .accure-console .config-page-actions,
+  .accure-console .provider-actions,
+  .accure-console .mcp-server-tags,
+  .accure-console .ui-card-header,
+  .accure-console .theme-footer {
+    justify-content: flex-start;
+  }
+
+  .accure-console .ui-card-header,
+  .accure-console .theme-footer {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .accure-console .config-page-header {
+    align-items: end;
+    padding-block: 0.75rem;
+  }
+
+  .accure-console .server-draft {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .accure-console .compact,
+  .accure-console .model-defaults,
+  .accure-console .mini-list.columns,
+  .accure-console .mini-item,
+  .accure-console .mini-item.simple {
+    grid-template-columns: 1fr;
+  }
+
+  .accure-console .metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .accure-console .models-filter-secondary {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .accure-console .models-context-filter,
+  .accure-console .models-privacy-filter-group,
+  .accure-console .models-capabilities-filter {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .accure-console .server-strip,
+  .accure-console .server-strip-info {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .accure-console .server-strip-info {
+    gap: 0.375rem;
+  }
+
+  .accure-console .server-strip-separator {
+    display: none;
+  }
+
+  .accure-console .facts div {
+    grid-template-columns: 1fr;
+    gap: 0.125rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .accure-console .app-header {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .accure-console .header-title span,
+  .accure-console .notification-zone {
+    display: none;
+  }
+
+  .accure-console .omni-search {
+    width: 100%;
+  }
+
+  .accure-console .omni-search.expanded {
+    top: 0.5rem;
+    width: min(35rem, calc(100vw - 1rem));
+    max-height: min(70vh, calc(100vh - 1rem));
+    border-radius: 0.75rem;
+  }
+
+  .accure-console .omni-search.expanded .omni-search-head {
+    padding: 0.75rem;
+  }
+
+  .accure-console .omni-search.expanded .omni-escape {
+    min-width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.625rem;
+  }
+
+  .accure-console .omni-entry {
+    grid-template-columns: 4.75rem minmax(0, 1fr);
+    min-height: 2.5rem;
+    gap: 0.75rem;
+    padding: 0 0.75rem;
+  }
+
+  .accure-console .omni-sub,
+  .accure-console .omni-enter {
+    display: none;
+  }
+
+  .accure-console .omni-footer {
+    min-height: 2rem;
+    gap: 0.75rem;
+    padding: 0.375rem 0.75rem;
+  }
+
+  .accure-console .omni-kbd {
+    min-width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.625rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .accure-console .explore-models,
+  .accure-console .model-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .accure-console .models-capabilities-filter {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .accure-console .metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .accure-console .theme-swatches {
+    width: 6.5rem;
+  }
+
+  .accure-console .agent-builder-field-head {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .accure-console .agent-builder-field-actions {
+    justify-content: flex-start;
+  }
+}

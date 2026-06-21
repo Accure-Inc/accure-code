@@ -13,9 +13,9 @@ CI already runs and will report failures directly. Do **not** comment on:
 - `knip` unused exports
 - `kilocode_change` marker rules — both directions:
   - Missing markers on shared opencode files (`script/check-opencode-annotations.ts`)
-  - Markers present in kilo-only paths like `packages/kilo-vscode/`, `packages/kilo-ui/`, `packages/opencode/src/kilocode/` (`bun run check-kilocode-change`)
+  - Markers present in kilo-only paths like `packages/accure-vscode/`, `packages/accure-ui/`, `packages/opencode/src/kilocode/` (`bun run check-kilocode-change`)
 - Workflow allowlist drift (`script/check-workflows.ts`)
-- Stale `packages/kilo-docs/source-links.md` (`script/extract-source-links.ts`)
+- Stale `packages/accure-docs/source-links.md` (`script/extract-source-links.ts`)
 - Markdown table padding (`script/check-md-table-padding.ts`)
 - Visual regression snapshots (CI generates baselines on Linux)
 - SDK regeneration drift (`generate.yml`)
@@ -56,7 +56,7 @@ When suggesting fixes, ensure the suggestion is valid TypeScript (matched braces
 
 Kilo CLI is a fork of opencode. Minimizing diff against upstream is a top priority.
 
-- If a change modifies a shared opencode file (anything under `packages/opencode/` not in a path containing `kilocode`), ask whether the logic could live in a Kilo-only directory instead (`packages/opencode/src/kilocode/`, `packages/kilo-gateway/`, etc.) or be reduced to a smaller hook.
+- If a change modifies a shared opencode file (anything under `packages/opencode/` not in a path containing `kilocode`), ask whether the logic could live in a Kilo-only directory instead (`packages/opencode/src/kilocode/`, `packages/accure-gateway/`, etc.) or be reduced to a smaller hook.
 - Refactors or reorganizations of upstream code are a red flag — flag them unless clearly justified.
 - See `.kilo/skills/kilocode-merge-minimizer/SKILL.md` for the decision rules.
 
@@ -78,7 +78,7 @@ When `Config.Info` in `packages/opencode/src/config/config.ts` gains a new `kilo
 
 ### 7. UI changes
 
-For changes under `packages/kilo-vscode/webview-ui/`:
+For changes under `packages/accure-vscode/webview-ui/`:
 
 - Significant visual or layout changes should have a Storybook story added under `webview-ui/src/stories/`. Minor tweaks and i18n-only changes don't need one.
 - Don't ask for locally generated baseline PNGs — those must come from Linux CI.

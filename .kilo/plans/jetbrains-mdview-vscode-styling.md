@@ -6,7 +6,7 @@ Improve JetBrains markdown output so assistant/user transcript markdown visually
 
 ## Findings
 
-- VS Code markdown styling is split across `packages/ui/src/components/markdown.css`, `packages/kilo-ui/src/components/markdown.css`, `packages/kilo-ui/src/styles/vscode-bridge.css`, and message-part overrides.
+- VS Code markdown styling is split across `packages/ui/src/components/markdown.css`, `packages/accure-ui/src/components/markdown.css`, `packages/accure-ui/src/styles/vscode-bridge.css`, and message-part overrides.
 - Base VS Code markdown uses 14px sans text, 160% line height, tight first/last margins, same-size medium headings, 12px paragraph spacing, link-colored anchors, compact lists, weak list markers, weak blockquotes with a 2px left border, invisible HR spacing, bordered/padded code blocks, green inline code, and lightly bordered tables.
 - The VS Code theme bridge maps markdown roles to editor/theme tokens: heading/link/list/image use `textLinkForeground`, text/strong/code-block use editor foreground, inline code uses charts/syntax green, quote/emphasis use description foreground, HR uses panel border.
 - JetBrains markdown is rendered by `MdViewHybrid` and `MdViewHtmlPane`, with shared CSS from `MdCommon.rules()` and defaults from `MdCommon.defaults()`.
@@ -53,17 +53,17 @@ Improve JetBrains markdown output so assistant/user transcript markdown visually
    - Extend `MdViewTest` and/or `MdViewHybridTest` to assert `overrideSheet()` contains the new VS Code-equivalent rules for headings, strong/emphasis, links, inline code foreground, list/table/blockquote spacing, HR, and code block/table border separation.
    - Add component tests for code block pane styling: background, viewport background, border color, padding, scrollbar policy, and retained editor instance after `applyStyle()`.
    - Keep existing stress/leak tests green. Add a small stress assertion only if the implementation changes style application semantics.
-   - Add a changeset: `@kilocode/kilo-jetbrains` patch with user-facing wording such as `Improve markdown readability in JetBrains chat transcripts.`
+   - Add a changeset: `@kilocode/accure-jetbrains` patch with user-facing wording such as `Improve markdown readability in JetBrains chat transcripts.`
 
 ## Verification
 
-- Run targeted JetBrains markdown tests first from `packages/kilo-jetbrains/`: `./gradlew frontend:test --tests '*MdView*'` if the Gradle module supports it; otherwise run the closest supported targeted Gradle test command.
-- Run `bun run typecheck` from `packages/kilo-jetbrains/`.
-- If targeted Gradle filtering is unreliable, run `./gradlew test` from `packages/kilo-jetbrains/`.
+- Run targeted JetBrains markdown tests first from `packages/accure-jetbrains/`: `./gradlew frontend:test --tests '*MdView*'` if the Gradle module supports it; otherwise run the closest supported targeted Gradle test command.
+- Run `bun run typecheck` from `packages/accure-jetbrains/`.
+- If targeted Gradle filtering is unreliable, run `./gradlew test` from `packages/accure-jetbrains/`.
 
 ## Constraints
 
 - Do not introduce JCEF, Compose, or Kotlin UI DSL.
-- Keep changes inside `packages/kilo-jetbrains/` and `.changeset/` unless a shared Kilo UI source of truth is explicitly required.
+- Keep changes inside `packages/accure-jetbrains/` and `.changeset/` unless a shared Kilo UI source of truth is explicitly required.
 - No `kilocode_change` markers are needed for JetBrains or Kilo UI paths.
 - Prefer IntelliJ theme APIs and centralized semantic tokens over scattered literal colors.

@@ -39,7 +39,7 @@ export const TelemetryApi = HttpApi.make("telemetry")
           OpenApi.annotations({
             identifier: "telemetry.capture",
             summary: "Capture telemetry event",
-            description: "Forward a telemetry event to PostHog via kilo-telemetry.",
+            description: "Forward a telemetry event to PostHog via accure-telemetry.",
           }),
         ),
         HttpApiEndpoint.post("setEnabled", TelemetryPaths.setEnabled, {

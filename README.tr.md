@@ -114,7 +114,7 @@ En son ikili dosyayı [Releases sayfasından](https://github.com/Kilo-Org/kiloco
 | Linux x64 | `kilo-linux-x64.tar.gz` |
 | Linux ARM | `kilo-linux-arm64.tar.gz` |
 
-Notlar: `x64-baseline`, AVX olmayan eski CPU'lar için uyumluluk derlemesidir. `musl`, Alpine veya glibc olmayan minimal Docker imajları için statik bağlı derlemedir. `kilo-vscode-*.vsix` CLI değil VS Code uzantı paketidir. `Source code` arşivleri kaynaktan derlemek içindir.
+Notlar: `x64-baseline`, AVX olmayan eski CPU'lar için uyumluluk derlemesidir. `musl`, Alpine veya glibc olmayan minimal Docker imajları için statik bağlı derlemedir. `accure-vscode-*.vsix` CLI değil VS Code uzantı paketidir. `Source code` arşivleri kaynaktan derlemek içindir.
 
 </details>
 
@@ -155,7 +155,7 @@ Yapılandırma ve diğer her şey için [dokümantasyona](https://kilo.ai/docs) 
 
 ### Katkıda bulunma
 
-Geliştiricilerden, yazarlardan ve herkesten katkı bekliyoruz. Ortam kurulumu, kodlama standartları ve pull request açma hakkında bilgi için [Contributing Guide](/CONTRIBUTING.md) ile başlayın. VS Code uzantısı ve CLI yayın süreci için [RELEASING.md](RELEASING.md), JetBrains eklentisi için [packages/kilo-jetbrains/RELEASING.md](packages/kilo-jetbrains/RELEASING.md) dosyasına bakın.
+Geliştiricilerden, yazarlardan ve herkesten katkı bekliyoruz. Ortam kurulumu, kodlama standartları ve pull request açma hakkında bilgi için [Contributing Guide](/CONTRIBUTING.md) ile başlayın. VS Code uzantısı ve CLI yayın süreci için [RELEASING.md](RELEASING.md), JetBrains eklentisi için [packages/accure-jetbrains/RELEASING.md](packages/accure-jetbrains/RELEASING.md) dosyasına bakın.
 
 Katılmadan önce lütfen [Code of Conduct](/CODE_OF_CONDUCT.md) belgemizi okuyun.
 

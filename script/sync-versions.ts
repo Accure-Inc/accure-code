@@ -24,7 +24,7 @@
 //   - the five Kilo-Org download URLs inside that toml
 //
 // Intentionally NOT touched:
-//   - `packages/kilo-jetbrains/**` — the JetBrains plugin has its own release
+//   - `packages/accure-jetbrains/**` — the JetBrains plugin has its own release
 //     cadence and version number.
 //   - dependency version strings inside `package.json` — internal deps use
 //     `workspace:*` so they don't need bumping.
@@ -56,7 +56,7 @@ for await (const rel of glob.scan({ cwd: root, onlyFiles: true })) {
   if (rel.startsWith(".")) continue
   if (rel.includes("/.")) continue
   // JetBrains plugin tracks its own version.
-  if (rel.startsWith("packages/kilo-jetbrains/")) continue
+  if (rel.startsWith("packages/accure-jetbrains/")) continue
 
   const path = join(root, rel)
   const text = await Bun.file(path).text()

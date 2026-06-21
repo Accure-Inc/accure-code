@@ -1,0 +1,96 @@
+@media (max-width: 980px) {
+  .accure-console .app-header {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .accure-console .header-title {
+    display: none;
+  }
+
+  .accure-console .config-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .accure-console .config-sidebar {
+    position: static;
+    height: auto;
+    max-height: 18rem;
+    overflow-y: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .accure-console .config-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  html[data-theme="kilo"],
+  html[data-theme="accure-console"],
+  .accure-console {
+    --app-header-height: auto;
+    --app-rail-width: 3rem;
+  }
+
+  [data-slot="page-header-main"],
+  [data-component="config-row"] {
+    align-items: stretch;
+  }
+
+  [data-component="config-row"] {
+    flex-wrap: wrap;
+  }
+
+  [data-slot="config-row-trailing"] {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .accure-console {
+    --app-rail-width: 3.75rem;
+  }
+
+  .accure-console .app-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .accure-console .notification-zone {
+    display: none;
+  }
+
+  .accure-console .console-body {
+    grid-template-columns: var(--app-rail-width) minmax(0, 1fr);
+  }
+
+  .accure-console .rail {
+    padding-inline: 0.45rem;
+  }
+
+  .accure-console .rail-action,
+  .accure-console .favorite-project {
+    width: 2.35rem;
+    height: 2.35rem;
+  }
+
+  .accure-console .content,
+  .accure-console .route-empty {
+    padding: 1rem;
+  }
+
+  .accure-console .config-sidebar-title {
+    min-height: 3.75rem;
+    padding: 0 1rem;
+  }
+
+  .accure-console .content {
+    padding-top: 0;
+  }
+
+  .accure-console .config-options {
+    grid-template-columns: 1fr;
+  }
+}

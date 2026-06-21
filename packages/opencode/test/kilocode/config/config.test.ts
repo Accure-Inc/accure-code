@@ -73,7 +73,7 @@ function decode(input: unknown): Config.Info {
 }
 
 const cfg: Partial<Config.Info> = {
-  plugin: ["@kilocode/kilo-indexing"],
+  plugin: ["@kilocode/accure-indexing"],
   indexing: {
     provider: "ollama",
     vectorStore: "qdrant",

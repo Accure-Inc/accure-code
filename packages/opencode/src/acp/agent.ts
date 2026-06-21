@@ -59,7 +59,7 @@ import type {
 import { applyPatch } from "diff"
 import { InstallationVersion } from "@opencode-ai/core/installation/version"
 
-import { fetchDefaultModel } from "@kilocode/kilo-gateway" // kilocode_change
+import { fetchDefaultModel } from "@kilocode/accure-gateway" // kilocode_change
 import { ShellID } from "@/tool/shell/id"
 
 type ModeOption = { id: string; name: string; description?: string }

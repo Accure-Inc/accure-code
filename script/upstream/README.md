@@ -150,8 +150,8 @@ Configuration is defined in `utils/config.ts`:
   // Kilo-specific directories (preserved)
   kiloDirectories: [
     "packages/opencode/src/kilocode",
-    "packages/kilo-gateway",
-    "packages/kilo-telemetry",
+    "packages/accure-gateway",
+    "packages/accure-telemetry",
     // ...
   ],
 }
@@ -293,7 +293,7 @@ Options:
 
 The command pre-filters with `git diff --name-only <last-merged-upstream>..HEAD` and drops:
 
-- Kilo-only paths: anything under `packages/kilo-*/`, any `**/kilocode/**` subdir, `script/upstream/`.
+- Kilo-only paths: anything under `packages/accure-*/`, any `**/kilocode/**` subdir, `script/upstream/`.
 - Non-code assets: SVG, PNG, fonts, archives, lock files, etc. (see `SKIP_EXTENSIONS` / `SKIP_FILENAMES` in the script).
 - Files covered by the merge config's `keepOurs` or `skipFiles` lists in `utils/config.ts` — these are intentionally preserved or removed in Kilo and must not be bulk-reset.
 
