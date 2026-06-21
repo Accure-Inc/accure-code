@@ -16280,7 +16280,7 @@
             }
           }
         },
-        "description": "Forward a telemetry event to PostHog via kilo-telemetry.",
+        "description": "Forward a telemetry event to PostHog via accure-telemetry.",
         "summary": "Capture telemetry event",
         "requestBody": {
           "content": {

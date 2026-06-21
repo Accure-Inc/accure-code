@@ -1,4 +1,4 @@
-import { Telemetry } from "@kilocode/kilo-telemetry"
+import { Telemetry } from "@kilocode/accure-telemetry"
 import { Agent } from "@/agent/agent"
 import { Bus } from "@/bus"
 import { TuiEvent } from "@/cli/cmd/tui/event"

@@ -20,7 +20,7 @@ import { DialogSelect } from "@tui/ui/dialog-select"
 import { Link } from "@tui/ui/link"
 import { isKiloError, showKiloErrorToast } from "@/kilocode/kilo-errors"
 import { registerKiloCommands } from "@/kilocode/kilo-commands"
-import { initializeTUIDependencies } from "@kilocode/kilo-gateway/tui"
+import { initializeTUIDependencies } from "@kilocode/accure-gateway/tui"
 import { DialogProcessList } from "@/kilocode/cli/cmd/tui/component/dialog-process-list"
 import { useIndexingWarnings } from "@/kilocode/cli/cmd/tui/indexing-warning"
 import { KiloTerminalTitle } from "./terminal-title"
@@ -193,7 +193,7 @@ export function handleSessionError(error: unknown, toast: ReturnType<typeof useT
 /**
  * One-shot initialiser called from the App component body.
  *
- * - Injects TUI dependencies into kilo-gateway
+ * - Injects TUI dependencies into accure-gateway
  * - Registers Kilo Gateway commands (profile, teams, kiloclaw, etc.)
  * - Registers the auto-approve toggle command
  */
@@ -205,7 +205,7 @@ export function init() {
 
   useIndexingWarnings()
 
-  // Inject TUI dependencies for kilo-gateway
+  // Inject TUI dependencies for accure-gateway
   initializeTUIDependencies({
     useSync,
     useDialog,

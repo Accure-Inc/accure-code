@@ -114,7 +114,7 @@ JetBrains Marketplace에서 [Kilo Code 플러그인](https://plugins.jetbrains.c
 | Linux x64 | `kilo-linux-x64.tar.gz` |
 | Linux ARM | `kilo-linux-arm64.tar.gz` |
 
-참고: `x64-baseline`은 AVX가 없는 구형 CPU용 호환 빌드입니다. `musl`은 Alpine 또는 glibc가 없는 최소 Docker 이미지용 정적 링크 빌드입니다. `kilo-vscode-*.vsix`는 CLI가 아니라 VS Code 확장 패키지입니다. `Source code` 아카이브는 소스에서 빌드할 때 사용합니다.
+참고: `x64-baseline`은 AVX가 없는 구형 CPU용 호환 빌드입니다. `musl`은 Alpine 또는 glibc가 없는 최소 Docker 이미지용 정적 링크 빌드입니다. `accure-vscode-*.vsix`는 CLI가 아니라 VS Code 확장 패키지입니다. `Source code` 아카이브는 소스에서 빌드할 때 사용합니다.
 
 </details>
 
@@ -155,7 +155,7 @@ kilo run --auto "run tests and fix any failures"
 
 ### 기여
 
-개발자, 작성자 등 누구나 기여할 수 있습니다. 환경 설정, 코딩 표준, pull request 여는 방법은 [Contributing Guide](/CONTRIBUTING.md)에서 시작하세요. VS Code 확장과 CLI 릴리스 절차는 [RELEASING.md](RELEASING.md)를, JetBrains 플러그인은 [packages/kilo-jetbrains/RELEASING.md](packages/kilo-jetbrains/RELEASING.md)를 참조하세요.
+개발자, 작성자 등 누구나 기여할 수 있습니다. 환경 설정, 코딩 표준, pull request 여는 방법은 [Contributing Guide](/CONTRIBUTING.md)에서 시작하세요. VS Code 확장과 CLI 릴리스 절차는 [RELEASING.md](RELEASING.md)를, JetBrains 플러그인은 [packages/accure-jetbrains/RELEASING.md](packages/accure-jetbrains/RELEASING.md)를 참조하세요.
 
 참여하기 전에 [Code of Conduct](/CODE_OF_CONDUCT.md)를 읽어 주세요.
 

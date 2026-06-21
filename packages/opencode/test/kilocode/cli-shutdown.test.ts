@@ -14,7 +14,7 @@ mock.module("@opencode-ai/core/installation/version", () => ({
   InstallationVersion: "test",
 }))
 
-mock.module("@kilocode/kilo-telemetry", () => ({
+mock.module("@kilocode/accure-telemetry", () => ({
   Telemetry: {
     async init() {},
     async updateIdentity() {},
@@ -30,7 +30,7 @@ mock.module("@kilocode/kilo-telemetry", () => ({
   },
 }))
 
-mock.module("@kilocode/kilo-gateway", () => ({
+mock.module("@kilocode/accure-gateway", () => ({
   ENV_FEATURE: "KILO_FEATURE",
   ENV_VERSION: "KILO_VERSION",
   async migrateLegacyKiloAuth() {},

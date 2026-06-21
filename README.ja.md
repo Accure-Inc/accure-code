@@ -114,7 +114,7 @@ JetBrains Marketplace から [Kilo Code プラグイン](https://plugins.jetbrai
 | Linux x64 | `kilo-linux-x64.tar.gz` |
 | Linux ARM | `kilo-linux-arm64.tar.gz` |
 
-注: `x64-baseline` は AVX のない古い CPU 向けの互換ビルドです。`musl` は Alpine や glibc のない最小 Docker イメージ向けの静的リンクビルドです。`kilo-vscode-*.vsix` は VS Code 拡張機能パッケージであり、CLI ではありません。`Source code` アーカイブはソースからビルドするためのものです。
+注: `x64-baseline` は AVX のない古い CPU 向けの互換ビルドです。`musl` は Alpine や glibc のない最小 Docker イメージ向けの静的リンクビルドです。`accure-vscode-*.vsix` は VS Code 拡張機能パッケージであり、CLI ではありません。`Source code` アーカイブはソースからビルドするためのものです。
 
 </details>
 
@@ -155,7 +155,7 @@ kilo run --auto "run tests and fix any failures"
 
 ### コントリビューション
 
-開発者、ライター、その他すべての方からのコントリビューションを歓迎します。環境設定、コーディング標準、pull request の作成方法については [Contributing Guide](/CONTRIBUTING.md) から始めてください。VS Code 拡張機能と CLI のリリース手順は [RELEASING.md](RELEASING.md)、JetBrains プラグインについては [packages/kilo-jetbrains/RELEASING.md](packages/kilo-jetbrains/RELEASING.md) を参照してください。
+開発者、ライター、その他すべての方からのコントリビューションを歓迎します。環境設定、コーディング標準、pull request の作成方法については [Contributing Guide](/CONTRIBUTING.md) から始めてください。VS Code 拡張機能と CLI のリリース手順は [RELEASING.md](RELEASING.md)、JetBrains プラグインについては [packages/accure-jetbrains/RELEASING.md](packages/accure-jetbrains/RELEASING.md) を参照してください。
 
 参加する前に [Code of Conduct](/CODE_OF_CONDUCT.md) を確認してください。
 

@@ -124,7 +124,7 @@ describe("KiloPlugin", () => {
 
         expect(updated.endpoint).toEqual({
           type: "aisdk",
-          package: "@kilocode/kilo-gateway",
+          package: "@kilocode/accure-gateway",
           url: "https://api.kilo.ai/api/openrouter",
         })
         expect(updated.options.aisdk.provider.kilocodeToken).toBe("stored-token")
@@ -133,7 +133,7 @@ describe("KiloPlugin", () => {
           "aisdk.sdk",
           {
             model: model("kilo", "kilo-auto/free"),
-            package: "@kilocode/kilo-gateway",
+            package: "@kilocode/accure-gateway",
             options: updated.options.aisdk.provider,
           },
           {},

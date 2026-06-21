@@ -12,7 +12,7 @@ function model(id: string, reasoning = true): Model {
     api: {
       id,
       url: "https://api.kilo.ai/api/openrouter",
-      npm: "@kilocode/kilo-gateway",
+      npm: "@kilocode/accure-gateway",
     },
     name: id,
     capabilities: {

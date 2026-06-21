@@ -1,4 +1,4 @@
-import type { IndexingConfig } from "@kilocode/kilo-indexing/config"
+import type { IndexingConfig } from "@kilocode/accure-indexing/config"
 
 type Auth = unknown
 

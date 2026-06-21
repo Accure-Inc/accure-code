@@ -1,6 +1,6 @@
 import { Config } from "@/config/config"
 // kilocode_change start - preserve Kilo API default model overlay
-import { fetchDefaultModel } from "@kilocode/kilo-gateway"
+import { fetchDefaultModel } from "@kilocode/accure-gateway"
 import { Auth } from "@/auth"
 import { ModelID, ProviderID } from "@/provider/schema"
 import { filterPromptTrainingModels, nonEmptyProviders } from "@/kilocode/provider/model-filter"

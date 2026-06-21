@@ -8,7 +8,7 @@ Improve JetBrains session UI icon consistency and reduce accidental header inter
 - Move the session-details toggle away from compaction and place it before the session title.
 
 ## Findings
-- Session view icons are centralized in `packages/kilo-jetbrains/frontend/src/main/kotlin/ai/kilocode/client/session/views/SessionViewIcons.kt` and loaded from `frontend/src/main/resources/icons/views/*.svg`.
+- Session view icons are centralized in `packages/accure-jetbrains/frontend/src/main/kotlin/ai/kilocode/client/session/views/SessionViewIcons.kt` and loaded from `frontend/src/main/resources/icons/views/*.svg`.
 - The JetBrains `views` SVGs already mirror the shared VS Code/UI icon paths from `packages/ui/src/components/icon.tsx` for the audited names, including `brain`, `chevron-down`, `chevron-right`, `checklist`, `console`, `warning`, etc.
 - The reasoning view currently renders `SessionViewIcons.eye` in `ReasoningView.kt`; VS Code/shared UI uses the `brain` icon for reasoning/thinking surfaces, and `SessionViewIcons.brain` already exists.
 - Standard collapsible session parts use `SessionViewIcons.chevronDown` when expanded and `SessionViewIcons.chevronRight` when collapsed in `AbstractSessionPartView.kt`; `QuestionResultView.kt` repeats this pattern manually. The down/right SVG paths have different visual extents.
@@ -53,11 +53,11 @@ Improve JetBrains session UI icon consistency and reduce accidental header inter
    - Update `ReasoningViewTest.kt` for the brain icon.
 
 6. **Verification**
-   - Run the smallest relevant JetBrains checks from `packages/kilo-jetbrains/`:
+   - Run the smallest relevant JetBrains checks from `packages/accure-jetbrains/`:
      - `./gradlew test --tests "ai.kilocode.client.session.views.ReasoningViewTest" --tests "ai.kilocode.client.session.views.base.AbstractSessionPartViewTest" --tests "ai.kilocode.client.session.views.QuestionResultViewTest" --tests "ai.kilocode.client.session.ui.header.SessionHeaderPanelTest"`
      - `./gradlew typecheck`
-   - If the filtered Gradle test syntax is not accepted by the project, run `./gradlew test` from `packages/kilo-jetbrains/` instead.
+   - If the filtered Gradle test syntax is not accepted by the project, run `./gradlew test` from `packages/accure-jetbrains/` instead.
 
 ## Notes
-- No shared upstream `opencode` files are involved; changes stay under `packages/kilo-jetbrains/`.
+- No shared upstream `opencode` files are involved; changes stay under `packages/accure-jetbrains/`.
 - A changeset may be needed because this is user-facing JetBrains UI polish; confirm existing changeset policy for the private JetBrains package during implementation.

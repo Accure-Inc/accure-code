@@ -3,7 +3,7 @@ name: vscode-visual-regression
 description: Write Storybook stories and visual regression tests for the Kilo VS Code extension webview UI
 ---
 
-Use this skill when the user asks you to add visual regression tests, screenshot tests, or Storybook stories for components in `packages/kilo-vscode/`.
+Use this skill when the user asks you to add visual regression tests, screenshot tests, or Storybook stories for components in `packages/accure-vscode/`.
 
 # Architecture
 
@@ -19,7 +19,7 @@ The test runner at `tests/visual-regression.spec.ts` is fully automatic — it f
 
 ## Step 1: Decide which story file to use
 
-Stories live in `packages/kilo-vscode/webview-ui/src/stories/`. Existing files and their scope:
+Stories live in `packages/accure-vscode/webview-ui/src/stories/`. Existing files and their scope:
 
 | File | Components covered |
 |---|---|
@@ -208,14 +208,14 @@ Baselines are generated on **Linux CI only** (font rendering differs on macOS). 
 To preview stories locally:
 
 ```bash
-# From packages/kilo-vscode/
+# From packages/accure-vscode/
 bun run storybook
 # Opens at http://localhost:6007
 ```
 
 # Reference: snapshot directory structure
 
-Snapshots live at `packages/kilo-vscode/tests/visual-regression.spec.ts-snapshots/`:
+Snapshots live at `packages/accure-vscode/tests/visual-regression.spec.ts-snapshots/`:
 
 ```
 tests/visual-regression.spec.ts-snapshots/
@@ -236,7 +236,7 @@ Example mapping:
 
 # Reference: Playwright config
 
-Key settings in `packages/kilo-vscode/playwright.config.ts`:
+Key settings in `packages/accure-vscode/playwright.config.ts`:
 
 - Default viewport: **420x720** (VS Code sidebar dimensions)
 - Narrow stories (ID ending `-200`): **200x720**
@@ -249,13 +249,13 @@ Key settings in `packages/kilo-vscode/playwright.config.ts`:
 
 The `visual-regression.yml` workflow triggers on PRs when these paths change:
 
-- `packages/kilo-ui/**`
+- `packages/accure-ui/**`
 - `packages/ui/**`
 - `packages/util/**`
 - `packages/sdk/js/**`
-- `packages/kilo-vscode/webview-ui/**`
-- `packages/kilo-vscode/.storybook/**`
-- `packages/kilo-vscode/tests/visual-regression*`
+- `packages/accure-vscode/webview-ui/**`
+- `packages/accure-vscode/.storybook/**`
+- `packages/accure-vscode/tests/visual-regression*`
 - `.github/workflows/visual-regression.yml`
 
 CI auto-commits new baselines via Git LFS and fails if screenshots changed, requiring developer review.
@@ -279,12 +279,12 @@ import { WorktreeItem } from "../../agent-manager/WorktreeItem"
 import "../../agent-manager/agent-manager.css" // Required for AM component styles
 ```
 
-kilo-ui components are imported via deep subpaths:
+accure-ui components are imported via deep subpaths:
 
 ```tsx
-import { Part } from "@kilocode/kilo-ui/message-part"
-import { BasicTool } from "@kilocode/kilo-ui/basic-tool"
-import { Button } from "@kilocode/kilo-ui/button"
+import { Part } from "@kilocode/accure-ui/message-part"
+import { BasicTool } from "@kilocode/accure-ui/basic-tool"
+import { Button } from "@kilocode/accure-ui/button"
 ```
 
 SDK types for mock data:
@@ -299,10 +299,10 @@ import type { PermissionRequest, QuestionRequest } from "../types/messages"
 The test runner renders every story with dark theme globals:
 
 ```
-globals=colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern
+globals=colorScheme:dark;theme:accure-vscode;vscodeTheme:dark-modern
 ```
 
-The `.storybook/preview.tsx` applies these via a decorator that calls `applyVscodeTheme()` / `applyKiloTheme()` from kilo-ui. Stories do NOT need to handle theming — it happens automatically.
+The `.storybook/preview.tsx` applies these via a decorator that calls `applyVscodeTheme()` / `applyKiloTheme()` from accure-ui. Stories do NOT need to handle theming — it happens automatically.
 
 # Reference: tool override registration
 

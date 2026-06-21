@@ -80,7 +80,7 @@ async function copyTreeSitterWasms(outputDir: string) {
 
 // kilocode_change start - embed Kilo Console static assets
 async function buildKiloConsole() {
-  const app = path.resolve(dir, "../kilo-console")
+  const app = path.resolve(dir, "../accure-console")
   const out = path.join(app, "dist")
   console.log("building Kilo Console")
   const proc = Bun.spawn([process.execPath, "run", "build"], {

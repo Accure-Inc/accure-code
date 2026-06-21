@@ -25,7 +25,7 @@
     "@types/npmcli__arborist": "6.3.3"
   },
   "dependencies": {
-    "@kilocode/kilo-gateway": "workspace:*",
+    "@kilocode/accure-gateway": "workspace:*",
     "@effect/opentelemetry": "catalog:",
     "@effect/platform-node": "catalog:",
     "@npmcli/arborist": "9.4.0",

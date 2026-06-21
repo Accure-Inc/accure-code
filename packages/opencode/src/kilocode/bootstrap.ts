@@ -9,7 +9,7 @@ import { Bus } from "@/bus"
 import { SessionExport } from "@/kilocode/session-export"
 import { createWorkspaceProvider } from "@/kilocode/session-export/workspace-provider"
 import { Instance } from "@/kilocode/instance"
-import { Identity } from "@kilocode/kilo-telemetry"
+import { Identity } from "@kilocode/accure-telemetry"
 
 const log = Log.create({ service: "kilocode-bootstrap" })
 

@@ -6,8 +6,8 @@ import path from "path"
 
 const root = path.resolve(import.meta.dir, "../../../..") + "/"
 
-const TABLE_PATH = root + "packages/kilo-docs/markdoc/partials/cli-commands-table.md"
-const REFERENCE_PATH = root + "packages/kilo-docs/pages/code-with-ai/platforms/cli-reference.md"
+const TABLE_PATH = root + "packages/accure-docs/markdoc/partials/cli-commands-table.md"
+const REFERENCE_PATH = root + "packages/accure-docs/pages/code-with-ai/platforms/cli-reference.md"
 
 // End-user docs describe the release CLI. dev-setup / dev-alias are hidden
 // from release builds (see InstallationBuildKind in commands.ts), so strip

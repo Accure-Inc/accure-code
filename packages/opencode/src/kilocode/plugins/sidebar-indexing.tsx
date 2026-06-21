@@ -1,6 +1,6 @@
 import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@kilocode/plugin/tui"
 import { createEffect, createMemo, createSignal, onCleanup, onMount, Show } from "solid-js"
-import type { IndexingStatus, IndexingStatusState } from "@kilocode/kilo-indexing/status"
+import type { IndexingStatus, IndexingStatusState } from "@kilocode/accure-indexing/status"
 import * as Log from "@opencode-ai/core/util/log"
 import { useSync } from "@/cli/cmd/tui/context/sync"
 import { formatIndexingLabel } from "../indexing-label"

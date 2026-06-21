@@ -13,13 +13,13 @@ import { Glob } from "bun"
 import path from "path"
 
 const ROOT = path.resolve(import.meta.dir, "..")
-const OUTPUT = path.join(ROOT, "packages/kilo-docs/source-links.md")
+const OUTPUT = path.join(ROOT, "packages/accure-docs/source-links.md")
 
 const check = process.argv.includes("--check")
 
 const DIRS = [
-  path.join(ROOT, "packages/kilo-vscode/src"),
-  path.join(ROOT, "packages/kilo-vscode/webview-ui"),
+  path.join(ROOT, "packages/accure-vscode/src"),
+  path.join(ROOT, "packages/accure-vscode/webview-ui"),
   path.join(ROOT, "packages/opencode/src"),
 ]
 
@@ -172,12 +172,12 @@ if (check) {
     .text()
     .catch(() => "")
   if (committed === output) {
-    console.log("packages/kilo-docs/source-links.md is up to date.")
+    console.log("packages/accure-docs/source-links.md is up to date.")
     process.exit(0)
   }
   console.error(
     [
-      "ERROR: packages/kilo-docs/source-links.md is out of date.",
+      "ERROR: packages/accure-docs/source-links.md is out of date.",
       "",
       "Run the following command locally and commit the result:",
       "",
@@ -189,4 +189,4 @@ if (check) {
 }
 
 await Bun.write(OUTPUT, output)
-console.log(`Wrote ${sorted.length} unique URLs to packages/kilo-docs/source-links.md`)
+console.log(`Wrote ${sorted.length} unique URLs to packages/accure-docs/source-links.md`)

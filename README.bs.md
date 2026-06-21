@@ -114,7 +114,7 @@ Preuzmite najnoviju binarnu datoteku sa [Releases stranice](https://github.com/K
 | Linux x64 | `kilo-linux-x64.tar.gz` |
 | Linux ARM | `kilo-linux-arm64.tar.gz` |
 
-Napomene: `x64-baseline` je kompatibilna verzija za starije CPU-e bez AVX-a. `musl` je statički linkovana verzija za Alpine ili minimalne Docker slike bez glibc-a. `kilo-vscode-*.vsix` je paket VS Code ekstenzije, ne CLI. `Source code` arhive služe za build iz izvornog koda.
+Napomene: `x64-baseline` je kompatibilna verzija za starije CPU-e bez AVX-a. `musl` je statički linkovana verzija za Alpine ili minimalne Docker slike bez glibc-a. `accure-vscode-*.vsix` je paket VS Code ekstenzije, ne CLI. `Source code` arhive služe za build iz izvornog koda.
 
 </details>
 
@@ -155,7 +155,7 @@ Za konfiguraciju i sve ostalo posjetite [dokumentaciju](https://kilo.ai/docs).
 
 ### Doprinos
 
-Doprinosi su dobrodošli od developera, pisaca i svih ostalih. Počnite sa [Contributing Guide](/CONTRIBUTING.md) za podešavanje okruženja, standarde kodiranja i otvaranje pull requesta. Pogledajte [RELEASING.md](RELEASING.md) za proces izdavanja VS Code ekstenzije i CLI-ja, te [packages/kilo-jetbrains/RELEASING.md](packages/kilo-jetbrains/RELEASING.md) za JetBrains plugin.
+Doprinosi su dobrodošli od developera, pisaca i svih ostalih. Počnite sa [Contributing Guide](/CONTRIBUTING.md) za podešavanje okruženja, standarde kodiranja i otvaranje pull requesta. Pogledajte [RELEASING.md](RELEASING.md) za proces izdavanja VS Code ekstenzije i CLI-ja, te [packages/accure-jetbrains/RELEASING.md](packages/accure-jetbrains/RELEASING.md) za JetBrains plugin.
 
 Prije uključivanja pročitajte naš [Code of Conduct](/CODE_OF_CONDUCT.md).
 

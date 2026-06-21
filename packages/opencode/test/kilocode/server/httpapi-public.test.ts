@@ -5,7 +5,7 @@ import { AgentBuilderPaths } from "../../../src/kilocode/server/httpapi/groups/a
 import { BackgroundProcessPaths } from "../../../src/kilocode/server/httpapi/groups/background-process"
 import { ConfigConsolePaths } from "../../../src/kilocode/server/httpapi/groups/config-console"
 import { IndexingPaths, KiloEmbeddingModel } from "../../../src/kilocode/server/httpapi/groups/indexing"
-import { KiloGatewayPaths } from "../../../src/kilocode/server/httpapi/groups/kilo-gateway"
+import { KiloGatewayPaths } from "../../../src/kilocode/server/httpapi/groups/accure-gateway"
 import { NetworkPaths } from "../../../src/kilocode/server/httpapi/groups/network"
 import { TelemetryPaths } from "../../../src/kilocode/server/httpapi/groups/telemetry"
 import { ExperimentalPaths } from "../../../src/server/routes/instance/httpapi/groups/experimental"

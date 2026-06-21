@@ -114,7 +114,7 @@ Tải binary mới nhất từ [trang Releases](https://github.com/Kilo-Org/kilo
 | Linux x64 | `kilo-linux-x64.tar.gz` |
 | Linux ARM | `kilo-linux-arm64.tar.gz` |
 
-Ghi chú: `x64-baseline` là build tương thích cho CPU cũ không có AVX. `musl` là build liên kết tĩnh cho Alpine hoặc image Docker tối giản không có glibc. `kilo-vscode-*.vsix` là gói tiện ích VS Code, không phải CLI. Các archive `Source code` dùng để build từ mã nguồn.
+Ghi chú: `x64-baseline` là build tương thích cho CPU cũ không có AVX. `musl` là build liên kết tĩnh cho Alpine hoặc image Docker tối giản không có glibc. `accure-vscode-*.vsix` là gói tiện ích VS Code, không phải CLI. Các archive `Source code` dùng để build từ mã nguồn.
 
 </details>
 
@@ -155,7 +155,7 @@ Về cấu hình và mọi thứ khác, hãy xem [tài liệu](https://kilo.ai/d
 
 ### Đóng góp
 
-Chúng tôi chào đón đóng góp từ developer, writer và tất cả mọi người. Bắt đầu với [Contributing Guide](/CONTRIBUTING.md) để thiết lập môi trường, tiêu chuẩn code và cách mở pull request. Xem [RELEASING.md](RELEASING.md) cho quy trình release tiện ích VS Code và CLI, và [packages/kilo-jetbrains/RELEASING.md](packages/kilo-jetbrains/RELEASING.md) cho plugin JetBrains.
+Chúng tôi chào đón đóng góp từ developer, writer và tất cả mọi người. Bắt đầu với [Contributing Guide](/CONTRIBUTING.md) để thiết lập môi trường, tiêu chuẩn code và cách mở pull request. Xem [RELEASING.md](RELEASING.md) cho quy trình release tiện ích VS Code và CLI, và [packages/accure-jetbrains/RELEASING.md](packages/accure-jetbrains/RELEASING.md) cho plugin JetBrains.
 
 Vui lòng đọc [Code of Conduct](/CODE_OF_CONDUCT.md) trước khi tham gia.
 

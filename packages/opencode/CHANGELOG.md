@@ -27,10 +27,10 @@
 - [#11453](https://github.com/Kilo-Org/kilocode/pull/11453) [`f7e68d1`](https://github.com/Kilo-Org/kilocode/commit/f7e68d19d9d8b23b087d3c7c92d487abced8d7ec) - Limit completion sounds to parent agent sessions.
 
 - Updated dependencies [[`ccec216`](https://github.com/Kilo-Org/kilocode/commit/ccec2162383a6f378ed5e62d630720607d185209), [`2c9e72c`](https://github.com/Kilo-Org/kilocode/commit/2c9e72c14a87387199fd42546746bbea30aa1570), [`f7e68d1`](https://github.com/Kilo-Org/kilocode/commit/f7e68d19d9d8b23b087d3c7c92d487abced8d7ec)]:
-  - @kilocode/kilo-gateway@7.4.0
+  - @kilocode/accure-gateway@7.4.0
   - @kilocode/sdk@7.3.50
-  - @kilocode/kilo-indexing@7.3.50
-  - @kilocode/kilo-telemetry@7.3.50
+  - @kilocode/accure-indexing@7.3.50
+  - @kilocode/accure-telemetry@7.3.50
   - @kilocode/plugin@7.3.50
   - @opencode-ai/ui@7.3.50
   - @kilocode/plugin-atomic-chat@7.3.50
@@ -190,13 +190,13 @@
 - [#10758](https://github.com/Kilo-Org/kilocode/pull/10758) [`e511b23`](https://github.com/Kilo-Org/kilocode/commit/e511b230ab87c3b1a594a7e1ac12e44a096a813f) Thanks [@cooper-oai](https://github.com/cooper-oai)! - Prevent concurrent Kilo processes from reusing a ChatGPT Codex refresh token.
 
 - Updated dependencies [[`9211000`](https://github.com/Kilo-Org/kilocode/commit/9211000aadd909f0d46746604c3e963966a59660), [`2fa0890`](https://github.com/Kilo-Org/kilocode/commit/2fa0890928f7dd060125ad4f4083b8bd2bf3e69b), [`973d02c`](https://github.com/Kilo-Org/kilocode/commit/973d02cfd15b3bf3eefefe92e7fb61059eba26f7), [`66af690`](https://github.com/Kilo-Org/kilocode/commit/66af6907005b99bb39a0869b35dfe1ec180cc0b5)]:
-  - @kilocode/kilo-indexing@7.4.0
+  - @kilocode/accure-indexing@7.4.0
   - @kilocode/sdk@7.4.0
   - @kilocode/plugin@7.3.47
   - @opencode-ai/ui@7.3.47
-  - @kilocode/kilo-gateway@7.3.47
+  - @kilocode/accure-gateway@7.3.47
   - @kilocode/plugin-atomic-chat@7.3.47
-  - @kilocode/kilo-telemetry@7.3.47
+  - @kilocode/accure-telemetry@7.3.47
 
 ## 7.3.46
 
@@ -267,9 +267,9 @@
 - [#11031](https://github.com/Kilo-Org/kilocode/pull/11031) [`28a26b1`](https://github.com/Kilo-Org/kilocode/commit/28a26b11c133686a4656af8be21af619c919301a) - Restore streamed responses in the CLI TUI and move code indexing status into the session sidebar.
 
 - Updated dependencies [[`a16e82a`](https://github.com/Kilo-Org/kilocode/commit/a16e82a77abf883c2c07c11464d50e08a518acd7), [`9c279a1`](https://github.com/Kilo-Org/kilocode/commit/9c279a16b4a14fc117f34d7aa19e771149031931), [`57bef8a`](https://github.com/Kilo-Org/kilocode/commit/57bef8ae68793c9b627ba0400b596bf932311e17), [`b75af0d`](https://github.com/Kilo-Org/kilocode/commit/b75af0de8865234a745f71eac03bf2bdea2271b4)]:
-  - @kilocode/kilo-indexing@7.4.0
-  - @kilocode/kilo-gateway@7.3.43
-  - @kilocode/kilo-telemetry@7.3.43
+  - @kilocode/accure-indexing@7.4.0
+  - @kilocode/accure-gateway@7.3.43
+  - @kilocode/accure-telemetry@7.3.43
   - @opencode-ai/ui@7.3.43
 
 ## 7.3.42
@@ -313,9 +313,9 @@
 - [#11010](https://github.com/Kilo-Org/kilocode/pull/11010) [`a130641`](https://github.com/Kilo-Org/kilocode/commit/a13064167df50862e9a4a8622e092ac518110281) - Compact sessions at the configured context percentage before sending an oversized provider request.
 
 - Updated dependencies [[`b0a4f03`](https://github.com/Kilo-Org/kilocode/commit/b0a4f0391106a837b78200e6de52621a6872b890)]:
-  - @kilocode/kilo-gateway@7.4.0
-  - @kilocode/kilo-indexing@7.3.41
-  - @kilocode/kilo-telemetry@7.3.41
+  - @kilocode/accure-gateway@7.4.0
+  - @kilocode/accure-indexing@7.3.41
+  - @kilocode/accure-telemetry@7.3.41
 
 ## 7.3.40
 
@@ -383,10 +383,10 @@
 
 - Updated dependencies [[`fc4cf10`](https://github.com/Kilo-Org/kilocode/commit/fc4cf10b0a65ec2b2949dd695ebec6ebb619cd15), [`a6b005d`](https://github.com/Kilo-Org/kilocode/commit/a6b005dfede302731dcbb00ac74e744333db9104)]:
   - @kilocode/sdk@7.3.23
-  - @kilocode/kilo-gateway@7.3.23
+  - @kilocode/accure-gateway@7.3.23
   - @kilocode/plugin@7.3.23
-  - @kilocode/kilo-indexing@7.3.23
-  - @kilocode/kilo-telemetry@7.3.23
+  - @kilocode/accure-indexing@7.3.23
+  - @kilocode/accure-telemetry@7.3.23
 
 ## 7.3.21
 
@@ -459,11 +459,11 @@
 - [#10618](https://github.com/Kilo-Org/kilocode/pull/10618) [`dcfadac`](https://github.com/Kilo-Org/kilocode/commit/dcfadac83ed45a109a402a2f71f4d214347804f1) - Prevent saved global indexing provider changes from temporarily reverting in active workspaces.
 
 - Updated dependencies [[`117691e`](https://github.com/Kilo-Org/kilocode/commit/117691e4d6fe48f91223bb7d7e24103c67cde73f), [`db38888`](https://github.com/Kilo-Org/kilocode/commit/db388889e867021c6bae42cbd03df6b67941b208)]:
-  - @kilocode/kilo-indexing@7.3.13
+  - @kilocode/accure-indexing@7.3.13
   - @kilocode/sdk@7.3.13
-  - @kilocode/kilo-gateway@7.4.0
+  - @kilocode/accure-gateway@7.4.0
   - @kilocode/plugin@7.3.13
-  - @kilocode/kilo-telemetry@7.3.13
+  - @kilocode/accure-telemetry@7.3.13
 
 ## 7.3.11
 
@@ -512,7 +512,7 @@
 ### Patch Changes
 
 - Updated dependencies [[`205e22e`](https://github.com/Kilo-Org/kilocode/commit/205e22ee4672305d3cb2e0c34b607a4950f8f4e8)]:
-  - @kilocode/kilo-indexing@7.3.5
+  - @kilocode/accure-indexing@7.3.5
 
 ## 7.3.3
 
@@ -556,10 +556,10 @@
 
 - Updated dependencies [[`4860e65`](https://github.com/Kilo-Org/kilocode/commit/4860e654ca1cc46c4e99acc3f40d4f1302e34944), [`1af7973`](https://github.com/Kilo-Org/kilocode/commit/1af79731a8ed925f1f69aa536ba90a53b89e8dfb), [`1ea86fb`](https://github.com/Kilo-Org/kilocode/commit/1ea86fb6e15cbe486cb0af6f26995d0b1b2745a2), [`f5dc95b`](https://github.com/Kilo-Org/kilocode/commit/f5dc95b99394c17ad7140bb034bc15a0f9de60b6)]:
   - @kilocode/sdk@7.3.0
-  - @kilocode/kilo-gateway@7.3.0
+  - @kilocode/accure-gateway@7.3.0
   - @kilocode/plugin@7.2.53
-  - @kilocode/kilo-indexing@7.2.53
-  - @kilocode/kilo-telemetry@7.2.53
+  - @kilocode/accure-indexing@7.2.53
+  - @kilocode/accure-telemetry@7.2.53
 
 ## 7.2.51
 
@@ -594,7 +594,7 @@
 - [#10060](https://github.com/Kilo-Org/kilocode/pull/10060) [`0cc0415`](https://github.com/Kilo-Org/kilocode/commit/0cc04158d0cd256ddce306bd330af3c3a328f8be) - Harden markdown rendering against malicious HTML by picking up the latest DOMPurify security fixes.
 
 - Updated dependencies [[`924f034`](https://github.com/Kilo-Org/kilocode/commit/924f034e12f3455f8cb69bb112541f887f4adfe5)]:
-  - @kilocode/kilo-indexing@7.2.48
+  - @kilocode/accure-indexing@7.2.48
 
 ## 7.2.47
 
@@ -635,10 +635,10 @@
 - [#9921](https://github.com/Kilo-Org/kilocode/pull/9921) [`e5e9d0b`](https://github.com/Kilo-Org/kilocode/commit/e5e9d0ba37bd1065aea5a9a83834c6749121e5bd) - Remove custom providers from settings when disconnecting them so they do not reappear after being disabled and re-enabled.
 
 - Updated dependencies [[`9886674`](https://github.com/Kilo-Org/kilocode/commit/98866740afd7f6c2fd06fecda1ffc69c1703974e), [`e5e9d0b`](https://github.com/Kilo-Org/kilocode/commit/e5e9d0ba37bd1065aea5a9a83834c6749121e5bd)]:
-  - @kilocode/kilo-gateway@7.3.0
+  - @kilocode/accure-gateway@7.3.0
   - @kilocode/sdk@7.3.0
-  - @kilocode/kilo-indexing@7.2.43
-  - @kilocode/kilo-telemetry@7.2.43
+  - @kilocode/accure-indexing@7.2.43
+  - @kilocode/accure-telemetry@7.2.43
   - @kilocode/plugin@7.2.43
 
 ## 7.2.42
@@ -734,9 +734,9 @@
 - [#9603](https://github.com/Kilo-Org/kilocode/pull/9603) [`4145e48`](https://github.com/Kilo-Org/kilocode/commit/4145e48e82d862178102386cd8a1c874b9415696) - Improve Windows worktree cleanup reliability when file handles are released slowly.
 
 - Updated dependencies [[`28a0eae`](https://github.com/Kilo-Org/kilocode/commit/28a0eae4b0b940482222f6671a6885b575b2ad9c), [`6130a3e`](https://github.com/Kilo-Org/kilocode/commit/6130a3ea66c6a323710fdc2d325fac87011f6b85)]:
-  - @kilocode/kilo-indexing@7.1.4
-  - @kilocode/kilo-gateway@7.2.27
-  - @kilocode/kilo-telemetry@7.2.27
+  - @kilocode/accure-indexing@7.1.4
+  - @kilocode/accure-gateway@7.2.27
+  - @kilocode/accure-telemetry@7.2.27
 
 ## 7.2.26
 
@@ -755,8 +755,8 @@
 - [#9526](https://github.com/Kilo-Org/kilocode/pull/9526) [`c8113f2`](https://github.com/Kilo-Org/kilocode/commit/c8113f27b190f5c08ce642da57d68646132e1828) - Fix multi-turn DeepSeek reasoning round-tripping on OpenRouter by bumping `@openrouter/ai-sdk-provider` to 2.8.1 in both the CLI and Kilo Gateway packages and letting the SDK handle reasoning details, plus pulling in upstream DeepSeek variant, reasoning-effort, and assistant-reasoning fixes. New DeepSeek conversations are fixed; existing sessions that already stored empty reasoning metadata may still need to be restarted.
 
 - Updated dependencies [[`c8113f2`](https://github.com/Kilo-Org/kilocode/commit/c8113f27b190f5c08ce642da57d68646132e1828)]:
-  - @kilocode/kilo-gateway@7.2.25
-  - @kilocode/kilo-telemetry@7.2.25
+  - @kilocode/accure-gateway@7.2.25
+  - @kilocode/accure-telemetry@7.2.25
 
 ## 7.2.23
 
@@ -801,8 +801,8 @@
 ### Patch Changes
 
 - Updated dependencies [[`3b73cf4`](https://github.com/Kilo-Org/kilocode/commit/3b73cf474ee7bd81ac1cb4a0153906059f3a2d3a)]:
-  - @kilocode/kilo-gateway@7.2.19
-  - @kilocode/kilo-telemetry@7.2.19
+  - @kilocode/accure-gateway@7.2.19
+  - @kilocode/accure-telemetry@7.2.19
 
 ## 7.2.18
 
@@ -827,8 +827,8 @@
 - [#9170](https://github.com/Kilo-Org/kilocode/pull/9170) [`297b988`](https://github.com/Kilo-Org/kilocode/commit/297b988a211933e106bf2864518e3542587d3f0b) - Update `@ai-sdk/amazon-bedrock` to 4.0.96 and `@ai-sdk/google-vertex` to 4.0.112, both of which include Opus 4.7 support with `xhigh` adaptive thinking effort
 
 - Updated dependencies [[`8b90eec`](https://github.com/Kilo-Org/kilocode/commit/8b90eec6d0852305ae4379088b1003c1d4e74e6a), [`448dba8`](https://github.com/Kilo-Org/kilocode/commit/448dba8ca595ff95220ab660cbc93ca40b90a19b)]:
-  - @kilocode/kilo-gateway@7.3.0
-  - @kilocode/kilo-telemetry@7.2.15
+  - @kilocode/accure-gateway@7.3.0
+  - @kilocode/accure-telemetry@7.2.15
 
 ## 7.2.14
 
@@ -849,8 +849,8 @@
 - [#9069](https://github.com/Kilo-Org/kilocode/pull/9069) [`e60c326`](https://github.com/Kilo-Org/kilocode/commit/e60c3263191c5746bea6bd93cd291c28f5d1ab0f) Thanks [@kilo-code-bot](https://github.com/apps/kilo-code-bot)! - Support adaptive reasoning for Claude Opus 4.7 and expose the `xhigh` effort level for adaptive Anthropic models
 
 - Updated dependencies [[`e65c2d9`](https://github.com/Kilo-Org/kilocode/commit/e65c2d99c0d234d3dc1dff2e75e58e22bea8ce7f)]:
-  - @kilocode/kilo-gateway@7.2.12
-  - @kilocode/kilo-telemetry@7.2.12
+  - @kilocode/accure-gateway@7.2.12
+  - @kilocode/accure-telemetry@7.2.12
 
 ## 7.2.11
 
@@ -877,5 +877,5 @@
 - [#9047](https://github.com/Kilo-Org/kilocode/pull/9047) [`bea8878`](https://github.com/Kilo-Org/kilocode/commit/bea88788f4530f57d210b98cd7205168cd8f9ae9) - Continue queued follow-up prompts after the active session turn finishes.
 
 - Updated dependencies [[`4d2f553`](https://github.com/Kilo-Org/kilocode/commit/4d2f55343b7403625c60de09460d01ab8ae268f7)]:
-  - @kilocode/kilo-gateway@7.2.11
-  - @kilocode/kilo-telemetry@7.2.11
+  - @kilocode/accure-gateway@7.2.11
+  - @kilocode/accure-telemetry@7.2.11

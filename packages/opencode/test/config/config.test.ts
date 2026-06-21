@@ -40,7 +40,7 @@ import { ConfigPlugin } from "@/config/plugin"
 import { AccountTest } from "../fake/account"
 import { AuthTest } from "../fake/auth"
 import { NpmTest } from "../fake/npm"
-import { isIndexingPlugin } from "@kilocode/kilo-indexing/detect" // kilocode_change
+import { isIndexingPlugin } from "@kilocode/accure-indexing/detect" // kilocode_change
 import { isAtomicChatPlugin } from "@/kilocode/atomic-chat-feature" // kilocode_change
 
 const testFlock = EffectFlock.defaultLayer

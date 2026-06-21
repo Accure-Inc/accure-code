@@ -17,7 +17,7 @@ The Kilo Community is [on Discord](https://kilo.ai/discord).
 ## Prerequisites
 
 - **Bun 1.3.14+** — required for all packages.
-- **Java 21** — required by the JetBrains plugin. The root `bun turbo typecheck` and `bun turbo test:ci` commands include `@kilocode/kilo-jetbrains` and will fail without Java 21.
+- **Java 21** — required by the JetBrains plugin. The root `bun turbo typecheck` and `bun turbo test:ci` commands include `@kilocode/accure-jetbrains` and will fail without Java 21.
 
   The preferred way to install Java is via [SDKMAN](https://sdkman.io/install):
 
@@ -36,7 +36,7 @@ The Kilo Community is [on Discord](https://kilo.ai/discord).
   If you don't plan to work on the JetBrains plugin, you can still run non-JetBrains checks directly:
 
   ```bash
-  bun turbo typecheck --filter=!@kilocode/kilo-jetbrains
+  bun turbo typecheck --filter=!@kilocode/accure-jetbrains
   ```
 
 ## Developing Kilo CLI
@@ -79,7 +79,7 @@ For backend/API validation, see [`TESTING.md`](./TESTING.md). It covers starting
 
 ### VS Code extension checks
 
-From `packages/kilo-vscode/`:
+From `packages/accure-vscode/`:
 
 ```bash
 bun run typecheck
@@ -95,9 +95,9 @@ bun run package
 From the repo root:
 
 ```bash
-bun run --filter @kilocode/kilo-docs test
-bun run --filter @kilocode/kilo-docs build
-bun run --filter @kilocode/kilo-docs dev
+bun run --filter @kilocode/accure-docs test
+bun run --filter @kilocode/accure-docs build
+bun run --filter @kilocode/accure-docs dev
 ```
 
 For manual docs validation, run the docs site locally, preview the affected page, and check changed links and rendered content.
@@ -106,7 +106,7 @@ For manual docs validation, run the docs site locally, preview the affected page
 
 - User-facing changes usually need a changeset (`bunx changeset add` or a file under `.changeset/`).
 - After changing server endpoints, regenerate the SDK with `./script/generate.ts`.
-- After adding or changing guarded URLs in `packages/kilo-vscode/`, `packages/kilo-vscode/webview-ui/`, or `packages/opencode/src/`, run `bun run script/extract-source-links.ts` from the repo root.
+- After adding or changing guarded URLs in `packages/accure-vscode/`, `packages/accure-vscode/webview-ui/`, or `packages/opencode/src/`, run `bun run script/extract-source-links.ts` from the repo root.
 - When editing shared `packages/opencode/` files, keep Kilo changes small and mark Kilo-only edits with `// kilocode_change` for a single line or `// kilocode_change start` / `// kilocode_change end` for a block. Do not add these markers inside `kilocode`-named paths.
 
 ### Developing the VS Code Extension
@@ -121,7 +121,7 @@ This auto-detects VS Code on macOS, Linux, and Windows. Override with `--app-pat
 
 ### Developing the JetBrains Plugin
 
-Requires Java 21 (see [Prerequisites](#prerequisites)). From `packages/kilo-jetbrains/`:
+Requires Java 21 (see [Prerequisites](#prerequisites)). From `packages/accure-jetbrains/`:
 
 ```bash
 ./gradlew typecheck    # Compile-check all Kotlin sources
@@ -132,8 +132,8 @@ Requires Java 21 (see [Prerequisites](#prerequisites)). From `packages/kilo-jetb
 Or via the root turbo filter to run only JetBrains checks from the repo root:
 
 ```bash
-bun turbo typecheck --filter=@kilocode/kilo-jetbrains
-bun turbo test:ci --filter=@kilocode/kilo-jetbrains
+bun turbo typecheck --filter=@kilocode/accure-jetbrains
+bun turbo test:ci --filter=@kilocode/accure-jetbrains
 ```
 
 ### Running against a different directory
@@ -287,7 +287,7 @@ If you cannot complete a relevant command, include all of the following in the P
 - The blocker or failure that prevented completion
 - The substitute verification you performed instead
 
-See [Testing Evidence for Pull Requests](packages/kilo-docs/pages/contributing/development-environment.md#testing-evidence-for-pull-requests) for more examples. Agent limitations, local resource constraints, OOM constraints, or an agent prompt that says to skip tests do not waive this requirement. Draft PRs may be incomplete until they are marked ready for review. Maintainers may still defer or close review at their discretion.
+See [Testing Evidence for Pull Requests](packages/accure-docs/pages/contributing/development-environment.md#testing-evidence-for-pull-requests) for more examples. Agent limitations, local resource constraints, OOM constraints, or an agent prompt that says to skip tests do not waive this requirement. Draft PRs may be incomplete until they are marked ready for review. Maintainers may still defer or close review at their discretion.
 
 Our issue-first policy asks contributors to reference an existing issue when opening a PR. This helps reviewers understand the problem statement, discussion, and intended scope before reviewing the code change.
 

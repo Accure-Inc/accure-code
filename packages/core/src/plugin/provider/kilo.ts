@@ -1,4 +1,4 @@
-import { createKilo, KILO_OPENROUTER_BASE } from "@kilocode/kilo-gateway" // kilocode_change
+import { createKilo, KILO_OPENROUTER_BASE } from "@kilocode/accure-gateway" // kilocode_change
 import { Effect } from "effect"
 import { PluginV2 } from "../../plugin"
 import { ProviderV2 } from "../../provider" // kilocode_change
@@ -20,7 +20,7 @@ export const KiloPlugin = PluginV2.define({
 
             provider.endpoint = {
               type: "aisdk",
-              package: "@kilocode/kilo-gateway",
+              package: "@kilocode/accure-gateway",
               url: KILO_OPENROUTER_BASE,
             }
             // kilocode_change end

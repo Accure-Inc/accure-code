@@ -1,5 +1,5 @@
 import { Schema } from "effect"
-import { PROMPTS, AI_SDK_PROVIDERS } from "@kilocode/kilo-gateway" // kilocode_change
+import { PROMPTS, AI_SDK_PROVIDERS } from "@kilocode/accure-gateway" // kilocode_change
 import { PositiveInt } from "@opencode-ai/core/schema"
 import { ModelStatus } from "@/provider/model-status"
 

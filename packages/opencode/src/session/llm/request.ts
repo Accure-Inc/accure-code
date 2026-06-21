@@ -21,8 +21,8 @@ import {
   HEADER_PROJECTID,
   HEADER_MACHINEID,
   HEADER_TASKID,
-} from "@kilocode/kilo-gateway"
-import { Identity } from "@kilocode/kilo-telemetry"
+} from "@kilocode/accure-gateway"
+import { Identity } from "@kilocode/accure-telemetry"
 import { KiloSession } from "@/kilocode/session"
 // kilocode_change end
 
@@ -162,7 +162,7 @@ export const prepare = Effect.fn("LLMRequestPrep.prepare")(function* (input: Pre
   )
 
   // kilocode_change start - resolve project ID and machine ID for kilo provider
-  const isKilo = input.model.api.npm === "@kilocode/kilo-gateway"
+  const isKilo = input.model.api.npm === "@kilocode/accure-gateway"
   const kiloProjectId = yield* isKilo
     ? Effect.promise(() => getKiloProjectId().catch(() => undefined))
     : Effect.succeed(undefined)

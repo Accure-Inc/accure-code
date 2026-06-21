@@ -11,7 +11,7 @@ console.log("=== publishing ===\n")
 // version job on a separate runner whose workspace was discarded.
 {
   await $`bun install`
-  const paths = ["packages/kilo-vscode/CHANGELOG.md", "packages/opencode/CHANGELOG.md"]
+  const paths = ["packages/accure-vscode/CHANGELOG.md", "packages/opencode/CHANGELOG.md"]
   const before = new Map<string, string>()
   for (const p of paths) {
     before.set(
@@ -110,7 +110,7 @@ await import(`../packages/plugin/script/publish.ts`)
 
 // kilocode_change start
 console.log("\n=== vscode ===\n")
-await import(`../packages/kilo-vscode/script/publish.ts`)
+await import(`../packages/accure-vscode/script/publish.ts`)
 // kilocode_change end
 
 // kilocode_change start - Kilo does not ship the opencode desktop app

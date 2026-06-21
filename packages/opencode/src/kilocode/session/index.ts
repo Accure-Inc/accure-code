@@ -15,7 +15,7 @@ import * as Log from "@opencode-ai/core/util/log"
 import type { ProviderMetadata, Usage } from "@opencode-ai/llm"
 import type { Provider } from "@/provider/provider"
 import { zod as toZod } from "@opencode-ai/core/effect-zod"
-import { ENV_FEATURE } from "@kilocode/kilo-gateway"
+import { ENV_FEATURE } from "@kilocode/accure-gateway"
 import { fn } from "@/kilocode/fn"
 import path from "path"
 

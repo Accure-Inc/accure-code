@@ -35,7 +35,7 @@ import { handleSuggestionEvent } from "@/kilocode/suggestion/tui/sync" // kiloco
 import { useToast } from "@tui/ui/toast" // kilocode_change
 import * as Log from "@opencode-ai/core/util/log"
 import { emptyConsoleState, type ConsoleState } from "@/config/console-state"
-import type { IndexingStatus } from "@kilocode/kilo-indexing/status" // kilocode_change
+import type { IndexingStatus } from "@kilocode/accure-indexing/status" // kilocode_change
 import path from "path"
 import { useKV } from "./kv"
 import { aggregateFailures } from "./aggregate-failures"

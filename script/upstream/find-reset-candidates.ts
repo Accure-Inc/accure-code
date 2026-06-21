@@ -49,7 +49,7 @@ interface Entry extends ClassifyResult {
 }
 
 const KILO_ONLY_PATHSPECS = [
-  ":(exclude,glob)packages/kilo-*/**",
+  ":(exclude,glob)packages/accure-*/**",
   ":(exclude,glob)**/kilocode/**",
   ":(exclude)script/upstream",
 ]

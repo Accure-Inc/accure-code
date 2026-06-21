@@ -55,7 +55,7 @@ import { KilocodeGlobalConfigStamp } from "@/kilocode/config/global-stamp"
 import {
   IndexingConfig as KiloIndexingConfig,
   IndexingSchema as KiloIndexingSchema,
-} from "@kilocode/kilo-indexing/config"
+} from "@kilocode/accure-indexing/config"
 import { unique } from "remeda"
 // kilocode_change end
 import { withTransientReadRetry } from "@/util/effect-http-client"

@@ -6,7 +6,7 @@ import { Config } from "../config/config"
 import { ConfigAgent } from "../config/agent"
 import { ConfigPermission } from "../config/permission"
 import { KilocodePaths } from "./paths"
-import type { OrganizationMode } from "@kilocode/kilo-gateway"
+import type { OrganizationMode } from "@kilocode/accure-gateway"
 
 export namespace ModesMigrator {
   // Kilocode mode structure
