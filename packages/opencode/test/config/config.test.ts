@@ -40,8 +40,8 @@ import { ConfigPlugin } from "@/config/plugin"
 import { AccountTest } from "../fake/account"
 import { AuthTest } from "../fake/auth"
 import { NpmTest } from "../fake/npm"
-import { isIndexingPlugin } from "@kilocode/accure-indexing/detect" // kilocode_change
-import { isAtomicChatPlugin } from "@/kilocode/atomic-chat-feature" // kilocode_change
+import { isIndexingPlugin } from "@accurecode/accure-indexing/detect" // accurecode_change
+import { isAtomicChatPlugin } from "@/accurecode/atomic-chat-feature" // accurecode_change
 
 const testFlock = EffectFlock.defaultLayer
 
@@ -134,7 +134,7 @@ const listDirs = (ctx: InstanceContext) =>
     ),
   )
 // Get managed config directory from environment (set in preload.ts)
-const managedConfigDir = process.env.KILO_TEST_MANAGED_CONFIG_DIR!
+const managedConfigDir = process.env.ACCURECODE_TEST_MANAGED_CONFIG_DIR!
 const originalTestToken = process.env.TEST_TOKEN
 
 beforeEach(async () => {
@@ -148,9 +148,9 @@ afterEach(async () => {
   await clear(true)
 })
 
-// kilocode_change start
-async function writeManagedSettings(settings: object, filename = "kilo.json") {
-  // kilocode_change end
+// accurecode_change start
+async function writeManagedSettings(settings: object, filename = "accure.json") {
+  // accurecode_change end
   await fs.mkdir(managedConfigDir, { recursive: true })
   await Filesystem.write(path.join(managedConfigDir, filename), JSON.stringify(settings))
 }
@@ -158,15 +158,15 @@ async function writeManagedSettings(settings: object, filename = "kilo.json") {
 const writeManagedSettingsEffect = (settings: object, filename?: string) =>
   Effect.promise(() => writeManagedSettings(settings, filename))
 
-// kilocode_change start
-async function writeConfig(dir: string, config: object, name = "kilo.json") {
-  // kilocode_change end
+// accurecode_change start
+async function writeConfig(dir: string, config: object, name = "accure.json") {
+  // accurecode_change end
   await Filesystem.write(path.join(dir, name), JSON.stringify(config))
 }
 
-// kilocode_change start
-const writeConfigEffect = (dir: string, config: object, name = "kilo.json") =>
-  // kilocode_change end
+// accurecode_change start
+const writeConfigEffect = (dir: string, config: object, name = "accure.json") =>
+  // accurecode_change end
   Effect.promise(() => writeConfig(dir, config, name))
 const mkdirEffect = (dir: string) => Effect.promise(() => fs.mkdir(dir, { recursive: true }))
 const writeTextEffect = (file: string, content: string) => Effect.promise(() => Filesystem.write(file, content))
@@ -246,21 +246,21 @@ test("creates global jsonc config with schema when no global configs exist", asy
       },
     })
 
-    const content = await Filesystem.readText(path.join(tmp.path, "kilo.jsonc")) // kilocode_change
-    expect(content).toContain('"$schema": "https://app.kilo.ai/config.json"') // kilocode_change
+    const content = await Filesystem.readText(path.join(tmp.path, "accure.jsonc")) // accurecode_change
+    expect(content).toContain('"$schema": "https://app.accurecode.ai/config.json"') // accurecode_change
   } finally {
     ;(Global.Path as { config: string }).config = prev
     await clear(true)
   }
 })
 
-test("does not create global config when KILO_CONFIG_DIR is set", async () => {
+test("does not create global config when ACCURECODE_CONFIG_DIR is set", async () => {
   await using tmp = await tmpdir()
   await using custom = await tmpdir()
   const prevConfig = Global.Path.config
-  const prevEnv = process.env.KILO_CONFIG_DIR
+  const prevEnv = process.env.ACCURECODE_CONFIG_DIR
   ;(Global.Path as { config: string }).config = tmp.path
-  process.env.KILO_CONFIG_DIR = custom.path
+  process.env.ACCURECODE_CONFIG_DIR = custom.path
   await clear(true)
 
   try {
@@ -274,37 +274,37 @@ test("does not create global config when KILO_CONFIG_DIR is set", async () => {
     expect(await Filesystem.exists(path.join(tmp.path, "opencode.jsonc"))).toBe(false)
   } finally {
     ;(Global.Path as { config: string }).config = prevConfig
-    if (prevEnv === undefined) delete process.env.KILO_CONFIG_DIR
-    else process.env.KILO_CONFIG_DIR = prevEnv
+    if (prevEnv === undefined) delete process.env.ACCURECODE_CONFIG_DIR
+    else process.env.ACCURECODE_CONFIG_DIR = prevEnv
     await clear(true)
   }
 })
 
 it.instance("loads JSON config file", () =>
   Effect.gen(function* () {
-    // kilocode_change start
+    // accurecode_change start
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json",
+      $schema: "https://app.accurecode.ai/config.json",
       model: "test/model",
       username: "testuser",
     })
-    // kilocode_change end
+    // accurecode_change end
     const config = yield* Config.use.get()
     expect(config.model).toBe("test/model")
     expect(config.username).toBe("testuser")
   }),
 )
 
-// kilocode_change start
-it.instance("preserves Kilo provider free model metadata", () =>
+// accurecode_change start
+it.instance("preserves Accure provider free model metadata", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json",
-      model: "kilo/free-e2e",
+      $schema: "https://app.accurecode.ai/config.json",
+      model: "accure/free-e2e",
       provider: {
-        kilo: {
+        accurecode: {
           models: {
             "free-e2e": {
               id: "free-e2e",
@@ -316,12 +316,12 @@ it.instance("preserves Kilo provider free model metadata", () =>
       },
     })
     const config = yield* Config.use.get()
-    const model = config.provider?.kilo?.models?.["free-e2e"]
+    const model = config.provider?.accurecode?.models?.["free-e2e"]
     expect(model?.isFree).toBe(true)
     expect(model?.ai_sdk_provider).toBe("openai-compatible")
   }),
 )
-// kilocode_change end
+// accurecode_change end
 
 it.instance(
   "loads shell config field",
@@ -335,20 +335,20 @@ it.instance(
 it.instance("updates config and preserves empty shell sentinel", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
-    // kilocode_change - upstream hardcodes project config to config.json; Kilo writes to kilo.json
+    // accurecode_change - upstream hardcodes project config to config.json; Accure writes to accure.json
     yield* writeConfigEffect(test.directory, { $schema: "https://opencode.ai/config.json", shell: "bash" })
 
     yield* Config.Service.use((svc) => svc.update(ConfigParse.schema(Config.Info, { shell: "" }, "test:config")))
 
     const writtenConfig = yield* Effect.promise(
-      () => Filesystem.readJson<{ shell?: string }>(path.join(test.directory, "kilo.json")), // kilocode_change
+      () => Filesystem.readJson<{ shell?: string }>(path.join(test.directory, "accure.json")), // accurecode_change
     )
     expect(writtenConfig.shell).toBe("")
   }),
 )
 
 test("updates global config and omits empty shell key in json", async () => {
-  // kilocode_change - globalConfigFile() prefers kilo.json over opencode.json
+  // accurecode_change - globalConfigFile() prefers accure.json over opencode.json
   await using tmp = await tmpdir({
     init: async (dir) => {
       await writeConfig(dir, {
@@ -366,7 +366,7 @@ test("updates global config and omits empty shell key in json", async () => {
     await saveGlobal({ shell: "" })
 
     const writtenConfig = await Filesystem.readJson<{ shell?: string }>(
-      path.join(tmp.path, "kilo.json"), // kilocode_change
+      path.join(tmp.path, "accure.json"), // accurecode_change
     )
     expect("shell" in writtenConfig).toBe(false)
   } finally {
@@ -465,15 +465,15 @@ it.instance("loads JSONC config file", () =>
     const test = yield* TestInstance
     yield* Effect.promise(() =>
       Filesystem.write(
-        // kilocode_change start
-        path.join(test.directory, "kilo.jsonc"),
+        // accurecode_change start
+        path.join(test.directory, "accure.jsonc"),
         `{
         // This is a comment
-        "$schema": "https://app.kilo.ai/config.json",
+        "$schema": "https://app.accurecode.ai/config.json",
         "model": "test/model",
         "username": "testuser"
       }`,
-        // kilocode_change end
+        // accurecode_change end
       ),
     )
     const config = yield* Config.use.get()
@@ -488,14 +488,14 @@ it.instance("jsonc overrides json in the same directory", () =>
     yield* writeConfigEffect(
       test.directory,
       {
-        $schema: "https://app.kilo.ai/config.json", // kilocode_change
+        $schema: "https://app.accurecode.ai/config.json", // accurecode_change
         model: "base",
         username: "base",
       },
-      "kilo.jsonc", // kilocode_change
+      "accure.jsonc", // accurecode_change
     )
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       model: "override",
     })
     const config = yield* Config.use.get()
@@ -504,16 +504,16 @@ it.instance("jsonc overrides json in the same directory", () =>
   }),
 )
 
-// kilocode_change start
-it.instance("prefers .kilo directory config over legacy .kilocode", () =>
+// accurecode_change start
+it.instance("prefers .accurecode directory config over legacy .accurecode", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
-    yield* writeConfigEffect(path.join(test.directory, ".kilocode"), {
-      $schema: "https://app.kilo.ai/config.json",
+    yield* writeConfigEffect(path.join(test.directory, ".accurecode"), {
+      $schema: "https://app.accurecode.ai/config.json",
       model: "legacy/model",
     })
-    yield* writeConfigEffect(path.join(test.directory, ".kilo"), {
-      $schema: "https://app.kilo.ai/config.json",
+    yield* writeConfigEffect(path.join(test.directory, ".accurecode"), {
+      $schema: "https://app.accurecode.ai/config.json",
       model: "new/model",
     })
 
@@ -521,7 +521,7 @@ it.instance("prefers .kilo directory config over legacy .kilocode", () =>
     expect(config.model).toBe("new/model")
   }),
 )
-// kilocode_change end
+// accurecode_change end
 
 it.instance("handles environment variable substitution", () =>
   withProcessEnv(
@@ -530,7 +530,7 @@ it.instance("handles environment variable substitution", () =>
     Effect.gen(function* () {
       const test = yield* TestInstance
       yield* writeConfigEffect(test.directory, {
-        $schema: "https://app.kilo.ai/config.json", // kilocode_change
+        $schema: "https://app.accurecode.ai/config.json", // accurecode_change
         username: "{env:TEST_VAR}",
       })
       const config = yield* Config.use.get()
@@ -548,7 +548,7 @@ it.instance("preserves env variables when adding $schema to config", () =>
       // Config without $schema - should trigger auto-add
       yield* Effect.promise(() =>
         Filesystem.write(
-          path.join(test.directory, "kilo.json"), // kilocode_change
+          path.join(test.directory, "accure.json"), // accurecode_change
           JSON.stringify({
             username: "{env:PRESERVE_VAR}",
           }),
@@ -559,7 +559,7 @@ it.instance("preserves env variables when adding $schema to config", () =>
 
       // Read the file to verify the env variable was preserved
       const content = yield* Effect.promise(
-        () => Filesystem.readText(path.join(test.directory, "kilo.json")), // kilocode_change
+        () => Filesystem.readText(path.join(test.directory, "accure.json")), // accurecode_change
       )
       expect(content).toContain("{env:PRESERVE_VAR}")
       expect(content).not.toContain("secret_value")
@@ -573,7 +573,7 @@ it.instance("handles file inclusion substitution", () =>
     const test = yield* TestInstance
     yield* Effect.promise(() => Filesystem.write(path.join(test.directory, "included.txt"), "test-user"))
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       username: "{file:included.txt}",
     })
     const config = yield* Config.use.get()
@@ -588,7 +588,7 @@ it.instance("handles file inclusion with replacement tokens", () =>
       Filesystem.write(path.join(test.directory, "included.md"), "const out = await Bun.$`echo hi`"),
     )
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       username: "{file:included.md}",
     })
     const config = yield* Config.use.get()
@@ -597,7 +597,7 @@ it.instance("handles file inclusion with replacement tokens", () =>
 )
 
 test("resolves env templates in account config with account token", async () => {
-  const originalControlToken = process.env["KILO_CONSOLE_TOKEN"]
+  const originalControlToken = process.env["ACCURECODE_CONSOLE_TOKEN"]
 
   const fakeAccount = Layer.mock(Account.Service)({
     active: () =>
@@ -627,7 +627,7 @@ test("resolves env templates in account config with account token", async () => 
     config: () =>
       Effect.succeed(
         Option.some({
-          provider: { opencode: { options: { apiKey: "{env:KILO_CONSOLE_TOKEN}" } } },
+          provider: { opencode: { options: { apiKey: "{env:ACCURECODE_CONSOLE_TOKEN}" } } },
         }),
       ),
     token: () => Effect.succeed(Option.some(AccessToken.make("st_test_token"))),
@@ -646,19 +646,19 @@ test("resolves env templates in account config with account token", async () => 
     ).pipe(Effect.scoped, Effect.provide(layer), Effect.runPromise)
   } finally {
     if (originalControlToken !== undefined) {
-      process.env["KILO_CONSOLE_TOKEN"] = originalControlToken
+      process.env["ACCURECODE_CONSOLE_TOKEN"] = originalControlToken
     } else {
-      delete process.env["KILO_CONSOLE_TOKEN"]
+      delete process.env["ACCURECODE_CONSOLE_TOKEN"]
     }
   }
 })
 
-// kilocode_change start
+// accurecode_change start
 it.instance("validates config schema and reports warning on invalid fields", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json",
+      $schema: "https://app.accurecode.ai/config.json",
       invalid_field: "should cause error",
     })
     // invalid schema surfaces as warnings, not a throw
@@ -667,26 +667,26 @@ it.instance("validates config schema and reports warning on invalid fields", () 
     expect(issues.length).toBeGreaterThan(0)
   }),
 )
-// kilocode_change end
+// accurecode_change end
 
-// kilocode_change start
+// accurecode_change start
 it.instance("reports warning for invalid JSON", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
-    yield* Effect.promise(() => Filesystem.write(path.join(test.directory, "kilo.json"), "{ invalid json }"))
+    yield* Effect.promise(() => Filesystem.write(path.join(test.directory, "accure.json"), "{ invalid json }"))
     // invalid JSON surfaces as a warning, not a throw
     yield* Config.use.get()
     const issues = yield* Config.Service.use((svc) => svc.warnings())
     expect(issues.length).toBeGreaterThan(0)
   }),
 )
-// kilocode_change end
+// accurecode_change end
 
 it.instance("handles agent configuration", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       agent: {
         test_agent: {
           model: "test/model",
@@ -710,7 +710,7 @@ it.instance("treats agent variant as model-scoped setting (not provider option)"
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       agent: {
         test_agent: {
           model: "openai/gpt-5.2",
@@ -734,7 +734,7 @@ it.instance("handles command configuration", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       command: {
         test_command: {
           template: "test template",
@@ -756,7 +756,7 @@ it.instance("migrates autoshare to share field", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       autoshare: true,
     })
     const config = yield* Config.use.get()
@@ -769,7 +769,7 @@ it.instance("migrates mode field to agent field", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       mode: {
         test_mode: {
           model: "test/model",
@@ -788,14 +788,14 @@ it.instance("migrates mode field to agent field", () =>
   }),
 )
 
-// kilocode_change start
-it.instance("loads config from .kilo directory", () =>
-  // kilocode_change end
+// accurecode_change start
+it.instance("loads config from .accurecode directory", () =>
+  // accurecode_change end
   Effect.gen(function* () {
     const test = yield* TestInstance
-    yield* mkdirEffect(path.join(test.directory, ".kilo", "agent")) // kilocode_change
+    yield* mkdirEffect(path.join(test.directory, ".accurecode", "agent")) // accurecode_change
     yield* writeTextEffect(
-      path.join(test.directory, ".kilo", "agent", "test.md"), // kilocode_change
+      path.join(test.directory, ".accurecode", "agent", "test.md"), // accurecode_change
       `---
 model: test/model
 ---
@@ -833,14 +833,14 @@ Ordered permissions`,
   }),
 )
 
-// kilocode_change start
-it.instance("loads agents from .kilo/agents (plural)", () =>
-  // kilocode_change end
+// accurecode_change start
+it.instance("loads agents from .accurecode/agents (plural)", () =>
+  // accurecode_change end
   Effect.gen(function* () {
     const test = yield* TestInstance
-    yield* mkdirEffect(path.join(test.directory, ".kilo", "agents", "nested")) // kilocode_change
+    yield* mkdirEffect(path.join(test.directory, ".accurecode", "agents", "nested")) // accurecode_change
     yield* writeTextEffect(
-      path.join(test.directory, ".kilo", "agents", "helper.md"), // kilocode_change
+      path.join(test.directory, ".accurecode", "agents", "helper.md"), // accurecode_change
       `---
 model: test/model
 mode: subagent
@@ -849,7 +849,7 @@ Helper agent prompt`,
     )
 
     yield* writeTextEffect(
-      path.join(test.directory, ".kilo", "agents", "nested", "child.md"), // kilocode_change
+      path.join(test.directory, ".accurecode", "agents", "nested", "child.md"), // accurecode_change
       `---
 model: test/model
 mode: subagent
@@ -875,14 +875,14 @@ Nested agent prompt`,
   }),
 )
 
-// kilocode_change start
-it.instance("loads commands from .kilo/command (singular)", () =>
-  // kilocode_change end
+// accurecode_change start
+it.instance("loads commands from .accurecode/command (singular)", () =>
+  // accurecode_change end
   Effect.gen(function* () {
     const test = yield* TestInstance
-    yield* mkdirEffect(path.join(test.directory, ".kilo", "command", "nested")) // kilocode_change
+    yield* mkdirEffect(path.join(test.directory, ".accurecode", "command", "nested")) // accurecode_change
     yield* writeTextEffect(
-      path.join(test.directory, ".kilo", "command", "hello.md"), // kilocode_change
+      path.join(test.directory, ".accurecode", "command", "hello.md"), // accurecode_change
       `---
 description: Test command
 ---
@@ -890,7 +890,7 @@ Hello from singular command`,
     )
 
     yield* writeTextEffect(
-      path.join(test.directory, ".kilo", "command", "nested", "child.md"), // kilocode_change
+      path.join(test.directory, ".accurecode", "command", "nested", "child.md"), // accurecode_change
       `---
 description: Nested command
 ---
@@ -911,14 +911,14 @@ Nested command template`,
   }),
 )
 
-// kilocode_change start
-it.instance("loads commands from .kilo/commands (plural)", () =>
-  // kilocode_change end
+// accurecode_change start
+it.instance("loads commands from .accurecode/commands (plural)", () =>
+  // accurecode_change end
   Effect.gen(function* () {
     const test = yield* TestInstance
-    yield* mkdirEffect(path.join(test.directory, ".kilo", "commands", "nested")) // kilocode_change
+    yield* mkdirEffect(path.join(test.directory, ".accurecode", "commands", "nested")) // accurecode_change
     yield* writeTextEffect(
-      path.join(test.directory, ".kilo", "commands", "hello.md"), // kilocode_change
+      path.join(test.directory, ".accurecode", "commands", "hello.md"), // accurecode_change
       `---
 description: Test command
 ---
@@ -926,7 +926,7 @@ Hello from plural commands`,
     )
 
     yield* writeTextEffect(
-      path.join(test.directory, ".kilo", "commands", "nested", "child.md"), // kilocode_change
+      path.join(test.directory, ".accurecode", "commands", "nested", "child.md"), // accurecode_change
       `---
 description: Nested command
 ---
@@ -947,19 +947,19 @@ Nested command template`,
   }),
 )
 
-// kilocode_change start
-it.instance("prefers .kilo commands over legacy .kilocode commands", () =>
+// accurecode_change start
+it.instance("prefers .accurecode commands over legacy .accurecode commands", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeTextEffect(
-      path.join(test.directory, ".kilocode", "command", "hello.md"),
+      path.join(test.directory, ".accurecode", "command", "hello.md"),
       `---
 description: Legacy command
 ---
 Hello from legacy command`,
     )
     yield* writeTextEffect(
-      path.join(test.directory, ".kilo", "command", "hello.md"),
+      path.join(test.directory, ".accurecode", "command", "hello.md"),
       `---
 description: New command
 ---
@@ -973,7 +973,7 @@ Hello from new command`,
     })
   }),
 )
-// kilocode_change end
+// accurecode_change end
 
 it.instance("updates config and writes to file", () =>
   Effect.gen(function* () {
@@ -983,7 +983,7 @@ it.instance("updates config and writes to file", () =>
     )
 
     const writtenConfig = yield* Effect.promise(
-      () => Filesystem.readJson<{ model: string }>(path.join(test.directory, ".kilo", "kilo.jsonc")), // kilocode_change
+      () => Filesystem.readJson<{ model: string }>(path.join(test.directory, ".accurecode", "accure.jsonc")), // accurecode_change
     )
     expect(writtenConfig.model).toBe("updated/model")
   }),
@@ -996,7 +996,7 @@ it.instance("gets config directories", () =>
   }),
 )
 
-test("does not try to install dependencies in read-only KILO_CONFIG_DIR", async () => {
+test("does not try to install dependencies in read-only ACCURECODE_CONFIG_DIR", async () => {
   if (process.platform === "win32") return
 
   await using tmp = await tmpdir<string>({
@@ -1013,8 +1013,8 @@ test("does not try to install dependencies in read-only KILO_CONFIG_DIR", async 
     },
   })
 
-  const prev = process.env.KILO_CONFIG_DIR
-  process.env.KILO_CONFIG_DIR = tmp.extra
+  const prev = process.env.ACCURECODE_CONFIG_DIR
+  process.env.ACCURECODE_CONFIG_DIR = tmp.extra
 
   try {
     await withTestInstance({
@@ -1024,12 +1024,12 @@ test("does not try to install dependencies in read-only KILO_CONFIG_DIR", async 
       },
     })
   } finally {
-    if (prev === undefined) delete process.env.KILO_CONFIG_DIR
-    else process.env.KILO_CONFIG_DIR = prev
+    if (prev === undefined) delete process.env.ACCURECODE_CONFIG_DIR
+    else process.env.ACCURECODE_CONFIG_DIR = prev
   }
 })
 
-test("installs dependencies in writable KILO_CONFIG_DIR", async () => {
+test("installs dependencies in writable ACCURECODE_CONFIG_DIR", async () => {
   await using tmp = await tmpdir<string>({
     init: async (dir) => {
       const cfg = path.join(dir, "configdir")
@@ -1038,8 +1038,8 @@ test("installs dependencies in writable KILO_CONFIG_DIR", async () => {
     },
   })
 
-  const prev = process.env.KILO_CONFIG_DIR
-  process.env.KILO_CONFIG_DIR = tmp.extra
+  const prev = process.env.ACCURECODE_CONFIG_DIR
+  process.env.ACCURECODE_CONFIG_DIR = tmp.extra
 
   const testLayer = configLayer()
 
@@ -1065,8 +1065,8 @@ test("installs dependencies in writable KILO_CONFIG_DIR", async () => {
     expect(await Filesystem.exists(path.join(tmp.extra, ".gitignore"))).toBe(true)
     expect(await Filesystem.readText(path.join(tmp.extra, ".gitignore"))).toContain("package-lock.json")
   } finally {
-    if (prev === undefined) delete process.env.KILO_CONFIG_DIR
-    else process.env.KILO_CONFIG_DIR = prev
+    if (prev === undefined) delete process.env.ACCURECODE_CONFIG_DIR
+    else process.env.ACCURECODE_CONFIG_DIR = prev
   }
 })
 
@@ -1107,25 +1107,25 @@ it.instance("resolves scoped npm plugins in config", () =>
 test("merges plugin arrays from global and local configs", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
-      // kilocode_change - Create a nested project structure with local .kilo config
+      // accurecode_change - Create a nested project structure with local .accurecode config
       const projectDir = path.join(dir, "project")
-      const opencodeDir = path.join(projectDir, ".kilo") // kilocode_change
+      const opencodeDir = path.join(projectDir, ".accurecode") // accurecode_change
       await fs.mkdir(opencodeDir, { recursive: true })
 
       // Global config with plugins
       await Filesystem.write(
-        path.join(dir, "kilo.json"), // kilocode_change
+        path.join(dir, "accure.json"), // accurecode_change
         JSON.stringify({
-          $schema: "https://app.kilo.ai/config.json", // kilocode_change
+          $schema: "https://app.accurecode.ai/config.json", // accurecode_change
           plugin: ["global-plugin-1", "global-plugin-2"],
         }),
       )
 
-      // kilocode_change - Local .kilo config with different plugins
+      // accurecode_change - Local .accurecode config with different plugins
       await Filesystem.write(
-        path.join(opencodeDir, "kilo.json"), // kilocode_change
+        path.join(opencodeDir, "accure.json"), // accurecode_change
         JSON.stringify({
-          $schema: "https://app.kilo.ai/config.json", // kilocode_change
+          $schema: "https://app.accurecode.ai/config.json", // accurecode_change
           plugin: ["local-plugin-1"],
         }),
       )
@@ -1153,9 +1153,9 @@ test("merges plugin arrays from global and local configs", async () => {
 it.instance("does not error when only custom agent is a subagent", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
-    yield* mkdirEffect(path.join(test.directory, ".kilo", "agent")) // kilocode_change
+    yield* mkdirEffect(path.join(test.directory, ".accurecode", "agent")) // accurecode_change
     yield* writeTextEffect(
-      path.join(test.directory, ".kilo", "agent", "helper.md"), // kilocode_change
+      path.join(test.directory, ".accurecode", "agent", "helper.md"), // accurecode_change
       `---
 model: test/model
 mode: subagent
@@ -1177,21 +1177,21 @@ test("merges instructions arrays from global and local configs", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       const projectDir = path.join(dir, "project")
-      const opencodeDir = path.join(projectDir, ".kilo") // kilocode_change
+      const opencodeDir = path.join(projectDir, ".accurecode") // accurecode_change
       await fs.mkdir(opencodeDir, { recursive: true })
 
       await Filesystem.write(
-        path.join(dir, "kilo.json"), // kilocode_change
+        path.join(dir, "accure.json"), // accurecode_change
         JSON.stringify({
-          $schema: "https://app.kilo.ai/config.json", // kilocode_change
+          $schema: "https://app.accurecode.ai/config.json", // accurecode_change
           instructions: ["global-instructions.md", "shared-rules.md"],
         }),
       )
 
       await Filesystem.write(
-        path.join(opencodeDir, "kilo.json"), // kilocode_change
+        path.join(opencodeDir, "accure.json"), // accurecode_change
         JSON.stringify({
-          $schema: "https://app.kilo.ai/config.json", // kilocode_change
+          $schema: "https://app.accurecode.ai/config.json", // accurecode_change
           instructions: ["local-instructions.md"],
         }),
       )
@@ -1216,21 +1216,21 @@ test("deduplicates duplicate instructions from global and local configs", async 
   await using tmp = await tmpdir({
     init: async (dir) => {
       const projectDir = path.join(dir, "project")
-      const opencodeDir = path.join(projectDir, ".kilo") // kilocode_change
+      const opencodeDir = path.join(projectDir, ".accurecode") // accurecode_change
       await fs.mkdir(opencodeDir, { recursive: true })
 
       await Filesystem.write(
-        path.join(dir, "kilo.json"), // kilocode_change
+        path.join(dir, "accure.json"), // accurecode_change
         JSON.stringify({
-          $schema: "https://app.kilo.ai/config.json", // kilocode_change
+          $schema: "https://app.accurecode.ai/config.json", // accurecode_change
           instructions: ["duplicate.md", "global-only.md"],
         }),
       )
 
       await Filesystem.write(
-        path.join(opencodeDir, "kilo.json"), // kilocode_change
+        path.join(opencodeDir, "accure.json"), // accurecode_change
         JSON.stringify({
-          $schema: "https://app.kilo.ai/config.json", // kilocode_change
+          $schema: "https://app.accurecode.ai/config.json", // accurecode_change
           instructions: ["duplicate.md", "local-only.md"],
         }),
       )
@@ -1257,25 +1257,25 @@ test("deduplicates duplicate instructions from global and local configs", async 
 test("deduplicates duplicate plugins from global and local configs", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
-      // kilocode_change - Create a nested project structure with local .kilo config
+      // accurecode_change - Create a nested project structure with local .accurecode config
       const projectDir = path.join(dir, "project")
-      const opencodeDir = path.join(projectDir, ".kilo") // kilocode_change
+      const opencodeDir = path.join(projectDir, ".accurecode") // accurecode_change
       await fs.mkdir(opencodeDir, { recursive: true })
 
       // Global config with plugins
       await Filesystem.write(
-        path.join(dir, "kilo.json"), // kilocode_change
+        path.join(dir, "accure.json"), // accurecode_change
         JSON.stringify({
-          $schema: "https://app.kilo.ai/config.json", // kilocode_change
+          $schema: "https://app.accurecode.ai/config.json", // accurecode_change
           plugin: ["duplicate-plugin", "global-plugin-1"],
         }),
       )
 
-      // kilocode_change - Local .kilo config with some overlapping plugins
+      // accurecode_change - Local .accurecode config with some overlapping plugins
       await Filesystem.write(
-        path.join(opencodeDir, "kilo.json"), // kilocode_change
+        path.join(opencodeDir, "accure.json"), // accurecode_change
         JSON.stringify({
-          $schema: "https://app.kilo.ai/config.json", // kilocode_change
+          $schema: "https://app.accurecode.ai/config.json", // accurecode_change
           plugin: ["duplicate-plugin", "local-plugin-1"],
         }),
       )
@@ -1310,21 +1310,21 @@ test("keeps plugin origins aligned with merged plugin list", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       const project = path.join(dir, "project")
-      const local = path.join(project, ".kilo") // kilocode_change
+      const local = path.join(project, ".accurecode") // accurecode_change
       await fs.mkdir(local, { recursive: true })
 
       await Filesystem.write(
-        path.join(dir, "kilo.json"), // kilocode_change
+        path.join(dir, "accure.json"), // accurecode_change
         JSON.stringify({
-          $schema: "https://app.kilo.ai/config.json", // kilocode_change
+          $schema: "https://app.accurecode.ai/config.json", // accurecode_change
           plugin: [["shared-plugin@1.0.0", { source: "global" }], "global-only@1.0.0"],
         }),
       )
 
       await Filesystem.write(
-        path.join(local, "kilo.json"), // kilocode_change
+        path.join(local, "accure.json"), // accurecode_change
         JSON.stringify({
-          $schema: "https://app.kilo.ai/config.json", // kilocode_change
+          $schema: "https://app.accurecode.ai/config.json", // accurecode_change
           plugin: [["shared-plugin@2.0.0", { source: "local" }], "local-only@1.0.0"],
         }),
       )
@@ -1344,11 +1344,11 @@ test("keeps plugin origins aligned with merged plugin list", async () => {
       expect(names).toContain("global-only@1.0.0")
       expect(names).toContain("local-only@1.0.0")
 
-      // kilocode_change start - bundled plugins intentionally have no external plugin origins
+      // accurecode_change start - bundled plugins intentionally have no external plugin origins
       expect(origins.map((item) => item.spec)).toEqual(
         plugins.filter((item) => !isIndexingPlugin(item) && !isAtomicChatPlugin(item)),
       )
-      // kilocode_change end
+      // accurecode_change end
       const hit = origins.find((item) => ConfigPlugin.pluginSpecifier(item.spec) === "shared-plugin@2.0.0")
       expect(hit?.scope).toBe("local")
     },
@@ -1361,7 +1361,7 @@ it.instance("migrates legacy tools config to permissions - allow", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       agent: { test: { tools: { bash: true, read: true } } },
     })
 
@@ -1377,7 +1377,7 @@ it.instance("migrates legacy tools config to permissions - deny", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       agent: { test: { tools: { bash: false, webfetch: false } } },
     })
 
@@ -1393,7 +1393,7 @@ it.instance("migrates legacy write tool to edit permission", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       agent: { test: { tools: { write: true } } },
     })
 
@@ -1403,13 +1403,13 @@ it.instance("migrates legacy write tool to edit permission", () =>
 )
 
 // Managed settings tests
-// kilocode_change - Note: preload.ts sets KILO_TEST_MANAGED_CONFIG which Global.Path.managedConfig uses
+// accurecode_change - Note: preload.ts sets ACCURECODE_TEST_MANAGED_CONFIG which Global.Path.managedConfig uses
 
 it.instance(
   "managed settings override user settings",
   Effect.gen(function* () {
     yield* writeManagedSettingsEffect({
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       model: "managed/model",
       share: "disabled",
     })
@@ -1426,7 +1426,7 @@ it.instance(
   "managed settings override project settings",
   Effect.gen(function* () {
     yield* writeManagedSettingsEffect({
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       autoupdate: false,
       disabled_providers: ["openai"],
     })
@@ -1451,7 +1451,7 @@ it.instance("migrates legacy edit tool to edit permission", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       agent: { test: { tools: { edit: false } } },
     })
 
@@ -1464,7 +1464,7 @@ it.instance("migrates legacy patch tool to edit permission", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       agent: { test: { tools: { patch: true } } },
     })
 
@@ -1477,7 +1477,7 @@ it.instance("migrates mixed legacy tools config", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       agent: { test: { tools: { bash: true, write: true, read: false, webfetch: true } } },
     })
 
@@ -1495,7 +1495,7 @@ it.instance("merges legacy tools with existing permission config", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       agent: { test: { permission: { glob: "allow" }, tools: { bash: true } } },
     })
 
@@ -1512,26 +1512,26 @@ it.instance("permission config preserves user key order", () =>
   // must not canonicalise known keys ahead of wildcard or custom keys.
   Effect.gen(function* () {
     const test = yield* TestInstance
-    // kilocode_change start — isolate from global config to prevent cross-test contamination
+    // accurecode_change start — isolate from global config to prevent cross-test contamination
     // (migrateBashPermission may write permission.bash to a global config file created by other
     // test files running in parallel, which mergeDeep then prepends to the project permission keys)
     const globalTmp = yield* tmpdirScoped()
     const prev = Global.Path.config
     ;(Global.Path as { config: string }).config = globalTmp
-    // kilocode_change end
+    // accurecode_change end
     yield* Effect.addFinalizer(() =>
       Effect.gen(function* () {
-        // kilocode_change start
+        // accurecode_change start
         ;(Global.Path as { config: string }).config = prev
         yield* Config.use.invalidate()
-        // kilocode_change end
+        // accurecode_change end
       }),
     )
     yield* Config.use.invalidate()
     yield* writeConfigEffect(
       test.directory,
       {
-        $schema: "https://app.kilo.ai/config.json", // kilocode_change
+        $schema: "https://app.accurecode.ai/config.json", // accurecode_change
         permission: {
           "*": "deny",
           edit: "ask",
@@ -1545,7 +1545,7 @@ it.instance("permission config preserves user key order", () =>
           "pr_comments_*": "allow",
         },
       },
-      "kilo.json", // kilocode_change
+      "accure.json", // accurecode_change
     )
 
     const config = yield* Config.use.get()
@@ -1589,12 +1589,12 @@ test("config parser preserves permission order while rejecting unknown top-level
 
 // MCP config merging tests
 
-// kilocode_change start - regression for `env` alias on local MCP entries
+// accurecode_change start - regression for `env` alias on local MCP entries
 it.instance("local mcp accepts `env` as an alias for `environment`", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json",
+      $schema: "https://app.accurecode.ai/config.json",
       mcp: {
         context7: {
           type: "local",
@@ -1618,7 +1618,7 @@ it.instance("local mcp prefers `environment` over `env` when both are present", 
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json",
+      $schema: "https://app.accurecode.ai/config.json",
       mcp: {
         context7: {
           type: "local",
@@ -1636,15 +1636,15 @@ it.instance("local mcp prefers `environment` over `env` when both are present", 
     })
   }),
 )
-// kilocode_change end
+// accurecode_change end
 
 it.instance("project config can override MCP server enabled status", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
-    // kilocode_change - base config in .json, override in .jsonc (jsonc loads second and wins)
+    // accurecode_change - base config in .json, override in .jsonc (jsonc loads second and wins)
     // Simulates a base config (like from remote .well-known) with disabled MCP.
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       mcp: {
         jira: {
           type: "remote",
@@ -1662,7 +1662,7 @@ it.instance("project config can override MCP server enabled status", () =>
     yield* writeConfigEffect(
       test.directory,
       {
-        $schema: "https://app.kilo.ai/config.json", // kilocode_change
+        $schema: "https://app.accurecode.ai/config.json", // accurecode_change
         mcp: {
           jira: {
             type: "remote",
@@ -1671,7 +1671,7 @@ it.instance("project config can override MCP server enabled status", () =>
           },
         },
       },
-      "kilo.jsonc", // kilocode_change
+      "accure.jsonc", // accurecode_change
     )
 
     const config = yield* Config.use.get()
@@ -1691,10 +1691,10 @@ it.instance("project config can override MCP server enabled status", () =>
 it.instance("MCP config deep merges preserving base config properties", () =>
   Effect.gen(function* () {
     const test = yield* TestInstance
-    // kilocode_change - base config in .json, override in .jsonc (jsonc loads second and wins)
-    // kilocode_change - Base config with full MCP definition
+    // accurecode_change - base config in .json, override in .jsonc (jsonc loads second and wins)
+    // accurecode_change - Base config with full MCP definition
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       mcp: {
         myserver: {
           type: "remote",
@@ -1706,11 +1706,11 @@ it.instance("MCP config deep merges preserving base config properties", () =>
         },
       },
     })
-    // kilocode_change - Override just enables it, should preserve other properties
+    // accurecode_change - Override just enables it, should preserve other properties
     yield* writeConfigEffect(
       test.directory,
       {
-        $schema: "https://app.kilo.ai/config.json", // kilocode_change
+        $schema: "https://app.accurecode.ai/config.json", // accurecode_change
         mcp: {
           myserver: {
             type: "remote",
@@ -1719,7 +1719,7 @@ it.instance("MCP config deep merges preserving base config properties", () =>
           },
         },
       },
-      "kilo.jsonc", // kilocode_change
+      "accure.jsonc", // accurecode_change
     )
 
     const config = yield* Config.use.get()
@@ -1734,13 +1734,13 @@ it.instance("MCP config deep merges preserving base config properties", () =>
   }),
 )
 
-// kilocode_change start
-it.instance("local .kilo config can override MCP from project config", () =>
-  // kilocode_change end
+// accurecode_change start
+it.instance("local .accurecode config can override MCP from project config", () =>
+  // accurecode_change end
   Effect.gen(function* () {
     const test = yield* TestInstance
     yield* writeConfigEffect(test.directory, {
-      $schema: "https://app.kilo.ai/config.json", // kilocode_change
+      $schema: "https://app.accurecode.ai/config.json", // accurecode_change
       mcp: {
         docs: {
           type: "remote",
@@ -1749,11 +1749,11 @@ it.instance("local .kilo config can override MCP from project config", () =>
         },
       },
     })
-    yield* mkdirEffect(path.join(test.directory, ".kilo")) // kilocode_change
+    yield* mkdirEffect(path.join(test.directory, ".accurecode")) // accurecode_change
     yield* writeConfigEffect(
-      path.join(test.directory, ".kilo"), // kilocode_change
+      path.join(test.directory, ".accurecode"), // accurecode_change
       {
-        $schema: "https://app.kilo.ai/config.json", // kilocode_change
+        $schema: "https://app.accurecode.ai/config.json", // accurecode_change
         mcp: {
           docs: {
             type: "remote",
@@ -1762,7 +1762,7 @@ it.instance("local .kilo config can override MCP from project config", () =>
           },
         },
       },
-      "kilo.json", // kilocode_change
+      "accure.json", // accurecode_change
     )
 
     const config = yield* Config.use.get()
@@ -2016,7 +2016,7 @@ test("wellknown remote_config rejects non-object config responses", async () => 
 describe("resolvePluginSpec", () => {
   test("keeps package specs unchanged", async () => {
     await using tmp = await tmpdir()
-    const file = path.join(tmp.path, "kilo.json") // kilocode_change
+    const file = path.join(tmp.path, "accure.json") // accurecode_change
     expect(await ConfigPlugin.resolvePluginSpec("oh-my-opencode@2.4.3", file)).toBe("oh-my-opencode@2.4.3")
     expect(await ConfigPlugin.resolvePluginSpec("@scope/pkg", file)).toBe("@scope/pkg")
   })
@@ -2044,7 +2044,7 @@ describe("resolvePluginSpec", () => {
       },
     })
 
-    const file = path.join(tmp.path, "kilo.json") // kilocode_change
+    const file = path.join(tmp.path, "accure.json") // accurecode_change
     const hit = await ConfigPlugin.resolvePluginSpec("./plugin.ts", file)
     expect(ConfigPlugin.pluginSpecifier(hit)).toBe(pathToFileURL(path.join(tmp.path, "plugin.ts")).href)
   })
@@ -2063,7 +2063,7 @@ describe("resolvePluginSpec", () => {
       },
     })
 
-    const file = path.join(tmp.path, "kilo.json") // kilocode_change
+    const file = path.join(tmp.path, "accure.json") // accurecode_change
     const hit = await ConfigPlugin.resolvePluginSpec("./plugin", file)
     expect(ConfigPlugin.pluginSpecifier(hit)).toBe(pathToFileURL(path.join(tmp.path, "plugin")).href)
   })
@@ -2106,7 +2106,7 @@ describe("deduplicatePluginOrigins", () => {
   })
 
   test("keeps path plugins separate from package plugins", () => {
-    const plugins = ["oh-my-opencode@2.4.3", "file:///project/.kilo/plugin/oh-my-opencode.js"] // kilocode_change
+    const plugins = ["oh-my-opencode@2.4.3", "file:///project/.accurecode/plugin/oh-my-opencode.js"] // accurecode_change
 
     const result = dedupe(plugins)
 
@@ -2114,11 +2114,11 @@ describe("deduplicatePluginOrigins", () => {
   })
 
   test("deduplicates direct path plugins by exact spec", () => {
-    const plugins = ["file:///project/.kilo/plugin/demo.ts", "file:///project/.kilo/plugin/demo.ts"] // kilocode_change
+    const plugins = ["file:///project/.accurecode/plugin/demo.ts", "file:///project/.accurecode/plugin/demo.ts"] // accurecode_change
 
     const result = dedupe(plugins)
 
-    expect(result).toEqual(["file:///project/.kilo/plugin/demo.ts"]) // kilocode_change
+    expect(result).toEqual(["file:///project/.accurecode/plugin/demo.ts"]) // accurecode_change
   })
 
   test("preserves order of remaining plugins", () => {
@@ -2133,14 +2133,14 @@ describe("deduplicatePluginOrigins", () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
         const projectDir = path.join(dir, "project")
-        const opencodeDir = path.join(projectDir, ".kilo") // kilocode_change
+        const opencodeDir = path.join(projectDir, ".accurecode") // accurecode_change
         const pluginDir = path.join(opencodeDir, "plugin")
         await fs.mkdir(pluginDir, { recursive: true })
 
         await Filesystem.write(
-          path.join(dir, "kilo.json"), // kilocode_change
+          path.join(dir, "accure.json"), // accurecode_change
           JSON.stringify({
-            $schema: "https://app.kilo.ai/config.json", // kilocode_change
+            $schema: "https://app.accurecode.ai/config.json", // accurecode_change
             plugin: ["my-plugin@1.0.0"],
           }),
         )
@@ -2162,20 +2162,20 @@ describe("deduplicatePluginOrigins", () => {
   })
 })
 
-describe("KILO_DISABLE_PROJECT_CONFIG", () => {
+describe("ACCURECODE_DISABLE_PROJECT_CONFIG", () => {
   it.instance("skips project config files when flag is set", () =>
     withProcessEnv(
-      "KILO_DISABLE_PROJECT_CONFIG",
+      "ACCURECODE_DISABLE_PROJECT_CONFIG",
       "true",
       Effect.gen(function* () {
         const test = yield* TestInstance
-        // kilocode_change start
+        // accurecode_change start
         yield* writeConfigEffect(test.directory, {
-          $schema: "https://app.kilo.ai/config.json",
+          $schema: "https://app.accurecode.ai/config.json",
           model: "project/model",
           username: "project-user",
         })
-        // kilocode_change end
+        // accurecode_change end
         const config = yield* Config.use.get()
         expect(config.model).not.toBe("project/model")
         expect(config.username).not.toBe("project-user")
@@ -2183,22 +2183,22 @@ describe("KILO_DISABLE_PROJECT_CONFIG", () => {
     ),
   )
 
-  // kilocode_change start
-  it.instance("skips project .kilo/ directories when flag is set", () =>
-    // kilocode_change end
+  // accurecode_change start
+  it.instance("skips project .accurecode/ directories when flag is set", () =>
+    // accurecode_change end
     withProcessEnv(
-      "KILO_DISABLE_PROJECT_CONFIG",
+      "ACCURECODE_DISABLE_PROJECT_CONFIG",
       "true",
       Effect.gen(function* () {
         const test = yield* TestInstance
-        // kilocode_change - test .kilo/ directory (the test body writes to .kilo/command/)
-        yield* mkdirEffect(path.join(test.directory, ".kilo", "command")) // kilocode_change
+        // accurecode_change - test .accurecode/ directory (the test body writes to .accurecode/command/)
+        yield* mkdirEffect(path.join(test.directory, ".accurecode", "command")) // accurecode_change
         yield* writeTextEffect(
-          path.join(test.directory, ".kilo", "command", "test-cmd.md"), // kilocode_change
+          path.join(test.directory, ".accurecode", "command", "test-cmd.md"), // accurecode_change
           "# Test Command\nThis is a test command.",
         )
         const directories = yield* Config.use.directories()
-        // kilocode_change - Project .kilo should NOT be in directories list
+        // accurecode_change - Project .accurecode should NOT be in directories list
         expect(directories.some((d) => d.startsWith(test.directory))).toBe(false)
       }),
     ),
@@ -2206,7 +2206,7 @@ describe("KILO_DISABLE_PROJECT_CONFIG", () => {
 
   it.instance("still loads global config when flag is set", () =>
     withProcessEnv(
-      "KILO_DISABLE_PROJECT_CONFIG",
+      "ACCURECODE_DISABLE_PROJECT_CONFIG",
       "true",
       Effect.gen(function* () {
         const config = yield* Config.use.get()
@@ -2220,7 +2220,7 @@ describe("KILO_DISABLE_PROJECT_CONFIG", () => {
     "skips relative instructions with warning when flag is set but no config dir",
     () =>
       withProcessEnvs(
-        { KILO_CONFIG_DIR: undefined, KILO_DISABLE_PROJECT_CONFIG: "true" },
+        { ACCURECODE_CONFIG_DIR: undefined, ACCURECODE_DISABLE_PROJECT_CONFIG: "true" },
         Effect.gen(function* () {
           const test = yield* TestInstance
           yield* writeTextEffect(path.join(test.directory, "CUSTOM.md"), "# Custom Instructions")
@@ -2233,18 +2233,18 @@ describe("KILO_DISABLE_PROJECT_CONFIG", () => {
   )
 
   it.instance(
-    "KILO_CONFIG_DIR still works when flag is set",
+    "ACCURECODE_CONFIG_DIR still works when flag is set",
     () =>
       Effect.gen(function* () {
         const configDir = yield* tmpdirScoped()
-        // kilocode_change start
+        // accurecode_change start
         yield* writeConfigEffect(configDir, {
-          $schema: "https://app.kilo.ai/config.json",
+          $schema: "https://app.accurecode.ai/config.json",
           model: "configdir/model",
         })
-        // kilocode_change end
+        // accurecode_change end
         yield* withProcessEnvs(
-          { KILO_DISABLE_PROJECT_CONFIG: "true", KILO_CONFIG_DIR: configDir },
+          { ACCURECODE_DISABLE_PROJECT_CONFIG: "true", ACCURECODE_CONFIG_DIR: configDir },
           Effect.gen(function* () {
             const config = yield* Config.use.get()
             expect(config.model).toBe("configdir/model")
@@ -2255,13 +2255,13 @@ describe("KILO_DISABLE_PROJECT_CONFIG", () => {
   )
 })
 
-// Regression for #28206: malformed KILO_PERMISSION JSON used to crash
+// Regression for #28206: malformed ACCURECODE_PERMISSION JSON used to crash
 // the app on startup with an unhandled SyntaxError. Loading the config with
 // an invalid JSON value in this env var should not throw.
-describe("KILO_PERMISSION env var", () => {
-  it.instance("does not crash when KILO_PERMISSION contains invalid JSON", () =>
+describe("ACCURECODE_PERMISSION env var", () => {
+  it.instance("does not crash when ACCURECODE_PERMISSION contains invalid JSON", () =>
     withProcessEnv(
-      "KILO_PERMISSION",
+      "ACCURECODE_PERMISSION",
       "{invalid",
       Effect.gen(function* () {
         const config = yield* Config.use.get()
@@ -2272,13 +2272,13 @@ describe("KILO_PERMISSION env var", () => {
   )
 })
 
-describe("KILO_CONFIG_CONTENT token substitution", () => {
-  it.instance("substitutes {env:} tokens in KILO_CONFIG_CONTENT", () =>
+describe("ACCURECODE_CONFIG_CONTENT token substitution", () => {
+  it.instance("substitutes {env:} tokens in ACCURECODE_CONFIG_CONTENT", () =>
     withProcessEnv(
       "TEST_CONFIG_VAR",
       "test_api_key_12345",
       withProcessEnv(
-        "KILO_CONFIG_CONTENT",
+        "ACCURECODE_CONFIG_CONTENT",
         JSON.stringify({
           $schema: "https://opencode.ai/config.json",
           username: "{env:TEST_CONFIG_VAR}",
@@ -2291,12 +2291,12 @@ describe("KILO_CONFIG_CONTENT token substitution", () => {
     ),
   )
 
-  it.instance("substitutes {file:} tokens in KILO_CONFIG_CONTENT", () =>
+  it.instance("substitutes {file:} tokens in ACCURECODE_CONFIG_CONTENT", () =>
     Effect.gen(function* () {
       const test = yield* TestInstance
       yield* writeTextEffect(path.join(test.directory, "api_key.txt"), "secret_key_from_file")
       yield* withProcessEnv(
-        "KILO_CONFIG_CONTENT",
+        "ACCURECODE_CONFIG_CONTENT",
         JSON.stringify({
           $schema: "https://opencode.ai/config.json",
           username: "{file:./api_key.txt}",
