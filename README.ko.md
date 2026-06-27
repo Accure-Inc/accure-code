@@ -56,59 +56,6 @@ paru -S accure-bin
 
 </details>
 
-<details>
-<summary><strong>JetBrains</strong></summary>
-
-<br>
-
-JetBrains Marketplace에서 [Accure Code 플러그인](https://plugins.jetbrains.com/plugin/28350-accure-code)을 설치하거나, JetBrains IDE의 `Settings → Plugins`에서 "Accure Code"를 검색하세요.
-
-</details>
-
-<details>
-<summary><strong>Cloud Agent</strong></summary>
-
-<br>
-
-로컬 머신 없이 웹에서 [app.accure.ai/cloud](https://app.accure.ai/cloud)로 Accure를 실행하세요.
-
-</details>
-
-<details>
-<summary><strong>코드 리뷰</strong></summary>
-
-<br>
-
-[app.accure.ai/code-reviews](https://app.accure.ai/code-reviews)에서 pull request에 자동 AI 코드 리뷰를 설정하세요.
-
-</details>
-
-<details>
-<summary><strong>AccureClaw</strong></summary>
-
-<br>
-
-[app.accure.ai/claw](https://app.accure.ai/claw)에서 항상 켜져 있는 AI 에이전트를 시작하세요.
-
-</details>
-
-<details>
-<summary>GitHub Releases에서 CLI 설치하기(바이너리)</summary>
-
-[Releases 페이지](https://github.com/Accure-Org/accurecode/releases)에서 최신 바이너리를 다운로드하세요.
-
-| 플랫폼 | 에셋 |
-|---|---|
-| Windows(대부분의 PC) | `accure-windows-x64.zip` |
-| macOS(Apple Silicon) | `accure-darwin-arm64.zip` |
-| macOS(Intel) | `accure-darwin-x64.zip` |
-| Linux x64 | `accure-linux-x64.tar.gz` |
-| Linux ARM | `accure-linux-arm64.tar.gz` |
-
-참고: `x64-baseline`은 AVX가 없는 구형 CPU용 호환 빌드입니다. `musl`은 Alpine 또는 glibc가 없는 최소 Docker 이미지용 정적 링크 빌드입니다. `accure-vscode-*.vsix`는 CLI가 아니라 VS Code 확장 패키지입니다. `Source code` 아카이브는 소스에서 빌드할 때 사용합니다.
-
-</details>
-
 ### Agents
 
 Accure에는 작업에 따라 전환할 수 있는 특화된 agents가 포함되어 있습니다. 사용자 지정 agents도 만들 수 있습니다.

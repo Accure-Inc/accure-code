@@ -56,59 +56,6 @@ Ardından başlamak için herhangi bir proje dizininde `accure` çalıştırın.
 
 </details>
 
-<details>
-<summary><strong>JetBrains</strong></summary>
-
-<br>
-
-[Accure Code eklentisini](https://plugins.jetbrains.com/plugin/28350-accure-code) JetBrains Marketplace'ten kurun veya herhangi bir JetBrains IDE içinde `Settings → Plugins` bölümünde "Accure Code" arayın.
-
-</details>
-
-<details>
-<summary><strong>Cloud Agent</strong></summary>
-
-<br>
-
-Accure'yu yerel makine gerekmeden web üzerinden [app.accure.ai/cloud](https://app.accure.ai/cloud) adresinde çalıştırın.
-
-</details>
-
-<details>
-<summary><strong>Kod İncelemeleri</strong></summary>
-
-<br>
-
-Pull request'leriniz için otomatik AI kod incelemelerini [app.accure.ai/code-reviews](https://app.accure.ai/code-reviews) adresinde ayarlayın.
-
-</details>
-
-<details>
-<summary><strong>AccureClaw</strong></summary>
-
-<br>
-
-Her zaman açık AI ajanınızı [app.accure.ai/claw](https://app.accure.ai/claw) adresinde başlatın.
-
-</details>
-
-<details>
-<summary>CLI'yi GitHub Releases üzerinden kurun (ikili dosyalar)</summary>
-
-En son ikili dosyayı [Releases sayfasından](https://github.com/Accure-Org/accurecode/releases) indirin.
-
-| Platform | Asset |
-|---|---|
-| Windows (çoğu PC) | `accure-windows-x64.zip` |
-| macOS (Apple Silicon) | `accure-darwin-arm64.zip` |
-| macOS (Intel) | `accure-darwin-x64.zip` |
-| Linux x64 | `accure-linux-x64.tar.gz` |
-| Linux ARM | `accure-linux-arm64.tar.gz` |
-
-Notlar: `x64-baseline`, AVX olmayan eski CPU'lar için uyumluluk derlemesidir. `musl`, Alpine veya glibc olmayan minimal Docker imajları için statik bağlı derlemedir. `accure-vscode-*.vsix` CLI değil VS Code uzantı paketidir. `Source code` arşivleri kaynaktan derlemek içindir.
-
-</details>
-
 ### Agents
 
 Accure, göreve göre aralarında geçiş yapabileceğiniz özelleşmiş agents ile gelir. Kendi özel agents'larınızı da oluşturabilirsiniz.

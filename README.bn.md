@@ -56,59 +56,6 @@ paru -S accure-bin
 
 </details>
 
-<details>
-<summary><strong>JetBrains</strong></summary>
-
-<br>
-
-JetBrains Marketplace থেকে [Accure Code plugin](https://plugins.jetbrains.com/plugin/28350-accure-code) ইনস্টল করুন, অথবা যেকোনো JetBrains IDE-তে `Settings → Plugins`-এ "Accure Code" খুঁজুন।
-
-</details>
-
-<details>
-<summary><strong>Cloud Agent</strong></summary>
-
-<br>
-
-লোকাল মেশিন ছাড়াই ওয়েব থেকে [app.accure.ai/cloud](https://app.accure.ai/cloud)-এ Accure চালান।
-
-</details>
-
-<details>
-<summary><strong>Code Reviews</strong></summary>
-
-<br>
-
-[app.accure.ai/code-reviews](https://app.accure.ai/code-reviews)-এ আপনার pull request-এ স্বয়ংক্রিয় AI code review সেট আপ করুন।
-
-</details>
-
-<details>
-<summary><strong>AccureClaw</strong></summary>
-
-<br>
-
-[app.accure.ai/claw](https://app.accure.ai/claw)-এ আপনার always-on AI agent চালু করুন।
-
-</details>
-
-<details>
-<summary>GitHub Releases থেকে CLI ইনস্টল করুন (বাইনারি)</summary>
-
-[Releases page](https://github.com/Accure-Org/accurecode/releases) থেকে সর্বশেষ বাইনারি ডাউনলোড করুন।
-
-| প্ল্যাটফর্ম | Asset |
-|---|---|
-| Windows (বেশিরভাগ PC) | `accure-windows-x64.zip` |
-| macOS (Apple Silicon) | `accure-darwin-arm64.zip` |
-| macOS (Intel) | `accure-darwin-x64.zip` |
-| Linux x64 | `accure-linux-x64.tar.gz` |
-| Linux ARM | `accure-linux-arm64.tar.gz` |
-
-নোট: `x64-baseline` হলো AVX ছাড়া পুরোনো CPU-এর জন্য compatibility build। `musl` হলো Alpine বা glibc ছাড়া minimal Docker image-এর জন্য statically linked build। `accure-vscode-*.vsix` হলো VS Code extension package, CLI নয়। `Source code` archive source থেকে build করার জন্য।
-
-</details>
-
 ### Agents
 
 Accure বিশেষায়িত agents সহ আসে, কাজ অনুযায়ী আপনি এগুলোর মধ্যে বদলাতে পারেন। আপনি নিজের custom agents-ও বানাতে পারেন।

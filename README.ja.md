@@ -56,59 +56,6 @@ paru -S accure-bin
 
 </details>
 
-<details>
-<summary><strong>JetBrains</strong></summary>
-
-<br>
-
-JetBrains Marketplace から [Accure Code プラグイン](https://plugins.jetbrains.com/plugin/28350-accure-code)をインストールするか、任意の JetBrains IDE の `Settings → Plugins` で "Accure Code" を検索してください。
-
-</details>
-
-<details>
-<summary><strong>Cloud Agent</strong></summary>
-
-<br>
-
-ローカルマシンなしで、Web から [app.accure.ai/cloud](https://app.accure.ai/cloud) で Accure を実行できます。
-
-</details>
-
-<details>
-<summary><strong>コードレビュー</strong></summary>
-
-<br>
-
-[app.accure.ai/code-reviews](https://app.accure.ai/code-reviews) で pull request に自動 AI コードレビューを設定できます。
-
-</details>
-
-<details>
-<summary><strong>AccureClaw</strong></summary>
-
-<br>
-
-[app.accure.ai/claw](https://app.accure.ai/claw) で常時稼働する AI エージェントを起動できます。
-
-</details>
-
-<details>
-<summary>GitHub Releases から CLI をインストールする（バイナリ）</summary>
-
-[Releases ページ](https://github.com/Accure-Org/accurecode/releases)から最新のバイナリをダウンロードしてください。
-
-| プラットフォーム | アセット |
-|---|---|
-| Windows（ほとんどの PC） | `accure-windows-x64.zip` |
-| macOS（Apple Silicon） | `accure-darwin-arm64.zip` |
-| macOS（Intel） | `accure-darwin-x64.zip` |
-| Linux x64 | `accure-linux-x64.tar.gz` |
-| Linux ARM | `accure-linux-arm64.tar.gz` |
-
-注: `x64-baseline` は AVX のない古い CPU 向けの互換ビルドです。`musl` は Alpine や glibc のない最小 Docker イメージ向けの静的リンクビルドです。`accure-vscode-*.vsix` は VS Code 拡張機能パッケージであり、CLI ではありません。`Source code` アーカイブはソースからビルドするためのものです。
-
-</details>
-
 ### Agents
 
 Accure には、タスクに応じて切り替えられる特化型 agents が含まれています。独自のカスタム agents も作成できます。

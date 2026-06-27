@@ -56,59 +56,6 @@ Zatim pokrenite `accure` u bilo kojem direktoriju projekta.
 
 </details>
 
-<details>
-<summary><strong>JetBrains</strong></summary>
-
-<br>
-
-Instalirajte [Accure Code plugin](https://plugins.jetbrains.com/plugin/28350-accure-code) sa JetBrains Marketplacea ili potražite "Accure Code" u `Settings → Plugins` unutar bilo kojeg JetBrains IDE-a.
-
-</details>
-
-<details>
-<summary><strong>Cloud Agent</strong></summary>
-
-<br>
-
-Pokrenite Accure s weba, bez lokalne mašine, na [app.accure.ai/cloud](https://app.accure.ai/cloud).
-
-</details>
-
-<details>
-<summary><strong>Pregledi koda</strong></summary>
-
-<br>
-
-Postavite automatske AI preglede koda na svojim pull requestovima na [app.accure.ai/code-reviews](https://app.accure.ai/code-reviews).
-
-</details>
-
-<details>
-<summary><strong>AccureClaw</strong></summary>
-
-<br>
-
-Pokrenite svog uvijek aktivnog AI agenta na [app.accure.ai/claw](https://app.accure.ai/claw).
-
-</details>
-
-<details>
-<summary>Instalirajte CLI iz GitHub Releases (binarne datoteke)</summary>
-
-Preuzmite najnoviju binarnu datoteku sa [Releases stranice](https://github.com/Accure-Org/accurecode/releases).
-
-| Platforma | Asset |
-|---|---|
-| Windows (većina PC računara) | `accure-windows-x64.zip` |
-| macOS (Apple Silicon) | `accure-darwin-arm64.zip` |
-| macOS (Intel) | `accure-darwin-x64.zip` |
-| Linux x64 | `accure-linux-x64.tar.gz` |
-| Linux ARM | `accure-linux-arm64.tar.gz` |
-
-Napomene: `x64-baseline` je kompatibilna verzija za starije CPU-e bez AVX-a. `musl` je statički linkovana verzija za Alpine ili minimalne Docker slike bez glibc-a. `accure-vscode-*.vsix` je paket VS Code ekstenzije, ne CLI. `Source code` arhive služe za build iz izvornog koda.
-
-</details>
-
 ### Agents
 
 Accure dolazi sa specijaliziranim agents koje mijenjate zavisno od zadatka. Možete napraviti i vlastite prilagođene agents.
