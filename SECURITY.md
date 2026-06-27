@@ -42,4 +42,4 @@ Please email your findings to [security@accure.ai](mailto:security@accure.ai). W
 
 After the initial reply to your report, the security team will keep you informed of the progress towards a fix and full announcement, and may ask for additional information or guidance.
 
-For more details, see our [Security Disclosure](https://accure.ai/security) page.
+For more details, see our Security Disclosure page.
