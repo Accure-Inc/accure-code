@@ -1,6 +1,6 @@
 # Contributing to Accure CLI
 
-See [the Documentation for details on contributing](https://accure.ai/docs/contributing).
+Refer to this guide and the package-specific instructions for details on contributing.
 
 ## TL;DR
 
@@ -12,14 +12,12 @@ There are lots of ways to contribute to the project:
 - **Feature Requests:** Suggest new features or improvements
 - **Community Support:** Help other users in the community
 
-The Accure Community is [on Discord](https://accure.ai/discord).
-
 ## Prerequisites
 
 - **Bun 1.3.14+** — required for all packages.
 - **Java 21** — required by the JetBrains plugin. The root `bun turbo typecheck` and `bun turbo test:ci` commands include `@accurecode/accure-jetbrains` and will fail without Java 21.
 
-  The preferred way to install Java is via [SDKMAN](https://sdkman.io/install):
+  The preferred way to install Java is via SDKMAN:
 
   ```bash
   # Install SDKMAN (if not already installed)
