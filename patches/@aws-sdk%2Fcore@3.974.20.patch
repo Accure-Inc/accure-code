@@ -1,0 +1,48 @@
+diff --git a/dist-cjs/submodules/client/index.browser.js b/dist-cjs/submodules/client/index.browser.js
+index d863b3fe07df04047e092fe1a5da9410eda2e3ec..94abf64354078cd83b49e732817ae0e4a83e63dd 100644
+--- a/dist-cjs/submodules/client/index.browser.js
++++ b/dist-cjs/submodules/client/index.browser.js
+@@ -531,7 +531,7 @@ const resolveAwsRegionExtensionConfiguration = (awsRegionExtensionConfiguration)
+ };
+ 
+ const no = Symbol.for("node-only");
+-const emitWarningIfUnsupportedVersion = no;
++const emitWarningIfUnsupportedVersion = () => {};
+ const state = no;
+ const crtAvailability = no;
+ const NODE_APP_ID_CONFIG_OPTIONS = no;
+diff --git a/dist-cjs/submodules/client/index.native.js b/dist-cjs/submodules/client/index.native.js
+index 0b99a3ea4ed51c450dbc3cf58eb477684bd8c308..6e80157d8cd0ff1f4702f714d451ac7d9ae162a9 100644
+--- a/dist-cjs/submodules/client/index.native.js
++++ b/dist-cjs/submodules/client/index.native.js
+@@ -524,7 +524,7 @@ const resolveAwsRegionExtensionConfiguration = (awsRegionExtensionConfiguration)
+ };
+ 
+ const no = Symbol.for("node-only");
+-const emitWarningIfUnsupportedVersion = no;
++const emitWarningIfUnsupportedVersion = () => {};
+ const state = no;
+ const crtAvailability = no;
+ const NODE_APP_ID_CONFIG_OPTIONS = no;
+diff --git a/dist-es/submodules/client/index.browser.js b/dist-es/submodules/client/index.browser.js
+index 17a7774a800642a40002cf0926f3dd77ba8d15d8..7434a1e320d8f36c1da897c6a7de3c7c0574ce1e 100644
+--- a/dist-es/submodules/client/index.browser.js
++++ b/dist-es/submodules/client/index.browser.js
+@@ -1,5 +1,5 @@
+ const no = Symbol.for("node-only");
+-export const emitWarningIfUnsupportedVersion = no;
++export const emitWarningIfUnsupportedVersion = () => {};
+ export const state = no;
+ export { getLongPollPlugin } from "./longPollMiddleware";
+ export { setCredentialFeature } from "./setCredentialFeature";
+diff --git a/dist-es/submodules/client/index.native.js b/dist-es/submodules/client/index.native.js
+index e78681bc5aa9a1c2d685a182e7619aadbd5f52e4..5a4030845351096db970961664010fe5da0e07d3 100644
+--- a/dist-es/submodules/client/index.native.js
++++ b/dist-es/submodules/client/index.native.js
+@@ -1,5 +1,5 @@
+ const no = Symbol.for("node-only");
+-export const emitWarningIfUnsupportedVersion = no;
++export const emitWarningIfUnsupportedVersion = () => {};
+ export const state = no;
+ export { getLongPollPlugin } from "./longPollMiddleware";
+ export { setCredentialFeature } from "./setCredentialFeature";

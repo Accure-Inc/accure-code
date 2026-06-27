@@ -10,13 +10,13 @@ import { NamedError } from "@opencode-ai/core/util/error"
 import { Flag } from "@opencode-ai/core/flag/flag"
 import { Auth } from "../auth"
 import { Env } from "../env"
-import { applyEdits, findNodeAtLocation, modify, parseTree } from "jsonc-parser" // kilocode_change - parseTree/findNodeAtLocation used in patchJsonc
+import { applyEdits, findNodeAtLocation, modify, parseTree } from "jsonc-parser" // accurecode_change - parseTree/findNodeAtLocation used in patchJsonc
 import { InstallationLocal, InstallationVersion } from "@opencode-ai/core/installation/version"
 import { existsSync } from "fs"
-// kilocode_change start
+// accurecode_change start
 import { GlobalBus } from "@/bus/global"
 import { Event } from "../server/event"
-// kilocode_change end
+// accurecode_change end
 import { Account } from "@/account/account"
 import { isRecord } from "@/util/record"
 import type { ConsoleState } from "./console-state"
@@ -46,18 +46,18 @@ import { ConfigServer } from "./server"
 import { ConfigSkills } from "./skills"
 import { ConfigVariable } from "./variable"
 import { Npm } from "@opencode-ai/core/npm"
-import z from "zod" // kilocode_change - Kilo config compatibility schemas
-// kilocode_change start
+import z from "zod" // accurecode_change - Accure config compatibility schemas
+// accurecode_change start
 import { ZodOverride } from "@opencode-ai/core/effect-zod"
-import { KilocodeConfig } from "../kilocode/config/config"
-import { KilocodeDefaultPlugins } from "@/kilocode/config/default-plugins"
-import { KilocodeGlobalConfigStamp } from "@/kilocode/config/global-stamp"
+import { AccurecodeConfig } from "../accurecode/config/config"
+import { AccurecodeDefaultPlugins } from "@/accurecode/config/default-plugins"
+import { AccurecodeGlobalConfigStamp } from "@/accurecode/config/global-stamp"
 import {
-  IndexingConfig as KiloIndexingConfig,
-  IndexingSchema as KiloIndexingSchema,
-} from "@kilocode/accure-indexing/config"
+  IndexingConfig as AccureIndexingConfig,
+  IndexingSchema as AccureIndexingSchema,
+} from "@accurecode/accure-indexing/config"
 import { unique } from "remeda"
-// kilocode_change end
+// accurecode_change end
 import { withTransientReadRetry } from "@/util/effect-http-client"
 
 const log = Log.create({ service: "config" })
@@ -78,7 +78,7 @@ function mergeConfigConcatArrays(target: Info, source: Info): Info {
 
 function normalizeLoadedConfig(data: unknown, source: string) {
   if (!isRecord(data)) return data
-  const copy = KilocodeConfig.retireIndexingFlag({ ...data }, source) // kilocode_change
+  const copy = AccurecodeConfig.retireIndexingFlag({ ...data }, source) // accurecode_change
   const hadLegacy = "theme" in copy || "keybinds" in copy || "tui" in copy
   if (!hadLegacy) return copy
   delete copy.theme
@@ -88,7 +88,7 @@ function normalizeLoadedConfig(data: unknown, source: string) {
   return copy
 }
 
-// kilocode_change start
+// accurecode_change start
 export const Warning = z.object({
   path: z.string(),
   message: z.string(),
@@ -96,8 +96,8 @@ export const Warning = z.object({
 })
 export type Warning = z.infer<typeof Warning>
 
-const { caught: caughtWarning } = KilocodeConfig
-// kilocode_change end
+const { caught: caughtWarning } = AccurecodeConfig
+// accurecode_change end
 
 async function substituteWellKnownRemoteConfig(input: {
   value: unknown
@@ -153,18 +153,18 @@ async function resolveLoadedPlugins<T extends { plugin?: ConfigPlugin.Spec[] }>(
 
 export type Layout = ConfigLayout.Layout
 
-// kilocode_change start - indexing configuration
-export const Indexing = KiloIndexingConfig
+// accurecode_change start - indexing configuration
+export const Indexing = AccureIndexingConfig
 export type Indexing = z.infer<typeof Indexing>
-// kilocode_change end
+// accurecode_change end
 
 const LogLevelRef = Schema.Literals(["DEBUG", "INFO", "WARN", "ERROR"]).annotate({
   identifier: "LogLevel",
   description: "Log level",
 })
-const Percent = Schema.Number.check(Schema.isGreaterThan(0), Schema.isLessThanOrEqualTo(100)) // kilocode_change
+const Percent = Schema.Number.check(Schema.isGreaterThan(0), Schema.isLessThanOrEqualTo(100)) // accurecode_change
 
-const IndexingRef = KiloIndexingSchema.annotate({ [ZodOverride]: KiloIndexingConfig }) // kilocode_change
+const IndexingRef = AccureIndexingSchema.annotate({ [ZodOverride]: AccureIndexingConfig }) // accurecode_change
 
 export const Info = Schema.Struct({
   $schema: Schema.optional(Schema.String).annotate({
@@ -175,10 +175,10 @@ export const Info = Schema.Struct({
   }),
   logLevel: Schema.optional(LogLevelRef).annotate({ description: "Log level" }),
   server: Schema.optional(ConfigServer.Server).annotate({
-    description: "Server configuration for the kilo serve command", // kilocode_change
+    description: "Server configuration for the accure serve command", // accurecode_change
   }),
   command: Schema.optional(Schema.Record(Schema.String, ConfigCommand.Info)).annotate({
-    description: "Command configuration, see https://kilo.ai/docs/customize/workflows", // kilocode_change
+    description: "Command configuration, see https://accure.ai/docs/customize/workflows", // accurecode_change
   }),
   skills: Schema.optional(ConfigSkills.Info).annotate({ description: "Additional skill folder paths" }),
   reference: Schema.optional(ConfigReference.Info).annotate({
@@ -212,12 +212,12 @@ export const Info = Schema.Struct({
   enabled_providers: Schema.optional(Schema.mutable(Schema.Array(Schema.String))).annotate({
     description: "When set, ONLY these providers will be enabled. All other providers will be ignored",
   }),
-  // kilocode_change start
-  // NOTE: Any new kilocode_change key added to Config.Info must also be mirrored in
+  // accurecode_change start
+  // NOTE: Any new accurecode_change key added to Config.Info must also be mirrored in
   // apps/web/src/app/config.json/extras.ts in the cloud repo, otherwise
-  // $schema: https://app.kilo.ai/config.json will not recognize it.
+  // $schema: https://app.accurecode.ai/config.json will not recognize it.
   remote_control: Schema.optional(Schema.Boolean).annotate({
-    description: "Enable remote control of sessions via Kilo Cloud. Equivalent to running /remote on startup.",
+    description: "Enable remote control of sessions via Accure Cloud. Equivalent to running /remote on startup.",
   }),
   auto_collapse_reasoning: Schema.optional(Schema.Boolean).annotate({
     description: "Automatically collapse reasoning blocks after the agent finishes writing them",
@@ -227,14 +227,14 @@ export const Info = Schema.Struct({
     Schema.Struct({
       context_sidebar_width: Schema.optional(
         Schema.Int.check(Schema.isBetween({ minimum: 250, maximum: 800 })).annotate({
-          description: "Width of the Kilo Console project context sidebar in pixels",
+          description: "Width of the Accure Console project context sidebar in pixels",
         }),
       ),
       diff_style: Schema.optional(Schema.Literals(["unified", "split"])).annotate({
-        description: "Default diff layout in Kilo Console project reviews",
+        description: "Default diff layout in Accure Console project reviews",
       }),
     }),
-  ).annotate({ description: "Kilo Console user interface configuration" }),
+  ).annotate({ description: "Accure Console user interface configuration" }),
   terminal_command_display: Schema.optional(Schema.Literals(["expanded", "collapsed"])).annotate({
     description: "Controls whether terminal command blocks are expanded or collapsed by default in the VS Code chat UI",
   }),
@@ -243,7 +243,7 @@ export const Info = Schema.Struct({
       "Controls whether code edit and diff blocks are expanded or collapsed by default in the VS Code chat UI",
   }),
   hide_prompt_training_models: Schema.optional(Schema.Boolean).annotate({
-    description: "Hide Kilo Gateway models that may train on your prompts from model listings",
+    description: "Hide Accure Gateway models that may train on your prompts from model listings",
   }),
   model: Schema.optional(Schema.NullOr(ConfigModelID)).annotate({
     description: "Model to use in the format of provider/model, eg anthropic/claude-2",
@@ -268,7 +268,7 @@ export const Info = Schema.Struct({
     description:
       "Default agent to use when none is specified. Must be a primary agent. Falls back to 'code' if not set or if the specified agent is invalid.",
   }),
-  // kilocode_change end
+  // accurecode_change end
   username: Schema.optional(Schema.String).annotate({
     description: "Custom username to display in conversations instead of system username",
   }),
@@ -287,11 +287,11 @@ export const Info = Schema.Struct({
         // primary
         plan: Schema.optional(ConfigAgent.Info),
         build: Schema.optional(ConfigAgent.Info),
-        // kilocode_change start
+        // accurecode_change start
         debug: Schema.optional(ConfigAgent.Info),
         orchestrator: Schema.optional(ConfigAgent.Info),
         ask: Schema.optional(ConfigAgent.Info),
-        // kilocode_change end
+        // accurecode_change end
         // subagent
         general: Schema.optional(ConfigAgent.Info),
         explore: Schema.optional(ConfigAgent.Info),
@@ -303,10 +303,10 @@ export const Info = Schema.Struct({
       }),
       [Schema.Record(Schema.String, ConfigAgent.Info)],
     ),
-    // kilocode_change start
-  ).annotate({ description: "Agent configuration, see https://kilo.ai/docs/customize/custom-subagents" }), // kilocode_change
+    // accurecode_change start
+  ).annotate({ description: "Agent configuration, see https://accure.ai/docs/customize/custom-subagents" }), // accurecode_change
   provider: Schema.optional(Schema.Record(Schema.String, Schema.NullOr(ConfigProvider.Info))).annotate({
-    // kilocode_change end
+    // accurecode_change end
     description: "Custom provider configurations and model overrides",
   }),
   mcp: Schema.optional(
@@ -341,7 +341,7 @@ export const Info = Schema.Struct({
       url: Schema.optional(Schema.String).annotate({ description: "Enterprise URL" }),
     }),
   ),
-  commit_message: KilocodeConfig.CommitMessageSchema, // kilocode_change
+  commit_message: AccurecodeConfig.CommitMessageSchema, // accurecode_change
   tool_output: Schema.optional(
     Schema.Struct({
       max_lines: Schema.optional(PositiveInt).annotate({
@@ -360,12 +360,12 @@ export const Info = Schema.Struct({
       auto: Schema.optional(Schema.Boolean).annotate({
         description: "Enable automatic compaction when context is full (default: true)",
       }),
-      // kilocode_change start
+      // accurecode_change start
       threshold_percent: Schema.optional(Schema.NullOr(Percent)).annotate({
         description:
           "Percentage of the model input/context window that triggers automatic compaction. The reserved safety buffer still applies if it would compact sooner.",
       }),
-      // kilocode_change end
+      // accurecode_change end
       prune: Schema.optional(Schema.Boolean).annotate({
         description: "Enable pruning of old tool outputs (default: true)",
       }),
@@ -385,7 +385,7 @@ export const Info = Schema.Struct({
     Schema.Struct({
       disable_paste_summary: Schema.optional(Schema.Boolean),
       batch_tool: Schema.optional(Schema.Boolean).annotate({ description: "Enable the batch tool" }),
-      // kilocode_change start
+      // accurecode_change start
       codebase_search: Schema.optional(Schema.Boolean).annotate({ description: "Enable AI-powered codebase search" }),
       speech_to_text_model: Schema.optional(Schema.String).annotate({
         description: "Speech-to-text transcription model ID to use for voice input",
@@ -393,7 +393,7 @@ export const Info = Schema.Struct({
       openTelemetry: Schema.Boolean.pipe(Schema.optional, Schema.withDecodingDefault(Effect.succeed(true))).annotate({
         description: "Enable telemetry. Set to false to opt-out.",
       }),
-      // kilocode_change end
+      // accurecode_change end
       primary_tools: Schema.optional(Schema.mutable(Schema.Array(Schema.String))).annotate({
         description: "Tools that should only be available to primary agents.",
       }),
@@ -420,7 +420,7 @@ type State = {
   config: Info
   directories: string[]
   deps: Fiber.Fiber<void>[]
-  warnings: Warning[] // kilocode_change
+  warnings: Warning[] // accurecode_change
   consoleState: ConsoleState
 }
 
@@ -429,16 +429,16 @@ export interface Interface {
   readonly getGlobal: () => Effect.Effect<Info>
   readonly getConsoleState: () => Effect.Effect<ConsoleState>
   readonly update: (config: Info) => Effect.Effect<void>
-  // kilocode_change start
+  // accurecode_change start
   readonly updateGlobal: (
     config: Info,
     options?: { dispose?: boolean },
   ) => Effect.Effect<{ info: Info; changed: boolean }>
-  // kilocode_change end
+  // accurecode_change end
   readonly invalidate: () => Effect.Effect<void>
   readonly directories: () => Effect.Effect<string[]>
   readonly waitForDependencies: () => Effect.Effect<void>
-  readonly warnings: () => Effect.Effect<Warning[]> // kilocode_change
+  readonly warnings: () => Effect.Effect<Warning[]> // accurecode_change
 }
 
 export class Service extends Context.Service<Service, Interface>()("@opencode/Config") {}
@@ -446,9 +446,9 @@ export class Service extends Context.Service<Service, Interface>()("@opencode/Co
 export const use = serviceUse(Service)
 
 function globalConfigFile() {
-  // kilocode_change start
-  const candidates = ["kilo.jsonc", "kilo.json", "opencode.jsonc", "opencode.json", "config.json"].map((file) =>
-    // kilocode_change end
+  // accurecode_change start
+  const candidates = ["accure.jsonc", "accure.json", "opencode.jsonc", "opencode.json", "config.json"].map((file) =>
+    // accurecode_change end
     path.join(Global.Path.config, file),
   )
   for (const file of candidates) {
@@ -459,8 +459,16 @@ function globalConfigFile() {
 
 function patchJsonc(input: string, patch: unknown, path: string[] = []): string {
   if (!isRecord(patch)) {
-    const edits = modify(input, path, patch === null ? undefined : patch, {
-      // kilocode_change
+    const value = patch === null ? undefined : patch // accurecode_change
+    if (value === undefined) { // accurecode_change start - avoid jsonc-parser error on deleting non-existent paths
+      const tree = parseTree(input)
+      const node = tree && findNodeAtLocation(tree, path)
+      if (!node) {
+        return input
+      }
+    } // accurecode_change end
+    const edits = modify(input, path, value, { // accurecode_change
+      // accurecode_change
       formattingOptions: {
         insertSpaces: true,
         tabSize: 2,
@@ -469,7 +477,7 @@ function patchJsonc(input: string, patch: unknown, path: string[] = []): string 
     return applyEdits(input, edits)
   }
 
-  // kilocode_change start — when the existing JSONC node at this path is a
+  // accurecode_change start — when the existing JSONC node at this path is a
   // scalar (e.g. permission.bash is "ask" as a string), jsonc-parser cannot
   // add child keys to it. Detect this case and replace the whole node with
   // the patch object in a single modify() call instead of recursing.
@@ -487,7 +495,7 @@ function patchJsonc(input: string, patch: unknown, path: string[] = []): string 
       return applyEdits(input, edits)
     }
   }
-  // kilocode_change end
+  // accurecode_change end
 
   return Object.entries(patch).reduce((result, [key, value]) => patchJsonc(result, value, [...path, key]), input)
 }
@@ -558,10 +566,10 @@ export const layer = Layer.effect(
 
       yield* Effect.promise(() => resolveLoadedPlugins(data, options.path))
       if (!data.$schema) {
-        // kilocode_change start
-        data.$schema = "https://app.kilo.ai/config.json"
-        const updated = text.replace(/^\s*\{/, '{\n  "$schema": "https://app.kilo.ai/config.json",')
-        // kilocode_change end
+        // accurecode_change start
+        data.$schema = "https://app.accurecode.ai/config.json"
+        const updated = text.replace(/^\s*\{/, '{\n  "$schema": "https://app.accurecode.ai/config.json",')
+        // accurecode_change end
         yield* fs.writeFileString(options.path, updated).pipe(Effect.catch(() => Effect.void))
       }
       return data
@@ -574,29 +582,29 @@ export const layer = Layer.effect(
       return yield* loadConfig(text, { path: filepath }, env)
     })
 
-    let globalStamp = "" // kilocode_change
+    let globalStamp = "" // accurecode_change
 
     const loadGlobal = Effect.fnUntraced(function* (env?: Record<string, string>) {
-      // kilocode_change start
-      yield* Effect.promise(() => KilocodeConfig.migrateBashPermission())
-      globalStamp = yield* KilocodeGlobalConfigStamp.read(fs, Global.Path.config)
-      // kilocode_change end
+      // accurecode_change start
+      yield* Effect.promise(() => AccurecodeConfig.migrateBashPermission())
+      globalStamp = yield* AccurecodeGlobalConfigStamp.read(fs, Global.Path.config)
+      // accurecode_change end
       let result: Info = {}
       // Seed the default global config with the schema for editor completion, but avoid writing when the user
       // explicitly routes config through env-provided paths or content.
-      if (!Flag.KILO_CONFIG && !Flag.KILO_CONFIG_DIR && !Flag.KILO_CONFIG_CONTENT) {
+      if (!Flag.ACCURECODE_CONFIG && !Flag.ACCURECODE_CONFIG_DIR && !Flag.ACCURECODE_CONFIG_CONTENT) {
         const file = globalConfigFile()
         if (!existsSync(file)) {
           yield* fs
-            .writeWithDirs(file, JSON.stringify({ $schema: "https://app.kilo.ai/config.json" }, null, 2))
+            .writeWithDirs(file, JSON.stringify({ $schema: "https://app.accurecode.ai/config.json" }, null, 2))
             .pipe(Effect.catch(() => Effect.void))
         }
       }
       result = mergeConfig(result, yield* loadFile(path.join(Global.Path.config, "config.json"), env))
-      // kilocode_change start
-      result = mergeConfig(result, yield* loadFile(path.join(Global.Path.config, "kilo.json"), env))
-      result = mergeConfig(result, yield* loadFile(path.join(Global.Path.config, "kilo.jsonc"), env))
-      // kilocode_change end
+      // accurecode_change start
+      result = mergeConfig(result, yield* loadFile(path.join(Global.Path.config, "accure.json"), env))
+      result = mergeConfig(result, yield* loadFile(path.join(Global.Path.config, "accure.jsonc"), env))
+      // accurecode_change end
       result = mergeConfig(result, yield* loadFile(path.join(Global.Path.config, "opencode.json"), env))
       result = mergeConfig(result, yield* loadFile(path.join(Global.Path.config, "opencode.jsonc"), env))
 
@@ -607,7 +615,7 @@ export const layer = Layer.effect(
             .then(async (mod) => {
               const { provider, model, ...rest } = mod.default
               if (provider && model) result.model = `${provider}/${model}`
-              result["$schema"] = "https://app.kilo.ai/config.json" // kilocode_change
+              result["$schema"] = "https://app.accurecode.ai/config.json" // accurecode_change
               result = mergeConfig(result, rest)
               await fsNode.writeFile(path.join(Global.Path.config, "config.json"), JSON.stringify(result, null, 2))
               await fsNode.unlink(legacy)
@@ -616,7 +624,7 @@ export const layer = Layer.effect(
         )
       }
 
-      globalStamp = yield* KilocodeGlobalConfigStamp.read(fs, Global.Path.config) // kilocode_change
+      globalStamp = yield* AccurecodeGlobalConfigStamp.read(fs, Global.Path.config) // accurecode_change
       return result
     })
 
@@ -630,18 +638,18 @@ export const layer = Layer.effect(
       Duration.infinity,
     )
 
-    // kilocode_change start - detect global config edits made by other Kilo processes
+    // accurecode_change start - detect global config edits made by other Accure processes
     const refreshGlobal = Effect.fnUntraced(function* () {
-      const stamp = yield* KilocodeGlobalConfigStamp.read(fs, Global.Path.config)
+      const stamp = yield* AccurecodeGlobalConfigStamp.read(fs, Global.Path.config)
       if (!globalStamp || stamp === globalStamp) return false
       globalStamp = stamp
       yield* invalidateGlobal
       return true
     })
-    // kilocode_change end
+    // accurecode_change end
 
     const getGlobal = Effect.fn("Config.getGlobal")(function* () {
-      yield* refreshGlobal() // kilocode_change
+      yield* refreshGlobal() // accurecode_change
       return yield* cachedGlobal
     })
 
@@ -652,7 +660,7 @@ export const layer = Layer.effect(
         yield* fs
           .writeFileString(
             gitignore,
-            // kilocode_change start - added pnpm-lock.yaml, yarn.lock, agent-manager.json (not in upstream)
+            // accurecode_change start - added pnpm-lock.yaml, yarn.lock, agent-manager.json (not in upstream)
             [
               "node_modules",
               "package.json",
@@ -663,11 +671,11 @@ export const layer = Layer.effect(
               ".gitignore",
               "agent-manager.json",
             ].join("\n"),
-            // kilocode_change end
+            // accurecode_change end
           )
           .pipe(
             Effect.catchIf(
-              (e) => e.reason._tag === "PermissionDenied" || e.reason._tag === "NotFound", // kilocode_change - also ignore NotFound (broken symlink/junction on Windows)
+              (e) => e.reason._tag === "PermissionDenied" || e.reason._tag === "NotFound", // accurecode_change - also ignore NotFound (broken symlink/junction on Windows)
               () => Effect.void,
             ),
           )
@@ -676,13 +684,13 @@ export const layer = Layer.effect(
 
     const loadInstanceState = Effect.fn("Config.loadInstanceState")(
       function* (ctx: InstanceContext) {
-        // kilocode_change start - warning accumulator and legacy Kilo config
+        // accurecode_change start - warning accumulator and legacy Accure config
         const warnings: Warning[] = []
         const auth = yield* authSvc.all().pipe(Effect.orDie)
 
         let result: Info = {}
         const legacy = yield* Effect.promise(() =>
-          KilocodeConfig.loadLegacyConfigs({
+          AccurecodeConfig.loadLegacyConfigs({
             projectDir: ctx.directory,
             merge: mergeConfigConcatArrays,
           }),
@@ -690,12 +698,12 @@ export const layer = Layer.effect(
         result = mergeConfigConcatArrays(result, legacy.config)
         warnings.push(...legacy.warnings)
 
-        const orgModes = yield* Effect.promise(() => KilocodeConfig.loadOrganizationModes(auth))
+        const orgModes = yield* Effect.promise(() => AccurecodeConfig.loadOrganizationModes(auth))
         if (Object.keys(orgModes.agents).length > 0) {
           result = mergeConfigConcatArrays(result, { agent: orgModes.agents })
         }
         warnings.push(...orgModes.warnings)
-        // kilocode_change end
+        // accurecode_change end
 
         const authEnv: Record<string, string> = {}
         const consoleManagedProviders = new Set<string>()
@@ -703,7 +711,7 @@ export const layer = Layer.effect(
 
         const pluginScopeForSource = Effect.fnUntraced(function* (source: string) {
           if (source.startsWith("http://") || source.startsWith("https://")) return "global"
-          if (source === "KILO_CONFIG_CONTENT") return "local"
+          if (source === "ACCURECODE_CONFIG_CONTENT") return "local"
           if (containsPath(source, ctx)) return "local"
           return "global"
         })
@@ -729,21 +737,21 @@ export const layer = Layer.effect(
           result.plugin_origins = plugins
         })
 
-        // kilocode_change start
+        // accurecode_change start
         const merge = Effect.fnUntraced(function* (source: string, next: Info, kind?: ConfigPlugin.Scope) {
           const scope = kind ?? (yield* pluginScopeForSource(source))
-          const scoped = KilocodeConfig.scopeIndexing(next, scope)
+          const scoped = AccurecodeConfig.scopeIndexing(next, scope)
           result = mergeConfigConcatArrays(result, scoped)
           return yield* mergePluginOrigins(source, scoped.plugin, scope)
         })
-        // kilocode_change end
+        // accurecode_change end
 
         for (const [key, value] of Object.entries(auth)) {
           if (value.type === "wellknown") {
             const url = key.replace(/\/+$/, "")
             authEnv[value.key] = value.token
             const wellknownURL = `${url}/.well-known/opencode`
-            // kilocode_change start
+            // accurecode_change start
             const source = wellknownURL
             yield* Effect.gen(function* () {
               log.debug("fetching remote config", { url: wellknownURL })
@@ -768,7 +776,7 @@ export const layer = Layer.effect(
                   })
                 : {}
               const remoteConfig = mergeConfig(isRecord(wellknown.config) ? wellknown.config : {}, fetchedConfig)
-              if (!remoteConfig.$schema) remoteConfig.$schema = "https://app.kilo.ai/config.json"
+              if (!remoteConfig.$schema) remoteConfig.$schema = "https://app.accurecode.ai/config.json"
               const next = yield* loadConfig(
                 JSON.stringify(remoteConfig),
                 {
@@ -791,39 +799,39 @@ export const layer = Layer.effect(
                 return Effect.void
               }),
             )
-            // kilocode_change end
+            // accurecode_change end
           }
         }
 
-        // kilocode_change start - capture global config failures as warnings
+        // accurecode_change start - capture global config failures as warnings
         const global = yield* (Object.keys(authEnv).length ? loadGlobal(authEnv) : getGlobal()).pipe(
           Effect.catchDefect((err: unknown) => {
             caughtWarning(warnings, "global config", err)
             return Effect.succeed({} as Info)
           }),
         )
-        // kilocode_change end
+        // accurecode_change end
 
         yield* merge(Global.Path.config, global, "global")
 
-        if (Flag.KILO_CONFIG) {
-          // kilocode_change start - capture KILO_CONFIG failures as warnings
+        if (Flag.ACCURECODE_CONFIG) {
+          // accurecode_change start - capture ACCURECODE_CONFIG failures as warnings
           yield* merge(
-            Flag.KILO_CONFIG,
-            yield* loadFile(Flag.KILO_CONFIG, authEnv).pipe(
+            Flag.ACCURECODE_CONFIG,
+            yield* loadFile(Flag.ACCURECODE_CONFIG, authEnv).pipe(
               Effect.catchDefect((err: unknown) => {
-                caughtWarning(warnings, Flag.KILO_CONFIG!, err)
+                caughtWarning(warnings, Flag.ACCURECODE_CONFIG!, err)
                 return Effect.succeed({} as Info)
               }),
             ),
           )
-          // kilocode_change end
-          log.debug("loaded custom config", { path: Flag.KILO_CONFIG })
+          // accurecode_change end
+          log.debug("loaded custom config", { path: Flag.ACCURECODE_CONFIG })
         }
 
-        if (!Flag.KILO_DISABLE_PROJECT_CONFIG) {
-          // kilocode_change start - also discover kilo.json project files
-          for (const name of ["kilo", "opencode"] as const) {
+        if (!Flag.ACCURECODE_DISABLE_PROJECT_CONFIG) {
+          // accurecode_change start - also discover accure.json project files
+          for (const name of ["accure", "opencode"] as const) {
             for (const file of yield* ConfigPaths.files(name, ctx.directory, ctx.project.worktree).pipe(Effect.orDie)) {
               yield* merge(
                 file,
@@ -837,25 +845,25 @@ export const layer = Layer.effect(
               )
             }
           }
-          // kilocode_change end
+          // accurecode_change end
         }
 
         result.agent = result.agent || {}
         result.mode = result.mode || {}
         result.plugin = result.plugin || []
 
-        const directories = yield* ConfigPaths.directories(ctx.directory, ctx.project.worktree) // kilocode_change
+        const directories = yield* ConfigPaths.directories(ctx.directory, ctx.project.worktree) // accurecode_change
 
-        if (Flag.KILO_CONFIG_DIR) {
-          log.debug("loading config from KILO_CONFIG_DIR", { path: Flag.KILO_CONFIG_DIR })
+        if (Flag.ACCURECODE_CONFIG_DIR) {
+          log.debug("loading config from ACCURECODE_CONFIG_DIR", { path: Flag.ACCURECODE_CONFIG_DIR })
         }
 
         const deps: Fiber.Fiber<void>[] = []
 
-        // kilocode_change start
+        // accurecode_change start
         for (const dir of unique(directories)) {
-          if (KilocodeConfig.isConfigDir(dir, Flag.KILO_CONFIG_DIR)) {
-            for (const file of KilocodeConfig.ALL_CONFIG_FILES) {
+          if (AccurecodeConfig.isConfigDir(dir, Flag.ACCURECODE_CONFIG_DIR)) {
+            for (const file of AccurecodeConfig.ALL_CONFIG_FILES) {
               const source = path.join(dir, file)
               log.debug(`loading config from ${source}`)
               yield* merge(
@@ -872,7 +880,7 @@ export const layer = Layer.effect(
               result.plugin ??= []
             }
           }
-          // kilocode_change end
+          // accurecode_change end
 
           yield* ensureGitignore(dir).pipe(Effect.orDie)
 
@@ -880,7 +888,7 @@ export const layer = Layer.effect(
             .install(dir, {
               add: [
                 {
-                  name: "@kilocode/plugin",
+                  name: "@accurecode/plugin",
                   version: InstallationLocal ? undefined : InstallationVersion,
                 },
               ],
@@ -899,30 +907,30 @@ export const layer = Layer.effect(
             )
           deps.push(dep)
 
-          // kilocode_change start - propagate parse errors to the Warning accumulator
+          // accurecode_change start - propagate parse errors to the Warning accumulator
           result.command = mergeDeep(
             result.command ?? {},
             yield* Effect.promise(() => ConfigCommand.load(dir, warnings)),
           )
           result.agent = mergeDeep(result.agent ?? {}, yield* Effect.promise(() => ConfigAgent.load(dir, warnings)))
           result.agent = mergeDeep(result.agent ?? {}, yield* Effect.promise(() => ConfigAgent.loadMode(dir, warnings)))
-          // kilocode_change end
+          // accurecode_change end
           // Auto-discovered plugins under `.opencode/plugin(s)` are already local files, so ConfigPlugin.load
           // returns normalized Specs and we only need to attach origin metadata here.
           const list = yield* Effect.promise(() => ConfigPlugin.load(dir))
           yield* mergePluginOrigins(dir, list)
         }
 
-        if (process.env.KILO_CONFIG_CONTENT) {
-          // kilocode_change start - capture KILO_CONFIG_CONTENT parse failures as warnings
-          const source = "KILO_CONFIG_CONTENT"
+        if (process.env.ACCURECODE_CONFIG_CONTENT) {
+          // accurecode_change start - capture ACCURECODE_CONFIG_CONTENT parse failures as warnings
+          const source = "ACCURECODE_CONFIG_CONTENT"
           yield* merge(
             source,
-            yield* loadConfig(process.env.KILO_CONFIG_CONTENT, {
+            yield* loadConfig(process.env.ACCURECODE_CONFIG_CONTENT, {
               dir: ctx.directory,
               source,
             }).pipe(
-              Effect.tap(() => Effect.sync(() => log.debug("loaded custom config from KILO_CONFIG_CONTENT"))),
+              Effect.tap(() => Effect.sync(() => log.debug("loaded custom config from ACCURECODE_CONFIG_CONTENT"))),
               Effect.catchDefect((err: unknown) => {
                 caughtWarning(warnings, source, err)
                 return Effect.succeed({} as Info)
@@ -930,7 +938,7 @@ export const layer = Layer.effect(
             ),
             "local",
           )
-          // kilocode_change end
+          // accurecode_change end
         }
 
         const activeAccount = Option.getOrUndefined(
@@ -946,8 +954,8 @@ export const layer = Layer.effect(
               { concurrency: 2 },
             )
             if (Option.isSome(tokenOpt)) {
-              process.env["KILO_CONSOLE_TOKEN"] = tokenOpt.value
-              yield* env.set("KILO_CONSOLE_TOKEN", tokenOpt.value)
+              process.env["ACCURECODE_CONSOLE_TOKEN"] = tokenOpt.value
+              yield* env.set("ACCURECODE_CONSOLE_TOKEN", tokenOpt.value)
             }
 
             if (Option.isSome(configOpt)) {
@@ -973,17 +981,17 @@ export const layer = Layer.effect(
         }
 
         const managedDir = ConfigManaged.managedConfigDir()
-        // kilocode_change start - include kilo.json/kilo.jsonc in managed dir loading
+        // accurecode_change start - include accure.json/accure.jsonc in managed dir loading
         if (existsSync(managedDir)) {
-          for (const file of KilocodeConfig.ALL_CONFIG_FILES) {
+          for (const file of AccurecodeConfig.ALL_CONFIG_FILES) {
             const source = path.join(managedDir, file)
             yield* merge(source, yield* loadFile(source), "global")
           }
         }
-        // kilocode_change end
+        // accurecode_change end
 
         // macOS managed preferences (.mobileconfig deployed via MDM) override everything
-        // kilocode_change start
+        // accurecode_change start
         const managed = yield* Effect.promise(() => ConfigManaged.readManagedPreferences())
         if (managed) {
           yield* merge(
@@ -995,7 +1003,7 @@ export const layer = Layer.effect(
             "global",
           )
         }
-        // kilocode_change end
+        // accurecode_change end
 
         for (const [name, mode] of Object.entries(result.mode ?? {})) {
           result.agent = mergeDeep(result.agent ?? {}, {
@@ -1006,11 +1014,11 @@ export const layer = Layer.effect(
           })
         }
 
-        if (Flag.KILO_PERMISSION) {
+        if (Flag.ACCURECODE_PERMISSION) {
           try {
-            result.permission = mergeDeep(result.permission ?? {}, JSON.parse(Flag.KILO_PERMISSION))
+            result.permission = mergeDeep(result.permission ?? {}, JSON.parse(Flag.ACCURECODE_PERMISSION))
           } catch (err) {
-            log.warn("KILO_PERMISSION contains invalid JSON, skipping", { err })
+            log.warn("ACCURECODE_PERMISSION contains invalid JSON, skipping", { err })
           }
         }
 
@@ -1033,21 +1041,21 @@ export const layer = Layer.effect(
           result.share = "auto"
         }
 
-        if (Flag.KILO_DISABLE_AUTOCOMPACT) {
+        if (Flag.ACCURECODE_DISABLE_AUTOCOMPACT) {
           result.compaction = { ...result.compaction, auto: false }
         }
-        if (Flag.KILO_DISABLE_PRUNE) {
+        if (Flag.ACCURECODE_DISABLE_PRUNE) {
           result.compaction = { ...result.compaction, prune: false }
         }
-        // kilocode_change start — inject Kilo default plugins into both plugin list and origins
-        KilocodeDefaultPlugins.apply(result, { disabled: Flag.KILO_DISABLE_DEFAULT_PLUGINS, log })
-        // kilocode_change end
+        // accurecode_change start — inject Accure default plugins into both plugin list and origins
+        AccurecodeDefaultPlugins.apply(result, { disabled: Flag.ACCURECODE_DISABLE_DEFAULT_PLUGINS, log })
+        // accurecode_change end
 
         return {
           config: result,
           directories,
           deps,
-          warnings, // kilocode_change
+          warnings, // accurecode_change
           consoleState: {
             consoleManagedProviders: Array.from(consoleManagedProviders),
             activeOrgName,
@@ -1065,11 +1073,11 @@ export const layer = Layer.effect(
     )
 
     const get = Effect.fn("Config.get")(function* () {
-      // kilocode_change start - reload instance config when global config changed elsewhere
+      // accurecode_change start - reload instance config when global config changed elsewhere
       if (yield* refreshGlobal()) {
         yield* InstanceState.invalidate(state).pipe(Effect.catchCause(() => Effect.void))
       }
-      // kilocode_change end
+      // accurecode_change end
       return yield* InstanceState.use(state, (s) => s.config)
     })
 
@@ -1088,9 +1096,9 @@ export const layer = Layer.effect(
     })
 
     const update = Effect.fn("Config.update")(function* (config: Info) {
-      // kilocode_change start - delegate Kilo project config update behavior.
+      // accurecode_change start - delegate Accure project config update behavior.
       const ctx = yield* InstanceState.context
-      yield* KilocodeConfig.updateProjectConfig({
+      yield* AccurecodeConfig.updateProjectConfig({
         fs,
         directory: ctx.directory,
         worktree: ctx.worktree,
@@ -1115,16 +1123,16 @@ export const layer = Layer.effect(
     const warnings = Effect.fn("Config.warnings")(function* () {
       return yield* InstanceState.use(state, (s) => s.warnings)
     })
-    // kilocode_change end
+    // accurecode_change end
 
     const invalidate = Effect.fn("Config.invalidate")(function* () {
       yield* invalidateGlobal
     })
 
-    // kilocode_change start - add dispose option to skip Instance.disposeAll for permission-only changes
+    // accurecode_change start - add dispose option to skip Instance.disposeAll for permission-only changes
     const updateGlobal = Effect.fn("Config.updateGlobal")(function* (config: Info, options?: { dispose?: boolean }) {
       const dispose = options?.dispose ?? true
-      // kilocode_change end
+      // accurecode_change end
       const file = globalConfigFile()
       const before = (yield* readConfigFile(file)) ?? "{}"
       const patch = writableGlobal(config)
@@ -1133,7 +1141,7 @@ export const layer = Layer.effect(
       let changed: boolean
       if (!file.endsWith(".jsonc")) {
         const existing = ConfigParse.schema(Info, ConfigParse.jsonc(before, file), file)
-        const merged = KilocodeConfig.mergeConfig(writable(existing), patch) // kilocode_change
+        const merged = AccurecodeConfig.mergeConfig(writable(existing), patch) // accurecode_change
         const serialized = JSON.stringify(merged, null, 2)
         changed = serialized !== before
         if (changed) yield* fs.writeFileString(file, serialized).pipe(Effect.orDie)
@@ -1145,7 +1153,7 @@ export const layer = Layer.effect(
         if (changed) yield* fs.writeFileString(file, updated).pipe(Effect.orDie)
       }
 
-      // kilocode_change start - skip dispose when caller opts out
+      // accurecode_change start - skip dispose when caller opts out
       if (!dispose) {
         yield* invalidateGlobal
         yield* InstanceState.invalidate(state).pipe(Effect.catchCause(() => Effect.void))
@@ -1160,10 +1168,10 @@ export const layer = Layer.effect(
         ).pipe(Effect.catchCause(() => Effect.void))
         return { info: next, changed }
       }
-      // kilocode_change end
+      // accurecode_change end
 
       if (changed) yield* invalidate()
-      // kilocode_change start - hot-reload global config changes in the active instance
+      // accurecode_change start - hot-reload global config changes in the active instance
       if (changed) {
         yield* InstanceState.invalidate(state).pipe(Effect.catchCause(() => Effect.void))
         yield* Effect.sync(() =>
@@ -1176,7 +1184,7 @@ export const layer = Layer.effect(
           }),
         ).pipe(Effect.catchCause(() => Effect.void))
       }
-      // kilocode_change end
+      // accurecode_change end
       return { info: next, changed }
     })
 
@@ -1189,7 +1197,7 @@ export const layer = Layer.effect(
       invalidate,
       directories,
       waitForDependencies,
-      warnings, // kilocode_change
+      warnings, // accurecode_change
     })
   }),
 )
