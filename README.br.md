@@ -56,59 +56,6 @@ Depois execute `accure` em qualquer diretório de projeto para começar.
 
 </details>
 
-<details>
-<summary><strong>JetBrains</strong></summary>
-
-<br>
-
-Instale o [plugin Accure Code](https://plugins.jetbrains.com/plugin/28350-accure-code) pelo JetBrains Marketplace ou procure por "Accure Code" em `Settings → Plugins` dentro de qualquer IDE JetBrains.
-
-</details>
-
-<details>
-<summary><strong>Cloud Agent</strong></summary>
-
-<br>
-
-Execute o Accure pela web, sem máquina local, em [app.accure.ai/cloud](https://app.accure.ai/cloud).
-
-</details>
-
-<details>
-<summary><strong>Revisões de código</strong></summary>
-
-<br>
-
-Configure revisões automáticas de código com IA nos seus pull requests em [app.accure.ai/code-reviews](https://app.accure.ai/code-reviews).
-
-</details>
-
-<details>
-<summary><strong>AccureClaw</strong></summary>
-
-<br>
-
-Inicie seu agente de IA sempre ativo em [app.accure.ai/claw](https://app.accure.ai/claw).
-
-</details>
-
-<details>
-<summary>Instalar a CLI pelo GitHub Releases (binários)</summary>
-
-Baixe o binário mais recente na [página de Releases](https://github.com/Accure-Org/accurecode/releases).
-
-| Plataforma | Asset |
-|---|---|
-| Windows (a maioria dos PCs) | `accure-windows-x64.zip` |
-| macOS (Apple Silicon) | `accure-darwin-arm64.zip` |
-| macOS (Intel) | `accure-darwin-x64.zip` |
-| Linux x64 | `accure-linux-x64.tar.gz` |
-| Linux ARM | `accure-linux-arm64.tar.gz` |
-
-Notas: `x64-baseline` é uma build de compatibilidade para CPUs antigas sem AVX. `musl` é a build com link estático para Alpine ou imagens Docker mínimas sem glibc. `accure-vscode-*.vsix` é o pacote da extensão VS Code, não a CLI. Arquivos `Source code` são para compilar a partir do código-fonte.
-
-</details>
-
 ### Agents
 
 Accure vem com agents especializados para você alternar dependendo da tarefa. Você também pode criar seus próprios agents personalizados.

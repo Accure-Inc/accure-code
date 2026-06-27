@@ -56,59 +56,6 @@ paru -S accure-bin
 
 </details>
 
-<details>
-<summary><strong>JetBrains</strong></summary>
-
-<br>
-
-從 JetBrains Marketplace 安裝 [Accure Code 外掛](https://plugins.jetbrains.com/plugin/28350-accure-code)，或在任何 JetBrains IDE 的 `Settings → Plugins` 中搜尋 "Accure Code"。
-
-</details>
-
-<details>
-<summary><strong>Cloud Agent</strong></summary>
-
-<br>
-
-無需本機電腦，在 Web 上透過 [app.accure.ai/cloud](https://app.accure.ai/cloud) 執行 Accure。
-
-</details>
-
-<details>
-<summary><strong>程式碼審查</strong></summary>
-
-<br>
-
-在 [app.accure.ai/code-reviews](https://app.accure.ai/code-reviews) 為你的 Pull Request 設定自動 AI 程式碼審查。
-
-</details>
-
-<details>
-<summary><strong>AccureClaw</strong></summary>
-
-<br>
-
-在 [app.accure.ai/claw](https://app.accure.ai/claw) 啟動你的常駐 AI 代理。
-
-</details>
-
-<details>
-<summary>從 GitHub Releases 安裝 CLI（二進位檔）</summary>
-
-從 [Releases 頁面](https://github.com/Accure-Org/accurecode/releases) 下載最新二進位檔。
-
-| 平台 | 資源 |
-|---|---|
-| Windows（大多數 PC） | `accure-windows-x64.zip` |
-| macOS（Apple Silicon） | `accure-darwin-arm64.zip` |
-| macOS（Intel） | `accure-darwin-x64.zip` |
-| Linux x64 | `accure-linux-x64.tar.gz` |
-| Linux ARM | `accure-linux-arm64.tar.gz` |
-
-注意：`x64-baseline` 是面向不支援 AVX 的舊 CPU 的相容性建置。`musl` 是面向 Alpine 或沒有 glibc 的極簡 Docker 映像的靜態連結建置。`accure-vscode-*.vsix` 是 VS Code 擴充功能套件，不是 CLI。`Source code` 封存檔用於從原始碼建置。
-
-</details>
-
 ### Agents
 
 Accure 內建可依任務切換的專用 Agents。你也可以建立自己的自訂 Agents。

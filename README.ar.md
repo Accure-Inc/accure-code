@@ -58,59 +58,6 @@ paru -S accure-bin
 
 </details>
 
-<details>
-<summary><strong>JetBrains</strong></summary>
-
-<br>
-
-ثبّت [إضافة Accure Code](https://plugins.jetbrains.com/plugin/28350-accure-code) من JetBrains Marketplace، أو ابحث عن "Accure Code" في `Settings → Plugins` داخل أي JetBrains IDE.
-
-</details>
-
-<details>
-<summary><strong>Cloud Agent</strong></summary>
-
-<br>
-
-شغّل Accure من الويب، من دون جهاز محلي، على [app.accure.ai/cloud](https://app.accure.ai/cloud).
-
-</details>
-
-<details>
-<summary><strong>مراجعات الكود</strong></summary>
-
-<br>
-
-أعدّ مراجعات كود آلية بالذكاء الاصطناعي لطلبات السحب الخاصة بك على [app.accure.ai/code-reviews](https://app.accure.ai/code-reviews).
-
-</details>
-
-<details>
-<summary><strong>AccureClaw</strong></summary>
-
-<br>
-
-شغّل وكيل الذكاء الاصطناعي الدائم لديك على [app.accure.ai/claw](https://app.accure.ai/claw).
-
-</details>
-
-<details>
-<summary>تثبيت CLI من GitHub Releases (ملفات ثنائية)</summary>
-
-نزّل أحدث ملف ثنائي من [صفحة Releases](https://github.com/Accure-Org/accurecode/releases).
-
-| المنصة | الملف |
-|---|---|
-| Windows (معظم أجهزة PC) | `accure-windows-x64.zip` |
-| macOS (Apple Silicon) | `accure-darwin-arm64.zip` |
-| macOS (Intel) | `accure-darwin-x64.zip` |
-| Linux x64 | `accure-linux-x64.tar.gz` |
-| Linux ARM | `accure-linux-arm64.tar.gz` |
-
-ملاحظات: `x64-baseline` هو بناء توافق للمعالجات القديمة التي لا تدعم AVX. `musl` هو البناء المرتبط ثابتًا لـ Alpine أو صور Docker البسيطة من دون glibc. `accure-vscode-*.vsix` هو حزمة إضافة VS Code وليس CLI. أرشيفات `Source code` مخصصة للبناء من المصدر.
-
-</details>
-
 ### Agents
 
 يأتي Accure مع agents متخصصة يمكنك التبديل بينها حسب المهمة. يمكنك أيضًا إنشاء agents مخصصة خاصة بك.

@@ -56,59 +56,6 @@ Kjør deretter `accure` i en prosjektmappe for å starte.
 
 </details>
 
-<details>
-<summary><strong>JetBrains</strong></summary>
-
-<br>
-
-Installer [Accure Code-pluginen](https://plugins.jetbrains.com/plugin/28350-accure-code) fra JetBrains Marketplace, eller søk etter "Accure Code" i `Settings → Plugins` i en JetBrains IDE.
-
-</details>
-
-<details>
-<summary><strong>Cloud Agent</strong></summary>
-
-<br>
-
-Kjør Accure fra nettet, uten lokal maskin, på [app.accure.ai/cloud](https://app.accure.ai/cloud).
-
-</details>
-
-<details>
-<summary><strong>Kodegjennomganger</strong></summary>
-
-<br>
-
-Sett opp automatiske AI-kodegjennomganger på pull requestene dine på [app.accure.ai/code-reviews](https://app.accure.ai/code-reviews).
-
-</details>
-
-<details>
-<summary><strong>AccureClaw</strong></summary>
-
-<br>
-
-Start din alltid aktive AI-agent på [app.accure.ai/claw](https://app.accure.ai/claw).
-
-</details>
-
-<details>
-<summary>Installer CLI fra GitHub Releases (binærfiler)</summary>
-
-Last ned den nyeste binærfilen fra [Releases-siden](https://github.com/Accure-Org/accurecode/releases).
-
-| Plattform | Asset |
-|---|---|
-| Windows (de fleste PC-er) | `accure-windows-x64.zip` |
-| macOS (Apple Silicon) | `accure-darwin-arm64.zip` |
-| macOS (Intel) | `accure-darwin-x64.zip` |
-| Linux x64 | `accure-linux-x64.tar.gz` |
-| Linux ARM | `accure-linux-arm64.tar.gz` |
-
-Merknader: `x64-baseline` er en kompatibilitetsbygg for eldre CPU-er uten AVX. `musl` er den statisk lenkede byggen for Alpine eller minimale Docker-bilder uten glibc. `accure-vscode-*.vsix` er VS Code-utvidelsespakken, ikke CLI-en. `Source code`-arkiver er for bygging fra kildekode.
-
-</details>
-
 ### Agents
 
 Accure leveres med spesialiserte agents du kan bytte mellom avhengig av oppgaven. Du kan også bygge dine egne egendefinerte agents.
