@@ -1,19 +1,19 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.QuestionInfoDto
-import ai.kilocode.rpc.dto.QuestionOptionDto
-import ai.kilocode.rpc.dto.QuestionReplyDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.QuestionInfoDto
+import ai.accurecode.rpc.dto.QuestionOptionDto
+import ai.accurecode.rpc.dto.QuestionReplyDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
 
 /**
  * End-to-end-ish controller test that drives a realistic CLI-shaped event
  * sequence through [SessionController], verifies model/state, sends a
  * synthetic question reply, and verifies the reply payload forwarded to
- * [ai.kilocode.client.testing.FakeSessionRpcApi].
+ * [ai.accurecode.client.testing.FakeSessionRpcApi].
  *
- * KiloCliDataParser lives in the backend module and is not available in
+ * AccureCliDataParser lives in the backend module and is not available in
  * the frontend test classpath. The fallback plan from the implementation
  * plan is used here: DTOs are constructed directly, which still validates
  * the full controller/model path.
@@ -94,7 +94,7 @@ class JsonSessionStreamTest : SessionControllerTestBase() {
             multiple: false
             custom: false
 
-            [code] [kilo/gpt-5] [awaiting-question]
+            [code] [accure/gpt-5] [awaiting-question]
             """,
             m,
         )

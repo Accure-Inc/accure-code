@@ -1,28 +1,28 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.jetbrains.api.model.Config
-import ai.kilocode.jetbrains.api.model.KiloNotifications200ResponseInner
-import ai.kilocode.jetbrains.api.model.KiloProfile200Response
-import ai.kilocode.backend.migration.LegacyMigrationDetection
+import ai.accurecode.jetbrains.api.model.Config
+import ai.accurecode.jetbrains.api.model.AccureNotifications200ResponseInner
+import ai.accurecode.jetbrains.api.model.AccureProfile200Response
+import ai.accurecode.backend.migration.LegacyMigrationDetection
 
 /**
  * Full application lifecycle state, combining CLI transport connection
  * status with data-loading progress.
  *
- * [ConnectionState] stays internal to [KiloConnectionService] for the
+ * [ConnectionState] stays internal to [AccureConnectionService] for the
  * transport layer. This sealed class is what the frontend observes.
  */
-sealed class KiloAppState {
-    data object Disconnected : KiloAppState()
-    data object Connecting : KiloAppState()
-    data class Loading(val progress: LoadProgress) : KiloAppState()
-    data class MigrationRequired(val detection: LegacyMigrationDetection) : KiloAppState()
-    data class Ready(val data: AppData) : KiloAppState()
-    data class Error(val message: String, val errors: List<LoadError> = emptyList()) : KiloAppState()
+sealed class AccureAppState {
+    data object Disconnected : AccureAppState()
+    data object Connecting : AccureAppState()
+    data class Loading(val progress: LoadProgress) : AccureAppState()
+    data class MigrationRequired(val detection: LegacyMigrationDetection) : AccureAppState()
+    data class Ready(val data: AppData) : AccureAppState()
+    data class Error(val message: String, val errors: List<LoadError> = emptyList()) : AccureAppState()
 }
 
 /**
- * Tracks which global data fetches have completed during the [KiloAppState.Loading] phase.
+ * Tracks which global data fetches have completed during the [AccureAppState.Loading] phase.
  */
 data class LoadProgress(
     val config: Boolean = false,
@@ -50,11 +50,11 @@ data class ConfigWarning(
 
 /**
  * All global data that has been successfully loaded.
- * Present only in [KiloAppState.Ready].
+ * Present only in [AccureAppState.Ready].
  */
 data class AppData(
-    val profile: KiloProfile200Response?,
+    val profile: AccureProfile200Response?,
     val config: Config,
-    val notifications: List<KiloNotifications200ResponseInner>,
+    val notifications: List<AccureNotifications200ResponseInner>,
     val warnings: List<ConfigWarning> = emptyList(),
 )

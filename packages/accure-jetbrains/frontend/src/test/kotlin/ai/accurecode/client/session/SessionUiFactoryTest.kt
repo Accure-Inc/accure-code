@@ -1,18 +1,18 @@
-package ai.kilocode.client.session
+package ai.accurecode.client.session
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.testing.FakeAppRpcApi
-import ai.kilocode.client.testing.FakeSessionRpcApi
-import ai.kilocode.client.testing.FakeWorkspaceRpcApi
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionTimeDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.testing.FakeAppRpcApi
+import ai.accurecode.client.testing.FakeSessionRpcApi
+import ai.accurecode.client.testing.FakeWorkspaceRpcApi
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionTimeDto
 import com.intellij.openapi.components.service
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import kotlinx.coroutines.CoroutineScope
@@ -23,19 +23,19 @@ import kotlinx.coroutines.cancel
 class SessionUiFactoryTest : BasePlatformTestCase() {
     private lateinit var scope: CoroutineScope
     private lateinit var workspace: Workspace
-    private lateinit var workspaces: KiloWorkspaceService
-    private lateinit var sessions: KiloSessionService
-    private lateinit var app: KiloAppService
+    private lateinit var workspaces: AccureWorkspaceService
+    private lateinit var sessions: AccureSessionService
+    private lateinit var app: AccureAppService
 
     override fun setUp() {
         super.setUp()
         scope = CoroutineScope(SupervisorJob())
-        sessions = KiloSessionService(project, scope, FakeSessionRpcApi())
-        app = KiloAppService(scope, FakeAppRpcApi().also {
-            it.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        sessions = AccureSessionService(project, scope, FakeSessionRpcApi())
+        app = AccureAppService(scope, FakeAppRpcApi().also {
+            it.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         })
-        workspaces = KiloWorkspaceService(scope, FakeWorkspaceRpcApi().also {
-            it.state.value = KiloWorkspaceStateDto(KiloWorkspaceStatusDto.READY)
+        workspaces = AccureWorkspaceService(scope, FakeWorkspaceRpcApi().also {
+            it.state.value = AccureWorkspaceStateDto(AccureWorkspaceStatusDto.READY)
         })
         workspace = workspaces.workspace("/test")
     }
@@ -72,7 +72,7 @@ class SessionUiFactoryTest : BasePlatformTestCase() {
         val rpc = session("ses_1")
         val ui = SessionUi(project, workspace, sessions, app, scope, manager = manager, workspaces = workspaces)
         val controller = controller(ui)
-        val panel = ai.kilocode.client.session.ui.empty.EmptySessionPanel(testRootDisposable, controller, listOf(rpc))
+        val panel = ai.accurecode.client.session.ui.empty.EmptySessionPanel(testRootDisposable, controller, listOf(rpc))
 
         panel.clickRecent(0)
 
@@ -84,7 +84,7 @@ class SessionUiFactoryTest : BasePlatformTestCase() {
         val manager = FakeManager()
         val ui = SessionUi(project, workspace, sessions, app, scope, manager = manager, workspaces = workspaces)
         val controller = controller(ui)
-        val panel = ai.kilocode.client.session.ui.empty.EmptySessionPanel(
+        val panel = ai.accurecode.client.session.ui.empty.EmptySessionPanel(
             testRootDisposable,
             controller,
             emptyList(),
@@ -96,10 +96,10 @@ class SessionUiFactoryTest : BasePlatformTestCase() {
         assertEquals(1, manager.history)
     }
 
-    private fun controller(ui: SessionUi): ai.kilocode.client.session.controller.SessionController {
+    private fun controller(ui: SessionUi): ai.accurecode.client.session.controller.SessionController {
         val field = SessionUi::class.java.getDeclaredField("controller")
         field.isAccessible = true
-        return field.get(ui) as ai.kilocode.client.session.controller.SessionController
+        return field.get(ui) as ai.accurecode.client.session.controller.SessionController
     }
 
     fun `test application service is available`() {

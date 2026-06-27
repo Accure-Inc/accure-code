@@ -1,18 +1,18 @@
-package ai.kilocode.client.session.ui.header
+package ai.accurecode.client.session.ui.header
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.SessionHeaderSnapshot
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.session.controller.SessionController
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.todo.TodoListPanel
-import ai.kilocode.client.ui.HoverIcon
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.rpc.dto.TodoDto
-import ai.kilocode.rpc.dto.TokensDto
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.SessionHeaderSnapshot
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.session.controller.SessionController
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.todo.TodoListPanel
+import ai.accurecode.client.ui.HoverIcon
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.rpc.dto.TodoDto
+import ai.accurecode.rpc.dto.TokensDto
 import com.intellij.icons.AllIcons
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.Disposable
@@ -49,7 +49,7 @@ class SessionHeaderPanel(
         private const val TOUCH_BEGIN = 2
         private const val TOUCH_UPDATE = 3
         private const val TOUCH_END = 4
-        internal const val EXPANDED_KEY = "kilo.session.header.expanded"
+        internal const val EXPANDED_KEY = "accure.session.header.expanded"
     }
 
     private val title = JBLabel()
@@ -61,14 +61,14 @@ class SessionHeaderPanel(
     private val compact = HoverIcon().apply {
         icon = COMPRESS_ICON
         cursor = java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR)
-        toolTipText = KiloBundle.message("session.header.compact.description")
-        accessibleContext.accessibleName = KiloBundle.message("session.header.compact")
+        toolTipText = AccureBundle.message("session.header.compact.description")
+        accessibleContext.accessibleName = AccureBundle.message("session.header.compact")
         addActionListener { controller.compact() }
     }
     private val expand = JBLabel().apply {
         cursor = java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR)
-        toolTipText = KiloBundle.message("session.header.expand")
-        accessibleContext.accessibleName = KiloBundle.message("session.header.expand")
+        toolTipText = AccureBundle.message("session.header.expand")
+        accessibleContext.accessibleName = AccureBundle.message("session.header.expand")
         addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(event: MouseEvent) {
                 toggle()
@@ -84,7 +84,7 @@ class SessionHeaderPanel(
     private var origin = Point()
     private var rest = 0.0
     private val bar = ContextBar()
-    private val tokenTitle = JBLabel(KiloBundle.message("session.header.tokens"))
+    private val tokenTitle = JBLabel(AccureBundle.message("session.header.tokens"))
     private val input = JBLabel().apply {
         icon = UP_ICON
         iconTextGap = UiStyle.Gap.xs()
@@ -128,8 +128,8 @@ class SessionHeaderPanel(
         isOpaque = false
         border = JBUI.Borders.empty(UiStyle.Gap.sm(), 0, 0, 0)
         cursor = java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR)
-        toolTipText = KiloBundle.message("session.header.todos.toggle")
-        accessibleContext.accessibleName = KiloBundle.message("session.header.todos.toggle")
+        toolTipText = AccureBundle.message("session.header.todos.toggle")
+        accessibleContext.accessibleName = AccureBundle.message("session.header.todos.toggle")
         add(todoArrow)
         add(todos)
     }
@@ -406,13 +406,13 @@ class SessionHeaderPanel(
             sum + value
         }
 
-        tokenTitle.text = KiloBundle.message("session.header.tokens")
-        tokens.toolTipText = KiloBundle.message("session.header.tokens.description")
+        tokenTitle.text = AccureBundle.message("session.header.tokens")
+        tokens.toolTipText = AccureBundle.message("session.header.tokens.description")
         tokenTitle.isVisible = total > 0
         set(input, if (sent > 0) num(sent) else null)
         set(output, if (received > 0) num(received) else null)
-        set(cacheWrite, if (write > 0) KiloBundle.message("session.header.cache.write", num(write)) else null)
-        set(cacheRead, if (read > 0) KiloBundle.message("session.header.cache.read", num(read)) else null)
+        set(cacheWrite, if (write > 0) AccureBundle.message("session.header.cache.write", num(write)) else null)
+        set(cacheRead, if (read > 0) AccureBundle.message("session.header.cache.read", num(read)) else null)
         tokens.isVisible = total > 0
     }
 
@@ -420,7 +420,7 @@ class SessionHeaderPanel(
         costValue = value.orEmpty()
         cost.text = costValue
         cost.icon = null
-        val tip = costValue.takeIf { it.isNotBlank() }?.let { KiloBundle.message("session.header.cost.tooltip", it) }
+        val tip = costValue.takeIf { it.isNotBlank() }?.let { AccureBundle.message("session.header.cost.tooltip", it) }
         cost.toolTipText = tip
         cost.accessibleContext.accessibleName = tip
         cost.isVisible = costValue.isNotBlank()
@@ -494,8 +494,8 @@ class SessionHeaderPanel(
         val key = if (expanded) "session.header.collapse" else "session.header.expand"
         expand.text = ""
         expand.icon = if (expanded) AllIcons.General.ChevronDown else AllIcons.General.ChevronRight
-        expand.toolTipText = KiloBundle.message(key)
-        expand.accessibleContext.accessibleName = KiloBundle.message(key)
+        expand.toolTipText = AccureBundle.message(key)
+        expand.accessibleContext.accessibleName = AccureBundle.message(key)
     }
 
     private fun expanded() = PropertiesComponent.getInstance().getBoolean(EXPANDED_KEY, false)

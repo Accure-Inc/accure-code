@@ -1,28 +1,28 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.rpc
+package ai.accurecode.rpc
 
-import ai.kilocode.rpc.dto.CustomModelFetchDto
-import ai.kilocode.rpc.dto.CustomModelFetchResultDto
-import ai.kilocode.rpc.dto.CustomProviderSaveDto
-import ai.kilocode.rpc.dto.ProviderActionResultDto
-import ai.kilocode.rpc.dto.ProviderConnectDto
-import ai.kilocode.rpc.dto.ProviderDisconnectDto
-import ai.kilocode.rpc.dto.ProviderEnableDto
-import ai.kilocode.rpc.dto.ProviderOAuthAuthorizeDto
-import ai.kilocode.rpc.dto.ProviderOAuthCallbackDto
-import ai.kilocode.rpc.dto.ProviderOAuthReadyDto
-import ai.kilocode.rpc.dto.ProviderSettingsDto
+import ai.accurecode.rpc.dto.CustomModelFetchDto
+import ai.accurecode.rpc.dto.CustomModelFetchResultDto
+import ai.accurecode.rpc.dto.CustomProviderSaveDto
+import ai.accurecode.rpc.dto.ProviderActionResultDto
+import ai.accurecode.rpc.dto.ProviderConnectDto
+import ai.accurecode.rpc.dto.ProviderDisconnectDto
+import ai.accurecode.rpc.dto.ProviderEnableDto
+import ai.accurecode.rpc.dto.ProviderOAuthAuthorizeDto
+import ai.accurecode.rpc.dto.ProviderOAuthCallbackDto
+import ai.accurecode.rpc.dto.ProviderOAuthReadyDto
+import ai.accurecode.rpc.dto.ProviderSettingsDto
 import com.intellij.platform.rpc.RemoteApiProviderService
 import fleet.rpc.RemoteApi
 import fleet.rpc.Rpc
 import fleet.rpc.remoteApiDescriptor
 
 @Rpc
-interface KiloProviderRpcApi : RemoteApi<Unit> {
+interface AccureProviderRpcApi : RemoteApi<Unit> {
     companion object {
-        suspend fun getInstance(): KiloProviderRpcApi {
-            return RemoteApiProviderService.resolve(remoteApiDescriptor<KiloProviderRpcApi>())
+        suspend fun getInstance(): AccureProviderRpcApi {
+            return RemoteApiProviderService.resolve(remoteApiDescriptor<AccureProviderRpcApi>())
         }
     }
 

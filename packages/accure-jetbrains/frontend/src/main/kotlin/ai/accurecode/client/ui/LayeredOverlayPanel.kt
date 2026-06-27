@@ -1,8 +1,8 @@
-package ai.kilocode.client.ui
+package ai.accurecode.client.ui
 
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.ui.components.BorderLayoutPanel

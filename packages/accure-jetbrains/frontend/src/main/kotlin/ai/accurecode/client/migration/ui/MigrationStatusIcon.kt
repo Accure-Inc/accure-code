@@ -1,6 +1,6 @@
-package ai.kilocode.client.migration.ui
+package ai.accurecode.client.migration.ui
 
-import ai.kilocode.rpc.dto.MigrationItemProgressStatusDto
+import ai.accurecode.rpc.dto.MigrationItemProgressStatusDto
 import com.intellij.icons.AllIcons
 import com.intellij.ui.AnimatedIcon
 import com.intellij.ui.components.JBLabel

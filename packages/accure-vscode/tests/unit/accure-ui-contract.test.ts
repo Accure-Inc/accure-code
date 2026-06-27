@@ -1,5 +1,5 @@
 /**
- * Runtime contract tests for accure-vscode's dependencies on @kilocode/accure-ui.
+ * Runtime contract tests for accure-vscode's dependencies on @accurecode/accure-ui.
  *
  * These tests import the upstream UI modules directly and verify at runtime
  * that the exports accure-vscode depends on still exist with the expected shape.
@@ -18,12 +18,12 @@ import fs from "node:fs"
 import path from "node:path"
 
 const MONOREPO_ROOT = path.resolve(import.meta.dir, "../../../..")
-const KILO_UI_DIR = path.join(MONOREPO_ROOT, "packages/accure-ui")
+const ACCURECODE_UI_DIR = path.join(MONOREPO_ROOT, "packages/accure-ui")
 const BASIC_TOOL_FILE = path.join(MONOREPO_ROOT, "packages/ui/src/components/basic-tool.tsx")
 const DATA_CONTEXT_FILE = path.join(MONOREPO_ROOT, "packages/ui/src/context/data.tsx")
 const MESSAGE_PART_FILE = path.join(MONOREPO_ROOT, "packages/ui/src/components/message-part.tsx")
-const KILO_MESSAGE_PART_FILE = path.join(MONOREPO_ROOT, "packages/accure-ui/src/components/message-part.tsx")
-const KILO_MESSAGE_PART_CSS_FILE = path.join(MONOREPO_ROOT, "packages/accure-ui/src/components/message-part.css")
+const ACCURECODE_MESSAGE_PART_FILE = path.join(MONOREPO_ROOT, "packages/accure-ui/src/components/message-part.tsx")
+const ACCURECODE_MESSAGE_PART_CSS_FILE = path.join(MONOREPO_ROOT, "packages/accure-ui/src/components/message-part.css")
 const SHELL_ROLLING_FILE = path.join(MONOREPO_ROOT, "packages/accure-ui/src/components/shell-rolling-results.tsx")
 const ASSISTANT_MESSAGE_FILE = path.join(
   MONOREPO_ROOT,
@@ -33,7 +33,7 @@ const CHAT_LAYOUT_FILE = path.join(MONOREPO_ROOT, "packages/accure-vscode/webvie
 
 function check(code: string): { ok: boolean; output: string } {
   const result = Bun.spawnSync(["bun", "--conditions=browser", "-e", code], {
-    cwd: KILO_UI_DIR,
+    cwd: ACCURECODE_UI_DIR,
     stdout: "pipe",
     stderr: "pipe",
   })
@@ -120,7 +120,7 @@ describe("DataProvider contract (runtime)", () => {
   })
 
   it("DataProvider accepts onOpenFile prop and exports OpenFileFn (source)", () => {
-    // onOpenFile and OpenFileFn are `kilocode_change` additions — TypeScript types
+    // onOpenFile and OpenFileFn are `accurecode_change` additions — TypeScript types
     // erased at runtime, so we verify via source analysis
     const src = fs.readFileSync(DATA_CONTEXT_FILE, "utf-8")
     expect(src).toContain("onOpenFile")
@@ -129,7 +129,7 @@ describe("DataProvider contract (runtime)", () => {
   })
 
   it("DataProvider accepts onOpenDiff prop and exports OpenDiffFn (source)", () => {
-    // onOpenDiff and OpenDiffFn are `kilocode_change` additions — TypeScript types
+    // onOpenDiff and OpenDiffFn are `accurecode_change` additions — TypeScript types
     // erased at runtime, so we verify via source analysis
     const src = fs.readFileSync(DATA_CONTEXT_FILE, "utf-8")
     expect(src).toContain("onOpenDiff")
@@ -146,7 +146,7 @@ describe("DataProvider contract (runtime)", () => {
 })
 
 describe("Assistant Markdown streaming contract (source)", () => {
-  const src = fs.readFileSync(KILO_MESSAGE_PART_FILE, "utf-8")
+  const src = fs.readFileSync(ACCURECODE_MESSAGE_PART_FILE, "utf-8")
   const block =
     src.match(
       /PART_MAPPING\["text"\]\s*=\s*function TextPartDisplay[\s\S]*?(?=\/\/ Expanded mode|PART_MAPPING\["reasoning"\])/,
@@ -159,7 +159,7 @@ describe("Assistant Markdown streaming contract (source)", () => {
 })
 
 describe("Edit tool diff-first click contract (source)", () => {
-  const src = fs.readFileSync(KILO_MESSAGE_PART_FILE, "utf-8")
+  const src = fs.readFileSync(ACCURECODE_MESSAGE_PART_FILE, "utf-8")
 
   const editBlockMatch = src.match(/ToolRegistry\.register\(\{\s*name:\s*"edit"[\s\S]*?(?=ToolRegistry\.register\(|$)/)
   const editBlock = editBlockMatch?.[0] ?? ""
@@ -172,7 +172,7 @@ describe("Edit tool diff-first click contract (source)", () => {
 })
 
 describe("Write and apply_patch patch rendering contracts (source)", () => {
-  const src = fs.readFileSync(KILO_MESSAGE_PART_FILE, "utf-8")
+  const src = fs.readFileSync(ACCURECODE_MESSAGE_PART_FILE, "utf-8")
   const writeBlock =
     src.match(/ToolRegistry\.register\(\{\s*name:\s*"write"[\s\S]*?(?=ToolRegistry\.register\(|$)/)?.[0] ?? ""
   const patchBlock =
@@ -193,7 +193,7 @@ describe("Write and apply_patch patch rendering contracts (source)", () => {
 })
 
 describe("Bash tool static terminal preview (source)", () => {
-  const src = fs.readFileSync(KILO_MESSAGE_PART_FILE, "utf-8")
+  const src = fs.readFileSync(ACCURECODE_MESSAGE_PART_FILE, "utf-8")
   const block =
     src.match(/ToolRegistry\.register\(\{\s*name:\s*"bash"[\s\S]*?(?=ToolRegistry\.register\(|$)/)?.[0] ?? ""
 
@@ -262,7 +262,7 @@ describe("Expanded tool motion and typography (source)", () => {
   })
 
   it("uses the assistant markdown line-height ratio for reasoning output", () => {
-    const css = fs.readFileSync(KILO_MESSAGE_PART_CSS_FILE, "utf-8")
+    const css = fs.readFileSync(ACCURECODE_MESSAGE_PART_CSS_FILE, "utf-8")
     const block = css.match(
       /html\[data-theme="accure-vscode"\] \[data-component="reasoning-part"\][\s\S]*?(?=@keyframes reasoning-pulse)/,
     )?.[0]
@@ -271,7 +271,7 @@ describe("Expanded tool motion and typography (source)", () => {
 })
 
 describe("HighlightedText @mention regex fallback and click handler (source)", () => {
-  const src = fs.readFileSync(KILO_MESSAGE_PART_FILE, "utf-8")
+  const src = fs.readFileSync(ACCURECODE_MESSAGE_PART_FILE, "utf-8")
 
   it("detects @path patterns via regex when source offsets are missing", () => {
     // detectMentions is the regex fallback for when the backend doesn't
@@ -355,7 +355,7 @@ describe("BasicTool export contract (runtime)", () => {
 
 describe("Collapsed deferred tool details contract (source)", () => {
   const basic = fs.readFileSync(BASIC_TOOL_FILE, "utf-8")
-  const message = fs.readFileSync(KILO_MESSAGE_PART_FILE, "utf-8")
+  const message = fs.readFileSync(ACCURECODE_MESSAGE_PART_FILE, "utf-8")
 
   it("uses an explicit details hint before touching deferred children", () => {
     expect(basic).toContain("hasDetails?: boolean")

@@ -1,38 +1,38 @@
-package ai.kilocode.client.settings.models
+package ai.accurecode.client.settings.models
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.ReasoningPicker
-import ai.kilocode.client.session.ui.model.ModelPicker
-import ai.kilocode.client.session.ui.model.ModelText
-import ai.kilocode.client.settings.base.BaseContentPanel
-import ai.kilocode.client.settings.base.BaseSettingsUi
-import ai.kilocode.client.settings.base.SettingsBannerKind
-import ai.kilocode.client.settings.base.SettingsRow
-import ai.kilocode.client.settings.base.SettingsRows
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
-import ai.kilocode.log.KiloLog
-import ai.kilocode.rpc.dto.AgentDto
-import ai.kilocode.rpc.dto.ConfigPatchDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.LoadErrorDto
-import ai.kilocode.rpc.dto.ModelStateDto
-import ai.kilocode.rpc.dto.ModelsWorkspaceDto
-import ai.kilocode.rpc.dto.ProvidersDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.ReasoningPicker
+import ai.accurecode.client.session.ui.model.ModelPicker
+import ai.accurecode.client.session.ui.model.ModelText
+import ai.accurecode.client.settings.base.BaseContentPanel
+import ai.accurecode.client.settings.base.BaseSettingsUi
+import ai.accurecode.client.settings.base.SettingsBannerKind
+import ai.accurecode.client.settings.base.SettingsRow
+import ai.accurecode.client.settings.base.SettingsRows
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
+import ai.accurecode.log.AccureLog
+import ai.accurecode.rpc.dto.AgentDto
+import ai.accurecode.rpc.dto.ConfigPatchDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.LoadErrorDto
+import ai.accurecode.rpc.dto.ModelStateDto
+import ai.accurecode.rpc.dto.ModelsWorkspaceDto
+import ai.accurecode.rpc.dto.ProvidersDto
 import com.intellij.openapi.components.service
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import kotlinx.coroutines.CoroutineScope
 
 internal class ModelsSettingsUi(
     cs: CoroutineScope,
-    private val app: KiloAppService = service(),
-    private val workspaces: KiloWorkspaceService = service(),
+    private val app: AccureAppService = service(),
+    private val workspaces: AccureWorkspaceService = service(),
     directory: String? = null,
-) : BaseSettingsUi<ModelsSettingsContent, ModelsDraft, ConfigPatchDto, KiloAppStateDto, ModelsWorkspaceDto>(
+) : BaseSettingsUi<ModelsSettingsContent, ModelsDraft, ConfigPatchDto, AccureAppStateDto, ModelsWorkspaceDto>(
     cs,
     ModelsDraft(),
     app,
@@ -41,7 +41,7 @@ internal class ModelsSettingsUi(
 ) {
 
     companion object {
-        private val LOG = KiloLog.create(ModelsSettingsUi::class.java)
+        private val LOG = AccureLog.create(ModelsSettingsUi::class.java)
     }
 
     private val defaults get() = form.defaults
@@ -64,19 +64,19 @@ internal class ModelsSettingsUi(
         it.values.isNotEmpty() || it.agents.isNotEmpty()
     }
 
-    override fun save(change: ConfigPatchDto, done: (KiloAppStateDto?) -> Unit) {
+    override fun save(change: ConfigPatchDto, done: (AccureAppStateDto?) -> Unit) {
         app.updateConfigAsync(change, done)
     }
 
-    override fun base(result: KiloAppStateDto): ModelsDraft = modelsDraft(result.config, agents)
+    override fun base(result: AccureAppStateDto): ModelsDraft = modelsDraft(result.config, agents)
 
-    override fun draft(state: KiloAppStateDto): ModelsDraft = modelsDraft(state.config, agents)
+    override fun draft(state: AccureAppStateDto): ModelsDraft = modelsDraft(state.config, agents)
 
     override fun saved(base: ModelsDraft, draft: ModelsDraft): Boolean = savedMatches(base, draft)
 
-    override fun pendingText(): String = KiloBundle.message("settings.models.save.pending")
+    override fun pendingText(): String = AccureBundle.message("settings.models.save.pending")
 
-    override fun failedText(): String = KiloBundle.message("settings.models.save.failed")
+    override fun failedText(): String = AccureBundle.message("settings.models.save.failed")
 
     override fun logSaveStarted(change: ConfigPatchDto) = LOG.info("model settings save: started ${summary(change)}")
 
@@ -88,7 +88,7 @@ internal class ModelsSettingsUi(
 
     override fun logSaveCompletedAfterDispose(change: ConfigPatchDto) = LOG.info("model settings save: completed after dispose ${summary(change)}")
 
-    override fun unavailable(state: KiloAppStateDto) {
+    override fun unavailable(state: AccureAppStateDto) {
         if (!workspaceLoaded && providers == null) {
             agents = emptyList()
             errors = emptyList()
@@ -114,8 +114,8 @@ internal class ModelsSettingsUi(
         allItems = items(false)
         val smallItems = items(true)
         val state = modelsStatus(
-            ready = appState.status == KiloAppStatusDto.READY && hasProjectDirectory,
-            loading = workspaceLoading || (appState.status == KiloAppStatusDto.READY && !workspaceLoaded && hasProjectDirectory),
+            ready = appState.status == AccureAppStatusDto.READY && hasProjectDirectory,
+            loading = workspaceLoading || (appState.status == AccureAppStatusDto.READY && !workspaceLoaded && hasProjectDirectory),
             providers = providers,
             items = allItems.size,
             errors = errors,
@@ -124,17 +124,17 @@ internal class ModelsSettingsUi(
         val ready = state == ModelsStatus.READY || state == ModelsStatus.MODES_FAILED
         val editable = !saving && (ready || state == ModelsStatus.LOADING)
         val bannerVisible = modelsLoginBannerVisible(
-            ready = appState.status == KiloAppStatusDto.READY,
+            ready = appState.status == AccureAppStatusDto.READY,
             authenticated = appState.profile != null,
         )
         syncModelBanner(state, bannerVisible)
         val err = saveError
         if (saving || state == ModelsStatus.SAVING) {
-            showProgress(KiloBundle.message("settings.models.save.pending"))
+            showProgress(AccureBundle.message("settings.models.save.pending"))
         } else if (err != null) {
             showError(err)
         } else if (state == ModelsStatus.UNAVAILABLE || state == ModelsStatus.LOADING) {
-            showProgress(KiloBundle.message("settings.models.loading"))
+            showProgress(AccureBundle.message("settings.models.loading"))
         } else {
             clearProgress()
         }
@@ -157,12 +157,12 @@ internal class ModelsSettingsUi(
             if ((saving || state == ModelsStatus.LOADING || state == ModelsStatus.SAVING) && top.isVisible) return@syncLoginBanner
             when (state) {
                 ModelsStatus.LOAD_FAILED -> top.showBanner(
-                    KiloBundle.message("settings.models.load.failed"),
+                    AccureBundle.message("settings.models.load.failed"),
                     emptyList(),
                     SettingsBannerKind.ERROR,
                 )
-                ModelsStatus.NO_PROVIDERS -> top.showBanner(KiloBundle.message("settings.models.noProviders"), emptyList())
-                ModelsStatus.MODES_FAILED -> top.showBanner(KiloBundle.message("settings.models.modes.failed"), emptyList())
+                ModelsStatus.NO_PROVIDERS -> top.showBanner(AccureBundle.message("settings.models.noProviders"), emptyList())
+                ModelsStatus.MODES_FAILED -> top.showBanner(AccureBundle.message("settings.models.modes.failed"), emptyList())
                 else -> top.hideBanner()
             }
         }
@@ -171,7 +171,7 @@ internal class ModelsSettingsUi(
     private fun items(includeSmall: Boolean): List<ModelPicker.Item> {
         val cfg = providers ?: return emptyList()
         return cfg.providers
-            .filter { it.id == KILO_PROVIDER || it.id in cfg.connected }
+            .filter { it.id == ACCURECODE_PROVIDER || it.id in cfg.connected }
             .flatMap { provider ->
                 provider.models.mapNotNull { (id, model) ->
                     val item = ModelPicker.Item(
@@ -245,7 +245,7 @@ internal class ModelsSettingsUi(
     }
 }
 
-private const val KILO_PROVIDER = "kilo"
+private const val ACCURECODE_PROVIDER = "accure"
 
 private fun summary(patch: ConfigPatchDto): String {
     val values = patch.values.keys.sorted().joinToString(",").ifEmpty { "none" }
@@ -253,7 +253,7 @@ private fun summary(patch: ConfigPatchDto): String {
 }
 
 internal class ModelsSettingsContent(
-    app: KiloAppService,
+    app: AccureAppService,
     update: (ModelsDraft.() -> ModelsDraft) -> Unit,
     select: (ModelPicker.Item) -> Unit,
 ) : BaseContentPanel() {
@@ -262,8 +262,8 @@ internal class ModelsSettingsContent(
     val subagent = ModelSettingPicker()
     val variant = ReasoningPicker()
     val variantRow = SettingsRow(
-        KiloBundle.message("settings.models.subagentVariant.title"),
-        KiloBundle.message("settings.models.subagentVariant.description"),
+        AccureBundle.message("settings.models.subagentVariant.title"),
+        AccureBundle.message("settings.models.subagentVariant.description"),
         variant.align(HAlign.RIGHT, VAlign.CENTER),
     )
     val modes: SettingsRows
@@ -283,26 +283,26 @@ internal class ModelsSettingsContent(
             picker.picker.onFavoriteToggle = { app.toggleModelFavorite(it.provider, it.id) }
         }
 
-        val rows = section(KiloBundle.message("settings.models.displayName"))
+        val rows = section(AccureBundle.message("settings.models.displayName"))
         rows.row(SettingsRow(
-            KiloBundle.message("settings.models.defaultModel.title"),
-            KiloBundle.message("settings.models.defaultModel.description"),
+            AccureBundle.message("settings.models.defaultModel.title"),
+            AccureBundle.message("settings.models.defaultModel.description"),
             defaults,
         ))
         rows.row(SettingsRow(
-            KiloBundle.message("settings.models.smallModel.title"),
-            KiloBundle.message("settings.models.smallModel.description"),
+            AccureBundle.message("settings.models.smallModel.title"),
+            AccureBundle.message("settings.models.smallModel.description"),
             small,
         ))
         rows.row(SettingsRow(
-            KiloBundle.message("settings.models.subagentModel.title"),
-            KiloBundle.message("settings.models.subagentModel.description"),
+            AccureBundle.message("settings.models.subagentModel.title"),
+            AccureBundle.message("settings.models.subagentModel.description"),
             subagent,
         ))
         rows.row(variantRow)
         modes = section(
-            KiloBundle.message("settings.models.modeModels.title"),
-            KiloBundle.message("settings.models.modeModels.description"),
+            AccureBundle.message("settings.models.modeModels.title"),
+            AccureBundle.message("settings.models.modeModels.description"),
         )
     }
 }

@@ -1,14 +1,14 @@
-package ai.kilocode.client.session.ui.account
+package ai.accurecode.client.session.ui.account
 
-import ai.kilocode.client.session.controller.SessionControllerEvent
-import ai.kilocode.client.session.controller.SessionControllerEvent.AccountOverlaySnapshot
-import ai.kilocode.client.session.controller.SessionControllerTestBase
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.FilledBadgeIcon
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ProfileBalanceDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.ProfileOrganizationDto
+import ai.accurecode.client.session.controller.SessionControllerEvent
+import ai.accurecode.client.session.controller.SessionControllerEvent.AccountOverlaySnapshot
+import ai.accurecode.client.session.controller.SessionControllerTestBase
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.FilledBadgeIcon
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ProfileBalanceDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.ProfileOrganizationDto
 import com.intellij.icons.AllIcons
 
 @Suppress("UnstableApiUsage")
@@ -34,7 +34,7 @@ class SessionAccountOverlayTest : SessionControllerTestBase() {
     }
 
     private fun snap(profile: ProfileDto?) =
-        AccountOverlaySnapshot(status = KiloAppStatusDto.READY, profile = profile)
+        AccountOverlaySnapshot(status = AccureAppStatusDto.READY, profile = profile)
 
     private fun profile(
         email: String = "user@example.com",
@@ -139,7 +139,7 @@ class SessionAccountOverlayTest : SessionControllerTestBase() {
             currentOrgId = null,
         )
         val switchingSnap = AccountOverlaySnapshot(
-            status = KiloAppStatusDto.READY,
+            status = AccureAppStatusDto.READY,
             profile = prof,
             switching = true,
             targetOrgId = "org_1",
@@ -169,7 +169,7 @@ class SessionAccountOverlayTest : SessionControllerTestBase() {
             currentOrgId = null,
         )
         val switchingSnap = AccountOverlaySnapshot(
-            status = KiloAppStatusDto.READY,
+            status = AccureAppStatusDto.READY,
             profile = prof,
             switching = true,
             targetOrgId = "org_1",
@@ -189,7 +189,7 @@ class SessionAccountOverlayTest : SessionControllerTestBase() {
             currentOrgId = "org_1",
         )
         val switchingSnap = AccountOverlaySnapshot(
-            status = KiloAppStatusDto.READY,
+            status = AccureAppStatusDto.READY,
             profile = prof,
             switching = true,
             targetOrgId = null,
@@ -222,7 +222,7 @@ class SessionAccountOverlayTest : SessionControllerTestBase() {
 
         // Show transient null (pending switch)
         val transientSnap = AccountOverlaySnapshot(
-            status = KiloAppStatusDto.READY,
+            status = AccureAppStatusDto.READY,
             profile = null,
             transient = true,
         )
@@ -317,7 +317,7 @@ class SessionAccountOverlayTest : SessionControllerTestBase() {
         var icon: javax.swing.Icon? = null
         edt { icon = panel.balanceIcon() }
 
-        show(AccountOverlaySnapshot(status = KiloAppStatusDto.READY, profile = null, transient = true))
+        show(AccountOverlaySnapshot(status = AccureAppStatusDto.READY, profile = null, transient = true))
         edt {
             assertTrue(panel.loggedInVisible())
             assertTrue(panel.balanceVisible())

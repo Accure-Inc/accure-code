@@ -1,9 +1,9 @@
 import { execFile } from "child_process"
 import type { DeviceAuthInitiateResponse, DeviceAuthPollResponse } from "../types.js"
 import { poll } from "./polling.js"
-import { getKiloProfile, getKiloDefaultModel } from "../api/profile.js"
-import { KILO_API_BASE, POLL_INTERVAL_MS } from "../api/constants.js"
-import type { AuthOuathResult } from "@kilocode/plugin"
+import { getAccureProfile, getAccureDefaultModel } from "../api/profile.js"
+import { ACCURECODE_API_BASE, POLL_INTERVAL_MS } from "../api/constants.js"
+import type { AuthOuathResult } from "@accurecode/plugin"
 
 /**
  * Initiate device authorization flow
@@ -11,7 +11,7 @@ import type { AuthOuathResult } from "@kilocode/plugin"
  * @throws Error if initiation fails
  */
 async function initiateDeviceAuth(): Promise<DeviceAuthInitiateResponse> {
-  const response = await fetch(`${KILO_API_BASE}/api/device-auth/codes`, {
+  const response = await fetch(`${ACCURECODE_API_BASE}/api/device-auth/codes`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -36,7 +36,7 @@ async function initiateDeviceAuth(): Promise<DeviceAuthInitiateResponse> {
  * @throws Error if polling fails
  */
 async function pollDeviceAuth(code: string): Promise<DeviceAuthPollResponse> {
-  const response = await fetch(`${KILO_API_BASE}/api/device-auth/codes/${code}`)
+  const response = await fetch(`${ACCURECODE_API_BASE}/api/device-auth/codes/${code}`)
 
   if (response.status === 202) {
     return { status: "pending" }
@@ -133,12 +133,12 @@ export async function authenticateWithDeviceAuthTUI(inputs?: Record<string, stri
       const organizationId = undefined
 
       // Fetch default model
-      const model = await getKiloDefaultModel(token, organizationId)
+      const model = await getAccureDefaultModel(token, organizationId)
 
       // Return success with OAuth credentials
       return {
         type: "success",
-        provider: "kilo",
+        provider: "accure",
         refresh: token,
         access: token,
         expires: Date.now() + 365 * 24 * 60 * 60 * 1000, // 1 year

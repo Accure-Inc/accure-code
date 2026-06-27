@@ -1,6 +1,6 @@
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 
-export async function hasGit(client: KiloClient, directory: string): Promise<boolean> {
+export async function hasGit(client: AccureClient, directory: string): Promise<boolean> {
   return client.project
     .current({ directory })
     .then((r) => r.data?.vcs === "git")

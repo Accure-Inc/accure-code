@@ -1,19 +1,19 @@
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1":
-    "Kilo Gateway bietet Ihnen Zugang zu einer kuratierten Auswahl zuverlässiger, optimierter Modelle für Coding-Agenten.",
-  "provider.connect.kiloGateway.line2":
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1":
+    "Accure Gateway bietet Ihnen Zugang zu einer kuratierten Auswahl zuverlässiger, optimierter Modelle für Coding-Agenten.",
+  "provider.connect.accureGateway.line2":
     "Mit einem einzigen API-Schlüssel erhalten Sie Zugang zu Modellen wie Claude, GPT, Gemini, GLM und mehr.",
-  "provider.connect.kiloGateway.visit.prefix": "Besuchen Sie ",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": ", um Ihren API-Schlüssel zu erhalten.",
-  "provider.connect.kiloGateway.byok.prefix": "Für weitere Nutzungsstatistiken ",
-  "provider.connect.kiloGateway.byok.link": "BYOK via Kilo's Gateway",
-  "provider.connect.kiloGateway.byok.suffix": " nutzen.",
+  "provider.connect.accureGateway.visit.prefix": "Besuchen Sie ",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": ", um Ihren API-Schlüssel zu erhalten.",
+  "provider.connect.accureGateway.byok.prefix": "Für weitere Nutzungsstatistiken ",
+  "provider.connect.accureGateway.byok.link": "BYOK via Accure's Gateway",
+  "provider.connect.accureGateway.byok.suffix": " nutzen.",
 
   // Provider settings translations
   "settings.providers.group.recommended": "Empfohlen",
-  "settings.providers.note.kilo": "Zugriff auf 500+ KI-Modelle",
+  "settings.providers.note.accurecode": "Zugriff auf 500+ KI-Modelle",
   "settings.providers.note.opencode": "Kuratierte Modelle, darunter Claude, GPT, Gemini und mehr",
   "settings.providers.note.anthropic": "Direkter Zugriff auf Claude-Modelle, einschließlich Pro und Max",
   "settings.providers.note.deepseek": "DeepSeek-Modelle für Denk- und Programmieraufgaben",
@@ -102,7 +102,7 @@ export const dict = {
     "Auf den Abschluss des Snapshots warten. Nachfolgende Runden sind schnell, sobald der initiale Snapshot erstellt ist.",
   "snapshot.slowRepo.answer.disable": "Für dieses Projekt deaktivieren",
   "snapshot.slowRepo.answer.disable.description":
-    "Kilo-Snapshots für dieses Projekt ausschalten. Rückgängig/Wiederherstellen für Kilo-Änderungen ist nicht mehr möglich, aber git verfolgt weiterhin alles.",
+    "Accure-Snapshots für dieses Projekt ausschalten. Rückgängig/Wiederherstellen für Accure-Änderungen ist nicht mehr möglich, aber git verfolgt weiterhin alles.",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "Im Diff-Viewer öffnen",

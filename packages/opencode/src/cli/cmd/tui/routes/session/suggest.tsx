@@ -1,2 +1,2 @@
-// kilocode_change - new file
-export { SuggestPrompt } from "../../../../../kilocode/suggestion/tui/prompt"
+// accurecode_change - new file
+export { SuggestPrompt } from "../../../../../accurecode/suggestion/tui/prompt"

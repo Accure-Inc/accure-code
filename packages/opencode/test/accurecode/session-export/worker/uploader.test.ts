@@ -2,9 +2,9 @@ import { describe, test, expect, beforeEach, afterEach } from "bun:test"
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { Storage } from "@/kilocode/session-export/worker/storage"
-import { Uploader, backoffFor } from "@/kilocode/session-export/worker/uploader"
-import { Config } from "@/kilocode/session-export/config"
+import { Storage } from "@/accurecode/session-export/worker/storage"
+import { Uploader, backoffFor } from "@/accurecode/session-export/worker/uploader"
+import { Config } from "@/accurecode/session-export/config"
 
 describe("Uploader", () => {
   let dir: string
@@ -12,8 +12,8 @@ describe("Uploader", () => {
   let token: string | undefined
 
   beforeEach(() => {
-    token = process.env.KILO_SESSION_EXPORT_AUTH_TOKEN
-    delete process.env.KILO_SESSION_EXPORT_AUTH_TOKEN
+    token = process.env.ACCURECODE_SESSION_EXPORT_AUTH_TOKEN
+    delete process.env.ACCURECODE_SESSION_EXPORT_AUTH_TOKEN
     dir = mkdtempSync(join(tmpdir(), "session-export-"))
     storage = new Storage(join(dir, "session-export.db"))
     storage.migrate()
@@ -34,14 +34,14 @@ describe("Uploader", () => {
   afterEach(() => {
     storage.close()
     rmSync(dir, { recursive: true, force: true })
-    if (token === undefined) delete process.env.KILO_SESSION_EXPORT_AUTH_TOKEN
-    else process.env.KILO_SESSION_EXPORT_AUTH_TOKEN = token
+    if (token === undefined) delete process.env.ACCURECODE_SESSION_EXPORT_AUTH_TOKEN
+    else process.env.ACCURECODE_SESSION_EXPORT_AUTH_TOKEN = token
   })
 
   test("2xx response marks rows uploaded and deletes them", async () => {
     const telemetry: unknown[] = []
     const calls: Array<{ input: string; init: RequestInit }> = []
-    process.env.KILO_SESSION_EXPORT_AUTH_TOKEN = "local-token"
+    process.env.ACCURECODE_SESSION_EXPORT_AUTH_TOKEN = "local-token"
     const uploader = new Uploader({
       storage,
       endpoint: "https://example.test/ingest",
@@ -57,17 +57,17 @@ describe("Uploader", () => {
     const headers = new Headers(calls[0].init.headers)
     const body = calls[0].init.body as string
     expect(calls[0].input).toBe("https://example.test/ingest")
-    expect(headers.get("x-kilo-export-api-version")).toBe("1")
-    expect(headers.get("x-kilo-export-schema-version")).toBe("1")
-    expect(headers.get("x-kilo-export-agent-version")).toBe("v0")
-    expect(headers.get("x-kilo-export-root-session-id")).toBe("s1")
-    expect(headers.get("x-kilo-export-session-id")).toBe("s1")
-    expect(headers.get("x-kilo-export-seq-start")).toBe("0")
-    expect(headers.get("x-kilo-export-seq-end")).toBe("0")
-    expect(headers.get("x-kilo-export-event-count")).toBe("1")
-    expect(headers.get("x-kilo-export-content-encoding")).toBe("identity")
-    expect(headers.get("x-kilo-export-client-sent-at")).toMatch(/^\d{4}-\d{2}-\d{2}T/)
-    expect(headers.get("x-kilo-export-payload-sha256")).toBe(await sha256(body))
+    expect(headers.get("x-accure-export-api-version")).toBe("1")
+    expect(headers.get("x-accure-export-schema-version")).toBe("1")
+    expect(headers.get("x-accure-export-agent-version")).toBe("v0")
+    expect(headers.get("x-accure-export-root-session-id")).toBe("s1")
+    expect(headers.get("x-accure-export-session-id")).toBe("s1")
+    expect(headers.get("x-accure-export-seq-start")).toBe("0")
+    expect(headers.get("x-accure-export-seq-end")).toBe("0")
+    expect(headers.get("x-accure-export-event-count")).toBe("1")
+    expect(headers.get("x-accure-export-content-encoding")).toBe("identity")
+    expect(headers.get("x-accure-export-client-sent-at")).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+    expect(headers.get("x-accure-export-payload-sha256")).toBe(await sha256(body))
     expect(headers.get("authorization")).toBe("Bearer local-token")
     expect(storage.pendingEvents({ now: Date.now(), limitBytes: 1_000_000 }).length).toBe(0)
     expect(telemetry.some((item) => (item as { name?: string }).name === "session_export.uploaded")).toBe(true)
@@ -110,23 +110,23 @@ describe("Uploader", () => {
     await uploader.flush("test")
     const headers = new Headers(calls[0].init.headers)
     const names = [
-      "x-kilo-export-api-version",
-      "x-kilo-export-schema-version",
-      "x-kilo-export-agent-version",
-      "x-kilo-export-surface",
-      "x-kilo-export-root-session-id",
-      "x-kilo-export-session-id",
-      "x-kilo-export-batch-id",
-      "x-kilo-export-seq-start",
-      "x-kilo-export-seq-end",
-      "x-kilo-export-event-count",
-      "x-kilo-export-payload-sha256",
-      "x-kilo-export-client-sent-at",
-      "x-kilo-export-content-encoding",
+      "x-accure-export-api-version",
+      "x-accure-export-schema-version",
+      "x-accure-export-agent-version",
+      "x-accure-export-surface",
+      "x-accure-export-root-session-id",
+      "x-accure-export-session-id",
+      "x-accure-export-batch-id",
+      "x-accure-export-seq-start",
+      "x-accure-export-seq-end",
+      "x-accure-export-event-count",
+      "x-accure-export-payload-sha256",
+      "x-accure-export-client-sent-at",
+      "x-accure-export-content-encoding",
     ]
 
     expect(headers.get("authorization")).toBeNull()
-    expect(headers.get("x-kilo-anon-id")).toBe("install_abc")
+    expect(headers.get("x-accure-anon-id")).toBe("install_abc")
     for (const name of names) expect(headers.get(name)).toBeTruthy()
   })
 
@@ -150,7 +150,7 @@ describe("Uploader", () => {
 
     const headers = new Headers(calls[0].init.headers)
     expect(headers.get("authorization")).toBeNull()
-    expect(headers.get("x-kilo-anon-id")).toBe("install_from_disk")
+    expect(headers.get("x-accure-anon-id")).toBe("install_from_disk")
   })
 
   test("uploads one session per batch so key metadata can reconstruct sessions", async () => {
@@ -266,7 +266,7 @@ describe("Uploader", () => {
     await uploader.flush("test")
     const headers = new Headers(calls[0].init.headers)
     const body = JSON.parse(calls[0].init.body as string) as { surface?: string }
-    expect(headers.get("x-kilo-export-surface")).toBe("vscode-extension")
+    expect(headers.get("x-accure-export-surface")).toBe("vscode-extension")
     expect(body.surface).toBe("vscode-extension")
   })
 

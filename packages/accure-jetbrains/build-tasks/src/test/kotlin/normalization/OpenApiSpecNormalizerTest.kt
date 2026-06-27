@@ -105,13 +105,13 @@ class OpenApiSpecNormalizerTest {
     }
 
     @Test
-    fun `makes balance and currentOrgId nullable in kilo profile response`() {
+    fun `makes balance and currentOrgId nullable in accure profile response`() {
         val raw = """
             {
               "paths": {
-                "/kilo/profile": {
+                "/accure/profile": {
                   "get": {
-                    "operationId": "kilo.profile",
+                    "operationId": "accure.profile",
                     "responses": {
                       "200": {
                         "content": {
@@ -137,7 +137,7 @@ class OpenApiSpecNormalizerTest {
         """.trimIndent()
 
         val root = obj(OpenApiSpecNormalizer.normalize(raw))
-        val schema = obj(obj(obj(obj(obj(obj(root["paths"])["/kilo/profile"])["get"])["responses"])["200"])["content"])
+        val schema = obj(obj(obj(obj(obj(obj(root["paths"])["/accure/profile"])["get"])["responses"])["200"])["content"])
         val props = obj(obj(obj(schema["application/json"])["schema"])["properties"])
 
         // balance must be anyOf [object, null]
@@ -163,14 +163,14 @@ class OpenApiSpecNormalizerTest {
     }
 
     @Test
-    fun `leaves already-nullable fields unchanged in kilo profile response`() {
+    fun `leaves already-nullable fields unchanged in accure profile response`() {
         // If balance already has anyOf (i.e. the spec was generated correctly), normalizer must not double-wrap it.
         val raw = """
             {
               "paths": {
-                "/kilo/profile": {
+                "/accure/profile": {
                   "get": {
-                    "operationId": "kilo.profile",
+                    "operationId": "accure.profile",
                     "responses": {
                       "200": {
                         "content": {
@@ -196,7 +196,7 @@ class OpenApiSpecNormalizerTest {
         """.trimIndent()
 
         val root = obj(OpenApiSpecNormalizer.normalize(raw))
-        val schema = obj(obj(obj(obj(obj(obj(root["paths"])["/kilo/profile"])["get"])["responses"])["200"])["content"])
+        val schema = obj(obj(obj(obj(obj(obj(root["paths"])["/accure/profile"])["get"])["responses"])["200"])["content"])
         val props = obj(obj(obj(schema["application/json"])["schema"])["properties"])
 
         // balance must still have exactly 2 anyOf entries (not wrapped again)

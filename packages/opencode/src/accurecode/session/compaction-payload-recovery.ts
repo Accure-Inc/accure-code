@@ -11,7 +11,7 @@ type UpdateMessage = <T extends MessageV2.Info>(msg: T) => Effect.Effect<T>
 
 const pattern = /request entity too large|function_payload_too_large/i
 
-export namespace KiloCompactionPayloadRecovery {
+export namespace AccureCompactionPayloadRecovery {
   export function matches(error: MessageV2.Assistant["error"]) {
     if (!error) return false
     if (error.name !== "ContextOverflowError" && error.name !== "APIError") return false
@@ -62,7 +62,7 @@ export namespace KiloCompactionPayloadRecovery {
     updateMessage: UpdateMessage
     updatePart: Update
   }) {
-    const run = Effect.fn("KiloCompactionPayloadRecovery.process")(function* (
+    const run = Effect.fn("AccureCompactionPayloadRecovery.process")(function* (
       messages: LLM.StreamInput["messages"],
       text: string,
     ) {

@@ -1,11 +1,11 @@
-// kilocode_change - new file
+// accurecode_change - new file
 
 /**
- * KiloClaw SolidJS reactive helpers — Kilo Chat protocol.
+ * AccureClaw SolidJS reactive helpers — Accure Chat protocol.
  *
  * Exposes:
  *   - `createClawStatus`: polled instance status
- *   - `createClawChat`: Kilo Chat connection + active-conversation state
+ *   - `createClawChat`: Accure Chat connection + active-conversation state
  *
  * `createClawChat` returns a reactive surface the view binds to: messages,
  * conversation list, active conversation id + status (token counter), bot
@@ -30,7 +30,7 @@ const log = Log.create({ service: "claw-chat" })
 type SDK = ReturnType<typeof useSDK>
 
 /**
- * Poll the KiloClaw instance status every `interval` ms.
+ * Poll the AccureClaw instance status every `interval` ms.
  */
 export function createClawStatus(sdk: SDK, interval = 10_000) {
   const [status, setStatus] = createSignal<ClawStatus | null>(null)
@@ -39,7 +39,7 @@ export function createClawStatus(sdk: SDK, interval = 10_000) {
 
   onMount(() => {
     const poll = async () => {
-      const res = await sdk.client.kilo.claw.status().catch(() => null)
+      const res = await sdk.client.accure.claw.status().catch(() => null)
       if (res?.data && !res.error) {
         setStatus(res.data as ClawStatus)
         setError(null)
@@ -178,7 +178,7 @@ export function createClawChat(sdk: SDK) {
     })
 
     log.info("fetching status + credentials")
-    const statusRes = await sdk.client.kilo.claw.status().catch(() => null)
+    const statusRes = await sdk.client.accure.claw.status().catch(() => null)
     const statusData = statusRes?.data as (ClawStatus & { userId?: string; sandboxId?: string }) | undefined
     if (!statusRes || statusRes.error || !statusData?.userId || !statusData?.sandboxId) {
       setError(null)
@@ -186,7 +186,7 @@ export function createClawChat(sdk: SDK) {
       return
     }
 
-    const credsRes = await sdk.client.kilo.claw.chatCredentials().catch((e: unknown) => {
+    const credsRes = await sdk.client.accure.claw.chatCredentials().catch((e: unknown) => {
       log.error("chatCredentials() threw", { error: errText(e) })
       return null
     })
@@ -200,7 +200,7 @@ export function createClawChat(sdk: SDK) {
     const envelope = credsRes.data as ChatToken
     const missing: string[] = []
     if (!envelope.token) missing.push("token")
-    if (!envelope.kiloChatUrl) missing.push("kiloChatUrl")
+    if (!envelope.accureChatUrl) missing.push("accureChatUrl")
     if (!envelope.eventServiceUrl) missing.push("eventServiceUrl")
     if (missing.length > 0) {
       setError(`Malformed chat credentials response: missing ${missing.join(", ")}`)
@@ -209,7 +209,7 @@ export function createClawChat(sdk: SDK) {
     }
 
     try {
-      log.info("connecting kilo-chat")
+      log.info("connecting accure-chat")
       chat = await connect({
         envelope,
         sandboxId: statusData.sandboxId,

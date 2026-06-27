@@ -4,8 +4,8 @@ import type { JSONSchema7 } from "@ai-sdk/provider"
 import type * as Provider from "./provider"
 import type * as ModelsDev from "@opencode-ai/core/models-dev"
 import { iife } from "@/util/iife"
-import { kiloProviderOptions } from "@/kilocode/provider-options"
-import { isLing } from "@/kilocode/model-match" // kilocode_change
+import { accureProviderOptions } from "@/accurecode/provider-options"
+import { isLing } from "@/accurecode/model-match" // accurecode_change
 
 type Modality = NonNullable<ModelsDev.Model["modalities"]>["input"][number]
 
@@ -45,7 +45,7 @@ function sdkKey(npm: string): string | undefined {
       return "gateway"
     case "@openrouter/ai-sdk-provider":
       return "openrouter"
-    case "@kilocode/accure-gateway": // kilocode_change
+    case "@accurecode/accure-gateway": // accurecode_change
       return "openrouter"
     case "ai-gateway-provider":
       // ai-gateway-provider/unified wraps createOpenAICompatible({ name: "Unified" }),
@@ -156,10 +156,9 @@ function normalizeMessages(
   }
 
   // Bedrock specific transforms
-  // kilocode_change start - only filter for Claude models on Bedrock, not all Bedrock models
-  const claude = model.api.id.includes("anthropic") || model.api.id.includes("claude") || model.id.includes("claude")
-  if (model.api.npm === "@ai-sdk/amazon-bedrock" && claude) {
-    // kilocode_change end
+  // accurecode_change start - filter empty string content and empty parts for all Bedrock Converse API models to prevent empty messages from failing
+  if (model.api.npm === "@ai-sdk/amazon-bedrock") {
+    // accurecode_change end
     msgs = msgs
       .map((msg) => {
         if (typeof msg.content === "string") {
@@ -307,12 +306,14 @@ function normalizeMessages(
     })
   }
 
+  // accurecode_change start - defensive check for undefined capabilities
   if (
+    model.capabilities &&
     typeof model.capabilities.interleaved === "object" &&
     model.capabilities.interleaved.field &&
     model.api.npm !== "@openrouter/ai-sdk-provider"
   ) {
-    const field = model.capabilities.interleaved.field
+    const field = model.capabilities.interleaved.field;
     return msgs.map((msg) => {
       if (msg.role === "assistant" && Array.isArray(msg.content)) {
         const reasoningParts = msg.content.filter((part: any) => part.type === "reasoning")
@@ -355,9 +356,11 @@ function applyCaching(msgs: ModelMessage[], model: Provider.Model): ModelMessage
     openrouter: {
       cacheControl: { type: "ephemeral" },
     },
-    bedrock: {
-      cachePoint: { type: "default" },
-    },
+    // accurecode_change start - Bedrock Converse API prompt caching is not universally supported and causes silent empty streams
+    // bedrock: {
+    //   cachePoint: { type: "default" },
+    // },
+    // accurecode_change end
     openaiCompatible: {
       cache_control: { type: "ephemeral" },
     },
@@ -395,6 +398,28 @@ function applyCaching(msgs: ModelMessage[], model: Provider.Model): ModelMessage
   return msgs
 }
 
+// accurecode_change start - Bedrock Converse API requires strict user→assistant alternation.
+// Consecutive user messages (e.g. title prefix + first user turn) cause a silent empty stream.
+function mergeConsecutiveUserMessages(msgs: ModelMessage[]): ModelMessage[] {
+  const result: ModelMessage[] = []
+  for (const msg of msgs) {
+    const last = result[result.length - 1]
+    if (last && last.role === "user" && msg.role === "user") {
+      const lastContent = Array.isArray(last.content)
+        ? last.content
+        : [{ type: "text" as const, text: String(last.content) }]
+      const newContent = Array.isArray(msg.content)
+        ? msg.content
+        : [{ type: "text" as const, text: String(msg.content) }]
+      result[result.length - 1] = { ...last, content: [...lastContent, ...newContent] }
+    } else {
+      result.push(msg)
+    }
+  }
+  return result
+}
+// accurecode_change end
+
 function unsupportedParts(msgs: ModelMessage[], model: Provider.Model): ModelMessage[] {
   return msgs.map((msg) => {
     if (msg.role !== "user" || !Array.isArray(msg.content)) return msg
@@ -420,7 +445,8 @@ function unsupportedParts(msgs: ModelMessage[], model: Provider.Model): ModelMes
       const filename = part.type === "file" ? part.filename : undefined
       const modality = mimeToModality(mime)
       if (!modality) return part
-      if (model.capabilities.input[modality]) return part
+      // accurecode_change - defensive optional chaining
+      if (model.capabilities?.input?.[modality]) return part
 
       const name = filename ? `"${filename}"` : modality
       return {
@@ -436,6 +462,11 @@ function unsupportedParts(msgs: ModelMessage[], model: Provider.Model): ModelMes
 export function message(msgs: ModelMessage[], model: Provider.Model, options: Record<string, unknown>) {
   msgs = unsupportedParts(msgs, model)
   msgs = normalizeMessages(msgs, model, options)
+  // accurecode_change start - merge consecutive user messages for Bedrock Converse API
+  if (model.api.npm === "@ai-sdk/amazon-bedrock") {
+    msgs = mergeConsecutiveUserMessages(msgs)
+  }
+  // accurecode_change end
   if (
     (model.providerID === "anthropic" ||
       model.providerID === "google-vertex-anthropic" ||
@@ -495,7 +526,7 @@ export function temperature(model: Provider.Model) {
     }
     return 0.6
   }
-  if (isLing(model.api.id)) return 0.3 // kilocode_change
+  if (isLing(model.api.id)) return 0.3 // accurecode_change
   return undefined
 }
 
@@ -505,7 +536,7 @@ export function topP(model: Provider.Model) {
   if (["minimax-m2", "gemini", "kimi-k2.5", "kimi-k2p5", "kimi-k2-5"].some((s) => id.includes(s))) {
     return 0.95
   }
-  if (isLing(model.api.id)) return 0.95 // kilocode_change
+  if (isLing(model.api.id)) return 0.95 // accurecode_change
   return undefined
 }
 
@@ -516,7 +547,7 @@ export function topK(model: Provider.Model) {
     return 20
   }
   if (id.includes("gemini")) return 64
-  if (isLing(model.api.id)) return 20 // kilocode_change
+  if (isLing(model.api.id)) return 20 // accurecode_change
   return undefined
 }
 
@@ -602,11 +633,11 @@ function openaiCompatibleReasoningEfforts(id: string) {
 }
 
 function anthropicAdaptiveEfforts(apiId: string): string[] | null {
-  // kilocode_change start - treat opus-4.8 like opus-4.7
+  // accurecode_change start - treat opus-4.8 like opus-4.7
   if (["opus-4-7", "opus-4.7", "opus-4-8", "opus-4.8"].some((v) => apiId.includes(v))) {
     return ["low", "medium", "high", "xhigh", "max"]
   }
-  // kilocode_change end
+  // accurecode_change end
   if (["opus-4-6", "opus-4.6", "sonnet-4-6", "sonnet-4.6"].some((v) => apiId.includes(v))) {
     return ["low", "medium", "high", "max"]
   }
@@ -629,17 +660,18 @@ function googleThinkingBudgetMax(apiId: string) {
 }
 
 export function variants(model: Provider.Model): Record<string, Record<string, any>> {
-  // kilocode_change start
+  // accurecode_change start
   if (
-    ["@kilocode/accure-gateway", "@ai-sdk/openai-compatible"].includes(model.api.npm) &&
+    ["@accurecode/accure-gateway", "@ai-sdk/openai-compatible"].includes(model.api.npm) &&
     model.variants &&
     Object.keys(model.variants).length > 0
   ) {
     return model.variants
   }
-  // kilocode_change end
+  // accurecode_change end
 
-  if (!model.capabilities.reasoning) return {}
+  // accurecode_change - defensive optional chaining
+  if (!model.capabilities?.reasoning) return {}
 
   const id = model.id.toLowerCase()
   const adaptiveEfforts = anthropicAdaptiveEfforts(model.api.id)
@@ -649,9 +681,9 @@ export function variants(model: Provider.Model): Record<string, Record<string, a
     id.includes("deepseek-reasoner") ||
     id.includes("deepseek-r1") ||
     id.includes("deepseek-v3") ||
-    // id.includes("minimax") || // kilocode_change
-    // id.includes("glm") || // kilocode_change
-    // id.includes("kimi") || // kilocode_change
+    // id.includes("minimax") || // accurecode_change
+    // id.includes("glm") || // accurecode_change
+    // id.includes("kimi") || // accurecode_change
     // TODO: Remove this after models.dev data is fixed to use "kimi-k2.5" instead of "k2p5"
     id.includes("k2p") ||
     id.includes("qwen") ||
@@ -661,8 +693,8 @@ export function variants(model: Provider.Model): Record<string, Record<string, a
 
   // see: https://docs.x.ai/docs/guides/reasoning#control-how-hard-the-model-thinks
   if (id.includes("grok") && id.includes("grok-3-mini")) {
-    if (model.api.npm === "@openrouter/ai-sdk-provider" || model.api.npm === "@kilocode/accure-gateway") {
-      // kilocode_change - add Kilo Gateway support
+    if (model.api.npm === "@openrouter/ai-sdk-provider" || model.api.npm === "@accurecode/accure-gateway") {
+      // accurecode_change - add Accure Gateway support
       return {
         low: { reasoning: { effort: "low" } },
         high: { reasoning: { effort: "high" } },
@@ -676,25 +708,25 @@ export function variants(model: Provider.Model): Record<string, Record<string, a
   if (id.includes("grok")) return {}
 
   switch (model.api.npm) {
-    case "@kilocode/accure-gateway": // kilocode_change
+    case "@accurecode/accure-gateway": // accurecode_change
     case "@openrouter/ai-sdk-provider":
-      // kilocode_change start
+      // accurecode_change start
       if (id.includes("glm") || id.includes("kimi") || id.includes("qwen") || id.includes("minimax")) {
         return {
           instant: { reasoning: { enabled: false } },
           thinking: { reasoning: { enabled: true } },
         }
       }
-      // kilocode_change end
+      // accurecode_change end
       if (
         !id.includes("gpt") &&
         !id.includes("gemini-3") &&
         !id.includes("claude") &&
-        !model.id.includes("mercury") // kilocode_change
+        !model.id.includes("mercury") // accurecode_change
       )
         return {}
       return Object.fromEntries(
-        (model.api.npm === "@kilocode/accure-gateway" || !id.includes("gpt") // kilocode_change
+        (model.api.npm === "@accurecode/accure-gateway" || !id.includes("gpt") // accurecode_change
           ? OPENAI_EFFORTS
           : openaiCompatibleReasoningEfforts(id)
         ).map((effort) => [effort, { reasoning: { effort } }]),
@@ -826,7 +858,7 @@ export function variants(model: Provider.Model): Record<string, Record<string, a
           ? ["minimal", ...WIDELY_SUPPORTED_EFFORTS]
           : WIDELY_SUPPORTED_EFFORTS
         )
-          .concat(model.release_date >= OPENAI_XHIGH_EFFORT_RELEASE_DATE ? ["xhigh"] : []) // kilocode_change
+          .concat(model.release_date >= OPENAI_XHIGH_EFFORT_RELEASE_DATE ? ["xhigh"] : []) // accurecode_change
           .map((effort) => [
             effort,
             {
@@ -855,22 +887,22 @@ export function variants(model: Provider.Model): Record<string, Record<string, a
     // https://v5.ai-sdk.dev/providers/ai-sdk-providers/anthropic
     case "@ai-sdk/google-vertex/anthropic":
       // https://v5.ai-sdk.dev/providers/ai-sdk-providers/google-vertex#anthropic-provider
-      // kilocode_change start - MiniMax M-series toggles thinking on/off rather than exposing effort levels
+      // accurecode_change start - MiniMax M-series toggles thinking on/off rather than exposing effort levels
       if (id.includes("minimax")) {
         return {
           instant: { thinking: { type: "disabled" } },
           thinking: { thinking: { type: "adaptive" } },
         }
       }
-      // kilocode_change end
+      // accurecode_change end
       if (adaptiveEfforts) {
         let efforts = [...adaptiveEfforts]
         if (model.providerID === "github-copilot") {
-          // kilocode_change start - treat opus-4.8 like opus-4.7
+          // accurecode_change start - treat opus-4.8 like opus-4.7
           if (model.api.id.includes("opus-4.7") || model.api.id.includes("opus-4.8")) {
             efforts = ["medium"]
           }
-          // kilocode_change end
+          // accurecode_change end
           // Efforts currently supported are: low, medium, high
           efforts = efforts.filter((v) => v !== "max" && v !== "xhigh")
         }
@@ -880,11 +912,11 @@ export function variants(model: Provider.Model): Record<string, Record<string, a
             {
               thinking: {
                 type: "adaptive",
-                // kilocode_change start - treat opus-4.8 like opus-4.7
+                // accurecode_change start - treat opus-4.8 like opus-4.7
                 ...(["opus-4-7", "opus-4.7", "opus-4-8", "opus-4.8"].some((v) => model.api.id.includes(v))
                   ? { display: "summarized" }
                   : {}),
-                // kilocode_change end
+                // accurecode_change end
               },
               effort,
             },
@@ -921,11 +953,11 @@ export function variants(model: Provider.Model): Record<string, Record<string, a
               reasoningConfig: {
                 type: "adaptive",
                 maxReasoningEffort: effort,
-                // kilocode_change start - treat opus-4.8 like opus-4.7
+                // accurecode_change start - treat opus-4.8 like opus-4.7
                 ...(["opus-4-7", "opus-4.7", "opus-4-8", "opus-4.8"].some((v) => model.api.id.includes(v))
                   ? { display: "summarized" }
                   : {}),
-                // kilocode_change end
+                // accurecode_change end
               },
             },
           ]),
@@ -949,18 +981,10 @@ export function variants(model: Provider.Model): Record<string, Record<string, a
         }
       }
 
-      // For Amazon Nova models, use reasoningConfig with maxReasoningEffort
-      return Object.fromEntries(
-        WIDELY_SUPPORTED_EFFORTS.map((effort) => [
-          effort,
-          {
-            reasoningConfig: {
-              type: "enabled",
-              maxReasoningEffort: effort,
-            },
-          },
-        ]),
-      )
+      // accurecode_change start - Nova reasoning config fix
+      // Nova v1 models don't support reasoning; return empty to avoid invalid config
+      return {}
+      // accurecode_change end
 
     case "@ai-sdk/google-vertex":
     // https://v5.ai-sdk.dev/providers/ai-sdk-providers/google-vertex
@@ -997,17 +1021,18 @@ export function variants(model: Provider.Model): Record<string, Record<string, a
 
     case "@ai-sdk/mistral":
       // https://v5.ai-sdk.dev/providers/ai-sdk-providers/mistral
-      // https://docs.mistral.ai/studio-api/conversations/reasoning // kilocode_change
-      if (!model.capabilities.reasoning) return {}
+      // https://docs.mistral.ai/studio-api/conversations/reasoning // accurecode_change
+      // accurecode_change - defensive optional chaining
+      if (!model.capabilities?.reasoning) return {}
       // Only Mistral Small 4 and Medium 3.5 support reasoning
       const MISTRAL_REASONING_IDS = [
         "mistral-small-2603",
         "mistral-small-latest",
         "mistral-medium-3.5",
-        // kilocode_change start
+        // accurecode_change start
         "mistral-medium-3-5",
         "mistral-medium-latest",
-        // kilocode_change end
+        // accurecode_change end
         "mistral-medium-2604",
       ]
       const mistralId = model.api.id.toLowerCase()
@@ -1121,7 +1146,7 @@ export function options(input: {
   if (
     input.model.api.npm === "@openrouter/ai-sdk-provider" ||
     input.model.api.npm === "@llmgateway/ai-sdk-provider" ||
-    input.model.api.npm === "@kilocode/accure-gateway" // kilocode_change
+    input.model.api.npm === "@accurecode/accure-gateway" // accurecode_change
   ) {
     result["usage"] = {
       include: true,
@@ -1153,7 +1178,8 @@ export function options(input: {
   }
 
   if (input.model.api.npm === "@ai-sdk/google" || input.model.api.npm === "@ai-sdk/google-vertex") {
-    if (input.model.capabilities.reasoning) {
+    // accurecode_change - defensive optional chaining
+    if (input.model.capabilities?.reasoning) {
       result["thinkingConfig"] = {
         includeThoughts: true,
       }
@@ -1182,7 +1208,8 @@ export function options(input: {
   // Note: kimi-k2-thinking is excluded as it returns reasoning_content by default.
   if (
     input.model.providerID === "alibaba-cn" &&
-    input.model.capabilities.reasoning &&
+    // accurecode_change - defensive optional chaining
+    input.model.capabilities?.reasoning &&
     input.model.api.npm === "@ai-sdk/openai-compatible" &&
     !modelId.includes("kimi-k2-thinking")
   ) {
@@ -1200,22 +1227,22 @@ export function options(input: {
       if (
         input.model.api.npm === "@ai-sdk/openai" ||
         input.model.api.npm === "@ai-sdk/azure" ||
-        input.model.api.npm === "@ai-sdk/github-copilot" || // kilocode_change
-        input.model.api.npm === "@openrouter/ai-sdk-provider" || // kilocode_change
-        input.model.api.npm === "@kilocode/accure-gateway" // kilocode_change
+        input.model.api.npm === "@ai-sdk/github-copilot" || // accurecode_change
+        input.model.api.npm === "@openrouter/ai-sdk-provider" || // accurecode_change
+        input.model.api.npm === "@accurecode/accure-gateway" // accurecode_change
       ) {
         result["reasoningSummary"] = "auto"
       }
     }
 
     if (
-      // kilocode_change start - gate textVerbosity to Responses-API providers
+      // accurecode_change start - gate textVerbosity to Responses-API providers
       (input.model.api.npm === "@ai-sdk/openai" ||
         input.model.api.npm === "@ai-sdk/azure" ||
         input.model.api.npm === "@ai-sdk/github-copilot" ||
         input.model.api.npm === "@openrouter/ai-sdk-provider" ||
-        input.model.api.npm === "@kilocode/accure-gateway") &&
-      // kilocode_change end
+        input.model.api.npm === "@accurecode/accure-gateway") &&
+      // accurecode_change end
       input.model.api.id.includes("gpt-5.") &&
       !input.model.api.id.includes("codex") &&
       !input.model.api.id.includes("-chat") &&
@@ -1260,10 +1287,10 @@ export function smallOptions(model: Provider.Model) {
   if (
     model.providerID === "openrouter" ||
     model.providerID === "llmgateway" ||
-    model.api.npm === "@kilocode/accure-gateway" // kilocode_change
+    model.api.npm === "@accurecode/accure-gateway" // accurecode_change
   ) {
-    if (!model.capabilities.reasoning) return {} // kilocode_change - omit unsupported reasoning options
-    return { reasoning: { enabled: true } } // kilocode_change - use the model's supported default effort
+    if (!model.capabilities?.reasoning) return {} // accurecode_change - omit unsupported reasoning options
+    return { reasoning: { enabled: true } } // accurecode_change - use the model's supported default effort
   }
 
   if (model.providerID === "venice") {
@@ -1311,11 +1338,11 @@ export function providerOptions(model: Provider.Model, options: { [x: string]: a
     return result
   }
 
-  // kilocode_change start
-  if (model.api.npm === "@kilocode/accure-gateway") {
-    return kiloProviderOptions(options)
+  // accurecode_change start
+  if (model.api.npm === "@accurecode/accure-gateway") {
+    return accureProviderOptions(options)
   }
-  // kilocode_change end
+  // accurecode_change end
 
   // AI SDK packages that resolve providerOptionsName by splitting the
   // provider name on "." (e.g. "wafer.ai" -> "wafer") need the same
@@ -1338,10 +1365,49 @@ export function providerOptions(model: Provider.Model, options: { [x: string]: a
 }
 
 export function maxOutputTokens(model: Provider.Model, outputTokenMax = OUTPUT_TOKEN_MAX): number {
-  return Math.min(model.limit.output, outputTokenMax) || outputTokenMax
+  let limit = model.limit.output
+  // accurecode_change start - Bedrock Converse API models have strict output limits (Nova = 5000, Claude 3.5 = 8192, others = 4096).
+  // Requesting maxTokens higher than the Bedrock model limit causes a ValidationException from Bedrock.
+  if (model.api.npm === "@ai-sdk/amazon-bedrock") {
+    const id = (model.id + "/" + model.api.id).toLowerCase()
+    let bedrockLimit = 4096
+    if (id.includes("nova")) {
+      bedrockLimit = 5000
+    } else if (
+      id.includes("claude-3-5") ||
+      id.includes("claude-3.5") ||
+      id.includes("claude-haiku-4-5") ||
+      id.includes("claude-haiku-4.5")
+    ) {
+      bedrockLimit = 8192
+    } else if (id.includes("claude")) {
+      bedrockLimit = 4096
+    }
+    limit = typeof limit === "number" && limit > 0 ? Math.min(limit, bedrockLimit) : bedrockLimit
+  }
+  // accurecode_change end
+  const cap = typeof limit === "number" && limit > 0 ? Math.min(limit, outputTokenMax) : outputTokenMax
+  return cap || outputTokenMax
 }
 
 export function schema(model: Provider.Model, schema: JSONSchema7): JSONSchema7 {
+  // accurecode_change start - Bedrock Nova and Converse API strictly forbid $schema and additionalProperties at the root/nested levels.
+  if (model.api.npm === "@ai-sdk/amazon-bedrock") {
+    const sanitizeBedrock = (obj: unknown): void => {
+      if (Array.isArray(obj)) {
+        obj.forEach(sanitizeBedrock)
+      } else if (obj && typeof obj === "object") {
+        const record = obj as Record<string, unknown>
+        if ("$schema" in record) delete record.$schema
+        if ("additionalProperties" in record) delete record.additionalProperties
+        Object.values(record).forEach(sanitizeBedrock)
+      }
+    }
+    schema = JSON.parse(JSON.stringify(schema))
+    sanitizeBedrock(schema)
+  }
+  // accurecode_change end
+
   /*
   if (["openai", "azure"].includes(providerID)) {
     if (schema.type === "object" && schema.properties) {

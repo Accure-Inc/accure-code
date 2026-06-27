@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.ui.style
+package ai.accurecode.client.session.ui.style
 
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.colors.EditorColorsScheme
 import com.intellij.openapi.editor.ex.EditorEx

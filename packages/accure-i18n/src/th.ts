@@ -1,19 +1,19 @@
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1":
-    "Kilo Gateway ให้คุณเข้าถึงชุดโมเดลที่คัดสรรมาอย่างดีและเชื่อถือได้สำหรับตัวแทนเขียนโค้ด",
-  "provider.connect.kiloGateway.line2":
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1":
+    "Accure Gateway ให้คุณเข้าถึงชุดโมเดลที่คัดสรรมาอย่างดีและเชื่อถือได้สำหรับตัวแทนเขียนโค้ด",
+  "provider.connect.accureGateway.line2":
     "ด้วย API key เดียว คุณจะสามารถเข้าถึงโมเดลต่างๆ เช่น Claude, GPT, Gemini, GLM และอื่นๆ",
-  "provider.connect.kiloGateway.visit.prefix": "เยี่ยมชม ",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": " เพื่อรับ API key ของคุณ",
-  "provider.connect.kiloGateway.byok.prefix": "สำหรับสถิติการใช้งานเพิ่มเติม โปรดใช้ ",
-  "provider.connect.kiloGateway.byok.link": "BYOK ผ่าน Kilo's Gateway",
-  "provider.connect.kiloGateway.byok.suffix": "",
+  "provider.connect.accureGateway.visit.prefix": "เยี่ยมชม ",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": " เพื่อรับ API key ของคุณ",
+  "provider.connect.accureGateway.byok.prefix": "สำหรับสถิติการใช้งานเพิ่มเติม โปรดใช้ ",
+  "provider.connect.accureGateway.byok.link": "BYOK ผ่าน Accure's Gateway",
+  "provider.connect.accureGateway.byok.suffix": "",
 
   // Provider settings translations
   "settings.providers.group.recommended": "แนะนำ",
-  "settings.providers.note.kilo": "เข้าถึงโมเดล AI มากกว่า 500 รายการ",
+  "settings.providers.note.accurecode": "เข้าถึงโมเดล AI มากกว่า 500 รายการ",
   "settings.providers.note.opencode": "โมเดลที่คัดสรร รวมถึง Claude, GPT, Gemini และอื่น ๆ",
   "settings.providers.note.anthropic": "เข้าถึงโมเดล Claude โดยตรง รวมถึง Pro และ Max",
   "settings.providers.note.deepseek": "โมเดล DeepSeek สำหรับงานใช้เหตุผลและเขียนโค้ด",
@@ -102,7 +102,7 @@ export const dict = {
     "รอจนกว่าสแน็ปช็อตจะเสร็จ เทิร์นถัดไปจะเร็วขึ้นเมื่อสร้างสแน็ปช็อตแรกเสร็จแล้ว",
   "snapshot.slowRepo.answer.disable": "ปิดใช้งานสำหรับโปรเจกต์นี้",
   "snapshot.slowRepo.answer.disable.description":
-    "ปิดสแน็ปช็อตของ Kilo สำหรับโปรเจกต์นี้ คุณจะสูญเสียการยกเลิก/ทำซ้ำสำหรับการเปลี่ยนแปลงของ Kilo แต่ git ยังคงติดตามทุกอย่าง",
+    "ปิดสแน็ปช็อตของ Accure สำหรับโปรเจกต์นี้ คุณจะสูญเสียการยกเลิก/ทำซ้ำสำหรับการเปลี่ยนแปลงของ Accure แต่ git ยังคงติดตามทุกอย่าง",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "เปิดในตัวดูความแตกต่าง",

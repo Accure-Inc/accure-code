@@ -1,13 +1,13 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import path from "path"
 import { describe, expect, test } from "bun:test"
-import { ConfigProtection } from "../../../src/kilocode/permission/config-paths"
+import { ConfigProtection } from "../../../src/accurecode/permission/config-paths"
 import { Global } from "@opencode-ai/core/global"
-import { KilocodePaths } from "../../../src/kilocode/paths"
+import { AccurecodePaths } from "../../../src/accurecode/paths"
 
 describe("ConfigProtection.isRequest", () => {
   const config = path.resolve(Global.Path.config)
-  const legacy = KilocodePaths.globalDirs().map((d) => path.resolve(d))
+  const legacy = AccurecodePaths.globalDirs().map((d) => path.resolve(d))
 
   // --- external_directory: bash-originated (empty metadata) ---
 
@@ -46,7 +46,7 @@ describe("ConfigProtection.isRequest", () => {
     const result = ConfigProtection.isRequest({
       permission: "external_directory",
       patterns: [config + "/*"],
-      metadata: { filepath: path.join(config, "kilo.json"), parentDir: config },
+      metadata: { filepath: path.join(config, "accure.json"), parentDir: config },
     })
     expect(result).toBe(false)
   })
@@ -126,7 +126,7 @@ describe("ConfigProtection.isRequest", () => {
   test("returns true for edit targeting relative config path via patterns", () => {
     const result = ConfigProtection.isRequest({
       permission: "edit",
-      patterns: [".kilo/command/foo.md"],
+      patterns: [".accurecode/command/foo.md"],
     })
     expect(result).toBe(true)
   })
@@ -134,7 +134,7 @@ describe("ConfigProtection.isRequest", () => {
   test("returns false for edit targeting excluded subdir (plans)", () => {
     const result = ConfigProtection.isRequest({
       permission: "edit",
-      patterns: [".kilo/plans/plan.md"],
+      patterns: [".accurecode/plans/plan.md"],
     })
     expect(result).toBe(false)
   })
@@ -142,7 +142,7 @@ describe("ConfigProtection.isRequest", () => {
   test("returns false for read permission", () => {
     const result = ConfigProtection.isRequest({
       permission: "read",
-      patterns: [".kilo/config.json"],
+      patterns: [".accurecode/config.json"],
     })
     expect(result).toBe(false)
   })
@@ -156,7 +156,7 @@ describe("ConfigProtection.isRequest", () => {
   })
 
   test("returns true for edit targeting root config files", () => {
-    for (const file of ["kilo.json", "kilo.jsonc", "AGENTS.md"]) {
+    for (const file of ["accure.json", "accure.jsonc", "AGENTS.md"]) {
       const result = ConfigProtection.isRequest({
         permission: "edit",
         patterns: [file],

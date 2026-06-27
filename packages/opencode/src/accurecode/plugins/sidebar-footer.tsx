@@ -1,15 +1,15 @@
-import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@kilocode/plugin/tui"
+import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@accurecode/plugin/tui"
 import { createMemo, Show } from "solid-js"
 import { Global } from "@opencode-ai/core/global"
 
-const id = "internal:kilo-sidebar-footer"
+const id = "internal:accure-sidebar-footer"
 
 function View(props: { api: TuiPluginApi }) {
   const theme = () => props.api.theme.current
   const has = createMemo(() =>
     props.api.state.provider.some(
       (item) =>
-        (item.id !== "opencode" && item.id !== "kilo") ||
+        (item.id !== "opencode" && item.id !== "accure") ||
         Object.values(item.models).some((model) => model.cost?.input !== 0),
     ),
   )
@@ -50,7 +50,7 @@ function View(props: { api: TuiPluginApi }) {
                 ✕
               </text>
             </box>
-            <text fg={theme().textMuted}>Kilo includes free models so you can start immediately.</text>
+            <text fg={theme().textMuted}>Accure includes free models so you can start immediately.</text>
             <text fg={theme().textMuted}>
               Connect from 75+ providers to use other models, including Claude, GPT, Gemini etc
             </text>
@@ -68,7 +68,7 @@ function View(props: { api: TuiPluginApi }) {
       <text fg={theme().textMuted}>
         <span style={{ fg: theme().success }}>•</span>{" "}
         <span style={{ fg: theme().text }}>
-          <b>Kilo</b>
+          <b>Accure</b>
         </span>{" "}
         <span>{props.api.app.version}</span>
       </text>

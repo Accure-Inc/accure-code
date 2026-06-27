@@ -6,7 +6,7 @@
  */
 
 import { Component, createSignal, createMemo, createEffect, For, Show, onCleanup } from "solid-js"
-import { Spinner } from "@kilocode/accure-ui/spinner"
+import { Spinner } from "@accurecode/accure-ui/spinner"
 import { useServer } from "../../context/server"
 import { useVSCode } from "../../context/vscode"
 import { useLanguage } from "../../context/language"

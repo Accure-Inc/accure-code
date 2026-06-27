@@ -1,10 +1,10 @@
-import { RemoteProtocol } from "@/kilo-sessions/remote-protocol"
-import type { RemoteWS } from "@/kilo-sessions/remote-ws"
+import { RemoteProtocol } from "@/accure-sessions/remote-protocol"
+import type { RemoteWS } from "@/accure-sessions/remote-ws"
 import { GlobalBus } from "@/bus/global"
 import { Session } from "@/session/session"
 import { SessionPrompt } from "@/session/prompt"
 import { Question } from "@/question"
-import { Suggestion } from "@/kilocode/suggestion" // kilocode_change
+import { Suggestion } from "@/accurecode/suggestion" // accurecode_change
 import { Permission } from "@/permission"
 import { PermissionID } from "@/permission/schema"
 import { SessionID } from "@/session/schema"
@@ -15,10 +15,10 @@ import z from "zod"
 import { zodObject } from "@opencode-ai/core/effect-zod"
 import { Effect } from "effect"
 
-type Provide = typeof import("@/kilocode/instance").provide
+type Provide = typeof import("@/accurecode/instance").provide
 
 async function provide<R>(input: { directory: string; fn: () => R }): Promise<R> {
-  const { provide } = await import("@/kilocode/instance")
+  const { provide } = await import("@/accurecode/instance")
   return provide(input)
 }
 
@@ -38,7 +38,7 @@ const SuggestionData = z.object({
   index: z.number().int().nonnegative(),
 })
 
-// kilocode_change start — lazy init to avoid circular dependency
+// accurecode_change start — lazy init to avoid circular dependency
 // (Server → RemoteRoutes → RemoteSender → SessionPrompt at module load time)
 let _remotePromptInput: z.ZodObject<any> | undefined
 function getRemotePromptInput() {
@@ -46,12 +46,12 @@ function getRemotePromptInput() {
     model: z.string().optional(),
   }))
 }
-// kilocode_change end
+// accurecode_change end
 function normalizeModel(model: string | undefined) {
   if (!model) return undefined
   return {
-    providerID: ProviderID.make("kilo"),
-    modelID: ModelID.make(model.startsWith("kilocode/") ? model.slice("kilocode/".length) : model),
+    providerID: ProviderID.make("accure"),
+    modelID: ModelID.make(model.startsWith("accurecode/") ? model.slice("accurecode/".length) : model),
   }
 }
 

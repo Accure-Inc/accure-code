@@ -37,14 +37,14 @@ function record(input: unknown): input is Record<string, unknown> {
 
 function models(input: unknown, key: "all" | "providers") {
   if (!record(input) || !Array.isArray(input[key])) return []
-  const kilo = input[key].find((provider) => record(provider) && provider.id === "kilo")
-  if (!record(kilo) || !record(kilo.models)) return []
-  return Object.keys(kilo.models)
+  const accure = input[key].find((provider) => record(provider) && provider.id === "accure")
+  if (!record(accure) || !record(accure.models)) return []
+  return Object.keys(accure.models)
 }
 
 function request(path: string, dir: string) {
   return Effect.promise(async () => {
-    const result = await Server.Default().app.request(path, { headers: { "x-kilo-directory": dir } })
+    const result = await Server.Default().app.request(path, { headers: { "x-accure-directory": dir } })
     expect(result.status).toBe(200)
     return result.json()
   })
@@ -76,23 +76,23 @@ it.live(
           config: {
             formatter: false,
             lsp: false,
-            enabled_providers: ["kilo"],
+            enabled_providers: ["accure"],
             hide_prompt_training_models: true,
-            provider: { kilo: { options: { baseURL } } },
+            provider: { accure: { options: { baseURL } } },
           },
         }),
       ),
       (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
     )
-    const key = process.env.KILO_API_KEY
+    const key = process.env.ACCURECODE_API_KEY
     yield* Effect.acquireRelease(
       Effect.sync(() => {
-        process.env.KILO_API_KEY = "test-key"
+        process.env.ACCURECODE_API_KEY = "test-key"
       }),
       () =>
         Effect.sync(() => {
-          if (key === undefined) delete process.env.KILO_API_KEY
-          else process.env.KILO_API_KEY = key
+          if (key === undefined) delete process.env.ACCURECODE_API_KEY
+          else process.env.ACCURECODE_API_KEY = key
         }),
     )
 

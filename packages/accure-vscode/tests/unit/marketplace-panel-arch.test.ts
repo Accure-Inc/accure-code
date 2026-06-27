@@ -3,19 +3,19 @@ import fs from "node:fs"
 import path from "node:path"
 
 const root = path.resolve(import.meta.dir, "../..")
-const kilo = fs.readFileSync(path.join(root, "src/KiloProvider.ts"), "utf-8")
+const accure = fs.readFileSync(path.join(root, "src/AccureProvider.ts"), "utf-8")
 const panel = fs.readFileSync(path.join(root, "src/MarketplacePanelProvider.ts"), "utf-8")
-const remove = fs.readFileSync(path.join(root, "src/kilo-provider/remove-config-item.ts"), "utf-8")
+const remove = fs.readFileSync(path.join(root, "src/accure-provider/remove-config-item.ts"), "utf-8")
 
 describe("standalone Marketplace architecture", () => {
-  it("keeps Marketplace webview cases out of KiloProvider", () => {
+  it("keeps Marketplace webview cases out of AccureProvider", () => {
     for (const type of [
       "fetchMarketplaceData",
       "installMarketplaceItem",
       "removeInstalledMarketplaceItem",
       "dismissAgentMigrationBanner",
     ]) {
-      expect(kilo).not.toContain(`case \"${type}\"`)
+      expect(accure).not.toContain(`case \"${type}\"`)
       expect(panel).toContain(`case \"${type}\"`)
     }
   })
@@ -26,8 +26,8 @@ describe("standalone Marketplace architecture", () => {
   })
 
   it("keeps sidebar removal behind a narrow adapter", () => {
-    expect(kilo).toContain("removeAgent(this.removeConfigItemCtx, name)")
-    expect(kilo).toContain("removeMcp(this.removeConfigItemCtx, name)")
+    expect(accure).toContain("removeAgent(this.removeConfigItemCtx, name)")
+    expect(accure).toContain("removeMcp(this.removeConfigItemCtx, name)")
     expect(remove).toContain("createMarketplaceRemover")
     expect(remove).not.toContain("new MarketplaceService()")
     expect(remove).not.toContain("AgentMarketplaceItem")

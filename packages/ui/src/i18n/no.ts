@@ -57,7 +57,7 @@ export const dict: Record<Keys, string> = {
 
   "dialog.usageExceeded.freeTier.title": "Gratis grense nådd",
   "dialog.usageExceeded.freeTier.description":
-    "Abonner på Kilo Go for pålitelig tilgang til de beste åpen kildekode-modellene, fra $5/måned.",
+    "Abonner på Accure Go for pålitelig tilgang til de beste åpen kildekode-modellene, fra $5/måned.",
   "dialog.usageExceeded.freeTier.actionLabel": "Abonner",
   "dialog.usageExceeded.accountRateLimit.title": "Go-grense nådd",
   "dialog.usageExceeded.accountRateLimit.description":
@@ -108,7 +108,7 @@ export const dict: Record<Keys, string> = {
   "ui.textField.copied": "Kopiert",
 
   "ui.imagePreview.alt": "Bildeforhåndsvisning",
-  // kilocode_change start
+  // accurecode_change start
   "ui.mermaid.rendering": "Gjengir Mermaid-diagram...",
   "ui.mermaid.renderError": "Mermaid-gjengivelse mislyktes: {{message}}",
   "ui.mermaid.errorDefault": "Kan ikke gjengi Mermaid-diagram.",
@@ -119,7 +119,7 @@ export const dict: Record<Keys, string> = {
   "ui.mermaid.copyPng": "Kopier PNG",
   "ui.mermaid.downloadSvg": "Last ned SVG",
   "ui.mermaid.downloadPng": "Last ned PNG",
-  // kilocode_change end
+  // accurecode_change end
   "ui.scrollView.ariaLabel": "rullbart innhold",
 
   "ui.tool.read": "Les",

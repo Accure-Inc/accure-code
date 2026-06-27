@@ -1,5 +1,5 @@
 /*
- * Kilo UI Global Overrides
+ * Accure UI Global Overrides
  *
  * Global design tokens, scrollbar styling, and VS Code extension overrides
  * that are not component-specific.
@@ -8,26 +8,26 @@
 /* ===== Global design tokens ===== */
 
 :root {
-  --kilo-font-size-10: 10px;
-  --kilo-font-size-11: 11px;
-  --kilo-font-size-12: 12px;
-  --kilo-font-size-13: 13px;
-  --kilo-font-size-14: 14px;
-  --kilo-font-size-15: 15px;
-  --kilo-font-size-16: 16px;
-  --kilo-font-size-17: 17px;
-  --kilo-font-size-18: 18px;
-  --kilo-font-size-19: 19px;
-  --kilo-font-size-20: 20px;
-  --kilo-font-size-21: 21px;
-  --kilo-font-size-22: 22px;
-  --kilo-font-size-23: 23px;
-  --kilo-font-size-24: 24px;
-  --kilo-font-scale: 1;
-  --font-size-x-small: var(--kilo-font-size-10);
-  --font-size-small: var(--kilo-font-size-11);
-  --font-size-base: var(--kilo-font-size-13);
-  --font-size-large: var(--kilo-font-size-16);
+  --accure-font-size-10: 10px;
+  --accure-font-size-11: 11px;
+  --accure-font-size-12: 12px;
+  --accure-font-size-13: 13px;
+  --accure-font-size-14: 14px;
+  --accure-font-size-15: 15px;
+  --accure-font-size-16: 16px;
+  --accure-font-size-17: 17px;
+  --accure-font-size-18: 18px;
+  --accure-font-size-19: 19px;
+  --accure-font-size-20: 20px;
+  --accure-font-size-21: 21px;
+  --accure-font-size-22: 22px;
+  --accure-font-size-23: 23px;
+  --accure-font-size-24: 24px;
+  --accure-font-scale: 1;
+  --font-size-x-small: var(--accure-font-size-10);
+  --font-size-small: var(--accure-font-size-11);
+  --font-size-base: var(--accure-font-size-13);
+  --font-size-large: var(--accure-font-size-16);
 
   /* Tight border radius (~2px) */
   --radius-xs: 2px;
@@ -88,16 +88,16 @@
 /*
  * Scrollbar utility class + universal scrollable-element styling.
  *
- * `.kilo-scrollbar` — explicit opt-in class for any scrollable element.
+ * `.accurecode-scrollbar` — explicit opt-in class for any scrollable element.
  * `[data-scrollable]` — data attribute used by accure-ui components internally.
  *
  * Both selectors receive identical thin, token-aware scrollbar styling.
  * In the VS Code theme the colors resolve to native VS Code scrollbar tokens.
  *
- * Usage (class):     <div class="kilo-scrollbar" style="overflow-y: auto">
+ * Usage (class):     <div class="accure-scrollbar" style="overflow-y: auto">
  * Usage (attribute): <div data-scrollable style="overflow-y: auto">
  */
-:is(.kilo-scrollbar, [data-scrollable]) {
+:is(.accurecode-scrollbar, [data-scrollable]) {
   /* Firefox */
   scrollbar-width: thin;
   scrollbar-color: rgba(121, 121, 121, 0.4) transparent;
@@ -135,7 +135,7 @@
 }
 
 /* VS Code theme: use native VS Code scrollbar color tokens */
-html[data-theme="accure-vscode"] :is(.kilo-scrollbar, [data-scrollable]) {
+html[data-theme="accure-vscode"] :is(.accurecode-scrollbar, [data-scrollable]) {
   scrollbar-color: var(--vscode-scrollbarSlider-background) transparent;
 
   &::-webkit-scrollbar-thumb {
@@ -163,7 +163,7 @@ html[data-theme="accure-vscode"] {
   --font-family-sans: var(--vscode-font-family);
   --font-family-mono: var(--vscode-editor-font-family, Menlo, Monaco, "Courier New", monospace);
   font-family: var(--vscode-font-family);
-  font-size: calc(var(--vscode-font-size, 16px) * var(--kilo-font-scale, 1));
+  font-size: calc(var(--vscode-font-size, 16px) * var(--accure-font-scale, 1));
   font-weight: var(--vscode-font-weight);
 
   ::-webkit-scrollbar-button {

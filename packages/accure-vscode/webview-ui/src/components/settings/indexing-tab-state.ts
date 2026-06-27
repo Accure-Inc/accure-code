@@ -1,4 +1,4 @@
-import type { IndexingConfig } from "@kilocode/accure-indexing/config"
+import type { IndexingConfig } from "@accurecode/accure-indexing/config"
 
 export type IndexingScope = "global" | "project"
 export type IndexingInheritance = "none" | "inherited" | "partial"

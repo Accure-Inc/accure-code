@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.views.question
+package ai.accurecode.client.session.views.question
 
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.model.toolKind
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.model.toolKind
 import junit.framework.TestCase
 
 class QuestionResultParserTest : TestCase() {

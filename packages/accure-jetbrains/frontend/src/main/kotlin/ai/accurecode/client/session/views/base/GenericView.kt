@@ -1,9 +1,9 @@
-package ai.kilocode.client.session.views.base
+package ai.accurecode.client.session.views.base
 
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.Generic
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.Generic
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.ui.components.JBLabel
 
 /**

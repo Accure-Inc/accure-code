@@ -1,10 +1,10 @@
-/* Kilo Switch overrides */
+/* Accure Switch overrides */
 
 [data-component="switch"] {
   cursor: pointer;
 
   [data-slot="switch-label"] {
-    font-size: var(--kilo-font-size-13);
+    font-size: var(--accure-font-size-13);
   }
 
   [data-slot="switch-control"] {

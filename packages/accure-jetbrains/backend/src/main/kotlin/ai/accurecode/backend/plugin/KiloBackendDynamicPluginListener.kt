@@ -1,21 +1,21 @@
-package ai.kilocode.backend.plugin
+package ai.accurecode.backend.plugin
 
-import ai.kilocode.KiloPlugin
-import ai.kilocode.backend.app.KiloBackendAppService
-import ai.kilocode.log.KiloLog
+import ai.accurecode.AccurePlugin
+import ai.accurecode.backend.app.AccureBackendAppService
+import ai.accurecode.log.AccureLog
 import com.intellij.ide.plugins.DynamicPluginListener
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.openapi.components.service
 import kotlinx.coroutines.runBlocking
 
-class KiloBackendDynamicPluginListener : DynamicPluginListener {
-    private val log = KiloLog.create(KiloBackendDynamicPluginListener::class.java)
+class AccureBackendDynamicPluginListener : DynamicPluginListener {
+    private val log = AccureLog.create(AccureBackendDynamicPluginListener::class.java)
 
     override fun beforePluginUnload(pluginDescriptor: IdeaPluginDescriptor, isUpdate: Boolean) {
-        if (pluginDescriptor.pluginId != KiloPlugin.id) return
-        log.info("Shutting down Kilo backend for plugin unload (isUpdate=$isUpdate)")
+        if (pluginDescriptor.pluginId != AccurePlugin.id) return
+        log.info("Shutting down Accure backend for plugin unload (isUpdate=$isUpdate)")
         runBlocking {
-            service<KiloBackendAppService>().shutdownForUnload()
+            service<AccureBackendAppService>().shutdownForUnload()
         }
     }
 }

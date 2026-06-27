@@ -1,15 +1,15 @@
 ---
 title: "Discord"
-description: "Use KiloClaw with Discord: setup, DM access control, and channel configuration"
+description: "Use AccureClaw with Discord: setup, DM access control, and channel configuration"
 ---
 
 # Discord
 
-This page covers everything you need to use KiloClaw with Discord: connecting your bot, controlling who can DM it, and adding it to specific channels.
+This page covers everything you need to use AccureClaw with Discord: connecting your bot, controlling who can DM it, and adding it to specific channels.
 
-## Connecting KiloClaw to Discord
+## Connecting AccureClaw to Discord
 
-Create a bot in the Discord Developer Portal and link it to your KiloClaw dashboard.
+Create a bot in the Discord Developer Portal and link it to your AccureClaw dashboard.
 
 ## Prerequisites
 
@@ -52,27 +52,27 @@ On the **Bot** page, scroll down to **Privileged Gateway Intents** and enable:
 > 📝 **Note**
 > Despite the name, this generates your first token — nothing is being "reset."
 
-2. Copy the token that appears and paste it into the **Discord Bot Token** field in your KiloClaw dashboard.
+2. Copy the token that appears and paste it into the **Discord Bot Token** field in your AccureClaw dashboard.
 
-{% image src="/docs/img/kiloclaw/discord.png" alt="Connect account screen" width="800" caption="Discord bot token entry" /%}
+{% image src="/docs/img/accureclaw/discord.png" alt="Connect account screen" width="800" caption="Discord bot token entry" /%}
 
 Enter the token in the Settings tab and click **Save**. You can remove or replace a configured token at any time.
 
 ## Redeploy to Apply Changes
 
-After saving your token, click **Redeploy** (the yellow button at the top of the KiloClaw dashboard) to apply the changes. The server will restart in about 30–45 seconds. Wait for the redeploy to complete before pairing.
+After saving your token, click **Redeploy** (the yellow button at the top of the AccureClaw dashboard) to apply the changes. The server will restart in about 30–45 seconds. Wait for the redeploy to complete before pairing.
 
 ## Start Chatting with the Bot
 
 1. Right-click on the Bot in Discord and click **Message**
 2. DM the bot `/pair`
 3. You should get a response back with a pairing code
-4. Return to [app.kilo.ai/claw](https://app.kilo.ai/claw) and confirm the pairing code and approve
+4. Return to [app.accurecode.ai/claw](https://app.accurecode.ai/claw) and confirm the pairing code and approve
 5. You should now be able to chat with the bot from Discord
 
-## Restricting KiloClaw to DMs Only (Just You)
+## Restricting AccureClaw to DMs Only (Just You)
 
-By default, KiloClaw will respond to any DMs. To lock it down to only DMs with you:
+By default, AccureClaw will respond to any DMs. To lock it down to only DMs with you:
 
 ### Step 1: Find your Discord user ID
 
@@ -83,7 +83,7 @@ Your user ID is a large number (e.g. `987654321098765432`).
 
 ### Step 2: Configure DM-only access
 
-Tell your KiloClaw agent (via DM):
+Tell your AccureClaw agent (via DM):
 
 > "Set Discord DM policy to allowlist with my user ID `987654321098765432` and disable guild responses."
 
@@ -101,9 +101,9 @@ Or configure it directly in the OpenClaw Control UI config:
 }
 ```
 
-## Adding KiloClaw to a Specific Discord Channel
+## Adding AccureClaw to a Specific Discord Channel
 
-By default, your KiloClaw will not respond in channels, even if added. To have KiloClaw participate in a specific channel:
+By default, your AccureClaw will not respond in channels, even if added. To have AccureClaw participate in a specific channel:
 
 ### Step 1: Get your server and channel IDs
 
@@ -114,7 +114,7 @@ With Developer Mode enabled (User Settings → Advanced → Developer Mode):
 
 ### Step 2: Configure the channel
 
-Tell your KiloClaw agent:
+Tell your AccureClaw agent:
 
 > "Add Discord server `YOUR_SERVER_ID` and channel `YOUR_CHANNEL_ID` to the allowlist. Only respond to user `YOUR_USER_ID`."
 

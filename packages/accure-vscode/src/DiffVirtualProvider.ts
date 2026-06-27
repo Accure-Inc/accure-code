@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
 import { buildWebviewHtml, getWebviewFontSize } from "./utils"
-import { watchFontSizeConfig } from "./kilo-provider/font-size"
+import { watchFontSizeConfig } from "./accure-provider/font-size"
 import { appendOutput, getWorkspaceRoot } from "./review-utils"
 import { getDiffMarkdownRender, setDiffMarkdownRender } from "./review-settings"
 
@@ -24,7 +24,7 @@ export class DiffVirtualProvider implements vscode.Disposable {
   private fontConfigDisposable: vscode.Disposable | undefined
 
   constructor(private readonly extensionUri: vscode.Uri) {
-    this.outputChannel = vscode.window.createOutputChannel("Kilo Diff Virtual")
+    this.outputChannel = vscode.window.createOutputChannel("Accure Diff Virtual")
   }
 
   private log(...args: unknown[]) {
@@ -50,8 +50,8 @@ export class DiffVirtualProvider implements vscode.Disposable {
     })
 
     panel.iconPath = {
-      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-light.svg"),
-      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-dark.svg"),
+      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "accure-light.svg"),
+      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "accure-dark.svg"),
     }
 
     panel.webview.html = this.getHtml(panel.webview)

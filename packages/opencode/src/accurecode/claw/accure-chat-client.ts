@@ -1,10 +1,10 @@
-// kilocode_change - new file
+// accurecode_change - new file
 
 /**
- * HTTP client for the kilo-chat Cloudflare Worker.
+ * HTTP client for the accure-chat Cloudflare Worker.
  *
- * Minimal inline port of `@kilocode/kilo-chat/client` (cloud monorepo)
- * tailored to what the TUI needs. The kilo-chat worker validates payloads
+ * Minimal inline port of `@accurecode/accure-chat/client` (cloud monorepo)
+ * tailored to what the TUI needs. The accure-chat worker validates payloads
  * at its edge so we don't run zod here.
  */
 
@@ -17,19 +17,19 @@ import type {
   Message,
 } from "./types"
 
-export type KiloChatClientConfig = {
+export type AccureChatClientConfig = {
   baseUrl: string
   getToken: () => Promise<string>
   onUnauthorized?: () => void
 }
 
-export class KiloChatApiError extends Error {
+export class AccureChatApiError extends Error {
   constructor(
     public readonly status: number,
     public readonly body: unknown,
   ) {
-    super(`KiloChat request failed: ${status}${formatBodyDetail(body)}`)
-    this.name = "KiloChatApiError"
+    super(`AccureChat request failed: ${status}${formatBodyDetail(body)}`)
+    this.name = "AccureChatApiError"
   }
 }
 
@@ -56,13 +56,13 @@ type HttpOpts = {
 
 type SendQueue = Map<string, Promise<unknown>>
 
-export class KiloChatClient {
+export class AccureChatClient {
   private readonly baseUrl: string
   private readonly getToken: () => Promise<string>
   private readonly onUnauthorized: (() => void) | undefined
   private readonly sendQueues: SendQueue = new Map()
 
-  constructor(config: KiloChatClientConfig) {
+  constructor(config: AccureChatClientConfig) {
     this.baseUrl = config.baseUrl.replace(/\/$/, "")
     this.getToken = config.getToken
     this.onUnauthorized = config.onUnauthorized
@@ -252,7 +252,7 @@ export class KiloChatClient {
     if (!res.ok) {
       if (res.status === 401 || res.status === 403) this.onUnauthorized?.()
       const body: unknown = await res.json().catch(() => null)
-      throw new KiloChatApiError(res.status, body)
+      throw new AccureChatApiError(res.status, body)
     }
 
     if (res.status === 204) return undefined as unknown as T

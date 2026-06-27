@@ -1,9 +1,15 @@
 import { A, useLocation, useNavigate } from "@solidjs/router"
-import { Button } from "@kilocode/accure-web-ui/button"
-import { Card } from "@kilocode/accure-web-ui/card"
+import { Button } from "@accurecode/accure-web-ui/button"
+import { Card } from "@accurecode/accure-web-ui/card"
 import { createEffect, createMemo, createResource, createSignal, For, Show } from "solid-js"
 import { LoadingScreen } from "../../components/LoadingScreen"
-import { loadKiloProfile, logoutKilo, setKiloOrganization, type KiloProfileData, type ProjectQuery } from "../../client"
+import {
+  loadAccureProfile,
+  logoutAccure,
+  setAccureOrganization,
+  type AccureProfileData,
+  type ProjectQuery,
+} from "../../client"
 import { errMsg } from "../../shared/utils"
 import {
   authError,
@@ -19,13 +25,13 @@ import {
 } from "./profile-utils"
 import { useProfileServer } from "./server"
 
-type Org = NonNullable<KiloProfileData["profile"]["organizations"]>[number]
-type State = { kind: "connected"; data: KiloProfileData } | { kind: "disconnected" }
+type Org = NonNullable<AccureProfileData["profile"]["organizations"]>[number]
+type State = { kind: "connected"; data: AccureProfileData } | { kind: "disconnected" }
 
 async function load(input: ProjectQuery): Promise<State> {
   if (wasDisconnected()) return { kind: "disconnected" }
   try {
-    const data = await loadKiloProfile(input)
+    const data = await loadAccureProfile(input)
     markDisconnected(false)
     return { kind: "connected", data }
   } catch (err) {
@@ -37,12 +43,12 @@ async function load(input: ProjectQuery): Promise<State> {
   }
 }
 
-function org(data: KiloProfileData | undefined) {
+function org(data: AccureProfileData | undefined) {
   if (!data?.currentOrgId) return undefined
   return data.profile.organizations?.find((item) => item.id === data.currentOrgId)
 }
 
-function account(data: KiloProfileData | undefined) {
+function account(data: AccureProfileData | undefined) {
   return org(data)?.name ?? "Personal Account"
 }
 
@@ -74,7 +80,7 @@ export function ProfileRoute() {
     if (data.loading) return "Loading..."
     return "Not connected"
   })
-  const login = () => page(params(), "/kilo/login")
+  const login = () => page(params(), "/accure/login")
   const overview = () => page(params(), "/profile")
   const usageUrl = createMemo(() => usage(profile()?.currentOrgId))
   const creditsUrl = createMemo(() => credits(profile()?.currentOrgId))
@@ -102,7 +108,7 @@ export function ProfileRoute() {
     if (selected === id) return
     setSaving(next)
     setError("")
-    void setKiloOrganization(current, id)
+    void setAccureOrganization(current, id)
       .then(() => actions.refetch())
       .catch((err) => setError(errMsg(err)))
       .finally(() => setSaving(undefined))
@@ -113,7 +119,7 @@ export function ProfileRoute() {
     if (!current) return
     setSaving("logout")
     setError("")
-    void logoutKilo(current)
+    void logoutAccure(current)
       .then(() => {
         markDisconnected(true)
         actions.mutate({ kind: "disconnected" })
@@ -151,9 +157,9 @@ export function ProfileRoute() {
           <Show when={!disconnected()}>
             <header class="profile-header">
               <div>
-                <p class="eyebrow">Kilo Account</p>
+                <p class="eyebrow">Accure Account</p>
                 <h1>Your Profile</h1>
-                <p>Manage your Kilo identity, account context, credits, and billing shortcuts.</p>
+                <p>Manage your Accure identity, account context, credits, and billing shortcuts.</p>
               </div>
               <div class="profile-actions">
                 <Button variant="secondary" type="button" onClick={refresh} disabled={data.loading || !server.query()}>
@@ -188,9 +194,9 @@ export function ProfileRoute() {
                 KG
               </span>
               <div class="profile-connect-copy">
-                <p class="eyebrow">Kilo Account</p>
-                <h1>Connect your Kilo account</h1>
-                <p>Sign in to view your credits, organizations, and account details in Kilo Console.</p>
+                <p class="eyebrow">Accure Account</p>
+                <h1>Connect your Accure account</h1>
+                <p>Sign in to view your credits, organizations, and account details in Accure Console.</p>
               </div>
               <A
                 class="profile-primary-link"
@@ -206,8 +212,8 @@ export function ProfileRoute() {
 
           <Show when={!server.query() && !server.discoverable()}>
             <Card class="profile-banner" variant="warning">
-              <strong>Kilo server not found</strong>
-              <span>Start Kilo Console from a running Kilo server or pass a server URL with ?server=.</span>
+              <strong>Accure server not found</strong>
+              <span>Start Accure Console from a running Accure server or pass a server URL with ?server=.</span>
             </Card>
           </Show>
 
@@ -279,7 +285,7 @@ export function ProfileRoute() {
                       </span>
                       <span class="profile-org-body">
                         <strong>Personal Account</strong>
-                        <span>Your personal Kilo credits and settings</span>
+                        <span>Your personal Accure credits and settings</span>
                       </span>
                       <span class="profile-org-state">{!info().currentOrgId ? "Current" : "Use"}</span>
                     </button>

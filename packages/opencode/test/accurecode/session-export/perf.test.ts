@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test"
-import { Capture } from "@/kilocode/session-export/capture"
+import { Capture } from "@/accurecode/session-export/capture"
 
 describe("session export performance budget", () => {
   const worker = { postMessage: () => {}, terminate: () => {} } as unknown as Worker
-  const enabled = process.env.KILO_SESSION_EXPORT_PERF === "1" && process.env.CI !== "true"
+  const enabled = process.env.ACCURECODE_SESSION_EXPORT_PERF === "1" && process.env.CI !== "true"
 
   test.skipIf(!enabled)("ineligible beforeRequest p99 stays under 0.1 ms", () => {
     const cap = new Capture({ worker, agentVersion: "v0", nowMs: () => 0, syncSeq: () => 0 })
@@ -29,7 +29,10 @@ describe("session export performance budget", () => {
     for (let i = 0; i < 200; i++) {
       const start = performance.now()
       cap.beforeRequest({
-        input: { model: { api: { npm: "@kilocode/accure-gateway" }, isFree: true }, org: { type: "personal" as const } },
+        input: {
+          model: { api: { npm: "@accurecode/accure-gateway" }, isFree: true },
+          org: { type: "personal" as const },
+        },
         requestMeta: meta(`s${i}`),
         assembled: { system: [body], messages: [], tools: {}, permissions: [], params: {} },
       })

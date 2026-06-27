@@ -1,29 +1,29 @@
-import { Telemetry } from "@kilocode/accure-telemetry"
+import { Telemetry } from "@accurecode/accure-telemetry"
 import { Agent } from "@/agent/agent"
 import { Bus } from "@/bus"
 import { TuiEvent } from "@/cli/cmd/tui/event"
 import { Flag } from "@opencode-ai/core/flag/flag"
 import { Global } from "@opencode-ai/core/global"
 import { Identifier } from "@/id/id"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/accurecode/instance"
 import { Provider } from "@/provider/provider"
 import { ProviderID, ModelID } from "@/provider/schema"
 import { Question } from "@/question"
 import { Session } from "@/session/session"
 import { SessionID, MessageID, PartID } from "@/session/schema"
 import { LLM } from "@/session/llm"
-import { KiloLLM } from "@/kilocode/session/llm"
+import { AccureLLM } from "@/accurecode/session/llm"
 import { MessageV2 } from "@/session/message-v2"
 import { SessionStatus } from "@/session/status"
 import { Todo } from "@/session/todo"
 import { makeRuntime } from "@/effect/run-service"
 import { Effect, Schema } from "effect"
 import * as Log from "@opencode-ai/core/util/log"
-import { KiloSessionPromptQueue } from "@/kilocode/session/prompt-queue"
+import { AccureSessionPromptQueue } from "@/accurecode/session/prompt-queue"
 import { lazy } from "@/util/lazy"
 import path from "path"
 import z from "zod"
-import { PlanFile } from "@/kilocode/plan-file"
+import { PlanFile } from "@/accurecode/plan-file"
 
 const agents = lazy(() => makeRuntime(Agent.Service, Agent.defaultLayer))
 const providers = lazy(() => makeRuntime(Provider.Service, Provider.defaultLayer))
@@ -47,7 +47,7 @@ export const PlanFollowupRuntime = {
     },
   },
   handover(input: LLM.StreamInput, signal: AbortSignal) {
-    return llm().runPromise((svc) => KiloLLM.text(svc.stream(input)).pipe(Effect.orDie), { signal })
+    return llm().runPromise((svc) => AccureLLM.text(svc.stream(input)).pipe(Effect.orDie), { signal })
   },
   async session<A, E>(run: (svc: Session.Interface) => Effect.Effect<A, E>) {
     const { AppRuntime } = await import("@/effect/app-runtime")
@@ -192,7 +192,7 @@ export namespace PlanFollowup {
 
   async function resolveCodeModel(input: Pick<MessageV2.User, "model">) {
     const state =
-      Flag.KILO_CLIENT === "cli"
+      Flag.ACCURECODE_CLIENT === "cli"
         ? await Bun.file(path.join(Global.Path.state, "model.json"))
             .text()
             .then((raw) => ModelState.safeParse(JSON.parse(raw)))
@@ -305,7 +305,7 @@ export namespace PlanFollowup {
           // main prompt input below the dock already routes typed text as a question
           // reply, so "Type your own answer" would be redundant (originally hidden in
           // 65566af7f8, flipped back during the v1.4.4 upstream merge).
-          custom: Flag.KILO_CLIENT === "cli" || Flag.KILO_CLIENT === "jetbrains",
+          custom: Flag.ACCURECODE_CLIENT === "cli" || Flag.ACCURECODE_CLIENT === "jetbrains",
           options: [
             {
               label: ANSWER_NEW_SESSION,
@@ -358,7 +358,7 @@ export namespace PlanFollowup {
       model: input.model,
     })
     const session = await PlanFollowupRuntime.session((svc) => svc.get(input.sessionID))
-    const { provide } = await import("@/kilocode/instance")
+    const { provide } = await import("@/accurecode/instance")
 
     await provide({
       directory: session.directory,
@@ -536,7 +536,7 @@ export namespace PlanFollowup {
         model: code.model,
         text: "Implement the plan above.",
       })
-      KiloSessionPromptQueue.retarget(input.sessionID, msg.id)
+      AccureSessionPromptQueue.retarget(input.sessionID, msg.id)
       return "continue"
     }
 
@@ -547,7 +547,7 @@ export namespace PlanFollowup {
       model: user.model,
       text: answer,
     })
-    KiloSessionPromptQueue.retarget(input.sessionID, msg.id)
+    AccureSessionPromptQueue.retarget(input.sessionID, msg.id)
     return "continue"
   }
 }

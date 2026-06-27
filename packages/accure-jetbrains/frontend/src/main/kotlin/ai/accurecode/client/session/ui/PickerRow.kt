@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
 import com.intellij.openapi.ui.popup.util.PopupUtil
 import com.intellij.ui.NewUI
 import com.intellij.ui.popup.list.SelectablePanel

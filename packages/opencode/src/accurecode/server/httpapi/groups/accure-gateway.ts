@@ -9,7 +9,7 @@ import {
 } from "@/server/routes/instance/httpapi/middleware/workspace-routing"
 import { described } from "@/server/routes/instance/httpapi/groups/metadata"
 
-const root = "/kilo"
+const root = "/accure"
 
 export const Organization = Schema.Struct({
   id: Schema.String,
@@ -90,7 +90,7 @@ export const ClawChatCredentials = Schema.NullOr(
   Schema.Struct({
     token: Schema.String,
     expiresAt: Schema.String,
-    kiloChatUrl: Schema.String,
+    accureChatUrl: Schema.String,
     eventServiceUrl: Schema.String,
   }),
 )
@@ -243,7 +243,7 @@ export const CloudSessionData = Schema.Struct({
   messages: Schema.Array(CloudMessage),
 })
 
-export const KiloGatewayPaths = {
+export const AccureGatewayPaths = {
   modes: `${root}/modes`,
   profile: `${root}/profile`,
   authStatus: `${root}/auth-status`,
@@ -259,129 +259,129 @@ export const KiloGatewayPaths = {
   cloudSessionImport: `${root}/cloud/session/import`,
 } as const
 
-export const KiloGatewayApi = HttpApi.make("kilo")
+export const AccureGatewayApi = HttpApi.make("accure")
   .add(
-    HttpApiGroup.make("kilo")
+    HttpApiGroup.make("accure")
       .add(
-        HttpApiEndpoint.get("profile", KiloGatewayPaths.profile, {
+        HttpApiEndpoint.get("profile", AccureGatewayPaths.profile, {
           query: WorkspaceRoutingQuery,
           success: described(ProfileWithBalance, "Profile data"),
           error: [HttpApiError.BadRequest, HttpApiError.Unauthorized],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.profile",
-            summary: "Get Kilo Gateway profile",
-            description: "Fetch user profile and organizations from Kilo Gateway",
+            identifier: "accure.profile",
+            summary: "Get Accure Gateway profile",
+            description: "Fetch user profile and organizations from Accure Gateway",
           }),
         ),
-        HttpApiEndpoint.get("authStatus", KiloGatewayPaths.authStatus, {
+        HttpApiEndpoint.get("authStatus", AccureGatewayPaths.authStatus, {
           query: WorkspaceRoutingQuery,
-          success: described(AuthStatus, "Kilo authentication status"),
+          success: described(AuthStatus, "Accure authentication status"),
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.authStatus",
-            summary: "Get Kilo authentication status",
-            description: "Check whether a locally stored Kilo credential can authenticate Gateway requests",
+            identifier: "accure.authStatus",
+            summary: "Get Accure authentication status",
+            description: "Check whether a locally stored Accure credential can authenticate Gateway requests",
           }),
         ),
-        HttpApiEndpoint.get("modes", KiloGatewayPaths.modes, {
+        HttpApiEndpoint.get("modes", AccureGatewayPaths.modes, {
           query: WorkspaceRoutingQuery,
           success: described(OrganizationModes, "Organization modes list"),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.modes",
+            identifier: "accure.modes",
             summary: "Get organization custom modes",
             description: "Fetch custom modes defined for the current organization",
           }),
         ),
-        HttpApiEndpoint.post("fim", KiloGatewayPaths.fim, {
+        HttpApiEndpoint.post("fim", AccureGatewayPaths.fim, {
           query: WorkspaceRoutingQuery,
           payload: FimBody,
           success: Schema.String.pipe(HttpApiSchema.asText({ contentType: "text/event-stream" })),
           error: [HttpApiError.BadRequest, HttpApiError.Unauthorized],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.fim",
+            identifier: "accure.fim",
             summary: "FIM completion",
-            description: "Proxy a Fill-in-the-Middle completion request to the Kilo Gateway",
+            description: "Proxy a Fill-in-the-Middle completion request to the Accure Gateway",
           }),
         ),
-        HttpApiEndpoint.post("edit", KiloGatewayPaths.edit, {
+        HttpApiEndpoint.post("edit", AccureGatewayPaths.edit, {
           query: WorkspaceRoutingQuery,
           payload: EditBody,
           success: described(EditResponse, "Next Edit completion"),
           error: [HttpApiError.BadRequest, HttpApiError.Unauthorized],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.edit",
+            identifier: "accure.edit",
             summary: "Next Edit completion",
             description:
               "Proxy a Mercury-style Next Edit request. The client supplies structured editor " +
               "context; the gateway assembles the sentinel-tagged prompt and forwards to the upstream edit endpoint.",
           }),
         ),
-        HttpApiEndpoint.post("audioTranscriptions", KiloGatewayPaths.audioTranscriptions, {
+        HttpApiEndpoint.post("audioTranscriptions", AccureGatewayPaths.audioTranscriptions, {
           query: WorkspaceRoutingQuery,
           payload: AudioTranscriptionsBody,
           success: described(TranscriptionResponse, "Transcription response"),
           error: [HttpApiError.BadRequest, HttpApiError.Unauthorized],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.audio.transcriptions",
+            identifier: "accure.audio.transcriptions",
             summary: "Speech to text transcription",
-            description: "Proxy an audio transcription request to the Kilo Gateway",
+            description: "Proxy an audio transcription request to the Accure Gateway",
           }),
         ),
-        HttpApiEndpoint.get("notifications", KiloGatewayPaths.notifications, {
+        HttpApiEndpoint.get("notifications", AccureGatewayPaths.notifications, {
           query: WorkspaceRoutingQuery,
           success: described(Schema.Array(Notification), "Notifications list"),
           error: [HttpApiError.BadRequest, HttpApiError.Unauthorized],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.notifications",
-            summary: "Get Kilo notifications",
-            description: "Fetch notifications from Kilo Gateway for CLI display",
+            identifier: "accure.notifications",
+            summary: "Get Accure notifications",
+            description: "Fetch notifications from Accure Gateway for CLI display",
           }),
         ),
-        HttpApiEndpoint.post("organization", KiloGatewayPaths.organization, {
+        HttpApiEndpoint.post("organization", AccureGatewayPaths.organization, {
           query: WorkspaceRoutingQuery,
           payload: OrganizationBody,
           success: described(Schema.Boolean, "Organization updated successfully"),
           error: [HttpApiError.BadRequest, HttpApiError.Unauthorized],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.organization.set",
-            summary: "Update Kilo Gateway organization",
-            description: "Switch to a different Kilo Gateway organization",
+            identifier: "accure.organization.set",
+            summary: "Update Accure Gateway organization",
+            description: "Switch to a different Accure Gateway organization",
           }),
         ),
-        HttpApiEndpoint.get("clawStatus", KiloGatewayPaths.clawStatus, {
+        HttpApiEndpoint.get("clawStatus", AccureGatewayPaths.clawStatus, {
           query: WorkspaceRoutingQuery,
           success: described(ClawStatus, "Instance status"),
           error: [HttpApiError.Unauthorized, HttpApiError.ServiceUnavailable],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.claw.status",
-            summary: "Get KiloClaw instance status",
-            description: "Fetch the user's KiloClaw instance status via the KiloClaw worker",
+            identifier: "accure.claw.status",
+            summary: "Get AccureClaw instance status",
+            description: "Fetch the user's AccureClaw instance status via the AccureClaw worker",
           }),
         ),
-        HttpApiEndpoint.get("clawChatCredentials", KiloGatewayPaths.clawChatCredentials, {
+        HttpApiEndpoint.get("clawChatCredentials", AccureGatewayPaths.clawChatCredentials, {
           query: WorkspaceRoutingQuery,
-          success: described(ClawChatCredentials, "Kilo Chat credentials or null"),
+          success: described(ClawChatCredentials, "Accure Chat credentials or null"),
           error: HttpApiError.Unauthorized,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.claw.chatCredentials",
-            summary: "Get KiloClaw chat credentials",
+            identifier: "accure.claw.chatCredentials",
+            summary: "Get AccureClaw chat credentials",
             description:
-              "Returns the bearer token and endpoint URLs the client uses to talk to the Kilo Chat worker " +
-              "and the Event Service. The bearer is the user's existing long-lived Kilo JWT — kilo-chat and " +
+              "Returns the bearer token and endpoint URLs the client uses to talk to the Accure Chat worker " +
+              "and the Event Service. The bearer is the user's existing long-lived Accure JWT — accure-chat and " +
               "event-service both verify it directly with NEXTAUTH_SECRET, so no separate token mint is needed.",
           }),
         ),
-        HttpApiEndpoint.get("cloudSessions", KiloGatewayPaths.cloudSessions, {
+        HttpApiEndpoint.get("cloudSessions", AccureGatewayPaths.cloudSessions, {
           query: {
             ...WorkspaceRoutingQueryFields,
             cursor: Schema.optional(Schema.String),
@@ -392,31 +392,31 @@ export const KiloGatewayApi = HttpApi.make("kilo")
           error: [HttpApiError.BadRequest, HttpApiError.Unauthorized],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.cloudSessions",
+            identifier: "accure.cloudSessions",
             summary: "Get cloud sessions",
-            description: "Fetch cloud CLI sessions from Kilo API",
+            description: "Fetch cloud CLI sessions from Accure API",
           }),
         ),
-        HttpApiEndpoint.get("cloudSession", KiloGatewayPaths.cloudSession, {
+        HttpApiEndpoint.get("cloudSession", AccureGatewayPaths.cloudSession, {
           params: { id: Schema.String },
           query: WorkspaceRoutingQuery,
           success: described(CloudSessionData, "Cloud session data"),
           error: [HttpApiError.Unauthorized, HttpApiError.NotFound],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.cloud.session.get",
+            identifier: "accure.cloud.session.get",
             summary: "Get cloud session",
-            description: "Fetch full session data from the Kilo cloud for preview",
+            description: "Fetch full session data from the Accure cloud for preview",
           }),
         ),
-        HttpApiEndpoint.post("cloudSessionImport", KiloGatewayPaths.cloudSessionImport, {
+        HttpApiEndpoint.post("cloudSessionImport", AccureGatewayPaths.cloudSessionImport, {
           query: WorkspaceRoutingQuery,
           payload: CloudSessionImportBody,
           success: described(CloudSessionData.fields.info, "Imported session info"),
           error: [HttpApiError.BadRequest, HttpApiError.Unauthorized, HttpApiError.NotFound],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilo.cloud.session.import",
+            identifier: "accure.cloud.session.import",
             summary: "Import session from cloud",
             description: "Download a cloud-synced session and write it to local storage with fresh IDs.",
           }),
@@ -424,8 +424,8 @@ export const KiloGatewayApi = HttpApi.make("kilo")
       )
       .annotateMerge(
         OpenApi.annotations({
-          title: "kilo",
-          description: "Kilo Gateway routes.",
+          title: "accure",
+          description: "Accure Gateway routes.",
         }),
       )
       .middleware(InstanceContextMiddleware)
@@ -434,8 +434,8 @@ export const KiloGatewayApi = HttpApi.make("kilo")
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "accure HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Accure HttpApi surface.",
     }),
   )

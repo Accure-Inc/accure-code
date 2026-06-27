@@ -1,12 +1,12 @@
-import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@kilocode/plugin/tui"
+import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@accurecode/plugin/tui"
 import { createEffect, createMemo, createSignal, onCleanup, onMount, Show } from "solid-js"
-import type { IndexingStatus, IndexingStatusState } from "@kilocode/accure-indexing/status"
+import type { IndexingStatus, IndexingStatusState } from "@accurecode/accure-indexing/status"
 import * as Log from "@opencode-ai/core/util/log"
 import { useSync } from "@/cli/cmd/tui/context/sync"
 import { formatIndexingLabel } from "../indexing-label"
 import { indexingEnabled } from "../indexing-feature"
 
-const id = "internal:kilo-sidebar-indexing"
+const id = "internal:accure-sidebar-indexing"
 const log = Log.create({ service: "sidebar-indexing" })
 
 function tone(state: IndexingStatusState, api: TuiPluginApi) {

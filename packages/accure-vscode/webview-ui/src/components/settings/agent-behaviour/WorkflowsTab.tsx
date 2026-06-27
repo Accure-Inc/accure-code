@@ -1,6 +1,6 @@
 import { Component, createMemo, createSignal, For, Show } from "solid-js"
-import { Card } from "@kilocode/accure-ui/card"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
+import { Card } from "@accurecode/accure-ui/card"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
 
 import { useConfig } from "../../../context/config"
 import { useLanguage } from "../../../context/language"
@@ -21,7 +21,7 @@ const WorkflowsTab: Component = () => {
       {/* Description */}
       <div
         style={{
-          "font-size": "var(--kilo-font-size-12)",
+          "font-size": "var(--accure-font-size-12)",
           color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
           "margin-bottom": "12px",
           "line-height": "1.5",
@@ -36,7 +36,7 @@ const WorkflowsTab: Component = () => {
           <Card>
             <div
               style={{
-                "font-size": "var(--kilo-font-size-12)",
+                "font-size": "var(--accure-font-size-12)",
                 color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
               }}
             >
@@ -87,7 +87,7 @@ const WorkflowsTab: Component = () => {
                       <Show when={cmd.description}>
                         <span
                           style={{
-                            "font-size": "var(--kilo-font-size-12)",
+                            "font-size": "var(--accure-font-size-12)",
                             color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
                             overflow: "hidden",
                             "text-overflow": "ellipsis",
@@ -106,7 +106,7 @@ const WorkflowsTab: Component = () => {
                       style={{
                         "padding-left": "28px",
                         "padding-bottom": "8px",
-                        "font-size": "var(--kilo-font-size-12)",
+                        "font-size": "var(--accure-font-size-12)",
                         color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
                       }}
                     >
@@ -127,7 +127,7 @@ const WorkflowsTab: Component = () => {
                             style={{
                               "margin-top": "4px",
                               "font-family": "var(--vscode-editor-font-family, monospace)",
-                              "font-size": "var(--kilo-font-size-11)",
+                              "font-size": "var(--accure-font-size-11)",
                               "white-space": "pre-wrap",
                               "word-break": "break-word",
                             }}

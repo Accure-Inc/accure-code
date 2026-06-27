@@ -1,13 +1,13 @@
-// KiloClaw root component
+// AccureClaw root component
 
 import { Switch, Match } from "solid-js"
-import { ThemeProvider } from "@kilocode/accure-ui/theme"
-import { MarkedProvider } from "@kilocode/accure-ui/context/marked"
-import { Button } from "@kilocode/accure-ui/button"
-import { Spinner } from "@kilocode/accure-ui/spinner"
-import { Toast } from "@kilocode/accure-ui/toast"
+import { ThemeProvider } from "@accurecode/accure-ui/theme"
+import { MarkedProvider } from "@accurecode/accure-ui/context/marked"
+import { Button } from "@accurecode/accure-ui/button"
+import { Spinner } from "@accurecode/accure-ui/spinner"
+import { Toast } from "@accurecode/accure-ui/toast"
 import { ClawProvider, useClaw } from "./context/claw"
-import { KiloClawLanguageProvider, useKiloClawLanguage } from "./context/language"
+import { AccureClawLanguageProvider, useAccureClawLanguage } from "./context/language"
 import { ConversationList } from "./components/ConversationList"
 import { MessageArea } from "./components/MessageArea"
 import { StatusSidebar } from "./components/StatusSidebar"
@@ -16,16 +16,16 @@ import { UpgradeView } from "./components/UpgradeView"
 
 function Content() {
   const claw = useClaw()
-  const { t } = useKiloClawLanguage()
+  const { t } = useAccureClawLanguage()
 
   return (
-    <div class="kiloclaw-root">
+    <div class="accureclaw-root">
       <Switch>
         <Match when={claw.phase() === "loading"}>
-          <div class="kiloclaw-center">
-            <div class="kiloclaw-loading">
+          <div class="accureclaw-center">
+            <div class="accureclaw-loading">
               <Spinner />
-              <span>{t("kiloClaw.loading")}</span>
+              <span>{t("accureClaw.loading")}</span>
             </div>
           </div>
         </Match>
@@ -36,17 +36,17 @@ function Content() {
           <UpgradeView />
         </Match>
         <Match when={claw.phase() === "error"}>
-          <div class="kiloclaw-center">
-            <div class="kiloclaw-error-view">
-              <span class="kiloclaw-error-text">{claw.error()}</span>
+          <div class="accureclaw-center">
+            <div class="accureclaw-error-view">
+              <span class="accureclaw-error-text">{claw.error()}</span>
               <Button variant="primary" onClick={() => claw.retry()}>
-                {t("kiloClaw.error.retry")}
+                {t("accureClaw.error.retry")}
               </Button>
             </div>
           </div>
         </Match>
         <Match when={claw.phase() === "ready"}>
-          <div class="kiloclaw-layout">
+          <div class="accureclaw-layout">
             <ConversationList />
             <MessageArea />
             <StatusSidebar />
@@ -58,7 +58,7 @@ function Content() {
   )
 }
 
-export function KiloClawApp() {
+export function AccureClawApp() {
   return (
     <ThemeProvider defaultTheme="accure-vscode">
       <ClawProvider>
@@ -75,5 +75,5 @@ export function KiloClawApp() {
 /** Bridges the claw context locale into the language provider. Must be below ClawProvider. */
 function LanguageBridge(props: { children: any }) {
   const claw = useClaw()
-  return <KiloClawLanguageProvider locale={claw.locale}>{props.children}</KiloClawLanguageProvider>
+  return <AccureClawLanguageProvider locale={claw.locale}>{props.children}</AccureClawLanguageProvider>
 }

@@ -28,7 +28,7 @@ export const ModelSelectorNoProviders: Story = {
     <StoryProviders>
       <div style={{ display: "flex", "align-items": "center", gap: "8px" }}>
         <ModelSelectorBase
-          value={{ providerID: "kilo", modelID: "kilo-auto/frontier" }}
+          value={{ providerID: "accure", modelID: "accure-auto/frontier" }}
           onSelect={() => {}}
           placement="bottom-start"
         />
@@ -38,17 +38,17 @@ export const ModelSelectorNoProviders: Story = {
 }
 
 const ACCESSIBLE_MODELS: EnrichedModel[] = [
-  { id: "alpha", name: "Alpha", providerID: "kilo", providerName: "Kilo" },
-  { id: "bravo", name: "Bravo", providerID: "kilo", providerName: "Kilo" },
-  { id: "charlie", name: "Charlie", providerID: "kilo", providerName: "Kilo" },
-  { id: "delta", name: "Delta", providerID: "kilo", providerName: "Kilo" },
-  { id: "echo", name: "Echo", providerID: "kilo", providerName: "Kilo" },
+  { id: "alpha", name: "Alpha", providerID: "accure", providerName: "Accure" },
+  { id: "bravo", name: "Bravo", providerID: "accure", providerName: "Accure" },
+  { id: "charlie", name: "Charlie", providerID: "accure", providerName: "Accure" },
+  { id: "delta", name: "Delta", providerID: "accure", providerName: "Accure" },
+  { id: "echo", name: "Echo", providerID: "accure", providerName: "Accure" },
   { id: "nova", name: "Nova", providerID: "nvidia", providerName: "NVIDIA" },
   { id: "nemotron", name: "Nemotron", providerID: "nvidia", providerName: "NVIDIA" },
 ]
 
 const AccessibleModelSelector = () => {
-  const [value, setValue] = createSignal<ModelSelection | null>({ providerID: "kilo", modelID: "alpha" })
+  const [value, setValue] = createSignal<ModelSelection | null>({ providerID: "accure", modelID: "alpha" })
 
   return (
     <div style={{ display: "flex", "align-items": "center", gap: "12px" }}>
@@ -83,7 +83,7 @@ export const ModelSelectorSelectedFavorite: Story = {
   render: () => {
     const session = {
       ...mockSessionValue(),
-      favoriteModels: () => [{ providerID: "kilo", modelID: "alpha" }],
+      favoriteModels: () => [{ providerID: "accure", modelID: "alpha" }],
     }
 
     return (

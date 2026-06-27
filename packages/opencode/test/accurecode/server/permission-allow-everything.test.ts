@@ -1,10 +1,10 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { describe, expect, test } from "bun:test"
 import { Cause, Effect, Exit, Fiber, Layer } from "effect"
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { Bus } from "../../../src/bus"
 import * as Config from "../../../src/config/config"
-import { AllowEverythingPermission } from "../../../src/kilocode/permission/allow-everything"
+import { AllowEverythingPermission } from "../../../src/accurecode/permission/allow-everything"
 import { Permission } from "../../../src/permission"
 import { PermissionID } from "../../../src/permission/schema"
 import { provideTestInstance } from "../../fixture/fixture"
@@ -53,14 +53,14 @@ describe("AllowEverythingPermission", () => {
       fn: async () => {
         const enable = await Server.Default().app.request("/permission/allow-everything", {
           method: "POST",
-          headers: { "Content-Type": "application/json", "x-kilo-directory": tmp.path },
+          headers: { "Content-Type": "application/json", "x-accure-directory": tmp.path },
           body: JSON.stringify({ enable: true }),
         })
         expect(enable.status).toBe(200)
 
         const disable = await Server.Default().app.request("/permission/allow-everything", {
           method: "POST",
-          headers: { "Content-Type": "application/json", "x-kilo-directory": tmp.path },
+          headers: { "Content-Type": "application/json", "x-accure-directory": tmp.path },
           body: JSON.stringify({ enable: false }),
         })
         expect(disable.status).toBe(200)

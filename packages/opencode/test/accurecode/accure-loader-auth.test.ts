@@ -1,5 +1,5 @@
-// kilocode_change - new file
-// Tests that unauthenticated Kilo models are assembled with paid models and autoloaded anonymously.
+// accurecode_change - new file
+// Tests that unauthenticated Accure models are assembled with paid models and autoloaded anonymously.
 
 import { expect } from "bun:test"
 import { AppFileSystem } from "@opencode-ai/core/filesystem"
@@ -7,7 +7,7 @@ import { ModelsDev } from "../../src/provider/models"
 import * as CoreModels from "@opencode-ai/core/models-dev"
 import { Effect, Layer } from "effect"
 import { FetchHttpClient } from "effect/unstable/http"
-import { kiloCustomLoaders, patchKiloProviderPrivacy } from "../../src/kilocode/provider/provider"
+import { accureCustomLoaders, patchAccureProviderPrivacy } from "../../src/accurecode/provider/provider"
 import { Auth } from "../../src/auth"
 import { ModelCache } from "../../src/provider/model-cache"
 import { Provider } from "../../src/provider/provider"
@@ -16,8 +16,8 @@ import { testEffect } from "../lib/effect"
 import { provideInstance } from "../fixture/fixture"
 
 const input = {
-  id: "kilo",
-  env: ["KILO_API_KEY"],
+  id: "accure",
+  env: ["ACCURECODE_API_KEY"],
   models: {
     "free-model": {
       id: "free-model",
@@ -60,19 +60,19 @@ const files = Layer.effect(
 ).pipe(Layer.provide(AppFileSystem.defaultLayer))
 
 function load(data?: { auth?: object; config?: object; env?: Record<string, string | undefined> }) {
-  return kiloCustomLoaders({
+  return accureCustomLoaders({
     auth: () => Effect.succeed(data?.auth),
     config: () => Effect.succeed(data?.config ?? {}),
     env: () => Effect.succeed(data?.env ?? {}),
     get: () => Effect.succeed(undefined),
-  }).kilo(input)
+  }).accure(input)
 }
 
 function layer() {
   const cfg = TestConfig.layer()
   const models = Layer.succeed(
-    ModelCache.KiloModelsService,
-    ModelCache.KiloModelsService.of({
+    ModelCache.AccureModelsService,
+    ModelCache.AccureModelsService.of({
       fetch: () =>
         Effect.succeed({
           models: {
@@ -119,17 +119,17 @@ function layer() {
 
 const it = testEffect(Layer.empty)
 
-it.live("assembles paid Kilo models without auth", () =>
+it.live("assembles paid Accure models without auth", () =>
   Effect.gen(function* () {
     const providers = yield* ModelsDev.Service.use((models) => models.get()).pipe(
       Effect.provide(layer()),
       provideInstance(process.cwd()),
     )
-    const kilo = Provider.fromModelsDevProvider(providers.kilo)
+    const accure = Provider.fromModelsDevProvider(providers.accure)
 
-    expect(kilo.models["paid-model"]).toMatchObject({
+    expect(accure.models["paid-model"]).toMatchObject({
       id: "paid-model",
-      providerID: "kilo",
+      providerID: "accure",
       cost: { input: 1, output: 2 },
       isFree: false,
       mayTrainOnYourPrompts: true,
@@ -143,9 +143,9 @@ it.live("does not infer free status from zero catalog prices", () =>
       Effect.provide(layer()),
       provideInstance(process.cwd()),
     )
-    const kilo = Provider.fromModelsDevProvider(providers.kilo)
+    const accure = Provider.fromModelsDevProvider(providers.accure)
 
-    expect(kilo.models["free-model"].isFree).toBeUndefined()
+    expect(accure.models["free-model"].isFree).toBeUndefined()
   }),
 )
 
@@ -159,7 +159,7 @@ it.effect("enables a paid catalog anonymously without auth", () =>
 
 it.effect("enables a paid catalog when config apiKey is present", () =>
   Effect.gen(function* () {
-    const result = yield* load({ config: { provider: { kilo: { options: { apiKey: "test-key" } } } } })
+    const result = yield* load({ config: { provider: { accure: { options: { apiKey: "test-key" } } } } })
     expect(result.autoload).toBe(true)
     expect(result.options).toEqual({})
   }),
@@ -174,9 +174,9 @@ it.effect("denies provider data collection when prompt-training models are hidde
 
 it.effect("keeps data collection denied after configured options are applied", () =>
   Effect.sync(() => {
-    const provider = { options: { dataCollection: "allow", baseURL: "https://api.kilo.ai" } }
-    patchKiloProviderPrivacy(provider, { hide_prompt_training_models: true })
-    expect(provider.options).toEqual({ dataCollection: "deny", baseURL: "https://api.kilo.ai" })
+    const provider = { options: { dataCollection: "allow", baseURL: "https://api.accurecode.ai" } }
+    patchAccureProviderPrivacy(provider, { hide_prompt_training_models: true })
+    expect(provider.options).toEqual({ dataCollection: "deny", baseURL: "https://api.accurecode.ai" })
   }),
 )
 
@@ -185,5 +185,43 @@ it.effect("enables a paid catalog when auth exists", () =>
     const result = yield* load({ auth: { type: "api", key: "test-key" } })
     expect(result.autoload).toBe(true)
     expect(result.options).toEqual({})
+  }),
+)
+
+function loadAccureModels(data?: { auth?: object; config?: object; env?: Record<string, string | undefined> }) {
+  return accureCustomLoaders({
+    auth: () => Effect.succeed(data?.auth),
+    config: () => Effect.succeed(data?.config ?? {}),
+    env: () => Effect.succeed(data?.env ?? {}),
+    get: () => Effect.succeed(undefined),
+  })["accure-models"](input)
+}
+
+it.effect("accure-models custom loader uses default key for default URL", () =>
+  Effect.gen(function* () {
+    const result = yield* loadAccureModels()
+    expect(result.options!.baseURL).toBe("http://jenkins.accure.ai:9006/v1/")
+    expect(result.options!.apiKey).toBe("sk-Fs75pLJeP7zb3bqtLSJLYxE__IuC8IJfOOf_EI7_Vy8-v4")
+  }),
+)
+
+it.effect("accure-models custom loader uses empty key for custom URL when unauthenticated", () =>
+  Effect.gen(function* () {
+    const result = yield* loadAccureModels({
+      config: { provider: { "accure-models": { options: { baseURL: "https://atm.accure.ai/v1" } } } }
+    })
+    expect(result.options!.baseURL).toBe("https://atm.accure.ai/v1/")
+    expect(result.options!.apiKey).toBe("")
+  }),
+)
+
+it.effect("accure-models custom loader uses custom key for custom URL when authenticated", () =>
+  Effect.gen(function* () {
+    const result = yield* loadAccureModels({
+      config: { provider: { "accure-models": { options: { baseURL: "https://atm.accure.ai/v1" } } } },
+      auth: { type: "api", key: "my-custom-token" }
+    })
+    expect(result.options!.baseURL).toBe("https://atm.accure.ai/v1/")
+    expect(result.options!.apiKey).toBe("my-custom-token")
   }),
 )

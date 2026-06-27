@@ -15,12 +15,12 @@ export function validateCloudFork(args: {
 
 /**
  * Import a cloud session to local storage and return the new local session ID.
- * Wraps the SDK's `.kilo.cloud.session.import()` which returns `unknown` due to
+ * Wraps the SDK's `.accure.cloud.session.import()` which returns `unknown` due to
  * the OpenAPI spec not typing the response.
  */
 export async function importCloudSession(
   client: {
-    kilo: {
+    accure: {
       cloud: {
         session: {
           import: (params: { sessionId: string }) => Promise<{ data?: unknown }>
@@ -30,7 +30,7 @@ export async function importCloudSession(
   },
   sessionId: string,
 ): Promise<string | undefined> {
-  const result = await client.kilo.cloud.session.import({ sessionId })
+  const result = await client.accure.cloud.session.import({ sessionId })
   const id = (result.data as Record<string, unknown>)?.id
   return typeof id === "string" ? id : undefined
 }

@@ -1,4 +1,4 @@
-import type { Event, GlobalEvent } from "@kilocode/sdk/v2"
+import type { Event, GlobalEvent } from "@accurecode/sdk/v2"
 
 type SyncEvent = Extract<GlobalEvent["payload"], { type: "sync" }>
 type WireSyncEvent = {
@@ -18,7 +18,7 @@ type EventMetadata = {
   workspace: string | undefined
 }
 
-// kilocode_change start - normalize the runtime SyncEvent wire envelope to the generated SDK shape
+// accurecode_change start - normalize the runtime SyncEvent wire envelope to the generated SDK shape
 export function normalizeSyncEvent(payload: unknown): SyncEvent | undefined {
   if (!payload || typeof payload !== "object" || !("type" in payload) || payload.type !== "sync") return
   if ("name" in payload) return payload as SyncEvent
@@ -43,7 +43,7 @@ export function normalizeSyncEvent(payload: unknown): SyncEvent | undefined {
     data: event.data,
   } as SyncEvent
 }
-// kilocode_change end
+// accurecode_change end
 
 export function useEvent() {
   const project = useProject()

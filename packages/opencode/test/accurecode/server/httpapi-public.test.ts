@@ -1,13 +1,13 @@
 import { describe, expect, test } from "bun:test"
 import { Result, Schema as EffectSchema } from "effect"
 import { OpenApi } from "effect/unstable/httpapi"
-import { AgentBuilderPaths } from "../../../src/kilocode/server/httpapi/groups/agent-builder"
-import { BackgroundProcessPaths } from "../../../src/kilocode/server/httpapi/groups/background-process"
-import { ConfigConsolePaths } from "../../../src/kilocode/server/httpapi/groups/config-console"
-import { IndexingPaths, KiloEmbeddingModel } from "../../../src/kilocode/server/httpapi/groups/indexing"
-import { KiloGatewayPaths } from "../../../src/kilocode/server/httpapi/groups/accure-gateway"
-import { NetworkPaths } from "../../../src/kilocode/server/httpapi/groups/network"
-import { TelemetryPaths } from "../../../src/kilocode/server/httpapi/groups/telemetry"
+import { AgentBuilderPaths } from "../../../src/accurecode/server/httpapi/groups/agent-builder"
+import { BackgroundProcessPaths } from "../../../src/accurecode/server/httpapi/groups/background-process"
+import { ConfigConsolePaths } from "../../../src/accurecode/server/httpapi/groups/config-console"
+import { IndexingPaths, AccureEmbeddingModel } from "../../../src/accurecode/server/httpapi/groups/indexing"
+import { AccureGatewayPaths } from "../../../src/accurecode/server/httpapi/groups/accure-gateway"
+import { NetworkPaths } from "../../../src/accurecode/server/httpapi/groups/network"
+import { TelemetryPaths } from "../../../src/accurecode/server/httpapi/groups/telemetry"
 import { ExperimentalPaths } from "../../../src/server/routes/instance/httpapi/groups/experimental"
 import { SessionPaths } from "../../../src/server/routes/instance/httpapi/groups/session"
 import { PublicApi } from "../../../src/server/routes/instance/httpapi/public"
@@ -35,17 +35,17 @@ type Body = {
   content?: Record<string, { schema?: Schema }>
 }
 
-describe("Kilo PublicApi OpenAPI contract", () => {
-  test("uses Kilo branding", () => {
+describe("Accure PublicApi OpenAPI contract", () => {
+  test("uses Accure branding", () => {
     const spec = OpenApi.fromApi(PublicApi)
-    expect(spec.info.title).toBe("kilo")
-    expect(spec.info.description).toBe("kilo api")
+    expect(spec.info.title).toBe("accure")
+    expect(spec.info.description).toBe("accure api")
   })
 
   test("constrains embedding model metadata", () => {
     const accepts = (dimension: number, scoreThreshold: number) =>
       Result.isSuccess(
-        EffectSchema.decodeUnknownResult(KiloEmbeddingModel)({
+        EffectSchema.decodeUnknownResult(AccureEmbeddingModel)({
           id: "provider/model",
           name: "Model",
           dimension,
@@ -94,7 +94,7 @@ describe("Kilo PublicApi OpenAPI contract", () => {
     }
   })
 
-  test("keeps directory routing queries on Kilo Console routes", () => {
+  test("keeps directory routing queries on Accure Console routes", () => {
     const spec = OpenApi.fromApi(PublicApi)
     const routes = [
       { method: "get", path: ExperimentalPaths.worktreeDiff },
@@ -115,7 +115,7 @@ describe("Kilo PublicApi OpenAPI contract", () => {
     }
   })
 
-  test("keeps workspace routing queries on all Kilo-owned routed endpoints", () => {
+  test("keeps workspace routing queries on all Accure-owned routed endpoints", () => {
     const spec = OpenApi.fromApi(PublicApi)
     const routes = [
       { method: "post", path: AgentBuilderPaths.preview },
@@ -149,49 +149,49 @@ describe("Kilo PublicApi OpenAPI contract", () => {
 
   test("keeps personal organization resets nullable", () => {
     const spec = OpenApi.fromApi(PublicApi)
-    const body = spec.paths[KiloGatewayPaths.organization]?.post?.requestBody as Body | undefined
+    const body = spec.paths[AccureGatewayPaths.organization]?.post?.requestBody as Body | undefined
     const schema = body?.content?.["application/json"]?.schema
     const props = schema?.properties
     expect(props?.organizationId).toEqual({ anyOf: [{ type: "string" }, { type: "null" }] })
   })
 
-  test("keeps Kilo gateway responses nullable", () => {
+  test("keeps Accure gateway responses nullable", () => {
     const spec = OpenApi.fromApi(PublicApi)
     const response = (path: string) => {
       const body = spec.paths[path]?.get?.responses?.["200"] as Body | undefined
       return body?.content?.["application/json"]?.schema
     }
 
-    const profile = response(KiloGatewayPaths.profile)?.properties
+    const profile = response(AccureGatewayPaths.profile)?.properties
     expect(profile?.balance).toEqual({ anyOf: [expect.objectContaining({ type: "object" }), { type: "null" }] })
     expect(profile?.currentOrgId).toEqual({ anyOf: [{ type: "string" }, { type: "null" }] })
 
-    const auth = response(KiloGatewayPaths.authStatus)?.properties
+    const auth = response(AccureGatewayPaths.authStatus)?.properties
     expect(auth).toEqual({
       authenticated: { type: "boolean" },
       type: { type: "string", enum: ["api", "oauth"] },
     })
 
-    const sessions = response(KiloGatewayPaths.cloudSessions)?.properties
+    const sessions = response(AccureGatewayPaths.cloudSessions)?.properties
     expect(sessions?.cliSessions?.items?.properties?.title).toEqual({
       anyOf: [{ type: "string" }, { type: "null" }],
     })
     expect(sessions?.nextCursor).toEqual({ anyOf: [{ type: "string" }, { type: "null" }] })
 
-    const claw = response(KiloGatewayPaths.clawStatus)?.properties
+    const claw = response(AccureGatewayPaths.clawStatus)?.properties
     expect(claw?.status).toEqual({ anyOf: [expect.objectContaining({ type: "string" }), { type: "null" }] })
     for (const field of ["openclawVersion", "lastStartedAt", "lastStoppedAt", "botName"]) {
       expect(claw?.[field]).toEqual({ anyOf: [{ type: "string" }, { type: "null" }] })
     }
 
-    expect(response(KiloGatewayPaths.clawChatCredentials)).toEqual({
+    expect(response(AccureGatewayPaths.clawChatCredentials)).toEqual({
       anyOf: [expect.objectContaining({ type: "object" }), { type: "null" }],
     })
   })
 
   test("keeps transcription prompts in the public contract", () => {
     const spec = OpenApi.fromApi(PublicApi)
-    const body = spec.paths[KiloGatewayPaths.audioTranscriptions]?.post?.requestBody as Body | undefined
+    const body = spec.paths[AccureGatewayPaths.audioTranscriptions]?.post?.requestBody as Body | undefined
     const schema = body?.content?.["application/json"]?.schema
     expect(schema?.properties?.prompt).toEqual({ type: "string" })
   })

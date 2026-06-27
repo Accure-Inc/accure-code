@@ -9,7 +9,7 @@ import { ProviderID } from "../../src/provider/schema"
 import { Plugin } from "@/plugin"
 import { RuntimeFlags } from "@/effect/runtime-flags"
 import { Auth } from "@/auth"
-import { ModelCache } from "@/provider/model-cache" // kilocode_change
+import { ModelCache } from "@/provider/model-cache" // accurecode_change
 import { Bus } from "@/bus"
 import { TestConfig } from "../fixture/config"
 import { testEffect } from "../lib/effect"
@@ -20,7 +20,7 @@ const it = testEffect(Layer.mergeAll(CrossSpawnSpawner.defaultLayer, AppFileSyst
 function layer(directory: string, plugins: string[]) {
   return ProviderAuth.layer.pipe(
     Layer.provide(Auth.defaultLayer),
-    Layer.provide(ModelCache.defaultLayer), // kilocode_change
+    Layer.provide(ModelCache.defaultLayer), // accurecode_change
     Layer.provide(
       Plugin.layer.pipe(
         Layer.provide(Bus.layer),

@@ -1,5 +1,5 @@
 import type { McpServer } from "@agentclientprotocol/sdk"
-import type { KiloClient } from "@kilocode/sdk/v2"
+import type { AccureClient } from "@accurecode/sdk/v2"
 import type { ProviderID, ModelID } from "../provider/schema"
 
 export interface ACPSessionState {
@@ -16,7 +16,7 @@ export interface ACPSessionState {
 }
 
 export interface ACPConfig {
-  sdk: KiloClient
+  sdk: AccureClient
   defaultModel?: {
     providerID: ProviderID
     modelID: ModelID

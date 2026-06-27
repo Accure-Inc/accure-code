@@ -1,8 +1,8 @@
 import { For, Show } from "solid-js"
-import { Button } from "@kilocode/accure-web-ui/button"
-import { Card } from "@kilocode/accure-web-ui/card"
-import { IconButton } from "@kilocode/accure-web-ui/icon-button"
-import { StatusTag } from "@kilocode/accure-web-ui/status-tag"
+import { Button } from "@accurecode/accure-web-ui/button"
+import { Card } from "@accurecode/accure-web-ui/card"
+import { IconButton } from "@accurecode/accure-web-ui/icon-button"
+import { StatusTag } from "@accurecode/accure-web-ui/status-tag"
 import { ConfirmDialog } from "../../components/ConfirmDialog"
 import { CustomSelect, type SelectOption } from "../../components/CustomSelect"
 import { SearchField } from "../../components/SearchField"
@@ -40,7 +40,7 @@ export function McpRoute() {
               <CountTag>{state.rows().length}</CountTag>
             </span>
           }
-          description="Install, configure, and manage Model Context Protocol servers available to Kilo agents."
+          description="Install, configure, and manage Model Context Protocol servers available to Accure agents."
           actions={
             <>
               <Button icon="plus" variant="primary" disabled={Boolean(state.ctx.saving())} onClick={state.openMarket}>
@@ -154,7 +154,7 @@ export function McpRoute() {
               <header class="drawer-header">
                 <div>
                   <h2>Install MCP server</h2>
-                  <span>Browse the Kilo Marketplace MCP catalog and install into the current settings scope.</span>
+                  <span>Browse the Accure Marketplace MCP catalog and install into the current settings scope.</span>
                 </div>
                 <Button variant="ghost" aria-label="Close MCP marketplace overlay" onClick={state.close}>
                   X

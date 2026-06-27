@@ -1,7 +1,7 @@
-package ai.kilocode.client.session.history
+package ai.accurecode.client.session.history
 
-import ai.kilocode.rpc.dto.CloudSessionDto
-import ai.kilocode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.CloudSessionDto
+import ai.accurecode.rpc.dto.SessionDto
 
 sealed interface HistoryItem {
     val id: String

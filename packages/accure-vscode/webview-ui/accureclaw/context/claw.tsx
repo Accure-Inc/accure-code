@@ -1,11 +1,11 @@
-// KiloClaw state context
+// AccureClaw state context
 //
 // All data arrives from the extension host via postMessage.
 // The webview has no direct network access — it dispatches commands via
 // vscode.postMessage() and receives state diffs back.
 
 import { createContext, createMemo, createSignal, onMount, onCleanup, useContext, type JSX } from "solid-js"
-import { showToast } from "@kilocode/accure-ui/toast"
+import { showToast } from "@accurecode/accure-ui/toast"
 import { applyFontSize } from "../../src/font-size"
 import type {
   BotStatusRecord,
@@ -14,8 +14,8 @@ import type {
   ConversationListItem,
   ConversationStatusRecord,
   ExecApprovalDecision,
-  KiloClawOutMessage,
-  KiloClawState,
+  AccureClawOutMessage,
+  AccureClawState,
   Message,
   TypingMember,
 } from "../lib/types"
@@ -107,7 +107,7 @@ export function ClawProvider(props: { children: JSX.Element }) {
   const [typingMembers, setTypingMembers] = createSignal<TypingMember[]>([])
   const [error, setError] = createSignal<string | null>(null)
 
-  const applyState = (s: KiloClawState) => {
+  const applyState = (s: AccureClawState) => {
     setPhase(s.phase)
     setLocale(s.locale)
     if (s.phase === "ready") {
@@ -137,35 +137,35 @@ export function ClawProvider(props: { children: JSX.Element }) {
     })
   }
 
-  const handleConversationMessage = (msg: KiloClawOutMessage, active: string | null): boolean => {
+  const handleConversationMessage = (msg: AccureClawOutMessage, active: string | null): boolean => {
     switch (msg.type) {
-      case "kiloclaw.messages":
+      case "accureclaw.messages":
         if (msg.conversationId === active) {
           setMessages(msg.messages)
           setHasMoreMessages(msg.hasMore)
         }
         return true
-      case "kiloclaw.messageOptimistic":
+      case "accureclaw.messageOptimistic":
         if (msg.conversationId === active) {
           setMessages((prev) => (prev.some((m) => m.id === msg.message.id) ? prev : [...prev, msg.message]))
         }
         return true
-      case "kiloclaw.messageReplaced":
+      case "accureclaw.messageReplaced":
         if (msg.conversationId === active) {
           // Replace the whole optimistic entry with the server's canonical
           // message so content, timestamps, and reactions stay in sync.
           setMessages((prev) => prev.map((m) => (m.id === msg.pendingId ? msg.message : m)))
         }
         return true
-      case "kiloclaw.messageRemoved":
+      case "accureclaw.messageRemoved":
         if (msg.conversationId === active) {
           setMessages((prev) => prev.filter((m) => m.id !== msg.messageId))
         }
         return true
-      case "kiloclaw.typing":
+      case "accureclaw.typing":
         if (msg.conversationId === active) upsertTyping(msg.memberId)
         return true
-      case "kiloclaw.typingStop":
+      case "accureclaw.typingStop":
         if (msg.conversationId === active) {
           setTypingMembers((prev) => prev.filter((m) => m.memberId !== msg.memberId))
         }
@@ -176,40 +176,40 @@ export function ClawProvider(props: { children: JSX.Element }) {
   }
 
   const handler = (event: MessageEvent) => {
-    const msg = event.data as KiloClawOutMessage
+    const msg = event.data as AccureClawOutMessage
     if (msg?.type === "fontSizeChanged") {
       applyFontSize(msg.fontSize)
       return
     }
-    if (!msg?.type?.startsWith("kiloclaw.")) return
+    if (!msg?.type?.startsWith("accureclaw.")) return
     const active = activeConversationId()
     if (handleConversationMessage(msg, active)) return
 
     switch (msg.type) {
-      case "kiloclaw.state":
+      case "accureclaw.state":
         applyState(msg.state)
         return
-      case "kiloclaw.status":
+      case "accureclaw.status":
         setStatus(msg.data)
         return
-      case "kiloclaw.locale":
+      case "accureclaw.locale":
         setLocale(msg.locale)
         return
-      case "kiloclaw.error":
+      case "accureclaw.error":
         showToast({ title: msg.error, variant: "error", duration: 5000 })
         return
-      case "kiloclaw.conversations":
+      case "accureclaw.conversations":
         setConversations(msg.conversations)
         setHasMoreConversations(msg.hasMore)
         return
-      case "kiloclaw.activeConversation":
+      case "accureclaw.activeConversation":
         setActiveConversationId(msg.conversationId)
         setTypingMembers([])
         return
-      case "kiloclaw.botStatus":
+      case "accureclaw.botStatus":
         setBotStatus(msg.status)
         return
-      case "kiloclaw.conversationStatus":
+      case "accureclaw.conversationStatus":
         setConversationStatus(msg.status)
         return
     }
@@ -220,14 +220,14 @@ export function ClawProvider(props: { children: JSX.Element }) {
   onCleanup(() => window.removeEventListener("message", handler))
 
   onMount(() => {
-    vscode.postMessage({ type: "kiloclaw.ready" })
+    vscode.postMessage({ type: "accureclaw.ready" })
   })
 
   const ctx: ClawCtx = {
     phase,
     locale,
     error,
-    retry: () => vscode.postMessage({ type: "kiloclaw.ready" }),
+    retry: () => vscode.postMessage({ type: "accureclaw.ready" }),
 
     status,
     currentUserId,
@@ -237,39 +237,40 @@ export function ClawProvider(props: { children: JSX.Element }) {
     conversations,
     hasMoreConversations,
     activeConversationId,
-    selectConversation: (conversationId) => vscode.postMessage({ type: "kiloclaw.selectConversation", conversationId }),
-    createConversation: (title) => vscode.postMessage({ type: "kiloclaw.createConversation", title }),
+    selectConversation: (conversationId) =>
+      vscode.postMessage({ type: "accureclaw.selectConversation", conversationId }),
+    createConversation: (title) => vscode.postMessage({ type: "accureclaw.createConversation", title }),
     renameConversation: (conversationId, title) =>
-      vscode.postMessage({ type: "kiloclaw.renameConversation", conversationId, title }),
-    leaveConversation: (conversationId) => vscode.postMessage({ type: "kiloclaw.leaveConversation", conversationId }),
-    loadMoreConversations: () => vscode.postMessage({ type: "kiloclaw.loadMoreConversations" }),
+      vscode.postMessage({ type: "accureclaw.renameConversation", conversationId, title }),
+    leaveConversation: (conversationId) => vscode.postMessage({ type: "accureclaw.leaveConversation", conversationId }),
+    loadMoreConversations: () => vscode.postMessage({ type: "accureclaw.loadMoreConversations" }),
 
     messages,
     hasMoreMessages,
     sendMessage: (conversationId, content, inReplyToMessageId) =>
       vscode.postMessage({
-        type: "kiloclaw.sendMessage",
+        type: "accureclaw.sendMessage",
         conversationId,
         content,
         inReplyToMessageId,
       }),
     editMessage: (conversationId, messageId, content) =>
-      vscode.postMessage({ type: "kiloclaw.editMessage", conversationId, messageId, content }),
+      vscode.postMessage({ type: "accureclaw.editMessage", conversationId, messageId, content }),
     deleteMessage: (conversationId, messageId) =>
-      vscode.postMessage({ type: "kiloclaw.deleteMessage", conversationId, messageId }),
+      vscode.postMessage({ type: "accureclaw.deleteMessage", conversationId, messageId }),
     loadMoreMessages: (conversationId, before) =>
-      vscode.postMessage({ type: "kiloclaw.loadMoreMessages", conversationId, before }),
+      vscode.postMessage({ type: "accureclaw.loadMoreMessages", conversationId, before }),
 
     addReaction: (conversationId, messageId, emoji) =>
-      vscode.postMessage({ type: "kiloclaw.addReaction", conversationId, messageId, emoji }),
+      vscode.postMessage({ type: "accureclaw.addReaction", conversationId, messageId, emoji }),
     removeReaction: (conversationId, messageId, emoji) =>
-      vscode.postMessage({ type: "kiloclaw.removeReaction", conversationId, messageId, emoji }),
+      vscode.postMessage({ type: "accureclaw.removeReaction", conversationId, messageId, emoji }),
 
     executeAction: (conversationId, messageId, groupId, value) =>
-      vscode.postMessage({ type: "kiloclaw.executeAction", conversationId, messageId, groupId, value }),
+      vscode.postMessage({ type: "accureclaw.executeAction", conversationId, messageId, groupId, value }),
 
-    sendTyping: (conversationId) => vscode.postMessage({ type: "kiloclaw.sendTyping", conversationId }),
-    sendTypingStop: (conversationId) => vscode.postMessage({ type: "kiloclaw.sendTypingStop", conversationId }),
+    sendTyping: (conversationId) => vscode.postMessage({ type: "accureclaw.sendTyping", conversationId }),
+    sendTypingStop: (conversationId) => vscode.postMessage({ type: "accureclaw.sendTypingStop", conversationId }),
     typingMembers: (conversationId) => {
       // Typing members are tracked for the active conversation only.
       if (conversationId !== activeConversationId()) return []
@@ -278,9 +279,9 @@ export function ClawProvider(props: { children: JSX.Element }) {
 
     botStatus,
     conversationStatus,
-    markConversationRead: (conversationId) => vscode.postMessage({ type: "kiloclaw.markRead", conversationId }),
+    markConversationRead: (conversationId) => vscode.postMessage({ type: "accureclaw.markRead", conversationId }),
 
-    openExternal: (url) => vscode.postMessage({ type: "kiloclaw.openExternal", url }),
+    openExternal: (url) => vscode.postMessage({ type: "accureclaw.openExternal", url }),
   }
 
   return <ClawContext.Provider value={ctx}>{props.children}</ClawContext.Provider>

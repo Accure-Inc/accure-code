@@ -5,9 +5,9 @@ description: "Manage and orchestrate multiple AI agents"
 
 # Agent Manager
 
-The Agent Manager is a control panel for running and orchestrating multiple Kilo Code agents, with support for parallel worktree-isolated sessions.
+The Agent Manager is a control panel for running and orchestrating multiple Accure Code agents, with support for parallel worktree-isolated sessions.
 
-The Agent Manager is a **full-panel editor tab** built directly into the extension. It uses the extension's embedded runtime, so no separate Kilo CLI installation or CLI authentication setup is required. It supports:
+The Agent Manager is a **full-panel editor tab** built directly into the extension. It uses the extension's embedded runtime, so no separate Accure CLI installation or CLI authentication setup is required. It supports:
 
 - Multiple parallel sessions, each in its own git worktree
 - A diff/review panel showing changes vs. the parent branch
@@ -24,7 +24,7 @@ New to running multiple agents in parallel? The [Agent Manager Workflows](/docs/
 ## Opening the Agent Manager
 
 - Keyboard shortcut: `Cmd+Shift+M` (macOS) / `Ctrl+Shift+M` (Windows/Linux)
-- Command Palette: "Kilo Code: Open Agent Manager"
+- Command Palette: "Accure Code: Open Agent Manager"
 - Click the Agent Manager icon in the sidebar toolbar
 
 The panel opens as an editor tab and stays active across focus changes.
@@ -47,7 +47,7 @@ Each Agent Manager session runs in an isolated git worktree on a separate branch
 
 ### Worktree Location
 
-Managed worktrees are created under `.kilo/worktrees/` in your project. Kilo also stores Agent Manager UI state in `.kilo/agent-manager.json`.
+Managed worktrees are created under `.accurecode/worktrees/` in your project. Accure also stores Agent Manager UI state in `.accurecode/agent-manager.json`.
 
 {% callout type="info" %}
 Worktrees share Git object storage with the main repository, but each worktree is still a separate checkout on disk. Files created inside each worktree, such as `node_modules`, build output, local databases, generated files, and package-manager caches, can multiply disk usage across parallel agents. Closing a managed worktree removes its checkout directory, but it does not remove external caches, containers, volumes, simulators, or databases that your scripts created outside the worktree.
@@ -107,7 +107,7 @@ PR badges update automatically in the background. The active worktree refreshes 
 ### Creating a New Worktree Session
 
 1. Click **New Worktree** or press `Cmd+N` (macOS) / `Ctrl+N` (Windows/Linux) to create a new worktree
-2. Enter a branch name (or let Kilo generate one)
+2. Enter a branch name (or let Accure generate one)
 3. Type your first message to start the agent
 
 A new git worktree is created from your current branch. The agent works in isolation — your main branch is unaffected.
@@ -118,7 +118,7 @@ You can run up to 4 parallel implementations of the same prompt across separate 
 
 1. Click the multi-version button and enter a prompt
 2. Optionally assign different models to each version
-3. Kilo creates one worktree + session per version and runs them in parallel
+3. Accure creates one worktree + session per version and runs them in parallel
 
 ### Importing Existing Work
 
@@ -144,7 +144,7 @@ Renaming a worktree changes only the label shown in Agent Manager. It does not r
 
 ## Starting Sessions From Chat
 
-Kilo can start Agent Manager sessions from chat with the `agent_manager` tool. It is available by default only in the VS Code extension because Agent Manager is an extension feature.
+Accure can start Agent Manager sessions from chat with the `agent_manager` tool. It is available by default only in the VS Code extension because Agent Manager is an extension feature.
 
 The tool supports two modes:
 
@@ -228,14 +228,14 @@ A common workflow is letting the agent work, then switching to the terminal to r
 
 Setup scripts let you prepare each new worktree before the agent starts, for example by installing dependencies, linking local config, copying non-standard env files, or creating per-worktree databases.
 
-Create a script file in `.kilo/` using the appropriate filename for your platform:
+Create a script file in `.accurecode/` using the appropriate filename for your platform:
 
 | Platform | Filename (checked in order) |
 |---|---|
-| macOS / Linux | `.kilo/setup-script`, `.kilo/setup-script.sh` |
-| Windows | `.kilo/setup-script.ps1`, `.kilo/setup-script.cmd`, `.kilo/setup-script.bat` |
+| macOS / Linux | `.accurecode/setup-script`, `.accurecode/setup-script.sh` |
+| Windows | `.accurecode/setup-script.ps1`, `.accurecode/setup-script.cmd`, `.accurecode/setup-script.bat` |
 
-Kilo runs the script automatically whenever a new worktree is created. It uses `sh` for POSIX scripts, PowerShell for `.ps1`, and `cmd.exe` for `.cmd` / `.bat`, so executable permissions are not required.
+Accure runs the script automatically whenever a new worktree is created. It uses `sh` for POSIX scripts, PowerShell for `.ps1`, and `cmd.exe` for `.cmd` / `.bat`, so executable permissions are not required.
 
 Two extra variables are injected into the setup script's environment:
 
@@ -253,7 +253,7 @@ set -e
 cd "$WORKTREE_PATH"
 npm install
 
-# Copy a nested env file that Kilo does not auto-copy.
+# Copy a nested env file that Accure does not auto-copy.
 if [ -f "$REPO_PATH/apps/web/.env.local" ] && [ ! -f "$WORKTREE_PATH/apps/web/.env.local" ]; then
   cp "$REPO_PATH/apps/web/.env.local" "$WORKTREE_PATH/apps/web/.env.local"
 fi
@@ -263,7 +263,7 @@ If the setup script fails, Agent Manager shows the failure and keeps the worktre
 
 ### Environment File Copying
 
-Before the setup script runs, Kilo automatically copies root-level `.env` files from the main repo into the new worktree.
+Before the setup script runs, Accure automatically copies root-level `.env` files from the main repo into the new worktree.
 
 Copied automatically:
 
@@ -275,9 +275,9 @@ Not copied automatically:
 - Nested env files, such as `apps/web/.env.local`
 - Non-dotenv files, such as `.envrc`, `.environment`, or `.env-cmdrc`
 - Directories named `.env` or `.env.local`
-- Files that already exist in the worktree, because Kilo never overwrites them
+- Files that already exist in the worktree, because Accure never overwrites them
 
-Use `.kilo/setup-script` for anything outside the automatic copy rules, including nested env files, ignored local config, local certificates, local database files, generated config directories, or tool-specific files required to run the project.
+Use `.accurecode/setup-script` for anything outside the automatic copy rules, including nested env files, ignored local config, local certificates, local database files, generated config directories, or tool-specific files required to run the project.
 
 ## Run Script
 
@@ -285,14 +285,14 @@ The run button lets you start your project (dev server, build, tests, etc.) dire
 
 ### Setting up a run script
 
-Create a script file in `.kilo/` using the appropriate filename for your platform:
+Create a script file in `.accurecode/` using the appropriate filename for your platform:
 
 | Platform | Filename (checked in order) |
 |---|---|
-| macOS / Linux | `.kilo/run-script`, `.kilo/run-script.sh` |
-| Windows | `.kilo/run-script.ps1`, `.kilo/run-script.cmd`, `.kilo/run-script.bat` |
+| macOS / Linux | `.accurecode/run-script`, `.accurecode/run-script.sh` |
+| Windows | `.accurecode/run-script.ps1`, `.accurecode/run-script.cmd`, `.accurecode/run-script.bat` |
 
-For example, on macOS / Linux create `.kilo/run-script`:
+For example, on macOS / Linux create `.accurecode/run-script`:
 
 ```sh
 #!/bin/sh
@@ -341,9 +341,9 @@ Two extra variables are injected into the script's environment:
 
 ## Session State and Persistence
 
-Agent Manager state is persisted in `.kilo/agent-manager.json`. It stores worktrees, sections, session tabs, ordering, collapsed state, diff preferences, and cached PR metadata. Git branches and worktree directories remain on disk separately.
+Agent Manager state is persisted in `.accurecode/agent-manager.json`. It stores worktrees, sections, session tabs, ordering, collapsed state, diff preferences, and cached PR metadata. Git branches and worktree directories remain on disk separately.
 
-Closing a managed worktree removes it from Agent Manager, deletes its `.kilo/worktrees/` directory, and deletes the local branch. Closing an imported external worktree removes the Agent Manager entry but leaves the external directory and branch untouched.
+Closing a managed worktree removes it from Agent Manager, deletes its `.accurecode/worktrees/` directory, and deletes the local branch. Closing an imported external worktree removes the Agent Manager entry but leaves the external directory and branch untouched.
 
 ## Keyboard Shortcuts (Agent Manager Panel)
 

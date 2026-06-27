@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test"
-import type { KiloConnectionService } from "../../src/services/cli-backend"
+import type { AccureConnectionService } from "../../src/services/cli-backend"
 import { DiffSourceCatalog } from "../../src/diff/sources/catalog"
 import { sessionDescriptor } from "../../src/diff/sources/session"
 import { WORKSPACE_DESCRIPTOR } from "../../src/diff/sources/worktree"
@@ -7,7 +7,7 @@ import { WORKSPACE_DESCRIPTOR } from "../../src/diff/sources/worktree"
 // Minimal stand-in for the connection service — the catalog only holds a
 // reference and passes it to the source factories, so we never exercise any
 // of its methods in these tests.
-const connection = {} as unknown as KiloConnectionService
+const connection = {} as unknown as AccureConnectionService
 
 function makeCatalog(): DiffSourceCatalog {
   return new DiffSourceCatalog(connection)

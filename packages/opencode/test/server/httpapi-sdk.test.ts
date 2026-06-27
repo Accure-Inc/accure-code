@@ -6,7 +6,7 @@ import { ChildProcessSpawner } from "effect/unstable/process"
 import { AppFileSystem } from "@opencode-ai/core/filesystem"
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { Flag } from "@opencode-ai/core/flag/flag"
-import { createKiloClient } from "@kilocode/sdk/v2"
+import { createAccureClient } from "@accurecode/sdk/v2"
 import { validateSession } from "../../src/cli/cmd/tui/validate-session"
 import { InstanceBootstrap } from "../../src/project/bootstrap-service"
 import { InstanceStore } from "../../src/project/instance-store"
@@ -22,7 +22,7 @@ import { TestLLMServer } from "../lib/llm-server"
 import path from "path"
 import { resetDatabase } from "../fixture/db"
 import { disposeAllInstances, TestInstance, tmpdirScoped } from "../fixture/fixture"
-import { awaitWithTimeout, pollWithTimeout, testEffect } from "../lib/effect" // kilocode_change
+import { awaitWithTimeout, pollWithTimeout, testEffect } from "../lib/effect" // accurecode_change
 import { testProviderConfig } from "../lib/test-provider"
 
 const noopBootstrap = Layer.succeed(InstanceBootstrap.Service, InstanceBootstrap.Service.of({ run: Effect.void }))
@@ -35,12 +35,12 @@ const it = testEffect(
 )
 
 const original = {
-  KILO_SERVER_PASSWORD: Flag.KILO_SERVER_PASSWORD,
-  KILO_SERVER_USERNAME: Flag.KILO_SERVER_USERNAME,
+  ACCURECODE_SERVER_PASSWORD: Flag.ACCURECODE_SERVER_PASSWORD,
+  ACCURECODE_SERVER_USERNAME: Flag.ACCURECODE_SERVER_USERNAME,
 }
 
 type ServerPath = "default" | "raw"
-type Sdk = ReturnType<typeof createKiloClient>
+type Sdk = ReturnType<typeof createAccureClient>
 type SdkResult = { response: Response; data?: unknown; error?: unknown }
 type Captured = { status: number; data?: unknown; error?: unknown }
 type ProjectFixture = { sdk: Sdk; directory: string }
@@ -49,8 +49,8 @@ type TestServices = AppFileSystem.Service | ChildProcessSpawner.ChildProcessSpaw
 type TestScope = Scope.Scope | TestServices
 
 function app(serverPath: ServerPath, input?: { password?: string; username?: string }) {
-  Flag.KILO_SERVER_PASSWORD = input?.password
-  Flag.KILO_SERVER_USERNAME = input?.username
+  Flag.ACCURECODE_SERVER_PASSWORD = input?.password
+  Flag.ACCURECODE_SERVER_USERNAME = input?.username
   if (serverPath === "default") return Server.Default().app
 
   const handler = HttpRouter.toWebHandler(
@@ -58,8 +58,8 @@ function app(serverPath: ServerPath, input?: { password?: string; username?: str
       Layer.provide(
         ConfigProvider.layer(
           ConfigProvider.fromUnknown({
-            KILO_SERVER_PASSWORD: input?.password,
-            KILO_SERVER_USERNAME: input?.username,
+            ACCURECODE_SERVER_PASSWORD: input?.password,
+            ACCURECODE_SERVER_USERNAME: input?.username,
           }),
         ),
       ),
@@ -79,7 +79,7 @@ function client(
   directory?: string,
   input?: { password?: string; username?: string; headers?: Record<string, string> },
 ) {
-  return createKiloClient({
+  return createAccureClient({
     baseUrl: "http://localhost",
     directory,
     headers: input?.headers,
@@ -171,14 +171,14 @@ function firstPartText(value: unknown) {
   return record(array(record(value).parts)[0]).text
 }
 
-// kilocode_change start
+// accurecode_change start
 function texts(value: unknown) {
   return array(value)
     .flatMap((item) => array(record(item).parts))
     .map((part) => record(part).text)
     .filter((text): text is string => typeof text === "string")
 }
-// kilocode_change end
+// accurecode_change end
 
 function sessionTitles(value: unknown) {
   return array(value)
@@ -337,8 +337,8 @@ function seedMessage(directory: string, sessionID: string) {
 }
 
 afterEach(async () => {
-  Flag.KILO_SERVER_PASSWORD = original.KILO_SERVER_PASSWORD
-  Flag.KILO_SERVER_USERNAME = original.KILO_SERVER_USERNAME
+  Flag.ACCURECODE_SERVER_PASSWORD = original.ACCURECODE_SERVER_PASSWORD
+  Flag.ACCURECODE_SERVER_USERNAME = original.ACCURECODE_SERVER_USERNAME
   await disposeAllInstances()
   await resetDatabase()
 })
@@ -472,20 +472,20 @@ describe("HttpApi SDK", () => {
         const missing = yield* capture(() =>
           client("raw", directory, { password: "secret" }).file.read({ path: "hello.txt" }),
         )
-        // kilocode_change start - match Hono AuthMiddleware username default ("kilo")
+        // accurecode_change start - match Hono AuthMiddleware username default ("accure")
         const bad = yield* capture(() =>
           client("raw", directory, {
             password: "secret",
-            headers: { authorization: authorization("kilo", "wrong") },
+            headers: { authorization: authorization("accure", "wrong") },
           }).file.read({ path: "hello.txt" }),
         )
         const good = yield* capture(() =>
           client("raw", directory, {
             password: "secret",
-            headers: { authorization: authorization("kilo", "secret") },
+            headers: { authorization: authorization("accure", "secret") },
           }).file.read({ path: "hello.txt" }),
         )
-        // kilocode_change end
+        // accurecode_change end
 
         return {
           statuses: statuses({ missing, bad, good }),
@@ -728,7 +728,7 @@ describe("HttpApi SDK", () => {
             parts: [{ type: "text", text: "hello" }],
           }),
         )
-        // kilocode_change start
+        // accurecode_change start
         const asyncPrompt = yield* capture(() =>
           sdk.session.promptAsync({
             sessionID,
@@ -750,12 +750,12 @@ describe("HttpApi SDK", () => {
           messageCount: array(messages.data).length,
           messageTexts: texts(messages.data).sort(),
         }
-        // kilocode_change end
+        // accurecode_change end
       }),
     ),
   )
 
-  // kilocode_change start - verify invalid user images fail at the real SDK boundary
+  // accurecode_change start - verify invalid user images fail at the real SDK boundary
   serverPathParity("rejects malformed user image data before persistence", (serverPath) =>
     withStandardProject(serverPath, ({ sdk }) =>
       Effect.gen(function* () {
@@ -819,7 +819,7 @@ describe("HttpApi SDK", () => {
       }),
     ),
   )
-  // kilocode_change end
+  // accurecode_change end
 
   serverPathParity("matches generated SDK prompt streaming through fake LLM", (serverPath) =>
     withFakeLlm(serverPath, ({ sdk, llm }) =>
@@ -855,7 +855,7 @@ describe("HttpApi SDK", () => {
     ),
   )
 
-  // kilocode_change start - verify provider errors remain in successful assistant messages
+  // accurecode_change start - verify provider errors remain in successful assistant messages
   serverPathParity("preserves provider errors through the generated SDK", (serverPath) =>
     withFakeLlm(serverPath, ({ sdk, llm }) =>
       Effect.gen(function* () {
@@ -909,7 +909,7 @@ describe("HttpApi SDK", () => {
       }),
     ),
   )
-  // kilocode_change end
+  // accurecode_change end
 
   httpapi(
     "includes project skills in REST API prompt context",

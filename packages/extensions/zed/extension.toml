@@ -1,36 +1,36 @@
-id = "kilo"
-name = "Kilo"
+id = "accure"
+name = "Accure"
 description = "The open source coding agent."
 version = "7.3.50"
 schema_version = 1
 authors = ["Anomaly"]
-repository = "https://github.com/Kilo-Org/kilocode"
+repository = "https://github.com/Accure-Inc/accure-code"
 
 [agent_servers.opencode]
-name = "Kilo"
+name = "Accure"
 icon = "./icons/opencode.svg"
 
 [agent_servers.opencode.targets.darwin-aarch64]
-archive = "https://github.com/Kilo-Org/kilocode/releases/download/v7.3.50/opencode-darwin-arm64.zip"
+archive = "https://github.com/Accure-Inc/accure-code/releases/download/v7.3.50/opencode-darwin-arm64.zip"
 cmd = "./opencode"
 args = ["acp"]
 
 [agent_servers.opencode.targets.darwin-x86_64]
-archive = "https://github.com/Kilo-Org/kilocode/releases/download/v7.3.50/opencode-darwin-x64.zip"
+archive = "https://github.com/Accure-Inc/accure-code/releases/download/v7.3.50/opencode-darwin-x64.zip"
 cmd = "./opencode"
 args = ["acp"]
 
 [agent_servers.opencode.targets.linux-aarch64]
-archive = "https://github.com/Kilo-Org/kilocode/releases/download/v7.3.50/opencode-linux-arm64.tar.gz"
+archive = "https://github.com/Accure-Inc/accure-code/releases/download/v7.3.50/opencode-linux-arm64.tar.gz"
 cmd = "./opencode"
 args = ["acp"]
 
 [agent_servers.opencode.targets.linux-x86_64]
-archive = "https://github.com/Kilo-Org/kilocode/releases/download/v7.3.50/opencode-linux-x64.tar.gz"
+archive = "https://github.com/Accure-Inc/accure-code/releases/download/v7.3.50/opencode-linux-x64.tar.gz"
 cmd = "./opencode"
 args = ["acp"]
 
 [agent_servers.opencode.targets.windows-x86_64]
-archive = "https://github.com/Kilo-Org/kilocode/releases/download/v7.3.50/opencode-windows-x64.zip"
+archive = "https://github.com/Accure-Inc/accure-code/releases/download/v7.3.50/opencode-windows-x64.zip"
 cmd = "./opencode.exe"
 args = ["acp"]

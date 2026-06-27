@@ -3,7 +3,7 @@ import { HttpApiBuilder } from "effect/unstable/httpapi"
 import { EffectBridge } from "@/effect/bridge"
 import { InstanceHttpApi } from "@/server/routes/instance/httpapi/api"
 import { Config } from "@/config/config"
-import { generateCommitMessage } from "@/kilocode/commit-message"
+import { generateCommitMessage } from "@/accurecode/commit-message"
 import { CommitMessagePayload } from "../groups/commit-message"
 
 export const commitMessageHandlers = HttpApiBuilder.group(InstanceHttpApi, "commit-message", (handlers) =>

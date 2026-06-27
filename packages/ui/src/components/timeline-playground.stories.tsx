@@ -11,7 +11,7 @@ import type {
   ToolPart,
   FilePart,
   AgentPart,
-} from "@kilocode/sdk/v2"
+} from "@accurecode/sdk/v2"
 import { DataProvider } from "../context/data"
 import { FileComponentProvider } from "../context/file"
 import { SessionTurn } from "./session-turn"
@@ -318,7 +318,7 @@ const TOOL_SAMPLES = {
     tool: "bash",
     input: { command: "bun test --filter session", description: "Run session tests" },
     output:
-      "bun test v1.3.14\n\n✓ session-turn.test.tsx (3 tests) 45ms\n✓ message-part.test.tsx (7 tests) 120ms\n\nTest Suites: 2 passed, 2 total\nTests:       10 passed, 10 total\nTime:        0.89s", // kilocode_change
+      "bun test v1.3.14\n\n✓ session-turn.test.tsx (3 tests) 45ms\n✓ message-part.test.tsx (7 tests) 120ms\n\nTest Suites: 2 passed, 2 total\nTests:       10 passed, 10 total\nTime:        0.89s", // accurecode_change
     title: "Run session tests",
     metadata: { command: "bun test --filter session" },
   },

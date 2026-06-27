@@ -1,10 +1,10 @@
-package ai.kilocode.client.session.views.permission
+package ai.accurecode.client.session.views.permission
 
-import ai.kilocode.client.session.model.PermissionFileDiff
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.ui.DiffStatBadge
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.session.model.PermissionFileDiff
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.ui.DiffStatBadge
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.components.BorderLayoutPanel
 import java.awt.FlowLayout

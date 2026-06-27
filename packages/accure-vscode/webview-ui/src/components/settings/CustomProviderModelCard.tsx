@@ -1,7 +1,7 @@
-import { Button } from "@kilocode/accure-ui/button"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
-import { Select } from "@kilocode/accure-ui/select"
-import { TextField } from "@kilocode/accure-ui/text-field"
+import { Button } from "@accurecode/accure-ui/button"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
+import { Select } from "@accurecode/accure-ui/select"
+import { TextField } from "@accurecode/accure-ui/text-field"
 import { For, Show } from "solid-js"
 import { useLanguage } from "../../context/language"
 
@@ -133,7 +133,7 @@ function VariantRow(props: VariantRowProps) {
           }}
         >
           <label
-            style={{ "font-size": "var(--kilo-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
+            style={{ "font-size": "var(--accure-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
           >
             {props.t("provider.custom.models.variants.enableThinking.label")}
           </label>
@@ -158,7 +158,7 @@ function VariantRow(props: VariantRowProps) {
           }}
         >
           <label
-            style={{ "font-size": "var(--kilo-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
+            style={{ "font-size": "var(--accure-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
           >
             {props.t("provider.custom.models.variants.thinking.label")}
           </label>
@@ -183,7 +183,7 @@ function VariantRow(props: VariantRowProps) {
           }}
         >
           <label
-            style={{ "font-size": "var(--kilo-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
+            style={{ "font-size": "var(--accure-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
           >
             {props.t("provider.custom.models.variants.splitReasoning.label")}
           </label>
@@ -208,7 +208,7 @@ function VariantRow(props: VariantRowProps) {
           }}
         >
           <label
-            style={{ "font-size": "var(--kilo-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
+            style={{ "font-size": "var(--accure-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
           >
             {props.t("provider.custom.models.variants.reasoningEffort.label")}
           </label>
@@ -233,7 +233,7 @@ function VariantRow(props: VariantRowProps) {
           }}
         >
           <label
-            style={{ "font-size": "var(--kilo-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
+            style={{ "font-size": "var(--accure-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
           >
             {props.t("provider.custom.models.variants.outputEffort.label")}
           </label>
@@ -258,7 +258,7 @@ function VariantRow(props: VariantRowProps) {
           }}
         >
           <label
-            style={{ "font-size": "var(--kilo-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
+            style={{ "font-size": "var(--accure-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
           >
             {props.t("provider.custom.models.variants.chatTemplateArgs.label")}
           </label>
@@ -360,7 +360,7 @@ export function ModelCard(props: ModelCardProps) {
           "align-items": "center",
           gap: "8px",
           cursor: "pointer",
-          "font-size": "var(--kilo-font-size-13)",
+          "font-size": "var(--accure-font-size-13)",
           color: "var(--vscode-foreground)",
         }}
       >
@@ -377,7 +377,11 @@ export function ModelCard(props: ModelCardProps) {
         <Show when={props.m.variants.length > 0}>
           <div style={{ display: "flex", "flex-direction": "column", gap: "0" }}>
             <label
-              style={{ "font-size": "var(--kilo-font-size-11)", "font-weight": "500", color: "var(--text-weak-base)" }}
+              style={{
+                "font-size": "var(--accure-font-size-11)",
+                "font-weight": "500",
+                color: "var(--text-weak-base)",
+              }}
             >
               {props.t("provider.custom.models.variants.label")}
             </label>

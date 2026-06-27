@@ -1,16 +1,16 @@
-// kilocode_change - new file
+// accurecode_change - new file
 /**
- * Kilo-specific home footer plugin.
+ * Accure-specific home footer plugin.
  *
  * Replaces the upstream `home_footer` slot (order 101 > upstream 100)
  * to inject the RemoteIndicator alongside the standard directory, MCP,
  * and version information.
  */
-import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@kilocode/plugin/tui"
+import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@accurecode/plugin/tui"
 import { createMemo, createSignal, Match, onCleanup, onMount, Show, Switch } from "solid-js"
 import { Global } from "@opencode-ai/core/global"
 
-const id = "internal:kilo-home-footer"
+const id = "internal:accure-home-footer"
 
 type Status = {
   enabled: boolean
@@ -18,10 +18,10 @@ type Status = {
 }
 
 // ---------------------------------------------------------------------------
-// RemoteIndicator – adapted from @/kilocode/remote-tui for plugin API usage
+// RemoteIndicator – adapted from @/accurecode/remote-tui for plugin API usage
 // ---------------------------------------------------------------------------
 
-function RemoteIndicator(props: { api: TuiPluginApi; kilo: boolean }) {
+function RemoteIndicator(props: { api: TuiPluginApi; accure: boolean }) {
   const theme = () => props.api.theme.current
   const [status, setStatus] = createSignal<Status | null>(null)
 
@@ -32,12 +32,12 @@ function RemoteIndicator(props: { api: TuiPluginApi; kilo: boolean }) {
         if (res.data) setStatus(res.data)
       })
       .catch(() => undefined)
-    const off = props.api.event.on("kilo-sessions.remote-status-changed", (evt) => setStatus(evt.properties))
+    const off = props.api.event.on("accure-sessions.remote-status-changed", (evt) => setStatus(evt.properties))
     onCleanup(off)
   })
 
   return (
-    <Show when={props.kilo && status()?.enabled}>
+    <Show when={props.accure && status()?.enabled}>
       <text fg={status()?.connected ? theme().success : theme().warning}>
         ◆ Remote{status()?.connected ? "" : " …"}
       </text>
@@ -46,7 +46,7 @@ function RemoteIndicator(props: { api: TuiPluginApi; kilo: boolean }) {
 }
 
 // ---------------------------------------------------------------------------
-// Sub-components (mirror upstream home/footer with kilo additions)
+// Sub-components (mirror upstream home/footer with accure additions)
 // ---------------------------------------------------------------------------
 
 function Directory(props: { api: TuiPluginApi }) {
@@ -104,7 +104,7 @@ function Version(props: { api: TuiPluginApi }) {
 // ---------------------------------------------------------------------------
 
 function View(props: { api: TuiPluginApi }) {
-  const kilo = createMemo(() => props.api.state.provider.some((p) => p.id === "kilo"))
+  const accure = createMemo(() => props.api.state.provider.some((p) => p.id === "accure"))
 
   return (
     <box
@@ -119,7 +119,7 @@ function View(props: { api: TuiPluginApi }) {
     >
       <Directory api={props.api} />
       <box gap={1} flexDirection="row" flexShrink={0}>
-        <RemoteIndicator api={props.api} kilo={kilo()} />
+        <RemoteIndicator api={props.api} accure={accure()} />
         <Mcp api={props.api} />
       </box>
       <box flexGrow={1} />

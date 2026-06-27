@@ -1,4 +1,4 @@
-import { Effect, Exit, Fiber, Layer, PubSub, Scope, Context, Stream, Schema } from "effect" // kilocode_change
+import { Effect, Exit, Fiber, Layer, PubSub, Scope, Context, Stream, Schema } from "effect" // accurecode_change
 import { EffectBridge } from "@/effect/bridge"
 import * as Log from "@opencode-ai/core/util/log"
 import { BusEvent } from "./bus-event"
@@ -7,9 +7,9 @@ import { InstanceState } from "@/effect/instance-state"
 import { makeRuntime } from "@/effect/run-service"
 import { serviceUse } from "@/effect/service-use"
 import { Identifier } from "@/id/id"
-import { context as instanceContext, type InstanceContext } from "@/project/instance-context" // kilocode_change
+import { context as instanceContext, type InstanceContext } from "@/project/instance-context" // accurecode_change
 import { InstanceRef } from "@/effect/instance-ref"
-import { LocalContext } from "@/util/local-context" // kilocode_change
+import { LocalContext } from "@/util/local-context" // accurecode_change
 
 const log = Log.create({ service: "bus" })
 
@@ -207,7 +207,7 @@ export async function publish<D extends BusEvent.Definition>(
   return runPromise((svc) => svc.publish(def, properties, options).pipe(Effect.provideService(InstanceRef, ctx)))
 }
 
-// kilocode_change start - legacy callback facade inherits the active instance context
+// accurecode_change start - legacy callback facade inherits the active instance context
 function active() {
   const fiber = Fiber.getCurrent()
   const current = fiber ? Context.getReferenceUnsafe(fiber.context, InstanceRef) : undefined
@@ -238,6 +238,6 @@ export function subscribeAll(callback: (event: any) => unknown) {
       .pipe(Effect.provideService(InstanceRef, ctx)),
   )
 }
-// kilocode_change end
+// accurecode_change end
 
 export * as Bus from "."

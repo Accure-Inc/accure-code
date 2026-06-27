@@ -1,7 +1,7 @@
-// Verifies fetchKiloModels typed result and 401 fallback behaviour.
+// Verifies fetchAccureModels typed result and 401 fallback behaviour.
 
 import { test, expect } from "bun:test"
-import { fetchKiloModels } from "../../src/api/models.js"
+import { fetchAccureModels } from "../../src/api/models.js"
 
 const VALID_RESPONSE = JSON.stringify({
   data: [
@@ -69,7 +69,7 @@ test("returns empty models and error when both auth and public requests return 4
   const orig = globalThis.fetch
   stubFetch(async () => new Response("Unauthorized", { status: 401, statusText: "Unauthorized" }))
 
-  const result = await fetchKiloModels({ kilocodeToken: "bad-token" })
+  const result = await fetchAccureModels({ accurecodeToken: "bad-token" })
 
   ;(globalThis as any).fetch = orig
 
@@ -92,9 +92,9 @@ test("falls back to public endpoint on 401 and returns models", async () => {
     })
   })
 
-  const result = await fetchKiloModels({
-    kilocodeToken: "expired-token",
-    kilocodeOrganizationId: "org-123",
+  const result = await fetchAccureModels({
+    accurecodeToken: "expired-token",
+    accurecodeOrganizationId: "org-123",
   })
 
   ;(globalThis as any).fetch = orig
@@ -110,7 +110,7 @@ test("returns error with kind=network on fetch exception", async () => {
     throw new Error("network error")
   })
 
-  const result = await fetchKiloModels({})
+  const result = await fetchAccureModels({})
 
   ;(globalThis as any).fetch = orig
 
@@ -122,7 +122,7 @@ test("returns error with kind=http on non-auth HTTP error (e.g. 500)", async () 
   const orig = globalThis.fetch
   stubFetch(async () => new Response("Server Error", { status: 500, statusText: "Internal Server Error" }))
 
-  const result = await fetchKiloModels({})
+  const result = await fetchAccureModels({})
 
   ;(globalThis as any).fetch = orig
 
@@ -141,7 +141,7 @@ test("returns models without error on success", async () => {
       }),
   )
 
-  const result = await fetchKiloModels({})
+  const result = await fetchAccureModels({})
 
   ;(globalThis as any).fetch = orig
 
@@ -163,7 +163,7 @@ test("preserves Terminal Bench metadata as a dedicated model field", async () =>
       }),
   )
 
-  const result = await fetchKiloModels({})
+  const result = await fetchAccureModels({})
 
   ;(globalThis as any).fetch = orig
 
@@ -184,7 +184,7 @@ test("omits malformed Terminal Bench metadata without rejecting the catalog", as
       }),
   )
 
-  const result = await fetchKiloModels({})
+  const result = await fetchAccureModels({})
 
   ;(globalThis as any).fetch = orig
 
@@ -202,7 +202,7 @@ test("returns error with kind=schema when response body is invalid JSON", async 
       }),
   )
 
-  const result = await fetchKiloModels({})
+  const result = await fetchAccureModels({})
 
   ;(globalThis as any).fetch = orig
 

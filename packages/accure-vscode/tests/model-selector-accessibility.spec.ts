@@ -65,14 +65,14 @@ test("provider groups collapse, expand, and skip their model rows", async ({ pag
 
   await page.getByRole("button", { name: "Review model: Alpha" }).click()
   const combobox = page.getByRole("combobox", { name: "Review model: Alpha. Search models" })
-  const kilo = page.getByRole("treeitem", { name: "Kilo" })
+  const accure = page.getByRole("treeitem", { name: "Accure" })
   const nvidia = page.getByRole("treeitem", { name: "NVIDIA" })
 
   await combobox.press("ArrowDown")
   await combobox.press("ArrowLeft")
-  await expect(combobox).toHaveAttribute("aria-activedescendant", await kilo.getAttribute("id"))
+  await expect(combobox).toHaveAttribute("aria-activedescendant", await accure.getAttribute("id"))
   await combobox.press("ArrowLeft")
-  await expect(kilo).toHaveAttribute("aria-expanded", "false")
+  await expect(accure).toHaveAttribute("aria-expanded", "false")
   await expect(page.getByRole("treeitem", { name: "Bravo" })).toBeHidden()
 
   await combobox.press("ArrowDown")

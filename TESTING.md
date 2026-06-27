@@ -1,6 +1,6 @@
 # TESTING.md
 
-How to spin up the **local main-branch** Kilo backend and test it with `curl` / `fetch`. Aimed at a running Kilo CLI agent iterating on backend fixes without rebuilding the VS Code extension or TUI.
+How to spin up the **local main-branch** Accure backend and test it with `curl` / `fetch`. Aimed at a running Accure CLI agent iterating on backend fixes without rebuilding the VS Code extension or TUI.
 
 All examples use plain shell + `curl`. Writing TypeScript files is a last resort (see Section 8).
 
@@ -9,32 +9,32 @@ All examples use plain shell + `curl`. Writing TypeScript files is a last resort
 ```bash
 # From repo root. Starts the LOCAL main-branch backend in the background.
 PASS=$(openssl rand -hex 16)
-KILO_SERVER_PASSWORD="$PASS" bun dev serve --port 0 >/tmp/kilo-serve.log 2>&1 &
-echo $! >/tmp/kilo-serve.pid
-while ! grep -q "kilo server listening" /tmp/kilo-serve.log 2>/dev/null; do sleep 0.1; done
-PORT=$(grep -oE "listening on http://[^:]+:[0-9]+" /tmp/kilo-serve.log | grep -oE "[0-9]+$")
-AUTH="Authorization: Basic $(printf 'kilo:%s' "$PASS" | base64 | tr -d '\n')"
+ACCURECODE_SERVER_PASSWORD="$PASS" bun dev serve --port 0 >/tmp/accure-serve.log 2>&1 &
+echo $! >/tmp/accure-serve.pid
+while ! grep -q "accure server listening" /tmp/accure-serve.log 2>/dev/null; do sleep 0.1; done
+PORT=$(grep -oE "listening on http://[^:]+:[0-9]+" /tmp/accure-serve.log | grep -oE "[0-9]+$")
+AUTH="Authorization: Basic $(printf 'accure:%s' "$PASS" | base64 | tr -d '\n')"
 BASE="http://127.0.0.1:$PORT"
 
 # Call any endpoint
-curl -sS -H "$AUTH" -H "x-kilo-directory: $PWD" "$BASE/global/health"
+curl -sS -H "$AUTH" -H "x-accure-directory: $PWD" "$BASE/global/health"
 
 # Stop when done
-kill "$(cat /tmp/kilo-serve.pid)" 2>/dev/null || true
-rm -f /tmp/kilo-serve.pid /tmp/kilo-serve.log
+kill "$(cat /tmp/accure-serve.pid)" 2>/dev/null || true
+rm -f /tmp/accure-serve.pid /tmp/accure-serve.log
 ```
 
 ## 1. What this doc is for
 
-Testing local backend fixes against a real running server, talking to it over HTTP the same way the VS Code extension, TUI, and `kilo run --attach` do — but without any of those clients. Every request is a `curl` the agent can copy-paste.
+Testing local backend fixes against a real running server, talking to it over HTTP the same way the VS Code extension, TUI, and `accure run --attach` do — but without any of those clients. Every request is a `curl` the agent can copy-paste.
 
-For in-process tests (no socket, fastest loop) see `packages/opencode/test/kilocode/server/permission-allow-everything.test.ts` for the `Server.Default().app.request(...)` pattern. That's the right tool inside the `packages/opencode/` test suite; this doc is for out-of-process HTTP testing.
+For in-process tests (no socket, fastest loop) see `packages/opencode/test/accurecode/server/permission-allow-everything.test.ts` for the `Server.Default().app.request(...)` pattern. That's the right tool inside the `packages/opencode/` test suite; this doc is for out-of-process HTTP testing.
 
-## 2. `kilo serve` vs `bun dev serve` — important
+## 2. `accure serve` vs `bun dev serve` — important
 
 | Command | What it runs |
 |---|---|
-| `kilo serve` | The npm-installed production CLI on `$PATH`. **Not the code in this repo.** |
+| `accure serve` | The npm-installed production CLI on `$PATH`. **Not the code in this repo.** |
 | `bun dev serve …` (repo root) | The local main-branch backend from this worktree. **This is what you want.** |
 | `bun run --cwd packages/opencode --conditions=browser src/index.ts serve …` | Same as `bun dev serve`, fully expanded. |
 
@@ -42,40 +42,40 @@ Root `package.json` defines `"dev"` as the full `bun run --cwd packages/opencode
 
 `bun dev` imports the source directly — no rebuild is needed between code edits. Just kill the running server and relaunch.
 
-Do **not** use `createKiloServer()` from `@kilocode/sdk/v2` to test local code: it spawns the PATH `kilo` binary (`packages/sdk/js/src/v2/server.ts:38-136`), which is the wrong tool here.
+Do **not** use `createAccureServer()` from `@accurecode/sdk/v2` to test local code: it spawns the PATH `accure` binary (`packages/sdk/js/src/v2/server.ts:38-136`), which is the wrong tool here.
 
 ## 3. Starting the backend (background)
 
 ### Random port (recommended)
 
 ```bash
-KILO_SERVER_PASSWORD=$(openssl rand -hex 16) \
-  bun dev serve --port 0 >/tmp/kilo-serve.log 2>&1 &
-echo $! >/tmp/kilo-serve.pid
-while ! grep -q "kilo server listening" /tmp/kilo-serve.log; do sleep 0.1; done
-PORT=$(grep -oE "listening on http://[^:]+:[0-9]+" /tmp/kilo-serve.log | grep -oE "[0-9]+$")
+ACCURECODE_SERVER_PASSWORD=$(openssl rand -hex 16) \
+  bun dev serve --port 0 >/tmp/accure-serve.log 2>&1 &
+echo $! >/tmp/accure-serve.pid
+while ! grep -q "accure server listening" /tmp/accure-serve.log; do sleep 0.1; done
+PORT=$(grep -oE "listening on http://[^:]+:[0-9]+" /tmp/accure-serve.log | grep -oE "[0-9]+$")
 ```
 
 ### Fixed port (if you need a stable URL)
 
 ```bash
-KILO_SERVER_PASSWORD=secret \
+ACCURECODE_SERVER_PASSWORD=secret \
   bun dev serve --port 4096 --hostname 127.0.0.1 \
-  >/tmp/kilo-serve.log 2>&1 &
-echo $! >/tmp/kilo-serve.pid
-while ! grep -q "kilo server listening" /tmp/kilo-serve.log; do sleep 0.1; done
+  >/tmp/accure-serve.log 2>&1 &
+echo $! >/tmp/accure-serve.pid
+while ! grep -q "accure server listening" /tmp/accure-serve.log; do sleep 0.1; done
 PORT=4096
 ```
 
 ### No-auth quickstart (fastest)
 
-Omit `KILO_SERVER_PASSWORD` entirely. The server prints `Warning: KILO_SERVER_PASSWORD is not set; server is unsecured.` and the auth middleware is bypassed — fine for throwaway local testing, never for anything else.
+Omit `ACCURECODE_SERVER_PASSWORD` entirely. The server prints `Warning: ACCURECODE_SERVER_PASSWORD is not set; server is unsecured.` and the auth middleware is bypassed — fine for throwaway local testing, never for anything else.
 
 ```bash
-bun dev serve --port 0 >/tmp/kilo-serve.log 2>&1 &
-echo $! >/tmp/kilo-serve.pid
-while ! grep -q "kilo server listening" /tmp/kilo-serve.log; do sleep 0.1; done
-PORT=$(grep -oE "listening on http://[^:]+:[0-9]+" /tmp/kilo-serve.log | grep -oE "[0-9]+$")
+bun dev serve --port 0 >/tmp/accure-serve.log 2>&1 &
+echo $! >/tmp/accure-serve.pid
+while ! grep -q "accure server listening" /tmp/accure-serve.log; do sleep 0.1; done
+PORT=$(grep -oE "listening on http://[^:]+:[0-9]+" /tmp/accure-serve.log | grep -oE "[0-9]+$")
 BASE="http://127.0.0.1:$PORT"
 # no AUTH var needed
 ```
@@ -87,23 +87,23 @@ BASE="http://127.0.0.1:$PORT"
 | `--port` | `0` (OS-assigned) | Must be passed literally when overriding `opencode.json`'s `server.port`. |
 | `--hostname` | `127.0.0.1` | Becomes `0.0.0.0` when `--mdns` is set without an override. |
 | `--mdns` | `false` | Publishes an mDNS SRV record. |
-| `--mdns-domain` | `kilo.local` |  |
+| `--mdns-domain` | `accure.local` |  |
 | `--cors` | `[]` | Extra allowed origins. |
 
 ## 4. The two mandatory request knobs
 
-### Auth header (only if `KILO_SERVER_PASSWORD` was set)
+### Auth header (only if `ACCURECODE_SERVER_PASSWORD` was set)
 
 ```bash
-AUTH="Authorization: Basic $(printf 'kilo:%s' "$KILO_SERVER_PASSWORD" | base64 | tr -d '\n')"
+AUTH="Authorization: Basic $(printf 'accure:%s' "$ACCURECODE_SERVER_PASSWORD" | base64 | tr -d '\n')"
 ```
 
-The username is literally `kilo` (same as the VS Code extension). Skip this whole block if you launched without a password.
+The username is literally `accure` (same as the VS Code extension). Skip this whole block if you launched without a password.
 
 ### Directory header on every call
 
 ```bash
-DIR_HEADER="x-kilo-directory: $PWD"
+DIR_HEADER="x-accure-directory: $PWD"
 ```
 
 `InstanceMiddleware` uses this to scope the request to a project. For `GET` / `HEAD`, pass `?directory=<urlencoded>` in the URL instead — that's what the SDK does internally.
@@ -182,8 +182,8 @@ curl -N -sS -H "$AUTH" \
 ## 6. Stopping the backend
 
 ```bash
-kill "$(cat /tmp/kilo-serve.pid)" 2>/dev/null || true
-rm -f /tmp/kilo-serve.pid /tmp/kilo-serve.log
+kill "$(cat /tmp/accure-serve.pid)" 2>/dev/null || true
+rm -f /tmp/accure-serve.pid /tmp/accure-serve.log
 ```
 
 `ServeCommand` handles `SIGTERM` / `SIGINT` / `SIGHUP` and runs `Instance.disposeAll()` + `server.stop(true)` before exiting (`packages/opencode/src/cli/cmd/serve.ts:29-31`). `-9` is only needed if the process hangs past ~5 s.
@@ -192,12 +192,12 @@ rm -f /tmp/kilo-serve.pid /tmp/kilo-serve.log
 
 | Var | Why you'd set it |
 |---|---|
-| `KILO_SERVER_PASSWORD` | Enable Basic auth. Omit for auth-bypassed local testing. |
-| `KILO_DB=":memory:"` | Skip on-disk SQLite — hermetic runs. |
-| `KILO_DISABLE_DEFAULT_PLUGINS=true` | Don't auto-load bundled plugins. |
-| `KILO_WORKSPACE_ID=<id>` | Single-workspace mode; disables control-plane routes. |
-| `KILO_TELEMETRY_LEVEL=off` | Disable PostHog during tests. |
-| `KILO_CONFIG_CONTENT='{…}'` | Inline JSON config without writing a file. |
+| `ACCURECODE_SERVER_PASSWORD` | Enable Basic auth. Omit for auth-bypassed local testing. |
+| `ACCURECODE_DB=":memory:"` | Skip on-disk SQLite — hermetic runs. |
+| `ACCURECODE_DISABLE_DEFAULT_PLUGINS=true` | Don't auto-load bundled plugins. |
+| `ACCURECODE_WORKSPACE_ID=<id>` | Single-workspace mode; disables control-plane routes. |
+| `ACCURECODE_TELEMETRY_LEVEL=off` | Disable PostHog during tests. |
+| `ACCURECODE_CONFIG_CONTENT='{…}'` | Inline JSON config without writing a file. |
 
 ## 8. Last resort: typed SDK via a throwaway script
 
@@ -205,13 +205,13 @@ Use this only when `curl` can't express what you need — typed request/response
 
 ```ts
 // /tmp/probe.ts — delete after use. Talks to an already-running backend.
-import { createKiloClient } from "@kilocode/sdk/v2"
+import { createAccureClient } from "@accurecode/sdk/v2"
 
 const port = process.env.PORT!
-const pass = process.env.KILO_SERVER_PASSWORD
-const headers = pass ? { Authorization: "Basic " + Buffer.from("kilo:" + pass).toString("base64") } : undefined
+const pass = process.env.ACCURECODE_SERVER_PASSWORD
+const headers = pass ? { Authorization: "Basic " + Buffer.from("accure:" + pass).toString("base64") } : undefined
 
-const client = createKiloClient({
+const client = createAccureClient({
   baseUrl: `http://127.0.0.1:${port}`,
   headers,
   directory: process.cwd(),
@@ -232,21 +232,21 @@ for await (const ev of events.stream) {
 ```
 
 ```bash
-PORT="$PORT" KILO_SERVER_PASSWORD="$KILO_SERVER_PASSWORD" bun /tmp/probe.ts
+PORT="$PORT" ACCURECODE_SERVER_PASSWORD="$ACCURECODE_SERVER_PASSWORD" bun /tmp/probe.ts
 rm /tmp/probe.ts
 ```
 
-Reminder: this script **connects to** the server you launched in Section 3 — it does not start one. `createKiloServer()` from the SDK would spawn the PATH `kilo` binary (production CLI), which defeats the point of testing local code.
+Reminder: this script **connects to** the server you launched in Section 3 — it does not start one. `createAccureServer()` from the SDK would spawn the PATH `accure` binary (production CLI), which defeats the point of testing local code.
 
 ## 9. Pitfalls
 
-- Running `kilo serve` instead of `bun dev serve` runs the installed prod binary, not your edits.
-- Missing `x-kilo-directory` (or `?directory=`) returns `400` from `InstanceMiddleware`.
+- Running `accure serve` instead of `bun dev serve` runs the installed prod binary, not your edits.
+- Missing `x-accure-directory` (or `?directory=`) returns `400` from `InstanceMiddleware`.
 - `curl` without `-N` buffers SSE output — you won't see events until the connection closes.
 - Hardcoding port `4096` breaks when a previous run didn't exit cleanly. Parse the log instead.
 - `--port` must appear literally in `argv` to override `opencode.json`'s `server.port` (`packages/opencode/src/cli/network.ts:45`).
-- `KILO_SERVER_PASSWORD` must be set **before** launch — changing it after doesn't rotate credentials.
-- When sharing `/tmp/kilo-serve.log` / `.pid` across terminals, unique-suffix the paths to avoid clobbering parallel runs.
+- `ACCURECODE_SERVER_PASSWORD` must be set **before** launch — changing it after doesn't rotate credentials.
+- When sharing `/tmp/accure-serve.log` / `.pid` across terminals, unique-suffix the paths to avoid clobbering parallel runs.
 
 ## 10. After changing server routes
 

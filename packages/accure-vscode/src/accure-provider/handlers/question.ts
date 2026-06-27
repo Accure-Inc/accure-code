@@ -1,15 +1,15 @@
 /**
- * Question handlers — extracted from KiloProvider.
+ * Question handlers — extracted from AccureProvider.
  *
  * Manages question reply and reject flows from the tool question UI,
  * plus recovery of pending questions after SSE reconnections or child-session syncs.
  * No vscode dependency.
  */
 
-import type { KiloClient, QuestionRequest } from "@kilocode/sdk/v2/client"
+import type { AccureClient, QuestionRequest } from "@accurecode/sdk/v2/client"
 
 export interface QuestionContext {
-  readonly client: KiloClient | null
+  readonly client: AccureClient | null
   readonly currentSessionId: string | undefined
   readonly trackedSessionIds: Set<string>
   readonly sessionDirectories: ReadonlyMap<string, string>
@@ -79,7 +79,7 @@ export async function fetchAndSendPendingQuestions(ctx: QuestionContext): Promis
         const { data, error } = await ctx.client.question.list({ directory: dir })
         if (error) {
           failed.add(dir)
-          console.error(`[Kilo New] KiloProvider: Failed to fetch pending questions for ${dir}:`, error)
+          console.error(`[Accure New] AccureProvider: Failed to fetch pending questions for ${dir}:`, error)
           continue
         }
         scanned.add(dir)
@@ -109,7 +109,7 @@ export async function fetchAndSendPendingQuestions(ctx: QuestionContext): Promis
       return { seen, complete: failed.size === 0 }
     }
   } catch (error) {
-    console.error("[Kilo New] KiloProvider: Failed to fetch pending questions:", error)
+    console.error("[Accure New] AccureProvider: Failed to fetch pending questions:", error)
   }
 }
 
@@ -139,7 +139,7 @@ export async function handleQuestionReply(
       return false
     }
     if (isNotFoundError(error) && (await recover(ctx, requestID))) return false
-    console.error("[Kilo New] KiloProvider: Failed to reply to question:", error)
+    console.error("[Accure New] AccureProvider: Failed to reply to question:", error)
     ctx.postMessage({ type: "questionError", requestID })
     return false
   }
@@ -170,7 +170,7 @@ export async function handleQuestionReject(
       return false
     }
     if (isNotFoundError(error) && (await recover(ctx, requestID))) return false
-    console.error("[Kilo New] KiloProvider: Failed to reject question:", error)
+    console.error("[Accure New] AccureProvider: Failed to reject question:", error)
     ctx.postMessage({ type: "questionError", requestID })
     return false
   }

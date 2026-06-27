@@ -3,13 +3,13 @@ import { Effect, Layer, Option } from "effect"
 import { NodeFileSystem, NodePath } from "@effect/platform-node"
 import path from "path"
 import { Flag } from "@opencode-ai/core/flag/flag"
-import { hasIndexingPlugin } from "@kilocode/accure-indexing/detect"
+import { hasIndexingPlugin } from "@accurecode/accure-indexing/detect"
 import { Account } from "../../../src/account/account"
 import { Auth } from "../../../src/auth"
 import { Config } from "../../../src/config/config"
 import type { ConfigPlugin } from "../../../src/config/plugin"
-import { KilocodeDefaultPlugins } from "../../../src/kilocode/config/default-plugins"
-import { INDEXING_PLUGIN } from "../../../src/kilocode/indexing-feature"
+import { AccurecodeDefaultPlugins } from "../../../src/accurecode/config/default-plugins"
+import { INDEXING_PLUGIN } from "../../../src/accurecode/indexing-feature"
 import * as CrossSpawnSpawner from "@opencode-ai/core/cross-spawn-spawner"
 import { Env } from "../../../src/env"
 import { AppFileSystem } from "@opencode-ai/core/filesystem"
@@ -50,7 +50,7 @@ const layer = Config.layer.pipe(
 )
 
 const load = () => Effect.runPromise(Config.Service.use((svc) => svc.get()).pipe(Effect.scoped, Effect.provide(layer)))
-describe("kilocode default indexing plugin", () => {
+describe("accurecode default indexing plugin", () => {
   afterEach(async () => {
     await disposeAllInstances()
   })
@@ -58,7 +58,7 @@ describe("kilocode default indexing plugin", () => {
   test("injects indexing without registering an external plugin origin", () => {
     const config: { plugin?: ConfigPlugin.Spec[]; plugin_origins?: ConfigPlugin.Origin[] } = {}
 
-    KilocodeDefaultPlugins.apply(config, { disabled: false })
+    AccurecodeDefaultPlugins.apply(config, { disabled: false })
 
     expect(hasIndexingPlugin(config.plugin ?? [])).toBe(true)
     expect(config.plugin_origins).toBeUndefined()
@@ -71,15 +71,15 @@ describe("kilocode default indexing plugin", () => {
       plugin_origins: [{ spec: INDEXING_PLUGIN, source: "global", scope: "global" as const }, external],
     }
 
-    KilocodeDefaultPlugins.apply(config, { disabled: true })
+    AccurecodeDefaultPlugins.apply(config, { disabled: true })
 
     expect(config.plugin).toEqual([INDEXING_PLUGIN, external.spec])
     expect(config.plugin_origins).toEqual([external])
   })
 
   test("does not hard-enable indexing plugin when default plugins are disabled", async () => {
-    const original = Flag.KILO_DISABLE_DEFAULT_PLUGINS
-    Flag.KILO_DISABLE_DEFAULT_PLUGINS = true
+    const original = Flag.ACCURECODE_DISABLE_DEFAULT_PLUGINS
+    Flag.ACCURECODE_DISABLE_DEFAULT_PLUGINS = true
 
     try {
       await using tmp = await tmpdir({
@@ -87,7 +87,7 @@ describe("kilocode default indexing plugin", () => {
           await Filesystem.write(
             path.join(dir, "opencode.json"),
             JSON.stringify({
-              $schema: "https://app.kilo.ai/config.json",
+              $schema: "https://app.accurecode.ai/config.json",
               plugin: ["global-plugin-1"],
             }),
           )
@@ -102,7 +102,7 @@ describe("kilocode default indexing plugin", () => {
         },
       })
     } finally {
-      Flag.KILO_DISABLE_DEFAULT_PLUGINS = original
+      Flag.ACCURECODE_DISABLE_DEFAULT_PLUGINS = original
     }
   })
 })

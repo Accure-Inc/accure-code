@@ -4,7 +4,7 @@ import { AppFileSystem } from "@opencode-ai/core/filesystem"
 import * as Log from "@opencode-ai/core/util/log"
 import { Hash } from "@opencode-ai/core/util/hash"
 
-export namespace KiloSnapshotMaterialize {
+export namespace AccureSnapshotMaterialize {
   const log = Log.create({ service: "snapshot.materialize" })
 
   interface Result {
@@ -24,8 +24,8 @@ export namespace KiloSnapshotMaterialize {
     readonly fs: AppFileSystem.Interface
   }
 
-  export const ref = (gitdir: string) => `refs/kilo/materialize/${Hash.fast(path.resolve(gitdir))}`
-  const snapshotRef = (hash: string, time = Date.now()) => `refs/kilo/snapshots/${time}/${hash}`
+  export const ref = (gitdir: string) => `refs/accure/materialize/${Hash.fast(path.resolve(gitdir))}`
+  const snapshotRef = (hash: string, time = Date.now()) => `refs/accure/snapshots/${time}/${hash}`
 
   const pack = Effect.fnUntraced(function* (input: Input, dir: string, name: string, objects: string[]) {
     if (!objects.length) return true
@@ -96,7 +96,7 @@ export namespace KiloSnapshotMaterialize {
       input.gitdir,
       "for-each-ref",
       "--format=%(refname)",
-      "refs/kilo/snapshots",
+      "refs/accure/snapshots",
     ])
     if (result.code !== 0) {
       log.warn("failed to list snapshot pins for pruning", { stderr: result.stderr })
@@ -106,7 +106,7 @@ export namespace KiloSnapshotMaterialize {
       .split("\n")
       .map((item) => item.trim())
       .filter((item) => {
-        const match = item.match(/^refs\/kilo\/snapshots\/(\d+)\/[0-9a-f]+$/)
+        const match = item.match(/^refs\/accure\/snapshots\/(\d+)\/[0-9a-f]+$/)
         if (!match) return false
         const time = Number(match[1])
         return Number.isSafeInteger(time) && time < before
@@ -144,7 +144,7 @@ export namespace KiloSnapshotMaterialize {
       input.gitdir,
       "for-each-ref",
       "--format=%(objectname)",
-      "refs/kilo/snapshots",
+      "refs/accure/snapshots",
     ])
     if (refs.code !== 0) {
       log.warn("failed to list snapshot pins", { stderr: refs.stderr })

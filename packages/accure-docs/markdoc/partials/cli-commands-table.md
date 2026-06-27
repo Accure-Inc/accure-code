@@ -2,32 +2,32 @@
 
 | Command | Description |
 |---|---|
-| `kilo acp` | start ACP (Agent Client Protocol) server |
-| `kilo mcp` | manage MCP (Model Context Protocol) servers |
-| `kilo [project]` | start kilo tui |
-| `kilo attach <url>` | attach to a running kilo server |
-| `kilo run [message..]` | run kilo with a message |
-| `kilo debug` | debugging and troubleshooting tools |
-| `kilo auth` | manage AI providers and credentials |
-| `kilo agent` | manage agents |
-| `kilo upgrade [target]` | upgrade kilo to the latest or a specific version |
-| `kilo uninstall` | uninstall kilo and remove all related files |
-| `kilo serve` | starts a headless kilo server |
-| `kilo web` | start kilo server and open web interface |
-| `kilo models [provider]` | list all available models |
-| `kilo roll-call <filter>` | batch-test text models matching a filter for connectivity and latency |
-| `kilo profile` | show Kilo account profile |
-| `kilo stats` | show token usage and cost statistics |
-| `kilo export [sessionID]` | export session data as JSON |
-| `kilo import <file>` | import session data from JSON file or URL |
-| `kilo github` | manage GitHub agent |
-| `kilo pr <number>` | fetch and checkout a GitHub PR branch, then run kilo |
-| `kilo session` | manage sessions |
-| `kilo remote` | enable remote connection for real-time session relay |
-| `kilo daemon` | manage the local kilo daemon |
-| `kilo console` | open or stop the local Kilo Console |
-| `kilo db` | database tools |
-| `kilo config` | configuration tools |
-| `kilo plugin <module>` | install plugin and update config |
-| `kilo help [command]` | show full CLI reference |
-| `kilo completion` | generate shell completion script |
+| `accure acp` | start ACP (Agent Client Protocol) server |
+| `accure mcp` | manage MCP (Model Context Protocol) servers |
+| `accure [project]` | start accure tui |
+| `accure attach <url>` | attach to a running accure server |
+| `accure run [message..]` | run accure with a message |
+| `accure debug` | debugging and troubleshooting tools |
+| `accure auth` | manage AI providers and credentials |
+| `accure agent` | manage agents |
+| `accure upgrade [target]` | upgrade accure to the latest or a specific version |
+| `accure uninstall` | uninstall accure and remove all related files |
+| `accure serve` | starts a headless accure server |
+| `accure web` | start accure server and open web interface |
+| `accure models [provider]` | list all available models |
+| `accure roll-call <filter>` | batch-test text models matching a filter for connectivity and latency |
+| `accure profile` | show Accure account profile |
+| `accure stats` | show token usage and cost statistics |
+| `accure export [sessionID]` | export session data as JSON |
+| `accure import <file>` | import session data from JSON file or URL |
+| `accure github` | manage GitHub agent |
+| `accure pr <number>` | fetch and checkout a GitHub PR branch, then run accure |
+| `accure session` | manage sessions |
+| `accure remote` | enable remote connection for real-time session relay |
+| `accure daemon` | manage the local accure daemon |
+| `accure console` | open or stop the local Accure Console |
+| `accure db` | database tools |
+| `accure config` | configuration tools |
+| `accure plugin <module>` | install plugin and update config |
+| `accure help [command]` | show full CLI reference |
+| `accure completion` | generate shell completion script |

@@ -3,9 +3,9 @@ import { Effect, Layer, Record, Result, Schema, Context } from "effect"
 import { NonNegativeInt } from "@opencode-ai/core/schema"
 import { Global } from "@opencode-ai/core/global"
 import { AppFileSystem } from "@opencode-ai/core/filesystem"
-import { Telemetry } from "@kilocode/accure-telemetry" // kilocode_change
+import { Telemetry } from "@accurecode/accure-telemetry" // accurecode_change
 
-export const OAUTH_DUMMY_KEY = "kilo-oauth-dummy-key" // kilocode_change
+export const OAUTH_DUMMY_KEY = "accure-oauth-dummy-key" // accurecode_change
 
 const file = path.join(Global.Path.data, "auth.json")
 
@@ -56,9 +56,9 @@ export const layer = Layer.effect(
     const decode = Schema.decodeUnknownOption(Info)
 
     const all = Effect.fn("Auth.all")(function* () {
-      if (process.env.KILO_AUTH_CONTENT) {
+      if (process.env.ACCURECODE_AUTH_CONTENT) {
         try {
-          return JSON.parse(process.env.KILO_AUTH_CONTENT)
+          return JSON.parse(process.env.ACCURECODE_AUTH_CONTENT)
         } catch (err) {}
       }
 
@@ -87,12 +87,12 @@ export const layer = Layer.effect(
       delete data[norm]
       yield* fsys.writeJson(file, data, 0o600).pipe(Effect.mapError(fail("Failed to write auth data")))
 
-      // kilocode_change start - Track logout and reset telemetry identity for Kilo
-      if (key === "kilo") {
+      // accurecode_change start - Track logout and reset telemetry identity for Accure
+      if (key === "accure") {
         yield* Effect.promise(() => Telemetry.updateIdentity(null))
       }
       Telemetry.trackAuthLogout(key)
-      // kilocode_change end
+      // accurecode_change end
     })
 
     return Service.of({ get, all, set, remove })

@@ -165,7 +165,7 @@ html[data-theme="accure-vscode"]
 }
 
 .am-local-branch {
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   color: var(--text-weaker);
   line-height: 1.2;
   overflow: hidden;
@@ -340,7 +340,7 @@ button.am-section-toggle:hover .am-section-label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   color: var(--text-weaker);
   line-height: 1.2;
   min-width: 0;
@@ -394,7 +394,7 @@ button.am-section-toggle:hover .am-section-label {
 /* Shortcut badge — hover-reveal index badge (⌘1, ⌘2, etc.) */
 
 .am-shortcut-badge {
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-variant-numeric: tabular-nums;
   color: var(--text-weaker);
   pointer-events: none;
@@ -546,7 +546,7 @@ button.am-section-toggle:hover .am-section-label {
   gap: 4px;
   flex-shrink: 0;
   font-family: var(--font-mono, monospace);
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -591,7 +591,7 @@ button.am-section-toggle:hover .am-section-label {
   border-radius: 6px;
   background: color-mix(in srgb, var(--am-run-accent) 12%, transparent);
   color: var(--am-run-accent);
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   line-height: 1;
   margin-left: auto;
 }
@@ -689,7 +689,7 @@ button.am-section-toggle:hover .am-section-label {
   background: color-mix(in srgb, var(--pr-accent) 12%, transparent);
   color: var(--pr-accent);
   cursor: pointer;
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   transition: background 150ms ease;
@@ -807,7 +807,7 @@ button.am-section-toggle:hover .am-section-label {
   cursor: pointer;
   user-select: none;
   border-radius: var(--radius-sm);
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 500;
   letter-spacing: 0.3px;
   text-transform: uppercase;
@@ -844,7 +844,7 @@ button.am-section-toggle:hover .am-section-label {
 
 .am-section-group-count {
   flex-shrink: 0;
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   color: var(--text-weaker);
   min-width: 14px;
   text-align: center;
@@ -860,7 +860,7 @@ button.am-section-toggle:hover .am-section-label {
   border: 1px solid var(--border-focus, var(--vscode-focusBorder, #007fd4));
   border-radius: var(--radius-sm);
   padding: 1px 4px;
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 500;
   letter-spacing: 0.3px;
   text-transform: uppercase;
@@ -946,7 +946,7 @@ button.am-section-toggle:hover .am-section-label {
 }
 
 .am-wt-group-label {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 500;
   letter-spacing: 0.2px;
   color: color-mix(in srgb, var(--border-focus, #007fd4) 80%, var(--text-weak));
@@ -1066,7 +1066,7 @@ button.am-section-toggle:hover .am-section-label {
   border-radius: var(--radius-sm);
   background: none;
   color: var(--text-weak);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   cursor: pointer;
   transition:
     background-color 120ms,
@@ -1204,7 +1204,7 @@ button.am-section-toggle:hover .am-section-label {
   padding: 0 8px;
   background: none;
   color: var(--text-weak);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   cursor: pointer;
   white-space: nowrap;
   border: 1px solid transparent;
@@ -1472,7 +1472,7 @@ body.am-wt-dragging-active * {
 .am-sidebar-search [data-slot="list-header"] {
   padding: 7px 8px 4px;
   color: var(--text-weaker);
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-weight: 600;
   letter-spacing: 0.06em;
 }
@@ -1528,7 +1528,7 @@ body.am-wt-dragging-active * {
 
 .am-sidebar-search-title {
   color: var(--text-base);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   font-weight: 500;
   line-height: 1.35;
 }
@@ -1538,7 +1538,7 @@ body.am-wt-dragging-active * {
   align-items: center;
   gap: 5px;
   color: var(--text-base);
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-weight: 400;
   line-height: 1.35;
 }
@@ -1556,7 +1556,7 @@ body.am-wt-dragging-active * {
   flex-shrink: 0;
   margin-left: auto;
   color: var(--text-base);
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-weight: 400;
 }
 
@@ -1598,7 +1598,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-empty-state-text {
-  font-size: var(--kilo-font-size-15);
+  font-size: var(--accure-font-size-15);
   font-weight: 500;
   color: var(--text-weak);
 }
@@ -1642,7 +1642,7 @@ body.am-wt-dragging-active * {
   padding: 3px 6px;
   border-radius: 5px;
   font-family: var(--font-mono, monospace);
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-variant-numeric: tabular-nums;
   line-height: 1;
   white-space: nowrap;
@@ -1863,10 +1863,10 @@ body.am-wt-dragging-active * {
   image-rendering: pixelated;
 }
 
-.am-kiloman-upper {
+.am-accureman-upper {
   transform-box: fill-box;
   transform-origin: center bottom;
-  animation: am-kiloman-idle 520ms linear infinite;
+  animation: am-accureman-idle 520ms linear infinite;
 }
 
 .am-diff-end-text {
@@ -1875,7 +1875,7 @@ body.am-wt-dragging-active * {
   color: var(--text-weak);
 }
 
-@keyframes am-kiloman-idle {
+@keyframes am-accureman-idle {
   0% {
     transform: translateY(0px);
   }
@@ -2355,7 +2355,7 @@ body.am-wt-dragging-active * {
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 600;
   border-radius: 9px;
   background: var(--surface-interactive-strong);
@@ -2370,7 +2370,7 @@ body.am-wt-dragging-active * {
   padding: 0 6px;
   height: 18px;
   border-radius: 9px;
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 600;
   color: color-mix(in oklab, var(--text-warning, #a15c00) 85%, var(--text-base));
   background: color-mix(in oklab, var(--surface-warning, rgba(245, 158, 11, 0.16)) 65%, transparent);
@@ -2385,7 +2385,7 @@ body.am-wt-dragging-active * {
   padding: 0 6px;
   height: 18px;
   border-radius: 9px;
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 600;
   color: var(--text-weak);
   background: color-mix(in oklab, var(--surface-interactive-base) 70%, transparent);
@@ -2465,7 +2465,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-setup-branch {
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   color: var(--text-weak);
   font-family: var(--font-family-mono, monospace);
 }
@@ -2653,7 +2653,7 @@ body.am-wt-dragging-active * {
   border-radius: var(--radius-sm);
   background: var(--surface-base);
   color: var(--text-base);
-  font-size: var(--kilo-font-size-13);
+  font-size: var(--accure-font-size-13);
   outline: none;
   box-sizing: border-box;
 }
@@ -2708,7 +2708,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-nv-config-label {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.3px;
@@ -2743,7 +2743,7 @@ body.am-wt-dragging-active * {
   border-radius: calc(var(--radius-sm) - 1px);
   background: transparent;
   color: var(--text-weak);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   font-weight: 500;
   cursor: pointer;
   transition: all 100ms;
@@ -2763,7 +2763,7 @@ body.am-wt-dragging-active * {
 /* Version hint text */
 
 .am-nv-version-hint {
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   color: var(--text-weaker);
 }
 
@@ -2785,7 +2785,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-nv-pill-compare-label {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 500;
   white-space: nowrap;
 }
@@ -2799,7 +2799,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-nv-compare-count {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 500;
   color: var(--text-weaker);
   margin-left: 6px;
@@ -2854,7 +2854,7 @@ body.am-wt-dragging-active * {
   border: none;
   background: none;
   color: var(--text-base);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   outline: none;
 }
 
@@ -2870,7 +2870,7 @@ body.am-wt-dragging-active * {
 
 .am-mm-group-label {
   padding: 6px 10px 2px;
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.3px;
@@ -2916,7 +2916,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-mm-item-name {
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   color: var(--text-base);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2938,7 +2938,7 @@ body.am-wt-dragging-active * {
   align-items: center;
   padding: 1px 4px;
   border-radius: var(--radius-sm);
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -2967,7 +2967,7 @@ body.am-wt-dragging-active * {
   border-radius: var(--radius-sm);
   background: var(--surface-base);
   color: var(--text-base);
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 500;
   cursor: pointer;
   outline: none;
@@ -2997,7 +2997,7 @@ body.am-wt-dragging-active * {
   border: none;
   background: none;
   color: var(--text-weak);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   cursor: pointer;
   transition: color 100ms;
 }
@@ -3028,7 +3028,7 @@ body.am-wt-dragging-active * {
   border-radius: var(--radius-sm);
   background: var(--surface-base);
   color: var(--text-base);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   font-family: inherit;
   outline: none;
   transition: border-color 120ms;
@@ -3045,7 +3045,7 @@ body.am-wt-dragging-active * {
 /* Branch selector */
 
 .am-branch-badge {
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-weight: 500;
   padding: 1px 6px;
   border-radius: 3px;
@@ -3068,7 +3068,7 @@ body.am-wt-dragging-active * {
   border: none;
   background: none;
   color: var(--text-base);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   cursor: pointer;
   transition: background 80ms;
   text-align: left;
@@ -3105,7 +3105,7 @@ body.am-wt-dragging-active * {
   border-radius: 3px;
   background: var(--surface-raised-stronger-non-alpha);
   color: var(--text-weak);
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-family: inherit;
   line-height: 1;
 }
@@ -3119,7 +3119,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-branch-item-time {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   color: var(--text-weaker);
   white-space: nowrap;
 }
@@ -3152,7 +3152,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-hover-card-label {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -3161,7 +3161,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-hover-card-branch {
-  font-size: var(--kilo-font-size-13);
+  font-size: var(--accure-font-size-13);
   font-weight: 600;
   color: var(--text-strong);
   line-height: 1.4;
@@ -3169,7 +3169,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-hover-card-meta {
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   color: var(--text-weaker);
   line-height: 1.4;
 }
@@ -3185,7 +3185,7 @@ body.am-wt-dragging-active * {
   background: var(--surface-inset-base);
   border: 1px solid var(--border-weak-base);
   font-family: var(--font-family-sans);
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 500;
   line-height: 1;
   color: var(--text-weak);
@@ -3206,12 +3206,12 @@ body.am-wt-dragging-active * {
 }
 
 .am-hover-card-row-label {
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   color: var(--text-weaker);
 }
 
 .am-hover-card-row-value {
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   font-weight: 500;
   color: var(--text-base);
 }
@@ -3238,7 +3238,7 @@ body.am-wt-dragging-active * {
 
 .am-hover-card-note {
   margin-top: 4px;
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   line-height: 1.35;
   color: var(--text-weak);
   text-align: left;
@@ -3255,7 +3255,7 @@ body.am-wt-dragging-active * {
   align-items: center;
   gap: 6px;
   color: var(--text-weaker);
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
 }
 
 .am-hover-card-hint [data-component="icon"] {
@@ -3280,7 +3280,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-shortcuts-category-title {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -3330,7 +3330,7 @@ body.am-wt-dragging-active * {
   background: var(--surface-inset-base);
   border: 1px solid var(--border-weak-base);
   font-family: var(--font-family-sans);
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 500;
   line-height: 1;
   color: var(--text-weak);
@@ -3357,7 +3357,7 @@ body.am-wt-dragging-active * {
   align-items: center;
   gap: 6px;
   padding: 8px 10px;
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   color: var(--text-weak);
 }
 
@@ -3451,7 +3451,7 @@ body.am-wt-dragging-active * {
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--text-weak);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   font-weight: 500;
   cursor: pointer;
   transition: all 100ms;
@@ -3693,7 +3693,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-branch-item-time {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   color: var(--text-weaker);
   white-space: nowrap;
   flex-shrink: 0;
@@ -3701,7 +3701,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-branch-badge {
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-weight: 500;
   padding: 1px 6px;
   border-radius: 3px;
@@ -3714,7 +3714,7 @@ body.am-wt-dragging-active * {
 .am-dropdown-empty {
   padding: 16px;
   text-align: center;
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   color: var(--text-weaker);
 }
 
@@ -3723,7 +3723,7 @@ body.am-wt-dragging-active * {
 .am-import-empty {
   padding: 20px;
   text-align: center;
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   color: var(--text-weaker);
   line-height: 1.5;
 }
@@ -3770,7 +3770,7 @@ body.am-wt-dragging-active * {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   color: var(--text-weak);
   font-variant-numeric: tabular-nums;
 }
@@ -3805,7 +3805,7 @@ body.am-wt-dragging-active * {
 }
 
 .am-apply-conflicts-title {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 600;
   color: var(--text-base);
 }
@@ -3824,7 +3824,7 @@ body.am-wt-dragging-active * {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   color: var(--text-base);
 }
 
@@ -3835,12 +3835,12 @@ body.am-wt-dragging-active * {
   line-height: 1.3;
   white-space: normal;
   word-break: break-word;
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   color: var(--text-weaker);
 }
 
 .am-apply-alert {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   color: var(--syntax-diff-delete, #da3319);
   line-height: 1.35;
 }
@@ -4035,7 +4035,7 @@ body.am-wt-dragging-active * {
 
 /* Tighter diff line height in review mode */
 .am-review-layout {
-  --diffs-line-height: var(--kilo-font-size-20);
+  --diffs-line-height: var(--accure-font-size-20);
 }
 
 /* ─── File tree (GitHub-style) ─── */
@@ -4045,7 +4045,7 @@ body.am-wt-dragging-active * {
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  font-size: var(--kilo-font-size-13);
+  font-size: var(--accure-font-size-13);
   font-family: var(--font-family-sans, -apple-system, BlinkMacSystemFont, sans-serif);
 }
 
@@ -4219,7 +4219,7 @@ body.am-wt-dragging-active * {
   border-radius: 8px;
   background: var(--surface-interactive-strong);
   color: var(--text-on-fill);
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-weight: 600;
   line-height: 1;
   margin-left: 6px;
@@ -4243,7 +4243,7 @@ body.am-wt-dragging-active * {
   gap: 8px;
   padding: 8px 14px;
   border-top: 1px solid var(--border-weak-base);
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   color: var(--text-weaker);
   flex-shrink: 0;
 }
@@ -4269,7 +4269,7 @@ body.am-wt-dragging-active * {
 .am-branch-hint {
   margin-left: auto;
   color: var(--text-weaker);
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
 }
 
 /* ============================================

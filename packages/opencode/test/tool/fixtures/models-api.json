@@ -45251,13 +45251,13 @@
       }
     }
   },
-  "kilo": {
-    "id": "kilo",
-    "env": ["KILO_API_KEY"],
+  "accure": {
+    "id": "accure",
+    "env": ["ACCURECODE_API_KEY"],
     "npm": "@ai-sdk/openai-compatible",
-    "api": "https://api.kilo.ai/api/gateway",
-    "name": "Kilo Gateway",
-    "doc": "https://kilo.ai",
+    "api": "https://api.accurecode.ai/api/gateway",
+    "name": "Accure Gateway",
+    "doc": "https://accure.ai",
     "models": {
       "rekaai/reka-edge": {
         "id": "rekaai/reka-edge",
@@ -46518,9 +46518,9 @@
           "cache_write": 0.08333333333333334
         }
       },
-      "kilo-auto/balanced": {
-        "id": "kilo-auto/balanced",
-        "name": "Kilo Auto Balanced",
+      "accure-auto/balanced": {
+        "id": "accure-auto/balanced",
+        "name": "Accure Auto Balanced",
         "attachment": false,
         "reasoning": true,
         "tool_call": true,
@@ -46541,9 +46541,9 @@
           "output": 3
         }
       },
-      "kilo-auto/frontier": {
-        "id": "kilo-auto/frontier",
-        "name": "Kilo Auto Frontier",
+      "accure-auto/frontier": {
+        "id": "accure-auto/frontier",
+        "name": "Accure Auto Frontier",
         "attachment": true,
         "reasoning": true,
         "tool_call": true,
@@ -46564,9 +46564,9 @@
           "output": 25
         }
       },
-      "kilo-auto/small": {
-        "id": "kilo-auto/small",
-        "name": "Kilo Auto Small",
+      "accure-auto/small": {
+        "id": "accure-auto/small",
+        "name": "Accure Auto Small",
         "attachment": true,
         "reasoning": true,
         "tool_call": true,
@@ -46587,9 +46587,9 @@
           "output": 0.4
         }
       },
-      "kilo-auto/free": {
-        "id": "kilo-auto/free",
-        "name": "Kilo Auto Free",
+      "accure-auto/free": {
+        "id": "accure-auto/free",
+        "name": "Accure Auto Free",
         "attachment": false,
         "reasoning": true,
         "tool_call": true,

@@ -1,7 +1,7 @@
-import { getErrorMessage } from "../kilo-provider-utils"
+import { getErrorMessage } from "../accure-provider-utils"
 import { transcribeSpeech } from "./transcribe"
 import { cancelSpeechCapture, startSpeechCapture, stopSpeechCapture } from "./capture"
-import type { KiloConnectionService } from "../services/cli-backend/connection-service"
+import type { AccureConnectionService } from "../services/cli-backend/connection-service"
 
 type Msg = {
   requestId: string
@@ -44,7 +44,12 @@ export function handleSpeechToTextStart(message: Msg, post: Post): void {
     })
 }
 
-export function handleSpeechToTextStop(connection: KiloConnectionService, message: Msg, dir: string, post: Post): void {
+export function handleSpeechToTextStop(
+  connection: AccureConnectionService,
+  message: Msg,
+  dir: string,
+  post: Post,
+): void {
   const ctrl = new AbortController()
   const ready = starts.get(message.requestId)?.catch(() => false) ?? Promise.resolve(true)
   aborts.set(message.requestId, ctrl)

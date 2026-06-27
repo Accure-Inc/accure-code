@@ -1,9 +1,9 @@
-package ai.kilocode.client.plugin
+package ai.accurecode.client.plugin
 
 import com.intellij.ide.util.PropertiesComponent
 
-object KiloPluginSettings {
-    private const val AUTO_APPROVE_KEY = "kilo.session.autoApprove"
+object AccurePluginSettings {
+    private const val AUTO_APPROVE_KEY = "accure.session.autoApprove"
 
     fun getAutoApprove(): Boolean = PropertiesComponent.getInstance().getBoolean(AUTO_APPROVE_KEY, false)
 

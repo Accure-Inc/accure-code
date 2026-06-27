@@ -1,9 +1,9 @@
 import { describe, test, expect, beforeEach } from "bun:test"
-import { isEligible, setKillSwitch, resetEligibility, type OrgState } from "@/kilocode/session-export/eligibility"
+import { isEligible, setKillSwitch, resetEligibility, type OrgState } from "@/accurecode/session-export/eligibility"
 
 const base = {
   model: {
-    api: { npm: "@kilocode/accure-gateway" },
+    api: { npm: "@accurecode/accure-gateway" },
     isFree: true,
   },
   org: { type: "personal" } as OrgState,
@@ -12,11 +12,11 @@ const base = {
 describe("isEligible", () => {
   beforeEach(() => resetEligibility())
 
-  test("free Kilo Gateway personal context is eligible", () => {
+  test("free Accure Gateway personal context is eligible", () => {
     expect(isEligible(base)).toBe(true)
   })
 
-  test("paid Kilo Gateway is ineligible", () => {
+  test("paid Accure Gateway is ineligible", () => {
     expect(isEligible({ ...base, model: { ...base.model, isFree: false } })).toBe(false)
   })
 
@@ -24,7 +24,7 @@ describe("isEligible", () => {
     expect(isEligible({ ...base, model: { ...base.model, isFree: undefined } })).toBe(false)
   })
 
-  test("non-Kilo provider with isFree=true is ineligible", () => {
+  test("non-Accure provider with isFree=true is ineligible", () => {
     expect(isEligible({ ...base, model: { ...base.model, api: { npm: "@ai-sdk/openai" } } })).toBe(false)
   })
 

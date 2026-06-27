@@ -2,13 +2,13 @@ import { afterEach, describe, expect, test } from "bun:test"
 import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
-import { appendSessionDiffs, mergeSessionDiffs } from "../../src/kilocode/session-portability/cumulative-diff"
-import { extractSessionDiffs, restoreSessionDiffs } from "../../src/kilocode/session-portability/session-diff-restore"
+import { appendSessionDiffs, mergeSessionDiffs } from "../../src/accurecode/session-portability/cumulative-diff"
+import { extractSessionDiffs, restoreSessionDiffs } from "../../src/accurecode/session-portability/session-diff-restore"
 
 const dirs: string[] = []
 
 function tmp() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "kilo-session-diff-"))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "accure-session-diff-"))
   dirs.push(dir)
   return dir
 }

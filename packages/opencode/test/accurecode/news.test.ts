@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test"
-import type { KilocodeNotification } from "@kilocode/accure-gateway"
-import { News } from "../../src/kilocode/components/news"
+import type { AccurecodeNotification } from "@accurecode/accure-gateway"
+import { News } from "../../src/accurecode/components/news"
 
-const item = (id: string): KilocodeNotification => ({
+const item = (id: string): AccurecodeNotification => ({
   id,
   title: id,
   message: id,

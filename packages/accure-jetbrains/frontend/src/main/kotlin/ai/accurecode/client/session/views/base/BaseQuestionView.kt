@@ -1,12 +1,12 @@
-package ai.kilocode.client.session.views.base
+package ai.accurecode.client.session.views.base
 
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.RoundedContentPanel
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.Stack
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.RoundedContentPanel
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.Stack
 import com.intellij.ide.ui.laf.darcula.ui.DarculaButtonUI
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextArea
@@ -28,8 +28,8 @@ import javax.swing.JPanel
  * description text area, an optional component above the header, and slots
  * for view-specific content and a base-owned action-button footer.
  *
- * Both [ai.kilocode.client.session.views.question.QuestionView] and
- * [ai.kilocode.client.session.views.LoginRequiredView] use this as their
+ * Both [ai.accurecode.client.session.views.question.QuestionView] and
+ * [ai.accurecode.client.session.views.LoginRequiredView] use this as their
  * outer card shell so they share the same background, padding, and text
  * styling without duplicating the setup.
  *
@@ -146,7 +146,7 @@ class BaseQuestionView(
 
     /**
      * Optional panel rendered above the header row (e.g. summary + nav in
-     * [ai.kilocode.client.session.views.question.QuestionView]). Calling with
+     * [ai.accurecode.client.session.views.question.QuestionView]). Calling with
      * `null` removes a previously set component.
      */
     @RequiresEdt

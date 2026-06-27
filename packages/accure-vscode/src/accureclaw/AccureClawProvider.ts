@@ -1,7 +1,7 @@
 /**
- * KiloClaw panel provider for the VS Code extension.
+ * AccureClaw panel provider for the VS Code extension.
  *
- * Owns the Kilo Chat HTTP client + event-service WebSocket connection
+ * Owns the Accure Chat HTTP client + event-service WebSocket connection
  * (in the extension host Node.js runtime) and relays messages to/from
  * the webview via postMessage.
  *
@@ -12,12 +12,12 @@
 
 import * as vscode from "vscode"
 import { homedir } from "os"
-import type { KiloConnectionService } from "../services/cli-backend"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureConnectionService } from "../services/cli-backend"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 import { buildWebviewHtml } from "../utils"
-import { watchFontSizeConfig } from "../kilo-provider/font-size"
+import { watchFontSizeConfig } from "../accure-provider/font-size"
 import { TokenManager } from "./token-manager"
-import { KiloChatApiError, KiloChatClient } from "./kilo-chat-client"
+import { AccureChatApiError, AccureChatClient } from "./accure-chat-client"
 import { EventServiceClient, WebSocketAuthError } from "./event-service-client"
 import { ulid } from "./ulid"
 import type {
@@ -35,9 +35,9 @@ import type {
   ConversationStatusEvent,
   ConversationStatusRecord,
   ExecApprovalDecision,
-  KiloClawInMessage,
-  KiloClawOutMessage,
-  KiloClawState,
+  AccureClawInMessage,
+  AccureClawOutMessage,
+  AccureClawState,
   Message,
   MessageCreatedEvent,
   MessageDeletedEvent,
@@ -55,8 +55,8 @@ const TYPING_TIMEOUT_MS = 5_000
 const MESSAGES_PAGE = 50
 const CONVERSATIONS_PAGE = 50
 
-export class KiloClawProvider implements vscode.Disposable {
-  static readonly viewType = "accure-code.KiloClawPanel"
+export class AccureClawProvider implements vscode.Disposable {
+  static readonly viewType = "accure-code.AccureClawPanel"
 
   private panel: vscode.WebviewPanel | null = null
   private timer: ReturnType<typeof setInterval> | null = null
@@ -69,7 +69,7 @@ export class KiloClawProvider implements vscode.Disposable {
 
   // Clients (created lazily per init)
   private events: EventServiceClient | null = null
-  private chat: KiloChatClient | null = null
+  private chat: AccureChatClient | null = null
   private tokens: TokenManager | null = null
 
   // Reactive state mirrored to the webview
@@ -91,7 +91,7 @@ export class KiloClawProvider implements vscode.Disposable {
 
   constructor(
     private readonly uri: vscode.Uri,
-    private readonly connection: KiloConnectionService,
+    private readonly connection: AccureConnectionService,
   ) {}
 
   openPanel(): void {
@@ -100,7 +100,7 @@ export class KiloClawProvider implements vscode.Disposable {
       return
     }
 
-    const panel = vscode.window.createWebviewPanel(KiloClawProvider.viewType, "KiloClaw", vscode.ViewColumn.One, {
+    const panel = vscode.window.createWebviewPanel(AccureClawProvider.viewType, "AccureClaw", vscode.ViewColumn.One, {
       enableScripts: true,
       retainContextWhenHidden: true,
       localResourceRoots: [this.uri],
@@ -131,8 +131,8 @@ export class KiloClawProvider implements vscode.Disposable {
     this.panel = panel
 
     panel.iconPath = {
-      light: vscode.Uri.joinPath(this.uri, "assets", "icons", "kilo-light.svg"),
-      dark: vscode.Uri.joinPath(this.uri, "assets", "icons", "kilo-dark.svg"),
+      light: vscode.Uri.joinPath(this.uri, "assets", "icons", "accure-light.svg"),
+      dark: vscode.Uri.joinPath(this.uri, "assets", "icons", "accure-dark.svg"),
     }
 
     panel.webview.options = {
@@ -141,14 +141,14 @@ export class KiloClawProvider implements vscode.Disposable {
     }
 
     panel.webview.html = buildWebviewHtml(panel.webview, {
-      scriptUri: panel.webview.asWebviewUri(vscode.Uri.joinPath(this.uri, "dist", "kiloclaw.js")),
-      styleUri: panel.webview.asWebviewUri(vscode.Uri.joinPath(this.uri, "dist", "kiloclaw.css")),
+      scriptUri: panel.webview.asWebviewUri(vscode.Uri.joinPath(this.uri, "dist", "accureclaw.js")),
+      styleUri: panel.webview.asWebviewUri(vscode.Uri.joinPath(this.uri, "dist", "accureclaw.css")),
       iconsBaseUri: panel.webview.asWebviewUri(vscode.Uri.joinPath(this.uri, "assets", "icons")),
       workerUri: panel.webview.asWebviewUri(vscode.Uri.joinPath(this.uri, "dist", "shiki-worker.js")),
-      title: "KiloClaw",
+      title: "AccureClaw",
     })
 
-    const msgSub = panel.webview.onDidReceiveMessage((msg: KiloClawInMessage) => this.onMessage(msg))
+    const msgSub = panel.webview.onDidReceiveMessage((msg: AccureClawInMessage) => this.onMessage(msg))
     this.subs.push(() => msgSub.dispose())
     const disposeSub = panel.onDidDispose(() => {
       this.panel = null
@@ -169,72 +169,72 @@ export class KiloClawProvider implements vscode.Disposable {
     this.subs.push(() => viewSub.dispose())
 
     const unsub = this.connection.onLanguageChanged((locale) => {
-      this.post({ type: "kiloclaw.locale", locale })
+      this.post({ type: "accureclaw.locale", locale })
     })
     this.subs.push(unsub)
     const font = watchFontSizeConfig((msg) => this.post(msg))
     this.subs.push(() => font.dispose())
   }
 
-  private post(msg: KiloClawOutMessage): void {
+  private post(msg: AccureClawOutMessage): void {
     this.panel?.webview.postMessage(msg)
   }
 
-  private async onMessage(msg: KiloClawInMessage): Promise<void> {
+  private async onMessage(msg: AccureClawInMessage): Promise<void> {
     switch (msg.type) {
-      case "kiloclaw.ready":
+      case "accureclaw.ready":
         await this.init()
         return
-      case "kiloclaw.openExternal": {
+      case "accureclaw.openExternal": {
         const uri = vscode.Uri.parse(msg.url)
         if (uri.scheme === "https" || uri.scheme === "http") {
           void vscode.env.openExternal(uri)
         }
         return
       }
-      case "kiloclaw.selectConversation":
+      case "accureclaw.selectConversation":
         await this.selectConversation(msg.conversationId)
         return
-      case "kiloclaw.createConversation":
+      case "accureclaw.createConversation":
         await this.createConversation(msg.title)
         return
-      case "kiloclaw.renameConversation":
+      case "accureclaw.renameConversation":
         await this.renameConversation(msg.conversationId, msg.title)
         return
-      case "kiloclaw.leaveConversation":
+      case "accureclaw.leaveConversation":
         await this.leaveConversation(msg.conversationId)
         return
-      case "kiloclaw.loadMoreConversations":
+      case "accureclaw.loadMoreConversations":
         await this.loadMoreConversations()
         return
-      case "kiloclaw.sendMessage":
+      case "accureclaw.sendMessage":
         await this.sendMessage(msg.conversationId, msg.content, msg.inReplyToMessageId)
         return
-      case "kiloclaw.editMessage":
+      case "accureclaw.editMessage":
         await this.editMessage(msg.conversationId, msg.messageId, msg.content)
         return
-      case "kiloclaw.deleteMessage":
+      case "accureclaw.deleteMessage":
         await this.deleteMessage(msg.conversationId, msg.messageId)
         return
-      case "kiloclaw.loadMoreMessages":
+      case "accureclaw.loadMoreMessages":
         await this.loadMoreMessages(msg.conversationId, msg.before)
         return
-      case "kiloclaw.addReaction":
+      case "accureclaw.addReaction":
         await this.addReaction(msg.conversationId, msg.messageId, msg.emoji)
         return
-      case "kiloclaw.removeReaction":
+      case "accureclaw.removeReaction":
         await this.removeReaction(msg.conversationId, msg.messageId, msg.emoji)
         return
-      case "kiloclaw.executeAction":
+      case "accureclaw.executeAction":
         await this.executeAction(msg.conversationId, msg.messageId, msg.groupId, msg.value)
         return
-      case "kiloclaw.sendTyping":
+      case "accureclaw.sendTyping":
         await this.sendTyping(msg.conversationId)
         return
-      case "kiloclaw.sendTypingStop":
+      case "accureclaw.sendTypingStop":
         await this.sendTypingStop(msg.conversationId)
         return
-      case "kiloclaw.markRead":
+      case "accureclaw.markRead":
         await this.markRead(msg.conversationId)
         return
     }
@@ -259,7 +259,7 @@ export class KiloClawProvider implements vscode.Disposable {
     let deferred = false
 
     try {
-      this.post({ type: "kiloclaw.state", state: { phase: "loading", locale: this.locale } })
+      this.post({ type: "accureclaw.state", state: { phase: "loading", locale: this.locale } })
 
       const client = await this.resolveClient()
       if (this.stale(gen)) return
@@ -273,7 +273,7 @@ export class KiloClawProvider implements vscode.Disposable {
       if (!ok) return
       if (this.stale(gen)) return
 
-      const state: KiloClawState = {
+      const state: AccureClawState = {
         phase: "ready",
         locale: this.locale,
         status: this.status,
@@ -288,7 +288,7 @@ export class KiloClawProvider implements vscode.Disposable {
         conversationStatus: this.conversationStatus,
         typingMembers: this.typingMembers,
       }
-      this.post({ type: "kiloclaw.state", state })
+      this.post({ type: "accureclaw.state", state })
       this.startPolling()
       this.startBotNudge()
     } finally {
@@ -301,7 +301,7 @@ export class KiloClawProvider implements vscode.Disposable {
    * Returns `true` if everything is ready, `false` if a non-ready phase
    * was already posted (loading / noInstance / needsUpgrade / error).
    */
-  private async bootstrap(client: KiloClient, gen: number): Promise<boolean> {
+  private async bootstrap(client: AccureClient, gen: number): Promise<boolean> {
     const ok = await this.resolveStatus(client, gen)
     if (!ok) return false
     if (this.stale(gen)) return false
@@ -314,7 +314,7 @@ export class KiloClawProvider implements vscode.Disposable {
     if (this.stale(gen)) return false
 
     if (!this.sandboxId) {
-      this.post({ type: "kiloclaw.state", state: { phase: "noInstance", locale: this.locale } })
+      this.post({ type: "accureclaw.state", state: { phase: "noInstance", locale: this.locale } })
       return false
     }
 
@@ -322,13 +322,13 @@ export class KiloClawProvider implements vscode.Disposable {
     return true
   }
 
-  private async resolveStatus(client: KiloClient, gen: number): Promise<boolean> {
-    const statusRes = await client.kilo.claw.status().catch(() => null)
+  private async resolveStatus(client: AccureClient, gen: number): Promise<boolean> {
+    const statusRes = await client.accure.claw.status().catch(() => null)
     if (this.stale(gen)) return false
 
     const statusData = statusRes?.data as (ClawStatus & { userId?: string }) | undefined
     if (!statusRes || (statusRes as Record<string, unknown>).error || !statusData || !statusData.userId) {
-      this.post({ type: "kiloclaw.state", state: { phase: "noInstance", locale: this.locale } })
+      this.post({ type: "accureclaw.state", state: { phase: "noInstance", locale: this.locale } })
       return false
     }
     this.status = statusData
@@ -352,10 +352,10 @@ export class KiloClawProvider implements vscode.Disposable {
     } catch (err) {
       if (this.stale(gen)) return null
       const message = err instanceof Error ? err.message : String(err)
-      console.error("[Kilo New] KiloClaw chat token fetch failed:", message)
+      console.error("[Accure New] AccureClaw chat token fetch failed:", message)
       // Token fetch typically fails when the instance hasn't been upgraded
-      // to support kilo-chat — surface that as the upgrade prompt.
-      this.post({ type: "kiloclaw.state", state: { phase: "needsUpgrade", locale: this.locale } })
+      // to support accure-chat — surface that as the upgrade prompt.
+      this.post({ type: "accureclaw.state", state: { phase: "needsUpgrade", locale: this.locale } })
       return null
     }
   }
@@ -367,17 +367,17 @@ export class KiloClawProvider implements vscode.Disposable {
       getToken: () => tokens.get(),
       onUnauthorized: () => {
         tokens.clear()
-        this.post({ type: "kiloclaw.error", error: "Authentication expired" })
+        this.post({ type: "accureclaw.error", error: "Authentication expired" })
       },
     })
     this.events = events
 
-    const chat = new KiloChatClient({
-      baseUrl: envelope.kiloChatUrl,
+    const chat = new AccureChatClient({
+      baseUrl: envelope.accureChatUrl,
       getToken: () => tokens.get(),
       onUnauthorized: () => {
         tokens.clear()
-        this.post({ type: "kiloclaw.error", error: "Authentication expired" })
+        this.post({ type: "accureclaw.error", error: "Authentication expired" })
       },
     })
     this.chat = chat
@@ -387,13 +387,13 @@ export class KiloClawProvider implements vscode.Disposable {
     } catch (err) {
       if (this.stale(gen)) return false
       if (err instanceof WebSocketAuthError) {
-        this.post({ type: "kiloclaw.state", state: { phase: "needsUpgrade", locale: this.locale } })
+        this.post({ type: "accureclaw.state", state: { phase: "needsUpgrade", locale: this.locale } })
         return false
       }
       const message = err instanceof Error ? err.message : String(err)
-      console.error("[Kilo New] KiloClaw event-service connect failed:", message)
+      console.error("[Accure New] AccureClaw event-service connect failed:", message)
       this.post({
-        type: "kiloclaw.state",
+        type: "accureclaw.state",
         state: { phase: "error", locale: this.locale, error: message || "Failed to connect to chat" },
       })
       return false
@@ -417,7 +417,7 @@ export class KiloClawProvider implements vscode.Disposable {
       this.hasMoreConversations = list.hasMore
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      console.warn("[Kilo New] KiloClaw listConversations failed:", message)
+      console.warn("[Accure New] AccureClaw listConversations failed:", message)
     }
 
     try {
@@ -426,7 +426,7 @@ export class KiloClawProvider implements vscode.Disposable {
       this.botStatus = res.status ?? null
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      console.warn("[Kilo New] KiloClaw getBotStatus failed:", message)
+      console.warn("[Accure New] AccureClaw getBotStatus failed:", message)
     }
 
     // Auto-select the most recent conversation so the panel opens straight
@@ -450,27 +450,27 @@ export class KiloClawProvider implements vscode.Disposable {
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
-        console.warn("[Kilo New] KiloClaw getConversationStatus failed:", message)
+        console.warn("[Accure New] AccureClaw getConversationStatus failed:", message)
       }
 
       void this.markRead(latest.conversationId)
     }
   }
 
-  private async resolveClient(): Promise<KiloClient | null> {
+  private async resolveClient(): Promise<AccureClient | null> {
     if (this.connection.getConnectionState() !== "connected") {
       try {
         const dir = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? homedir()
         await this.connection.connect(dir)
       } catch (err) {
-        console.debug("[Kilo New] KiloClaw connect deferred:", (err as Error)?.message ?? err)
+        console.debug("[Accure New] AccureClaw connect deferred:", (err as Error)?.message ?? err)
         return null
       }
     }
     try {
       return this.connection.getClient()
     } catch (err) {
-      console.debug("[Kilo New] KiloClaw getClient deferred:", (err as Error)?.message ?? err)
+      console.debug("[Accure New] AccureClaw getClient deferred:", (err as Error)?.message ?? err)
       return null
     }
   }
@@ -490,7 +490,7 @@ export class KiloClawProvider implements vscode.Disposable {
 
   private subscribeSandboxContext(): void {
     if (!this.events || !this.sandboxId) return
-    const ctx = `/kiloclaw/${this.sandboxId}`
+    const ctx = `/accureclaw/${this.sandboxId}`
     this.events.subscribe([ctx])
     this.subscribedSandboxContext = ctx
   }
@@ -500,7 +500,7 @@ export class KiloClawProvider implements vscode.Disposable {
     if (this.subscribedConversationContext) {
       this.events.unsubscribe([this.subscribedConversationContext])
     }
-    const ctx = `/kiloclaw/${this.sandboxId}/${conversationId}`
+    const ctx = `/accureclaw/${this.sandboxId}/${conversationId}`
     this.events.subscribe([ctx])
     this.subscribedConversationContext = ctx
   }
@@ -523,7 +523,7 @@ export class KiloClawProvider implements vscode.Disposable {
 
     this.chatSubs.push(
       events.on("conversation.created", (ctx, e: ConversationCreatedEvent) => {
-        if (!this.sandboxId || ctx !== `/kiloclaw/${this.sandboxId}`) return
+        if (!this.sandboxId || ctx !== `/accureclaw/${this.sandboxId}`) return
         // Newer servers include the full conversation snapshot — splice it in
         // immediately so the list updates without a roundtrip. Fall back to a
         // refetch when the snapshot is absent (older servers / safety net).
@@ -538,7 +538,7 @@ export class KiloClawProvider implements vscode.Disposable {
 
     this.chatSubs.push(
       events.on("conversation.renamed", (ctx, e: ConversationRenamedEvent) => {
-        if (!this.sandboxId || ctx !== `/kiloclaw/${this.sandboxId}`) return
+        if (!this.sandboxId || ctx !== `/accureclaw/${this.sandboxId}`) return
         this.conversations = this.conversations.map((c) =>
           c.conversationId === e.conversationId ? { ...c, title: e.title } : c,
         )
@@ -548,7 +548,7 @@ export class KiloClawProvider implements vscode.Disposable {
 
     this.chatSubs.push(
       events.on("conversation.left", (ctx, e: ConversationLeftEvent) => {
-        if (!this.sandboxId || ctx !== `/kiloclaw/${this.sandboxId}`) return
+        if (!this.sandboxId || ctx !== `/accureclaw/${this.sandboxId}`) return
         this.conversations = this.conversations.filter((c) => c.conversationId !== e.conversationId)
         if (this.activeConversationId === e.conversationId) {
           this.activeConversationId = null
@@ -556,15 +556,15 @@ export class KiloClawProvider implements vscode.Disposable {
           this.messages = []
           this.hasMoreMessages = false
           this.conversationStatus = null
-          this.post({ type: "kiloclaw.activeConversation", conversationId: null })
+          this.post({ type: "accureclaw.activeConversation", conversationId: null })
           this.post({
-            type: "kiloclaw.messages",
+            type: "accureclaw.messages",
             conversationId: e.conversationId,
             messages: [],
             hasMore: false,
             replace: true,
           })
-          this.post({ type: "kiloclaw.conversationStatus", status: null })
+          this.post({ type: "accureclaw.conversationStatus", status: null })
         }
         this.broadcastConversations({ replace: true })
       }),
@@ -572,7 +572,7 @@ export class KiloClawProvider implements vscode.Disposable {
 
     this.chatSubs.push(
       events.on("conversation.activity", (ctx, e: ConversationActivityEvent) => {
-        if (!this.sandboxId || ctx !== `/kiloclaw/${this.sandboxId}`) return
+        if (!this.sandboxId || ctx !== `/accureclaw/${this.sandboxId}`) return
         this.conversations = this.conversations.map((c) =>
           c.conversationId === e.conversationId ? { ...c, lastActivityAt: e.lastActivityAt } : c,
         )
@@ -582,10 +582,10 @@ export class KiloClawProvider implements vscode.Disposable {
 
     this.chatSubs.push(
       events.on("bot.status", (ctx, e: BotStatusEvent) => {
-        if (!this.sandboxId || ctx !== `/kiloclaw/${this.sandboxId}`) return
+        if (!this.sandboxId || ctx !== `/accureclaw/${this.sandboxId}`) return
         if (e.sandboxId !== this.sandboxId) return
         this.botStatus = { online: e.online, at: e.at, updatedAt: Date.now() }
-        this.post({ type: "kiloclaw.botStatus", status: this.botStatus })
+        this.post({ type: "accureclaw.botStatus", status: this.botStatus })
       }),
     )
 
@@ -607,7 +607,7 @@ export class KiloClawProvider implements vscode.Disposable {
           if (idx !== -1) {
             this.messages = this.messages.map((m, i) => (i === idx ? server : m))
             this.post({
-              type: "kiloclaw.messageReplaced",
+              type: "accureclaw.messageReplaced",
               conversationId: this.activeConversationId ?? "",
               pendingId: pending,
               message: server,
@@ -663,7 +663,7 @@ export class KiloClawProvider implements vscode.Disposable {
           }
         })
         this.broadcastMessages({ replace: true })
-        this.post({ type: "kiloclaw.error", error: "Couldn't reach the bot — please try again" })
+        this.post({ type: "accureclaw.error", error: "Couldn't reach the bot — please try again" })
       }),
     )
 
@@ -715,7 +715,7 @@ export class KiloClawProvider implements vscode.Disposable {
           at: e.at,
           updatedAt: Date.now(),
         }
-        this.post({ type: "kiloclaw.conversationStatus", status: this.conversationStatus })
+        this.post({ type: "accureclaw.conversationStatus", status: this.conversationStatus })
       }),
     )
   }
@@ -734,7 +734,7 @@ export class KiloClawProvider implements vscode.Disposable {
     if (!this.chat) return
     this.activeConversationId = conversationId
     this.subscribeConversationContext(conversationId)
-    this.post({ type: "kiloclaw.activeConversation", conversationId })
+    this.post({ type: "accureclaw.activeConversation", conversationId })
     this.typingMembers = []
     for (const t of this.typingTimers.values()) clearTimeout(t)
     this.typingTimers.clear()
@@ -747,10 +747,10 @@ export class KiloClawProvider implements vscode.Disposable {
       // only apply the status if it still matches the active conversation.
       if (this.activeConversationId !== conversationId) return
       this.conversationStatus = res.status ?? null
-      this.post({ type: "kiloclaw.conversationStatus", status: this.conversationStatus })
+      this.post({ type: "accureclaw.conversationStatus", status: this.conversationStatus })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      console.warn("[Kilo New] KiloClaw getConversationStatus failed:", message)
+      console.warn("[Accure New] AccureClaw getConversationStatus failed:", message)
       return
     }
 
@@ -768,7 +768,7 @@ export class KiloClawProvider implements vscode.Disposable {
       await this.refreshConversations()
       await this.selectConversation(res.conversationId)
     } catch (err) {
-      this.post({ type: "kiloclaw.error", error: this.formatError(err, "Failed to create conversation") })
+      this.post({ type: "accureclaw.error", error: this.formatError(err, "Failed to create conversation") })
     }
   }
 
@@ -779,7 +779,7 @@ export class KiloClawProvider implements vscode.Disposable {
     try {
       await this.chat.renameConversation(conversationId, title)
     } catch (err) {
-      this.post({ type: "kiloclaw.error", error: this.formatError(err, "Failed to rename conversation") })
+      this.post({ type: "accureclaw.error", error: this.formatError(err, "Failed to rename conversation") })
       void this.refreshConversations()
     }
   }
@@ -794,12 +794,12 @@ export class KiloClawProvider implements vscode.Disposable {
         this.activeConversationId = null
         this.unsubscribeConversationContext()
         this.messages = []
-        this.post({ type: "kiloclaw.activeConversation", conversationId: null })
-        this.post({ type: "kiloclaw.messages", conversationId, messages: [], hasMore: false, replace: true })
+        this.post({ type: "accureclaw.activeConversation", conversationId: null })
+        this.post({ type: "accureclaw.messages", conversationId, messages: [], hasMore: false, replace: true })
       }
       this.broadcastConversations({ replace: true })
     } catch (err) {
-      this.post({ type: "kiloclaw.error", error: this.formatError(err, "Failed to leave conversation") })
+      this.post({ type: "accureclaw.error", error: this.formatError(err, "Failed to leave conversation") })
     }
   }
 
@@ -821,7 +821,7 @@ export class KiloClawProvider implements vscode.Disposable {
       this.hasMoreConversations = res.hasMore
       this.broadcastConversations({ replace: true })
     } catch (err) {
-      this.post({ type: "kiloclaw.error", error: this.formatError(err, "Failed to load conversations") })
+      this.post({ type: "accureclaw.error", error: this.formatError(err, "Failed to load conversations") })
     }
   }
 
@@ -833,7 +833,7 @@ export class KiloClawProvider implements vscode.Disposable {
     if (!this.chat) return
     if (!this.currentUserId) return
 
-    // kilo-chat validates clientId as a ULID (Crockford Base32); generate
+    // accure-chat validates clientId as a ULID (Crockford Base32); generate
     // it here so the webview doesn't need to know the format.
     const clientId = ulid()
     const pendingId = `pending-${clientId}`
@@ -851,18 +851,18 @@ export class KiloClawProvider implements vscode.Disposable {
 
     if (conversationId === this.activeConversationId) {
       this.messages = [...this.messages, optimistic]
-      this.post({ type: "kiloclaw.messageOptimistic", conversationId, message: optimistic })
+      this.post({ type: "accureclaw.messageOptimistic", conversationId, message: optimistic })
     }
 
     try {
       await this.chat.sendMessage({ conversationId, content, clientId, inReplyToMessageId })
       // Server will fire `message.created` — reconciliation happens there.
     } catch (err) {
-      console.error("[Kilo New] KiloClaw sendMessage failed:", err instanceof Error ? err.message : err)
-      this.post({ type: "kiloclaw.error", error: this.formatError(err, "Failed to send message") })
+      console.error("[Accure New] AccureClaw sendMessage failed:", err instanceof Error ? err.message : err)
+      this.post({ type: "accureclaw.error", error: this.formatError(err, "Failed to send message") })
       if (conversationId === this.activeConversationId) {
         this.messages = this.messages.filter((m) => m.id !== pendingId)
-        this.post({ type: "kiloclaw.messageRemoved", conversationId, messageId: pendingId })
+        this.post({ type: "accureclaw.messageRemoved", conversationId, messageId: pendingId })
       }
     }
   }
@@ -879,7 +879,7 @@ export class KiloClawProvider implements vscode.Disposable {
     try {
       await this.chat.editMessage(messageId, { conversationId, content, timestamp: Date.now() })
     } catch (err) {
-      this.post({ type: "kiloclaw.error", error: this.formatError(err, "Failed to edit message") })
+      this.post({ type: "accureclaw.error", error: this.formatError(err, "Failed to edit message") })
       if (snapshot && conversationId === this.activeConversationId) {
         this.messages = this.messages.map((m) => (m.id === messageId ? snapshot : m))
         this.broadcastMessages({ replace: true })
@@ -897,7 +897,7 @@ export class KiloClawProvider implements vscode.Disposable {
     try {
       await this.chat.deleteMessage(messageId, conversationId)
     } catch (err) {
-      this.post({ type: "kiloclaw.error", error: this.formatError(err, "Failed to delete message") })
+      this.post({ type: "accureclaw.error", error: this.formatError(err, "Failed to delete message") })
       if (snapshot && conversationId === this.activeConversationId) {
         this.messages = this.messages.map((m) => (m.id === messageId ? snapshot : m))
         this.broadcastMessages({ replace: true })
@@ -917,7 +917,7 @@ export class KiloClawProvider implements vscode.Disposable {
       this.hasMoreMessages = res.hasMore
       this.broadcastMessages({ replace: true })
     } catch (err) {
-      this.post({ type: "kiloclaw.error", error: this.formatError(err, "Failed to load messages") })
+      this.post({ type: "accureclaw.error", error: this.formatError(err, "Failed to load messages") })
     }
   }
 
@@ -933,7 +933,7 @@ export class KiloClawProvider implements vscode.Disposable {
     try {
       await this.chat.addReaction(messageId, { conversationId, emoji })
     } catch (err) {
-      this.post({ type: "kiloclaw.error", error: this.formatError(err, "Failed to add reaction") })
+      this.post({ type: "accureclaw.error", error: this.formatError(err, "Failed to add reaction") })
       if (snapshot && conversationId === this.activeConversationId) {
         this.messages = this.messages.map((m) => (m.id === messageId ? snapshot : m))
         this.broadcastMessages({ replace: true })
@@ -953,7 +953,7 @@ export class KiloClawProvider implements vscode.Disposable {
     try {
       await this.chat.removeReaction(messageId, { conversationId, emoji })
     } catch (err) {
-      this.post({ type: "kiloclaw.error", error: this.formatError(err, "Failed to remove reaction") })
+      this.post({ type: "accureclaw.error", error: this.formatError(err, "Failed to remove reaction") })
       if (snapshot && conversationId === this.activeConversationId) {
         this.messages = this.messages.map((m) => (m.id === messageId ? snapshot : m))
         this.broadcastMessages({ replace: true })
@@ -986,7 +986,7 @@ export class KiloClawProvider implements vscode.Disposable {
     try {
       await this.chat.executeAction(conversationId, messageId, { groupId, value })
     } catch (err) {
-      this.post({ type: "kiloclaw.error", error: this.formatError(err, "Failed to execute action") })
+      this.post({ type: "accureclaw.error", error: this.formatError(err, "Failed to execute action") })
       if (snapshot && conversationId === this.activeConversationId) {
         this.messages = this.messages.map((m) => (m.id === messageId ? snapshot : m))
         this.broadcastMessages({ replace: true })
@@ -1044,7 +1044,7 @@ export class KiloClawProvider implements vscode.Disposable {
       this.broadcastConversations({ replace: true })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      console.warn("[Kilo New] KiloClaw refreshConversations failed:", message)
+      console.warn("[Accure New] AccureClaw refreshConversations failed:", message)
     }
   }
 
@@ -1062,7 +1062,7 @@ export class KiloClawProvider implements vscode.Disposable {
       this.broadcastMessages({ replace: true })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      console.warn("[Kilo New] KiloClaw refreshActiveMessages failed:", message)
+      console.warn("[Accure New] AccureClaw refreshActiveMessages failed:", message)
     }
   }
 
@@ -1075,7 +1075,7 @@ export class KiloClawProvider implements vscode.Disposable {
       this.typingMembers = this.typingMembers.map((m, i) => (i === idx ? { ...m, at: now } : m))
     }
     if (this.activeConversationId) {
-      this.post({ type: "kiloclaw.typing", conversationId: this.activeConversationId, memberId })
+      this.post({ type: "accureclaw.typing", conversationId: this.activeConversationId, memberId })
     }
     const existing = this.typingTimers.get(memberId)
     if (existing) clearTimeout(existing)
@@ -1093,7 +1093,7 @@ export class KiloClawProvider implements vscode.Disposable {
       this.typingTimers.delete(memberId)
     }
     if (this.activeConversationId) {
-      this.post({ type: "kiloclaw.typingStop", conversationId: this.activeConversationId, memberId })
+      this.post({ type: "accureclaw.typingStop", conversationId: this.activeConversationId, memberId })
     }
   }
 
@@ -1113,7 +1113,7 @@ export class KiloClawProvider implements vscode.Disposable {
 
   private broadcastConversations(opts: { replace: boolean }): void {
     this.post({
-      type: "kiloclaw.conversations",
+      type: "accureclaw.conversations",
       conversations: this.conversations,
       hasMore: this.hasMoreConversations,
       replace: opts.replace,
@@ -1123,7 +1123,7 @@ export class KiloClawProvider implements vscode.Disposable {
   private broadcastMessages(opts: { replace: boolean }): void {
     if (!this.activeConversationId) return
     this.post({
-      type: "kiloclaw.messages",
+      type: "accureclaw.messages",
       conversationId: this.activeConversationId,
       messages: this.messages,
       hasMore: this.hasMoreMessages,
@@ -1132,7 +1132,7 @@ export class KiloClawProvider implements vscode.Disposable {
   }
 
   private formatError(err: unknown, fallback: string): string {
-    if (err instanceof KiloChatApiError) {
+    if (err instanceof AccureChatApiError) {
       const body = err.body as Record<string, unknown> | null
       if (body && typeof body.error === "string") return body.error
     }
@@ -1158,7 +1158,7 @@ export class KiloClawProvider implements vscode.Disposable {
     this.botNudge = setInterval(() => {
       if (!this.chat || !this.sandboxId) return
       this.chat.requestBotStatus(this.sandboxId).catch((err) => {
-        console.debug("[Kilo New] KiloClaw requestBotStatus failed:", (err as Error)?.message ?? err)
+        console.debug("[Accure New] AccureClaw requestBotStatus failed:", (err as Error)?.message ?? err)
       })
     }, BOT_STATUS_NUDGE_MS)
   }
@@ -1172,13 +1172,13 @@ export class KiloClawProvider implements vscode.Disposable {
   private async poll(): Promise<void> {
     try {
       const client = this.connection.getClient()
-      const res = await client.kilo.claw.status()
+      const res = await client.accure.claw.status()
       if (res?.data) {
         this.status = res.data as ClawStatus
-        this.post({ type: "kiloclaw.status", data: this.status })
+        this.post({ type: "accureclaw.status", data: this.status })
       }
     } catch (err) {
-      console.debug("[Kilo New] KiloClaw poll failed:", (err as Error)?.message ?? err)
+      console.debug("[Accure New] AccureClaw poll failed:", (err as Error)?.message ?? err)
     }
   }
 

@@ -6,23 +6,23 @@ import {
   getOrganizationId,
   getToken,
   importSessionToDb,
-} from "@kilocode/accure-gateway"
+} from "@accurecode/accure-gateway"
 import {
   HEADER_FEATURE,
   HEADER_ORGANIZATIONID,
-  KILO_API_BASE,
-  KILO_CHAT_URL,
-  KILO_EVENT_SERVICE_URL,
+  ACCURECODE_API_BASE,
+  ACCURECODE_CHAT_URL,
+  ACCURECODE_EVENT_SERVICE_URL,
   clearModesCache,
   fetchBalance,
-  fetchKilocodeNotifications,
+  fetchAccurecodeNotifications,
   fetchOrganizationModes,
   fetchProfile,
-} from "@kilocode/accure-gateway"
-import { DIRECT_FIM_ENV, requestMistralFim, resolveFimTarget } from "@kilocode/accure-gateway/fim"
-import { DIRECT_EDIT_ENV, extractFencedBody, resolveEditTarget } from "@kilocode/accure-gateway/edit"
-import { buildMercuryEditPrompt } from "@kilocode/accure-gateway/edit-prompt"
-import { buildKiloHeaders } from "@kilocode/accure-gateway"
+} from "@accurecode/accure-gateway"
+import { DIRECT_FIM_ENV, requestMistralFim, resolveFimTarget } from "@accurecode/accure-gateway/fim"
+import { DIRECT_EDIT_ENV, extractFencedBody, resolveEditTarget } from "@accurecode/accure-gateway/edit"
+import { buildMercuryEditPrompt } from "@accurecode/accure-gateway/edit-prompt"
+import { buildAccureHeaders } from "@accurecode/accure-gateway"
 import { Effect, Schema } from "effect"
 import * as Stream from "effect/Stream"
 import { HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
@@ -32,7 +32,7 @@ import { Auth } from "@/auth"
 import { EffectBridge } from "@/effect/bridge"
 import { Bus } from "@/bus"
 import { Identifier } from "@/id/id"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/accurecode/instance"
 import { InstanceStore } from "@/project/instance-store"
 import { ModelCache } from "@/provider/model-cache"
 import { InstanceHttpApi } from "@/server/routes/instance/httpapi/api"
@@ -55,14 +55,14 @@ function logError(route: string, err: unknown) {
   log.error("unhandled error", { route, err })
 }
 
-export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo", (handlers) =>
+export const accureGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "accure", (handlers) =>
   Effect.gen(function* () {
     const auth = yield* Auth.Service
     const store = yield* InstanceStore.Service
     const cache = yield* ModelCache.Service
 
-    const profile = Effect.fn("KiloGatewayHttpApi.profile")(function* () {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
+    const profile = Effect.fn("AccureGatewayHttpApi.profile")(function* () {
+      const info = yield* auth.get("accure").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
       if (!info || info.type !== "oauth") return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
       const currentOrgId = info.accountId ?? null
@@ -73,15 +73,15 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       return { profile, balance, currentOrgId }
     })
 
-    const authStatus = Effect.fn("KiloGatewayHttpApi.authStatus")(function* () {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
+    const authStatus = Effect.fn("AccureGatewayHttpApi.authStatus")(function* () {
+      const info = yield* auth.get("accure").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
       const type = getToken(info) && (info?.type === "api" || info?.type === "oauth") ? info.type : undefined
       if (!type) return { authenticated: false }
       return { authenticated: true, type }
     })
 
-    const proxyAuth = Effect.fn("KiloGatewayHttpApi.proxyAuth")(function* () {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
+    const proxyAuth = Effect.fn("AccureGatewayHttpApi.proxyAuth")(function* () {
+      const info = yield* auth.get("accure").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
       return {
         auth: info,
         token: getToken(info),
@@ -89,8 +89,8 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       }
     })
 
-    const modes = Effect.fn("KiloGatewayHttpApi.modes")(function* () {
-      const info = yield* auth.get("kilo").pipe(Effect.catch(() => Effect.succeed(undefined)))
+    const modes = Effect.fn("AccureGatewayHttpApi.modes")(function* () {
+      const info = yield* auth.get("accure").pipe(Effect.catch(() => Effect.succeed(undefined)))
       if (!info || info.type !== "oauth" || !info.access || !info.accountId) return { modes: [] }
 
       const org = info.accountId
@@ -100,17 +100,17 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       )
     })
 
-    const fim = Effect.fn("KiloGatewayHttpApi.fim")(function* (ctx: { payload: typeof FimBody.Type }) {
+    const fim = Effect.fn("AccureGatewayHttpApi.fim")(function* (ctx: { payload: typeof FimBody.Type }) {
       const target = resolveFimTarget(ctx.payload.provider, ctx.payload.model)
-      const info = target.provider === "kilo" ? yield* proxyAuth() : undefined
+      const info = target.provider === "accure" ? yield* proxyAuth() : undefined
       const token = yield* Effect.gen(function* () {
-        if (target.provider === "kilo") return info?.token
+        if (target.provider === "accure") return info?.token
         const item = yield* auth.get(target.provider).pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
         if (item?.type === "api") return item.key
         return DIRECT_FIM_ENV[target.provider].map((key) => process.env[key]).find(Boolean)
       })
 
-      if (target.provider === "kilo" && !info?.auth) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
+      if (target.provider === "accure" && !info?.auth) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
       if (!token) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
       const request = yield* HttpServerRequest.HttpServerRequest
@@ -127,10 +127,10 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
-                ...(target.provider === "kilo"
-                  ? buildKiloHeaders(undefined, { kilocodeOrganizationId: info?.organizationId })
+                ...(target.provider === "accure"
+                  ? buildAccureHeaders(undefined, { accurecodeOrganizationId: info?.organizationId })
                   : {}),
-                ...(target.provider === "kilo" ? { [HEADER_FEATURE]: "autocomplete" } : {}),
+                ...(target.provider === "accure" ? { [HEADER_FEATURE]: "autocomplete" } : {}),
               },
               signal,
               body: JSON.stringify({
@@ -176,19 +176,19 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       )
     })
 
-    const edit = Effect.fn("KiloGatewayHttpApi.edit")(function* (ctx: { payload: typeof EditBody.Type }) {
+    const edit = Effect.fn("AccureGatewayHttpApi.edit")(function* (ctx: { payload: typeof EditBody.Type }) {
       const target = resolveEditTarget(ctx.payload.provider, ctx.payload.model)
-      if (target.provider === "kilo" && !target.url) {
+      if (target.provider === "accure" && !target.url) {
         return yield* Effect.fail(new HttpApiError.BadRequest({}))
       }
-      const proxy = target.provider === "kilo" ? yield* proxyAuth() : undefined
+      const proxy = target.provider === "accure" ? yield* proxyAuth() : undefined
       const token = yield* Effect.gen(function* () {
-        if (target.provider === "kilo") return proxy?.token
+        if (target.provider === "accure") return proxy?.token
         const item = yield* auth.get(target.provider).pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
         if (item?.type === "api") return item.key
         return DIRECT_EDIT_ENV[target.provider].map((key) => process.env[key]).find(Boolean)
       })
-      if (target.provider === "kilo" && !proxy?.auth) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
+      if (target.provider === "accure" && !proxy?.auth) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
       if (!token) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
       const request = yield* HttpServerRequest.HttpServerRequest
@@ -217,10 +217,10 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
-              ...(target.provider === "kilo"
-                ? buildKiloHeaders(undefined, { kilocodeOrganizationId: proxy?.organizationId })
+              ...(target.provider === "accure"
+                ? buildAccureHeaders(undefined, { accurecodeOrganizationId: proxy?.organizationId })
                 : {}),
-              ...(target.provider === "kilo" ? { [HEADER_FEATURE]: "autocomplete" } : {}),
+              ...(target.provider === "accure" ? { [HEADER_FEATURE]: "autocomplete" } : {}),
             },
             signal,
             body: JSON.stringify({
@@ -275,7 +275,7 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       }
     })
 
-    const audioTranscriptions = Effect.fn("KiloGatewayHttpApi.audioTranscriptions")(function* (ctx: {
+    const audioTranscriptions = Effect.fn("AccureGatewayHttpApi.audioTranscriptions")(function* (ctx: {
       payload: typeof AudioTranscriptionsBody.Type
     }) {
       const info = yield* proxyAuth()
@@ -285,12 +285,12 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       const request = yield* HttpServerRequest.HttpServerRequest
       const response = yield* Effect.tryPromise({
         try: () =>
-          fetch(`${KILO_API_BASE}/api/gateway/v1/audio/transcriptions`, {
+          fetch(`${ACCURECODE_API_BASE}/api/gateway/v1/audio/transcriptions`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${info.token}`,
-              ...buildKiloHeaders(undefined, { kilocodeOrganizationId: info.organizationId }),
+              ...buildAccureHeaders(undefined, { accurecodeOrganizationId: info.organizationId }),
               [HEADER_FEATURE]: "vscode-extension",
             },
             signal: request.source instanceof Request ? request.source.signal : undefined,
@@ -305,25 +305,25 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       })
     })
 
-    const notifications = Effect.fn("KiloGatewayHttpApi.notifications")(function* () {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
+    const notifications = Effect.fn("AccureGatewayHttpApi.notifications")(function* () {
+      const info = yield* auth.get("accure").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
       const token = getToken(info)
       if (!token) return []
 
       return yield* Effect.promise(() =>
-        fetchKilocodeNotifications({
-          kilocodeToken: token,
-          kilocodeOrganizationId: getOrganizationId(info),
+        fetchAccurecodeNotifications({
+          accurecodeToken: token,
+          accurecodeOrganizationId: getOrganizationId(info),
         }),
       )
     })
 
-    const organization = Effect.fn("KiloGatewayHttpApi.organization")(function* (ctx) {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
+    const organization = Effect.fn("AccureGatewayHttpApi.organization")(function* (ctx) {
+      const info = yield* auth.get("accure").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
       if (!info || info.type !== "oauth") return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
       yield* auth
-        .set("kilo", {
+        .set("accure", {
           type: "oauth",
           refresh: info.refresh,
           access: info.access,
@@ -332,14 +332,14 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
         })
         .pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
 
-      yield* cache.clear("kilo")
+      yield* cache.clear("accure")
       clearModesCache()
       yield* store.disposeAll().pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
       return true
     })
 
-    const clawStatus = Effect.fn("KiloGatewayHttpApi.clawStatus")(function* () {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.ServiceUnavailable({})))
+    const clawStatus = Effect.fn("AccureGatewayHttpApi.clawStatus")(function* () {
+      const info = yield* auth.get("accure").pipe(Effect.mapError(() => new HttpApiError.ServiceUnavailable({})))
       const token = getToken(info)
       if (!token) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
@@ -352,7 +352,7 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
 
       return yield* Effect.tryPromise({
         try: async () => {
-          const response = await fetch(`${KILO_API_BASE}/api/kiloclaw/status`, { headers })
+          const response = await fetch(`${ACCURECODE_API_BASE}/api/accureclaw/status`, { headers })
           if (!response.ok) throw new GatewayError(await response.text(), response.status)
           return Schema.decodeUnknownPromise(ClawStatus)(await response.json())
         },
@@ -361,17 +361,17 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
         Effect.match({
           onFailure: (err) => {
             if (err instanceof GatewayError)
-              return jsonError(`KiloClaw request failed: ${err.status} ${err.message}`, err.status)
+              return jsonError(`AccureClaw request failed: ${err.status} ${err.message}`, err.status)
             logError("claw/status", err)
-            return jsonError("Failed to reach KiloClaw", 502)
+            return jsonError("Failed to reach AccureClaw", 502)
           },
           onSuccess: (result) => result,
         }),
       )
     })
 
-    const clawChatCredentials = Effect.fn("KiloGatewayHttpApi.clawChatCredentials")(function* () {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
+    const clawChatCredentials = Effect.fn("AccureGatewayHttpApi.clawChatCredentials")(function* () {
+      const info = yield* auth.get("accure").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
       const token = getToken(info)
       if (!token) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
@@ -379,13 +379,13 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       return {
         token,
         expiresAt: new Date(expires).toISOString(),
-        kiloChatUrl: KILO_CHAT_URL,
-        eventServiceUrl: KILO_EVENT_SERVICE_URL,
+        accureChatUrl: ACCURECODE_CHAT_URL,
+        eventServiceUrl: ACCURECODE_EVENT_SERVICE_URL,
       }
     })
 
-    const cloudSessions = Effect.fn("KiloGatewayHttpApi.cloudSessions")(function* (ctx) {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
+    const cloudSessions = Effect.fn("AccureGatewayHttpApi.cloudSessions")(function* (ctx) {
+      const info = yield* auth.get("accure").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
       const token = getToken(info)
       if (!token) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
@@ -409,8 +409,8 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       )
     })
 
-    const cloudSession = Effect.fn("KiloGatewayHttpApi.cloudSession")(function* (ctx) {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
+    const cloudSession = Effect.fn("AccureGatewayHttpApi.cloudSession")(function* (ctx) {
+      const info = yield* auth.get("accure").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
       const token = getToken(info)
       if (!token) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
@@ -430,8 +430,8 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       return result.data
     })
 
-    const cloudSessionImport = Effect.fn("KiloGatewayHttpApi.cloudSessionImport")(function* (ctx) {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
+    const cloudSessionImport = Effect.fn("AccureGatewayHttpApi.cloudSessionImport")(function* (ctx) {
+      const info = yield* auth.get("accure").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
       const token = getToken(info)
       if (!token) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 

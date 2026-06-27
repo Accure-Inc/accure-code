@@ -11,7 +11,7 @@ Reference for every Wasteland-related setting in your Gas Town dashboard, from u
 Access these settings from your town dashboard → **Settings** → **Wasteland** tab.
 
 <!-- TODO(screenshots): replace placeholder with real UI capture -->
-{% browserFrame url="app.kilo.ai/gastown/town/settings/wasteland" caption="Wasteland settings tab in your Gas Town dashboard" %}
+{% browserFrame url="app.accurecode.ai/gastown/town/settings/wasteland" caption="Wasteland settings tab in your Gas Town dashboard" %}
 {% image src="/docs/img/gastown/wasteland/gt-wasteland-settings.png" alt="Wasteland settings tab" /%}
 {% /browserFrame %}
 
@@ -56,7 +56,7 @@ To change your upstream for a single connection, you'll need to disconnect and r
 
 ## Rig Handle
 
-Your **rig handle** is your town's identity on the wasteland. It's an `org/repo`-style identifier (e.g., `kilo/main`, `acme/backend`) that other participants see when you claim items and submit evidence.
+Your **rig handle** is your town's identity on the wasteland. It's an `org/repo`-style identifier (e.g., `accure/main`, `acme/backend`) that other participants see when you claim items and submit evidence.
 
 ### Setting your handle
 

@@ -1,8 +1,8 @@
-package ai.kilocode.cli
+package ai.accurecode.cli
 
 import java.util.concurrent.ConcurrentHashMap
 
-object KiloCliParser {
+object AccureCliParser {
     private val tags = ConcurrentHashMap<String, Regex>()
 
     fun tag(text: String, name: String): String? =

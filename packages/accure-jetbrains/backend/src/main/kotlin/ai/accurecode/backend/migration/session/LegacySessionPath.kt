@@ -1,4 +1,4 @@
-package ai.kilocode.backend.migration.session
+package ai.accurecode.backend.migration.session
 
 import java.io.File
 import java.nio.file.Paths

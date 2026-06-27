@@ -1,7 +1,7 @@
 import { Bus } from "@/bus"
 import { BusEvent } from "@/bus/bus-event"
 import { ConfigPermission } from "@/config/permission"
-import * as Config from "@/config/config" // kilocode_change
+import * as Config from "@/config/config" // accurecode_change
 import { InstanceState } from "@/effect/instance-state"
 import { ProjectID } from "@/project/schema"
 import { MessageID, SessionID } from "@/session/schema"
@@ -12,16 +12,16 @@ import * as Log from "@opencode-ai/core/util/log"
 import { Wildcard } from "@opencode-ai/core/util/wildcard"
 import { Deferred, Effect, Layer, Schema, Context } from "effect"
 import os from "os"
-import z from "zod" // kilocode_change
-import { zod } from "@opencode-ai/core/effect-zod" // kilocode_change
+import z from "zod" // accurecode_change
+import { zod } from "@opencode-ai/core/effect-zod" // accurecode_change
 import { PermissionV2 } from "@opencode-ai/core/permission"
 import { PermissionID } from "./schema"
-// kilocode_change start
-import { ConfigProtection } from "@/kilocode/permission/config-paths"
-import { drainCovered } from "@/kilocode/permission/drain"
-import { ReadPermission } from "@/kilocode/permission/read"
-import { ExternalDirectoryPermission } from "@/kilocode/permission/external-directory"
-// kilocode_change end
+// accurecode_change start
+import { ConfigProtection } from "@/accurecode/permission/config-paths"
+import { drainCovered } from "@/accurecode/permission/drain"
+import { ReadPermission } from "@/accurecode/permission/read"
+import { ExternalDirectoryPermission } from "@/accurecode/permission/external-directory"
+// accurecode_change end
 
 const log = Log.create({ service: "permission" })
 
@@ -119,7 +119,7 @@ export const AskInput = Schema.Struct({
   ...Request.fields,
   id: Schema.optional(PermissionID),
   ruleset: Ruleset,
-  hardRuleset: Schema.optional(Ruleset), // kilocode_change
+  hardRuleset: Schema.optional(Ruleset), // accurecode_change
 }).annotate({ identifier: "PermissionAskInput" })
 export type AskInput = Schema.Schema.Type<typeof AskInput>
 
@@ -129,7 +129,7 @@ export const ReplyInput = Schema.Struct({
 }).annotate({ identifier: "PermissionReplyInput" })
 export type ReplyInput = Schema.Schema.Type<typeof ReplyInput>
 
-// kilocode_change start
+// accurecode_change start
 export const SaveAlwaysRulesInput = z.object({
   requestID: zod(PermissionID),
   approvedAlways: z.string().array().optional(),
@@ -141,40 +141,40 @@ export const AllowEverythingInput = z.object({
   requestID: zod(PermissionID).optional(),
   sessionID: zod(SessionID).optional(),
 })
-// kilocode_change end
+// accurecode_change end
 
 export interface Interface {
   readonly ask: (input: AskInput) => Effect.Effect<void, Error>
   readonly reply: (input: ReplyInput) => Effect.Effect<void, NotFoundError>
   readonly list: () => Effect.Effect<ReadonlyArray<Request>>
-  // kilocode_change start
+  // accurecode_change start
   readonly saveAlwaysRules: (input: z.infer<typeof SaveAlwaysRulesInput>) => Effect.Effect<void, NotFoundError>
   readonly allowEverything: (input: z.infer<typeof AllowEverythingInput>) => Effect.Effect<void>
   readonly pending: (id: string) => Effect.Effect<Request | undefined>
-  // kilocode_change end
+  // accurecode_change end
 }
 
 interface PendingEntry {
   info: Request
-  // kilocode_change start
+  // accurecode_change start
   ruleset: Ruleset
   hardRuleset?: Ruleset
   saved?: boolean
-  // kilocode_change end
+  // accurecode_change end
   deferred: Deferred.Deferred<void, RejectedError | CorrectedError>
 }
 
 interface State {
   pending: Map<PermissionID, PendingEntry>
   approved: Rule[]
-  session: Record<string, Ruleset> // kilocode_change
+  session: Record<string, Ruleset> // accurecode_change
 }
 
 export function evaluate(permission: string, pattern: string, ...rulesets: Ruleset[]): Rule {
   return PermissionV2.evaluate(permission, pattern, ...rulesets)
 }
 
-// kilocode_change start
+// accurecode_change start
 export function resolve(permission: string, pattern: string, ruleset: Ruleset, ...overrides: Ruleset[]): Rule {
   const evalFn =
     permission === "external_directory"
@@ -209,7 +209,7 @@ function covered(entry: PendingEntry, approved: Ruleset, local: Ruleset) {
     return resolve(entry.info.permission, pattern, entry.ruleset, approved, local).action === "allow"
   })
 }
-// kilocode_change end
+// accurecode_change end
 
 export class Service extends Context.Service<Service, Interface>()("@opencode/Permission") {}
 
@@ -217,7 +217,7 @@ export const layer = Layer.effect(
   Service,
   Effect.gen(function* () {
     const bus = yield* Bus.Service
-    const config = yield* Config.Service // kilocode_change
+    const config = yield* Config.Service // accurecode_change
     const state = yield* InstanceState.make<State>(
       Effect.fn("Permission.state")(function* (ctx) {
         const row = Database.use((db) =>
@@ -226,7 +226,7 @@ export const layer = Layer.effect(
         const state = {
           pending: new Map<PermissionID, PendingEntry>(),
           approved: [...(row?.data ?? [])],
-          session: {} as Record<string, Ruleset>, // kilocode_change
+          session: {} as Record<string, Ruleset>, // accurecode_change
         }
 
         yield* Effect.addFinalizer(() =>
@@ -244,33 +244,33 @@ export const layer = Layer.effect(
 
     const ask = Effect.fn("Permission.ask")(function* (input: AskInput) {
       const { approved, pending } = yield* InstanceState.get(state)
-      // kilocode_change start
+      // accurecode_change start
       const { ruleset, hardRuleset, ...request } = input
       const s = yield* InstanceState.get(state)
       const local = s.session[request.sessionID] ?? []
-      // kilocode_change end
+      // accurecode_change end
       let needsAsk = false
 
-      // kilocode_change start — force "ask" for config file edits
+      // accurecode_change start — force "ask" for config file edits
       const isProtected = ConfigProtection.isRequest(request)
-      // kilocode_change end
+      // accurecode_change end
 
       for (const pattern of request.patterns) {
-        const rule = resolve(request.permission, pattern, ruleset, approved, local) // kilocode_change — include session-scoped rules
+        const rule = resolve(request.permission, pattern, ruleset, approved, local) // accurecode_change — include session-scoped rules
         log.info("evaluated", { permission: request.permission, pattern, action: rule })
-        // kilocode_change start — saved/session approvals cannot override hard Ask/Plan denials
+        // accurecode_change start — saved/session approvals cannot override hard Ask/Plan denials
         if (veto(request.permission, pattern, hardRuleset)) {
           return yield* new DeniedError({ ruleset: subset(request.permission, hardRuleset ?? []) })
         }
-        // kilocode_change end
+        // accurecode_change end
         if (rule.action === "deny") {
           return yield* new DeniedError({
-            ruleset: subset(request.permission, ruleset), // kilocode_change
+            ruleset: subset(request.permission, ruleset), // accurecode_change
           })
         }
-        // kilocode_change start — override "allow" to "ask" for config paths
+        // accurecode_change start — override "allow" to "ask" for config paths
         if (rule.action === "allow" && !isProtected) continue
-        // kilocode_change end
+        // accurecode_change end
         needsAsk = true
       }
 
@@ -282,19 +282,19 @@ export const layer = Layer.effect(
         sessionID: request.sessionID,
         permission: request.permission,
         patterns: request.patterns,
-        // kilocode_change start — inject disableAlways metadata for config paths
+        // accurecode_change start — inject disableAlways metadata for config paths
         metadata: {
           ...request.metadata,
           ...(isProtected ? { [ConfigProtection.DISABLE_ALWAYS_KEY]: true } : {}),
         },
-        // kilocode_change end
+        // accurecode_change end
         always: request.always,
         tool: request.tool,
       }
       log.info("asking", { id, permission: info.permission, patterns: info.patterns })
 
       const deferred = yield* Deferred.make<void, RejectedError | CorrectedError>()
-      pending.set(id, { info, ruleset, hardRuleset, deferred }) // kilocode_change
+      pending.set(id, { info, ruleset, hardRuleset, deferred }) // accurecode_change
       yield* bus.publish(Event.Asked, info)
       return yield* Effect.ensuring(
         Deferred.await(deferred),
@@ -338,12 +338,12 @@ export const layer = Layer.effect(
       yield* Deferred.succeed(existing.deferred, undefined)
       if (input.reply === "once") return
 
-      // kilocode_change start — downgrade "always" to "once" for config file edits
+      // accurecode_change start — downgrade "always" to "once" for config file edits
       if (ConfigProtection.isRequest(existing.info)) return
-      // kilocode_change end
+      // accurecode_change end
 
       for (const pattern of existing.info.always) {
-        // kilocode_change start — saveAlwaysRules may have already persisted selected always-rules
+        // accurecode_change start — saveAlwaysRules may have already persisted selected always-rules
         if (!existing.saved) {
           approved.push({
             permission: existing.info.permission,
@@ -365,7 +365,7 @@ export const layer = Layer.effect(
           yield* config.updateGlobal({ permission: toConfig(alwaysRules) }, { dispose: false })
         }
       }
-      // kilocode_change end
+      // accurecode_change end
     })
 
     const list = Effect.fn("Permission.list")(function* () {
@@ -373,7 +373,7 @@ export const layer = Layer.effect(
       return Array.from(pending.values(), (item) => item.info)
     })
 
-    // kilocode_change start
+    // accurecode_change start
     const saveAlwaysRules = Effect.fn("Permission.saveAlwaysRules")(function* (
       input: z.infer<typeof SaveAlwaysRulesInput>,
     ) {
@@ -461,9 +461,9 @@ export const layer = Layer.effect(
       const s = yield* InstanceState.get(state)
       return s.pending.get(PermissionID.make(id))?.info
     })
-    // kilocode_change end
+    // accurecode_change end
 
-    return Service.of({ ask, reply, list, saveAlwaysRules, allowEverything, pending }) // kilocode_change
+    return Service.of({ ask, reply, list, saveAlwaysRules, allowEverything, pending }) // accurecode_change
   }),
 )
 
@@ -482,9 +482,9 @@ export function fromConfig(permission: ConfigPermission.Info) {
       ruleset.push({ permission: key, action: value, pattern: "*" })
       continue
     }
-    if (value === null) continue // kilocode_change — null is a delete sentinel
+    if (value === null) continue // accurecode_change — null is a delete sentinel
     ruleset.push(
-      // kilocode_change start — filter out null entries (delete sentinels)
+      // accurecode_change start — filter out null entries (delete sentinels)
       ...Object.entries(value)
         .filter(([, action]) => action !== null)
         .map(([pattern, action]) => ({
@@ -492,7 +492,7 @@ export function fromConfig(permission: ConfigPermission.Info) {
           pattern: expand(pattern),
           action: action as Action,
         })),
-      // kilocode_change end
+      // accurecode_change end
     )
   }
   return ruleset
@@ -506,9 +506,9 @@ export function disabled(tools: string[], ruleset: Ruleset): Set<string> {
   return PermissionV2.disabled(tools, ruleset)
 }
 
-export const defaultLayer = layer.pipe(Layer.provide(Bus.layer), Layer.provide(Config.defaultLayer)) // kilocode_change
+export const defaultLayer = layer.pipe(Layer.provide(Bus.layer), Layer.provide(Config.defaultLayer)) // accurecode_change
 
-// kilocode_change start — inverse of fromConfig: convert rules back to config format
+// accurecode_change start — inverse of fromConfig: convert rules back to config format
 const SCALAR_ONLY_PERMISSIONS = new Set(["todowrite", "todoread", "question", "webfetch", "websearch", "doom_loop"])
 
 export function toConfig(rules: Ruleset): ConfigPermission.Info {
@@ -533,6 +533,6 @@ export function toConfig(rules: Ruleset): ConfigPermission.Info {
   }
   return result
 }
-// kilocode_change end
+// accurecode_change end
 
 export * as Permission from "."

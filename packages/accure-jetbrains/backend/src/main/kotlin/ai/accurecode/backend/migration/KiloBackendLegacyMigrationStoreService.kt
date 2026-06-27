@@ -1,8 +1,8 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
-import ai.kilocode.backend.cli.KiloBackendCliManager
-import ai.kilocode.backend.cli.KiloCliConfigPath
-import ai.kilocode.log.KiloLog
+import ai.accurecode.backend.cli.AccureBackendCliManager
+import ai.accurecode.backend.cli.AccureCliConfigPath
+import ai.accurecode.log.AccureLog
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import kotlinx.serialization.SerializationException
@@ -14,16 +14,16 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import java.io.File
 
-/** Provides the production [LegacyMigrationStore] backed by the CLI Kilo config directory. */
+/** Provides the production [LegacyMigrationStore] backed by the CLI Accure config directory. */
 @Service(Service.Level.APP)
-class KiloBackendLegacyMigrationStoreService {
+class AccureBackendLegacyMigrationStoreService {
 
     companion object {
-        fun getInstance(): KiloBackendLegacyMigrationStoreService = service()
+        fun getInstance(): AccureBackendLegacyMigrationStoreService = service()
 
-        internal fun store(log: KiloLog): LegacyMigrationStore {
-            val env = KiloBackendCliManager(log).buildEnv("migration")
-            val file = KiloCliConfigPath.legacySettingsFile(env)
+        internal fun store(log: AccureLog): LegacyMigrationStore {
+            val env = AccureBackendCliManager(log).buildEnv("migration")
+            val file = AccureCliConfigPath.legacySettingsFile(env)
             log.info("Migration store: file=${file.absolutePath}")
             return LegacySettingsFileMigrationStore(file) { msg, err ->
                 if (err == null) log.warn(msg) else log.warn(msg, err)
@@ -31,7 +31,7 @@ class KiloBackendLegacyMigrationStoreService {
         }
     }
 
-    private val log = KiloLog.create(KiloBackendLegacyMigrationStoreService::class.java)
+    private val log = AccureLog.create(AccureBackendLegacyMigrationStoreService::class.java)
 
     fun store(): LegacyMigrationStore = store(log)
 }

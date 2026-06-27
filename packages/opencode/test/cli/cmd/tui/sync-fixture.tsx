@@ -7,8 +7,8 @@ import { KVProvider, useKV } from "../../../../src/cli/cmd/tui/context/kv"
 import { ProjectProvider, useProject } from "../../../../src/cli/cmd/tui/context/project"
 import { SDKProvider, type EventSource } from "../../../../src/cli/cmd/tui/context/sdk"
 import { SyncProvider, useSync } from "../../../../src/cli/cmd/tui/context/sync"
-import { ToastProvider } from "../../../../src/cli/cmd/tui/ui/toast" // kilocode_change
-import type { GlobalEvent } from "@kilocode/sdk/v2"
+import { ToastProvider } from "../../../../src/cli/cmd/tui/ui/toast" // accurecode_change
+import type { GlobalEvent } from "@accurecode/sdk/v2"
 
 export const worktree = "/tmp/opencode"
 export const directory = `${worktree}/packages/opencode`
@@ -67,12 +67,12 @@ export function createFetch(override?: FetchHandler) {
       case "/command":
       case "/formatter":
       case "/lsp":
-      case "/network": // kilocode_change
-      case "/background-process": // kilocode_change
+      case "/network": // accurecode_change
+      case "/background-process": // accurecode_change
         return json([])
       case "/config":
       case "/experimental/resource":
-      case "/global/config": // kilocode_change
+      case "/global/config": // accurecode_change
       case "/mcp":
       case "/provider/auth":
       case "/session/status":
@@ -94,7 +94,7 @@ export function createFetch(override?: FetchHandler) {
         ])
       case "/experimental/workspace/status":
         return json([])
-      case "/indexing/status": // kilocode_change
+      case "/indexing/status": // accurecode_change
         return json({ state: "Disabled", message: "Indexing disabled.", processedFiles: 0, totalFiles: 0, percent: 0 })
       case "/session":
         return json([])
@@ -136,9 +136,9 @@ export async function mount(override?: FetchHandler) {
     <ArgsProvider>
       <ExitProvider>
         <KVProvider>
-          {/* kilocode_change start */}
+          {/* accurecode_change start */}
           <ToastProvider>
-            {/* kilocode_change end */}
+            {/* accurecode_change end */}
             <SDKProvider url="http://test" directory={directory} fetch={calls.fetch} events={events.source}>
               <ProjectProvider>
                 <SyncProvider>
@@ -146,9 +146,9 @@ export async function mount(override?: FetchHandler) {
                 </SyncProvider>
               </ProjectProvider>
             </SDKProvider>
-            {/* kilocode_change start */}
+            {/* accurecode_change start */}
           </ToastProvider>
-          {/* kilocode_change end */}
+          {/* accurecode_change end */}
         </KVProvider>
       </ExitProvider>
     </ArgsProvider>

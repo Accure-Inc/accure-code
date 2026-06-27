@@ -1,10 +1,10 @@
-package ai.kilocode.client.plugin
+package ai.accurecode.client.plugin
 
-import ai.kilocode.KiloPlugin
-import ai.kilocode.client.session.ui.attachment.unregisterAttachmentEditorKind
-import ai.kilocode.client.vfs.KiloEditorKindRegistry
-import ai.kilocode.client.vfs.KiloVirtualFileSystem
-import ai.kilocode.log.KiloLog
+import ai.accurecode.AccurePlugin
+import ai.accurecode.client.session.ui.attachment.unregisterAttachmentEditorKind
+import ai.accurecode.client.vfs.AccureEditorKindRegistry
+import ai.accurecode.client.vfs.AccureVirtualFileSystem
+import ai.accurecode.log.AccureLog
 import com.intellij.ide.plugins.DynamicPluginListener
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.openapi.components.service
@@ -13,32 +13,32 @@ import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.wm.ToolWindowManager
 import javax.swing.SwingUtilities
 
-class KiloFrontendDynamicPluginListener : DynamicPluginListener {
+class AccureFrontendDynamicPluginListener : DynamicPluginListener {
     override fun beforePluginUnload(pluginDescriptor: IdeaPluginDescriptor, isUpdate: Boolean) {
-        if (pluginDescriptor.pluginId != KiloPlugin.id) return
-        KiloFrontendUnloadCleanup.cleanup(isUpdate)
+        if (pluginDescriptor.pluginId != AccurePlugin.id) return
+        AccureFrontendUnloadCleanup.cleanup(isUpdate)
     }
 }
 
-object KiloFrontendUnloadCleanup {
-    private val log = KiloLog.create(KiloFrontendUnloadCleanup::class.java)
+object AccureFrontendUnloadCleanup {
+    private val log = AccureLog.create(AccureFrontendUnloadCleanup::class.java)
 
     fun cleanup(isUpdate: Boolean) {
-        log.info("Cleaning up Kilo frontend for plugin unload (isUpdate=$isUpdate)")
+        log.info("Cleaning up Accure frontend for plugin unload (isUpdate=$isUpdate)")
         runEdt {
             ProjectManager.getInstance().openProjects.forEach { project ->
                 if (project.isDisposed) return@forEach
-                ToolWindowManager.getInstance(project).getToolWindow("Kilo Code")
+                ToolWindowManager.getInstance(project).getToolWindow("Accure Code")
                     ?.contentManager
                     ?.removeAllContents(true)
                 val editors = FileEditorManager.getInstance(project).openFiles
-                    .filter { it.fileSystem === KiloVirtualFileSystem.getInstance() }
+                    .filter { it.fileSystem === AccureVirtualFileSystem.getInstance() }
                 editors.forEach { file -> FileEditorManager.getInstance(project).closeFile(file) }
             }
         }
         unregisterAttachmentEditorKind()
-        service<KiloEditorKindRegistry>().clear()
-        KiloVirtualFileSystem.getInstance().clear()
+        service<AccureEditorKindRegistry>().clear()
+        AccureVirtualFileSystem.getInstance().clear()
     }
 
     private fun runEdt(block: () -> Unit) {

@@ -14,17 +14,17 @@ import { RuntimeFlags } from "@/effect/runtime-flags"
 import { Glob } from "@opencode-ai/core/util/glob"
 import * as Log from "@opencode-ai/core/util/log"
 import { Discovery } from "./discovery"
-import { BUILTIN_SKILLS } from "../kilocode/skills/builtin" // kilocode_change
+import { BUILTIN_SKILLS } from "../accurecode/skills/builtin" // accurecode_change
 import { isRecord } from "@/util/record"
 
 const log = Log.create({ service: "skill" })
 const CLAUDE_EXTERNAL_DIR = ".claude"
 const AGENTS_EXTERNAL_DIR = ".agents"
-// kilocode_change start
+// accurecode_change start
 export const BUILTIN_LOCATION = "builtin"
-// kilocode_change end
+// accurecode_change end
 const EXTERNAL_SKILL_PATTERN = "skills/**/SKILL.md"
-const KILO_SKILL_PATTERN = "{skill,skills}/**/SKILL.md"
+const ACCURECODE_SKILL_PATTERN = "{skill,skills}/**/SKILL.md"
 const SKILL_PATTERN = "**/SKILL.md"
 
 export const Info = Schema.Struct({
@@ -198,7 +198,7 @@ const discoverSkills = Effect.fnUntraced(function* (
 
   const configDirs = yield* config.directories()
   for (const dir of configDirs) {
-    yield* scan(state, dir, KILO_SKILL_PATTERN)
+    yield* scan(state, dir, ACCURECODE_SKILL_PATTERN)
   }
 
   const cfg = yield* config.get()
@@ -227,7 +227,7 @@ const discoverSkills = Effect.fnUntraced(function* (
 })
 
 const loadSkills = Effect.fnUntraced(function* (state: State, discovered: DiscoveryState, bus: Bus.Interface) {
-  // kilocode_change start - seed built-in skills before discovery so user skills can override
+  // accurecode_change start - seed built-in skills before discovery so user skills can override
   for (const skill of BUILTIN_SKILLS) {
     state.skills[skill.name] = {
       name: skill.name,
@@ -236,7 +236,7 @@ const loadSkills = Effect.fnUntraced(function* (state: State, discovered: Discov
       content: skill.content,
     }
   }
-  // kilocode_change end
+  // accurecode_change end
 
   yield* Effect.forEach(discovered.matches, (match) => add(state, match, bus), {
     concurrency: "unbounded",
@@ -267,7 +267,7 @@ export const layer = Layer.effect(
           flags.disableExternalSkills,
           flags.disableClaudeCodeSkills,
           ctx.directory,
-          ctx.project.worktree, // kilocode_change
+          ctx.project.worktree, // accurecode_change
         )
       }),
     )

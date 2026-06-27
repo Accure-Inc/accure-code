@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { Buffer } from "node:buffer"
-import * as PowerShell from "@/kilocode/shell/shell"
+import * as PowerShell from "@/accurecode/shell/shell"
 import { Shell } from "@/shell/shell"
 
 const command = `Write-Output "こんにちは 😀"; Write-Output '$value'; Write-Output \`tick\`
@@ -25,7 +25,7 @@ describe("PowerShell arguments", () => {
     expect(Buffer.from(payload!, "base64").toString("utf8")).toBe(command)
   })
 
-  test.each(["powershell", "pwsh"])("routes %s through the Kilo argument builder", (shell) => {
+  test.each(["powershell", "pwsh"])("routes %s through the Accure argument builder", (shell) => {
     expect(Shell.args(shell, command, "/tmp")).toEqual(PowerShell.args(command))
   })
 })

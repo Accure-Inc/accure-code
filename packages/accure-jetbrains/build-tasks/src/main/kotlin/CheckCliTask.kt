@@ -44,7 +44,7 @@ abstract class CheckCliTask : DefaultTask() {
         if (production.get()) {
             val missing = platforms.get().filter { platform ->
                 val d = File(resolved, platform)
-                val exe = if (platform.startsWith("windows")) "kilo.exe" else "kilo"
+                val exe = if (platform.startsWith("windows")) "accure.exe" else "accure"
                 !File(d, exe).exists()
             }
             if (missing.isNotEmpty()) {

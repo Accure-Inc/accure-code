@@ -1,4 +1,4 @@
-package ai.kilocode.backend.testing
+package ai.accurecode.backend.testing
 
 import java.io.BufferedWriter
 import java.io.OutputStreamWriter
@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.io.path.createTempDirectory
 
 /**
- * Lightweight mock HTTP server simulating the Kilo CLI server.
+ * Lightweight mock HTTP server simulating the Accure CLI server.
  *
  * Handles REST endpoints with configurable JSON responses and provides
  * full control over the SSE `/global/event` stream. Uses raw sockets
@@ -35,7 +35,7 @@ class MockCliServer : AutoCloseable {
     @Volatile var warnings = "[]"
     @Volatile var notifications = "[]"
     @Volatile var profile = """{"profile":{"email":"test@test.com","name":"Test"},"balance":null,"currentOrgId":null}"""
-    @Volatile var path = """{"home":"/tmp","state":"${createTempDirectory("kilo-model-state").toAbsolutePath()}","config":"/tmp","worktree":"/tmp","directory":"/tmp"}"""
+    @Volatile var path = """{"home":"/tmp","state":"${createTempDirectory("accure-model-state").toAbsolutePath()}","config":"/tmp","worktree":"/tmp","directory":"/tmp"}"""
     @Volatile var profileStatus = 200
     @Volatile var configStatus = 200
     @Volatile var workspaceConfigStatus = 200
@@ -43,7 +43,7 @@ class MockCliServer : AutoCloseable {
     @Volatile var notificationsStatus = 200
 
     // Auth / OAuth responses
-    @Volatile var authorizeResponse = """{"url":"https://auth.kilo.ai/device","method":"code","instructions":"Open URL and enter code: TEST-1234"}"""
+    @Volatile var authorizeResponse = """{"url":"https://auth.accurecode.ai/device","method":"code","instructions":"Open URL and enter code: TEST-1234"}"""
     @Volatile var authorizeStatus = 200
     @Volatile var callbackStatus = 200
     @Volatile var authRemoveStatus = 200
@@ -291,8 +291,8 @@ class MockCliServer : AutoCloseable {
                     respond(output, workspaceConfigStatus, workspaceConfig)
                 }
                 bare == "/config" -> respond(output, workspaceConfigStatus, workspaceConfig)
-                path.startsWith("/kilo/notifications") -> respond(output, notificationsStatus, notifications)
-                path.startsWith("/kilo/profile") && method == "GET" -> {
+                path.startsWith("/accure/notifications") -> respond(output, notificationsStatus, notifications)
+                path.startsWith("/accure/profile") && method == "GET" -> {
                     if (profileStatus == 401) {
                         respond(output, 401, """{"message":"Unauthorized"}""")
                     } else {
@@ -315,7 +315,7 @@ class MockCliServer : AutoCloseable {
                     lastAuthPutBody = body
                     respond(output, authPutStatus, "true")
                 }
-                bare == "/kilo/organization" && method == "POST" -> {
+                bare == "/accure/organization" && method == "POST" -> {
                     lastOrganizationSetBody = body
                     respond(output, organizationSetStatus, "true")
                 }
@@ -330,11 +330,11 @@ class MockCliServer : AutoCloseable {
                     lastExperimentalSessionPath = path
                     respond(output, recentSessionsStatus, recentSessions)
                 }
-                bare == "/kilo/cloud-sessions" -> {
+                bare == "/accure/cloud-sessions" -> {
                     lastCloudSessionsPath = path
                     respond(output, cloudSessionsStatus, cloudSessions)
                 }
-                bare == "/kilo/cloud/session/import" && method == "POST" -> {
+                bare == "/accure/cloud/session/import" && method == "POST" -> {
                     lastCloudSessionImportPath = path
                     lastCloudSessionImportBody = body
                     respond(output, cloudSessionImportStatus, cloudSessionImport)

@@ -1,8 +1,8 @@
 /**
- * Contract tests for Kilo-specific fields on QuestionOption / QuestionInfo.
+ * Contract tests for Accure-specific fields on QuestionOption / QuestionInfo.
  *
  * packages/opencode/src/question/index.ts is a shared upstream file.
- * Two Kilo additions to the Option schema have been silently dropped by
+ * Two Accure additions to the Option schema have been silently dropped by
  * upstream merges more than once:
  *
  *   1. labelKey / descriptionKey  — lost during the opencode v1.3.x
@@ -27,7 +27,7 @@ import { Option } from "../../src/question"
 
 const SOURCE = path.resolve(import.meta.dir, "../../src/question/index.ts")
 
-describe("QuestionOption schema — Kilo-specific field contract", () => {
+describe("QuestionOption schema — Accure-specific field contract", () => {
   test("Option class accepts and round-trips the mode field", () => {
     const raw = { label: "Continue here", description: "Implement the plan in this session", mode: "code" }
     const decoded = Schema.decodeUnknownSync(Option)(raw)
@@ -52,18 +52,18 @@ describe("QuestionOption schema — Kilo-specific field contract", () => {
     expect(decoded.descriptionKey).toBe("plan.followup.answer.continue.description")
   })
 
-  // Static source checks — guard the kilocode_change markers so a conflict
+  // Static source checks — guard the accurecode_change markers so a conflict
   // resolution that drops the fields is caught immediately.
-  test("source declares mode as an optional field inside a kilocode_change block", () => {
+  test("source declares mode as an optional field inside a accurecode_change block", () => {
     const src = fs.readFileSync(SOURCE, "utf-8")
-    expect(src).toMatch(/kilocode_change start[^\n]*hint to UI clients/)
+    expect(src).toMatch(/accurecode_change start[^\n]*hint to UI clients/)
     expect(src).toMatch(/mode:\s*Schema\.optional\(Schema\.String\)/)
-    expect(src).toMatch(/kilocode_change end/)
+    expect(src).toMatch(/accurecode_change end/)
   })
 
-  test("source declares labelKey and descriptionKey inside a kilocode_change block", () => {
+  test("source declares labelKey and descriptionKey inside a accurecode_change block", () => {
     const src = fs.readFileSync(SOURCE, "utf-8")
-    expect(src).toMatch(/kilocode_change start[^\n]*i18n keys/)
+    expect(src).toMatch(/accurecode_change start[^\n]*i18n keys/)
     expect(src).toMatch(/labelKey:\s*Schema\.optional\(Schema\.String\)/)
     expect(src).toMatch(/descriptionKey:\s*Schema\.optional\(Schema\.String\)/)
   })

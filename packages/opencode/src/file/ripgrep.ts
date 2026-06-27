@@ -290,10 +290,10 @@ export const layer: Layer.Layer<Service, never, AppFileSystem.Service | ChildPro
 
       const filepath = yield* Effect.cached(
         Effect.gen(function* () {
-          // kilocode_change start - Git for Windows can expose an MSYS rg.exe that fails when spawned natively
+          // accurecode_change start - Git for Windows can expose an MSYS rg.exe that fails when spawned natively
           const system = yield* Effect.sync(() => (process.platform === "win32" ? undefined : which("rg")))
           if (system && (yield* fs.isFile(system).pipe(Effect.orDie))) return system
-          // kilocode_change end
+          // accurecode_change end
 
           const target = path.join(Global.Path.bin, `rg${process.platform === "win32" ? ".exe" : ""}`)
           if (yield* fs.isFile(target).pipe(Effect.orDie)) return target
@@ -441,7 +441,7 @@ export const layer: Layer.Layer<Service, never, AppFileSystem.Service | ChildPro
 
         const root: Node = { name: "", children: new Map() }
         for (const file of list) {
-          if (file.includes(".kilo") || file.includes(".opencode")) continue // kilocode_change
+          if (file.includes(".accurecode") || file.includes(".opencode")) continue // accurecode_change
           const parts = file.split(path.sep)
           if (parts.length < 2) continue
           let node = root

@@ -1,7 +1,7 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.rpc.dto.ChatEventDto
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.rpc.dto.ChatEventDto
 
 class StatusComputationTest : SessionControllerTestBase() {
 
@@ -19,7 +19,7 @@ class StatusComputationTest : SessionControllerTestBase() {
             assistant#msg1
             tool#prt1 bash [PENDING]
 
-            [code] [kilo/gpt-5] [busy] [running commands]
+            [code] [accure/gpt-5] [busy] [running commands]
             """,
             m,
         )

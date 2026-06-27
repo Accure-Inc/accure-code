@@ -3,8 +3,8 @@ import { Schema } from "effect"
 import type { ModelMessage } from "ai"
 import { Config } from "@/config/config"
 import type { Provider } from "@/provider/provider"
-import { KiloLLM } from "@/kilocode/session/llm"
-import { KiloSessionOverflow } from "@/kilocode/session/overflow"
+import { AccureLLM } from "@/accurecode/session/llm"
+import { AccureSessionOverflow } from "@/accurecode/session/overflow"
 import type { MessageV2 } from "@/session/message-v2"
 import { isOverflow, usable } from "@/session/overflow"
 
@@ -47,7 +47,7 @@ function tokens(count: number): MessageV2.Assistant["tokens"] {
   return { input: count, output: 0, reasoning: 0, cache: { read: 0, write: 0 } }
 }
 
-describe("Kilo auto-compaction threshold", () => {
+describe("Accure auto-compaction threshold", () => {
   test("triggers at the configured context percentage", () => {
     const conf = cfg({ threshold_percent: 75 })
     const mdl = model({ context: 200_000, output: 32_000 })
@@ -125,25 +125,25 @@ describe("Kilo auto-compaction threshold", () => {
   })
 })
 
-describe("Kilo request estimation", () => {
+describe("Accure request estimation", () => {
   test("skips output estimation when no output cap can use it", () => {
     const mdl = model({ context: 200_000, output: 32_000 })
 
-    expect(KiloLLM.needsEstimate({ model: mdl, configured: undefined })).toBe(false)
-    expect(KiloLLM.needsEstimate({ model: mdl, configured: 0 })).toBe(false)
-    expect(KiloLLM.needsEstimate({ model: model({ context: 0, output: 32_000 }), configured: 32_000 })).toBe(false)
-    expect(KiloLLM.needsEstimate({ model: mdl, configured: 32_000 })).toBe(true)
+    expect(AccureLLM.needsEstimate({ model: mdl, configured: undefined })).toBe(false)
+    expect(AccureLLM.needsEstimate({ model: mdl, configured: 0 })).toBe(false)
+    expect(AccureLLM.needsEstimate({ model: model({ context: 0, output: 32_000 }), configured: 32_000 })).toBe(false)
+    expect(AccureLLM.needsEstimate({ model: mdl, configured: 32_000 })).toBe(true)
   })
 })
 
-describe("Kilo preflight compaction", () => {
+describe("Accure preflight compaction", () => {
   test("triggers from estimated outgoing context without provider usage", () => {
     const conf = cfg({ threshold_percent: 75 })
     const mdl = model({ context: 200_000, output: 32_000 })
     const messages = [{ role: "user" as const, content: "x".repeat(600_000) }]
 
     expect(
-      KiloSessionOverflow.shouldCompact({
+      AccureSessionOverflow.shouldCompact({
         cfg: conf,
         model: mdl,
         usable: usable({ cfg: conf, model: mdl }),
@@ -158,7 +158,7 @@ describe("Kilo preflight compaction", () => {
     const mdl = model({ context: 10_000, output: 1_000 })
 
     expect(
-      KiloSessionOverflow.shouldCompact({
+      AccureSessionOverflow.shouldCompact({
         cfg: conf,
         model: mdl,
         usable: usable({ cfg: conf, model: mdl }),
@@ -178,7 +178,7 @@ describe("Kilo preflight compaction", () => {
     const mdl = model({ context: 400_000, input: 200_000, output: 32_000 })
 
     expect(
-      KiloSessionOverflow.shouldCompact({
+      AccureSessionOverflow.shouldCompact({
         cfg: conf,
         model: mdl,
         usable: usable({ cfg: conf, model: mdl }),
@@ -211,7 +211,7 @@ describe("Kilo preflight compaction", () => {
     ] satisfies ModelMessage[]
 
     expect(
-      KiloSessionOverflow.shouldCompact({
+      AccureSessionOverflow.shouldCompact({
         cfg: conf,
         model: mdl,
         usable: usable({ cfg: conf, model: mdl }),
@@ -227,7 +227,7 @@ describe("Kilo preflight compaction", () => {
     const messages = [{ role: "user" as const, content: "x".repeat(600_000) }]
 
     expect(
-      KiloSessionOverflow.shouldCompact({
+      AccureSessionOverflow.shouldCompact({
         cfg: conf,
         model: mdl,
         usable: usable({ cfg: conf, model: mdl }),
@@ -243,7 +243,7 @@ describe("Kilo preflight compaction", () => {
     const messages = [{ role: "user" as const, content: "x".repeat(600_000) }]
 
     expect(
-      KiloSessionOverflow.shouldCompact({
+      AccureSessionOverflow.shouldCompact({
         cfg: conf,
         model: mdl,
         usable: usable({ cfg: conf, model: mdl }),
@@ -267,7 +267,7 @@ describe("Kilo preflight compaction", () => {
     ] satisfies ModelMessage[]
 
     expect(
-      KiloSessionOverflow.shouldCompact({
+      AccureSessionOverflow.shouldCompact({
         cfg: conf,
         model: mdl,
         usable: usable({ cfg: conf, model: mdl }),
@@ -285,7 +285,7 @@ describe("Kilo preflight compaction", () => {
       },
     ] satisfies ModelMessage[]
 
-    const usage = KiloSessionOverflow.measure({ messages, tools: {} })
+    const usage = AccureSessionOverflow.measure({ messages, tools: {} })
     expect(usage.normalized).toBeLessThan(100)
     expect(usage.raw).toBeGreaterThan(100_000)
   })
@@ -298,7 +298,7 @@ describe("Kilo preflight compaction", () => {
       },
     ] satisfies ModelMessage[]
 
-    const usage = KiloSessionOverflow.measure({ messages, tools: {} })
+    const usage = AccureSessionOverflow.measure({ messages, tools: {} })
     expect(usage.normalized).toBeLessThan(100)
     expect(usage.raw).toBeGreaterThan(100_000)
   })
@@ -317,7 +317,7 @@ describe("Kilo preflight compaction", () => {
     ] satisfies ModelMessage[]
 
     expect(
-      KiloSessionOverflow.shouldCompact({
+      AccureSessionOverflow.shouldCompact({
         cfg: conf,
         model: mdl,
         usable: usable({ cfg: conf, model: mdl }),

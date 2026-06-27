@@ -1,4 +1,4 @@
-html[data-theme="kilo"],
+html[data-theme="accure"],
 html[data-theme="accure-console"],
 .accure-console {
   --radius: 0.45rem;
@@ -75,7 +75,7 @@ html[data-color-scheme="dark"],
   --ring: oklch(0.553 0.013 58.071);
 }
 
-html[data-theme="kilo"],
+html[data-theme="accure"],
 html[data-theme="accure-console"],
 .accure-console {
   --background-base: var(--background);

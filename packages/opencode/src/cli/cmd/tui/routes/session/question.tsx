@@ -3,7 +3,7 @@ import { createMemo, createSignal, For, onCleanup, onMount, Show } from "solid-j
 import { useRenderer } from "@opentui/solid"
 import type { TextareaRenderable } from "@opentui/core"
 import { selectedForeground, tint, useTheme } from "../../context/theme"
-import type { QuestionAnswer, QuestionRequest } from "@kilocode/sdk/v2"
+import type { QuestionAnswer, QuestionRequest } from "@accurecode/sdk/v2"
 import { useSDK } from "../../context/sdk"
 import { SplitBorder } from "../../component/border"
 import { useTuiConfig } from "../../context/tui-config"
@@ -11,13 +11,13 @@ import { useBindings, useOpencodeModeStack } from "../../keymap"
 
 const QUESTION_MODE = "question"
 
-// kilocode_change start
+// accurecode_change start
 export function QuestionPrompt(props: {
   request: QuestionRequest
   nonBlocking?: boolean
   inputFocused?: () => boolean
 }) {
-  // kilocode_change end
+  // accurecode_change end
   const sdk = useSDK()
   const { theme } = useTheme()
   const renderer = useRenderer()
@@ -216,9 +216,9 @@ export function QuestionPrompt(props: {
 
     return {
       mode: QUESTION_MODE,
-      // kilocode_change start - avoid intrusive key capture for non-blocking review questions
+      // accurecode_change start - avoid intrusive key capture for non-blocking review questions
       enabled: !store.editing && !(props.nonBlocking && props.inputFocused?.()),
-      // kilocode_change end
+      // accurecode_change end
       commands: [
         {
           name: "app.exit",

@@ -1,9 +1,9 @@
 import * as vscode from "vscode"
-import type { KiloConnectionService } from "../services/cli-backend"
+import type { AccureConnectionService } from "../services/cli-backend"
 import { appendOutput, getWorkspaceRoot, openWorkspaceRelativeFile } from "../review-utils"
 import { getDiffMarkdownRender, setDiffMarkdownRender } from "../review-settings"
 import { buildWebviewHtml, getWebviewFontSize } from "../utils"
-import { watchFontSizeConfig } from "../kilo-provider/font-size"
+import { watchFontSizeConfig } from "../accure-provider/font-size"
 import type { DiffSourceCatalog } from "./sources/catalog"
 import { turnSourceId } from "./sources/turn"
 import type { PanelContext } from "./types"
@@ -35,12 +35,12 @@ export class DiffViewerProvider implements vscode.Disposable {
 
   constructor(
     private readonly extensionUri: vscode.Uri,
-    private readonly connection: KiloConnectionService,
+    private readonly connection: AccureConnectionService,
     private readonly catalog: DiffSourceCatalog,
     opts: DiffViewerProviderOptions = {},
   ) {
     this.sessionIdProvider = opts.sessionIdProvider ?? (() => undefined)
-    this.output = vscode.window.createOutputChannel("Kilo Diff Panel")
+    this.output = vscode.window.createOutputChannel("Accure Diff Panel")
   }
 
   setCommentHandler(handler: CommentHandler): void {
@@ -105,8 +105,8 @@ export class DiffViewerProvider implements vscode.Disposable {
       localResourceRoots: [this.extensionUri],
     })
     panel.iconPath = {
-      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-light.svg"),
-      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-dark.svg"),
+      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "accure-light.svg"),
+      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "accure-dark.svg"),
     }
     panel.webview.html = this.getHtml(panel.webview)
     this.panel = panel

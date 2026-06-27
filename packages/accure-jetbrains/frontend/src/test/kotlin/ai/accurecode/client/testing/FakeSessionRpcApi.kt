@@ -1,30 +1,30 @@
-package ai.kilocode.client.testing
+package ai.accurecode.client.testing
 
-import ai.kilocode.rpc.KiloSessionRpcApi
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.CloudSessionDto
-import ai.kilocode.rpc.dto.CloudSessionListDto
-import ai.kilocode.rpc.dto.ConfigUpdateDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.PermissionAlwaysRulesDto
-import ai.kilocode.rpc.dto.PermissionReplyDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PromptDto
-import ai.kilocode.rpc.dto.QuestionReplyDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionListDto
-import ai.kilocode.rpc.dto.SessionStatusDto
-import ai.kilocode.rpc.dto.SessionTimeDto
+import ai.accurecode.rpc.AccureSessionRpcApi
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.CloudSessionDto
+import ai.accurecode.rpc.dto.CloudSessionListDto
+import ai.accurecode.rpc.dto.ConfigUpdateDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.PermissionAlwaysRulesDto
+import ai.accurecode.rpc.dto.PermissionReplyDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PromptDto
+import ai.accurecode.rpc.dto.QuestionReplyDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionListDto
+import ai.accurecode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.SessionTimeDto
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
- * Fake [KiloSessionRpcApi] for testing.
+ * Fake [AccureSessionRpcApi] for testing.
  *
  * Configurable return values and call tracking. Push events
  * via [events] and statuses via [statuses].
@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
  * Every `suspend` method asserts it is NOT called on the EDT —
  * RPC calls must happen on background threads.
  */
-class FakeSessionRpcApi : KiloSessionRpcApi {
+class FakeSessionRpcApi : AccureSessionRpcApi {
 
     /** The session returned by [create] and [get]. */
     var session = SessionDto(

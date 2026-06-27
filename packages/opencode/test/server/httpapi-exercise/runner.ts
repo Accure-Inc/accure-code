@@ -120,7 +120,7 @@ function withContext<A, E>(
         const base: ScenarioContext = {
           directory: context.dir?.path,
           headers: (extra) => ({
-            ...(context.dir?.path ? { "x-kilo-directory": context.dir.path } : {}),
+            ...(context.dir?.path ? { "x-accure-directory": context.dir.path } : {}),
             ...extra,
           }),
           file: (name, content) =>
@@ -252,9 +252,9 @@ function fakeLlmConfig(url: string): Partial<Config.Info> {
 
 const resetState = Effect.promise(async () => {
   const modules = await runtime()
-  Flag.KILO_SERVER_PASSWORD = original.KILO_SERVER_PASSWORD
-  Flag.KILO_SERVER_USERNAME = original.KILO_SERVER_USERNAME
+  Flag.ACCURECODE_SERVER_PASSWORD = original.ACCURECODE_SERVER_PASSWORD
+  Flag.ACCURECODE_SERVER_USERNAME = original.ACCURECODE_SERVER_USERNAME
   await modules.disposeAllInstances()
-  // kilocode_change - each exerciser process already owns an isolated DB; unlinking it between scenarios races async Kilo callbacks
+  // accurecode_change - each exerciser process already owns an isolated DB; unlinking it between scenarios races async Accure callbacks
   await Bun.sleep(25)
 })

@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.model
+package ai.accurecode.client.session.model
 
 enum class PermissionRequestState { PENDING, RESPONDING, RESOLVED, ERROR }
 

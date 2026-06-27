@@ -1,15 +1,15 @@
-package ai.kilocode.rpc
+package ai.accurecode.rpc
 
-import ai.kilocode.rpc.dto.DeviceAuthDto
-import ai.kilocode.rpc.dto.ConfigPatchDto
-import ai.kilocode.rpc.dto.HealthDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.ModelFavoriteUpdateDto
-import ai.kilocode.rpc.dto.ModelSelectionUpdateDto
-import ai.kilocode.rpc.dto.ModelStateDto
-import ai.kilocode.rpc.dto.ModelVariantUpdateDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.TelemetryCaptureDto
+import ai.accurecode.rpc.dto.DeviceAuthDto
+import ai.accurecode.rpc.dto.ConfigPatchDto
+import ai.accurecode.rpc.dto.HealthDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.ModelFavoriteUpdateDto
+import ai.accurecode.rpc.dto.ModelSelectionUpdateDto
+import ai.accurecode.rpc.dto.ModelStateDto
+import ai.accurecode.rpc.dto.ModelVariantUpdateDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.TelemetryCaptureDto
 import com.intellij.platform.rpc.RemoteApiProviderService
 import fleet.rpc.RemoteApi
 import fleet.rpc.Rpc
@@ -23,10 +23,10 @@ import kotlinx.coroutines.flow.Flow
  * per application, not per project.
  */
 @Rpc
-interface KiloAppRpcApi : RemoteApi<Unit> {
+interface AccureAppRpcApi : RemoteApi<Unit> {
     companion object {
-        suspend fun getInstance(): KiloAppRpcApi {
-            return RemoteApiProviderService.resolve(remoteApiDescriptor<KiloAppRpcApi>())
+        suspend fun getInstance(): AccureAppRpcApi {
+            return RemoteApiProviderService.resolve(remoteApiDescriptor<AccureAppRpcApi>())
         }
     }
 
@@ -34,7 +34,7 @@ interface KiloAppRpcApi : RemoteApi<Unit> {
     suspend fun connect()
 
     /** Observe app lifecycle state changes. */
-    suspend fun state(): Flow<KiloAppStateDto>
+    suspend fun state(): Flow<AccureAppStateDto>
 
     /** One-shot health check against /global/health. */
     suspend fun health(): HealthDto
@@ -64,13 +64,13 @@ interface KiloAppRpcApi : RemoteApi<Unit> {
     suspend fun updateModelVariant(update: ModelVariantUpdateDto): ModelStateDto
 
     /** Patch global CLI config values. */
-    suspend fun updateConfig(patch: ConfigPatchDto): KiloAppStateDto
+    suspend fun updateConfig(patch: ConfigPatchDto): AccureAppStateDto
 
     /** Refresh the user profile and return the latest data, or null if not logged in. */
     suspend fun refreshProfile(): ProfileDto?
 
     /**
-     * Start the device auth login flow for Kilo Gateway.
+     * Start the device auth login flow for Accure Gateway.
      * Returns device auth details (verification URL and code) to show in the UI.
      */
     suspend fun startLogin(directory: String?): DeviceAuthDto
@@ -81,7 +81,7 @@ interface KiloAppRpcApi : RemoteApi<Unit> {
      */
     suspend fun completeLogin(directory: String?): ProfileDto?
 
-    /** Log out from Kilo Gateway. */
+    /** Log out from Accure Gateway. */
     suspend fun logout(): Boolean
 
     /**

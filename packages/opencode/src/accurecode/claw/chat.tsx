@@ -1,8 +1,8 @@
 /**
- * KiloClaw chat panel
+ * AccureClaw chat panel
  *
  * Renders a scrollable message list, a slash-command autocomplete popup,
- * and a textarea for chatting with the KiloClaw bot via Kilo Chat.
+ * and a textarea for chatting with the AccureClaw bot via Accure Chat.
  * Conversation title and context-window usage live in the sidebar (mirrors
  * the session route's layout).
  *
@@ -87,9 +87,9 @@ export function ClawChat(props: {
   const active = createMemo(() => !props.disabled && props.connected && props.online)
 
   // Render the typing banner with friendly names. Bot members come in as
-  // `bot:kiloclaw:{sandboxId}` — the bot is the only non-self member in 1:1
+  // `bot:accureclaw:{sandboxId}` — the bot is the only non-self member in 1:1
   // chats, so we resolve bot ids to the user-configured `botName` (which
-  // falls back to "KiloClaw" upstream) and render any human collaborators
+  // falls back to "AccureClaw" upstream) and render any human collaborators
   // by their raw memberId.
   const typingLabel = createMemo(() => {
     const list = props.typingMembers

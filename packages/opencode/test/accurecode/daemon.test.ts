@@ -1,38 +1,38 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import path from "path"
-import { Daemon } from "../../src/kilocode/daemon/daemon"
-import { DaemonClient } from "../../src/kilocode/daemon/client"
+import { Daemon } from "../../src/accurecode/daemon/daemon"
+import { DaemonClient } from "../../src/accurecode/daemon/client"
 import { tmpdir } from "../fixture/fixture"
 
 const original = {
-  state: process.env.KILO_TEST_DAEMON_STATE_DIR,
-  log: process.env.KILO_TEST_DAEMON_LOG_DIR,
-  disabled: process.env.KILO_NO_DAEMON,
+  state: process.env.ACCURECODE_TEST_DAEMON_STATE_DIR,
+  log: process.env.ACCURECODE_TEST_DAEMON_LOG_DIR,
+  disabled: process.env.ACCURECODE_NO_DAEMON,
 }
 
 afterEach(async () => {
-  if (process.env.KILO_TEST_DAEMON_STATE_DIR !== original.state) await Daemon.stop().catch(() => undefined)
+  if (process.env.ACCURECODE_TEST_DAEMON_STATE_DIR !== original.state) await Daemon.stop().catch(() => undefined)
   restore()
 })
 
 function restore() {
-  if (original.state === undefined) delete process.env.KILO_TEST_DAEMON_STATE_DIR
-  else process.env.KILO_TEST_DAEMON_STATE_DIR = original.state
-  if (original.log === undefined) delete process.env.KILO_TEST_DAEMON_LOG_DIR
-  else process.env.KILO_TEST_DAEMON_LOG_DIR = original.log
-  if (original.disabled === undefined) delete process.env.KILO_NO_DAEMON
-  else process.env.KILO_NO_DAEMON = original.disabled
+  if (original.state === undefined) delete process.env.ACCURECODE_TEST_DAEMON_STATE_DIR
+  else process.env.ACCURECODE_TEST_DAEMON_STATE_DIR = original.state
+  if (original.log === undefined) delete process.env.ACCURECODE_TEST_DAEMON_LOG_DIR
+  else process.env.ACCURECODE_TEST_DAEMON_LOG_DIR = original.log
+  if (original.disabled === undefined) delete process.env.ACCURECODE_NO_DAEMON
+  else process.env.ACCURECODE_NO_DAEMON = original.disabled
 }
 
 function dirs(root: string) {
-  process.env.KILO_TEST_DAEMON_STATE_DIR = path.join(root, "state")
-  process.env.KILO_TEST_DAEMON_LOG_DIR = path.join(root, "log")
+  process.env.ACCURECODE_TEST_DAEMON_STATE_DIR = path.join(root, "state")
+  process.env.ACCURECODE_TEST_DAEMON_LOG_DIR = path.join(root, "log")
   return {
     XDG_DATA_HOME: path.join(root, "xdg-data"),
     XDG_CONFIG_HOME: path.join(root, "xdg-config"),
     XDG_STATE_HOME: path.join(root, "xdg-state"),
     XDG_CACHE_HOME: path.join(root, "xdg-cache"),
-    KILO_TEST_DAEMON_EPHEMERAL_PORT: "1",
+    ACCURECODE_TEST_DAEMON_EPHEMERAL_PORT: "1",
   }
 }
 
@@ -41,7 +41,7 @@ function opts(root: string): Daemon.Options {
     hostname: "127.0.0.1",
     port: 0,
     mdns: false,
-    mdnsDomain: "kilo.local",
+    mdnsDomain: "accure.local",
     cors: [],
     command: [process.execPath, "--conditions=browser", path.join(process.cwd(), "src/index.ts")],
     env: dirs(root),
@@ -55,12 +55,12 @@ function cli(args: string[], env: NodeJS.ProcessEnv = {}) {
     env: {
       ...process.env,
       ...env,
-      KILO_CONFIG_CONTENT: '{"experimental":{"openTelemetry":false}}',
-      KILO_DISABLE_PROJECT_CONFIG: "1",
-      KILO_DISABLE_AUTOUPDATE: "1",
-      KILO_DISABLE_MODELS_FETCH: "1",
-      KILO_AUTH_CONTENT: "{}",
-      KILO_PURE: "1",
+      ACCURECODE_CONFIG_CONTENT: '{"experimental":{"openTelemetry":false}}',
+      ACCURECODE_DISABLE_PROJECT_CONFIG: "1",
+      ACCURECODE_DISABLE_AUTOUPDATE: "1",
+      ACCURECODE_DISABLE_MODELS_FETCH: "1",
+      ACCURECODE_AUTH_CONTENT: "{}",
+      ACCURECODE_PURE: "1",
     },
     stdin: "ignore",
     stdout: "pipe",
@@ -115,35 +115,35 @@ describe("daemon manager", () => {
 
   test("does not forward bundled bun entrypoints to the daemon child", () => {
     const proc = {
-      argv: ["/tmp/kilo", "/$bunfs/root/src/index.js", "daemon", "start"],
-      execArgv: ["--user-agent=kilo/test", "--use-system-ca", "--"],
-      execPath: "/tmp/kilo",
+      argv: ["/tmp/accure", "/$bunfs/root/src/index.js", "daemon", "start"],
+      execArgv: ["--user-agent=accure/test", "--use-system-ca", "--"],
+      execPath: "/tmp/accure",
     }
-    expect(Daemon.command(undefined, proc)).toStrictEqual(["/tmp/kilo"])
+    expect(Daemon.command(undefined, proc)).toStrictEqual(["/tmp/accure"])
     expect(
       Daemon.command(undefined, {
         ...proc,
-        argv: ["C:/tmp/kilo.exe", "B:/~BUN/root/src/index.js", "daemon", "start"],
-        execPath: "C:/tmp/kilo.exe",
+        argv: ["C:/tmp/accure.exe", "B:/~BUN/root/src/index.js", "daemon", "start"],
+        execPath: "C:/tmp/accure.exe",
       }),
-    ).toStrictEqual(["C:/tmp/kilo.exe"])
+    ).toStrictEqual(["C:/tmp/accure.exe"])
     expect(
       Daemon.command(undefined, {
         ...proc,
-        argv: ["C:/tmp/kilo.exe", "b:\\~BUN\\root\\src\\index.js", "daemon", "start"],
-        execPath: "C:/tmp/kilo.exe",
+        argv: ["C:/tmp/accure.exe", "b:\\~BUN\\root\\src\\index.js", "daemon", "start"],
+        execPath: "C:/tmp/accure.exe",
       }),
-    ).toStrictEqual(["C:/tmp/kilo.exe"])
+    ).toStrictEqual(["C:/tmp/accure.exe"])
   })
 
   test("forwards source entrypoints to the daemon child", () => {
     expect(
       Daemon.command(undefined, {
-        argv: ["/tmp/bun", "/tmp/kilo/src/index.ts", "daemon", "start"],
+        argv: ["/tmp/bun", "/tmp/accure/src/index.ts", "daemon", "start"],
         execArgv: ["--conditions=browser"],
         execPath: "/tmp/bun",
       }),
-    ).toStrictEqual(["/tmp/bun", "--conditions=browser", "/tmp/kilo/src/index.ts"])
+    ).toStrictEqual(["/tmp/bun", "--conditions=browser", "/tmp/accure/src/index.ts"])
   })
 
   test("reuses one daemon across caller directories", async () => {
@@ -227,7 +227,7 @@ describe("daemon manager", () => {
       await Daemon.start(input)
       const ready = path.join(tmp.path, "foreground-ready")
       const release = path.join(tmp.path, "foreground-release")
-      const source = path.join(process.cwd(), "src/kilocode/daemon/daemon.ts")
+      const source = path.join(process.cwd(), "src/accurecode/daemon/daemon.ts")
       const script = `
         import { Daemon } from ${JSON.stringify(source)}
         await Daemon.foreground(async () => {
@@ -280,7 +280,7 @@ describe("daemon manager", () => {
     ])
 
     expect(code).toBe(0)
-    expect(stdout).toContain("kilo daemon stopped")
+    expect(stdout).toContain("accure daemon stopped")
     expect(stderr).not.toContain("Could not open browser automatically")
     expect((await Daemon.status()).running).toBe(false)
   }, 30_000)
@@ -291,7 +291,7 @@ describe("daemon manager", () => {
       await using tmp = await tmpdir()
       const env = dirs(tmp.path)
       const proc = cli(["daemon", "-f", "--port", "0"], env)
-      const stdout = capture(proc.stdout, "Press Ctrl+C to stop the Kilo daemon.")
+      const stdout = capture(proc.stdout, "Press Ctrl+C to stop the Accure daemon.")
       const stderr = new Response(proc.stderr).text()
 
       try {
@@ -311,7 +311,7 @@ describe("daemon manager", () => {
         proc.kill("SIGINT")
         expect(await deadline(proc.exited, 10_000)).toBe(0)
         expect((await Daemon.status()).running).toBe(false)
-        expect(await stdout.text).toContain("kilo daemon started")
+        expect(await stdout.text).toContain("accure daemon started")
         await stderr
       } finally {
         if (proc.exitCode === null) proc.kill("SIGKILL")
@@ -335,7 +335,7 @@ describe("daemon manager", () => {
   test("daemon client honors the escape hatch", async () => {
     await using tmp = await tmpdir()
     const started = await Daemon.start(opts(tmp.path))
-    process.env.KILO_NO_DAEMON = "1"
+    process.env.ACCURECODE_NO_DAEMON = "1"
 
     const daemon = await DaemonClient.connect()
 

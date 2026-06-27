@@ -279,7 +279,7 @@ export function Diff<T>(props: DiffProps<T>) {
     host.removeAttribute("data-color-scheme")
   }
 
-  // Patch Pierre shadow styles for Kilo-specific layout and contrast tweaks.
+  // Patch Pierre shadow styles for Accure-specific layout and contrast tweaks.
   let separatorPatchSheet: CSSStyleSheet | null = null
   const patchSeparatorLayout = () => {
     const root = getRoot()

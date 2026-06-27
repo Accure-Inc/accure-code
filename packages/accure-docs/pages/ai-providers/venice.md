@@ -2,9 +2,9 @@
 sidebar_label: Venice AI
 ---
 
-# Using Venice AI With Kilo Code
+# Using Venice AI With Accure Code
 
-Kilo Code supports Venice AI through the native Venice provider. Venice offers privacy-focused access to open and reasoning-capable models through its API.
+Accure Code supports Venice AI through the native Venice provider. Venice offers privacy-focused access to open and reasoning-capable models through its API.
 
 **Website:** [https://venice.ai/](https://venice.ai/)
 
@@ -12,10 +12,10 @@ Kilo Code supports Venice AI through the native Venice provider. Venice offers p
 
 1. Sign in to Venice AI.
 2. Open your API settings.
-3. Create a key for Kilo Code.
+3. Create a key for Accure Code.
 4. Copy the key immediately and store it securely.
 
-## Configuration in Kilo Code
+## Configuration in Accure Code
 
 {% tabs %}
 {% tab label="VSCode (Legacy)" %}
@@ -27,12 +27,12 @@ Use the **OpenAI Compatible** provider if the legacy provider list does not incl
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add Venice AI and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `accure.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `accure.json` config file:
 
 **Environment variable:**
 
@@ -40,7 +40,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export VENICE_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/accure/accure.json` or `./accure.json`):
 
 ```jsonc
 {
@@ -65,12 +65,12 @@ Then select a Venice model from the model picker, or set a default model after c
 
 ## Tips and Notes
 
-- **Native provider:** Kilo uses the Venice AI SDK provider for built-in Venice models.
-- **Reasoning models:** Some Venice models expose reasoning controls. Kilo maps supported reasoning effort and disable-thinking options when the selected model supports them.
+- **Native provider:** Accure uses the Venice AI SDK provider for built-in Venice models.
+- **Reasoning models:** Some Venice models expose reasoning controls. Accure maps supported reasoning effort and disable-thinking options when the selected model supports them.
 - **Model availability:** Venice model IDs and access can vary by plan. Use the model picker or Venice dashboard for the current list.
 - **Pricing:** Refer to Venice AI pricing and account limits for current token costs and rate limits.
 
 ## Troubleshooting
 
-- **Invalid API key:** Verify `VENICE_API_KEY` is set in the same environment that launches Kilo, or reconnect the provider in Settings.
+- **Invalid API key:** Verify `VENICE_API_KEY` is set in the same environment that launches Accure, or reconnect the provider in Settings.
 - **Model not available:** Confirm your Venice account has access to the selected model and try selecting it from the model picker.

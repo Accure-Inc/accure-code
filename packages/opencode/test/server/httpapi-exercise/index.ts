@@ -6,7 +6,7 @@
  * requests, uses the right instance context, mutates storage when expected, and
  * returns the expected response shape.
  *
- * The script intentionally isolates `KILO_DB` before importing modules that touch
+ * The script intentionally isolates `ACCURECODE_DB` before importing modules that touch
  * storage. Scenarios may create/delete sessions and reset the database after each run,
  * so this must never point at a developer's real session database.
  *
@@ -35,7 +35,7 @@ import { coverageResult, parseOptions, routeKey, routeKeys, selectedScenarios } 
 import { runScenario } from "./runner"
 import { runtime } from "./runtime"
 import { type Scenario } from "./types"
-import { kiloScenarios } from "../../kilocode/server/httpapi-exercise-scenarios" // kilocode_change
+import { accureScenarios } from "../../accurecode/server/httpapi-exercise-scenarios" // accurecode_change
 
 void (await import("@opencode-ai/core/util/log")).init({ print: false })
 
@@ -103,8 +103,8 @@ const scenarios: Scenario[] = [
     ),
   http.protected.get("/path", "path.get").json(200, (body, ctx) => {
     object(body)
-    check(body.directory === ctx.directory, "directory should resolve from x-kilo-directory")
-    check(body.worktree === ctx.directory, "worktree should resolve from x-kilo-directory")
+    check(body.directory === ctx.directory, "directory should resolve from x-accure-directory")
+    check(body.worktree === ctx.directory, "worktree should resolve from x-accure-directory")
   }),
   http.protected.get("/vcs", "vcs.get").json(),
   http.protected.get("/vcs/status", "vcs.status").json(200, array),
@@ -1236,13 +1236,13 @@ const scenarios: Scenario[] = [
     .mutating()
     .seeded((ctx) => ctx.session({ title: "Share session" }))
     .at((ctx) => ({ path: route("/session/{sessionID}/share", { sessionID: ctx.state.id }), headers: ctx.headers() }))
-    .status(500, undefined, "status"), // kilocode_change
+    .status(500, undefined, "status"), // accurecode_change
   http.protected
     .delete("/session/{sessionID}/share", "session.unshare")
     .mutating()
     .seeded((ctx) => ctx.session({ title: "Unshare session" }))
     .at((ctx) => ({ path: route("/session/{sessionID}/share", { sessionID: ctx.state.id }), headers: ctx.headers() }))
-    .status(500, undefined, "status"), // kilocode_change
+    .status(500, undefined, "status"), // accurecode_change
   http.protected
     .post("/tui/append-prompt", "tui.appendPrompt")
     .at((ctx) => ({ path: "/tui/append-prompt", headers: ctx.headers(), body: { text: "hello" } }))
@@ -1306,7 +1306,7 @@ const scenarios: Scenario[] = [
     .probe({ path: "/global/upgrade", body: { target: 1 } })
     .at(() => ({ path: "/global/upgrade", body: { target: 1 } }))
     .status(400),
-  ...kiloScenarios, // kilocode_change
+  ...accureScenarios, // accurecode_change
 ]
 
 const llmScenarios = new Set([

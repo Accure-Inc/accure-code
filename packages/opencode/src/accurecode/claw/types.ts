@@ -1,16 +1,16 @@
-// kilocode_change - new file
+// accurecode_change - new file
 
 /**
- * KiloClaw TUI types — Kilo Chat protocol.
+ * AccureClaw TUI types — Accure Chat protocol.
  *
- * Mirrors `@kilocode/kilo-chat` from the cloud monorepo. We carry our own
+ * Mirrors `@accurecode/accure-chat` from the cloud monorepo. We carry our own
  * copy here so the CLI can be built without an external dependency.
  */
 
 export type ClawStatus = {
   // `recovering` and `restoring` are transitional states the worker reports
   // while bringing an instance back from an unexpected stop or snapshot
-  // restore (cloud: `services/kiloclaw/src/index.ts`).
+  // restore (cloud: `services/accureclaw/src/index.ts`).
   status:
     | "provisioned"
     | "starting"
@@ -30,19 +30,19 @@ export type ClawStatus = {
   channelCount?: number
   secretCount?: number
   userId?: string
-  // User-chosen name for the KiloClaw bot, set during onboarding via the
+  // User-chosen name for the AccureClaw bot, set during onboarding via the
   // `patchBotIdentity` mutation. May be null for fresh instances that
   // skipped the bot-identity step. The chat UI should fall back to the
-  // literal string "KiloClaw" when null.
+  // literal string "AccureClaw" when null.
   botName?: string | null
 }
 
-// ── Kilo Chat token envelope (gateway response) ─────────────────────
+// ── Accure Chat token envelope (gateway response) ─────────────────────
 
 export type ChatToken = {
   token: string
   expiresAt: string // ISO timestamp
-  kiloChatUrl: string
+  accureChatUrl: string
   eventServiceUrl: string
 }
 
@@ -179,7 +179,7 @@ export type ConversationStatusEvent = {
   at: number
 }
 
-export type KiloChatEventMap = {
+export type AccureChatEventMap = {
   "message.created": MessageCreatedEvent
   "message.updated": MessageUpdatedEvent
   "message.deleted": MessageDeletedEvent
@@ -197,7 +197,7 @@ export type KiloChatEventMap = {
   "conversation.status": ConversationStatusEvent
 }
 
-export type KiloChatEventName = keyof KiloChatEventMap
+export type AccureChatEventName = keyof AccureChatEventMap
 
 // ── Legacy display message (for CLI rendering) ──────────────────────
 

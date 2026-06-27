@@ -59,7 +59,7 @@ export const dict = {
 
   "dialog.usageExceeded.freeTier.title": "Kostenloses Limit erreicht",
   "dialog.usageExceeded.freeTier.description":
-    "Abonniere Kilo Go für zuverlässigen Zugriff auf die besten Open-Source-Modelle, ab $5/Monat.",
+    "Abonniere Accure Go für zuverlässigen Zugriff auf die besten Open-Source-Modelle, ab $5/Monat.",
   "dialog.usageExceeded.freeTier.actionLabel": "Abonnieren",
   "dialog.usageExceeded.accountRateLimit.title": "Go-Limit erreicht",
   "dialog.usageExceeded.accountRateLimit.description":
@@ -110,7 +110,7 @@ export const dict = {
   "ui.textField.copied": "Kopiert",
 
   "ui.imagePreview.alt": "Bildvorschau",
-  // kilocode_change start
+  // accurecode_change start
   "ui.mermaid.rendering": "Mermaid-Diagramm wird gerendert...",
   "ui.mermaid.renderError": "Mermaid-Rendering fehlgeschlagen: {{message}}",
   "ui.mermaid.errorDefault": "Mermaid-Diagramm kann nicht gerendert werden.",
@@ -121,7 +121,7 @@ export const dict = {
   "ui.mermaid.copyPng": "PNG kopieren",
   "ui.mermaid.downloadSvg": "SVG herunterladen",
   "ui.mermaid.downloadPng": "PNG herunterladen",
-  // kilocode_change end
+  // accurecode_change end
   "ui.scrollView.ariaLabel": "scrollbarer Inhalt",
 
   "ui.tool.read": "Lesen",

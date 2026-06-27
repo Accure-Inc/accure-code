@@ -1,7 +1,7 @@
-package ai.kilocode.client.session.ui.selection
+package ai.accurecode.client.session.ui.selection
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.ui.HoverIcon
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.ui.HoverIcon
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.ui.popup.Balloon
@@ -22,7 +22,7 @@ internal class SessionCopyButton(
     val button = HoverIcon(fill = fill).apply {
         icon = AllIcons.Actions.Copy
         cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-        toolTipText = KiloBundle.message("session.copy.hover")
+        toolTipText = AccureBundle.message("session.copy.hover")
     }
 
     init {
@@ -46,7 +46,7 @@ internal class SessionCopyButton(
         CopyPasteManager.getInstance().setContents(StringSelection(value))
         dismiss()
         balloon = JBPopupFactory.getInstance()
-            .createHtmlTextBalloonBuilder(KiloBundle.message("session.copy.copied"), null, null, null)
+            .createHtmlTextBalloonBuilder(AccureBundle.message("session.copy.copied"), null, null, null)
             .createBalloon()
             .also { item ->
                 item.setAnimationEnabled(false)

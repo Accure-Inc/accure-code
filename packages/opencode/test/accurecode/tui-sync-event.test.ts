@@ -1,6 +1,6 @@
 /** @jsxImportSource @opentui/solid */
 import { describe, expect, test } from "bun:test"
-import type { GlobalEvent } from "@kilocode/sdk/v2"
+import type { GlobalEvent } from "@accurecode/sdk/v2"
 import { normalizeSyncEvent } from "../../src/cli/cmd/tui/context/event"
 import { mount, wait } from "../cli/cmd/tui/sync-fixture"
 
@@ -87,8 +87,8 @@ describe("TUI sync event wire format", () => {
                 path: { cwd: "/tmp/opencode", root: "/tmp/opencode" },
                 cost: 0,
                 tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
-                modelID: "kilo-auto/free",
-                providerID: "kilo",
+                modelID: "accure-auto/free",
+                providerID: "accure",
                 time: { created: 1 },
               },
             },

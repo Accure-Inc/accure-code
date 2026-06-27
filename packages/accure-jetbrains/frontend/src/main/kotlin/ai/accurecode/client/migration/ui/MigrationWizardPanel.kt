@@ -1,18 +1,18 @@
-package ai.kilocode.client.migration.ui
+package ai.accurecode.client.migration.ui
 
-import ai.kilocode.client.migration.MigrationItemUiProgress
-import ai.kilocode.client.migration.MigrationSelectionBuilder
-import ai.kilocode.client.migration.MigrationSettingsUiSelections
-import ai.kilocode.client.migration.MigrationUiPhase
-import ai.kilocode.client.migration.MigrationUiSelections
-import ai.kilocode.client.migration.MigrationUiState
-import ai.kilocode.client.migration.groupStatus
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.views.base.BaseQuestionView
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.rpc.dto.LegacyMigrationDetectionDto
-import ai.kilocode.rpc.dto.MigrationItemCategoryDto
+import ai.accurecode.client.migration.MigrationItemUiProgress
+import ai.accurecode.client.migration.MigrationSelectionBuilder
+import ai.accurecode.client.migration.MigrationSettingsUiSelections
+import ai.accurecode.client.migration.MigrationUiPhase
+import ai.accurecode.client.migration.MigrationUiSelections
+import ai.accurecode.client.migration.MigrationUiState
+import ai.accurecode.client.migration.groupStatus
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.views.base.BaseQuestionView
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.rpc.dto.LegacyMigrationDetectionDto
+import ai.accurecode.rpc.dto.MigrationItemCategoryDto
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.concurrency.annotations.RequiresEdt
@@ -41,17 +41,17 @@ class MigrationWizardPanel : JPanel(BorderLayout()) {
 
     // ------ Migrate screen row state ------
     private val rows = mutableMapOf<MigrationItemCategoryDto, MigrationItemRow>()
-    private val settingsRow = MigrationItemRow(KiloBundle.message("migration.row.settings"), MigrationItemCategoryDto.settings)
-    private val providerRow = MigrationItemRow(KiloBundle.message("migration.row.providers"), MigrationItemCategoryDto.provider)
-    private val mcpRow = MigrationItemRow(KiloBundle.message("migration.row.mcp"), MigrationItemCategoryDto.mcpServer)
-    private val modesRow = MigrationItemRow(KiloBundle.message("migration.row.modes"), MigrationItemCategoryDto.customMode)
-    private val sessionsRow = MigrationItemRow(KiloBundle.message("migration.row.sessions"), MigrationItemCategoryDto.session)
-    private val modelRow = MigrationItemRow(KiloBundle.message("migration.row.model"), MigrationItemCategoryDto.defaultModel)
+    private val settingsRow = MigrationItemRow(AccureBundle.message("migration.row.settings"), MigrationItemCategoryDto.settings)
+    private val providerRow = MigrationItemRow(AccureBundle.message("migration.row.providers"), MigrationItemCategoryDto.provider)
+    private val mcpRow = MigrationItemRow(AccureBundle.message("migration.row.mcp"), MigrationItemCategoryDto.mcpServer)
+    private val modesRow = MigrationItemRow(AccureBundle.message("migration.row.modes"), MigrationItemCategoryDto.customMode)
+    private val sessionsRow = MigrationItemRow(AccureBundle.message("migration.row.sessions"), MigrationItemCategoryDto.session)
+    private val modelRow = MigrationItemRow(AccureBundle.message("migration.row.model"), MigrationItemCategoryDto.defaultModel)
 
     private val question = BaseQuestionView()
-    private val keepBox = JBCheckBox(KiloBundle.message("migration.keep_legacy_settings"), true)
+    private val keepBox = JBCheckBox(AccureBundle.message("migration.keep_legacy_settings"), true)
 
-    private val emptyLabel = JBLabel(KiloBundle.message("migration.empty")).apply {
+    private val emptyLabel = JBLabel(AccureBundle.message("migration.empty")).apply {
         foreground = UiStyle.Colors.weak()
     }
 
@@ -75,22 +75,22 @@ class MigrationWizardPanel : JPanel(BorderLayout()) {
         }
 
         question.setHeader(
-            KiloBundle.message("migration.migrate.title"),
-            KiloBundle.message("migration.migrate.subtitle"),
+            AccureBundle.message("migration.migrate.title"),
+            AccureBundle.message("migration.migrate.subtitle"),
         )
         question.setContent(buildContent())
         question.setActions(
             listOf(
-                BaseQuestionView.Action(ACTION_SKIP, KiloBundle.message("migration.button.skip"), primary = false) {
+                BaseQuestionView.Action(ACTION_SKIP, AccureBundle.message("migration.button.skip"), primary = false) {
                     onSkip?.invoke()
                 },
-                BaseQuestionView.Action(ACTION_MIGRATE, KiloBundle.message("migration.button.migrate"), primary = true) {
+                BaseQuestionView.Action(ACTION_MIGRATE, AccureBundle.message("migration.button.migrate"), primary = true) {
                     onStart?.invoke(currentSelections())
                 },
-                BaseQuestionView.Action(ACTION_DONE, KiloBundle.message("migration.button.done"), primary = true) {
+                BaseQuestionView.Action(ACTION_DONE, AccureBundle.message("migration.button.done"), primary = true) {
                     onDone?.invoke()
                 },
-                BaseQuestionView.Action(ACTION_CONTINUE, KiloBundle.message("migration.button.continue"), primary = true) {
+                BaseQuestionView.Action(ACTION_CONTINUE, AccureBundle.message("migration.button.continue"), primary = true) {
                     onContinueFromError?.invoke()
                 },
             ),
@@ -188,7 +188,7 @@ class MigrationWizardPanel : JPanel(BorderLayout()) {
         question.setActionVisible(ACTION_MIGRATE, phase == MigrationUiPhase.selecting || phase == MigrationUiPhase.migrating)
         question.setActionText(
             ACTION_MIGRATE,
-            if (running) KiloBundle.message("migration.button.migrating") else KiloBundle.message("migration.button.migrate"),
+            if (running) AccureBundle.message("migration.button.migrating") else AccureBundle.message("migration.button.migrate"),
         )
         question.setActionVisible(ACTION_DONE, phase == MigrationUiPhase.done)
         question.setActionVisible(ACTION_CONTINUE, phase == MigrationUiPhase.error)

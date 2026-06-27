@@ -1,7 +1,7 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.session.ui.prompt.PromptDataKeys
-import ai.kilocode.client.session.ui.prompt.SendPromptContext
+import ai.accurecode.client.session.ui.prompt.PromptDataKeys
+import ai.accurecode.client.session.ui.prompt.SendPromptContext
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.actionSystem.DataContext
@@ -21,7 +21,7 @@ class SendPromptActionTest : BasePlatformTestCase() {
         assertTrue(event.presentation.isEnabled)
         assertEquals(1, ctx.sent)
         assertEquals("Send Prompt", action.templatePresentation.text)
-        assertEquals("Send the current Kilo prompt", action.templatePresentation.description)
+        assertEquals("Send the current Accure prompt", action.templatePresentation.description)
     }
 
     fun `test update disables action without prompt context`() {
@@ -57,12 +57,12 @@ class SendPromptActionTest : BasePlatformTestCase() {
     }
 
     fun `test frontend descriptor registers send prompt shortcuts`() {
-        val xml = javaClass.classLoader.getResourceAsStream("kilo.jetbrains.frontend.xml")
+        val xml = javaClass.classLoader.getResourceAsStream("accurecode.jetbrains.frontend.xml")
             ?.bufferedReader()
             ?.use { it.readText() }
             ?: error("missing frontend descriptor")
 
-        assertTrue(xml.contains("id=\"Kilo.SendPrompt\""))
+        assertTrue(xml.contains("id=\"Accure.SendPrompt\""))
         assertTrue(xml.contains("first-keystroke=\"ENTER\""))
         assertTrue(xml.contains("keymap=\"Mac OS X 10.5+\""))
         assertTrue(xml.contains("first-keystroke=\"meta ENTER\""))

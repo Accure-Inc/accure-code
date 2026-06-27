@@ -23,7 +23,7 @@ const ENVELOPE = new Set([
   "agentVersion",
 ])
 
-const IDENTITY = new Set(["accountid", "email", "org", "orgid", "organizationid", "kilo_org_id"])
+const IDENTITY = new Set(["accountid", "email", "org", "orgid", "organizationid", "accure_org_id"])
 const METADATA = new Set(["eventSeq", "time", "durationMs", "retryCount", "requestedAt", "durationToDecideMs"])
 
 export async function handleEvent(envelope: ExportEvent, ctx: HandlerCtx): Promise<void> {

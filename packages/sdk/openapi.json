@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "kilo",
+    "title": "accure",
     "version": "1.0.0",
-    "description": "kilo api"
+    "description": "accure api"
   },
   "paths": {
     "/auth/{providerID}": {
@@ -64,7 +64,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.auth.set({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.auth.set({\n  ...\n})"
           }
         ]
       },
@@ -116,7 +116,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.auth.remove({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.auth.remove({\n  ...\n})"
           }
         ]
       }
@@ -207,7 +207,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.app.log({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.app.log({\n  ...\n})"
           }
         ]
       }
@@ -251,12 +251,12 @@
             }
           }
         },
-        "description": "Get health information about the Kilo server.",
+        "description": "Get health information about the Accure server.",
         "summary": "Get health",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.global.health({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.global.health({\n  ...\n})"
           }
         ]
       }
@@ -288,12 +288,12 @@
             }
           }
         },
-        "description": "Subscribe to global events from the Kilo system using server-sent events.",
+        "description": "Subscribe to global events from the Accure system using server-sent events.",
         "summary": "Get global events",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.global.event({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.global.event({\n  ...\n})"
           }
         ]
       }
@@ -325,12 +325,12 @@
             }
           }
         },
-        "description": "Retrieve the current global Kilo configuration settings and preferences.",
+        "description": "Retrieve the current global Accure configuration settings and preferences.",
         "summary": "Get global configuration",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.global.config.get({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.global.config.get({\n  ...\n})"
           }
         ]
       },
@@ -367,7 +367,7 @@
             }
           }
         },
-        "description": "Update global Kilo configuration settings and preferences.",
+        "description": "Update global Accure configuration settings and preferences.",
         "summary": "Update global configuration",
         "requestBody": {
           "content": {
@@ -381,7 +381,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.global.config.update({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.global.config.update({\n  ...\n})"
           }
         ]
       }
@@ -414,12 +414,12 @@
             }
           }
         },
-        "description": "Clean up and dispose all Kilo instances, releasing all resources.",
+        "description": "Clean up and dispose all Accure instances, releasing all resources.",
         "summary": "Dispose instance",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.global.dispose({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.global.dispose({\n  ...\n})"
           }
         ]
       }
@@ -488,8 +488,8 @@
             }
           }
         },
-        "description": "Upgrade kilo to the specified version or latest if not specified.",
-        "summary": "Upgrade kilo",
+        "description": "Upgrade accure to the specified version or latest if not specified.",
+        "summary": "Upgrade accure",
         "requestBody": {
           "content": {
             "application/json": {
@@ -508,7 +508,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.global.upgrade({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.global.upgrade({\n  ...\n})"
           }
         ]
       }
@@ -552,7 +552,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.event.subscribe({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.event.subscribe({\n  ...\n})"
           }
         ]
       }
@@ -601,12 +601,12 @@
             }
           }
         },
-        "description": "Retrieve the current Kilo configuration settings and preferences.",
+        "description": "Retrieve the current Accure configuration settings and preferences.",
         "summary": "Get configuration",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.config.get({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.config.get({\n  ...\n})"
           }
         ]
       },
@@ -660,7 +660,7 @@
             }
           }
         },
-        "description": "Update Kilo configuration settings and preferences.",
+        "description": "Update Accure configuration settings and preferences.",
         "summary": "Update configuration",
         "requestBody": {
           "content": {
@@ -674,7 +674,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.config.update({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.config.update({\n  ...\n})"
           }
         ]
       }
@@ -745,7 +745,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.config.warnings({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.config.warnings({\n  ...\n})"
           }
         ]
       }
@@ -816,7 +816,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.config.providers({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.config.providers({\n  ...\n})"
           }
         ]
       }
@@ -880,7 +880,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.experimental.console.get({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.experimental.console.get({\n  ...\n})"
           }
         ]
       }
@@ -977,7 +977,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.experimental.console.listOrgs({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.experimental.console.listOrgs({\n  ...\n})"
           }
         ]
       }
@@ -1017,7 +1017,7 @@
             }
           }
         },
-        "description": "Persist a new active Console account/org selection for the current local Kilo state.",
+        "description": "Persist a new active Console account/org selection for the current local Accure state.",
         "summary": "Switch active Console org",
         "requestBody": {
           "content": {
@@ -1041,7 +1041,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.experimental.console.switchOrg({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.experimental.console.switchOrg({\n  ...\n})"
           }
         ]
       }
@@ -1118,7 +1118,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tool.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tool.list({\n  ...\n})"
           }
         ]
       }
@@ -1179,7 +1179,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tool.ids({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tool.ids({\n  ...\n})"
           }
         ]
       }
@@ -1239,12 +1239,12 @@
             }
           }
         },
-        "description": "List all git worktrees for the current project and whether Kilo manages them.",
+        "description": "List all git worktrees for the current project and whether Accure manages them.",
         "summary": "List worktrees",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.worktree.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.worktree.list({\n  ...\n})"
           }
         ]
       },
@@ -1312,7 +1312,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.worktree.create({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.worktree.create({\n  ...\n})"
           }
         ]
       },
@@ -1381,7 +1381,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.worktree.remove({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.worktree.remove({\n  ...\n})"
           }
         ]
       }
@@ -1452,7 +1452,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.worktree.reset({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.worktree.reset({\n  ...\n})"
           }
         ]
       }
@@ -1525,7 +1525,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.worktree.diff({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.worktree.diff({\n  ...\n})"
           }
         ]
       }
@@ -1598,7 +1598,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.worktree.diffSummary({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.worktree.diffSummary({\n  ...\n})"
           }
         ]
       }
@@ -1675,7 +1675,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.worktree.diffFile({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.worktree.diffFile({\n  ...\n})"
           }
         ]
       }
@@ -1817,12 +1817,12 @@
             }
           }
         },
-        "description": "Get a list of all Kilo sessions across projects, sorted by most recently updated. Archived sessions are excluded by default.",
+        "description": "Get a list of all Accure sessions across projects, sorted by most recently updated. Archived sessions are excluded by default.",
         "summary": "List sessions",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.experimental.session.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.experimental.session.list({\n  ...\n})"
           }
         ]
       }
@@ -1880,7 +1880,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.experimental.resource.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.experimental.resource.list({\n  ...\n})"
           }
         ]
       }
@@ -2006,7 +2006,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.find.text({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.find.text({\n  ...\n})"
           }
         ]
       }
@@ -2100,7 +2100,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.find.files({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.find.files({\n  ...\n})"
           }
         ]
       }
@@ -2166,7 +2166,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.find.symbols({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.find.symbols({\n  ...\n})"
           }
         ]
       }
@@ -2232,7 +2232,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.file.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.file.list({\n  ...\n})"
           }
         ]
       }
@@ -2294,7 +2294,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.file.read({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.file.read({\n  ...\n})"
           }
         ]
       }
@@ -2352,7 +2352,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.file.status({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.file.status({\n  ...\n})"
           }
         ]
       }
@@ -2402,12 +2402,12 @@
             }
           }
         },
-        "description": "Clean up and dispose the current Kilo instance, releasing all resources.",
+        "description": "Clean up and dispose the current Accure instance, releasing all resources.",
         "summary": "Dispose instance",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.instance.dispose({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.instance.dispose({\n  ...\n})"
           }
         ]
       }
@@ -2456,12 +2456,12 @@
             }
           }
         },
-        "description": "Retrieve the current working directory and related path information for the Kilo instance.",
+        "description": "Retrieve the current working directory and related path information for the Accure instance.",
         "summary": "Get paths",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.path.get({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.path.get({\n  ...\n})"
           }
         ]
       }
@@ -2515,7 +2515,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.vcs.get({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.vcs.get({\n  ...\n})"
           }
         ]
       }
@@ -2573,7 +2573,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.vcs.status({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.vcs.status({\n  ...\n})"
           }
         ]
       }
@@ -2649,7 +2649,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.vcs.diff({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.vcs.diff({\n  ...\n})"
           }
         ]
       }
@@ -2703,7 +2703,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.vcs.diff.raw({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.vcs.diff.raw({\n  ...\n})"
           }
         ]
       }
@@ -2788,7 +2788,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.vcs.apply({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.vcs.apply({\n  ...\n})"
           }
         ]
       }
@@ -2841,12 +2841,12 @@
             }
           }
         },
-        "description": "Get a list of all available commands in the Kilo system.",
+        "description": "Get a list of all available commands in the Accure system.",
         "summary": "List commands",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.command.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.command.list({\n  ...\n})"
           }
         ]
       }
@@ -2899,12 +2899,12 @@
             }
           }
         },
-        "description": "Get a list of all available AI agents in the Kilo system.",
+        "description": "Get a list of all available AI agents in the Accure system.",
         "summary": "List agents",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.app.agents({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.app.agents({\n  ...\n})"
           }
         ]
       }
@@ -2973,12 +2973,12 @@
             }
           }
         },
-        "description": "Get a list of all available skills in the Kilo system.",
+        "description": "Get a list of all available skills in the Accure system.",
         "summary": "List skills",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.app.skills({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.app.skills({\n  ...\n})"
           }
         ]
       }
@@ -3036,7 +3036,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.lsp.status({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.lsp.status({\n  ...\n})"
           }
         ]
       }
@@ -3094,7 +3094,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.formatter.status({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.formatter.status({\n  ...\n})"
           }
         ]
       }
@@ -3152,7 +3152,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.mcp.status({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.mcp.status({\n  ...\n})"
           }
         ]
       },
@@ -3241,7 +3241,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.mcp.add({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.mcp.add({\n  ...\n})"
           }
         ]
       }
@@ -3331,7 +3331,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.mcp.auth.start({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.mcp.auth.start({\n  ...\n})"
           }
         ]
       },
@@ -3410,7 +3410,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.mcp.auth.remove({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.mcp.auth.remove({\n  ...\n})"
           }
         ]
       }
@@ -3505,7 +3505,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.mcp.auth.callback({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.mcp.auth.callback({\n  ...\n})"
           }
         ]
       }
@@ -3584,7 +3584,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.mcp.auth.authenticate({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.mcp.auth.authenticate({\n  ...\n})"
           }
         ]
       }
@@ -3656,7 +3656,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.mcp.connect({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.mcp.connect({\n  ...\n})"
           }
         ]
       }
@@ -3728,7 +3728,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.mcp.disconnect({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.mcp.disconnect({\n  ...\n})"
           }
         ]
       }
@@ -3781,12 +3781,12 @@
             }
           }
         },
-        "description": "Get a list of projects that have been opened with Kilo.",
+        "description": "Get a list of projects that have been opened with Accure.",
         "summary": "List all projects",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.project.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.project.list({\n  ...\n})"
           }
         ]
       }
@@ -3835,12 +3835,12 @@
             }
           }
         },
-        "description": "Retrieve the currently active project that Kilo is working with.",
+        "description": "Retrieve the currently active project that Accure is working with.",
         "summary": "Get current project",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.project.current({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.project.current({\n  ...\n})"
           }
         ]
       }
@@ -3894,7 +3894,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.project.initGit({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.project.initGit({\n  ...\n})"
           }
         ]
       }
@@ -4013,7 +4013,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.project.update({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.project.update({\n  ...\n})"
           }
         ]
       }
@@ -4084,7 +4084,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.pty.shells({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.pty.shells({\n  ...\n})"
           }
         ]
       }
@@ -4137,12 +4137,12 @@
             }
           }
         },
-        "description": "Get a list of all active pseudo-terminal (PTY) sessions managed by Kilo.",
+        "description": "Get a list of all active pseudo-terminal (PTY) sessions managed by Accure.",
         "summary": "List PTY sessions",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.pty.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.pty.list({\n  ...\n})"
           }
         ]
       },
@@ -4234,7 +4234,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.pty.create({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.pty.create({\n  ...\n})"
           }
         ]
       }
@@ -4307,7 +4307,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.pty.get({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.pty.get({\n  ...\n})"
           }
         ]
       },
@@ -4426,7 +4426,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.pty.update({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.pty.update({\n  ...\n})"
           }
         ]
       },
@@ -4498,7 +4498,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.pty.remove({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.pty.remove({\n  ...\n})"
           }
         ]
       }
@@ -4593,7 +4593,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.pty.connectToken({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.pty.connectToken({\n  ...\n})"
           }
         ]
       }
@@ -4651,7 +4651,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.question.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.question.list({\n  ...\n})"
           }
         ]
       }
@@ -4752,7 +4752,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.question.reply({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.question.reply({\n  ...\n})"
           }
         ]
       }
@@ -4833,7 +4833,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.question.reject({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.question.reject({\n  ...\n})"
           }
         ]
       }
@@ -4891,7 +4891,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.permission.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.permission.list({\n  ...\n})"
           }
         ]
       }
@@ -4992,7 +4992,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.permission.reply({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.permission.reply({\n  ...\n})"
           }
         ]
       }
@@ -5090,7 +5090,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.permission.saveAlwaysRules({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.permission.saveAlwaysRules({\n  ...\n})"
           }
         ]
       }
@@ -5184,7 +5184,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.permission.allowEverything({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.permission.allowEverything({\n  ...\n})"
           }
         ]
       }
@@ -5267,7 +5267,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.provider.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.provider.list({\n  ...\n})"
           }
         ]
       }
@@ -5328,7 +5328,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.provider.auth({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.provider.auth({\n  ...\n})"
           }
         ]
       }
@@ -5420,7 +5420,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.provider.oauth.authorize({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.provider.oauth.authorize({\n  ...\n})"
           }
         ]
       }
@@ -5510,7 +5510,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.provider.oauth.callback({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.provider.oauth.callback({\n  ...\n})"
           }
         ]
       }
@@ -5620,12 +5620,12 @@
             }
           }
         },
-        "description": "Get a list of all Kilo sessions, sorted by most recently updated.",
+        "description": "Get a list of all Accure sessions, sorted by most recently updated.",
         "summary": "List sessions",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.list({\n  ...\n})"
           }
         ]
       },
@@ -5679,7 +5679,7 @@
             }
           }
         },
-        "description": "Create a new Kilo session for interacting with AI assistants and managing conversations.",
+        "description": "Create a new Accure session for interacting with AI assistants and managing conversations.",
         "summary": "Create session",
         "requestBody": {
           "content": {
@@ -5732,7 +5732,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.create({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.create({\n  ...\n})"
           }
         ]
       }
@@ -5797,7 +5797,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.status({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.status({\n  ...\n})"
           }
         ]
       }
@@ -5872,12 +5872,12 @@
             }
           }
         },
-        "description": "Retrieve detailed information about a specific Kilo session.",
+        "description": "Retrieve detailed information about a specific Accure session.",
         "summary": "Get session",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.get({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.get({\n  ...\n})"
           }
         ]
       },
@@ -5956,7 +5956,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.delete({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.delete({\n  ...\n})"
           }
         ]
       },
@@ -6061,7 +6061,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.update({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.update({\n  ...\n})"
           }
         ]
       }
@@ -6145,7 +6145,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.children({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.children({\n  ...\n})"
           }
         ]
       }
@@ -6229,7 +6229,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.todo({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.todo({\n  ...\n})"
           }
         ]
       }
@@ -6305,7 +6305,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.diff({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.diff({\n  ...\n})"
           }
         ]
       }
@@ -6420,7 +6420,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.messages({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.messages({\n  ...\n})"
           }
         ]
       },
@@ -6608,7 +6608,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.prompt({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.prompt({\n  ...\n})"
           }
         ]
       }
@@ -6711,7 +6711,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.message({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.message({\n  ...\n})"
           }
         ]
       },
@@ -6809,7 +6809,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.deleteMessage({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.deleteMessage({\n  ...\n})"
           }
         ]
       }
@@ -6905,7 +6905,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.fork({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.fork({\n  ...\n})"
           }
         ]
       }
@@ -6976,7 +6976,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.abort({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.abort({\n  ...\n})"
           }
         ]
       }
@@ -7080,7 +7080,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.init({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.init({\n  ...\n})"
           }
         ]
       }
@@ -7163,7 +7163,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.share({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.share({\n  ...\n})"
           }
         ]
       },
@@ -7244,7 +7244,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.unshare({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.unshare({\n  ...\n})"
           }
         ]
       }
@@ -7347,7 +7347,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.summarize({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.summarize({\n  ...\n})"
           }
         ]
       }
@@ -7518,7 +7518,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.prompt_async({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.prompt_async({\n  ...\n})"
           }
         ]
       }
@@ -7676,7 +7676,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.command({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.command({\n  ...\n})"
           }
         ]
       }
@@ -7816,7 +7816,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.shell({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.shell({\n  ...\n})"
           }
         ]
       }
@@ -7927,7 +7927,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.revert({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.revert({\n  ...\n})"
           }
         ]
       }
@@ -8017,7 +8017,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.unrevert({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.unrevert({\n  ...\n})"
           }
         ]
       }
@@ -8132,7 +8132,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.permission.respond({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.permission.respond({\n  ...\n})"
           }
         ]
       }
@@ -8230,7 +8230,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.part.delete({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.part.delete({\n  ...\n})"
           }
         ]
       },
@@ -8334,7 +8334,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.part.update({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.part.update({\n  ...\n})"
           }
         ]
       }
@@ -8413,7 +8413,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.session.viewed({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.session.viewed({\n  ...\n})"
           }
         ]
       }
@@ -8468,7 +8468,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.sync.start({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.sync.start({\n  ...\n})"
           }
         ]
       }
@@ -8580,7 +8580,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.sync.replay({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.sync.replay({\n  ...\n})"
           }
         ]
       }
@@ -8667,7 +8667,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.sync.steal({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.sync.steal({\n  ...\n})"
           }
         ]
       }
@@ -8765,7 +8765,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.sync.history.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.sync.history.list({\n  ...\n})"
           }
         ]
       }
@@ -8906,7 +8906,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.v2.session.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.v2.session.list({\n  ...\n})"
           }
         ]
       }
@@ -9019,7 +9019,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.v2.session.prompt({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.v2.session.prompt({\n  ...\n})"
           }
         ]
       }
@@ -9106,7 +9106,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.v2.session.compact({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.v2.session.compact({\n  ...\n})"
           }
         ]
       }
@@ -9193,7 +9193,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.v2.session.wait({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.v2.session.wait({\n  ...\n})"
           }
         ]
       }
@@ -9290,7 +9290,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.v2.session.context({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.v2.session.context({\n  ...\n})"
           }
         ]
       }
@@ -9417,7 +9417,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.v2.session.messages({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.v2.session.messages({\n  ...\n})"
           }
         ]
       }
@@ -9498,7 +9498,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.v2.model.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.v2.model.list({\n  ...\n})"
           }
         ]
       }
@@ -9579,7 +9579,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.v2.provider.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.v2.provider.list({\n  ...\n})"
           }
         ]
       }
@@ -9675,7 +9675,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.v2.provider.get({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.v2.provider.get({\n  ...\n})"
           }
         ]
       }
@@ -9753,7 +9753,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.appendPrompt({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.appendPrompt({\n  ...\n})"
           }
         ]
       }
@@ -9808,7 +9808,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.openHelp({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.openHelp({\n  ...\n})"
           }
         ]
       }
@@ -9863,7 +9863,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.openSessions({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.openSessions({\n  ...\n})"
           }
         ]
       }
@@ -9918,7 +9918,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.openThemes({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.openThemes({\n  ...\n})"
           }
         ]
       }
@@ -9973,7 +9973,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.openModels({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.openModels({\n  ...\n})"
           }
         ]
       }
@@ -10028,7 +10028,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.submitPrompt({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.submitPrompt({\n  ...\n})"
           }
         ]
       }
@@ -10083,7 +10083,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.clearPrompt({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.clearPrompt({\n  ...\n})"
           }
         ]
       }
@@ -10161,7 +10161,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.executeCommand({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.executeCommand({\n  ...\n})"
           }
         ]
       }
@@ -10243,7 +10243,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.showToast({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.showToast({\n  ...\n})"
           }
         ]
       }
@@ -10327,7 +10327,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.publish({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.publish({\n  ...\n})"
           }
         ]
       }
@@ -10417,7 +10417,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.selectSession({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.selectSession({\n  ...\n})"
           }
         ]
       }
@@ -10480,7 +10480,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.control.next({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.control.next({\n  ...\n})"
           }
         ]
       }
@@ -10542,7 +10542,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.control.response({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.control.response({\n  ...\n})"
           }
         ]
       }
@@ -10613,7 +10613,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.experimental.workspace.adapter.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.experimental.workspace.adapter.list({\n  ...\n})"
           }
         ]
       }
@@ -10671,7 +10671,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.experimental.workspace.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.experimental.workspace.list({\n  ...\n})"
           }
         ]
       },
@@ -10768,7 +10768,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.experimental.workspace.create({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.experimental.workspace.create({\n  ...\n})"
           }
         ]
       }
@@ -10815,7 +10815,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.experimental.workspace.syncList({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.experimental.workspace.syncList({\n  ...\n})"
           }
         ]
       }
@@ -10885,7 +10885,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.experimental.workspace.status({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.experimental.workspace.status({\n  ...\n})"
           }
         ]
       }
@@ -10955,7 +10955,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.experimental.workspace.remove({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.experimental.workspace.remove({\n  ...\n})"
           }
         ]
       }
@@ -11053,7 +11053,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.experimental.workspace.warp({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.experimental.workspace.warp({\n  ...\n})"
           }
         ]
       }
@@ -11207,7 +11207,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.agentBuilder.preview({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.agentBuilder.preview({\n  ...\n})"
           }
         ]
       }
@@ -11372,7 +11372,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.agentBuilder.save({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.agentBuilder.save({\n  ...\n})"
           }
         ]
       }
@@ -11430,7 +11430,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.backgroundProcess.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.backgroundProcess.list({\n  ...\n})"
           }
         ]
       }
@@ -11503,7 +11503,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.backgroundProcess.get({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.backgroundProcess.get({\n  ...\n})"
           }
         ]
       }
@@ -11576,7 +11576,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.backgroundProcess.logs({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.backgroundProcess.logs({\n  ...\n})"
           }
         ]
       }
@@ -11649,7 +11649,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.backgroundProcess.stop({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.backgroundProcess.stop({\n  ...\n})"
           }
         ]
       }
@@ -11722,7 +11722,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.backgroundProcess.restart({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.backgroundProcess.restart({\n  ...\n})"
           }
         ]
       }
@@ -11786,7 +11786,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.backgroundProcess.stopSession({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.backgroundProcess.stopSession({\n  ...\n})"
           }
         ]
       }
@@ -11881,7 +11881,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.commitMessage.generate({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.commitMessage.generate({\n  ...\n})"
           }
         ]
       }
@@ -11945,7 +11945,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.config.overlay({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.config.overlay({\n  ...\n})"
           }
         ]
       },
@@ -12026,7 +12026,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.config.overlayUpdate({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.config.overlayUpdate({\n  ...\n})"
           }
         ]
       }
@@ -12080,7 +12080,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.config.sources({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.config.sources({\n  ...\n})"
           }
         ]
       }
@@ -12134,7 +12134,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.config.effective({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.config.effective({\n  ...\n})"
           }
         ]
       }
@@ -12193,12 +12193,12 @@
             }
           }
         },
-        "description": "List project instruction files used by Kilo and return their current contents.",
+        "description": "List project instruction files used by Accure and return their current contents.",
         "summary": "Get project rules",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.config.rules({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.config.rules({\n  ...\n})"
           }
         ]
       },
@@ -12271,7 +12271,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.config.rulesUpdate({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.config.rulesUpdate({\n  ...\n})"
           }
         ]
       }
@@ -12325,7 +12325,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.config.modelState({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.config.modelState({\n  ...\n})"
           }
         ]
       },
@@ -12372,7 +12372,7 @@
             }
           }
         },
-        "description": "Patch TUI-compatible model selections shared with Kilo Console.",
+        "description": "Patch TUI-compatible model selections shared with Accure Console.",
         "summary": "Update model state",
         "requestBody": {
           "content": {
@@ -12405,7 +12405,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.config.modelStateUpdate({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.config.modelStateUpdate({\n  ...\n})"
           }
         ]
       }
@@ -12459,7 +12459,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.config.get({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.config.get({\n  ...\n})"
           }
         ]
       },
@@ -12664,7 +12664,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.config.update({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.config.update({\n  ...\n})"
           }
         ]
       }
@@ -12718,7 +12718,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.tui.keybind.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.tui.keybind.list({\n  ...\n})"
           }
         ]
       }
@@ -12805,7 +12805,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.enhancePrompt.enhance({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.enhancePrompt.enhance({\n  ...\n})"
           }
         ]
       }
@@ -12859,7 +12859,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.indexing.status({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.indexing.status({\n  ...\n})"
           }
         ]
       }
@@ -12917,7 +12917,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.indexing.warnings({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.indexing.warnings({\n  ...\n})"
           }
         ]
       }
@@ -12946,11 +12946,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Kilo embedding model catalog",
+            "description": "Accure embedding model catalog",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/KiloEmbeddingModelCatalog"
+                  "$ref": "#/components/schemas/AccureEmbeddingModelCatalog"
                 }
               }
             }
@@ -12966,20 +12966,20 @@
             }
           }
         },
-        "description": "Retrieve the embedding models available through the active Kilo account.",
-        "summary": "List Kilo embedding models",
+        "description": "Retrieve the embedding models available through the active Accure account.",
+        "summary": "List Accure embedding models",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.indexing.models({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.indexing.models({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/profile": {
+    "/accure/profile": {
       "get": {
-        "tags": ["kilo"],
-        "operationId": "kilo.profile",
+        "tags": ["accure"],
+        "operationId": "accure.profile",
         "parameters": [
           {
             "name": "directory",
@@ -13091,20 +13091,20 @@
             }
           }
         },
-        "description": "Fetch user profile and organizations from Kilo Gateway",
-        "summary": "Get Kilo Gateway profile",
+        "description": "Fetch user profile and organizations from Accure Gateway",
+        "summary": "Get Accure Gateway profile",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.profile({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.profile({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/auth-status": {
+    "/accure/auth-status": {
       "get": {
-        "tags": ["kilo"],
-        "operationId": "kilo.authStatus",
+        "tags": ["accure"],
+        "operationId": "accure.authStatus",
         "parameters": [
           {
             "name": "directory",
@@ -13125,7 +13125,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Kilo authentication status",
+            "description": "Accure authentication status",
             "content": {
               "application/json": {
                 "schema": {
@@ -13141,7 +13141,7 @@
                   },
                   "required": ["authenticated"],
                   "additionalProperties": false,
-                  "description": "Kilo authentication status"
+                  "description": "Accure authentication status"
                 }
               }
             }
@@ -13164,20 +13164,20 @@
             }
           }
         },
-        "description": "Check whether a locally stored Kilo credential can authenticate Gateway requests",
-        "summary": "Get Kilo authentication status",
+        "description": "Check whether a locally stored Accure credential can authenticate Gateway requests",
+        "summary": "Get Accure authentication status",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.authStatus({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.authStatus({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/modes": {
+    "/accure/modes": {
       "get": {
-        "tags": ["kilo"],
-        "operationId": "kilo.modes",
+        "tags": ["accure"],
+        "operationId": "accure.modes",
         "parameters": [
           {
             "name": "directory",
@@ -13332,15 +13332,15 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.modes({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.modes({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/fim": {
+    "/accure/fim": {
       "post": {
-        "tags": ["kilo"],
-        "operationId": "kilo.fim",
+        "tags": ["accure"],
+        "operationId": "accure.fim",
         "parameters": [
           {
             "name": "directory",
@@ -13423,7 +13423,7 @@
             }
           }
         },
-        "description": "Proxy a Fill-in-the-Middle completion request to the Kilo Gateway",
+        "description": "Proxy a Fill-in-the-Middle completion request to the Accure Gateway",
         "summary": "FIM completion",
         "requestBody": {
           "content": {
@@ -13459,15 +13459,15 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.fim({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.fim({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/edit": {
+    "/accure/edit": {
       "post": {
-        "tags": ["kilo"],
-        "operationId": "kilo.edit",
+        "tags": ["accure"],
+        "operationId": "accure.edit",
         "parameters": [
           {
             "name": "directory",
@@ -13611,15 +13611,15 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.edit({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.edit({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/audio/transcriptions": {
+    "/accure/audio/transcriptions": {
       "post": {
-        "tags": ["kilo"],
-        "operationId": "kilo.audio.transcriptions",
+        "tags": ["accure"],
+        "operationId": "accure.audio.transcriptions",
         "parameters": [
           {
             "name": "directory",
@@ -13676,7 +13676,7 @@
             }
           }
         },
-        "description": "Proxy an audio transcription request to the Kilo Gateway",
+        "description": "Proxy an audio transcription request to the Accure Gateway",
         "summary": "Speech to text transcription",
         "requestBody": {
           "content": {
@@ -13719,15 +13719,15 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.audio.transcriptions({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.audio.transcriptions({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/notifications": {
+    "/accure/notifications": {
       "get": {
-        "tags": ["kilo"],
-        "operationId": "kilo.notifications",
+        "tags": ["accure"],
+        "operationId": "accure.notifications",
         "parameters": [
           {
             "name": "directory",
@@ -13814,20 +13814,20 @@
             }
           }
         },
-        "description": "Fetch notifications from Kilo Gateway for CLI display",
-        "summary": "Get Kilo notifications",
+        "description": "Fetch notifications from Accure Gateway for CLI display",
+        "summary": "Get Accure notifications",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.notifications({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.notifications({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/organization": {
+    "/accure/organization": {
       "post": {
-        "tags": ["kilo"],
-        "operationId": "kilo.organization.set",
+        "tags": ["accure"],
+        "operationId": "accure.organization.set",
         "parameters": [
           {
             "name": "directory",
@@ -13876,8 +13876,8 @@
             }
           }
         },
-        "description": "Switch to a different Kilo Gateway organization",
-        "summary": "Update Kilo Gateway organization",
+        "description": "Switch to a different Accure Gateway organization",
+        "summary": "Update Accure Gateway organization",
         "requestBody": {
           "content": {
             "application/json": {
@@ -13904,15 +13904,15 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.organization.set({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.organization.set({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/claw/status": {
+    "/accure/claw/status": {
       "get": {
-        "tags": ["kilo"],
-        "operationId": "kilo.claw.status",
+        "tags": ["accure"],
+        "operationId": "accure.claw.status",
         "parameters": [
           {
             "name": "directory",
@@ -14056,20 +14056,20 @@
             }
           }
         },
-        "description": "Fetch the user's KiloClaw instance status via the KiloClaw worker",
-        "summary": "Get KiloClaw instance status",
+        "description": "Fetch the user's AccureClaw instance status via the AccureClaw worker",
+        "summary": "Get AccureClaw instance status",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.claw.status({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.claw.status({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/claw/chat-credentials": {
+    "/accure/claw/chat-credentials": {
       "get": {
-        "tags": ["kilo"],
-        "operationId": "kilo.claw.chatCredentials",
+        "tags": ["accure"],
+        "operationId": "accure.claw.chatCredentials",
         "parameters": [
           {
             "name": "directory",
@@ -14090,7 +14090,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Kilo Chat credentials or null",
+            "description": "Accure Chat credentials or null",
             "content": {
               "application/json": {
                 "schema": {
@@ -14104,14 +14104,14 @@
                         "expiresAt": {
                           "type": "string"
                         },
-                        "kiloChatUrl": {
+                        "accureChatUrl": {
                           "type": "string"
                         },
                         "eventServiceUrl": {
                           "type": "string"
                         }
                       },
-                      "required": ["token", "expiresAt", "kiloChatUrl", "eventServiceUrl"],
+                      "required": ["token", "expiresAt", "accureChatUrl", "eventServiceUrl"],
                       "additionalProperties": false
                     },
                     {
@@ -14133,20 +14133,20 @@
             }
           }
         },
-        "description": "Returns the bearer token and endpoint URLs the client uses to talk to the Kilo Chat worker and the Event Service. The bearer is the user's existing long-lived Kilo JWT — kilo-chat and event-service both verify it directly with NEXTAUTH_SECRET, so no separate token mint is needed.",
-        "summary": "Get KiloClaw chat credentials",
+        "description": "Returns the bearer token and endpoint URLs the client uses to talk to the Accure Chat worker and the Event Service. The bearer is the user's existing long-lived Accure JWT — accure-chat and event-service both verify it directly with NEXTAUTH_SECRET, so no separate token mint is needed.",
+        "summary": "Get AccureClaw chat credentials",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.claw.chatCredentials({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.claw.chatCredentials({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/cloud-sessions": {
+    "/accure/cloud-sessions": {
       "get": {
-        "tags": ["kilo"],
-        "operationId": "kilo.cloudSessions",
+        "tags": ["accure"],
+        "operationId": "accure.cloudSessions",
         "parameters": [
           {
             "name": "directory",
@@ -14265,20 +14265,20 @@
             }
           }
         },
-        "description": "Fetch cloud CLI sessions from Kilo API",
+        "description": "Fetch cloud CLI sessions from Accure API",
         "summary": "Get cloud sessions",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.cloudSessions({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.cloudSessions({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/cloud/session/{id}": {
+    "/accure/cloud/session/{id}": {
       "get": {
-        "tags": ["kilo"],
-        "operationId": "kilo.cloud.session.get",
+        "tags": ["accure"],
+        "operationId": "accure.cloud.session.get",
         "parameters": [
           {
             "name": "id",
@@ -14426,20 +14426,20 @@
             }
           }
         },
-        "description": "Fetch full session data from the Kilo cloud for preview",
+        "description": "Fetch full session data from the Accure cloud for preview",
         "summary": "Get cloud session",
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.cloud.session.get({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.cloud.session.get({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilo/cloud/session/import": {
+    "/accure/cloud/session/import": {
       "post": {
-        "tags": ["kilo"],
-        "operationId": "kilo.cloud.session.import",
+        "tags": ["accure"],
+        "operationId": "accure.cloud.session.import",
         "parameters": [
           {
             "name": "directory",
@@ -14541,15 +14541,15 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilo.cloud.session.import({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accure.cloud.session.import({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilocode/heap/snapshot": {
+    "/accurecode/heap/snapshot": {
       "post": {
-        "tags": ["kilocode"],
-        "operationId": "kilocode.heap.snapshot",
+        "tags": ["accurecode"],
+        "operationId": "accurecode.heap.snapshot",
         "parameters": [
           {
             "name": "directory",
@@ -14603,15 +14603,15 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilocode.heap.snapshot({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accurecode.heap.snapshot({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilocode/skill/remove": {
+    "/accurecode/skill/remove": {
       "post": {
-        "tags": ["kilocode"],
-        "operationId": "kilocode.removeSkill",
+        "tags": ["accurecode"],
+        "operationId": "accurecode.removeSkill",
         "parameters": [
           {
             "name": "directory",
@@ -14681,15 +14681,15 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilocode.removeSkill({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accurecode.removeSkill({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilocode/agent/remove": {
+    "/accurecode/agent/remove": {
       "post": {
-        "tags": ["kilocode"],
-        "operationId": "kilocode.removeAgent",
+        "tags": ["accurecode"],
+        "operationId": "accurecode.removeAgent",
         "parameters": [
           {
             "name": "directory",
@@ -14759,7 +14759,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilocode.removeAgent({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accurecode.removeAgent({\n  ...\n})"
           }
         ]
       }
@@ -14817,7 +14817,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.network.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.network.list({\n  ...\n})"
           }
         ]
       }
@@ -14898,7 +14898,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.network.reply({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.network.reply({\n  ...\n})"
           }
         ]
       }
@@ -14979,7 +14979,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.network.reject({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.network.reject({\n  ...\n})"
           }
         ]
       }
@@ -15044,7 +15044,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.remote.enable({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.remote.enable({\n  ...\n})"
           }
         ]
       }
@@ -15109,7 +15109,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.remote.disable({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.remote.disable({\n  ...\n})"
           }
         ]
       }
@@ -15174,15 +15174,15 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.remote.status({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.remote.status({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilocode/session-import/project": {
+    "/accurecode/session-import/project": {
       "post": {
         "tags": ["session-import"],
-        "operationId": "kilocode.sessionImport.project",
+        "operationId": "accurecode.sessionImport.project",
         "parameters": [
           {
             "name": "directory",
@@ -15207,7 +15207,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/KilocodeSessionImportResult"
+                  "$ref": "#/components/schemas/AccurecodeSessionImportResult"
                 }
               }
             }
@@ -15290,15 +15290,15 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilocode.sessionImport.project({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accurecode.sessionImport.project({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilocode/session-import/session": {
+    "/accurecode/session-import/session": {
       "post": {
         "tags": ["session-import"],
-        "operationId": "kilocode.sessionImport.session",
+        "operationId": "accurecode.sessionImport.session",
         "parameters": [
           {
             "name": "directory",
@@ -15323,7 +15323,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/KilocodeSessionImportResult"
+                  "$ref": "#/components/schemas/AccurecodeSessionImportResult"
                 }
               }
             }
@@ -15450,15 +15450,15 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilocode.sessionImport.session({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accurecode.sessionImport.session({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilocode/session-import/message": {
+    "/accurecode/session-import/message": {
       "post": {
         "tags": ["session-import"],
-        "operationId": "kilocode.sessionImport.message",
+        "operationId": "accurecode.sessionImport.message",
         "parameters": [
           {
             "name": "directory",
@@ -15483,7 +15483,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/KilocodeSessionImportResult"
+                  "$ref": "#/components/schemas/AccurecodeSessionImportResult"
                 }
               }
             }
@@ -15688,15 +15688,15 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilocode.sessionImport.message({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accurecode.sessionImport.message({\n  ...\n})"
           }
         ]
       }
     },
-    "/kilocode/session-import/part": {
+    "/accurecode/session-import/part": {
       "post": {
         "tags": ["session-import"],
-        "operationId": "kilocode.sessionImport.part",
+        "operationId": "accurecode.sessionImport.part",
         "parameters": [
           {
             "name": "directory",
@@ -15721,7 +15721,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/KilocodeSessionImportResult"
+                  "$ref": "#/components/schemas/AccurecodeSessionImportResult"
                 }
               }
             }
@@ -15987,7 +15987,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.kilocode.sessionImport.part({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.accurecode.sessionImport.part({\n  ...\n})"
           }
         ]
       }
@@ -16045,7 +16045,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.suggestion.list({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.suggestion.list({\n  ...\n})"
           }
         ]
       }
@@ -16143,7 +16143,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.suggestion.accept({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.suggestion.accept({\n  ...\n})"
           }
         ]
       }
@@ -16223,7 +16223,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.suggestion.dismiss({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.suggestion.dismiss({\n  ...\n})"
           }
         ]
       }
@@ -16305,7 +16305,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.telemetry.capture({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.telemetry.capture({\n  ...\n})"
           }
         ]
       }
@@ -16362,7 +16362,7 @@
             }
           }
         },
-        "description": "Update the PostHog client's opt-in/out state at runtime. The CLI reads KILO_TELEMETRY_LEVEL once at spawn — this route lets clients (e.g. the VS Code extension) propagate runtime telemetry consent changes.",
+        "description": "Update the PostHog client's opt-in/out state at runtime. The CLI reads ACCURECODE_TELEMETRY_LEVEL once at spawn — this route lets clients (e.g. the VS Code extension) propagate runtime telemetry consent changes.",
         "summary": "Set PostHog telemetry enabled state",
         "requestBody": {
           "content": {
@@ -16383,7 +16383,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.telemetry.setEnabled({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.telemetry.setEnabled({\n  ...\n})"
           }
         ]
       }
@@ -16457,7 +16457,7 @@
         "x-codeSamples": [
           {
             "lang": "js",
-            "source": "import { createKiloClient } from \"@kilocode/sdk\n\nconst client = createKiloClient()\nawait client.pty.connect({\n  ...\n})"
+            "source": "import { createAccureClient } from \"@accurecode/sdk\n\nconst client = createAccureClient()\nawait client.pty.connect({\n  ...\n})"
           }
         ]
       }
@@ -16489,7 +16489,7 @@
             "$ref": "#/components/schemas/Event.tui.session.select"
           },
           {
-            "$ref": "#/components/schemas/EventKilocodeAgent_managerStart"
+            "$ref": "#/components/schemas/EventAccurecodeAgent_managerStart"
           },
           {
             "$ref": "#/components/schemas/EventIndexingStatus"
@@ -16603,7 +16603,7 @@
             "$ref": "#/components/schemas/EventVcsBranchUpdated"
           },
           {
-            "$ref": "#/components/schemas/EventKilo-sessionsRemote-status-changed"
+            "$ref": "#/components/schemas/EventAccure-sessionsRemote-status-changed"
           },
           {
             "$ref": "#/components/schemas/EventWorkspaceReady"
@@ -19259,7 +19259,7 @@
                 "$ref": "#/components/schemas/Event.tui.session.select"
               },
               {
-                "$ref": "#/components/schemas/EventKilocodeAgent_managerStart"
+                "$ref": "#/components/schemas/EventAccurecodeAgent_managerStart"
               },
               {
                 "$ref": "#/components/schemas/EventIndexingStatus"
@@ -19373,7 +19373,7 @@
                 "$ref": "#/components/schemas/EventVcsBranchUpdated"
               },
               {
-                "$ref": "#/components/schemas/EventKilo-sessionsRemote-status-changed"
+                "$ref": "#/components/schemas/EventAccure-sessionsRemote-status-changed"
               },
               {
                 "$ref": "#/components/schemas/EventWorkspaceReady"
@@ -19728,7 +19728,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Server configuration for the kilo serve command"
+        "description": "Server configuration for the accure serve command"
       },
       "ReferenceConfigEntry": {
         "anyOf": [
@@ -19777,7 +19777,7 @@
           "provider": {
             "type": "string",
             "enum": [
-              "kilo",
+              "accure",
               "openai",
               "ollama",
               "openai-compatible",
@@ -19814,7 +19814,7 @@
             "type": "string",
             "enum": ["lancedb", "qdrant"]
           },
-          "kilo": {
+          "accure": {
             "type": "object",
             "properties": {
               "apiKey": {
@@ -20656,7 +20656,7 @@
                 "type": "integer",
                 "minimum": 250,
                 "maximum": 800,
-                "description": "Width of the Kilo Console project context sidebar in pixels"
+                "description": "Width of the Accure Console project context sidebar in pixels"
               },
               "diff_style": {
                 "type": "string",
@@ -23579,7 +23579,7 @@
         "required": ["keybinds"],
         "additionalProperties": false
       },
-      "KiloEmbeddingModelCatalog": {
+      "AccureEmbeddingModelCatalog": {
         "type": "object",
         "properties": {
           "defaultModel": {
@@ -23645,7 +23645,7 @@
         "required": ["_tag"],
         "additionalProperties": false
       },
-      "KilocodeSessionImportResult": {
+      "AccurecodeSessionImportResult": {
         "type": "object",
         "properties": {
           "ok": {
@@ -25580,7 +25580,7 @@
         "required": ["id", "type", "properties"],
         "additionalProperties": false
       },
-      "EventKilocodeAgent_managerStart": {
+      "EventAccurecodeAgent_managerStart": {
         "type": "object",
         "properties": {
           "id": {
@@ -25588,7 +25588,7 @@
           },
           "type": {
             "type": "string",
-            "enum": ["kilocode.agent_manager.start"]
+            "enum": ["accurecode.agent_manager.start"]
           },
           "properties": {
             "type": "object",
@@ -26614,7 +26614,7 @@
         "required": ["id", "type", "properties"],
         "additionalProperties": false
       },
-      "EventKilo-sessionsRemote-status-changed": {
+      "EventAccure-sessionsRemote-status-changed": {
         "type": "object",
         "properties": {
           "id": {
@@ -26622,7 +26622,7 @@
           },
           "type": {
             "type": "string",
-            "enum": ["kilo-sessions.remote-status-changed"]
+            "enum": ["accure-sessions.remote-status-changed"]
           },
           "properties": {
             "type": "object",
@@ -30085,55 +30085,55 @@
     },
     {
       "name": "agent-builder",
-      "description": "Kilo agent builder routes."
+      "description": "Accure agent builder routes."
     },
     {
       "name": "background-process",
-      "description": "Kilo background process routes."
+      "description": "Accure background process routes."
     },
     {
       "name": "commit-message",
-      "description": "Kilo commit message routes."
+      "description": "Accure commit message routes."
     },
     {
       "name": "config-console",
-      "description": "Kilo Console config routes."
+      "description": "Accure Console config routes."
     },
     {
       "name": "enhance-prompt",
-      "description": "Kilo enhance prompt routes."
+      "description": "Accure enhance prompt routes."
     },
     {
       "name": "indexing",
-      "description": "Kilo indexing routes."
+      "description": "Accure indexing routes."
     },
     {
-      "name": "kilo",
-      "description": "Kilo Gateway routes."
+      "name": "accure",
+      "description": "Accure Gateway routes."
     },
     {
-      "name": "kilocode",
-      "description": "Kilo-specific routes."
+      "name": "accurecode",
+      "description": "Accure-specific routes."
     },
     {
       "name": "network",
-      "description": "Kilo network routes."
+      "description": "Accure network routes."
     },
     {
       "name": "remote",
-      "description": "Kilo remote connection routes."
+      "description": "Accure remote connection routes."
     },
     {
       "name": "session-import",
-      "description": "Kilo legacy session import routes."
+      "description": "Accure legacy session import routes."
     },
     {
       "name": "suggestion",
-      "description": "Kilo suggestion routes."
+      "description": "Accure suggestion routes."
     },
     {
       "name": "telemetry",
-      "description": "Kilo telemetry routes."
+      "description": "Accure telemetry routes."
     },
     {
       "name": "pty",

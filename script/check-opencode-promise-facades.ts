@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
-// kilocode_change - new file
+// accurecode_change - new file
 
 /**
  * Prevents new service-local runtimes in shared Effect modules while the
- * remaining Kilo Promise facades are migrated away. It also prevents tests
+ * remaining Accure Promise facades are migrated away. It also prevents tests
  * from reaching through the global application runtime unless the integration
  * boundary is explicitly classified.
  *
@@ -29,17 +29,17 @@ const allow: Record<string, string> = {
 }
 
 const testAllow: Record<string, { count: number; reason: string }> = {
-  "kilocode/config-resilience.test.ts": { count: 4, reason: "existing runtime integration test" },
-  "kilocode/config-validation.test.ts": { count: 2, reason: "existing runtime integration test" },
-  "kilocode/plan-followup.test.ts": { count: 4, reason: "existing runtime integration test" },
-  "kilocode/session/platform-attribution.test.ts": { count: 2, reason: "existing runtime integration test" },
-  "kilocode/session-prompt-queue.test.ts": { count: 5, reason: "prompt queue legacy instance bridge regression" },
-  "server/experimental-session-list.test.ts": { count: 2, reason: "Kilo session list integration test" },
-  "kilocode/server/listener-runtime.test.ts": { count: 3, reason: "listener and AppRuntime integration test" },
+  "accurecode/config-resilience.test.ts": { count: 4, reason: "existing runtime integration test" },
+  "accurecode/config-validation.test.ts": { count: 2, reason: "existing runtime integration test" },
+  "accurecode/plan-followup.test.ts": { count: 4, reason: "existing runtime integration test" },
+  "accurecode/session/platform-attribution.test.ts": { count: 2, reason: "existing runtime integration test" },
+  "accurecode/session-prompt-queue.test.ts": { count: 5, reason: "prompt queue legacy instance bridge regression" },
+  "server/experimental-session-list.test.ts": { count: 2, reason: "Accure session list integration test" },
+  "accurecode/server/listener-runtime.test.ts": { count: 3, reason: "listener and AppRuntime integration test" },
   "tool/recall.test.ts": { count: 11, reason: "existing runtime integration test" },
 }
 
-const owned = (file: string) => file.startsWith("kilocode/") || file.startsWith("kilo-sessions/")
+const owned = (file: string) => file.startsWith("accurecode/") || file.startsWith("accure-sessions/")
 const hits: Array<{ file: string; line: number }> = []
 const glob = new Bun.Glob("**/*.ts")
 

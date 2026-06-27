@@ -1,4 +1,4 @@
-package ai.kilocode.client.vfs
+package ai.accurecode.client.vfs
 
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
@@ -12,17 +12,17 @@ import java.nio.charset.StandardCharsets
 import java.util.concurrent.ConcurrentHashMap
 import kotlinx.serialization.json.Json
 
-class KiloVirtualFileSystem : VirtualFileSystem(), NonPhysicalFileSystem {
-    private val files = ConcurrentHashMap<KiloPath, KiloVirtualFile>()
+class AccureVirtualFileSystem : VirtualFileSystem(), NonPhysicalFileSystem {
+    private val files = ConcurrentHashMap<AccurePath, AccureVirtualFile>()
 
-    fun getPath(path: KiloPath): String = json.encodeToString(KiloPath.serializer(), path.canonical())
+    fun getPath(path: AccurePath): String = json.encodeToString(AccurePath.serializer(), path.canonical())
 
-    fun findOrCreateFile(path: KiloPath): VirtualFile? {
-        service<KiloVirtualFileKindRegistry>().get(path.kind) ?: return null
-        return files.computeIfAbsent(path.canonical()) { KiloVirtualFile(it) }
+    fun findOrCreateFile(path: AccurePath): VirtualFile? {
+        service<AccureVirtualFileKindRegistry>().get(path.kind) ?: return null
+        return files.computeIfAbsent(path.canonical()) { AccureVirtualFile(it) }
     }
 
-    fun release(path: KiloPath) {
+    fun release(path: AccurePath) {
         files.remove(path.canonical())
     }
 
@@ -56,21 +56,21 @@ class KiloVirtualFileSystem : VirtualFileSystem(), NonPhysicalFileSystem {
     override fun createChildDirectory(requestor: Any?, file: VirtualFile, name: String): VirtualFile = unsupported()
     override fun copyFile(requestor: Any?, file: VirtualFile, newParent: VirtualFile, copyName: String): VirtualFile = unsupported()
 
-    private fun unsupported(): Nothing = throw UnsupportedOperationException("Kilo virtual files are read-only")
+    private fun unsupported(): Nothing = throw UnsupportedOperationException("Accure virtual files are read-only")
 
     companion object {
-        const val PROTOCOL = "kilo"
+        const val PROTOCOL = "accure"
 
         private val json = Json
-        private val log = logger<KiloVirtualFileSystem>()
-        private val local = KiloVirtualFileSystem()
+        private val log = logger<AccureVirtualFileSystem>()
+        private val local = AccureVirtualFileSystem()
 
-        fun getInstance(): KiloVirtualFileSystem = local
+        fun getInstance(): AccureVirtualFileSystem = local
 
-        fun decode(path: String): KiloPath? {
+        fun decode(path: String): AccurePath? {
             return try {
                 val raw = raw(path) ?: return null
-                json.decodeFromString(KiloPath.serializer(), raw).canonical()
+                json.decodeFromString(AccurePath.serializer(), raw).canonical()
             } catch (err: Exception) {
                 log.warn("Cannot deserialize $path", err)
                 null

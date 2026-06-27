@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.ui.LayeredOverlayPanel
+import ai.accurecode.client.ui.LayeredOverlayPanel
 
 class SessionRootPanel(
     private val sessionOverlay: Overlay = Overlay(),

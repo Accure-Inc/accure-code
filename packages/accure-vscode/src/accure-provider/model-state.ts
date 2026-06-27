@@ -1,13 +1,13 @@
 /**
  * Per-mode model selection persistence via the CLI's model.json.
  *
- * Reads/writes ~/.local/state/kilo/model.json (same file the CLI TUI uses)
+ * Reads/writes ~/.local/state/accure/model.json (same file the CLI TUI uses)
  * so per-mode model choices are shared between CLI and extension.
  */
 
 import * as fs from "fs"
 import * as path from "path"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 import { validateModelSelections } from "../provider-actions"
 
 type PostMessage = (msg: unknown) => void
@@ -15,7 +15,7 @@ type PostMessage = (msg: unknown) => void
 let cached: string | undefined
 let queue: Promise<void> = Promise.resolve()
 
-async function resolve(client: KiloClient | null): Promise<string | undefined> {
+async function resolve(client: AccureClient | null): Promise<string | undefined> {
   if (cached) return cached
   try {
     const resp = await client?.path.get()
@@ -27,7 +27,7 @@ async function resolve(client: KiloClient | null): Promise<string | undefined> {
   }
 }
 
-async function read(client: KiloClient | null): Promise<Record<string, unknown>> {
+async function read(client: AccureClient | null): Promise<Record<string, unknown>> {
   const p = await resolve(client)
   if (!p) return {}
   try {
@@ -41,7 +41,7 @@ async function read(client: KiloClient | null): Promise<Record<string, unknown>>
   }
 }
 
-function write(client: KiloClient | null, key: string, value: unknown): Promise<void> {
+function write(client: AccureClient | null, key: string, value: unknown): Promise<void> {
   const op = queue.then(async () => {
     const p = await resolve(client)
     if (!p) return
@@ -59,7 +59,7 @@ function write(client: KiloClient | null, key: string, value: unknown): Promise<
 export async function handleMessage(
   type: string,
   message: Record<string, unknown>,
-  client: KiloClient | null,
+  client: AccureClient | null,
   post: PostMessage,
 ): Promise<boolean> {
   if (type === "persistModelSelection") {
@@ -88,7 +88,7 @@ export async function handleMessage(
   return false
 }
 
-export async function reset(client: KiloClient | null, post: PostMessage): Promise<void> {
+export async function reset(client: AccureClient | null, post: PostMessage): Promise<void> {
   await write(client, "model", {})
   post({ type: "modelSelectionsLoaded", selections: {} })
 }

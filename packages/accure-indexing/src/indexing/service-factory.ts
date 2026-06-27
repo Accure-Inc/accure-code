@@ -5,7 +5,7 @@ import { getDefaultModelId } from "./model-registry"
 import { resolveEmbeddingProfile } from "./embedding-profile"
 
 import { OpenAiEmbedder } from "./embedders/openai"
-import { KiloEmbedder } from "./embedders/kilo"
+import { AccureEmbedder } from "./embedders/accure"
 import { CodeIndexOllamaEmbedder } from "./embedders/ollama"
 import { OpenAICompatibleEmbedder } from "./embedders/openai-compatible"
 import { GeminiEmbedder } from "./embedders/gemini"
@@ -65,13 +65,13 @@ export class CodeIndexServiceFactory {
     const config = this.configManager.getConfig()
     const provider = config.embedderProvider
 
-    if (provider === "kilo") {
-      if (!config.kiloOptions?.apiKey) throw new Error("Kilo API key is required for embedding.")
-      if (!config.modelId) throw new Error("Kilo embedding model is required.")
-      return new KiloEmbedder({
-        apiKey: config.kiloOptions.apiKey,
-        baseUrl: config.kiloOptions.baseUrl,
-        organizationId: config.kiloOptions.organizationId,
+    if (provider === "accure") {
+      if (!config.accureOptions?.apiKey) throw new Error("Accure API key is required for embedding.")
+      if (!config.modelId) throw new Error("Accure embedding model is required.")
+      return new AccureEmbedder({
+        apiKey: config.accureOptions.apiKey,
+        baseUrl: config.accureOptions.baseUrl,
+        organizationId: config.accureOptions.organizationId,
         modelId: config.modelId,
         dimensions: config.modelDimension,
       })

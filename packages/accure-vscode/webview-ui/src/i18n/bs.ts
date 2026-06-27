@@ -113,7 +113,7 @@ export const dict = {
   "dialog.model.expand": "Proširi",
   "dialog.model.collapse": "Skupi",
 
-  "dialog.model.unpaid.freeModels.title": "Besplatni modeli koje obezbjeđuje Kilo",
+  "dialog.model.unpaid.freeModels.title": "Besplatni modeli koje obezbjeđuje Accure",
   "dialog.model.unpaid.addMore.title": "Dodaj još modela od popularnih provajdera",
 
   "dialog.provider.viewAll": "Prikaži više provajdera",
@@ -126,7 +126,7 @@ export const dict = {
   "provider.connect.status.waiting": "Čekanje na autorizaciju...",
   "provider.connect.status.failed": "Autorizacija nije uspjela: {{error}}",
   "provider.connect.apiKey.description":
-    "Unesi svoj {{provider}} API ključ da povežeš račun i koristiš {{provider}} modele u Kilo-u.",
+    "Unesi svoj {{provider}} API ključ da povežeš račun i koristiš {{provider}} modele u Accure-u.",
   "provider.connect.apiKey.description.local":
     "Connect to your local {{provider}} server. Leave the API key empty if the server does not require one (default for localhost).",
   "provider.connect.atomicChat.description":
@@ -156,7 +156,7 @@ export const dict = {
   "provider.connect.oauth.code.visit.prefix": "Posjeti ",
   "provider.connect.oauth.code.visit.link": "ovaj link",
   "provider.connect.oauth.code.visit.suffix":
-    " da preuzmeš autorizacijski kod i povežeš račun te koristiš {{provider}} modele u Kilo-u.",
+    " da preuzmeš autorizacijski kod i povežeš račun te koristiš {{provider}} modele u Accure-u.",
   "provider.connect.oauth.code.label": "{{method}} autorizacijski kod",
   "provider.connect.oauth.code.placeholder": "Autorizacijski kod",
   "provider.connect.oauth.code.required": "Autorizacijski kod je obavezan",
@@ -164,7 +164,7 @@ export const dict = {
   "provider.connect.oauth.auto.visit.prefix": "Posjeti ",
   "provider.connect.oauth.auto.visit.link": "ovaj link",
   "provider.connect.oauth.auto.visit.suffix":
-    " i unesi kod ispod da povežeš račun i koristiš {{provider}} modele u Kilo-u.",
+    " i unesi kod ispod da povežeš račun i koristiš {{provider}} modele u Accure-u.",
   "provider.connect.oauth.auto.confirmationCode": "Kod za potvrdu",
   "provider.connect.toast.connected.title": "{{provider}} povezan",
   "provider.connect.toast.connected.description": "{{provider}} modeli su sada dostupni za korištenje.",
@@ -288,12 +288,12 @@ export const dict = {
   "prompt.action.enhanceDescription":
     "Dugme 'Poboljšaj prompt' pomaže poboljšati vaš zahtjev pružajući dodatni kontekst, pojašnjenje ili preformulaciju. Pokušajte upisati zahtjev ovdje i ponovo kliknite na dugme da vidite kako funkcioniše.",
 
-  "speechToText.tooltip.start": "Započni glasovni unos sa Kilo Gateway",
+  "speechToText.tooltip.start": "Započni glasovni unos sa Accure Gateway",
   "speechToText.tooltip.stop": "Zaustavi hvatanje zvuka",
   "speechToText.tooltip.transcribing": "Prepisivanje... Kliknite da otkažete.",
   "speechToText.tooltip.error": "Glasovni unos nije uspio. Kliknite da očistite.",
   "speechToText.error.title": "Glasovni unos nije uspio",
-  "speechToText.error.loginRequired": "Prijavite se na Kilo da koristite glasovni unos.",
+  "speechToText.error.loginRequired": "Prijavite se na Accure da koristite glasovni unos.",
   "speechToText.error.permission": "Dozvola za mikrofon je odbijena.",
   "speechToText.error.microphone": "Nije moguće pokrenuti mikrofon.",
   "speechToText.error.recording": "Snimanje nije uspjelo.",
@@ -331,7 +331,7 @@ export const dict = {
   "dialog.directory.empty": "Nema pronađenih foldera",
 
   "dialog.server.title": "Serveri",
-  "dialog.server.description": "Promijeni na koji se Kilo server ova aplikacija povezuje.",
+  "dialog.server.description": "Promijeni na koji se Accure server ova aplikacija povezuje.",
   "dialog.server.search.placeholder": "Pretraži servere",
   "dialog.server.empty": "Još nema servera",
   "dialog.server.add.title": "Dodaj server",
@@ -460,7 +460,7 @@ export const dict = {
   "toast.session.listFailed.title": "Neuspjelo učitavanje sesija za {{project}}",
 
   "toast.update.title": "Dostupno ažuriranje",
-  "toast.update.description": "Nova verzija Kilo-a ({{version}}) je dostupna za instalaciju.",
+  "toast.update.description": "Nova verzija Accure-a ({{version}}) je dostupna za instalaciju.",
   "toast.update.action.installRestart": "Instaliraj i restartuj",
   "toast.update.action.notYet": "Ne još",
 
@@ -471,7 +471,7 @@ export const dict = {
   "error.page.action.checking": "Provjera...",
   "error.page.action.checkUpdates": "Provjeri ažuriranja",
   "error.page.action.updateTo": "Ažuriraj na {{version}}",
-  "error.page.report.prefix": "Molimo prijavi ovu grešku Kilo timu",
+  "error.page.report.prefix": "Molimo prijavi ovu grešku Accure timu",
   "error.page.report.discord": "na Discordu",
   "error.page.version": "Verzija: {{version}}",
 
@@ -505,7 +505,7 @@ export const dict = {
   "error.chain.didYouMean": "Da li si mislio: {{suggestions}}",
   "error.chain.modelNotFound": "Model nije pronađen: {{provider}}/{{model}}",
   "error.chain.checkConfig": "Provjeri konfiguraciju (opencode.json) - nazive provajdera/modela",
-  "error.chain.mcpFailed": 'MCP server "{{name}}" nije uspio. Napomena: Kilo još ne podržava MCP autentifikaciju.',
+  "error.chain.mcpFailed": 'MCP server "{{name}}" nije uspio. Napomena: Accure još ne podržava MCP autentifikaciju.',
   "error.chain.providerAuthFailed": "Autentifikacija provajdera nije uspjela ({{provider}}): {{message}}",
   "error.chain.providerInitFailed":
     'Neuspjelo inicijalizovanje provajdera "{{provider}}". Provjeri kredencijale i konfiguraciju.',
@@ -680,12 +680,12 @@ export const dict = {
   "sidebar.workspaces.enable": "Omogući radne prostore",
   "sidebar.workspaces.disable": "Onemogući radne prostore",
   "sidebar.gettingStarted.title": "Početak",
-  "sidebar.gettingStarted.line1": "Kilo uključuje besplatne modele, tako da možeš odmah početi.",
+  "sidebar.gettingStarted.line1": "Accure uključuje besplatne modele, tako da možeš odmah početi.",
   "sidebar.gettingStarted.line2": "Poveži bilo kojeg provajdera da koristiš modele, npr. Claude, GPT, Gemini itd.",
   "sidebar.project.recentSessions": "Nedavne sesije",
   "sidebar.project.viewAllSessions": "Prikaži sve sesije",
 
-  "app.name.desktop": "Kilo Desktop",
+  "app.name.desktop": "Accure Desktop",
 
   "settings.section.desktop": "Desktop",
   "settings.section.server": "Server",
@@ -698,11 +698,11 @@ export const dict = {
   "settings.general.section.sounds": "Zvučni efekti",
 
   "settings.general.row.language.title": "Jezik",
-  "settings.general.row.language.description": "Promijeni jezik prikaza u Kilo-u",
+  "settings.general.row.language.description": "Promijeni jezik prikaza u Accure-u",
   "settings.general.row.appearance.title": "Izgled",
-  "settings.general.row.appearance.description": "Prilagodi kako Kilo izgleda na tvom uređaju",
+  "settings.general.row.appearance.description": "Prilagodi kako Accure izgleda na tvom uređaju",
   "settings.general.row.theme.title": "Tema",
-  "settings.general.row.theme.description": "Prilagodi temu Kilo-a.",
+  "settings.general.row.theme.description": "Prilagodi temu Accure-a.",
   "settings.general.row.font.title": "Font",
   "settings.general.row.font.description": "Prilagodi monospace font koji se koristi u blokovima koda",
 
@@ -710,13 +710,13 @@ export const dict = {
   "settings.general.row.releaseNotes.description": 'Prikaži iskačuće prozore "Šta je novo" nakon ažuriranja',
 
   "settings.updates.row.startup.title": "Provjeri ažuriranja pri pokretanju",
-  "settings.updates.row.startup.description": "Automatski provjerava ažuriranja kada se Kilo pokrene",
+  "settings.updates.row.startup.description": "Automatski provjerava ažuriranja kada se Accure pokrene",
   "settings.updates.row.check.title": "Provjeri ažuriranja",
   "settings.updates.row.check.description": "Ručno provjeri ažuriranja i instaliraj ako su dostupna",
   "settings.updates.action.checkNow": "Provjeri sada",
   "settings.updates.action.checking": "Provjera...",
   "settings.updates.toast.latest.title": "Sve je ažurno",
-  "settings.updates.toast.latest.description": "Koristiš najnoviju verziju Kilo-a.",
+  "settings.updates.toast.latest.description": "Koristiš najnoviju verziju Accure-a.",
   "font.option.ibmPlexMono": "IBM Plex Mono",
   "font.option.cascadiaCode": "Cascadia Code",
   "font.option.firaCode": "Fira Code",
@@ -811,10 +811,10 @@ export const dict = {
   "settings.indexing.model.title": "Model embeddinga",
   "settings.indexing.provider.description":
     "Odaberite provajdera koji se koristi za generiranje embeddinga za semantičku pretragu.",
-  "settings.indexing.kiloModel.title": "Preset Kilo modela",
-  "settings.indexing.kiloModel.description": "Odaberite podržani model embeddinga hostovan na Kilo.",
-  "settings.indexing.kiloSignIn.title": "Potrebna je prijava na Kilo",
-  "settings.indexing.kiloSignIn.description": "Prijavite se na Kilo za korištenje hostovanih embeddinga.",
+  "settings.indexing.accureModel.title": "Preset Accure modela",
+  "settings.indexing.accureModel.description": "Odaberite podržani model embeddinga hostovan na Accure.",
+  "settings.indexing.accureSignIn.title": "Potrebna je prijava na Accure",
+  "settings.indexing.accureSignIn.description": "Prijavite se na Accure za korištenje hostovanih embeddinga.",
   "settings.indexing.provider.title": "Provajder embeddinga",
   "settings.indexing.providerField.description": "Postavka veze specifična za provajdera.",
   "settings.indexing.qdrantApiKey.description": "Opcionalni API ključ za Qdrant instancu.",
@@ -849,7 +849,7 @@ export const dict = {
   "settings.providers.title": "Provajderi",
   "settings.providers.description": "Postavke provajdera će se ovdje moći podešavati.",
   "settings.providers.betaNotice":
-    "Trenutno se samo Kilo Gateway provajder može konfigurisati u interfejsu za postavke. Podrška za konfigurisanje drugih provajdera stiže uskoro tokom beta perioda. U međuvremenu, provajdere možete konfigurisati koristeći CLI ili konfiguracijsku datoteku. Posvećeni smo tome da Kilo ostane otvoren, bez vezivanja.",
+    "Trenutno se samo Accure Gateway provajder može konfigurisati u interfejsu za postavke. Podrška za konfigurisanje drugih provajdera stiže uskoro tokom beta perioda. U međuvremenu, provajdere možete konfigurisati koristeći CLI ili konfiguracijsku datoteku. Posvećeni smo tome da Accure ostane otvoren, bez vezivanja.",
   "settings.providers.section.connected": "Povezani provajderi",
   "settings.providers.connected.empty": "Nema povezanih provajdera",
   "settings.providers.section.popular": "Popularni provajderi",
@@ -870,7 +870,7 @@ export const dict = {
     "Zadani model i napor zaključivanja za podagente task-tool-a. Ostavite nepodešeno da naslijedi model pozivnog agenta.",
   "settings.models.hidePromptTraining.title": "Sakrij modele koji treniraju na promptovima",
   "settings.models.hidePromptTraining.description":
-    "Sakrij Kilo Gateway modele čiji pružaoci mogu koristiti vaše promptove za treniranje.",
+    "Sakrij Accure Gateway modele čiji pružaoci mogu koristiti vaše promptove za treniranje.",
   "settings.providers.modeModels": "Model po režimu",
   "settings.providers.custom.note": "Dodajte prilagođenog provajdera putem osnovnog URL-a.",
   "settings.providers.modeModels.description":
@@ -976,21 +976,22 @@ export const dict = {
   "settings.config.status.loadedLegacy": "učitana zastarjela konfiguracija",
   "settings.config.status.notLoaded": "nije učitano",
   "settings.config.status.create": "nije pronađeno - kreiraj ovu datoteku",
-  "settings.config.title": "Otvori {{scope}} Kilo konfiguracijsku datoteku",
+  "settings.config.title": "Otvori {{scope}} Accure konfiguracijsku datoteku",
   "settings.config.placeholder":
     "Konfiguracijske datoteke se spajaju po redu; datoteke označene kao učitane trenutno utiču na postavke.",
-  "settings.config.noWorkspace": "Otvorite fasciklu radnog prostora da uredite lokalnu Kilo konfiguracijsku datoteku.",
-  "settings.config.openFailed": "Nije uspjelo otvaranje {{scope}} Kilo konfiguracijske datoteke: {{message}}",
+  "settings.config.noWorkspace":
+    "Otvorite fasciklu radnog prostora da uredite lokalnu Accure konfiguracijsku datoteku.",
+  "settings.config.openFailed": "Nije uspjelo otvaranje {{scope}} Accure konfiguracijske datoteke: {{message}}",
   "settings.config.source.xdg": "XDG globalna konfiguracija",
-  "settings.config.source.homeKilo": "Home .kilo konfiguracija",
-  "settings.config.source.homeKilocode": "Home .kilocode konfiguracija",
+  "settings.config.source.homeAccure": "Home .accurecode konfiguracija",
+  "settings.config.source.homeAccurecode": "Home .accurecode konfiguracija",
   "settings.config.source.homeOpencode": "Home .opencode konfiguracija",
-  "settings.config.source.envFile": "KILO_CONFIG datoteka okruženja",
-  "settings.config.source.envDir": "KILO_CONFIG_DIR",
+  "settings.config.source.envFile": "ACCURECODE_CONFIG datoteka okruženja",
+  "settings.config.source.envDir": "ACCURECODE_CONFIG_DIR",
   "settings.config.source.envContent": "Ugrađena konfiguracija okruženja",
-  "settings.config.source.projectKilo": "Projektna .kilo konfiguracija",
+  "settings.config.source.projectAccure": "Projektna .accurecode konfiguracija",
   "settings.config.source.projectRoot": "Konfiguracija korijena projekta",
-  "settings.config.source.projectKilocode": "Zastarjela .kilocode konfiguracija",
+  "settings.config.source.projectAccurecode": "Zastarjela .accurecode konfiguracija",
   "settings.config.source.projectOpencode": "Zastarjela .opencode konfiguracija",
   "settings.models.title": "Modeli",
   "settings.models.description": "Postavke modela će se ovdje moći podešavati.",
@@ -1064,7 +1065,7 @@ export const dict = {
   "feedback.dialog.github": "Prijavite problem na GitHubu",
   "feedback.dialog.discord": "Pridružite se našoj Discord zajednici",
   "feedback.dialog.support": "Korisnička podrška",
-  "workStyle.onboarding.welcome": "Dobro došli u Kilo",
+  "workStyle.onboarding.welcome": "Dobro došli u Accure",
   "workStyle.onboarding.title": "Odaberite kako želite raditi",
   "workStyle.onboarding.settingsNote": "Ove opcije možete promijeniti bilo kada u",
   "workStyle.onboarding.settings": "Postavkama.",
@@ -1079,7 +1080,7 @@ export const dict = {
   "workStyle.choice.visibility": "Vidljivost",
   "workStyle.choice.human-in-the-loop.eyebrow": "Čovjek nadzire proces",
   "workStyle.choice.human-in-the-loop.title": "Prvo pregledajte",
-  "workStyle.choice.human-in-the-loop.description": "Kilo zastaje i prikazuje vam svoj plan tokom rada.",
+  "workStyle.choice.human-in-the-loop.description": "Accure zastaje i prikazuje vam svoj plan tokom rada.",
   "workStyle.choice.human-in-the-loop.permissions": "Traži dozvolu prije uređivanja datoteka ili pokretanja komandi.",
   "workStyle.choice.human-in-the-loop.bash": "Traži dozvolu za svaku terminalsku komandu.",
   "workStyle.choice.human-in-the-loop.visibility": "Prikazuje sve detalje razgovora, uključujući zaključivanje.",
@@ -1090,7 +1091,7 @@ export const dict = {
   "workStyle.choice.autonomous.bash": "Može pokretati terminalske komande u radnom prostoru bez odobrenja.",
   "workStyle.choice.autonomous.visibility": "Detalji ostaju sažeti dok ih ne proširite.",
   "session.cloud.import.title": "Uvezi iz oblaka",
-  "session.cloud.import.placeholder": "ID sesije, URL ili kilo import naredba",
+  "session.cloud.import.placeholder": "ID sesije, URL ili accure import naredba",
   "session.cloud.import.button": "Uvezi",
   "session.cloud.import.invalid": "Neispravan format ID-a sesije",
   "session.cloud.import.legacy": "Čini se da je ovo zastarjela sesija koja više nije podržana.",
@@ -1167,7 +1168,7 @@ export const dict = {
 
   "settings.experimental.title": "Eksperimentalno",
   "settings.language.title": "Jezik",
-  "settings.aboutKiloCode.title": "O Accure Code-u",
+  "settings.aboutAccureCode.title": "O Accure Code-u",
 
   "session.messages.empty": "Započnite razgovor unosom poruke ispod.",
   "session.messages.welcome":
@@ -1214,41 +1215,42 @@ export const dict = {
   "time.thisMonth": "Ovog mjeseca",
   "time.older": "Starije",
 
-  "settings.aboutKiloCode.status.connected": "Povezano",
-  "settings.aboutKiloCode.status.connecting": "Povezivanje...",
-  "settings.aboutKiloCode.status.disconnected": "Odspojeno",
-  "settings.aboutKiloCode.status.error": "Greška",
-  "settings.aboutKiloCode.cliServer": "CLI server",
-  "settings.aboutKiloCode.status.label": "Status:",
-  "settings.aboutKiloCode.port.label": "Port:",
-  "settings.aboutKiloCode.versionInfo": "Informacije o verziji",
-  "settings.aboutKiloCode.version.label": "Verzija:",
-  "settings.aboutKiloCode.extensionName": "Accure Code ekstenzija",
-  "settings.aboutKiloCode.community": "Zajednica i podrška",
-  "settings.aboutKiloCode.feedback.prefix": "Ako imate pitanja ili povratne informacije, slobodno otvorite issue na",
-  "settings.aboutKiloCode.feedback.or": "ili",
-  "settings.aboutKiloCode.support.prefix": "Za pitanja o naplati ili računu, kontaktirajte korisničku podršku na",
-  "settings.aboutKiloCode.resetSettings.title": "Resetovanje postavki",
-  "settings.aboutKiloCode.resetSettings.description":
+  "settings.aboutAccureCode.status.connected": "Povezano",
+  "settings.aboutAccureCode.status.connecting": "Povezivanje...",
+  "settings.aboutAccureCode.status.disconnected": "Odspojeno",
+  "settings.aboutAccureCode.status.error": "Greška",
+  "settings.aboutAccureCode.cliServer": "CLI server",
+  "settings.aboutAccureCode.status.label": "Status:",
+  "settings.aboutAccureCode.port.label": "Port:",
+  "settings.aboutAccureCode.versionInfo": "Informacije o verziji",
+  "settings.aboutAccureCode.version.label": "Verzija:",
+  "settings.aboutAccureCode.extensionName": "Accure Code ekstenzija",
+  "settings.aboutAccureCode.community": "Zajednica i podrška",
+  "settings.aboutAccureCode.feedback.prefix": "Ako imate pitanja ili povratne informacije, slobodno otvorite issue na",
+  "settings.aboutAccureCode.feedback.or": "ili",
+  "settings.aboutAccureCode.support.prefix": "Za pitanja o naplati ili računu, kontaktirajte korisničku podršku na",
+  "settings.aboutAccureCode.resetSettings.title": "Resetovanje postavki",
+  "settings.aboutAccureCode.resetSettings.description":
     "Ovo resetuje samo postavke specifične za VS Code ekstenziju na njihove zadane vrijednosti. Postavke koje se dijele s CLI-jem, kao što su načini rada i pravila automatskog odobravanja, pohranjene su u CLI konfiguraciji i neće biti resetovane.",
-  "settings.aboutKiloCode.resetSettings.button": "Resetuj sve postavke",
-  "settings.aboutKiloCode.settingsTransfer.title": "Prijenos postavki",
-  "settings.aboutKiloCode.settingsTransfer.description":
+  "settings.aboutAccureCode.resetSettings.button": "Resetuj sve postavke",
+  "settings.aboutAccureCode.settingsTransfer.title": "Prijenos postavki",
+  "settings.aboutAccureCode.settingsTransfer.description":
     "Izvezite ili uvezite postavke za prijenos između VS Code instanci.",
-  "settings.aboutKiloCode.exportSettings": "Izvezi",
-  "settings.aboutKiloCode.importSettings": "Uvezi",
-  "settings.aboutKiloCode.importSettings.invalidJson": "Nevažeći JSON fajl. Odaberite važeći fajl s postavkama.",
-  "settings.aboutKiloCode.importSettings.invalidConfig": "Fajl ne sadrži važeće Kilo postavke.",
-  "settings.aboutKiloCode.importSettings.tooLarge": "Fajl je prevelik. Fajlovi s postavkama moraju biti manji od 1 MB.",
-  "settings.aboutKiloCode.importSettings.newerVersion":
-    "Ovaj fajl je izvezen iz novije verzije Kilo-a. Neke postavke mogu biti zanemarene.",
-  "settings.aboutKiloCode.importSettings.success":
+  "settings.aboutAccureCode.exportSettings": "Izvezi",
+  "settings.aboutAccureCode.importSettings": "Uvezi",
+  "settings.aboutAccureCode.importSettings.invalidJson": "Nevažeći JSON fajl. Odaberite važeći fajl s postavkama.",
+  "settings.aboutAccureCode.importSettings.invalidConfig": "Fajl ne sadrži važeće Accure postavke.",
+  "settings.aboutAccureCode.importSettings.tooLarge":
+    "Fajl je prevelik. Fajlovi s postavkama moraju biti manji od 1 MB.",
+  "settings.aboutAccureCode.importSettings.newerVersion":
+    "Ovaj fajl je izvezen iz novije verzije Accure-a. Neke postavke mogu biti zanemarene.",
+  "settings.aboutAccureCode.importSettings.success":
     "Postavke su uvezene. Pregledajte promjene iznad, a zatim kliknite Sačuvaj.",
 
-  "settings.aboutKiloCode.telemetry.title": "Telemetrija",
-  "settings.aboutKiloCode.telemetry.description":
+  "settings.aboutAccureCode.telemetry.title": "Telemetrija",
+  "settings.aboutAccureCode.telemetry.description":
     'Telemetrija je kontrolisana ugrađenom postavkom za telemetriju u VS Code-u. Da biste je onemogućili, idite na Postavke > Telemetrija > Nivo telemetrije i postavite na "off". Ponovo pokrenite VS Code da biste primijenili promjenu.',
-  "settings.aboutKiloCode.telemetry.openSettings": "Otvori postavke telemetrije",
+  "settings.aboutAccureCode.telemetry.openSettings": "Otvori postavke telemetrije",
 
   "settings.agentBehaviour.subtab.agents": "Agenti",
   "settings.agentBehaviour.subtab.mcpServers": "MCP serveri",
@@ -1318,18 +1320,18 @@ export const dict = {
   "settings.experimental.codebaseSearch.description": "Omogući AI pretragu prirodnim jezikom kroz bazu koda",
   "settings.experimental.speechToText.title": "Govor u tekst",
   "settings.experimental.speechToText.description":
-    "Omogućite glasovni unos u poljima za promptove koristeći vaš Kilo račun preko Kilo Gateway.",
+    "Omogućite glasovni unos u poljima za promptove koristeći vaš Accure račun preko Accure Gateway.",
   "settings.models.speechToText.disabledDescription":
-    "Omogućite i prijavite se na Kilo provajder da biste koristili Speech to Text. Speech to Text je trenutno podržan samo uz Kilo Gateway.",
+    "Omogućite i prijavite se na Accure provajder da biste koristili Speech to Text. Speech to Text je trenutno podržan samo uz Accure Gateway.",
   "settings.models.speechToTextModel.title": "Model govora u tekst",
-  "settings.models.speechToTextModel.description": "Odaberite Kilo Gateway model za transkripciju za glasovni unos.",
+  "settings.models.speechToTextModel.description": "Odaberite Accure Gateway model za transkripciju za glasovni unos.",
   "settings.experimental.continueOnDeny.title": "Nastavi pri odbijanju",
   "settings.experimental.continueOnDeny.description": "Nastavi petlju agenta kada je dozvola odbijena",
   "settings.experimental.mcpTimeout.title": "MCP istek vremena (ms)",
   "settings.experimental.mcpTimeout.description": "Istek vremena za MCP server zahtjeve u milisekundama",
   "settings.experimental.remote.title": "Remote kontrola",
   "settings.experimental.remote.description":
-    "Omogućite Remote kontrolu sesija putem Kilo Cloud. Ovo će također utjecati na CLI-jeve na ovoj mašini.",
+    "Omogućite Remote kontrolu sesija putem Accure Cloud. Ovo će također utjecati na CLI-jeve na ovoj mašini.",
   "settings.experimental.remote.current": "Trenutno stanje:",
   "settings.experimental.remote.startup": "Automatsko uključivanje pri pokretanju:",
   "settings.experimental.remote.active": "Aktivno",
@@ -1442,14 +1444,14 @@ export const dict = {
   "settings.agentBehaviour.claudeCompat.heading": "Claude Code kompatibilnost",
   "settings.agentBehaviour.claudeCompat.title": "Učitaj Claude Code datoteke",
   "settings.agentBehaviour.claudeCompat.description":
-    "Učitajte CLAUDE.md instrukcije i vještine iz vašeg Claude Code konfiguracijskog direktorija u sesije. Omogućite ovo ako želite da Kilo koristi vaše Claude Code instrukcije i vještine. Zahtijeva ponovno pokretanje.",
+    "Učitajte CLAUDE.md instrukcije i vještine iz vašeg Claude Code konfiguracijskog direktorija u sesije. Omogućite ovo ako želite da Accure koristi vaše Claude Code instrukcije i vještine. Zahtijeva ponovno pokretanje.",
   "settings.agentBehaviour.mcpDetail.command": "Naredba",
   "settings.agentBehaviour.mcpDetail.args": "Argumenti",
   "settings.agentBehaviour.mcpDetail.env": "Okruženje",
   "settings.agentBehaviour.mcpDetail.disabled": "Ovaj server je onemogućen.",
   "settings.agentBehaviour.mcpBrowseMarketplace": "Pregledaj Marketplace",
   "settings.agentBehaviour.mcpEmpty":
-    "Nema konfiguriranih MCP servera. Dodajte MCP servere u kilo.jsonc ili zamolite agenta da ih doda.",
+    "Nema konfiguriranih MCP servera. Dodajte MCP servere u accure.jsonc ili zamolite agenta da ih doda.",
   "settings.agentBehaviour.workflowsPlaceholder": "Tokovi rada se upravljaju putem datoteka tokova rada.",
   "settings.agentBehaviour.workflows.description":
     "Tokovi rada su prilagođene slash komande definirane u vašoj konfiguraciji. Upišite /command-name u chat da ih pokrenete. Komande se konfiguriraju u opencode.json pod sekcijom 'command'.",
@@ -1521,7 +1523,7 @@ export const dict = {
   "settings.display.username.title": "Korisničko ime",
   "settings.display.username.description": "Prilagođeno korisničko ime u razgovorima",
   "settings.display.fontSize.title": "Veličina fonta",
-  "settings.display.fontSize.description": "Prilagodite veličinu fonta za Kilo webview UI nezavisno od VS Code-a.",
+  "settings.display.fontSize.description": "Prilagodite veličinu fonta za Accure webview UI nezavisno od VS Code-a.",
   "settings.display.reasoningAutoCollapse.title": "Automatski sažmi razmišljanje",
   "settings.display.reasoningAutoCollapse.description":
     "Sažima blokove razmišljanja nakon što ih agent završi pisati. Ostavite isključeno da razmišljanje ostane prošireno, osim ako ga ručno sažmete.",
@@ -1556,11 +1558,11 @@ export const dict = {
 
   // legacy-migration start
   "settings.legacyMigration.link": "Migriraj sa prethodne verzije",
-  "settings.aboutKiloCode.legacyMigration.title": "Migracija sa prethodne verzije",
-  "settings.aboutKiloCode.legacyMigration.description":
+  "settings.aboutAccureCode.legacyMigration.title": "Migracija sa prethodne verzije",
+  "settings.aboutAccureCode.legacyMigration.description":
     "Migrirajte postavke iz prethodne instalacije Accure Code, uključujući API ključeve provajdera i podrazumijevani model.",
-  "settings.aboutKiloCode.rooImport.description": "Uvezite historiju razgovora iz instalacije Roo Code.",
-  "settings.aboutKiloCode.rooImport.button": "Uvezi sesije iz Roo Code",
+  "settings.aboutAccureCode.rooImport.description": "Uvezite historiju razgovora iz instalacije Roo Code.",
+  "settings.aboutAccureCode.rooImport.button": "Uvezi sesije iz Roo Code",
 
   // Screen 1 — What's New
   "migration.whatsNew.title": "Šta je novo u Accure Code",
@@ -1575,7 +1577,7 @@ export const dict = {
     "Jedinstveni interfejs za pokretanje više agenata paralelno, svaki na svom worktree-u — pratite napredak, mijenjajte kontekst i pregledajte promjene na jednom mjestu.",
   "migration.whatsNew.features.foundation.title": "Zajednički temelj",
   "migration.whatsNew.features.foundation.detail":
-    "Jedno malo, efikasno jezgro kroz sve Kilo proizvode. Poznato iskustvo bez obzira na to kako odaberete raditi.",
+    "Jedno malo, efikasno jezgro kroz sve Accure proizvode. Poznato iskustvo bez obzira na to kako odaberete raditi.",
   "migration.whatsNew.blogLink": "Pročitajte cijeli oglas",
   "migration.whatsNew.docsLink": "Novosti i često postavljana pitanja",
   "migration.whatsNew.continue": "Nastavi",
@@ -1674,7 +1676,7 @@ export const dict = {
     "Datoteke izmijenjene u radnom stablu ali još nisu pripremljene, plus nepraćene (nove) datoteke.",
   "diffViewer.source.session.label": "Sesija",
   "diffViewer.source.session.tooltip":
-    "Datoteke koje je Kilo promijenio tokom trenutne sesije, na osnovu snapshota po koraku. Resetuje se kada pokrenete novu sesiju.",
+    "Datoteke koje je Accure promijenio tokom trenutne sesije, na osnovu snapshota po koraku. Resetuje se kada pokrenete novu sesiju.",
   "diffViewer.group.session": "Sesija",
   "diffViewer.group.git": "Git",
   "diffViewer.notice.snapshotsDisabled":

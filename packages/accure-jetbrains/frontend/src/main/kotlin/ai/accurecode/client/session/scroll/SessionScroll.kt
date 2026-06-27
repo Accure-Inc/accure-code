@@ -1,12 +1,12 @@
-package ai.kilocode.client.session.scroll
+package ai.accurecode.client.session.scroll
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.SessionMessageListPanel
-import ai.kilocode.client.session.ui.SessionRootPanel
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.SessionMessageListPanel
+import ai.accurecode.client.session.ui.SessionRootPanel
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
@@ -60,7 +60,7 @@ internal class SessionScroll(
     init {
         jump = JBLabel(ScrollButtonIcon.create()).apply {
             cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-            toolTipText = KiloBundle.message("session.scroll.bottom")
+            toolTipText = AccureBundle.message("session.scroll.bottom")
             isVisible = false
             addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent) {
@@ -214,7 +214,7 @@ internal class SessionScroll(
     @RequiresEdt
     private fun syncIcon() {
         jump.icon = ScrollButtonIcon.create(question)
-        jump.toolTipText = KiloBundle.message(if (question) "session.scroll.question" else "session.scroll.bottom")
+        jump.toolTipText = AccureBundle.message(if (question) "session.scroll.question" else "session.scroll.bottom")
     }
 
     @RequiresEdt

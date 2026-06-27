@@ -1,4 +1,4 @@
-import type { SnapshotFileDiff } from "@kilocode/sdk/v2/client"
+import type { SnapshotFileDiff } from "@accurecode/sdk/v2/client"
 import type { DiffSource, DiffSourceDescriptor, DiffSourceFetch } from "./types"
 import { toSessionDiffFile } from "./session"
 

@@ -33,7 +33,7 @@ export const SkillTool = Tool.define(
             metadata: {},
           })
 
-          // kilocode_change start - built-in skills have no filesystem directory
+          // accurecode_change start - built-in skills have no filesystem directory
           if (info.location === Skill.BUILTIN_LOCATION) {
             return {
               title: `Loaded skill: ${info.name}`,
@@ -50,7 +50,7 @@ export const SkillTool = Tool.define(
               },
             }
           }
-          // kilocode_change end
+          // accurecode_change end
 
           const dir = path.dirname(info.location)
           const base = pathToFileURL(dir).href

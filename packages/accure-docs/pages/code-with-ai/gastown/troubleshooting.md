@@ -31,7 +31,7 @@ Gas Town is a complex system with multiple agents, containers, and external inte
 - Environment variables causing startup crash
 
 **Fix:**
-1. Check that the [Kilo GitHub App](https://github.com/apps/kilo-code) is installed on your repository
+1. Check that the [Accure GitHub App](https://github.com/apps/accure-code) is installed on your repository
 2. Verify your GitHub PAT is valid (if configured)
 3. Remove any environment variables that might cause issues during container init
 4. Try a container restart from town settings
@@ -44,7 +44,7 @@ Gas Town is a complex system with multiple agents, containers, and external inte
 
 | Cause | Fix |
 |---|---|
-| GitHub App uninstalled | Reinstall at [github.com/apps/kilo-code](https://github.com/apps/kilo-code) |
+| GitHub App uninstalled | Reinstall at [github.com/apps/accure-code](https://github.com/apps/accure-code) |
 | PAT expired or revoked | Generate a new token and update in Settings → Git & Authentication |
 | Repository visibility changed | Ensure the GitHub App has access to the repo |
 | Org SSO not authorized | Authorize the token for your organization's SSO |
@@ -75,7 +75,7 @@ Beads automatically escalate after 3 failed review cycles. If a bead is genuinel
 
 **Common causes:**
 - Container sleeping (wakes up after ~30 seconds)
-- KILOCODE_TOKEN expired
+- ACCURECODE_TOKEN expired
 - Gateway authentication failure
 
 **Fix:**
@@ -133,4 +133,4 @@ If you can't resolve an issue:
 
 1. **Ask the Mayor** — it can diagnose most problems
 2. **Check the event timeline** — see exactly what happened and when
-3. **Contact support** — reach out at [kilo.ai/discord](https://kilo.ai/discord) with your town ID
+3. **Contact support** — reach out at [accure.ai/discord](https://accure.ai/discord) with your town ID

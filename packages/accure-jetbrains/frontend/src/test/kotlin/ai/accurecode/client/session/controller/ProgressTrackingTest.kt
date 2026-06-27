@@ -1,10 +1,10 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.session.model.StepFinish
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.MessageErrorDto
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.session.model.StepFinish
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.MessageErrorDto
 
 /**
  * Verifies that:
@@ -47,7 +47,7 @@ class ProgressTrackingTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [busy] [considering next steps]
+            [code] [accure/gpt-5] [busy] [considering next steps]
             """,
             m,
         )
@@ -66,7 +66,7 @@ class ProgressTrackingTest : SessionControllerTestBase() {
             reasoning#p1 done=true:
               <empty>
 
-            [code] [kilo/gpt-5] [busy] [thinking]
+            [code] [accure/gpt-5] [busy] [thinking]
             """,
             m,
         )
@@ -84,7 +84,7 @@ class ProgressTrackingTest : SessionControllerTestBase() {
             assistant#msg1
             tool#p1 bash [PENDING]
 
-            [code] [kilo/gpt-5] [busy] [running commands]
+            [code] [accure/gpt-5] [busy] [running commands]
             """,
             m,
         )
@@ -111,7 +111,7 @@ class ProgressTrackingTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -125,7 +125,7 @@ class ProgressTrackingTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [error] [Timed out]
+            [code] [accure/gpt-5] [error] [Timed out]
             """,
             m,
         )

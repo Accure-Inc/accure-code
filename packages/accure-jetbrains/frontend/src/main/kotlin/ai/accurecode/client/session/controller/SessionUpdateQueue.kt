@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.log.ChatLogSummary
-import ai.kilocode.log.KiloLog
-import ai.kilocode.rpc.dto.ChatEventDto
+import ai.accurecode.log.ChatLogSummary
+import ai.accurecode.log.AccureLog
+import ai.accurecode.rpc.dto.ChatEventDto
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.Disposer
@@ -30,7 +30,7 @@ internal class SessionUpdateQueue(
     private val sid: () -> String,
 ) : Disposable {
     companion object {
-        private val LOG = KiloLog.create(SessionUpdateQueue::class.java)
+        private val LOG = AccureLog.create(SessionUpdateQueue::class.java)
     }
 
     private val app = ApplicationManager.getApplication()

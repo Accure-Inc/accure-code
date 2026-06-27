@@ -19,7 +19,7 @@ function setup() {
 test("config writes include the selected directory", async () => {
   const calls = setup()
   const client = await import("./client")
-  const query = { url: "http://kilo:secret@127.0.0.1:4097", dir: "/tmp/project", scope: "project" as const }
+  const query = { url: "http://accure:secret@127.0.0.1:4097", dir: "/tmp/project", scope: "project" as const }
 
   await client.saveConfig(query, { permission: { edit: { "*": "allow" } } })
   await client.unsetConfig(query, [["permission", "edit"]])

@@ -1,10 +1,10 @@
-package ai.kilocode.client.session.history
+package ai.accurecode.client.session.history
 
-import ai.kilocode.client.plugin.KiloBundle
+import ai.accurecode.client.plugin.AccureBundle
 import com.intellij.ui.components.JBList
 import java.awt.event.MouseEvent
 
-internal fun title(item: HistoryItem): String = item.title.takeIf { it.isNotBlank() } ?: KiloBundle.message("history.untitled")
+internal fun title(item: HistoryItem): String = item.title.takeIf { it.isNotBlank() } ?: AccureBundle.message("history.untitled")
 
 internal fun <T> itemAt(list: JBList<T>, e: MouseEvent): T? {
     val row = list.locationToIndex(e.point)

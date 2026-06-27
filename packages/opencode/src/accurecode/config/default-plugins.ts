@@ -1,8 +1,8 @@
 import { createRequire } from "module"
 import { ConfigPlugin } from "@/config/plugin"
-import { isIndexingPlugin } from "@kilocode/accure-indexing/detect"
-import { ensureAtomicChatPlugin, isAtomicChatPlugin } from "@/kilocode/atomic-chat-feature"
-import { ensureIndexingPlugin, resolveIndexingPlugin } from "@/kilocode/indexing-feature"
+import { isIndexingPlugin } from "@accurecode/accure-indexing/detect"
+import { ensureAtomicChatPlugin, isAtomicChatPlugin } from "@/accurecode/atomic-chat-feature"
+import { ensureIndexingPlugin, resolveIndexingPlugin } from "@/accurecode/indexing-feature"
 
 type Log = {
   debug: (msg: string, data?: Record<string, unknown>) => void
@@ -10,7 +10,7 @@ type Log = {
 
 const req = createRequire(import.meta.url)
 
-export namespace KilocodeDefaultPlugins {
+export namespace AccurecodeDefaultPlugins {
   export function apply<T extends { plugin?: ConfigPlugin.Spec[]; plugin_origins?: ConfigPlugin.Origin[] }>(
     cfg: T,
     opts: { disabled: boolean; log?: Log },

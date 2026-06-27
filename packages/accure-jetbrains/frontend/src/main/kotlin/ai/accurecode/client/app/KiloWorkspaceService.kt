@@ -1,16 +1,16 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.client.app
+package ai.accurecode.client.app
 
-import ai.kilocode.rpc.KiloWorkspaceRpcApi
-import ai.kilocode.rpc.dto.ConfigTargetDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.LoadErrorDto
-import ai.kilocode.rpc.dto.ModelsWorkspaceDto
-import ai.kilocode.rpc.dto.WorkspaceFileDto
+import ai.accurecode.rpc.AccureWorkspaceRpcApi
+import ai.accurecode.rpc.dto.ConfigTargetDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.LoadErrorDto
+import ai.accurecode.rpc.dto.ModelsWorkspaceDto
+import ai.accurecode.rpc.dto.WorkspaceFileDto
 import com.intellij.openapi.components.Service
-import ai.kilocode.log.KiloLog
+import ai.accurecode.log.AccureLog
 import fleet.rpc.client.durable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -29,16 +29,16 @@ import java.util.concurrent.ConcurrentHashMap
  * on the backend host.
  */
 @Service(Service.Level.APP)
-class KiloWorkspaceService internal constructor(
+class AccureWorkspaceService internal constructor(
     private val cs: CoroutineScope,
-    private val rpc: KiloWorkspaceRpcApi?,
+    private val rpc: AccureWorkspaceRpcApi?,
 ) {
     /** Platform constructor — resolves RPC from the service container. */
     constructor(cs: CoroutineScope) : this(cs, null)
 
     companion object {
-        private val LOG = KiloLog.create(KiloWorkspaceService::class.java)
-        private val INIT = KiloWorkspaceStateDto(KiloWorkspaceStatusDto.PENDING)
+        private val LOG = AccureLog.create(AccureWorkspaceService::class.java)
+        private val INIT = AccureWorkspaceStateDto(AccureWorkspaceStatusDto.PENDING)
     }
 
     private val workspaces = ConcurrentHashMap<String, Workspace>()
@@ -50,15 +50,15 @@ class KiloWorkspaceService internal constructor(
 
     // ------ RPC helpers ------
 
-    private suspend fun <T> call(block: suspend KiloWorkspaceRpcApi.() -> T): T {
+    private suspend fun <T> call(block: suspend AccureWorkspaceRpcApi.() -> T): T {
         val api = rpc
-        return if (api != null) block(api) else durable { block(KiloWorkspaceRpcApi.getInstance()) }
+        return if (api != null) block(api) else durable { block(AccureWorkspaceRpcApi.getInstance()) }
     }
 
-    private fun <T> stream(block: suspend KiloWorkspaceRpcApi.() -> Flow<T>): Flow<T> = flow {
+    private fun <T> stream(block: suspend AccureWorkspaceRpcApi.() -> Flow<T>): Flow<T> = flow {
         val api = rpc
         if (api != null) block(api).collect { emit(it) }
-        else durable { block(KiloWorkspaceRpcApi.getInstance()).collect { emit(it) } }
+        else durable { block(AccureWorkspaceRpcApi.getInstance()).collect { emit(it) } }
     }
 
     // ------ Public API ------

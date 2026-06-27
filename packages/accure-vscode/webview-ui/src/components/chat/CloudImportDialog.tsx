@@ -1,8 +1,8 @@
 import { Component, createSignal } from "solid-js"
-import { Dialog } from "@kilocode/accure-ui/dialog"
-import { Button } from "@kilocode/accure-ui/button"
-import { TextField } from "@kilocode/accure-ui/text-field"
-import { useDialog } from "@kilocode/accure-ui/context/dialog"
+import { Dialog } from "@accurecode/accure-ui/dialog"
+import { Button } from "@accurecode/accure-ui/button"
+import { TextField } from "@accurecode/accure-ui/text-field"
+import { useDialog } from "@accurecode/accure-ui/context/dialog"
 import { useLanguage } from "../../context/language"
 
 const UUID_RE = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i

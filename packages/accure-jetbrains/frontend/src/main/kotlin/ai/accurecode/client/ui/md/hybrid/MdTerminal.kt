@@ -1,4 +1,4 @@
-package ai.kilocode.client.ui.md.hybrid
+package ai.accurecode.client.ui.md.hybrid
 
 import com.intellij.execution.process.AnsiEscapeDecoder
 import com.intellij.execution.process.ProcessOutputTypes

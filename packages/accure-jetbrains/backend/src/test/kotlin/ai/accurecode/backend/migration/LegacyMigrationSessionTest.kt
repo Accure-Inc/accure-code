@@ -1,8 +1,8 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
-import ai.kilocode.backend.migration.session.LegacySessionIds
-import ai.kilocode.backend.migration.session.LegacySessionParser
-import ai.kilocode.backend.migration.session.LegacySessionParts
+import ai.accurecode.backend.migration.session.LegacySessionIds
+import ai.accurecode.backend.migration.session.LegacySessionParser
+import ai.accurecode.backend.migration.session.LegacySessionParts
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlin.test.Test
@@ -79,7 +79,7 @@ class LegacyMigrationSessionTest {
 
     @Test
     fun `reasoning_content extracted`() {
-        val entry = ai.kilocode.backend.migration.session.LegacyApiMessage(
+        val entry = ai.accurecode.backend.migration.session.LegacyApiMessage(
             role = "assistant",
             content = listOf(mapOf("type" to "text", "text" to "Hi")),
             ts = 0L,
@@ -96,7 +96,7 @@ class LegacyMigrationSessionTest {
 
     @Test
     fun `reasoning_details extracted from text field`() {
-        val entry = ai.kilocode.backend.migration.session.LegacyApiMessage(
+        val entry = ai.accurecode.backend.migration.session.LegacyApiMessage(
             role = "assistant",
             content = listOf<Any>(),
             ts = null,
@@ -186,7 +186,7 @@ class LegacyMigrationSessionTest {
     @Test
     fun `thereIsNoToolResult returns true when no matching result`() {
         val conv = listOf(
-            ai.kilocode.backend.migration.session.LegacyApiMessage("user", "text", null, null, null, null, null, null, null),
+            ai.accurecode.backend.migration.session.LegacyApiMessage("user", "text", null, null, null, null, null, null, null),
         )
         assertTrue(LegacySessionParts.thereIsNoToolResult(conv, "call-id-1"))
     }

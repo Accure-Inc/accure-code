@@ -1,7 +1,7 @@
 import * as path from "path"
 import * as vscode from "vscode"
 import type {
-  KiloClient,
+  AccureClient,
   Session,
   SessionStatus,
   Event,
@@ -9,16 +9,16 @@ import type {
   TextPartInput,
   FilePartInput,
   Config,
-} from "@kilocode/sdk/v2/client"
-import { type KiloConnectionService, ServerStartupError } from "./services/cli-backend"
+} from "@accurecode/sdk/v2/client"
+import { type AccureConnectionService, ServerStartupError } from "./services/cli-backend"
 import { previewSound } from "./services/attention"
 import type { EditorContext, IndexingStatus } from "./services/cli-backend/types"
 import { FileIgnoreController } from "./services/autocomplete/shims/FileIgnoreController"
 import { ChatTextAreaAutocomplete } from "./services/autocomplete/chat-autocomplete/ChatTextAreaAutocomplete"
 import { buildWebviewHtml, getWebviewFontSize } from "./utils"
-import { saveImage } from "./kilo-provider/save-image"
-import { handleEditorAction } from "./kilo-provider/editor-actions"
-import { exportTranscript } from "./kilo-provider/export-transcript"
+import { saveImage } from "./accure-provider/save-image"
+import { handleEditorAction } from "./accure-provider/editor-actions"
+import { exportTranscript } from "./accure-provider/export-transcript"
 import {
   TelemetryProxy,
   type TelemetryPropertiesProvider,
@@ -46,51 +46,51 @@ import {
   SessionStreamScheduler,
   buildSettingPath,
   type SessionRefreshContext,
-} from "./kilo-provider-utils"
+} from "./accure-provider-utils"
 import { GitOps } from "./agent-manager/GitOps"
 import { GitStatsPoller, type LocalStats } from "./agent-manager/GitStatsPoller"
 import { diffSummary as localDiffSummary } from "./agent-manager/local-diff"
 import { getWorkspaceRoot } from "./review-utils"
-import { createMarketplaceRemover, removeAgent, removeMcp } from "./kilo-provider/remove-config-item"
+import { createMarketplaceRemover, removeAgent, removeMcp } from "./accure-provider/remove-config-item"
 import type { RemoteStatusService } from "./services/RemoteStatusService"
 import { resolveProjectDirectory } from "./project-directory"
 import { seedSessionStatuses } from "./session-status"
 import { normalizeEnhancePromptErrorMessage } from "./enhance-prompt-error"
 import { retry } from "./services/cli-backend/retry"
-import { slimInfo, slimPart, slimParts } from "./kilo-provider/slim-metadata"
-import { handleSidebarWorktreeMessage } from "./kilo-provider/sidebar-worktree"
-import { parseMessageFiles, type MessageFile } from "./kilo-provider/message-files"
-import { renameSession } from "./kilo-provider/rename-session"
-import { handleFileSearch } from "./kilo-provider/file-search"
-import { watchFontSizeConfig } from "./kilo-provider/font-size"
+import { slimInfo, slimPart, slimParts } from "./accure-provider/slim-metadata"
+import { handleSidebarWorktreeMessage } from "./accure-provider/sidebar-worktree"
+import { parseMessageFiles, type MessageFile } from "./accure-provider/message-files"
+import { renameSession } from "./accure-provider/rename-session"
+import { handleFileSearch } from "./accure-provider/file-search"
+import { watchFontSizeConfig } from "./accure-provider/font-size"
 import { getTerminalContents } from "./services/terminal/context"
-import { disposeGitChangesTarget } from "./kilo-provider/git-changes-target"
-import { interceptMessage } from "./kilo-provider/git-changes-request"
-import { matchFollowup, recordFollowup, type Followup } from "./kilo-provider/followup-session"
-import { clearCommandsCache, loadCommands } from "./kilo-provider/commands"
-import { fetchMessagePage, MESSAGE_PAGE_LIMIT } from "./kilo-provider/message-page"
-import { childID } from "./kilo-provider/task-session"
-import { VisibleTaskStreams } from "./kilo-provider/visible-task-streams"
-import { handleNetworkEvent, clearNetworkWaits } from "./kilo-provider/network"
-import { SessionAbort } from "./kilo-provider/abort"
+import { disposeGitChangesTarget } from "./accure-provider/git-changes-target"
+import { interceptMessage } from "./accure-provider/git-changes-request"
+import { matchFollowup, recordFollowup, type Followup } from "./accure-provider/followup-session"
+import { clearCommandsCache, loadCommands } from "./accure-provider/commands"
+import { fetchMessagePage, MESSAGE_PAGE_LIMIT } from "./accure-provider/message-page"
+import { childID } from "./accure-provider/task-session"
+import { VisibleTaskStreams } from "./accure-provider/visible-task-streams"
+import { handleNetworkEvent, clearNetworkWaits } from "./accure-provider/network"
+import { SessionAbort } from "./accure-provider/abort"
 import {
   buildAutocompleteSettingsMessage,
   validAutocompleteSetting,
   watchAutocompleteConfig,
 } from "./services/autocomplete/settings"
-import { routeEarlyMessage } from "./kilo-provider/early-message"
-import * as ModelState from "./kilo-provider/model-state"
-import { handleForkSession } from "./kilo-provider/fork-session"
-import { openConfig } from "./kilo-provider/open-config"
+import { routeEarlyMessage } from "./accure-provider/early-message"
+import * as ModelState from "./accure-provider/model-state"
+import { handleForkSession } from "./accure-provider/fork-session"
+import { openConfig } from "./accure-provider/open-config"
 import {
   getWorkStylePayload,
   handleWorkStyleMessage,
   isWorkStyleSetting,
   watchWorkStyleConfig,
-} from "./kilo-provider/work-style"
-import * as McpOAuth from "./kilo-provider/mcp-oauth"
+} from "./accure-provider/work-style"
+import * as McpOAuth from "./accure-provider/mcp-oauth"
 import { retryable, backoff, MAX_RETRIES } from "./util/retry"
-import { hasGit } from "./kilo-provider/git-status"
+import { hasGit } from "./accure-provider/git-status"
 // legacy-migration start
 import {
   checkAndShowMigrationWizard,
@@ -100,7 +100,7 @@ import {
   handleSkipLegacyMigration,
   handleClearLegacyData,
   type MigrationContext,
-} from "./kilo-provider/handlers/migration"
+} from "./accure-provider/handlers/migration"
 // legacy-migration end
 import {
   handleLogin,
@@ -108,25 +108,25 @@ import {
   handleSetOrganization,
   handleRefreshProfile,
   type AuthContext,
-} from "./kilo-provider/handlers/auth"
+} from "./accure-provider/handlers/auth"
 import {
   handleRequestCloudSessions,
   handleRequestCloudSessionData,
   handleImportAndSend,
   type CloudSessionContext,
-} from "./kilo-provider/handlers/cloud-session"
+} from "./accure-provider/handlers/cloud-session"
 import {
   handlePermissionResponse,
   fetchAndSendPendingPermissions,
   type PermissionContext,
-} from "./kilo-provider/handlers/permission-handler"
+} from "./accure-provider/handlers/permission-handler"
 import {
   handleQuestionReply,
   handleQuestionReject,
   fetchAndSendPendingQuestions,
-} from "./kilo-provider/handlers/question"
-import { fetchAndSendPendingSuggestions } from "./kilo-provider/handlers/suggestion"
-import { nativeTitle } from "./kilo-provider/native-tab-title"
+} from "./accure-provider/handlers/question"
+import { fetchAndSendPendingSuggestions } from "./accure-provider/handlers/suggestion"
+import { nativeTitle } from "./accure-provider/native-tab-title"
 import { parseReview, reviewMetadata, type ReviewMessageData } from "./shared/review-comments"
 
 import {
@@ -140,16 +140,17 @@ import {
   completeProviderOAuth as completeOAuthAction,
   disconnectProvider as disconnectProviderAction,
   saveCustomProvider as saveCustomProviderAction,
+  saveProviderOptions as saveProviderOptionsAction,
   resolveStoredKey,
 } from "./provider-actions"
 import type { StoredProviderKey } from "./provider-actions"
 import { fetchOpenAIModels, FetchModelsError } from "./shared/fetch-models"
-import type { Agent } from "@kilocode/sdk/v2/client"
+import type { Agent } from "@accurecode/sdk/v2/client"
 import { configFeatures } from "./features"
-import { createAutoApproveBridge } from "./kilo-provider/auto-approve"
-import type { KiloProviderOptions } from "./kilo-provider/options"
-import { fetchKiloEmbeddingModelCatalog } from "@kilocode/accure-gateway"
-import { stopSessionProcesses } from "./kilo-provider/background-process"
+import { createAutoApproveBridge } from "./accure-provider/auto-approve"
+import type { AccureProviderOptions } from "./accure-provider/options"
+import { fetchAccureEmbeddingModelCatalog } from "@accurecode/accure-gateway"
+import { stopSessionProcesses } from "./accure-provider/background-process"
 
 type MessageLoadMode = "replace" | "prepend" | "focus" | "reconcile"
 type ContextMessage = { contextDirectory?: unknown }
@@ -279,7 +280,7 @@ export function unwrapSyncEvent(event: GlobalEvent["payload"] | RawSyncPayload):
   }
 }
 
-export class KiloProvider implements vscode.WebviewViewProvider, TelemetryPropertiesProvider {
+export class AccureProvider implements vscode.WebviewViewProvider, TelemetryPropertiesProvider {
   public static readonly viewType = "accure-code.SidebarProvider"
   private readonly instanceId = crypto.randomUUID()
 
@@ -314,8 +315,8 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   private cachedGlobalConfig: Config | null = null
   /** Cached indexingStatusLoaded payload so requestIndexingStatus can be served before client is ready */
   private cachedIndexingStatusMessage: unknown = null
-  /** Cached kiloEmbeddingModelsLoaded payload so requestKiloEmbeddingModels is resilient offline. */
-  private cachedKiloEmbeddingModelsMessage: unknown = null
+  /** Cached accureEmbeddingModelsLoaded payload so requestAccureEmbeddingModels is resilient offline. */
+  private cachedAccureEmbeddingModelsMessage: unknown = null
   /** Cached mcpStatusLoaded payload so requestMcpStatus can be served before client is ready */
   private cachedMcpStatusMessage: unknown = null
   /** Ref-count of in-flight handleUpdateConfig calls; prevents fetchAndSendConfig from sending stale data */
@@ -323,7 +324,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   private configWarningsShown = false
   /** Cached notificationsLoaded payload */
   private cachedNotificationsMessage: unknown = null
-  private pendingKiloModel: { modelID?: string; agent?: string } | null = null
+  private pendingAccureModel: { modelID?: string; agent?: string } | null = null
   private pendingReviewComments: { comments: unknown[]; autoSend: boolean }[] = []
   private readyResolvers: (() => void)[] = []
   private promptRecoveryQueued = false
@@ -392,9 +393,9 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
   constructor(
     private readonly extensionUri: vscode.Uri,
-    private readonly connectionService: KiloConnectionService,
+    private readonly connectionService: AccureConnectionService,
     private readonly extensionContext?: vscode.ExtensionContext,
-    private readonly opts: KiloProviderOptions = {},
+    private readonly opts: AccureProviderOptions = {},
   ) {
     this.projectDirectory = opts.projectDirectory
     this.slimEditMetadata = opts.slimEditMetadata ?? true
@@ -430,7 +431,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
     this.checkpoints.set(sid, pending)
     void pending.then(cleanup, (error) => {
-      console.error("[Kilo New] checkpoint mutation failed:", error)
+      console.error("[Accure New] checkpoint mutation failed:", error)
       cleanup()
     })
   }
@@ -479,10 +480,10 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   }
 
   /**
-   * Convenience getter that returns the shared SDK KiloClient or null if not yet connected.
+   * Convenience getter that returns the shared SDK AccureClient or null if not yet connected.
    * Preserves the existing null-check pattern used throughout handler methods.
    */
-  private get client(): KiloClient | null {
+  private get client(): AccureClient | null {
     try {
       return this.connectionService.getClient()
     } catch {
@@ -501,7 +502,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   }
 
   // Strip metadata unused by the webview to keep session switches fast.
-  // Logic in kilo-provider/slim-metadata.ts.
+  // Logic in accure-provider/slim-metadata.ts.
   private slimInfo<T>(info: T): T {
     if (!this.slimEditMetadata) return info
     return slimInfo(info)
@@ -545,7 +546,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
   private async syncWebviewState(reason: string): Promise<void> {
     const serverInfo = this.connectionService.getServerInfo()
-    console.log("[Kilo New] KiloProvider: 🔄 syncWebviewState()", {
+    console.log("[Accure New] AccureProvider: 🔄 syncWebviewState()", {
       reason,
       isWebviewReady: this.isWebviewReady,
       connectionState: this.connectionState,
@@ -554,7 +555,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     })
 
     if (!this.isWebviewReady) {
-      console.log("[Kilo New] KiloProvider: ⏭️ syncWebviewState skipped (webview not ready)")
+      console.log("[Accure New] AccureProvider: ⏭️ syncWebviewState skipped (webview not ready)")
       return
     }
 
@@ -576,13 +577,13 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
 
     // Always attempt to fetch+push profile when connected.
-    // Profile returns 401 when user isn't logged into Kilo Gateway — that's expected.
+    // Profile returns 401 when user isn't logged into Accure Gateway — that's expected.
     // Use fire-and-forget (no throwOnError) to match old getProfile() which returned null on error.
     if (this.connectionState === "connected" && this.client) {
-      console.log("[Kilo New] KiloProvider: 👤 syncWebviewState fetching profile...")
-      const profileResult = await retry(() => this.client!.kilo.profile())
+      console.log("[Accure New] AccureProvider: 👤 syncWebviewState fetching profile...")
+      const profileResult = await retry(() => this.client!.accure.profile())
       const profileData = profileResult.data ?? null
-      console.log("[Kilo New] KiloProvider: 👤 syncWebviewState profile:", profileData ? "received" : "null")
+      console.log("[Accure New] AccureProvider: 👤 syncWebviewState profile:", profileData ? "received" : "null")
       this.postMessage({
         type: "profileData",
         data: profileData,
@@ -655,7 +656,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     vscode.commands.executeCommand("setContext", "accure-code.sidebarVisible", visible)
   }
 
-  /** Resolve a WebviewPanel for displaying Kilo in an editor tab. */
+  /** Resolve a WebviewPanel for displaying Accure in an editor tab. */
   public resolveWebviewPanel(panel: vscode.WebviewPanel): void {
     // WebviewPanel can be restored/reloaded; ensure we don't treat it as ready prematurely.
     this.isWebviewReady = false
@@ -765,10 +766,10 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     this.postMessage({ type: "openCloudSession", sessionId })
   }
 
-  public selectKiloModel(modelID?: string, agent?: string): void {
+  public selectAccureModel(modelID?: string, agent?: string): void {
     if (!modelID && !agent) return
-    this.pendingKiloModel = { ...(modelID && { modelID }), ...(agent && { agent }) }
-    this.flushPendingKiloModel()
+    this.pendingAccureModel = { ...(modelID && { modelID }), ...(agent && { agent }) }
+    this.flushPendingAccureModel()
   }
 
   public setContinueInWorktreeHandler(
@@ -849,10 +850,10 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.visibleTaskStreams.handle(message)
       switch (message.type) {
         case "webviewReady":
-          console.log("[Kilo New] KiloProvider: ✅ webviewReady received")
+          console.log("[Accure New] AccureProvider: ✅ webviewReady received")
           this.isWebviewReady = true
           this.visibleTaskStreams.clear()
-          this.flushPendingKiloModel()
+          this.flushPendingAccureModel()
           await this.syncWebviewState("webviewReady")
           this.flushPendingReviewComments()
           this.recoverPendingPrompts()
@@ -936,11 +937,11 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           break
         case "syncSession":
           this.handleSyncSession(message.sessionID, message.parentSessionID).catch((e) =>
-            console.error("[Kilo New] handleSyncSession failed:", e),
+            console.error("[Accure New] handleSyncSession failed:", e),
           )
           break
         case "loadSessions":
-          this.handleLoadSessions().catch((e) => console.error("[Kilo New] handleLoadSessions failed:", e))
+          this.handleLoadSessions().catch((e) => console.error("[Accure New] handleLoadSessions failed:", e))
           break
         case "login": {
           const attempt = ++this.loginAttempt
@@ -976,13 +977,13 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           break
         case "forkSession":
           handleForkSession(this.forkCtx, message.sessionId, message.messageId).catch((e) =>
-            console.error("[Kilo New] handleForkSession failed:", e),
+            console.error("[Accure New] handleForkSession failed:", e),
           )
           break
         case "retryConnection":
-          console.log("[Kilo New] KiloProvider: 🔄 Retrying connection...")
+          console.log("[Accure New] AccureProvider: 🔄 Retrying connection...")
           this.initializeConnection().catch((e) =>
-            console.error("[Kilo New] KiloProvider: ❌ Retry connection failed:", e),
+            console.error("[Accure New] AccureProvider: ❌ Retry connection failed:", e),
           )
           break
         case "openSubAgentViewer":
@@ -991,52 +992,53 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         case "saveImage":
           return saveImage(this.getWorkspaceDirectory(this.currentSession?.id), message)
         case "requestProviders":
-          this.fetchAndSendProviders().catch((e) => console.error("[Kilo New] fetchAndSendProviders failed:", e))
+          this.fetchAndSendProviders().catch((e) => console.error("[Accure New] fetchAndSendProviders failed:", e))
           break
         case "connectProvider":
         case "authorizeProviderOAuth":
         case "completeProviderOAuth":
         case "disconnectProvider":
         case "saveCustomProvider":
+        case "saveProviderOptions":
           await this.handleProviderAction(message)
           break
         case "fetchCustomProviderModels":
           this.handleFetchCustomProviderModels(message).catch((e) =>
-            console.error("[Kilo New] fetchCustomProviderModels failed:", e),
+            console.error("[Accure New] fetchCustomProviderModels failed:", e),
           )
           break
         case "compact":
           await this.handleCompact(message.sessionID, message.providerID, message.modelID)
           break
         case "requestAgents":
-          this.fetchAndSendAgents().catch((e) => console.error("[Kilo New] fetchAndSendAgents failed:", e))
+          this.fetchAndSendAgents().catch((e) => console.error("[Accure New] fetchAndSendAgents failed:", e))
           break
         case "requestSkills":
-          this.fetchAndSendSkills().catch((e) => console.error("[Kilo New] fetchAndSendSkills failed:", e))
+          this.fetchAndSendSkills().catch((e) => console.error("[Accure New] fetchAndSendSkills failed:", e))
           break
         case "requestCommands":
-          this.fetchAndSendCommands().catch((e) => console.error("[Kilo New] fetchAndSendCommands failed:", e))
+          this.fetchAndSendCommands().catch((e) => console.error("[Accure New] fetchAndSendCommands failed:", e))
           break
         case "removeSkill":
           this.removeSkillViaCli(message.location).catch((e: unknown) =>
-            console.error("[Kilo New] removeSkill failed:", e),
+            console.error("[Accure New] removeSkill failed:", e),
           )
           break
         case "removeAgent":
-          this.handleRemoveAgent(message.name).catch((e) => console.error("[Kilo New] handleRemoveAgent failed:", e))
+          this.handleRemoveAgent(message.name).catch((e) => console.error("[Accure New] handleRemoveAgent failed:", e))
           break
         case "removeMcp":
-          this.handleRemoveMcp(message.name).catch((e) => console.error("[Kilo New] handleRemoveMcp failed:", e))
+          this.handleRemoveMcp(message.name).catch((e) => console.error("[Accure New] handleRemoveMcp failed:", e))
           break
         case "requestMcpStatus":
-          this.fetchAndSendMcpStatus().catch((e) => console.error("[Kilo New] fetchAndSendMcpStatus failed:", e))
+          this.fetchAndSendMcpStatus().catch((e) => console.error("[Accure New] fetchAndSendMcpStatus failed:", e))
           break
         case "connectMcp": {
           const c1 = this.client
           if (c1) {
             void McpOAuth.connectMcpServer(c1, message.name, this.getWorkspaceDirectory(), () =>
               this.fetchAndSendMcpStatus(),
-            ).catch((e) => console.error("[Kilo New] connectMcpServer failed:", e))
+            ).catch((e) => console.error("[Accure New] connectMcpServer failed:", e))
           }
           break
         }
@@ -1045,7 +1047,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           if (c2) {
             void McpOAuth.disconnectMcpServer(c2, message.name, this.getWorkspaceDirectory(), () =>
               this.fetchAndSendMcpStatus(),
-            ).catch((e) => console.error("[Kilo New] disconnectMcpServer failed:", e))
+            ).catch((e) => console.error("[Accure New] disconnectMcpServer failed:", e))
           }
           break
         }
@@ -1054,7 +1056,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           if (c) {
             void McpOAuth.authenticateMcpServer(c, message.name, this.getWorkspaceDirectory(), () =>
               this.fetchAndSendMcpStatus(),
-            ).catch((e) => console.error("[Kilo New] authenticateMcpServer failed:", e))
+            ).catch((e) => console.error("[Accure New] authenticateMcpServer failed:", e))
           }
           break
         }
@@ -1070,19 +1072,21 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           await handleQuestionReject(this.questionCtx, message.requestID, message.sessionID)
           break
         case "requestConfig":
-          this.fetchAndSendConfig().catch((e) => console.error("[Kilo New] fetchAndSendConfig failed:", e))
+          this.fetchAndSendConfig().catch((e) => console.error("[Accure New] fetchAndSendConfig failed:", e))
           break
         case "requestGlobalConfig":
-          this.fetchAndSendGlobalConfig().catch((e) => console.error("[Kilo New] fetchAndSendGlobalConfig failed:", e))
+          this.fetchAndSendGlobalConfig().catch((e) =>
+            console.error("[Accure New] fetchAndSendGlobalConfig failed:", e),
+          )
           break
         case "requestIndexingStatus":
           this.fetchAndSendIndexingStatus().catch((e) =>
-            console.error("[Kilo New] fetchAndSendIndexingStatus failed:", e),
+            console.error("[Accure New] fetchAndSendIndexingStatus failed:", e),
           )
           break
-        case "requestKiloEmbeddingModels":
-          this.fetchAndSendKiloEmbeddingModels().catch((e) =>
-            console.error("[Kilo New] fetchAndSendKiloEmbeddingModels failed:", e),
+        case "requestAccureEmbeddingModels":
+          this.fetchAndSendAccureEmbeddingModels().catch((e) =>
+            console.error("[Accure New] fetchAndSendAccureEmbeddingModels failed:", e),
           )
           break
         case "updateConfig":
@@ -1142,7 +1146,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
             .then((s) => {
               if (s) this.sendRemoteStatus()
             })
-            .catch((err) => console.error("[Kilo New] remote message failed:", err))
+            .catch((err) => console.error("[Accure New] remote message failed:", err))
           break
         case "deleteSession":
           await this.handleDeleteSession(message.sessionID)
@@ -1170,7 +1174,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           break
         case "requestNotifications":
           this.fetchAndSendNotifications().catch((e) =>
-            console.error("[Kilo New] fetchAndSendNotifications failed:", e),
+            console.error("[Accure New] fetchAndSendNotifications failed:", e),
           )
           break
         case "requestCloudSessions":
@@ -1284,7 +1288,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
             .catch((err: unknown) => {
               const raw = getErrorMessage(err) || "Failed to enhance prompt"
               const msg = normalizeEnhancePromptErrorMessage(raw)
-              console.error("[Kilo New] KiloProvider: Failed to enhance prompt:", err)
+              console.error("[Accure New] AccureProvider: Failed to enhance prompt:", err)
               vscode.window.showErrorMessage(`Enhance prompt failed: ${msg}`)
               this.postMessage({
                 type: "enhancePromptError",
@@ -1310,7 +1314,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
   /**
    * Initialize connection to the CLI backend server.
-   * Subscribes to the shared KiloConnectionService.
+   * Subscribes to the shared AccureConnectionService.
    */
   private initializeConnection(): Promise<void> {
     if (this.initConnectionPromise) {
@@ -1323,7 +1327,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   }
 
   private async doInitializeConnection(): Promise<void> {
-    console.log("[Kilo New] KiloProvider: 🔧 Starting initializeConnection...")
+    console.log("[Accure New] AccureProvider: 🔧 Starting initializeConnection...")
 
     this.connectionState = "connecting"
     this.postMessage({ type: "connectionState", state: "connecting" })
@@ -1343,7 +1347,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
       // Connect the shared service (no-op if already connected)
       await this.connectionService.connect(workspaceDir)
-      this.flushPendingKiloModel()
+      this.flushPendingAccureModel()
 
       // Subscribe to SSE events for this webview (filtered by tracked sessions)
       this.unsubscribeEvent = this.connectionService.onEventFiltered(
@@ -1352,7 +1356,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           if (!event) return false
 
           // Remote status events are global and should always pass through
-          if (event.type === "kilo-sessions.remote-status-changed") return true
+          if (event.type === "accure-sessions.remote-status-changed") return true
           const sessionId = this.resolveEventSessionId(event)
 
           // message.part.* events are always session-scoped; drop if session unknown.
@@ -1363,7 +1367,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           }
 
           // session.status must always pass through — even for sessions not tracked by this
-          // KiloProvider instance. The Settings panel is a separate provider with no tracked
+          // AccureProvider instance. The Settings panel is a separate provider with no tracked
           // sessions, but it needs session.status to populate sessionStatusMap and allStatusMap
           // for the busy-session warning on Save.
           if (event.type === "session.status") return true
@@ -1382,7 +1386,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         this.postConnectionState(error)
 
         if (state === "connected") {
-          this.flushPendingKiloModel()
+          this.flushPendingAccureModel()
           // Fire config warnings independently so a failure in the
           // sequential await chain doesn't prevent warnings from being shown
           void this.checkConfigWarnings("state")
@@ -1390,14 +1394,14 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
             // Profile fetch is best-effort — returns 401 when user isn't logged into gateway.
             const sdkClient = this.client
             if (sdkClient) {
-              const profileResult = await sdkClient.kilo.profile()
+              const profileResult = await sdkClient.accure.profile()
               this.postMessage({ type: "profileData", data: profileResult.data ?? null })
             }
             await this.syncWebviewState("sse-connected")
             await this.flushPendingSessionRefresh("sse-connected")
             this.recoverPendingPrompts()
           } catch (error) {
-            console.error("[Kilo New] KiloProvider: ❌ Failed during connected state handling:", error)
+            console.error("[Accure New] AccureProvider: ❌ Failed during connected state handling:", error)
             this.postMessage({
               type: "error",
               message: getErrorMessage(error) || "Failed to sync after connecting",
@@ -1406,28 +1410,28 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         }
       })
 
-      // Subscribe to notification dismiss broadcast from other KiloProvider instances
+      // Subscribe to notification dismiss broadcast from other AccureProvider instances
       this.unsubscribeNotificationDismiss = this.connectionService.onNotificationDismissed(() => {
         this.fetchAndSendNotifications()
       })
 
-      // Subscribe to language change broadcast from other KiloProvider instances
+      // Subscribe to language change broadcast from other AccureProvider instances
       this.unsubscribeLanguageChange = this.connectionService.onLanguageChanged((locale) => {
         this.postMessage({ type: "languageChanged", locale })
       })
 
-      // Subscribe to profile change broadcast from other KiloProvider instances
+      // Subscribe to profile change broadcast from other AccureProvider instances
       this.unsubscribeProfileChange = this.connectionService.onProfileChanged((data) => {
         this.postMessage({ type: "profileData", data })
       })
 
-      // Subscribe to favorites change broadcast from other KiloProvider instances
+      // Subscribe to favorites change broadcast from other AccureProvider instances
       this.unsubscribeFavoritesChange = this.connectionService.onFavoritesChanged((favorites) => {
         this.postMessage({ type: "favoritesLoaded", favorites })
       })
 
       // legacy-migration start
-      // Subscribe to migration-complete broadcast from any KiloProvider instance
+      // Subscribe to migration-complete broadcast from any AccureProvider instance
       this.unsubscribeMigrationComplete = this.connectionService.onMigrationComplete(() => {
         this.postMessage({ type: "migrationState", needed: false, source: "legacy" })
       })
@@ -1491,9 +1495,9 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
       if (this.cachedGitRepo) this.startStatsPolling()
 
-      console.log("[Kilo New] KiloProvider: ✅ initializeConnection completed successfully")
+      console.log("[Accure New] AccureProvider: ✅ initializeConnection completed successfully")
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: ❌ Failed to initialize connection:", error)
+      console.error("[Accure New] AccureProvider: ❌ Failed to initialize connection:", error)
       this.connectionState = "error"
       this.postMessage({
         type: "connectionState",
@@ -1539,7 +1543,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         session: this.sessionToWebview(this.currentSession!),
       })
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to create session:", error)
+      console.error("[Accure New] AccureProvider: Failed to create session:", error)
       this.postMessage({
         type: "error",
         message: getErrorMessage(error) || "Failed to create session",
@@ -1569,7 +1573,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         this.contextSessionID = r.data.id
         this.postMessage({ type: "sessionUpdated", session: this.sessionToWebview(r.data) })
       })
-      .catch((e: unknown) => console.warn("[Kilo New] KiloProvider: getSession failed (non-critical):", e))
+      .catch((e: unknown) => console.warn("[Accure New] AccureProvider: getSession failed (non-critical):", e))
     this.postMessage({ type: "workspaceDirectoryChanged", directory: this.getWorkspaceDirectory(sessionID) })
     this.client.session
       .status({ directory: dir })
@@ -1585,7 +1589,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           })
         }
       })
-      .catch((e: unknown) => console.error("[Kilo New] KiloProvider: Failed to fetch session statuses:", e))
+      .catch((e: unknown) => console.error("[Accure New] AccureProvider: Failed to fetch session statuses:", e))
   }
 
   private async handleLoadMessages(
@@ -1658,7 +1662,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.recoverPendingPrompts()
     } catch (error) {
       if (abort?.signal.aborted) return
-      console.error("[Kilo New] KiloProvider: Failed to load messages:", error)
+      console.error("[Accure New] AccureProvider: Failed to load messages:", error)
       this.postMessage({ type: "error", message: getErrorMessage(error) || "Failed to load messages", sessionID })
     }
   }
@@ -1716,7 +1720,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.recoverPendingPrompts()
     } catch (err) {
       this.syncedChildSessions.delete(sessionID)
-      console.error("[Kilo New] KiloProvider: Failed to sync child session:", err)
+      console.error("[Accure New] AccureProvider: Failed to sync child session:", err)
     }
   }
 
@@ -1744,13 +1748,13 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
    */
   private async flushPendingSessionRefresh(reason: string): Promise<void> {
     if (!this.pendingSessionRefresh) return
-    console.log("[Kilo New] KiloProvider: 🔄 Flushing deferred sessions refresh", { reason })
+    console.log("[Accure New] AccureProvider: 🔄 Flushing deferred sessions refresh", { reason })
     const ctx = this.sessionRefreshContext
     try {
       const resolved = await flushPendingSessionRefreshUtil(ctx)
       if (resolved) this.projectID = resolved
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to flush session refresh:", error)
+      console.error("[Accure New] AccureProvider: Failed to flush session refresh:", error)
     }
     this.pendingSessionRefresh = ctx.pendingSessionRefresh
   }
@@ -1764,7 +1768,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       const resolved = await loadSessionsUtil(ctx)
       if (resolved) this.projectID = resolved
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to load sessions:", error)
+      console.error("[Accure New] AccureProvider: Failed to load sessions:", error)
       this.postMessage({
         type: "error",
         message: getErrorMessage(error) || "Failed to load sessions",
@@ -1783,7 +1787,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         truncated: output.truncated,
       })
     } catch (error) {
-      console.error("[Kilo New] Failed to capture terminal context:", error)
+      console.error("[Accure New] Failed to capture terminal context:", error)
       this.postMessage({
         type: "terminalContextError",
         requestId,
@@ -1826,7 +1830,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       }
       this.postMessage({ type: "sessionDeleted", sessionID })
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to delete session:", error)
+      console.error("[Accure New] AccureProvider: Failed to delete session:", error)
       this.postMessage({
         type: "error",
         message: getErrorMessage(error) || "Failed to delete session",
@@ -1848,7 +1852,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       if (this.currentSession?.id === sessionID) this.setCurrentSession(updated)
       this.postMessage({ type: "sessionUpdated", session: this.sessionToWebview(updated) })
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to rename session:", error)
+      console.error("[Accure New] AccureProvider: Failed to rename session:", error)
       this.postMessage({ type: "error", message: getErrorMessage(error) || "Failed to rename session" })
     }
   }
@@ -1869,7 +1873,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       })
       if (saved) void vscode.window.showInformationMessage("Session transcript exported as Markdown.")
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to export session transcript:", error)
+      console.error("[Accure New] AccureProvider: Failed to export session transcript:", error)
       this.postMessage({
         type: "error",
         message: getErrorMessage(error) || "Failed to export session transcript",
@@ -1928,7 +1932,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
             generation = this.providersGeneration
             continue
           }
-          console.error("[Kilo New] KiloProvider: Failed to fetch providers:", error)
+          console.error("[Accure New] AccureProvider: Failed to fetch providers:", error)
         }
         if (!this.providersQueued) return
         generation = this.providersGeneration
@@ -1986,6 +1990,10 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     if (msg.type === "disconnectProvider") return disconnectProviderAction(ctx, rid, pid, this.cachedConfigMessage, set)
     if (msg.type === "saveCustomProvider" && config)
       return saveCustomProviderAction(ctx, rid, pid, config, key, keyChanged, this.cachedConfigMessage, set)
+    if (msg.type === "saveProviderOptions") {
+      const opts = msg.options && typeof msg.options === "object" ? (msg.options as Record<string, string>) : {}
+      return saveProviderOptionsAction(ctx, rid, pid, opts, key)
+    }
   }
 
   private async handleFetchCustomProviderModels(msg: Record<string, unknown>): Promise<void> {
@@ -2033,7 +2041,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.cachedAgentsMessage = message
       this.postMessage(message)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch agents:", error)
+      console.error("[Accure New] AccureProvider: Failed to fetch agents:", error)
     }
   }
 
@@ -2058,7 +2066,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.cachedSkillsMessage = message
       this.postMessage(message)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch skills:", error)
+      console.error("[Accure New] AccureProvider: Failed to fetch skills:", error)
     }
   }
 
@@ -2082,7 +2090,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.cachedCommandsMessage = message
       this.postMessage(message)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch commands:", error)
+      console.error("[Accure New] AccureProvider: Failed to fetch commands:", error)
     }
   }
 
@@ -2095,16 +2103,16 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     if (!this.client) return false
     try {
       const dir = this.getWorkspaceDirectory()
-      const result = await this.client.kilocode.removeSkill({ location, directory: dir })
+      const result = await this.client.accurecode.removeSkill({ location, directory: dir })
       if (result.error) {
-        console.error("[Kilo New] removeSkill returned error:", result.error)
+        console.error("[Accure New] removeSkill returned error:", result.error)
         this.cachedSkillsMessage = null
         this.clearCommandsCache()
         await Promise.all([this.fetchAndSendSkills(), this.fetchAndSendCommands()])
         return false
       }
     } catch (error) {
-      console.error("[Kilo New] Failed to remove skill:", error)
+      console.error("[Accure New] Failed to remove skill:", error)
       this.cachedSkillsMessage = null
       this.cachedCommandsMessage = null
       await Promise.all([this.fetchAndSendSkills(), this.fetchAndSendCommands()])
@@ -2116,28 +2124,28 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     return true
   }
 
-  /** Remove an agent via CLI, falling back to kilo.json removal. */
+  /** Remove an agent via CLI, falling back to accure.json removal. */
   private async handleRemoveAgent(name: string): Promise<void> {
     if (!this.client) return
     try {
-      const result = await this.client.kilocode.removeAgent({ name, directory: this.getWorkspaceDirectory() })
+      const result = await this.client.accurecode.removeAgent({ name, directory: this.getWorkspaceDirectory() })
       if (!result.error) {
         this.cachedAgentsMessage = null
         await this.fetchAndSendAgents()
         return
       }
     } catch {
-      // fall through to kilo.json removal
+      // fall through to accure.json removal
     }
     if (!(await removeAgent(this.removeConfigItemCtx, name))) {
-      console.error("[Kilo New] KiloProvider: Failed to remove agent:", name)
+      console.error("[Accure New] AccureProvider: Failed to remove agent:", name)
     }
   }
 
   private async handleRemoveMcp(name: string): Promise<void> {
     const removed = await removeMcp(this.removeConfigItemCtx, name)
     if (!removed) {
-      console.error("[Kilo New] KiloProvider: Failed to remove MCP server:", name)
+      console.error("[Accure New] AccureProvider: Failed to remove MCP server:", name)
     }
   }
 
@@ -2158,7 +2166,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         this.postMessage(message)
       }
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch MCP status:", error)
+      console.error("[Accure New] AccureProvider: Failed to fetch MCP status:", error)
     }
   }
 
@@ -2198,7 +2206,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.cachedConfigMessage = message
       this.postMessage(message)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch config:", error)
+      console.error("[Accure New] AccureProvider: Failed to fetch config:", error)
     }
   }
 
@@ -2210,7 +2218,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.cachedGlobalConfig = config ?? null
       this.postMessage({ type: "globalConfigLoaded", config })
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch global config:", error)
+      console.error("[Accure New] AccureProvider: Failed to fetch global config:", error)
     }
   }
 
@@ -2227,11 +2235,11 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
     try {
       const dir = this.getWorkspaceDirectory(this.currentSession?.id)
-      const auth = Buffer.from(`kilo:${config.password}`).toString("base64")
+      const auth = Buffer.from(`accure:${config.password}`).toString("base64")
       const res = await fetch(`${config.baseUrl}/indexing/status`, {
         headers: {
           Authorization: `Basic ${auth}`,
-          ...(dir ? { "x-kilo-directory": dir } : {}),
+          ...(dir ? { "x-accure-directory": dir } : {}),
         },
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -2243,14 +2251,14 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.cachedIndexingStatusMessage = message
       this.postMessage(message)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch indexing status:", error)
+      console.error("[Accure New] AccureProvider: Failed to fetch indexing status:", error)
     }
   }
 
-  private async fetchAndSendKiloEmbeddingModels(): Promise<void> {
-    const catalog = await fetchKiloEmbeddingModelCatalog()
-    const message = { type: "kiloEmbeddingModelsLoaded", catalog }
-    this.cachedKiloEmbeddingModelsMessage = message
+  private async fetchAndSendAccureEmbeddingModels(): Promise<void> {
+    const catalog = await fetchAccureEmbeddingModelCatalog()
+    const message = { type: "accureEmbeddingModelsLoaded", catalog }
+    this.cachedAccureEmbeddingModelsMessage = message
     this.postMessage(message)
   }
 
@@ -2298,7 +2306,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         features: configFeatures(config),
       })
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch config after update:", error)
+      console.error("[Accure New] AccureProvider: Failed to fetch config after update:", error)
     }
   }
 
@@ -2309,25 +2317,29 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
    */
   private async checkConfigWarnings(from: string): Promise<void> {
     if (this.configWarningsShown) {
-      console.log("[Kilo New] KiloProvider: config warnings already shown", { from })
+      console.log("[Accure New] AccureProvider: config warnings already shown", { from })
       return
     }
     if (!this.client) {
-      console.log("[Kilo New] KiloProvider: config warnings skipped (no client)", { from })
+      console.log("[Accure New] AccureProvider: config warnings skipped (no client)", { from })
       return
     }
     try {
       const dir = this.getWorkspaceDirectory()
-      console.log("[Kilo New] KiloProvider: checking config warnings", { from, dir })
+      console.log("[Accure New] AccureProvider: checking config warnings", { from, dir })
       const result = await this.client.config.warnings({ directory: dir })
       const list = result?.data ?? []
-      console.log("[Kilo New] KiloProvider: config warnings fetched", { from, count: list.length })
+      console.log("[Accure New] AccureProvider: config warnings fetched", { from, count: list.length })
       if (list.length === 0) return
       this.configWarningsShown = true
 
       const first = list[0]!
       const summary = list.length === 1 ? first.message : `${first.message} (and ${list.length - 1} more)`
-      console.warn("[Kilo New] KiloProvider: showing config warnings", { from, count: list.length, path: first.path })
+      console.warn("[Accure New] AccureProvider: showing config warnings", {
+        from,
+        count: list.length,
+        path: first.path,
+      })
 
       const action = await vscode.window.showWarningMessage(`Config: ${summary}`, "Show Details")
       if (action === "Show Details") {
@@ -2335,18 +2347,18 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           const base = `${w.path}\n  ${w.message}`
           return w.detail ? `${base}\n  ${w.detail}` : base
         })
-        const channel = vscode.window.createOutputChannel("Kilo Config Warnings")
+        const channel = vscode.window.createOutputChannel("Accure Config Warnings")
         channel.clear()
         channel.appendLine(lines.join("\n\n"))
         channel.show()
       }
     } catch (err) {
-      console.warn("[Kilo New] KiloProvider: checkConfigWarnings failed:", { from, err })
+      console.warn("[Accure New] AccureProvider: checkConfigWarnings failed:", { from, err })
     }
   }
 
   /**
-   * Fetch Kilo news/notifications and send to webview.
+   * Fetch Accure news/notifications and send to webview.
    * Uses the cached message pattern so the webview gets data immediately on refresh.
    */
   private async fetchAndSendNotifications(): Promise<void> {
@@ -2354,7 +2366,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       if (this.cachedNotificationsMessage) {
         // Merge the latest dismissed IDs from globalState into the cached
         // message so that dismissals persisted while offline are honoured.
-        const persisted = this.extensionContext?.globalState.get<string[]>("kilo.dismissedNotificationIds", []) ?? []
+        const persisted = this.extensionContext?.globalState.get<string[]>("accure.dismissedNotificationIds", []) ?? []
         if (persisted.length > 0) {
           const cached = this.cachedNotificationsMessage as {
             type: string
@@ -2370,9 +2382,9 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
 
     try {
-      const { data: all } = await retry(() => this.client!.kilo.notifications(undefined, { throwOnError: true }))
+      const { data: all } = await retry(() => this.client!.accure.notifications(undefined, { throwOnError: true }))
       const notifications = all.filter((n) => !n.showIn || n.showIn.includes("extension"))
-      const existing = this.extensionContext?.globalState.get<string[]>("kilo.dismissedNotificationIds", []) ?? []
+      const existing = this.extensionContext?.globalState.get<string[]>("accure.dismissedNotificationIds", []) ?? []
       const active = new Set(notifications.map((n) => n.id))
       // Only prune stale dismissed IDs when we have a non-empty notification
       // list. An empty list may mean the API returned nothing due to being
@@ -2380,26 +2392,26 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       // are gone — pruning in that case would wipe the persisted dismissals.
       const dismissedIds = notifications.length > 0 ? existing.filter((id) => active.has(id)) : existing
       if (dismissedIds.length !== existing.length) {
-        await this.extensionContext?.globalState.update("kilo.dismissedNotificationIds", dismissedIds)
+        await this.extensionContext?.globalState.update("accure.dismissedNotificationIds", dismissedIds)
       }
       const message = { type: "notificationsLoaded", notifications, dismissedIds }
       this.cachedNotificationsMessage = message
       this.postMessage(message)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch notifications:", error)
+      console.error("[Accure New] AccureProvider: Failed to fetch notifications:", error)
     }
   }
 
-  // Cloud session methods extracted to kilo-provider/handlers/cloud-session.ts
+  // Cloud session methods extracted to accure-provider/handlers/cloud-session.ts
 
   /**
    * Persist a dismissed notification ID in globalState and push updated lists to webview.
    */
   private async handleDismissNotification(notificationId: string): Promise<void> {
     if (!this.extensionContext) return
-    const existing = this.extensionContext.globalState.get<string[]>("kilo.dismissedNotificationIds", [])
+    const existing = this.extensionContext.globalState.get<string[]>("accure.dismissedNotificationIds", [])
     if (!existing.includes(notificationId)) {
-      await this.extensionContext.globalState.update("kilo.dismissedNotificationIds", [...existing, notificationId])
+      await this.extensionContext.globalState.update("accure.dismissedNotificationIds", [...existing, notificationId])
     }
     // Update the cached message so the dismiss persists even if
     // fetchAndSendNotifications() fails (e.g. no client / API error).
@@ -2517,7 +2529,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         refreshAgents ? this.fetchAndSendAgents() : Promise.resolve(),
       ])
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Config write succeeded but post-write refresh failed:", error)
+      console.error("[Accure New] AccureProvider: Config write succeeded but post-write refresh failed:", error)
       const patch =
         partial.indexing === undefined && project.indexing === undefined
           ? { ...partial, ...project }
@@ -2537,7 +2549,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
   }
   private postConfigFailure(error: unknown): void {
-    console.error("[Kilo New] KiloProvider: Failed to update config:", error)
+    console.error("[Accure New] AccureProvider: Failed to update config:", error)
     this.postMessage({
       type: "configUpdateFailed",
       message: getErrorMessage(error) || "Failed to update config",
@@ -2619,7 +2631,9 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         }
 
         const delay = backoff(attempt, result.response?.headers)
-        console.log(`[Kilo New] KiloProvider: Retry on ${status}, attempt ${attempt}/${MAX_RETRIES}, delay ${delay}ms`)
+        console.log(
+          `[Accure New] AccureProvider: Retry on ${status}, attempt ${attempt}/${MAX_RETRIES}, delay ${delay}ms`,
+        )
 
         this.postMessage({
           type: "sessionStatus",
@@ -2705,7 +2719,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       }
 
       await this.checkpoints.get(sid)
-      await runWithMessageConfirmation(this.confirmations, messageID, "KiloProvider: Message request", () =>
+      await runWithMessageConfirmation(this.confirmations, messageID, "AccureProvider: Message request", () =>
         this.withRetry(
           () =>
             this.client!.session.promptAsync({
@@ -2724,7 +2738,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         ),
       )
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to send message:", error)
+      console.error("[Accure New] AccureProvider: Failed to send message:", error)
       this.postMessage({
         type: "sendMessageFailed",
         error: getErrorMessage(error) || "Failed to send message",
@@ -2784,7 +2798,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       const sid = resolved!.sid
       const dir = resolved!.dir
       await this.checkpoints.get(sid)
-      await runWithMessageConfirmation(this.confirmations, messageID, "KiloProvider: Command request", () =>
+      await runWithMessageConfirmation(this.confirmations, messageID, "AccureProvider: Command request", () =>
         this.withRetry(
           () =>
             this.client!.session.command({
@@ -2804,7 +2818,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         ),
       )
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to send command:", error)
+      console.error("[Accure New] AccureProvider: Failed to send command:", error)
       this.postMessage({
         type: "sendMessageFailed",
         error: getErrorMessage(error) || "Failed to send command",
@@ -2830,7 +2844,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     const dir = this.getWorkspaceDirectory(sessionID)
     const { data, error } = await this.client.session.revert({ sessionID, messageID, partID, directory: dir })
     if (error) {
-      console.error("[Kilo New] KiloProvider: Failed to revert session:", error)
+      console.error("[Accure New] AccureProvider: Failed to revert session:", error)
       this.postMessage({ type: "error", message: "Failed to revert session", sessionID })
       throw error
     }
@@ -2845,7 +2859,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     const dir = this.getWorkspaceDirectory(sessionID)
     const { data, error } = await this.client.session.unrevert({ sessionID, directory: dir })
     if (error) {
-      console.error("[Kilo New] KiloProvider: Failed to unrevert session:", error)
+      console.error("[Accure New] AccureProvider: Failed to unrevert session:", error)
       this.postMessage({ type: "error", message: "Failed to redo session", sessionID })
       throw error
     }
@@ -2869,12 +2883,12 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
     const target = sessionID || this.currentSession?.id
     if (!target) {
-      console.error("[Kilo New] KiloProvider: No sessionID for compact")
+      console.error("[Accure New] AccureProvider: No sessionID for compact")
       return
     }
 
     if (!providerID || !modelID) {
-      console.error("[Kilo New] KiloProvider: No model selected for compact")
+      console.error("[Accure New] AccureProvider: No model selected for compact")
       this.postMessage({
         type: "error",
         message: "No model selected. Connect a provider to compact this session.",
@@ -2889,7 +2903,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         { throwOnError: true },
       )
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to compact session:", error)
+      console.error("[Accure New] AccureProvider: Failed to compact session:", error)
       this.postMessage({
         type: "error",
         message: getErrorMessage(error) || "Failed to compact session",
@@ -2897,7 +2911,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
   }
 
-  // Permission + question handlers extracted to kilo-provider/handlers/permission.ts and question.ts
+  // Permission + question handlers extracted to accure-provider/handlers/permission.ts and question.ts
 
   private get permissionCtx(): PermissionContext {
     return {
@@ -2933,7 +2947,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
   }
 
-  // Cloud session handlers extracted to kilo-provider/handlers/cloud-session.ts
+  // Cloud session handlers extracted to accure-provider/handlers/cloud-session.ts
 
   private get cloudSessionCtx(): CloudSessionContext {
     const self = this
@@ -2956,7 +2970,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
   }
 
-  // Auth handlers extracted to kilo-provider/handlers/auth.ts
+  // Auth handlers extracted to accure-provider/handlers/auth.ts
 
   private get authCtx(): AuthContext {
     return {
@@ -2974,20 +2988,20 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
     await this.client.global
       .dispose()
-      .catch((e: unknown) => console.warn("[Kilo New] KiloProvider: global.dispose() after org switch failed:", e))
+      .catch((e: unknown) => console.warn("[Accure New] AccureProvider: global.dispose() after org switch failed:", e))
 
     // Org switch succeeded — refresh profile and providers independently (best-effort)
     try {
-      const profileResult = await this.client!.kilo.profile()
+      const profileResult = await this.client!.accure.profile()
       // Broadcast to all webviews (sidebar, profile tab, agent manager, etc.)
       this.connectionService.notifyProfileChanged(profileResult.data ?? null)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to refresh profile after org switch:", error)
+      console.error("[Accure New] AccureProvider: Failed to refresh profile after org switch:", error)
     }
     try {
       await this.fetchAndSendProviders()
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to refresh providers after org switch:", error)
+      console.error("[Accure New] AccureProvider: Failed to refresh providers after org switch:", error)
     }
   }
 
@@ -3039,8 +3053,8 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     // Clear globalState items that are not part of the configuration
     await this.extensionContext?.globalState.update("variantSelections", undefined)
     await this.extensionContext?.globalState.update("recentModels", undefined)
-    await this.extensionContext?.globalState.update("kilo.dismissedNotificationIds", undefined)
-    await this.extensionContext?.globalState.update("kilo.agentMigrationBannerDismissed", undefined)
+    await this.extensionContext?.globalState.update("accure.dismissedNotificationIds", undefined)
+    await this.extensionContext?.globalState.update("accure.agentMigrationBannerDismissed", undefined)
 
     // Re-send all settings to the webview so the UI reflects the reset
     this.postMessage(buildAutocompleteSettingsMessage())
@@ -3172,7 +3186,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
    * Filters events by project ID and tracked session IDs so each webview only sees its own sessions.
    */
   private handleEvent(event: ProviderEvent, directory?: string): void {
-    if (event.type === "kilo-sessions.remote-status-changed") {
+    if (event.type === "accure-sessions.remote-status-changed") {
       this.remoteService?.updateFromEvent({ enabled: event.properties.enabled, connected: event.properties.connected })
       return
     }
@@ -3206,7 +3220,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
 
     // session.status events pass the onEventFiltered pre-filter for all providers (see line 842),
-    // so this runs on every KiloProvider instance — including the Settings panel which has no
+    // so this runs on every AccureProvider instance — including the Settings panel which has no
     // tracked sessions. Update sessionStatusMap and forward to webview before the
     // trackedSessionIds guard so the Settings panel's allStatusMap stays current for the
     // busy-session warning on Save.
@@ -3296,7 +3310,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       }
       const childId = childID(part)
       if (childId && !this.trackedSessionIds.has(childId)) {
-        console.log("[Kilo New] KiloProvider: 🔗 Auto-adopting child session from task tool", { childId })
+        console.log("[Accure New] AccureProvider: 🔗 Auto-adopting child session from task tool", { childId })
         void this.handleSyncSession(childId, part.sessionID ?? sessionID)
       }
     }
@@ -3349,28 +3363,28 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         typeof (message as { type?: unknown }).type === "string"
           ? (message as { type: string }).type
           : "<unknown>"
-      console.warn("[Kilo New] KiloProvider: ⚠️ postMessage dropped (no webview)", { type })
+      console.warn("[Accure New] AccureProvider: ⚠️ postMessage dropped (no webview)", { type })
       return
     }
 
     void this.webview.postMessage(message).then(undefined, (error) => {
-      console.error("[Kilo New] KiloProvider: ❌ postMessage failed", error)
+      console.error("[Accure New] AccureProvider: ❌ postMessage failed", error)
     })
   }
 
-  private flushPendingKiloModel(): void {
-    if (!this.webview || !this.isWebviewReady || !this.client || !this.pendingKiloModel) return
+  private flushPendingAccureModel(): void {
+    if (!this.webview || !this.isWebviewReady || !this.client || !this.pendingAccureModel) return
 
-    const pending = this.pendingKiloModel
-    this.pendingKiloModel = null
-    this.postMessage({ type: "selectKiloModel", ...pending })
+    const pending = this.pendingAccureModel
+    this.pendingAccureModel = null
+    this.postMessage({ type: "selectAccureModel", ...pending })
   }
 
   public async appendReviewComments(comments: unknown[], autoSend = false): Promise<void> {
     this.pendingReviewComments.push({ comments, autoSend })
 
     if (!this.webview) {
-      await vscode.commands.executeCommand(`${KiloProvider.viewType}.focus`)
+      await vscode.commands.executeCommand(`${AccureProvider.viewType}.focus`)
     }
 
     this.flushPendingReviewComments()
@@ -3402,7 +3416,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       const remote = repo.state?.remotes?.find((r: { name: string }) => r.name === "origin")
       return remote?.fetchUrl ?? remote?.pushUrl
     } catch (error) {
-      console.warn("[Kilo New] KiloProvider: Failed to get git remote URL:", error)
+      console.warn("[Accure New] AccureProvider: Failed to get git remote URL:", error)
       return undefined
     }
   }
@@ -3412,7 +3426,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
    */
   /**
    * Return the set of relative paths for all open text-editor tabs within the
-   * given directory, filtered through .kilocodeignore.
+   * given directory, filtered through .accurecodeignore.
    */
   private async getOpenTabPaths(dir: string): Promise<Set<string>> {
     const controller = await this.getIgnoreController(dir)
@@ -3463,7 +3477,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       return relative
     }
 
-    // Visible files (capped to avoid bloating context, filtered through .kilocodeignore)
+    // Visible files (capped to avoid bloating context, filtered through .accurecodeignore)
     const visibleFiles = vscode.window.visibleTextEditors
       .map((e) => e.document.uri)
       .filter((uri) => uri.scheme === "file")
@@ -3474,7 +3488,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     // Open tabs — use instanceof TabInputText to exclude notebooks, diffs, custom editors
     const openTabs = [...(await this.getOpenTabPaths(workspaceDir))].slice(0, 20)
 
-    // Active file (also filtered through .kilocodeignore)
+    // Active file (also filtered through .accurecodeignore)
     const activeEditor = vscode.window.activeTextEditor
     const activeRel =
       activeEditor?.document.uri.scheme === "file" ? toRelative(activeEditor.document.uri.fsPath) : undefined
@@ -3575,7 +3589,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   }
 
   // legacy-migration start -------------------------------------------------------
-  // Migration handlers extracted to kilo-provider/handlers/migration.ts
+  // Migration handlers extracted to accure-provider/handlers/migration.ts
 
   private get migrationCtx(): MigrationContext {
     const self = this

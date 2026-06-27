@@ -1,13 +1,13 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
 import kotlinx.serialization.json.JsonElement
 
 /**
- * Source adapter for legacy Kilo Code v5.x data.
+ * Source adapter for legacy Accure Code v5.x data.
  *
  * Abstracts over VS Code SecretStorage, globalState, and filesystem access.
  * Callers supply raw content; this interface never reads VS Code storage directly.
- * The store also persists the migration status key ("kilo.legacyMigrationStatus").
+ * The store also persists the migration status key ("accure.legacyMigrationStatus").
  */
 interface LegacyMigrationStore {
     fun status(): LegacyMigrationStatus?

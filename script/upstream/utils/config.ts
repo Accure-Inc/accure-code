@@ -9,16 +9,16 @@ export interface PackageMapping {
 }
 
 export interface MergeConfig {
-  /** Package name mappings from opencode to kilo */
+  /** Package name mappings from opencode to accure */
   packageMappings: PackageMapping[]
 
-  /** Files to always keep Kilo's version (never take upstream changes) */
+  /** Files to always keep Accure's version (never take upstream changes) */
   keepOurs: string[]
 
   /** Files to skip entirely (don't add from upstream, remove if added) */
   skipFiles: string[]
 
-  /** Files that should take upstream version and apply Kilo branding transforms */
+  /** Files that should take upstream version and apply Accure branding transforms */
   takeTheirsAndTransform: string[]
 
   /** Script files with GitHub API references */
@@ -33,8 +33,8 @@ export interface MergeConfig {
   /** Lock files to accept ours and regenerate after merge */
   lockFiles: string[]
 
-  /** Directories that are Kilo-specific and should be preserved */
-  kiloDirectories: string[]
+  /** Directories that are Accure-specific and should be preserved */
+  accureDirectories: string[]
 
   /** File patterns to exclude from codemods */
   excludePatterns: string[]
@@ -57,10 +57,10 @@ export interface MergeConfig {
 
 export const defaultConfig: MergeConfig = {
   packageMappings: [
-    { from: "opencode-ai", to: "@kilocode/cli" },
-    { from: "@opencode-ai/cli", to: "@kilocode/cli" },
-    { from: "@opencode-ai/sdk", to: "@kilocode/sdk" },
-    { from: "@opencode-ai/plugin", to: "@kilocode/plugin" },
+    { from: "opencode-ai", to: "@accurecode/cli" },
+    { from: "@opencode-ai/cli", to: "@accurecode/cli" },
+    { from: "@opencode-ai/sdk", to: "@accurecode/sdk" },
+    { from: "@opencode-ai/plugin", to: "@accurecode/plugin" },
   ],
 
   keepOurs: [
@@ -74,23 +74,23 @@ export const defaultConfig: MergeConfig = {
     ".github/workflows/publish.yml",
     ".github/workflows/close-stale-prs.yml",
     ".github/pull_request_template.md",
-    // Kilo-specific command files
+    // Accure-specific command files
     ".opencode/command/commit.md",
-    // Kilo-specific publish scripts
+    // Accure-specific publish scripts
     "packages/opencode/script/publish-registries.ts",
     // Generated OpenAPI spec - kept ours and regenerated post-merge via script/generate.ts
     "packages/sdk/openapi.json",
-    // GitHub Action - Kilo version is fully ported and complete
+    // GitHub Action - Accure version is fully ported and complete
     "github/action.yml",
     "github/README.md",
     "github/script/release",
     "github/script/publish",
   ],
 
-  // Files that only exist in upstream and should NOT be added to Kilo
+  // Files that only exist in upstream and should NOT be added to Accure
   // These are removed during merge if they appear
   skipFiles: [
-    // Translated README files (Kilo doesn't have these)
+    // Translated README files (Accure doesn't have these)
     "README.ar.md",
     "README.bn.md",
     "README.br.md",
@@ -114,37 +114,37 @@ export const defaultConfig: MergeConfig = {
     "README.zht.md",
     // Stats file
     "STATS.md",
-    // Team members file (Kilo doesn't maintain this upstream list)
+    // Team members file (Accure doesn't maintain this upstream list)
     ".github/TEAM_MEMBERS",
-    // Workflows that don't exist in Kilo
+    // Workflows that don't exist in Accure
     ".github/workflows/update-nix-hashes.yml",
     ".github/workflows/deploy.yml",
     ".github/workflows/docs-update.yml",
     ".github/workflows/docs-locale-sync.yml",
-    // Workflows deleted in Kilo (replaced or no longer needed)
+    // Workflows deleted in Accure (replaced or no longer needed)
     ".github/workflows/close-prs.yml",
     ".github/workflows/opencode.yml",
     ".github/workflows/publish-vscode.yml",
-    // Upstream PR cleanup is replaced by .github/workflows/kilo-auto-close.yml
+    // Upstream PR cleanup is replaced by .github/workflows/accure-auto-close.yml
     "script/github/close-prs.ts",
-    // VS Code example configs (Kilo ships real .vscode/* files)
+    // VS Code example configs (Accure ships real .vscode/* files)
     ".vscode/launch.example.json",
     ".vscode/settings.example.json",
-    // Nix files for packages Kilo has removed / replaced with nix/kilo.nix
+    // Nix files for packages Accure has removed / replaced with nix/accure.nix
     "nix/desktop.nix",
     "nix/opencode.nix",
-    // opencode CLI bin (Kilo uses its own build output)
+    // opencode CLI bin (Accure uses its own build output)
     "packages/opencode/bin/opencode",
     // Removed prompt file
     "packages/opencode/src/session/prompt/build-switch.txt",
-    // Vouch files (Kilo doesn't use Vouch).
+    // Vouch files (Accure doesn't use Vouch).
     // Upstream currently ships VOUCHED.td (typo extension). The glob covers both
     // the current .td file and any future .md rename without another merge breaking.
     ".github/VOUCHED.*",
     ".github/workflows/vouch-check-issue.yml",
     ".github/workflows/vouch-check-pr.yml",
     ".github/workflows/vouch-manage-by-issue.yml",
-    // SST infrastructure files (Kilo is CLI-only, no hosted platform)
+    // SST infrastructure files (Accure is CLI-only, no hosted platform)
     "sst.config.ts",
     "sst-env.d.ts",
     // Hosted platform packages (not needed for CLI)
@@ -160,7 +160,7 @@ export const defaultConfig: MergeConfig = {
     "packages/desktop/**",
     "packages/desktop-electron/**",
     "sdks/vscode/**",
-    // GitHub Action - Kilo version is fully ported and complete
+    // GitHub Action - Accure version is fully ported and complete
     "github/index.ts",
     "github/package.json",
     "github/tsconfig.json",
@@ -169,7 +169,7 @@ export const defaultConfig: MergeConfig = {
     "github/.gitignore",
   ],
 
-  // Files that should take upstream version and apply Kilo branding transforms
+  // Files that should take upstream version and apply Accure branding transforms
   // These are files with only branding differences, no logic changes
   takeTheirsAndTransform: [
     // UI components
@@ -202,9 +202,9 @@ export const defaultConfig: MergeConfig = {
     "nix/hashes.json",
   ],
 
-  kiloDirectories: [
-    "packages/opencode/src/kilocode",
-    "packages/opencode/test/kilocode",
+  accureDirectories: [
+    "packages/opencode/src/accurecode",
+    "packages/opencode/test/accurecode",
     "packages/accure-gateway",
     "packages/accure-telemetry",
     "packages/accure-vscode",
@@ -229,7 +229,7 @@ export const defaultConfig: MergeConfig = {
   upstreamRemote: "upstream",
   originRemote: "origin",
 
-  // i18n translation files that need Kilo branding transforms
+  // i18n translation files that need Accure branding transforms
   i18nPatterns: ["packages/*/src/i18n/*.ts"],
 }
 

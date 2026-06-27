@@ -7,7 +7,7 @@
  * permission counts, never question counts — guarantees that a pending question
  * cannot re-block the prompt input.
  *
- * Protects against accidental removal during Kilo development.
+ * Protects against accidental removal during Accure development.
  */
 
 import { describe, it, expect } from "bun:test"

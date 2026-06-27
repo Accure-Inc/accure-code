@@ -1,7 +1,7 @@
-package ai.kilocode.client.session
+package ai.accurecode.client.session
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.ui.UiStyle
 import java.awt.Color
 
 enum class SessionActivityKind {
@@ -13,11 +13,11 @@ enum class SessionActivityKind {
     ;
 
     fun label(): String = when (this) {
-        RUNNING -> KiloBundle.message("session.part.tool.running")
-        LOGIN_REQUIRED -> KiloBundle.message("history.badge.loginRequired")
-        PERMISSION -> KiloBundle.message("history.badge.permission")
-        PLAN -> KiloBundle.message("history.badge.plan")
-        QUESTION -> KiloBundle.message("history.badge.question")
+        RUNNING -> AccureBundle.message("session.part.tool.running")
+        LOGIN_REQUIRED -> AccureBundle.message("history.badge.loginRequired")
+        PERMISSION -> AccureBundle.message("history.badge.permission")
+        PLAN -> AccureBundle.message("history.badge.plan")
+        QUESTION -> AccureBundle.message("history.badge.question")
     }
 
     fun bg(): Color = when (this) {

@@ -8,13 +8,13 @@ import {
 } from "@/server/routes/instance/httpapi/middleware/workspace-routing"
 import { described } from "@/server/routes/instance/httpapi/groups/metadata"
 
-const root = "/kilocode/session-import"
+const root = "/accurecode/session-import"
 
 const ResultSchema = Schema.Struct({
   ok: Schema.Boolean,
   id: Schema.String,
   skipped: Schema.optional(Schema.Boolean),
-}).annotate({ identifier: "KilocodeSessionImportResult" })
+}).annotate({ identifier: "AccurecodeSessionImportResult" })
 
 const ProjectSchema = Schema.Struct({
   id: Schema.String,
@@ -236,7 +236,7 @@ export const SessionImportApi = HttpApi.make("session-import")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.sessionImport.project",
+            identifier: "accurecode.sessionImport.project",
             summary: "Insert project for session import",
             description: "Insert or update a project row used by legacy session import.",
           }),
@@ -248,7 +248,7 @@ export const SessionImportApi = HttpApi.make("session-import")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.sessionImport.session",
+            identifier: "accurecode.sessionImport.session",
             summary: "Insert session for session import",
             description: "Insert or update a session row used by legacy session import.",
           }),
@@ -260,7 +260,7 @@ export const SessionImportApi = HttpApi.make("session-import")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.sessionImport.message",
+            identifier: "accurecode.sessionImport.message",
             summary: "Insert message for session import",
             description: "Insert or update a message row used by legacy session import.",
           }),
@@ -272,7 +272,7 @@ export const SessionImportApi = HttpApi.make("session-import")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.sessionImport.part",
+            identifier: "accurecode.sessionImport.part",
             summary: "Insert part for session import",
             description: "Insert or update a part row used by legacy session import.",
           }),
@@ -281,7 +281,7 @@ export const SessionImportApi = HttpApi.make("session-import")
       .annotateMerge(
         OpenApi.annotations({
           title: "session-import",
-          description: "Kilo legacy session import routes.",
+          description: "Accure legacy session import routes.",
         }),
       )
       .middleware(InstanceContextMiddleware)
@@ -290,8 +290,8 @@ export const SessionImportApi = HttpApi.make("session-import")
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "accure HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Accure HttpApi surface.",
     }),
   )

@@ -1,12 +1,12 @@
 import * as os from "os"
 import * as vscode from "vscode"
-import type { GlobalEvent, SessionStatus } from "@kilocode/sdk/v2/client"
+import type { GlobalEvent, SessionStatus } from "@accurecode/sdk/v2/client"
 import { buildWebviewHtml, getWebviewFontSize } from "./utils"
-import { watchFontSizeConfig } from "./kilo-provider/font-size"
-import { mapSSEEventToWebviewMessage } from "./kilo-provider-utils"
+import { watchFontSizeConfig } from "./accure-provider/font-size"
+import { mapSSEEventToWebviewMessage } from "./accure-provider-utils"
 import { resolvePanelProjectDirectory } from "./project-directory"
 import { seedSessionStatuses } from "./session-status"
-import type { KiloConnectionService } from "./services/cli-backend"
+import type { AccureConnectionService } from "./services/cli-backend"
 import { MarketplaceService } from "./services/marketplace"
 import {
   fetchMarketplaceData,
@@ -42,7 +42,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
 
   constructor(
     private readonly extensionUri: vscode.Uri,
-    private readonly connection: KiloConnectionService,
+    private readonly connection: AccureConnectionService,
     private readonly context: vscode.ExtensionContext,
   ) {}
 
@@ -65,7 +65,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
 
     const panel = vscode.window.createWebviewPanel(
       MarketplacePanelProvider.viewType,
-      "Kilo Marketplace",
+      "Accure Marketplace",
       vscode.ViewColumn.One,
       {
         enableScripts: true,
@@ -92,8 +92,8 @@ export class MarketplacePanelProvider implements vscode.Disposable {
     this.project = project
     this.ready = false
     panel.iconPath = {
-      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-light.svg"),
-      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-dark.svg"),
+      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "accure-light.svg"),
+      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "accure-dark.svg"),
     }
     panel.webview.options = {
       enableScripts: true,
@@ -162,7 +162,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
       const client = this.connection.getClient()
       await seedSessionStatuses(client, this.directory(), this.statuses, (msg) => this.post(msg), reconcile)
     } catch (err) {
-      console.warn("[Kilo New] Marketplace session status sync failed:", err)
+      console.warn("[Accure New] Marketplace session status sync failed:", err)
     }
   }
 
@@ -187,7 +187,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
         if (msg.mpItem) await this.remove(msg.mpItem, msg.mpInstallOptions?.target ?? "project")
         return
       case "dismissAgentMigrationBanner":
-        await this.context.globalState.update("kilo.agentMigrationBannerDismissed", true)
+        await this.context.globalState.update("accure.agentMigrationBannerDismissed", true)
         return
       case "openExternal":
         this.openExternal(msg.url)
@@ -202,11 +202,11 @@ export class MarketplacePanelProvider implements vscode.Disposable {
     try {
       const project = this.project ?? undefined
       const data = await fetchMarketplaceData(this.marketplaceCtx, project, this.directory())
-      const dismissed = this.context.globalState.get<boolean>("kilo.agentMigrationBannerDismissed") ?? false
+      const dismissed = this.context.globalState.get<boolean>("accure.agentMigrationBannerDismissed") ?? false
       this.post({ type: "marketplaceData", ...data, showAgentMigrationBanner: !dismissed })
     } catch (err) {
       const error = err instanceof Error ? err.message : String(err)
-      console.warn("[Kilo New] Marketplace data fetch failed:", err)
+      console.warn("[Accure New] Marketplace data fetch failed:", err)
       this.post({
         type: "marketplaceData",
         marketplaceItems: [],
@@ -274,7 +274,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
   private post(msg: unknown): void {
     if (!this.panel || !this.ready) return
     void this.panel.webview.postMessage(msg).then(undefined, (err) => {
-      console.warn("[Kilo New] Marketplace panel postMessage failed:", err)
+      console.warn("[Accure New] Marketplace panel postMessage failed:", err)
     })
   }
 
@@ -284,7 +284,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
       styleUri: webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "dist", "marketplace.css")),
       iconsBaseUri: webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "assets", "icons")),
       workerUri: webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "dist", "shiki-worker.js")),
-      title: "Kilo Marketplace",
+      title: "Accure Marketplace",
       port: this.connection.getServerInfo()?.port,
     })
   }

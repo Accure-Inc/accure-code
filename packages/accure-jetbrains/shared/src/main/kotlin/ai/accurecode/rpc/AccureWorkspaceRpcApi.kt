@@ -1,9 +1,9 @@
-package ai.kilocode.rpc
+package ai.accurecode.rpc
 
-import ai.kilocode.rpc.dto.ConfigTargetDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.ModelsWorkspaceDto
-import ai.kilocode.rpc.dto.WorkspaceFileDto
+import ai.accurecode.rpc.dto.ConfigTargetDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.ModelsWorkspaceDto
+import ai.accurecode.rpc.dto.WorkspaceFileDto
 import com.intellij.platform.rpc.RemoteApiProviderService
 import fleet.rpc.RemoteApi
 import fleet.rpc.Rpc
@@ -14,14 +14,14 @@ import kotlinx.coroutines.flow.Flow
  * Workspace-level RPC API exposed from backend to frontend.
  *
  * Operations are scoped to a specific directory (workspace root
- * or worktree). Each call routes to a [KiloBackendWorkspace]
+ * or worktree). Each call routes to a [AccureBackendWorkspace]
  * via the workspace manager.
  */
 @Rpc
-interface KiloWorkspaceRpcApi : RemoteApi<Unit> {
+interface AccureWorkspaceRpcApi : RemoteApi<Unit> {
     companion object {
-        suspend fun getInstance(): KiloWorkspaceRpcApi {
-            return RemoteApiProviderService.resolve(remoteApiDescriptor<KiloWorkspaceRpcApi>())
+        suspend fun getInstance(): AccureWorkspaceRpcApi {
+            return RemoteApiProviderService.resolve(remoteApiDescriptor<AccureWorkspaceRpcApi>())
         }
     }
 
@@ -35,7 +35,7 @@ interface KiloWorkspaceRpcApi : RemoteApi<Unit> {
     suspend fun resolveProjectDirectory(hint: String): String
 
     /** Observe workspace state loading progress. */
-    suspend fun state(directory: String): Flow<KiloWorkspaceStateDto>
+    suspend fun state(directory: String): Flow<AccureWorkspaceStateDto>
 
     /** Trigger a full reload of workspace data. */
     suspend fun reload(directory: String)

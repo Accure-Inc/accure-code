@@ -1,7 +1,7 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.session.ui.prompt.PromptDataKeys
-import ai.kilocode.client.session.ui.prompt.SendPromptContext
+import ai.accurecode.client.session.ui.prompt.PromptDataKeys
+import ai.accurecode.client.session.ui.prompt.SendPromptContext
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.actionSystem.DataContext
@@ -21,7 +21,7 @@ class StopSessionActionTest : BasePlatformTestCase() {
         assertTrue(event.presentation.isEnabled)
         assertEquals(1, ctx.stopped)
         assertEquals("Stop Session", action.templatePresentation.text)
-        assertEquals("Stop the current Kilo session", action.templatePresentation.description)
+        assertEquals("Stop the current Accure session", action.templatePresentation.description)
     }
 
     fun `test update disables action without prompt context`() {

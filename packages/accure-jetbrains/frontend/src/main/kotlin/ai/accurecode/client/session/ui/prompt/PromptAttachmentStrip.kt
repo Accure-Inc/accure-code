@@ -1,10 +1,10 @@
-package ai.kilocode.client.session.ui.prompt
+package ai.accurecode.client.session.ui.prompt
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.PromptAttachment
-import ai.kilocode.client.session.ui.attachment.AttachmentCard
-import ai.kilocode.client.session.ui.attachment.AttachmentCardItem
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.PromptAttachment
+import ai.accurecode.client.session.ui.attachment.AttachmentCard
+import ai.accurecode.client.session.ui.attachment.AttachmentCardItem
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.ApplicationManager
@@ -78,7 +78,7 @@ private class PromptAttachmentChip(
                 ApplicationManager.getApplication().invokeLater {
                     if (project.isDisposed) return@invokeLater
                     if (file == null) {
-                        Notification("Kilo Code", KiloBundle.message("prompt.attachment.missing", item.name), NotificationType.WARNING).notify(project)
+                        Notification("Accure Code", AccureBundle.message("prompt.attachment.missing", item.name), NotificationType.WARNING).notify(project)
                         return@invokeLater
                     }
                     FileEditorManager.getInstance(project).openFile(file, true)

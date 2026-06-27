@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 /**
- * Build the Kilo JetBrains plugin.
+ * Build the Accure JetBrains plugin.
  *
  * Usage:
  *   bun script/build.ts               # Local build — only current platform binary required
@@ -12,8 +12,8 @@
  * 1. Builds CLI binaries (or uses prebuilt ones from dist/).
  *    Local: builds only current platform (--single).
  *    Production: builds all platforms.
- * 2. Copies them into backend/build/generated/cli/cli/{os}/kilo[.exe]
- *    so they end up inside the backend jar at /cli/{os}/kilo.
+ * 2. Copies them into backend/build/generated/cli/cli/{os}/accure[.exe]
+ *    so they end up inside the backend jar at /cli/{os}/accure.
  * 3. Invokes Gradle to build the plugin.
  */
 
@@ -32,12 +32,12 @@ const cliDir = join(root, "backend", "build", "generated", "cli", "cli")
 
 /** All desktop platforms. */
 const platforms = [
-  { os: "darwin-arm64", exe: "kilo" },
-  { os: "darwin-x64", exe: "kilo" },
-  { os: "linux-arm64", exe: "kilo" },
-  { os: "linux-x64", exe: "kilo" },
-  { os: "windows-x64", exe: "kilo.exe" },
-  { os: "windows-arm64", exe: "kilo.exe" },
+  { os: "darwin-arm64", exe: "accure" },
+  { os: "darwin-x64", exe: "accure" },
+  { os: "linux-arm64", exe: "accure" },
+  { os: "linux-x64", exe: "accure" },
+  { os: "windows-x64", exe: "accure.exe" },
+  { os: "windows-arm64", exe: "accure.exe" },
 ] as const
 
 function localPlatformTag(): string {
@@ -50,7 +50,7 @@ function log(msg: string) {
 }
 
 function distBinPath(os: string, exe: string): string {
-  return join(distDir, `@kilocode/cli-${os}`, "bin", exe)
+  return join(distDir, `@accurecode/cli-${os}`, "bin", exe)
 }
 
 function hasDist(): boolean {

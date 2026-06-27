@@ -1,7 +1,7 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.session.history.HistoryDataKeys
-import ai.kilocode.client.session.SessionManager
+import ai.accurecode.client.session.history.HistoryDataKeys
+import ai.accurecode.client.session.SessionManager
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent

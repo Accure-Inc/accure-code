@@ -1,8 +1,8 @@
-import { useDialog } from "@kilocode/accure-ui/context/dialog"
-import { Dialog } from "@kilocode/accure-ui/dialog"
-import { List } from "@kilocode/accure-ui/list"
-import { ProviderIcon } from "@kilocode/accure-ui/provider-icon"
-import { Tag } from "@kilocode/accure-ui/tag"
+import { useDialog } from "@accurecode/accure-ui/context/dialog"
+import { Dialog } from "@accurecode/accure-ui/dialog"
+import { List } from "@accurecode/accure-ui/list"
+import { ProviderIcon } from "@accurecode/accure-ui/provider-icon"
+import { Tag } from "@accurecode/accure-ui/tag"
 import { Show, createMemo } from "solid-js"
 import { useConfig } from "../../context/config"
 import { useLanguage } from "../../context/language"
@@ -13,12 +13,12 @@ import ProviderConnectDialog from "./ProviderConnectDialog"
 import {
   CUSTOM_PROVIDER_ID,
   isPopularProvider,
-  kiloFallbackProvider,
+  accureFallbackProvider,
   popularProviderIndex,
   providerIcon,
 } from "./provider-catalog"
 import CustomProviderDialog from "./CustomProviderDialog"
-import { KILO_PROVIDER_ID } from "../../../../src/shared/provider-model"
+import { ACCURECODE_PROVIDER_ID } from "../../../../src/shared/provider-model"
 
 type ProviderItem = {
   id: string
@@ -39,8 +39,8 @@ const ProviderSelectDialog = () => {
     const disabled = new Set(config().disabled_providers ?? [])
     const connected = new Set(provider.connected())
     const all = Object.values(provider.providers())
-    const withKilo = all.some((item) => item.id === KILO_PROVIDER_ID) ? all : [kiloFallbackProvider(), ...all]
-    const available = withKilo.filter((item) => !disabled.has(item.id) && !connected.has(item.id))
+    const withAccure = all.some((item) => item.id === ACCURECODE_PROVIDER_ID) ? all : [accureFallbackProvider(), ...all]
+    const available = withAccure.filter((item) => !disabled.has(item.id) && !connected.has(item.id))
 
     return [
       {
@@ -61,7 +61,7 @@ const ProviderSelectDialog = () => {
       return
     }
 
-    if (item.id === KILO_PROVIDER_ID) {
+    if (item.id === ACCURECODE_PROVIDER_ID) {
       dialog.close()
       // Navigate to the Profile view so the full device-auth UI is visible.
       server.goToLogin()
@@ -124,14 +124,14 @@ const ProviderSelectDialog = () => {
             >
               <span
                 style={{
-                  "font-size": "var(--kilo-font-size-14)",
-                  "line-height": "var(--kilo-font-size-20)",
+                  "font-size": "var(--accure-font-size-14)",
+                  "line-height": "var(--accure-font-size-20)",
                   color: "var(--vscode-foreground)",
                 }}
               >
                 {item.name}
               </span>
-              <Show when={item.id === KILO_PROVIDER_ID}>
+              <Show when={item.id === ACCURECODE_PROVIDER_ID}>
                 <Tag>{language.t("dialog.provider.tag.recommended")}</Tag>
               </Show>
               <Show when={item.id === CUSTOM_PROVIDER_ID}>

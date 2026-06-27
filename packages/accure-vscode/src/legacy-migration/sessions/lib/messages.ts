@@ -1,4 +1,4 @@
-import type { KilocodeSessionImportMessageData as Message } from "@kilocode/sdk/v2"
+import type { AccurecodeSessionImportMessageData as Message } from "@accurecode/sdk/v2"
 import type { LegacyApiMessage, LegacyHistoryItem } from "./legacy-types"
 import { createMessageID, createSessionID } from "./ids"
 

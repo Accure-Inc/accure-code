@@ -4,11 +4,11 @@ import { createAnthropic } from "@ai-sdk/anthropic"
 import { createOpenAI } from "@ai-sdk/openai"
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible"
 import { createMistral } from "@ai-sdk/mistral"
-import type { KiloProvider, KiloProviderOptions } from "./types.js"
+import type { AccureProvider, AccureProviderOptions } from "./types.js"
 import { getApiKey } from "./auth/token.js"
-import { buildKiloHeaders, getDefaultHeaders } from "./headers.js"
+import { buildAccureHeaders, getDefaultHeaders } from "./headers.js"
 import { ANONYMOUS_API_KEY } from "./api/constants.js"
-import { resolveKiloOpenRouterBaseUrl } from "./api/url.js"
+import { resolveAccureOpenRouterBaseUrl } from "./api/url.js"
 import { transformRequestBody } from "./responses.js"
 
 export function buildRequestHeaders(defaultHeaders: Record<string, string>, requestHeaders?: HeadersInit): Headers {
@@ -20,33 +20,33 @@ export function buildRequestHeaders(defaultHeaders: Record<string, string>, requ
 }
 
 /**
- * Create a KiloCode provider instance
+ * Create a AccureCode provider instance
  *
- * This provider wraps the OpenRouter SDK with KiloCode-specific configuration
+ * This provider wraps the OpenRouter SDK with AccureCode-specific configuration
  * including custom authentication, headers, and base URL.
  *
  * @example
  * ```typescript
- * const provider = createKilo({
- *   kilocodeToken: "your-token-here",
- *   kilocodeOrganizationId: "org-123"
+ * const provider = createAccure({
+ *   accurecodeToken: "your-token-here",
+ *   accurecodeOrganizationId: "org-123"
  * })
  *
  * const model = provider.languageModel("anthropic/claude-sonnet-4")
  * ```
  */
-export function createKilo(options: KiloProviderOptions = {}): KiloProvider {
+export function createAccure(options: AccureProviderOptions = {}): AccureProvider {
   // Get API key from options or environment
   const apiKey = getApiKey(options)
 
-  const openRouterUrl = resolveKiloOpenRouterBaseUrl({ baseURL: options.baseURL, token: apiKey })
+  const openRouterUrl = resolveAccureOpenRouterBaseUrl({ baseURL: options.baseURL, token: apiKey })
 
   // Merge custom headers with defaults
   const customHeaders = {
     ...getDefaultHeaders(),
-    ...buildKiloHeaders(undefined, {
-      kilocodeOrganizationId: options.kilocodeOrganizationId,
-      kilocodeTesterWarningsDisabledUntil: undefined,
+    ...buildAccureHeaders(undefined, {
+      accurecodeOrganizationId: options.accurecodeOrganizationId,
+      accurecodeTesterWarningsDisabledUntil: undefined,
     }),
     ...options.headers,
   }

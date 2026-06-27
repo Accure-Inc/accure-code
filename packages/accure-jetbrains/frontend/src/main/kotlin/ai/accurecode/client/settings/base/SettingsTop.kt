@@ -1,9 +1,9 @@
-package ai.kilocode.client.settings.base
+package ai.accurecode.client.settings.base
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.ui.layout.StackAxis
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.ui.layout.StackAxis
 import com.intellij.ui.EditorNotificationPanel
 import com.intellij.ui.InlineBanner
 import java.awt.BorderLayout
@@ -48,8 +48,8 @@ internal class SettingsTop : Stack(StackAxis.VERTICAL, UiStyle.Gap.md()) {
 
     fun showNotLoggedIn(run: (JComponent) -> Unit) {
         showBanner(
-            KiloBundle.message("settings.login.message"),
-            listOf(SettingsAction(KiloBundle.message("settings.login.action"), run)),
+            AccureBundle.message("settings.login.message"),
+            listOf(SettingsAction(AccureBundle.message("settings.login.action"), run)),
         )
     }
 

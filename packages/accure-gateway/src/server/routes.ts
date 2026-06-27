@@ -1,14 +1,14 @@
 /**
- * Kilo Gateway specific routes
- * Handles profile fetching and organization management for Kilo Gateway provider
+ * Accure Gateway specific routes
+ * Handles profile fetching and organization management for Accure Gateway provider
  *
- * This factory function accepts OpenCode dependencies to create Kilo-specific routes
+ * This factory function accepts OpenCode dependencies to create Accure-specific routes
  */
 
-import { fetchKilocodeNotifications, KilocodeNotificationSchema } from "../api/notifications.js"
+import { fetchAccurecodeNotifications, AccurecodeNotificationSchema } from "../api/notifications.js"
 import { fetchOrganizationModes, clearModesCache } from "../api/modes.js"
-import { KILO_API_BASE, HEADER_FEATURE, HEADER_ORGANIZATIONID } from "../api/constants.js"
-import { buildKiloHeaders } from "../headers.js"
+import { ACCURECODE_API_BASE, HEADER_FEATURE, HEADER_ORGANIZATIONID } from "../api/constants.js"
+import { buildAccureHeaders } from "../headers.js"
 import type { ImportDeps, DrizzleDb } from "../cloud-sessions.js"
 import { fetchCloudSession, fetchCloudSessionForImport, importSessionToDb } from "../cloud-sessions.js"
 import { createEditHandler } from "./edit.js"
@@ -34,7 +34,7 @@ type Auth = any
 type ModelCache = { clear: (providerID: string) => void | Promise<void> }
 type Z = any
 
-interface KiloRoutesDeps extends ImportDeps {
+interface AccureRoutesDeps extends ImportDeps {
   Hono: new () => Hono
   describeRoute: DescribeRoute
   validator: Validator
@@ -47,18 +47,18 @@ interface KiloRoutesDeps extends ImportDeps {
 }
 
 /**
- * Create Kilo Gateway routes with OpenCode dependencies injected
+ * Create Accure Gateway routes with OpenCode dependencies injected
  *
  * @example
  * ```typescript
- * import { createKiloRoutes } from "@kilocode/accure-gateway"
+ * import { createAccureRoutes } from "@accurecode/accure-gateway"
  * import { Hono } from "hono"
  * import { describeRoute, validator, resolver } from "hono-openapi"
  * import z from "zod"
  * import { errors } from "../error"
  * import { Auth } from "../../auth"
  *
- * export const KiloRoutes = createKiloRoutes({
+ * export const AccureRoutes = createAccureRoutes({
  *   Hono,
  *   describeRoute,
  *   validator,
@@ -69,7 +69,7 @@ interface KiloRoutesDeps extends ImportDeps {
  * })
  * ```
  */
-export function createKiloRoutes(deps: KiloRoutesDeps) {
+export function createAccureRoutes(deps: AccureRoutesDeps) {
   const {
     Hono,
     describeRoute,
@@ -151,7 +151,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
   })
 
   const getProxyAuth = async () => {
-    const auth = await Auth.get("kilo")
+    const auth = await Auth.get("accure")
     const token = auth?.type === "api" ? auth.key : auth?.type === "oauth" ? auth.access : undefined
     return {
       auth,
@@ -164,9 +164,9 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
     .get(
       "/profile",
       describeRoute({
-        summary: "Get Kilo Gateway profile",
-        description: "Fetch user profile and organizations from Kilo Gateway",
-        operationId: "kilo.profile",
+        summary: "Get Accure Gateway profile",
+        description: "Fetch user profile and organizations from Accure Gateway",
+        operationId: "accure.profile",
         responses: {
           200: {
             description: "Profile data",
@@ -184,16 +184,16 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           return c.json(await getProfile(Auth))
         } catch (err) {
           if (!(err instanceof UnauthorizedError)) throw err
-          return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+          return c.json({ error: "Not authenticated with Accure Gateway" }, 401)
         }
       },
     )
     .post(
       "/organization",
       describeRoute({
-        summary: "Update Kilo Gateway organization",
-        description: "Switch to a different Kilo Gateway organization",
-        operationId: "kilo.organization.set",
+        summary: "Update Accure Gateway organization",
+        description: "Switch to a different Accure Gateway organization",
+        operationId: "accure.organization.set",
         responses: {
           200: {
             description: "Organization updated successfully",
@@ -220,7 +220,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
             await setOrganization(
               {
                 auth: Auth,
-                clear: () => ModelCache.clear("kilo"),
+                clear: () => ModelCache.clear("accure"),
                 dispose: () => Instances.disposeAllInstances(),
               },
               organizationId,
@@ -228,7 +228,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           )
         } catch (err) {
           if (!(err instanceof UnauthorizedError)) throw err
-          return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+          return c.json({ error: "Not authenticated with Accure Gateway" }, 401)
         }
       },
     )
@@ -237,7 +237,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       describeRoute({
         summary: "Get organization custom modes",
         description: "Fetch custom modes defined for the current organization",
-        operationId: "kilo.modes",
+        operationId: "accure.modes",
         responses: {
           200: {
             description: "Organization modes list",
@@ -281,7 +281,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
         },
       }),
       async (c: any) => {
-        const auth = await Auth.get("kilo")
+        const auth = await Auth.get("accure")
 
         if (!auth || auth.type !== "oauth") {
           return c.json({ modes: [] })
@@ -309,8 +309,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       "/fim",
       describeRoute({
         summary: "FIM completion",
-        description: "Proxy a Fill-in-the-Middle completion request to the Kilo Gateway",
-        operationId: "kilo.fim",
+        description: "Proxy a Fill-in-the-Middle completion request to the Accure Gateway",
+        operationId: "accure.fim",
         responses: {
           200: {
             description: "Streaming FIM completion response",
@@ -343,7 +343,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
         description:
           "Proxy a Mercury-style Next Edit request. The client supplies structured editor " +
           "context; the gateway assembles the sentinel-tagged prompt and forwards to the upstream edit endpoint.",
-        operationId: "kilo.edit",
+        operationId: "accure.edit",
         responses: {
           200: {
             description: "Next Edit completion",
@@ -378,8 +378,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       "/audio/transcriptions",
       describeRoute({
         summary: "Speech to text transcription",
-        description: "Proxy an audio transcription request to the Kilo Gateway",
-        operationId: "kilo.audio.transcriptions",
+        description: "Proxy an audio transcription request to the Accure Gateway",
+        operationId: "accure.audio.transcriptions",
         responses: {
           200: {
             description: "Transcription response",
@@ -407,7 +407,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       ),
       async (c: any) => {
         const proxy = await getProxyAuth()
-        if (!proxy.auth) return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+        if (!proxy.auth) return c.json({ error: "Not authenticated with Accure Gateway" }, 401)
 
         if (!proxy.token) return c.json({ error: "No valid token found" }, 401)
 
@@ -415,11 +415,11 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${proxy.token}`,
-          ...buildKiloHeaders(undefined, { kilocodeOrganizationId: proxy.organizationId }),
+          ...buildAccureHeaders(undefined, { accurecodeOrganizationId: proxy.organizationId }),
           [HEADER_FEATURE]: "vscode-extension",
         }
 
-        const response = await fetch(`${KILO_API_BASE}/api/gateway/v1/audio/transcriptions`, {
+        const response = await fetch(`${ACCURECODE_API_BASE}/api/gateway/v1/audio/transcriptions`, {
           method: "POST",
           headers,
           signal: c.req.raw.signal,
@@ -438,15 +438,15 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
     .get(
       "/notifications",
       describeRoute({
-        summary: "Get Kilo notifications",
-        description: "Fetch notifications from Kilo Gateway for CLI display",
-        operationId: "kilo.notifications",
+        summary: "Get Accure notifications",
+        description: "Fetch notifications from Accure Gateway for CLI display",
+        operationId: "accure.notifications",
         responses: {
           200: {
             description: "Notifications list",
             content: {
               "application/json": {
-                schema: resolver(z.array(KilocodeNotificationSchema)),
+                schema: resolver(z.array(AccurecodeNotificationSchema)),
               },
             },
           },
@@ -461,8 +461,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       "/cloud/session/:id",
       describeRoute({
         summary: "Get cloud session",
-        description: "Fetch full session data from the Kilo cloud for preview",
-        operationId: "kilo.cloud.session.get",
+        description: "Fetch full session data from the Accure cloud for preview",
+        operationId: "accure.cloud.session.get",
         responses: {
           200: {
             description: "Cloud session data",
@@ -478,8 +478,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       validator("param", z.object({ id: z.string() })),
       async (c: any) => {
         try {
-          const auth = await Auth.get("kilo")
-          if (!auth) return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+          const auth = await Auth.get("accure")
+          if (!auth) return c.json({ error: "Not authenticated with Accure Gateway" }, 401)
           const token = auth.type === "api" ? auth.key : auth.type === "oauth" ? auth.access : undefined
           if (!token) return c.json({ error: "No valid token found" }, 401)
 
@@ -488,7 +488,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           if (!result.ok) return c.json({ error: result.error }, result.status)
           return c.json(result.data)
         } catch (err: any) {
-          console.error("[Kilo Gateway] cloud/session/get: unhandled error", err?.message ?? err)
+          console.error("[Accure Gateway] cloud/session/get: unhandled error", err?.message ?? err)
           return c.json({ error: "Internal error" }, 500)
         }
       },
@@ -498,7 +498,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       describeRoute({
         summary: "Import session from cloud",
         description: "Download a cloud-synced session and write it to local storage with fresh IDs.",
-        operationId: "kilo.cloud.session.import",
+        operationId: "accure.cloud.session.import",
         responses: {
           200: {
             description: "Imported session info",
@@ -521,8 +521,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
         try {
           const { sessionId } = c.req.valid("json")
 
-          const auth = await Auth.get("kilo")
-          if (!auth) return c.json({ error: "Not authenticated with Kilo" }, 401)
+          const auth = await Auth.get("accure")
+          if (!auth) return c.json({ error: "Not authenticated with Accure" }, 401)
           const token = auth.type === "api" ? auth.key : auth.type === "oauth" ? auth.access : undefined
           if (!token) return c.json({ error: "No valid token found" }, 401)
 
@@ -546,7 +546,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
 
           return c.json(info)
         } catch (err: any) {
-          console.error("[Kilo Gateway] cloud/session/import: unhandled error", err?.message ?? err)
+          console.error("[Accure Gateway] cloud/session/import: unhandled error", err?.message ?? err)
           return c.json({ error: "Internal error" }, 500)
         }
       },
@@ -554,9 +554,9 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
     .get(
       "/claw/status",
       describeRoute({
-        summary: "Get KiloClaw instance status",
-        description: "Fetch the user's KiloClaw instance status via the KiloClaw worker",
-        operationId: "kilo.claw.status",
+        summary: "Get AccureClaw instance status",
+        description: "Fetch the user's AccureClaw instance status via the AccureClaw worker",
+        operationId: "accure.claw.status",
         responses: {
           200: {
             description: "Instance status",
@@ -567,9 +567,9 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
                     // `recovering` and `restoring` are transitional states the
                     // worker reports while it brings an instance back online
                     // after an unexpected stop or a snapshot restore — see
-                    // cloud `services/kiloclaw/src/index.ts` and the
+                    // cloud `services/accureclaw/src/index.ts` and the
                     // `PlatformStatusResponse` type in
-                    // cloud/apps/web/src/lib/kiloclaw/types.ts. Keeping them in
+                    // cloud/apps/web/src/lib/accureclaw/types.ts. Keeping them in
                     // the enum so the SDK types stay accurate.
                     status: z
                       .enum([
@@ -606,25 +606,25 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           return c.json(await getClawStatus(Auth))
         } catch (err: any) {
           if (err instanceof GatewayError) {
-            return c.json({ error: `KiloClaw request failed: ${err.status} ${err.message}` }, err.status as any)
+            return c.json({ error: `AccureClaw request failed: ${err.status} ${err.message}` }, err.status as any)
           }
-          console.error("[Kilo Gateway] claw/status: error", err?.message ?? err)
-          return c.json({ error: "Failed to reach KiloClaw" }, 502)
+          console.error("[Accure Gateway] claw/status: error", err?.message ?? err)
+          return c.json({ error: "Failed to reach AccureClaw" }, 502)
         }
       },
     )
     .get(
       "/claw/chat-credentials",
       describeRoute({
-        summary: "Get KiloClaw chat credentials",
+        summary: "Get AccureClaw chat credentials",
         description:
-          "Returns the bearer token and endpoint URLs the client uses to talk to the Kilo Chat worker " +
-          "and the Event Service. The bearer is the user's existing long-lived Kilo JWT — kilo-chat and " +
+          "Returns the bearer token and endpoint URLs the client uses to talk to the Accure Chat worker " +
+          "and the Event Service. The bearer is the user's existing long-lived Accure JWT — accure-chat and " +
           "event-service both verify it directly with NEXTAUTH_SECRET, so no separate token mint is needed.",
-        operationId: "kilo.claw.chatCredentials",
+        operationId: "accure.claw.chatCredentials",
         responses: {
           200: {
-            description: "Kilo Chat credentials or null",
+            description: "Accure Chat credentials or null",
             content: {
               "application/json": {
                 schema: resolver(
@@ -632,7 +632,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
                     .object({
                       token: z.string(),
                       expiresAt: z.string(),
-                      kiloChatUrl: z.string(),
+                      accureChatUrl: z.string(),
                       eventServiceUrl: z.string(),
                     })
                     .nullable(),
@@ -648,7 +648,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           return c.json(await getClawChatCredentials(Auth))
         } catch (err) {
           if (!(err instanceof UnauthorizedError)) throw err
-          return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+          return c.json({ error: "Not authenticated with Accure Gateway" }, 401)
         }
       },
     )
@@ -656,8 +656,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       "/cloud-sessions",
       describeRoute({
         summary: "Get cloud sessions",
-        description: "Fetch cloud CLI sessions from Kilo API",
-        operationId: "kilo.cloudSessions",
+        description: "Fetch cloud CLI sessions from Accure API",
+        operationId: "accure.cloudSessions",
         responses: {
           200: {
             description: "Cloud sessions list",
@@ -693,8 +693,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       ),
       async (c: any) => {
         try {
-          const auth = await Auth.get("kilo")
-          if (!auth) return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+          const auth = await Auth.get("accure")
+          if (!auth) return c.json({ error: "Not authenticated with Accure Gateway" }, 401)
 
           const token = auth.type === "api" ? auth.key : auth.type === "oauth" ? auth.access : undefined
           if (!token) return c.json({ error: "No valid token found" }, 401)
@@ -702,7 +702,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           return c.json(await getCloudSessions(token, c.req.valid("query")))
         } catch (err: any) {
           if (err instanceof GatewayError) return c.json({ error: err.message }, err.status as any)
-          console.error("[Kilo Gateway] cloud-sessions: unhandled error", err?.message ?? err)
+          console.error("[Accure Gateway] cloud-sessions: unhandled error", err?.message ?? err)
           return c.json({ error: "Internal error" }, 500)
         }
       },

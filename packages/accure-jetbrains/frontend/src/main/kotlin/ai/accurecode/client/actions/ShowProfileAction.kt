@@ -1,8 +1,8 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.settings.profile.UserProfileConfigurable
-import ai.kilocode.client.telemetry.Telemetry
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.settings.profile.UserProfileConfigurable
+import ai.accurecode.client.telemetry.Telemetry
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -13,14 +13,14 @@ import com.intellij.openapi.project.DumbAwareAction
 import java.util.function.Predicate
 
 /**
- * Toolbar action that opens the Kilo User Profile settings page.
+ * Toolbar action that opens the Accure User Profile settings page.
  *
  * Uses a predicate-based lookup so settings open correctly in JetBrains
  * Remote Development where configurables may be wrapped.
  */
 class ShowProfileAction : DumbAwareAction(
-    KiloBundle.message("action.Kilo.ShowProfile.text"),
-    KiloBundle.message("action.Kilo.ShowProfile.description"),
+    AccureBundle.message("action.Accure.ShowProfile.text"),
+    AccureBundle.message("action.Accure.ShowProfile.description"),
     AllIcons.General.User,
 ) {
 

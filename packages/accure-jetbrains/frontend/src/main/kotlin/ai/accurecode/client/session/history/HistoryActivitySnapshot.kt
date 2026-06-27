@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.history
+package ai.accurecode.client.session.history
 
-import ai.kilocode.client.session.SessionActivityKind
+import ai.accurecode.client.session.SessionActivityKind
 
 internal data class HistoryActivitySnapshot(
     val activity: Map<String, SessionActivityKind> = emptyMap(),

@@ -3,36 +3,27 @@
 </p>
 
 <p align="center">
-  <a href="https://kilo.ai"><img width="250" alt="Kilo Code logo" src="https://github.com/user-attachments/assets/bdb0c174-b9fd-40ad-a47b-f3aab9b54e8d" /></a>
+  <a href="https://accure.ai"><img width="250" alt="Accure Code logo" src="logo.png" /></a>
 </p>
 
 <p align="center">El agente de programación de código abierto para construir con IA en VS Code, JetBrains o la CLI.</p>
 
-<p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code"><img src="https://raster.shields.io/badge/VS_Code_Marketplace-007ACC?style=flat&logo=visualstudiocode&logoColor=white" alt="VS Code Marketplace" height="20"></a>
-  <a href="https://www.npmjs.com/package/@kilocode/cli"><img alt="npm" src="https://raster.shields.io/npm/v/@kilocode/cli?style=flat" height="20" /></a>
-  <a href="https://x.com/kilocode"><img src="https://raster.shields.io/badge/kilocode-000000?style=flat&logo=x&logoColor=white" alt="X (Twitter)" height="20"></a>
-  <a href="https://blog.kilo.ai"><img src="https://raster.shields.io/badge/Blog-555?style=flat&logo=substack&logoColor=white" alt="Blog" height="20"></a>
-  <a href="https://kilo.ai/discord"><img src="https://raster.shields.io/badge/Join%20Discord-5865F2?style=flat&logo=discord&logoColor=white" alt="Discord" height="20"></a>
-  <a href="https://www.reddit.com/r/kilocode/"><img src="https://raster.shields.io/badge/Join%20r%2Fkilocode-D84315?style=flat&logo=reddit&logoColor=white" alt="Reddit" height="20"></a>
-</p>
-
-![Kilo-in-VS-Code-and-CLI](https://github.com/user-attachments/assets/0536ca59-ed81-4512-9e05-d186187a1b52)
+![Accure-in-VS-Code-and-CLI](screenshot.png)
 
 ---
 
-Kilo Code es un agente de programación con IA que te acompaña en todos los lugares donde trabajas: [VS Code](https://kilo.ai/landing/vs-code), [JetBrains](https://kilo.ai/features/jetbrains-native) y la [CLI](https://kilo.ai/cli). Es de código abierto y tiene precios abiertos. Puedes elegir entre más de 500 modelos, cambiar entre ellos a mitad de una tarea y pagar la tarifa del proveedor del modelo sin recargos. No necesitas claves de API para empezar.
+Accure Code es un agente de programación con IA que te acompaña en todos los lugares donde trabajas: [VS Code](https://accure.ai/landing/vs-code), [JetBrains](https://accure.ai/features/jetbrains-native) y la [CLI](https://accure.ai/cli). Es de código abierto y tiene precios abiertos. Puedes elegir entre más de 500 modelos, cambiar entre ellos a mitad de una tarea y pagar la tarifa del proveedor del modelo sin recargos. No necesitas claves de API para empezar.
 
 ### Instalación
 
-Elige dónde quieres ejecutar Kilo.
+Elige dónde quieres ejecutar Accure.
 
 <details open>
 <summary><strong>VS Code</strong></summary>
 
 <br>
 
-Instala directamente la [extensión Kilo Code](vscode:extension/kilocode.kilo-code), o descárgala desde [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code). Crea una cuenta y tendrás acceso a más de 500 modelos, incluidos GPT-5.5, Claude Opus 4.7, Claude Sonnet 4.6 y Gemini 3.1 Pro Preview, todos con precios del proveedor.
+Instala directamente la [extensión Accure Code](vscode:extension/accurecode.accure-code), o descárgala desde [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=accurecode.Accure-Code). Crea una cuenta y tendrás acceso a más de 500 modelos, incluidos GPT-5.5, Claude Opus 4.7, Claude Sonnet 4.6 y Gemini 3.1 Pro Preview, todos con precios del proveedor.
 
 </details>
 
@@ -43,25 +34,25 @@ Instala directamente la [extensión Kilo Code](vscode:extension/kilocode.kilo-co
 
 ```bash
 # npm
-npm install -g @kilocode/cli
+npm install -g @accurecode/cli
 
 # curl
-curl -fsSL https://kilo.ai/cli/install | bash
+curl -fsSL https://accure.ai/cli/install | bash
 
 # pnpm
-pnpm add -g @kilocode/cli
+pnpm add -g @accurecode/cli
 
 # bun
-bun add -g @kilocode/cli
+bun add -g @accurecode/cli
 
 # Homebrew (macOS / Linux)
-brew install Kilo-Org/tap/kilo
+brew install Accure-Org/tap/accure
 
 # Arch Linux (AUR)
-paru -S kilo-bin
+paru -S accure-bin
 ```
 
-Luego ejecuta `kilo` en cualquier directorio de proyecto para empezar.
+Luego ejecuta `accure` en cualquier directorio de proyecto para empezar.
 
 </details>
 
@@ -70,7 +61,7 @@ Luego ejecuta `kilo` en cualquier directorio de proyecto para empezar.
 
 <br>
 
-Instala el [plugin Kilo Code](https://plugins.jetbrains.com/plugin/28350-kilo-code) desde JetBrains Marketplace, o busca "Kilo Code" en `Settings → Plugins` dentro de cualquier IDE de JetBrains.
+Instala el [plugin Accure Code](https://plugins.jetbrains.com/plugin/28350-accure-code) desde JetBrains Marketplace, o busca "Accure Code" en `Settings → Plugins` dentro de cualquier IDE de JetBrains.
 
 </details>
 
@@ -79,7 +70,7 @@ Instala el [plugin Kilo Code](https://plugins.jetbrains.com/plugin/28350-kilo-co
 
 <br>
 
-Ejecuta Kilo desde la web, sin necesitar una máquina local, en [app.kilo.ai/cloud](https://app.kilo.ai/cloud).
+Ejecuta Accure desde la web, sin necesitar una máquina local, en [app.accure.ai/cloud](https://app.accure.ai/cloud).
 
 </details>
 
@@ -88,31 +79,31 @@ Ejecuta Kilo desde la web, sin necesitar una máquina local, en [app.kilo.ai/clo
 
 <br>
 
-Configura revisiones automáticas de código con IA en tus pull requests en [app.kilo.ai/code-reviews](https://app.kilo.ai/code-reviews).
+Configura revisiones automáticas de código con IA en tus pull requests en [app.accure.ai/code-reviews](https://app.accure.ai/code-reviews).
 
 </details>
 
 <details>
-<summary><strong>KiloClaw</strong></summary>
+<summary><strong>AccureClaw</strong></summary>
 
 <br>
 
-Activa tu agente de IA siempre disponible en [app.kilo.ai/claw](https://app.kilo.ai/claw).
+Activa tu agente de IA siempre disponible en [app.accure.ai/claw](https://app.accure.ai/claw).
 
 </details>
 
 <details>
 <summary>Instalar la CLI desde GitHub Releases (binarios)</summary>
 
-Descarga el binario más reciente desde la [página de Releases](https://github.com/Kilo-Org/kilocode/releases).
+Descarga el binario más reciente desde la [página de Releases](https://github.com/Accure-Org/accurecode/releases).
 
 | Plataforma | Recurso |
 |---|---|
-| Windows (la mayoría de PCs) | `kilo-windows-x64.zip` |
-| macOS (Apple Silicon) | `kilo-darwin-arm64.zip` |
-| macOS (Intel) | `kilo-darwin-x64.zip` |
-| Linux x64 | `kilo-linux-x64.tar.gz` |
-| Linux ARM | `kilo-linux-arm64.tar.gz` |
+| Windows (la mayoría de PCs) | `accure-windows-x64.zip` |
+| macOS (Apple Silicon) | `accure-darwin-arm64.zip` |
+| macOS (Intel) | `accure-darwin-x64.zip` |
+| Linux x64 | `accure-linux-x64.tar.gz` |
+| Linux ARM | `accure-linux-arm64.tar.gz` |
 
 Notas: `x64-baseline` es una compilación de compatibilidad para CPUs antiguas sin AVX. `musl` es la compilación enlazada estáticamente para Alpine o imágenes Docker mínimas sin glibc. `accure-vscode-*.vsix` es el paquete de extensión de VS Code, no la CLI. Los archivos `Source code` son para compilar desde el código fuente.
 
@@ -120,7 +111,7 @@ Notas: `x64-baseline` es una compilación de compatibilidad para CPUs antiguas s
 
 ### Agents
 
-Kilo incluye agents especializados entre los que puedes cambiar según la tarea. También puedes crear tus propios agents personalizados.
+Accure incluye agents especializados entre los que puedes cambiar según la tarea. También puedes crear tus propios agents personalizados.
 
 - **Code** - El predeterminado. Implementa y edita código a partir de lenguaje natural.
 - **Plan** - Diseña la arquitectura y escribe planes de implementación antes de que se escriba código.
@@ -128,7 +119,7 @@ Kilo incluye agents especializados entre los que puedes cambiar según la tarea.
 - **Debug** - Diagnostica y rastrea problemas.
 - **Review** - Revisa tus cambios y detecta problemas de rendimiento, seguridad, estilo y cobertura de pruebas.
 
-Más información sobre [agents y agents personalizados](https://kilo.ai/docs/code-with-ai/agents/using-agents).
+Más información sobre [agents y agents personalizados](https://accure.ai/docs/code-with-ai/agents/using-agents).
 
 ### Qué hace
 
@@ -141,17 +132,17 @@ Más información sobre [agents y agents personalizados](https://kilo.ai/docs/co
 
 ### Modo autónomo (CI/CD)
 
-Ejecuta `kilo run` con `--auto` para operar de forma totalmente autónoma y sin prompts, pensado para pipelines CI/CD:
+Ejecuta `accure run` con `--auto` para operar de forma totalmente autónoma y sin prompts, pensado para pipelines CI/CD:
 
 ```bash
-kilo run --auto "run tests and fix any failures"
+accure run --auto "run tests and fix any failures"
 ```
 
 `--auto` desactiva todos los prompts de permisos y permite que el agente ejecute cualquier acción sin confirmación. Úsalo solo en entornos de confianza.
 
 ### Documentación
 
-Para configuración y todo lo demás, consulta la [documentación](https://kilo.ai/docs).
+Para configuración y todo lo demás, consulta la [documentación](https://accure.ai/docs).
 
 ### Contribuir
 
@@ -166,12 +157,12 @@ MIT. Puedes usar, modificar y distribuir este código, incluso comercialmente, s
 ### FAQ
 
 <details>
-<summary>¿De dónde viene Kilo CLI?</summary>
+<summary>¿De dónde viene Accure CLI?</summary>
 
-Kilo CLI es un fork de [OpenCode](https://github.com/Kilo-Org/kilocode), mejorado para funcionar dentro de la plataforma de ingeniería agéntica de Kilo.
+Accure CLI es un fork de [OpenCode](https://github.com/Accure-Org/accurecode), mejorado para funcionar dentro de la plataforma de ingeniería agéntica de Accure.
 
 </details>
 
 ---
 
-**Únete a la comunidad** [Discord](https://kilo.ai/discord) | [X](https://x.com/kilocode) | [Reddit](https://www.reddit.com/r/kilocode/)
+**Únete a la comunidad** [Discord](https://accure.ai/discord) | [X](https://x.com/accurecode) | [Reddit](https://www.reddit.com/r/accurecode/)

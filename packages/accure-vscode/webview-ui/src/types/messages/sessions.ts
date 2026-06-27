@@ -58,7 +58,7 @@ export interface SessionInfo {
 
 export type SessionUpdate = Partial<SessionInfo> & Pick<SessionInfo, "id">
 
-// Cloud session info (from Kilo cloud API)
+// Cloud session info (from Accure cloud API)
 export interface CloudSessionInfo {
   session_id: string
   title: string | null

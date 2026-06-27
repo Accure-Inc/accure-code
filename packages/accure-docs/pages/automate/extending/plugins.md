@@ -1,12 +1,12 @@
 ---
 title: "Plugins"
-description: "Extend the Kilo CLI with custom hooks, tools, auth providers, and more"
+description: "Extend the Accure CLI with custom hooks, tools, auth providers, and more"
 platform: new
 ---
 
 # Plugins
 
-Plugins extend Kilo by hooking into events, adding custom tools, registering auth or model providers, and customizing runtime behavior. They are TypeScript or JavaScript modules loaded at startup, and work in both the Kilo CLI and the VS Code extension.
+Plugins extend Accure by hooking into events, adding custom tools, registering auth or model providers, and customizing runtime behavior. They are TypeScript or JavaScript modules loaded at startup, and work in both the Accure CLI and the VS Code extension.
 
 ## What plugins can do
 
@@ -31,7 +31,7 @@ Add an array of plugin specifiers to your config file:
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.accurecode.ai/config.json",
   "plugin": [
     "@your-org/your-plugin",
     "your-plugin@1.2.3",
@@ -57,59 +57,59 @@ Config files live in the same locations as the rest of your CLI configuration �
 
 Drop TypeScript or JavaScript files into a `plugin/` or `plugins/` folder inside any config directory:
 
-- Global: `~/.config/kilo/plugin/`
-- Project: `.kilo/plugin/`, `.kilocode/plugin/`, or `.opencode/plugin/`
+- Global: `~/.config/accure/plugin/`
+- Project: `.accurecode/plugin/`, `.accurecode/plugin/`, or `.opencode/plugin/`
 
 Every `.ts` or `.js` file in those directories is auto-registered at startup — no need to list them in the config file.
 
 ```text
 my-project/
-├── kilo.json
-└── .kilo/
+├── accure.json
+└── .accurecode/
     └── plugin/
         ├── env-guard.ts
         └── notifications.ts
 ```
 
-### From the `kilo plugin` command
+### From the `accure plugin` command
 
 Install an npm plugin and patch your config in one step:
 
 ```bash
 # Install into the current project's config
-kilo plugin my-plugin
+accure plugin my-plugin
 
 # Install into your global config
-kilo plugin my-plugin --global
+accure plugin my-plugin --global
 
 # Replace an existing entry
-kilo plugin my-plugin --force
+accure plugin my-plugin --force
 ```
 
-The command resolves the package, reads its `package.json` for plugin entrypoints, and writes the entry into the appropriate config file (currently `.opencode/opencode.jsonc` / `.opencode/tui.jsonc` for local installs, or `~/.config/kilo/opencode.jsonc` / `~/.config/kilo/tui.jsonc` for `--global`) while preserving JSONC comments.
+The command resolves the package, reads its `package.json` for plugin entrypoints, and writes the entry into the appropriate config file (currently `.opencode/opencode.jsonc` / `.opencode/tui.jsonc` for local installs, or `~/.config/accure/opencode.jsonc` / `~/.config/accure/tui.jsonc` for `--global`) while preserving JSONC comments.
 
 ### How plugins are installed
 
 - **npm plugins** are installed automatically at startup using Bun. Packages and their dependencies are cached under `packages/` in the current CLI XDG cache directory (`~/.cache/opencode/packages/` by default, or `$XDG_CACHE_HOME/opencode/packages/` when `XDG_CACHE_HOME` is set).
 - **Pinned npm versions** like `my-plugin@1.2.3` install that exact version and do not check for newer registry versions. Bare package names resolve to `latest` and can refresh when the cached copy becomes stale.
-- **Install scripts are disabled** for npm plugins. Kilo installs packages with lifecycle scripts such as `install` and `postinstall` blocked.
-- **Local plugins** are loaded directly from the plugin directory. If your plugin imports external packages, add a `package.json` to your config directory (see [Dependencies](#dependencies)) — Kilo runs `bun install` on startup so imports resolve.
+- **Install scripts are disabled** for npm plugins. Accure installs packages with lifecycle scripts such as `install` and `postinstall` blocked.
+- **Local plugins** are loaded directly from the plugin directory. If your plugin imports external packages, add a `package.json` to your config directory (see [Dependencies](#dependencies)) — Accure runs `bun install` on startup so imports resolve.
 
 ### Load order
 
 Plugins from all sources run on every session. They load in this order:
 
-1. Internal built-ins (Kilo Gateway auth, Codex auth, Copilot auth, Cloudflare, etc.)
-2. Global config plugin array (`~/.config/kilo/kilo.json`)
-3. Global plugin directory (`~/.config/kilo/plugin/`)
-4. Project config plugin array (`kilo.json` / `opencode.json`)
-5. Project plugin directory (`.kilo/plugin/` and friends)
+1. Internal built-ins (Accure Gateway auth, Codex auth, Copilot auth, Cloudflare, etc.)
+2. Global config plugin array (`~/.config/accure/accure.json`)
+3. Global plugin directory (`~/.config/accure/plugin/`)
+4. Project config plugin array (`accure.json` / `opencode.json`)
+5. Project plugin directory (`.accurecode/plugin/` and friends)
 
 Duplicates (same package, same version) are deduplicated. Hooks from multiple plugins run sequentially in load order.
 
 ### Disabling external plugins
 
-Set the `KILO_PURE=1` environment variable to skip all external plugins — only built-in plugins will load. Useful for reproducible CI runs or debugging.
+Set the `ACCURECODE_PURE=1` environment variable to skip all external plugins — only built-in plugins will load. Useful for reproducible CI runs or debugging.
 
 ---
 
@@ -122,8 +122,8 @@ A plugin is a module that exports a function returning a set of [hooks](#hooks-r
 Create a file in your plugin directory:
 
 ```ts
-// .kilo/plugin/hello.ts
-import type { Plugin } from "@kilocode/plugin"
+// .accurecode/plugin/hello.ts
+import type { Plugin } from "@accurecode/plugin"
 
 const hello: Plugin = async ({ project, client, $, directory, worktree }) => {
   console.log("hello plugin loaded")
@@ -143,19 +143,19 @@ The plugin function receives a context object:
 | `project` | Current project metadata. |
 | `directory` | Current working directory for this session. |
 | `worktree` | Git worktree root for this session. |
-| `client` | A Kilo SDK client (`@kilocode/sdk`) for calling the local server. |
+| `client` | A Accure SDK client (`@accurecode/sdk`) for calling the local server. |
 | `$` | [Bun's shell API](https://bun.com/docs/runtime/shell). |
-| `serverUrl` | URL of the local Kilo server. |
+| `serverUrl` | URL of the local Accure server. |
 | `experimental_workspace` | Register workspace adaptors (used by Agent Manager). |
 
 The function returns a `Hooks` object. Any second argument is the options object passed via config (e.g. the `{ apiKey: "..." }` from `["my-plugin", { apiKey: "..." }]`).
 
 ### Register workspace adaptors
 
-Workspace adaptors let plugins add custom workspace targets to Kilo's workspace creation flow. This API is experimental and may change.
+Workspace adaptors let plugins add custom workspace targets to Accure's workspace creation flow. This API is experimental and may change.
 
 ```ts
-import type { Plugin } from "@kilocode/plugin"
+import type { Plugin } from "@accurecode/plugin"
 import { mkdir, rm } from "node:fs/promises"
 
 const WorkspacePlugin: Plugin = async ({ experimental_workspace }) => {
@@ -163,7 +163,7 @@ const WorkspacePlugin: Plugin = async ({ experimental_workspace }) => {
     name: "Folder",
     description: "Create a blank folder",
     configure(config) {
-      return { ...config, directory: `/tmp/kilo-${Date.now()}` }
+      return { ...config, directory: `/tmp/accure-${Date.now()}` }
     },
     async create(config) {
       await mkdir(config.directory!, { recursive: true })
@@ -189,7 +189,7 @@ An adaptor implements `configure(config)`, `create(config, env, from?)`, `remove
 Plugins must default-export a module descriptor. `id` is required for local-file plugins and inferred from `package.json#name` for npm plugins.
 
 ```ts
-import type { Plugin } from "@kilocode/plugin"
+import type { Plugin } from "@accurecode/plugin"
 
 const server: Plugin = async (ctx) => ({
   /* hooks */
@@ -205,7 +205,7 @@ An npm plugin can also expose a TUI entry point (`tui`) for [TUI plugins](#tui-p
 
 ### Package manifest for npm plugins
 
-Published npm plugins should declare separate package entrypoints for each runtime they support. Kilo detects install targets from `package.json`:
+Published npm plugins should declare separate package entrypoints for each runtime they support. Accure detects install targets from `package.json`:
 
 - `exports["./server"]` marks the package as a server plugin.
 - `exports["./tui"]` marks the package as a TUI plugin.
@@ -214,7 +214,7 @@ Published npm plugins should declare separate package entrypoints for each runti
 
 ```json
 {
-  "name": "@acme/kilo-plugin",
+  "name": "@acme/accure-plugin",
   "type": "module",
   "main": "./dist/server.js",
   "exports": {
@@ -239,7 +239,7 @@ Theme-only packages can omit code entrypoints and provide package-relative theme
 
 ```json
 {
-  "name": "@acme/kilo-themes",
+  "name": "@acme/accure-themes",
   "oc-themes": ["themes/acme-dark.json", "themes/acme-light.json"]
 }
 ```
@@ -251,15 +251,15 @@ Theme-only packages can omit code entrypoints and provide package-relative theme
 Install the plugin package locally and import its types:
 
 ```bash
-bun add -d @kilocode/plugin
+bun add -d @accurecode/plugin
 ```
 
 ```ts
-import type { Plugin } from "@kilocode/plugin"
-import { tool } from "@kilocode/plugin/tool"
+import type { Plugin } from "@accurecode/plugin"
+import { tool } from "@accurecode/plugin/tool"
 ```
 
-Kilo automatically creates a `package.json` in config directories that contain a `plugin/` folder and installs `@kilocode/plugin` so types resolve out of the box.
+Accure automatically creates a `package.json` in config directories that contain a `plugin/` folder and installs `@accurecode/plugin` so types resolve out of the box.
 
 ### Engine compatibility
 
@@ -279,7 +279,7 @@ If the running CLI does not satisfy the range, the plugin is skipped and a warni
 Local plugins and custom tools can use external npm packages. Add a `package.json` to your config directory:
 
 ```json
-// .kilo/package.json
+// .accurecode/package.json
 {
   "dependencies": {
     "shescape": "^2.1.0"
@@ -287,12 +287,12 @@ Local plugins and custom tools can use external npm packages. Add a `package.jso
 }
 ```
 
-Kilo runs `bun install` at startup so your plugins can import the packages:
+Accure runs `bun install` at startup so your plugins can import the packages:
 
 ```ts
-// .kilo/plugin/escape-bash.ts
+// .accurecode/plugin/escape-bash.ts
 import { escape } from "shescape"
-import type { Plugin } from "@kilocode/plugin"
+import type { Plugin } from "@accurecode/plugin"
 
 const EscapeBash: Plugin = async () => ({
   "tool.execute.before": async (input, output) => {
@@ -336,7 +336,7 @@ Every hook is optional. Return only the ones you care about.
 | `chat.headers` | Add or replace HTTP headers on the LLM API call. |
 | `permission.ask` | Auto-allow or auto-deny permission prompts. |
 | `command.execute.before` | Intercept slash command execution; mutate the resulting `parts`. |
-| `shell.env` | Inject environment variables into every shell command Kilo runs. |
+| `shell.env` | Inject environment variables into every shell command Accure runs. |
 
 ### Providers & auth
 
@@ -348,7 +348,7 @@ Every hook is optional. Return only the ones you care about.
 Provider hooks can replace or refresh the model catalog for a provider. The hook receives the provider definition and auth context, and returns a map of model ID to model metadata:
 
 ```ts
-import type { Plugin } from "@kilocode/plugin"
+import type { Plugin } from "@accurecode/plugin"
 
 const ProviderPlugin: Plugin = async () => ({
   provider: {
@@ -365,7 +365,7 @@ const ProviderPlugin: Plugin = async () => ({
 export default { id: "my-provider", server: ProviderPlugin }
 ```
 
-Kilo fills provider/model IDs from the returned catalog and uses the returned models in the picker and provider router.
+Accure fills provider/model IDs from the returned catalog and uses the returned models in the picker and provider router.
 
 ### Experimental
 
@@ -381,7 +381,7 @@ These hooks live behind the `experimental.` prefix and may change between releas
 
 ### Events
 
-The `event` hook fires for every event on Kilo's internal bus. Common event types include:
+The `event` hook fires for every event on Accure's internal bus. Common event types include:
 
 - **Session**: `session.created`, `session.updated`, `session.idle`, `session.error`, `session.deleted`, `session.compacted`, `session.diff`, `session.status`
 - **Message**: `message.updated`, `message.removed`, `message.part.updated`, `message.part.removed`
@@ -412,9 +412,9 @@ const server: Plugin = async () => ({
 Plugins can register tools the model can call alongside the built-in ones. Use the `tool()` helper for type-safety:
 
 ```ts
-// .kilo/plugin/database.ts
-import type { Plugin } from "@kilocode/plugin"
-import { tool } from "@kilocode/plugin/tool"
+// .accurecode/plugin/database.ts
+import type { Plugin } from "@accurecode/plugin"
+import { tool } from "@accurecode/plugin/tool"
 
 const DatabasePlugin: Plugin = async () => ({
   tool: {
@@ -446,7 +446,7 @@ If a custom tool uses the same name as a built-in tool, **the custom tool wins**
 
 ### Alternative: standalone tool files
 
-For tools that don't need the full plugin context, drop them in a `tool/` or `tools/` folder inside any config directory — for example `.kilo/tool/database.ts` or `~/.config/kilo/tool/database.ts`. The filename becomes the tool name, and each file exports a `tool()` definition directly. The layout is identical to the [OpenCode custom tools guide](https://opencode.ai/docs/custom-tools); substitute `.kilo/` (or `.kilocode/` / `.opencode/`) for `.opencode/`.
+For tools that don't need the full plugin context, drop them in a `tool/` or `tools/` folder inside any config directory — for example `.accurecode/tool/database.ts` or `~/.config/accure/tool/database.ts`. The filename becomes the tool name, and each file exports a `tool()` definition directly. The layout is identical to the [OpenCode custom tools guide](https://opencode.ai/docs/custom-tools); substitute `.accurecode/` (or `.accurecode/` / `.opencode/`) for `.opencode/`.
 
 ---
 
@@ -456,13 +456,13 @@ For tools that don't need the full plugin context, drop them in a `tool/` or `to
 
 The CLI has built-in attention alerts for session completion, errors, and prompts that need input. You do not need a plugin or platform-specific notification command.
 
-Enable notifications and sounds in `kilo console` under **Settings > CLI > Notifications**, or configure the `attention` section of `tui.json`. See [CLI Notifications and Sounds](/docs/code-with-ai/platforms/cli#cli-notifications-and-sounds) for configuration and custom sound overrides.
+Enable notifications and sounds in `accure console` under **Settings > CLI > Notifications**, or configure the `attention` section of `tui.json`. See [CLI Notifications and Sounds](/docs/code-with-ai/platforms/cli#cli-notifications-and-sounds) for configuration and custom sound overrides.
 
 ### Block reads of `.env` files
 
 ```ts
-// .kilo/plugin/env-guard.ts
-import type { Plugin } from "@kilocode/plugin"
+// .accurecode/plugin/env-guard.ts
+import type { Plugin } from "@accurecode/plugin"
 
 const EnvGuard: Plugin = async () => ({
   "tool.execute.before": async (input, output) => {
@@ -478,8 +478,8 @@ export default { id: "env-guard", server: EnvGuard }
 ### Inject environment variables into every shell command
 
 ```ts
-// .kilo/plugin/inject-env.ts
-import type { Plugin } from "@kilocode/plugin"
+// .accurecode/plugin/inject-env.ts
+import type { Plugin } from "@accurecode/plugin"
 
 const InjectEnv: Plugin = async () => ({
   "shell.env": async (input, output) => {
@@ -493,10 +493,10 @@ export default { id: "inject-env", server: InjectEnv }
 
 ### Structured logging
 
-Prefer `client.app.log()` over `console.log` so entries land in Kilo's log pipeline:
+Prefer `client.app.log()` over `console.log` so entries land in Accure's log pipeline:
 
 ```ts
-import type { Plugin } from "@kilocode/plugin"
+import type { Plugin } from "@accurecode/plugin"
 
 const Logger: Plugin = async ({ client }) => {
   await client.app.log({
@@ -518,8 +518,8 @@ Levels: `debug`, `info`, `warn`, `error`.
 ### Inject context during session compaction
 
 ```ts
-// .kilo/plugin/compaction.ts
-import type { Plugin } from "@kilocode/plugin"
+// .accurecode/plugin/compaction.ts
+import type { Plugin } from "@accurecode/plugin"
 
 const Compaction: Plugin = async () => ({
   "experimental.session.compacting": async (input, output) => {
@@ -536,7 +536,7 @@ Set `output.prompt` to replace the default compaction prompt entirely — when p
 
 ### Stop auto-continuing after compaction
 
-By default, Kilo sends a synthetic "continue" turn after compaction so the agent resumes the interrupted task. Use `experimental.compaction.autocontinue` to disable that turn for specific sessions or providers:
+By default, Accure sends a synthetic "continue" turn after compaction so the agent resumes the interrupted task. Use `experimental.compaction.autocontinue` to disable that turn for specific sessions or providers:
 
 ```ts
 const CompactionStop: Plugin = async () => ({
@@ -552,9 +552,9 @@ The hook receives the `sessionID`, `agent`, `model`, `provider`, compacted `mess
 
 ## TUI plugins
 
-Plugins can also target the Kilo TUI itself — registering slash commands, routes, slots, dialogs, and keybinds. TUI plugins are SolidJS modules exported from `"./tui"` in your plugin package, or theme-only packages declared with `oc-themes`.
+Plugins can also target the Accure TUI itself — registering slash commands, routes, slots, dialogs, and keybinds. TUI plugins are SolidJS modules exported from `"./tui"` in your plugin package, or theme-only packages declared with `oc-themes`.
 
-TUI plugins live in a separate module namespace (`@kilocode/plugin/tui`) and have their own API surface (`TuiPluginApi`). Because the TUI API is larger and still evolving, this guide doesn't cover it exhaustively — use the types in `@kilocode/plugin/tui` as the reference, and look at the built-in TUI plugins under `packages/opencode/src/cli/cmd/tui/feature-plugins/` for working examples.
+TUI plugins live in a separate module namespace (`@accurecode/plugin/tui`) and have their own API surface (`TuiPluginApi`). Because the TUI API is larger and still evolving, this guide doesn't cover it exhaustively — use the types in `@accurecode/plugin/tui` as the reference, and look at the built-in TUI plugins under `packages/opencode/src/cli/cmd/tui/feature-plugins/` for working examples.
 
 Common TUI APIs include:
 
@@ -569,7 +569,7 @@ Host slots include `home_prompt_right`, `session_prompt`, `session_prompt_right`
 
 ## Troubleshooting
 
-- **Plugin failed to load** — check the CLI logs with `kilo --print-logs --log-level DEBUG`. Load failures are also surfaced as session errors in the TUI and VS Code extension.
+- **Plugin failed to load** — check the CLI logs with `accure --print-logs --log-level DEBUG`. Load failures are also surfaced as session errors in the TUI and VS Code extension.
 - **Plugin loaded but hooks never fire** — make sure the default export includes `server`:
 
   ```ts
@@ -581,14 +581,14 @@ Host slots include `home_prompt_right`, `session_prompt`, `session_prompt_right`
 - **Package installed but not active in one runtime** — make sure the package exposes the matching entrypoint. Server plugins need `exports["./server"]` or `main`; TUI plugins need `exports["./tui"]` or valid `oc-themes`. Packages that only support the other runtime are skipped with a warning instead of causing a fatal load error.
 
 - **Local plugin can't find an npm import** — add a `package.json` in the config directory so `bun install` picks up the dependency (see [Dependencies](#dependencies)).
-- **Plugin loads in dev but not in CI** — verify `KILO_PURE` is not set, and that npm-installed plugins are cached under `packages/` in the current CLI XDG cache directory (`~/.cache/opencode/packages/` by default, or `$XDG_CACHE_HOME/opencode/packages/` when `XDG_CACHE_HOME` is set). Run with `--log-level DEBUG` to see install output.
-- **Reset the plugin cache** — delete the plugin package folder under the CLI's `packages/` cache directory (or the `node_modules` cache under your config directory) and restart Kilo.
+- **Plugin loads in dev but not in CI** — verify `ACCURECODE_PURE` is not set, and that npm-installed plugins are cached under `packages/` in the current CLI XDG cache directory (`~/.cache/opencode/packages/` by default, or `$XDG_CACHE_HOME/opencode/packages/` when `XDG_CACHE_HOME` is set). Run with `--log-level DEBUG` to see install output.
+- **Reset the plugin cache** — delete the plugin package folder under the CLI's `packages/` cache directory (or the `node_modules` cache under your config directory) and restart Accure.
 
 ---
 
 ## Reference
 
-- Types: [`@kilocode/plugin`](https://github.com/Kilo-Org/kilocode/tree/main/packages/plugin) — `Plugin`, `Hooks`, `PluginInput`, `ToolDefinition`, `AuthHook`, `ProviderHook`.
-- Example plugin: [`packages/plugin/src/example.ts`](https://github.com/Kilo-Org/kilocode/blob/main/packages/plugin/src/example.ts)
-- CLI command: [`kilo plugin`](/docs/code-with-ai/platforms/cli-reference#kilo-plugin)
+- Types: [`@accurecode/plugin`](https://github.com/Accure-Inc/accure-code/tree/main/packages/plugin) — `Plugin`, `Hooks`, `PluginInput`, `ToolDefinition`, `AuthHook`, `ProviderHook`.
+- Example plugin: [`packages/plugin/src/example.ts`](https://github.com/Accure-Inc/accure-code/blob/main/packages/plugin/src/example.ts)
+- CLI command: [`accure plugin`](/docs/code-with-ai/platforms/cli-reference#accure-plugin)
 - Upstream docs (behavior is identical to OpenCode): [opencode.ai/docs/plugins](https://opencode.ai/docs/plugins) and [opencode.ai/docs/custom-tools](https://opencode.ai/docs/custom-tools)

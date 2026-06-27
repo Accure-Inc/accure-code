@@ -1,11 +1,11 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.DiffFileDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.DiffFileDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.SessionStatusDto
 import junit.framework.TestCase
 
 class SessionQueueCondenserTest : TestCase() {

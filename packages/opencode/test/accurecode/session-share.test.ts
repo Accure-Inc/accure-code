@@ -20,7 +20,7 @@ const layer = SessionShare.layer.pipe(
   Layer.provide(SyncEvent.defaultLayer),
 )
 
-it.instance("shares and unshares sessions through Kilo public URLs", () => {
+it.instance("shares and unshares sessions through Accure public URLs", () => {
   const urls: string[] = []
   const fetch: typeof globalThis.fetch = Object.assign(
     async (input: RequestInfo | URL) => {
@@ -40,14 +40,14 @@ it.instance("shares and unshares sessions through Kilo public URLs", () => {
     const share = yield* SessionShare.Service
     const session = yield* Session.Service
     const storage = yield* Storage.Service
-    yield* auth.set("kilo", { type: "api", key: "test-token" })
+    yield* auth.set("accure", { type: "api", key: "test-token" })
 
     const info = yield* share.create({ title: "share-test" })
     yield* storage.write(["session_share", info.id], { id: "remote-1", ingestPath: "/api/ingest/session-1" })
 
     const result = yield* share.share(info.id)
-    expect(result.url).toBe("https://app.kilo.ai/s/public-1")
-    expect((yield* session.get(info.id)).share?.url).toBe("https://app.kilo.ai/s/public-1")
+    expect(result.url).toBe("https://app.accurecode.ai/s/public-1")
+    expect((yield* session.get(info.id)).share?.url).toBe("https://app.accurecode.ai/s/public-1")
 
     yield* share.unshare(info.id)
     expect((yield* session.get(info.id)).share).toBeUndefined()
@@ -57,7 +57,7 @@ it.instance("shares and unshares sessions through Kilo public URLs", () => {
     Effect.ensuring(
       Effect.gen(function* () {
         const auth = yield* Auth.Service
-        yield* auth.remove("kilo").pipe(Effect.ignore)
+        yield* auth.remove("accure").pipe(Effect.ignore)
         request.mockRestore()
       }),
     ),

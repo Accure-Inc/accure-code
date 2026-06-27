@@ -5,14 +5,14 @@ description: "Track team usage and performance analytics"
 
 # Analytics
 
-Using Kilo seats with an Enterprise or Teams subscription provides detailed usage analytics to help you monitor and understand your organization’s AI usage patterns, costs, and activity through the Kilo Gateway provider.
+Using Accure seats with an Enterprise or Teams subscription provides detailed usage analytics to help you monitor and understand your organization’s AI usage patterns, costs, and activity through the Accure Gateway provider.
 
 ## Analytics Dashboard Overview
 
-Access your organization’s usage analytics through the **Usage Details** section in your dashboard. The analytics show comprehensive data about your team's usage of the Kilo Gateway provider.
+Access your organization’s usage analytics through the **Usage Details** section in your dashboard. The analytics show comprehensive data about your team's usage of the Accure Gateway provider.
 
 {% callout type="info" title="Usage Scope" %}
-This usage overview includes all of your usage of the Kilo Gateway provider. It does **NOT** include any usage made via the Kilo Code extension to other, non-Kilo Code providers. You can choose which API provider to use from the extension's main settings page.
+This usage overview includes all of your usage of the Accure Gateway provider. It does **NOT** include any usage made via the Accure Code extension to other, non-Accure Code providers. You can choose which API provider to use from the extension's main settings page.
 {% /callout %}
 
 ## Summary Metrics
@@ -88,9 +88,9 @@ For example, if the following were in your `.git/config`:
 
 The project name would be `example-repo`.
 
-You can also manually override the project name in the `.kilocode/config.json` file in your project.
+You can also manually override the project name in the `.accurecode/config.json` file in your project.
 
-To set the project identifier to `my-project`, create a `.kilocode/config.json` file with the following contents:
+To set the project identifier to `my-project`, create a `.accurecode/config.json` file with the following contents:
 
 ```json
 {

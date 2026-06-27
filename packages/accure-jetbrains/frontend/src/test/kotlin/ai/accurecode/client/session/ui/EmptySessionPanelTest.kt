@@ -1,27 +1,27 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.SessionActivityKind
-import ai.kilocode.client.session.history.HistoryTime
-import ai.kilocode.client.session.history.LocalHistoryItem
-import ai.kilocode.client.session.controller.SessionController
-import ai.kilocode.client.session.ui.empty.EmptySessionPanel
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.FilledBadgeIcon
-import ai.kilocode.client.testing.FakeAppRpcApi
-import ai.kilocode.client.testing.FakeSessionRpcApi
-import ai.kilocode.client.testing.FakeWorkspaceRpcApi
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionStatusDto
-import ai.kilocode.rpc.dto.SessionTimeDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.SessionActivityKind
+import ai.accurecode.client.session.history.HistoryTime
+import ai.accurecode.client.session.history.LocalHistoryItem
+import ai.accurecode.client.session.controller.SessionController
+import ai.accurecode.client.session.ui.empty.EmptySessionPanel
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.FilledBadgeIcon
+import ai.accurecode.client.testing.FakeAppRpcApi
+import ai.accurecode.client.testing.FakeSessionRpcApi
+import ai.accurecode.client.testing.FakeWorkspaceRpcApi
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.SessionTimeDto
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.UIUtil
@@ -38,25 +38,25 @@ import javax.swing.JButton
 @Suppress("UnstableApiUsage")
 class EmptySessionPanelTest : BasePlatformTestCase() {
     private lateinit var scope: CoroutineScope
-    private lateinit var app: KiloAppService
+    private lateinit var app: AccureAppService
     private lateinit var workspace: Workspace
     private lateinit var controller: SessionController
     private lateinit var rpc: FakeSessionRpcApi
-    private lateinit var sessions: KiloSessionService
+    private lateinit var sessions: AccureSessionService
     private val opened = mutableListOf<String>()
 
     override fun setUp() {
         super.setUp()
         scope = CoroutineScope(SupervisorJob())
-        app = KiloAppService(scope, FakeAppRpcApi().also {
-            it.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        app = AccureAppService(scope, FakeAppRpcApi().also {
+            it.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         })
-        val workspaces = KiloWorkspaceService(scope, FakeWorkspaceRpcApi().also {
-            it.state.value = KiloWorkspaceStateDto(KiloWorkspaceStatusDto.READY)
+        val workspaces = AccureWorkspaceService(scope, FakeWorkspaceRpcApi().also {
+            it.state.value = AccureWorkspaceStateDto(AccureWorkspaceStatusDto.READY)
         })
         workspace = workspaces.workspace("/test")
         rpc = FakeSessionRpcApi()
-        sessions = KiloSessionService(project, scope, rpc)
+        sessions = AccureSessionService(project, scope, rpc)
         controller = SessionController(
             parent = testRootDisposable,
             ref = null,
@@ -133,7 +133,7 @@ class EmptySessionPanelTest : BasePlatformTestCase() {
         val panel = panel()
 
         assertEquals(
-            "Kilo Code is an AI coding assistant. Ask it to build features, fix bugs, or explain your codebase.",
+            "Accure Code is an AI coding assistant. Ask it to build features, fix bugs, or explain your codebase.",
             panel.explanationText(),
         )
     }
@@ -158,13 +158,13 @@ class EmptySessionPanelTest : BasePlatformTestCase() {
     fun `test show history button uses localized text`() {
         val panel = panel()
 
-        assertEquals(ai.kilocode.client.plugin.KiloBundle.message("session.showHistory"), panel.showHistoryText())
+        assertEquals(ai.accurecode.client.plugin.AccureBundle.message("session.showHistory"), panel.showHistoryText())
     }
 
     fun `test feedback button uses localized text and icon`() {
         val panel = panel()
 
-        assertEquals(KiloBundle.message("feedback.button"), panel.feedbackText())
+        assertEquals(AccureBundle.message("feedback.button"), panel.feedbackText())
         assertNotNull(panel.feedbackIcon())
     }
 
@@ -195,9 +195,9 @@ class EmptySessionPanelTest : BasePlatformTestCase() {
 
         assertEquals(
             listOf(
-                KiloBundle.message("feedback.dialog.github"),
-                KiloBundle.message("feedback.dialog.discord"),
-                KiloBundle.message("feedback.dialog.support"),
+                AccureBundle.message("feedback.dialog.github"),
+                AccureBundle.message("feedback.dialog.discord"),
+                AccureBundle.message("feedback.dialog.support"),
             ),
             buttons.map { it.text },
         )
@@ -212,7 +212,7 @@ class EmptySessionPanelTest : BasePlatformTestCase() {
         val content = panel.feedbackContent()
         val discord = UIUtil.uiTraverser(content)
             .filter(JButton::class.java)
-            .first { it.text == KiloBundle.message("feedback.dialog.discord") }
+            .first { it.text == AccureBundle.message("feedback.dialog.discord") }
 
         assertNotNull(discord.icon)
     }
@@ -279,7 +279,7 @@ class EmptySessionPanelTest : BasePlatformTestCase() {
 
         val cell = panel.rendererComponent(session("ses_1")) as BorderLayoutPanel
 
-        assertEquals(KiloBundle.message("session.part.tool.running"), badgeText(cell))
+        assertEquals(AccureBundle.message("session.part.tool.running"), badgeText(cell))
     }
 
     fun `test renderer shows overlay badge for active recent session`() {
@@ -293,7 +293,7 @@ class EmptySessionPanelTest : BasePlatformTestCase() {
 
         val cell = panel.rendererComponent(session("ses_1")) as BorderLayoutPanel
 
-        assertEquals(KiloBundle.message("history.badge.question"), badgeText(cell))
+        assertEquals(AccureBundle.message("history.badge.question"), badgeText(cell))
     }
 
     fun `test sync activity updates recent badge kind change`() {
@@ -307,7 +307,7 @@ class EmptySessionPanelTest : BasePlatformTestCase() {
 
         panel.syncActivity()
         assertEquals(
-            KiloBundle.message("session.part.tool.running"),
+            AccureBundle.message("session.part.tool.running"),
             badgeText(panel.rendererComponent(session("ses_1")) as BorderLayoutPanel),
         )
 
@@ -315,7 +315,7 @@ class EmptySessionPanelTest : BasePlatformTestCase() {
         panel.syncActivity()
 
         assertEquals(
-            KiloBundle.message("history.badge.question"),
+            AccureBundle.message("history.badge.question"),
             badgeText(panel.rendererComponent(session("ses_1")) as BorderLayoutPanel),
         )
     }

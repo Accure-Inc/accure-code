@@ -19,7 +19,7 @@ type ParseSource =
 type SubstituteInput = ParseSource & {
   text: string
   missing?: "error" | "empty"
-  escapeJson?: boolean // kilocode_change
+  escapeJson?: boolean // accurecode_change
   env?: Record<string, string>
 }
 
@@ -34,7 +34,7 @@ function dir(input: ParseSource) {
 /** Apply {env:VAR} and {file:path} substitutions to config text. */
 export async function substitute(input: SubstituteInput) {
   const missing = input.missing ?? "error"
-  const escape = input.escapeJson ?? true // kilocode_change
+  const escape = input.escapeJson ?? true // accurecode_change
   let text = input.text.replace(/\{env:([^}]+)\}/g, (_, varName) => {
     return (input.env?.[varName] ?? process.env[varName]) || ""
   })
@@ -84,7 +84,7 @@ export async function substitute(input: SubstituteInput) {
       })
     ).trim()
 
-    out += escape ? JSON.stringify(fileContent).slice(1, -1) : fileContent // kilocode_change
+    out += escape ? JSON.stringify(fileContent).slice(1, -1) : fileContent // accurecode_change
     cursor = index + token.length
   }
 

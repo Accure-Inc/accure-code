@@ -57,7 +57,7 @@ export const dict = {
   "ui.sessionTurn.error.addCredits": "新增點數",
 
   "dialog.usageExceeded.freeTier.title": "已達免費額度上限",
-  "dialog.usageExceeded.freeTier.description": "訂閱 Kilo Go，可靠地使用最佳開源模型，每月 $5 起。",
+  "dialog.usageExceeded.freeTier.description": "訂閱 Accure Go，可靠地使用最佳開源模型，每月 $5 起。",
   "dialog.usageExceeded.freeTier.actionLabel": "訂閱",
   "dialog.usageExceeded.accountRateLimit.title": "已達 Go 額度上限",
   "dialog.usageExceeded.accountRateLimit.description":
@@ -108,7 +108,7 @@ export const dict = {
   "ui.textField.copied": "已複製",
 
   "ui.imagePreview.alt": "圖片預覽",
-  // kilocode_change start
+  // accurecode_change start
   "ui.mermaid.rendering": "正在渲染 Mermaid 圖表...",
   "ui.mermaid.renderError": "Mermaid 渲染失敗：{{message}}",
   "ui.mermaid.errorDefault": "無法渲染 Mermaid 圖表。",
@@ -119,7 +119,7 @@ export const dict = {
   "ui.mermaid.copyPng": "複製 PNG",
   "ui.mermaid.downloadSvg": "下載 SVG",
   "ui.mermaid.downloadPng": "下載 PNG",
-  // kilocode_change end
+  // accurecode_change end
   "ui.scrollView.ariaLabel": "可捲動內容",
 
   "ui.tool.read": "讀取",

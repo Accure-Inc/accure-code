@@ -33,11 +33,11 @@ export const AccountPlugin = PluginV2.define({
             }
             if (account.credential.type === "oauth") {
               provider.options.aisdk.provider.apiKey = account.credential.access
-              // kilocode_change start
-              if (provider.id === "kilo" && account.credential.accountId) {
-                provider.options.aisdk.provider.kilocodeOrganizationId = account.credential.accountId
+              // accurecode_change start
+              if (provider.id === "accure" && account.credential.accountId) {
+                provider.options.aisdk.provider.accurecodeOrganizationId = account.credential.accountId
               }
-              // kilocode_change end
+              // accurecode_change end
             }
           })
         }

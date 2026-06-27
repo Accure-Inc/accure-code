@@ -116,7 +116,7 @@ export const dict = {
   "dialog.model.expand": "Utvid",
   "dialog.model.collapse": "Skjul",
 
-  "dialog.model.unpaid.freeModels.title": "Gratis modeller levert av Kilo",
+  "dialog.model.unpaid.freeModels.title": "Gratis modeller levert av Accure",
   "dialog.model.unpaid.addMore.title": "Legg til flere modeller fra populære leverandører",
 
   "dialog.provider.viewAll": "Vis flere leverandører",
@@ -129,7 +129,7 @@ export const dict = {
   "provider.connect.status.waiting": "Venter på autorisering...",
   "provider.connect.status.failed": "Autorisering mislyktes: {{error}}",
   "provider.connect.apiKey.description":
-    "Skriv inn din {{provider}} API-nøkkel for å koble til kontoen din og bruke {{provider}}-modeller i Kilo.",
+    "Skriv inn din {{provider}} API-nøkkel for å koble til kontoen din og bruke {{provider}}-modeller i Accure.",
   "provider.connect.apiKey.description.local":
     "Connect to your local {{provider}} server. Leave the API key empty if the server does not require one (default for localhost).",
   "provider.connect.atomicChat.description":
@@ -159,7 +159,7 @@ export const dict = {
   "provider.connect.oauth.code.visit.prefix": "Besøk ",
   "provider.connect.oauth.code.visit.link": "denne lenken",
   "provider.connect.oauth.code.visit.suffix":
-    " for å hente autorisasjonskoden din for å koble til kontoen din og bruke {{provider}}-modeller i Kilo.",
+    " for å hente autorisasjonskoden din for å koble til kontoen din og bruke {{provider}}-modeller i Accure.",
   "provider.connect.oauth.code.label": "{{method}} autorisasjonskode",
   "provider.connect.oauth.code.placeholder": "Autorisasjonskode",
   "provider.connect.oauth.code.required": "Autorisasjonskode er påkrevd",
@@ -167,7 +167,7 @@ export const dict = {
   "provider.connect.oauth.auto.visit.prefix": "Besøk ",
   "provider.connect.oauth.auto.visit.link": "denne lenken",
   "provider.connect.oauth.auto.visit.suffix":
-    " og skriv inn koden nedenfor for å koble til kontoen din og bruke {{provider}}-modeller i Kilo.",
+    " og skriv inn koden nedenfor for å koble til kontoen din og bruke {{provider}}-modeller i Accure.",
   "provider.connect.oauth.auto.confirmationCode": "Bekreftelseskode",
   "provider.connect.toast.connected.title": "{{provider}} tilkoblet",
   "provider.connect.toast.connected.description": "{{provider}}-modeller er nå tilgjengelige.",
@@ -291,12 +291,12 @@ export const dict = {
   "prompt.action.enhanceDescription":
     "Knappen 'Forbedre prompt' hjelper med å forbedre forespørselen din ved å gi ekstra kontekst, avklaring eller omformulering. Prøv å skrive en forespørsel her og klikk på knappen igjen for å se hvordan det fungerer.",
 
-  "speechToText.tooltip.start": "Start taleinndata med Kilo Gateway",
+  "speechToText.tooltip.start": "Start taleinndata med Accure Gateway",
   "speechToText.tooltip.stop": "Stopp lydfangst",
   "speechToText.tooltip.transcribing": "Transkriberer... Klikk for å avbryte.",
   "speechToText.tooltip.error": "Taleinndata mislyktes. Klikk for å tømme.",
   "speechToText.error.title": "Taleinndata mislyktes",
-  "speechToText.error.loginRequired": "Logg på Kilo for å bruke taleinndata.",
+  "speechToText.error.loginRequired": "Logg på Accure for å bruke taleinndata.",
   "speechToText.error.permission": "Mikrofontillatelse ble nektet.",
   "speechToText.error.microphone": "Kunne ikke starte mikrofonen.",
   "speechToText.error.recording": "Opptak mislyktes.",
@@ -334,7 +334,7 @@ export const dict = {
   "dialog.directory.empty": "Ingen mapper funnet",
 
   "dialog.server.title": "Servere",
-  "dialog.server.description": "Bytt hvilken Kilo-server denne appen kobler til.",
+  "dialog.server.description": "Bytt hvilken Accure-server denne appen kobler til.",
   "dialog.server.search.placeholder": "Søk etter servere",
   "dialog.server.empty": "Ingen servere ennå",
   "dialog.server.add.title": "Legg til en server",
@@ -460,7 +460,7 @@ export const dict = {
   "toast.session.listFailed.title": "Kunne ikke laste sesjoner for {{project}}",
 
   "toast.update.title": "Oppdatering tilgjengelig",
-  "toast.update.description": "En ny versjon av Kilo ({{version}}) er nå tilgjengelig for installasjon.",
+  "toast.update.description": "En ny versjon av Accure ({{version}}) er nå tilgjengelig for installasjon.",
   "toast.update.action.installRestart": "Installer og start på nytt",
   "toast.update.action.notYet": "Ikke nå",
 
@@ -472,7 +472,7 @@ export const dict = {
   "error.page.action.checking": "Sjekker...",
   "error.page.action.checkUpdates": "Se etter oppdateringer",
   "error.page.action.updateTo": "Oppdater til {{version}}",
-  "error.page.report.prefix": "Vennligst rapporter denne feilen til Kilo-teamet",
+  "error.page.report.prefix": "Vennligst rapporter denne feilen til Accure-teamet",
   "error.page.report.discord": "på Discord",
   "error.page.version": "Versjon: {{version}}",
 
@@ -506,7 +506,7 @@ export const dict = {
   "error.chain.didYouMean": "Mente du: {{suggestions}}",
   "error.chain.modelNotFound": "Modell ikke funnet: {{provider}}/{{model}}",
   "error.chain.checkConfig": "Sjekk leverandør-/modellnavnene i konfigurasjonen din (opencode.json)",
-  "error.chain.mcpFailed": 'MCP-server "{{name}}" mislyktes. Merk at Kilo ikke støtter MCP-autentisering ennå.',
+  "error.chain.mcpFailed": 'MCP-server "{{name}}" mislyktes. Merk at Accure ikke støtter MCP-autentisering ennå.',
   "error.chain.providerAuthFailed": "Leverandørautentisering mislyktes ({{provider}}): {{message}}",
   "error.chain.providerInitFailed":
     'Kunne ikke initialisere leverandør "{{provider}}". Sjekk legitimasjon og konfigurasjon.',
@@ -680,12 +680,12 @@ export const dict = {
   "sidebar.workspaces.enable": "Aktiver arbeidsområder",
   "sidebar.workspaces.disable": "Deaktiver arbeidsområder",
   "sidebar.gettingStarted.title": "Kom i gang",
-  "sidebar.gettingStarted.line1": "Kilo inkluderer gratis modeller så du kan starte umiddelbart.",
+  "sidebar.gettingStarted.line1": "Accure inkluderer gratis modeller så du kan starte umiddelbart.",
   "sidebar.gettingStarted.line2": "Koble til en leverandør for å bruke modeller, inkl. Claude, GPT, Gemini osv.",
   "sidebar.project.recentSessions": "Nylige sesjoner",
   "sidebar.project.viewAllSessions": "Vis alle sesjoner",
 
-  "app.name.desktop": "Kilo Desktop",
+  "app.name.desktop": "Accure Desktop",
   "settings.section.desktop": "Skrivebord",
   "settings.section.server": "Server",
   "settings.tab.general": "Generelt",
@@ -697,11 +697,11 @@ export const dict = {
   "settings.general.section.sounds": "Lydeffekter",
 
   "settings.general.row.language.title": "Språk",
-  "settings.general.row.language.description": "Endre visningsspråket for Kilo",
+  "settings.general.row.language.description": "Endre visningsspråket for Accure",
   "settings.general.row.appearance.title": "Utseende",
-  "settings.general.row.appearance.description": "Tilpass hvordan Kilo ser ut på enheten din",
+  "settings.general.row.appearance.description": "Tilpass hvordan Accure ser ut på enheten din",
   "settings.general.row.theme.title": "Tema",
-  "settings.general.row.theme.description": "Tilpass hvordan Kilo er tematisert.",
+  "settings.general.row.theme.description": "Tilpass hvordan Accure er tematisert.",
   "settings.general.row.font.title": "Skrift",
   "settings.general.row.font.description": "Tilpass mono-skriften som brukes i kodeblokker",
 
@@ -709,13 +709,13 @@ export const dict = {
   "settings.general.row.releaseNotes.description": 'Vis "Hva er nytt"-vinduer etter oppdateringer',
 
   "settings.updates.row.startup.title": "Se etter oppdateringer ved oppstart",
-  "settings.updates.row.startup.description": "Se automatisk etter oppdateringer når Kilo starter",
+  "settings.updates.row.startup.description": "Se automatisk etter oppdateringer når Accure starter",
   "settings.updates.row.check.title": "Se etter oppdateringer",
   "settings.updates.row.check.description": "Se etter oppdateringer manuelt og installer hvis tilgjengelig",
   "settings.updates.action.checkNow": "Sjekk nå",
   "settings.updates.action.checking": "Sjekker...",
   "settings.updates.toast.latest.title": "Du er oppdatert",
-  "settings.updates.toast.latest.description": "Du bruker den nyeste versjonen av Kilo.",
+  "settings.updates.toast.latest.description": "Du bruker den nyeste versjonen av Accure.",
 
   "font.option.ibmPlexMono": "IBM Plex Mono",
   "font.option.cascadiaCode": "Cascadia Code",
@@ -810,7 +810,7 @@ export const dict = {
   "settings.providers.title": "Leverandører",
   "settings.providers.description": "Leverandørinnstillinger vil kunne konfigureres her.",
   "settings.providers.betaNotice":
-    "For øyeblikket kan kun Kilo Gateway-leverandøren konfigureres i innstillingsgrensesnittet. Støtte for konfigurering av andre leverandører kommer snart i løpet av betaperioden. I mellomtiden kan du konfigurere leverandører via CLI eller konfigurasjonsfilen. Vi er forpliktet til å holde Kilo åpent, ingen lock-in.",
+    "For øyeblikket kan kun Accure Gateway-leverandøren konfigureres i innstillingsgrensesnittet. Støtte for konfigurering av andre leverandører kommer snart i løpet av betaperioden. I mellomtiden kan du konfigurere leverandører via CLI eller konfigurasjonsfilen. Vi er forpliktet til å holde Accure åpent, ingen lock-in.",
   "settings.providers.section.connected": "Tilkoblede leverandører",
   "settings.providers.connected.empty": "Ingen tilkoblede leverandører",
   "settings.providers.section.popular": "Populære leverandører",
@@ -831,7 +831,7 @@ export const dict = {
     "Standardmodell og resonneringsinnsats for task-tool-underagenter. La stå tom for å arve den kallende agentens modell.",
   "settings.models.hidePromptTraining.title": "Skjul modeller som trener på ledetekster",
   "settings.models.hidePromptTraining.description":
-    "Skjul Kilo Gateway-modeller der leverandørene kan bruke ledetekstene dine til trening.",
+    "Skjul Accure Gateway-modeller der leverandørene kan bruke ledetekstene dine til trening.",
   "settings.providers.modeModels": "Modell per modus",
   "settings.providers.custom.note": "Legg til en egendefinert leverandør via basis-URL.",
   "settings.providers.modeModels.description":
@@ -935,21 +935,21 @@ export const dict = {
   "settings.config.status.loadedLegacy": "lastet inn eldre konfigurasjon",
   "settings.config.status.notLoaded": "ikke lastet",
   "settings.config.status.create": "ikke funnet - opprett denne filen",
-  "settings.config.title": "Åpne {{scope}} Kilo-konfigurasjonsfil",
+  "settings.config.title": "Åpne {{scope}} Accure-konfigurasjonsfil",
   "settings.config.placeholder":
     "Konfigurasjonsfiler slås sammen i rekkefølge; filer merket som lastet påvirker for øyeblikket innstillingene.",
-  "settings.config.noWorkspace": "Åpne en arbeidsområdemappe for å redigere den lokale Kilo-konfigurasjonsfilen.",
-  "settings.config.openFailed": "Klarte ikke å åpne {{scope}} Kilo-konfigurasjonsfil: {{message}}",
+  "settings.config.noWorkspace": "Åpne en arbeidsområdemappe for å redigere den lokale Accure-konfigurasjonsfilen.",
+  "settings.config.openFailed": "Klarte ikke å åpne {{scope}} Accure-konfigurasjonsfil: {{message}}",
   "settings.config.source.xdg": "XDG global konfigurasjon",
-  "settings.config.source.homeKilo": "Home .kilo-konfigurasjon",
-  "settings.config.source.homeKilocode": "Home .kilocode-konfigurasjon",
+  "settings.config.source.homeAccure": "Home .accurecode-konfigurasjon",
+  "settings.config.source.homeAccurecode": "Home .accurecode-konfigurasjon",
   "settings.config.source.homeOpencode": "Home .opencode-konfigurasjon",
-  "settings.config.source.envFile": "KILO_CONFIG miljøfil",
-  "settings.config.source.envDir": "KILO_CONFIG_DIR",
+  "settings.config.source.envFile": "ACCURECODE_CONFIG miljøfil",
+  "settings.config.source.envDir": "ACCURECODE_CONFIG_DIR",
   "settings.config.source.envContent": "Innebygd miljøkonfigurasjon",
-  "settings.config.source.projectKilo": "Prosjekt .kilo-konfigurasjon",
+  "settings.config.source.projectAccure": "Prosjekt .accurecode-konfigurasjon",
   "settings.config.source.projectRoot": "Prosjektets rotkonfigurasjon",
-  "settings.config.source.projectKilocode": "Eldre .kilocode-konfigurasjon",
+  "settings.config.source.projectAccurecode": "Eldre .accurecode-konfigurasjon",
   "settings.config.source.projectOpencode": "Eldre .opencode-konfigurasjon",
   "settings.models.title": "Modeller",
   "settings.models.description": "Modellinnstillinger vil kunne konfigureres her.",
@@ -1023,7 +1023,7 @@ export const dict = {
   "feedback.dialog.github": "Rapporter et problem på GitHub",
   "feedback.dialog.discord": "Bli med i Discord-fellesskapet vårt",
   "feedback.dialog.support": "Kundestøtte",
-  "workStyle.onboarding.welcome": "Velkommen til Kilo",
+  "workStyle.onboarding.welcome": "Velkommen til Accure",
   "workStyle.onboarding.title": "Velg hvordan du vil arbeide",
   "workStyle.onboarding.description":
     "Dette angir startinnstillingene for tillatelser, resonneringsblokker, terminalutdata og konteksttidslinjen. Det brukes bare én gang og hopper over innstillinger du allerede har tilpasset.",
@@ -1038,7 +1038,7 @@ export const dict = {
   "workStyle.choice.visibility": "Synlighet",
   "workStyle.choice.human-in-the-loop.eyebrow": "Menneskelig kontroll",
   "workStyle.choice.human-in-the-loop.title": "Gjennomgå først",
-  "workStyle.choice.human-in-the-loop.description": "Kilo tar pause og viser deg planen sin mens den arbeider.",
+  "workStyle.choice.human-in-the-loop.description": "Accure tar pause og viser deg planen sin mens den arbeider.",
   "workStyle.choice.human-in-the-loop.permissions": "Ber om tillatelse før filer redigeres eller kommandoer kjøres.",
   "workStyle.choice.human-in-the-loop.bash": "Ber om tillatelse til alle terminalkommandoer.",
   "workStyle.choice.human-in-the-loop.visibility": "Viser alle samtaledetaljer, inkludert resonnering.",
@@ -1049,7 +1049,7 @@ export const dict = {
   "workStyle.choice.autonomous.bash": "Kan kjøre terminalkommandoer i arbeidsområdet uten godkjenning.",
   "workStyle.choice.autonomous.visibility": "Detaljene forblir skjult til du utvider dem.",
   "session.cloud.import.title": "Importer fra skyen",
-  "session.cloud.import.placeholder": "Økt-ID, URL eller kilo import-kommando",
+  "session.cloud.import.placeholder": "Økt-ID, URL eller accure import-kommando",
   "session.cloud.import.button": "Importer",
   "session.cloud.import.invalid": "Ugyldig økt-ID-format",
   "session.cloud.import.legacy": "Dette ser ut til å være en eldre økt som ikke lenger støttes.",
@@ -1126,7 +1126,7 @@ export const dict = {
 
   "settings.experimental.title": "Eksperimentelt",
   "settings.language.title": "Språk",
-  "settings.aboutKiloCode.title": "Om Accure Code",
+  "settings.aboutAccureCode.title": "Om Accure Code",
 
   "session.messages.empty": "Start en samtale ved å skrive en melding nedenfor.",
   "session.messages.welcome":
@@ -1173,41 +1173,41 @@ export const dict = {
   "time.thisMonth": "Denne måneden",
   "time.older": "Eldre",
 
-  "settings.aboutKiloCode.status.connected": "Tilkoblet",
-  "settings.aboutKiloCode.status.connecting": "Kobler til...",
-  "settings.aboutKiloCode.status.disconnected": "Frakoblet",
-  "settings.aboutKiloCode.status.error": "Feil",
-  "settings.aboutKiloCode.cliServer": "CLI-server",
-  "settings.aboutKiloCode.status.label": "Status:",
-  "settings.aboutKiloCode.port.label": "Port:",
-  "settings.aboutKiloCode.versionInfo": "Versjonsinformasjon",
-  "settings.aboutKiloCode.version.label": "Versjon:",
-  "settings.aboutKiloCode.extensionName": "Accure Code-utvidelse",
-  "settings.aboutKiloCode.community": "Fellesskap og støtte",
-  "settings.aboutKiloCode.feedback.prefix": "Hvis du har spørsmål eller tilbakemeldinger, åpne gjerne en issue på",
-  "settings.aboutKiloCode.feedback.or": "eller",
-  "settings.aboutKiloCode.support.prefix": "For fakturerings- eller kontospørsmål, kontakt kundestøtte på",
-  "settings.aboutKiloCode.resetSettings.title": "Tilbakestill innstillinger",
-  "settings.aboutKiloCode.resetSettings.description":
+  "settings.aboutAccureCode.status.connected": "Tilkoblet",
+  "settings.aboutAccureCode.status.connecting": "Kobler til...",
+  "settings.aboutAccureCode.status.disconnected": "Frakoblet",
+  "settings.aboutAccureCode.status.error": "Feil",
+  "settings.aboutAccureCode.cliServer": "CLI-server",
+  "settings.aboutAccureCode.status.label": "Status:",
+  "settings.aboutAccureCode.port.label": "Port:",
+  "settings.aboutAccureCode.versionInfo": "Versjonsinformasjon",
+  "settings.aboutAccureCode.version.label": "Versjon:",
+  "settings.aboutAccureCode.extensionName": "Accure Code-utvidelse",
+  "settings.aboutAccureCode.community": "Fellesskap og støtte",
+  "settings.aboutAccureCode.feedback.prefix": "Hvis du har spørsmål eller tilbakemeldinger, åpne gjerne en issue på",
+  "settings.aboutAccureCode.feedback.or": "eller",
+  "settings.aboutAccureCode.support.prefix": "For fakturerings- eller kontospørsmål, kontakt kundestøtte på",
+  "settings.aboutAccureCode.resetSettings.title": "Tilbakestill innstillinger",
+  "settings.aboutAccureCode.resetSettings.description":
     "Dette tilbakestiller kun VS Code-utvidelsesspecifikke innstillinger til standardverdiene. Innstillinger som deles med CLI, som modi og regler for automatisk godkjenning, lagres i CLI-konfigurasjonen og vil ikke tilbakestilles.",
-  "settings.aboutKiloCode.resetSettings.button": "Tilbakestill alle innstillinger",
-  "settings.aboutKiloCode.settingsTransfer.title": "Overføring av innstillinger",
-  "settings.aboutKiloCode.settingsTransfer.description":
+  "settings.aboutAccureCode.resetSettings.button": "Tilbakestill alle innstillinger",
+  "settings.aboutAccureCode.settingsTransfer.title": "Overføring av innstillinger",
+  "settings.aboutAccureCode.settingsTransfer.description":
     "Eksporter eller importer innstillingene dine for å overføre dem mellom VS Code-instanser.",
-  "settings.aboutKiloCode.exportSettings": "Eksporter",
-  "settings.aboutKiloCode.importSettings": "Importer",
-  "settings.aboutKiloCode.importSettings.invalidJson": "Ugyldig JSON-fil. Vennligst velg en gyldig innstillingsfil.",
-  "settings.aboutKiloCode.importSettings.invalidConfig": "Filen inneholder ikke gyldige Kilo-innstillinger.",
-  "settings.aboutKiloCode.importSettings.tooLarge": "Filen er for stor. Innstillingsfiler må være under 1 MB.",
-  "settings.aboutKiloCode.importSettings.newerVersion":
-    "Denne filen ble eksportert fra en nyere versjon av Kilo. Noen innstillinger kan bli ignorert.",
-  "settings.aboutKiloCode.importSettings.success":
+  "settings.aboutAccureCode.exportSettings": "Eksporter",
+  "settings.aboutAccureCode.importSettings": "Importer",
+  "settings.aboutAccureCode.importSettings.invalidJson": "Ugyldig JSON-fil. Vennligst velg en gyldig innstillingsfil.",
+  "settings.aboutAccureCode.importSettings.invalidConfig": "Filen inneholder ikke gyldige Accure-innstillinger.",
+  "settings.aboutAccureCode.importSettings.tooLarge": "Filen er for stor. Innstillingsfiler må være under 1 MB.",
+  "settings.aboutAccureCode.importSettings.newerVersion":
+    "Denne filen ble eksportert fra en nyere versjon av Accure. Noen innstillinger kan bli ignorert.",
+  "settings.aboutAccureCode.importSettings.success":
     "Innstillinger importert. Gjennomgå endringene ovenfor, og klikk deretter på Lagre.",
 
-  "settings.aboutKiloCode.telemetry.title": "Telemetri",
-  "settings.aboutKiloCode.telemetry.description":
+  "settings.aboutAccureCode.telemetry.title": "Telemetri",
+  "settings.aboutAccureCode.telemetry.description":
     'Telemetri styres av den innebygde telemetri-innstillingen i VS Code. For å deaktivere den, gå til Innstillinger > Telemetry > Telemetry Level og sett den til "off". Start VS Code på nytt for å ta i bruk endringen.',
-  "settings.aboutKiloCode.telemetry.openSettings": "Åpne innstillinger for telemetri",
+  "settings.aboutAccureCode.telemetry.openSettings": "Åpne innstillinger for telemetri",
 
   "settings.agentBehaviour.subtab.agents": "Agenter",
   "settings.agentBehaviour.subtab.mcpServers": "MCP-servere",
@@ -1277,18 +1277,18 @@ export const dict = {
   "settings.experimental.codebaseSearch.description": "Aktiver AI-drevet naturlig språksøk på tvers av kodebasen",
   "settings.experimental.speechToText.title": "Tale til tekst",
   "settings.experimental.speechToText.description":
-    "Aktiver taleinndata i prompt-felt ved å bruke din Kilo-konto gjennom Kilo Gateway.",
+    "Aktiver taleinndata i prompt-felt ved å bruke din Accure-konto gjennom Accure Gateway.",
   "settings.models.speechToText.disabledDescription":
-    "Aktiver og logg på Kilo-leverandøren for å bruke Speech to Text. Speech to Text støttes for øyeblikket bare med Kilo Gateway.",
+    "Aktiver og logg på Accure-leverandøren for å bruke Speech to Text. Speech to Text støttes for øyeblikket bare med Accure Gateway.",
   "settings.models.speechToTextModel.title": "Tale-til-tekst-modell",
-  "settings.models.speechToTextModel.description": "Velg Kilo Gateway-transkripsjonsmodellen for taleinndata.",
+  "settings.models.speechToTextModel.description": "Velg Accure Gateway-transkripsjonsmodellen for taleinndata.",
   "settings.experimental.continueOnDeny.title": "Fortsett ved avvisning",
   "settings.experimental.continueOnDeny.description": "Fortsett agentløkken når en tillatelse avvises",
   "settings.experimental.mcpTimeout.title": "MCP-tidsavbrudd (ms)",
   "settings.experimental.mcpTimeout.description": "Tidsavbrudd for MCP-serverforespørsler i millisekunder",
   "settings.experimental.remote.title": "Remote-kontroll",
   "settings.experimental.remote.description":
-    "Aktiver Remote-kontroll av økter via Kilo Cloud. Dette vil også påvirke CLI-er på denne maskinen.",
+    "Aktiver Remote-kontroll av økter via Accure Cloud. Dette vil også påvirke CLI-er på denne maskinen.",
   "settings.experimental.remote.current": "Nåværende status:",
   "settings.experimental.remote.startup": "Aktiver automatisk ved oppstart:",
   "settings.experimental.remote.active": "Aktiv",
@@ -1307,10 +1307,10 @@ export const dict = {
     "Global indeksering er aktivert, så dette prosjektet er allerede dekket.",
   "settings.indexing.provider.title": "Embedding-leverandør",
   "settings.indexing.provider.description": "Velg leverandøren som brukes til å generere embeddings for semantisk søk.",
-  "settings.indexing.kiloModel.title": "Kilo-modellforhåndsvalg",
-  "settings.indexing.kiloModel.description": "Velg en støttet Kilo-hostet embedding-modell.",
-  "settings.indexing.kiloSignIn.title": "Kilo-pålogging kreves",
-  "settings.indexing.kiloSignIn.description": "Logg inn på Kilo for å bruke hostede embeddings.",
+  "settings.indexing.accureModel.title": "Accure-modellforhåndsvalg",
+  "settings.indexing.accureModel.description": "Velg en støttet Accure-hostet embedding-modell.",
+  "settings.indexing.accureSignIn.title": "Accure-pålogging kreves",
+  "settings.indexing.accureSignIn.description": "Logg inn på Accure for å bruke hostede embeddings.",
   "settings.indexing.model.title": "Embedding-modell",
   "settings.indexing.model.description": "Overstyr standard embedding-modell for den valgte leverandøren.",
   "settings.indexing.vectorStore.title": "Vektordatabase",
@@ -1434,14 +1434,14 @@ export const dict = {
   "settings.agentBehaviour.claudeCompat.heading": "Claude Code-kompatibilitet",
   "settings.agentBehaviour.claudeCompat.title": "Last inn Claude Code-filer",
   "settings.agentBehaviour.claudeCompat.description":
-    "Last inn CLAUDE.md-instruksjoner og ferdigheter fra Claude Code-konfigurasjonsmappen din i økter. Aktiver dette hvis du vil at Kilo skal bruke dine Claude Code-instruksjoner og ferdigheter. Krever omstart.",
+    "Last inn CLAUDE.md-instruksjoner og ferdigheter fra Claude Code-konfigurasjonsmappen din i økter. Aktiver dette hvis du vil at Accure skal bruke dine Claude Code-instruksjoner og ferdigheter. Krever omstart.",
   "settings.agentBehaviour.mcpDetail.command": "Kommando",
   "settings.agentBehaviour.mcpDetail.args": "Argumenter",
   "settings.agentBehaviour.mcpDetail.env": "Miljø",
   "settings.agentBehaviour.mcpDetail.disabled": "Denne serveren er deaktivert.",
   "settings.agentBehaviour.mcpBrowseMarketplace": "Bla gjennom Marketplace",
   "settings.agentBehaviour.mcpEmpty":
-    "Ingen MCP-servere konfigurert. Legg til MCP-servere i kilo.jsonc, eller be agenten om å legge dem til.",
+    "Ingen MCP-servere konfigurert. Legg til MCP-servere i accure.jsonc, eller be agenten om å legge dem til.",
   "settings.agentBehaviour.workflowsPlaceholder": "Arbeidsflyter administreres via arbeidsflytfiler i arbeidsområdet.",
   "settings.agentBehaviour.workflows.description":
     "Arbeidsflyter er egendefinerte skråstrekkommandoer definert i konfigurasjonen din. Skriv /command-name i chatten for å kjøre dem. Kommandoer konfigureres i opencode.json under seksjonen 'command'.",
@@ -1509,7 +1509,7 @@ export const dict = {
   "settings.display.username.title": "Brukernavn",
   "settings.display.username.description": "Egendefinert brukernavn i samtaler",
   "settings.display.fontSize.title": "Skriftstørrelse",
-  "settings.display.fontSize.description": "Juster skriftstørrelsen for Kilo webview UI uavhengig av VS Code.",
+  "settings.display.fontSize.description": "Juster skriftstørrelsen for Accure webview UI uavhengig av VS Code.",
   "settings.display.reasoningAutoCollapse.title": "Skjul resonnement automatisk",
   "settings.display.reasoningAutoCollapse.description":
     "Skjuler resonnementblokker etter at agenten er ferdig med å skrive dem. La være av for å holde resonnement utvidet med mindre du skjuler det manuelt.",
@@ -1543,11 +1543,11 @@ export const dict = {
 
   // legacy-migration start
   "settings.legacyMigration.link": "Migrer fra eldre versjon",
-  "settings.aboutKiloCode.legacyMigration.title": "Migrering fra eldre versjon",
-  "settings.aboutKiloCode.legacyMigration.description":
+  "settings.aboutAccureCode.legacyMigration.title": "Migrering fra eldre versjon",
+  "settings.aboutAccureCode.legacyMigration.description":
     "Migrer innstillinger fra en tidligere installasjon av Accure Code, inkludert API-nøkler for leverandører og standardmodell.",
-  "settings.aboutKiloCode.rooImport.description": "Importer samtalehistorikk fra en installasjon av Roo Code.",
-  "settings.aboutKiloCode.rooImport.button": "Importer økter fra Roo Code",
+  "settings.aboutAccureCode.rooImport.description": "Importer samtalehistorikk fra en installasjon av Roo Code.",
+  "settings.aboutAccureCode.rooImport.button": "Importer økter fra Roo Code",
 
   // Screen 1 — What's New
   "migration.whatsNew.title": "Hva er nytt i Accure Code",
@@ -1562,7 +1562,7 @@ export const dict = {
     "Et samlet grensesnitt for å kjøre flere agenter parallelt, hver på sitt eget worktree — overvåk fremdrift, bytt kontekst og gjennomgå endringer på ett sted.",
   "migration.whatsNew.features.foundation.title": "Delt grunnlag",
   "migration.whatsNew.features.foundation.detail":
-    "Én liten, effektiv kjerne på tvers av alle Kilo-produkter. En kjent opplevelse uansett hvordan du velger å jobbe.",
+    "Én liten, effektiv kjerne på tvers av alle Accure-produkter. En kjent opplevelse uansett hvordan du velger å jobbe.",
   "migration.whatsNew.blogLink": "Les hele kunngjøringen",
   "migration.whatsNew.docsLink": "Nyheter og ofte stilte spørsmål",
   "migration.whatsNew.continue": "Fortsett",
@@ -1658,7 +1658,7 @@ export const dict = {
   "diffViewer.source.unstaged.tooltip": "Filer endret i arbeidstreet, men ikke staget ennå, pluss usporet (nye) filer.",
   "diffViewer.source.session.label": "Økt",
   "diffViewer.source.session.tooltip":
-    "Filer endret av Kilo i løpet av gjeldende økt, basert på øyeblikksbilder per tur. Tilbakestilles når du starter en ny økt.",
+    "Filer endret av Accure i løpet av gjeldende økt, basert på øyeblikksbilder per tur. Tilbakestilles når du starter en ny økt.",
   "diffViewer.group.session": "Økt",
   "diffViewer.group.git": "Git",
   "diffViewer.notice.snapshotsDisabled":

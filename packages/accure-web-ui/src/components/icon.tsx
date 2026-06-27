@@ -1,1 +1,1 @@
-export * from "@kilocode/accure-ui/icon"
+export * from "@accurecode/accure-ui/icon"

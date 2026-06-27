@@ -1,12 +1,12 @@
 ---
-title: "Using AWS Bedrock with Kilo Code"
-description: "Configure AWS Bedrock in Kilo Code to access Claude, Llama, and other foundation models through your AWS account."
+title: "Using AWS Bedrock with Accure Code"
+description: "Configure AWS Bedrock in Accure Code to access Claude, Llama, and other foundation models through your AWS account."
 sidebar_label: AWS Bedrock
 ---
 
-# Using AWS Bedrock With Kilo Code
+# Using AWS Bedrock With Accure Code
 
-Kilo Code supports accessing models through Amazon Bedrock, a fully managed service that makes a selection of high-performing foundation models (FMs) from leading AI companies available via a single API. This provider connects directly to AWS Bedrock and authenticates with the provided credentials.
+Accure Code supports accessing models through Amazon Bedrock, a fully managed service that makes a selection of high-performing foundation models (FMs) from leading AI companies available via a single API. This provider connects directly to AWS Bedrock and authenticates with the provided credentials.
 
 **Website:** [https://aws.amazon.com/bedrock/](https://aws.amazon.com/bedrock/)
 
@@ -34,12 +34,12 @@ You have three options for configuring AWS credentials:
 3.  **AWS Profile:**
     - Configure an AWS profile using the AWS CLI or by manually editing your AWS credentials file. See the [AWS CLI documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) for details.
 
-## Configuration in Kilo Code
+## Configuration in Accure Code
 
 {% tabs %}
 {% tab label="VSCode (Legacy)" %}
 
-1.  **Open Kilo Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Kilo Code panel.
+1.  **Open Accure Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Accure Code panel.
 2.  **Select Provider:** Choose "Bedrock" from the "API Provider" dropdown.
 3.  **Select Authentication Method:**
     - **Bedrock API Key:**
@@ -58,7 +58,7 @@ You have three options for configuring AWS credentials:
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add AWS Bedrock. The extension uses the AWS credentials chain for authentication — configure your AWS credentials using the AWS CLI or environment variables before adding the provider.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `accure.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
@@ -79,7 +79,7 @@ Or use an AWS profile:
 aws configure --profile bedrock
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/accure/accure.json` or `./accure.json`):
 
 ```jsonc
 {

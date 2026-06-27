@@ -1,12 +1,12 @@
 ---
-title: "Using Requesty with Kilo Code"
-description: "Route AI model requests through Requesty in Kilo Code for cost optimization and access to multiple providers from one API key."
+title: "Using Requesty with Accure Code"
+description: "Route AI model requests through Requesty in Accure Code for cost optimization and access to multiple providers from one API key."
 sidebar_label: Requesty
 ---
 
-# Using Requesty With Kilo Code
+# Using Requesty With Accure Code
 
-Kilo Code supports accessing models through the [Requesty](https://www.requesty.ai/) AI platform. Requesty provides an easy and optimized API for interacting with 150+ large language models (LLMs).
+Accure Code supports accessing models through the [Requesty](https://www.requesty.ai/) AI platform. Requesty provides an easy and optimized API for interacting with 150+ large language models (LLMs).
 
 **Website:** [https://www.requesty.ai/](https://www.requesty.ai/)
 
@@ -15,12 +15,12 @@ Kilo Code supports accessing models through the [Requesty](https://www.requesty.
 1.  **Sign Up/Sign In:** Go to the [Requesty website](https://www.requesty.ai/) and create an account or sign in.
 2.  **Get API Key:** You can get an API key from the [API Management](https://app.requesty.ai/manage-api) section of your Requesty dashboard.
 
-## Configuration in Kilo Code
+## Configuration in Accure Code
 
 {% tabs %}
 {% tab label="VSCode (Legacy)" %}
 
-1.  **Open Kilo Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Kilo Code panel.
+1.  **Open Accure Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Accure Code panel.
 2.  **Select Provider:** Choose "Requesty" from the "API Provider" dropdown.
 3.  **Enter API Key:** Paste your Requesty API key into the "Requesty API Key" field.
 4.  **Select Model:** Choose your desired model from the "Model" dropdown.
@@ -30,12 +30,12 @@ Kilo Code supports accessing models through the [Requesty](https://www.requesty.
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add Requesty and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `accure.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `accure.json` config file:
 
 **Environment variable:**
 
@@ -43,7 +43,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export REQUESTY_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/accure/accure.json` or `./accure.json`):
 
 ```jsonc
 {

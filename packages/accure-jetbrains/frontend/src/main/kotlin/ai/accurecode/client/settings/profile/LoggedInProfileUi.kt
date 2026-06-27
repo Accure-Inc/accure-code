@@ -1,14 +1,14 @@
-package ai.kilocode.client.settings.profile
+package ai.accurecode.client.settings.profile
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.ui.RoundedContentPanel
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
-import ai.kilocode.log.KiloLog
-import ai.kilocode.rpc.dto.ProfileDto
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.ui.RoundedContentPanel
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
+import ai.accurecode.log.AccureLog
+import ai.accurecode.rpc.dto.ProfileDto
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.util.IconLoader
@@ -39,7 +39,7 @@ internal class LoggedInProfileUi(
 ) : BorderLayoutPanel() {
 
     companion object {
-        private val LOG = KiloLog.create(LoggedInProfileUi::class.java)
+        private val LOG = AccureLog.create(LoggedInProfileUi::class.java)
     }
 
     private val nameLabel = JBLabel().also { RelativeFont.BOLD.install(it) }
@@ -47,19 +47,19 @@ internal class LoggedInProfileUi(
         foreground = UiStyle.Colors.weak()
         setCopyable(true)
     }
-    private val logoLabel = JBLabel(IconLoader.getIcon("/icons/kilo-profile.svg", LoggedInProfileUi::class.java)).apply {
-        name = "kilo.profile.logo.loggedIn"
-        accessibleContext.accessibleName = KiloBundle.message("settings.kilo.displayName")
+    private val logoLabel = JBLabel(IconLoader.getIcon("/icons/accure-profile.svg", LoggedInProfileUi::class.java)).apply {
+        name = "accure.profile.logo.loggedIn"
+        accessibleContext.accessibleName = AccureBundle.message("settings.accurecode.displayName")
     }
 
-    private val titleLabel = JBLabel(KiloBundle.message("profile.balance.title")).apply {
+    private val titleLabel = JBLabel(AccureBundle.message("profile.balance.title")).apply {
         foreground = UiStyle.Colors.weak()
     }
     private val valueLabel = JBLabel().apply {
         horizontalAlignment = SwingConstants.CENTER
         font = UiStyle.Fonts.display()
     }
-    private val refreshBtn = JButton(KiloBundle.message("profile.action.refresh"), AllIcons.Actions.Refresh)
+    private val refreshBtn = JButton(AccureBundle.message("profile.action.refresh"), AllIcons.Actions.Refresh)
         .also {
             it.isOpaque = false
             it.isContentAreaFilled = false
@@ -71,7 +71,7 @@ internal class LoggedInProfileUi(
         }
 
     private val balanceCard = RoundedContentPanel(UiStyle.Gap.pad(), UiStyle.Gap.xl()).apply {
-        name = "kilo.profile.balanceCard"
+        name = "accure.profile.balanceCard"
         addToTop(titleLabel)
         addToCenter(Stack.vertical(UiStyle.Gap.pad())
             .next(valueLabel)
@@ -82,9 +82,9 @@ internal class LoggedInProfileUi(
     private val comboModel = DefaultComboBoxModel<String>()
     val combo = ComboBox(comboModel)
 
-    val dashboardBtn = JButton(KiloBundle.message("profile.action.dashboard"))
+    val dashboardBtn = JButton(AccureBundle.message("profile.action.dashboard"))
         .also { it.addActionListener { dashboard() } }
-    val logoutBtn = JButton(KiloBundle.message("profile.action.logout"))
+    val logoutBtn = JButton(AccureBundle.message("profile.action.logout"))
         .also { it.addActionListener { logout() } }
 
     private val actionRow = Stack.horizontal(UiStyle.Gap.md())
@@ -187,8 +187,8 @@ internal class LoggedInProfileUi(
     fun setRefreshing(refreshing: Boolean) {
         if (this.refreshing == refreshing) return
         this.refreshing = refreshing
-        val text = if (refreshing) KiloBundle.message("profile.action.refreshing")
-        else KiloBundle.message("profile.action.refresh")
+        val text = if (refreshing) AccureBundle.message("profile.action.refreshing")
+        else AccureBundle.message("profile.action.refresh")
         if (refreshBtn.text != text) refreshBtn.text = text
         syncLayout()
     }
@@ -204,7 +204,7 @@ internal class LoggedInProfileUi(
     @RequiresEdt
     private fun applyOrganizations(profile: ProfileDto) {
         val orgs = profile.organizations
-        val keys: List<Pair<String?, String>> = listOf(null to KiloBundle.message("profile.personalAccount")) +
+        val keys: List<Pair<String?, String>> = listOf(null to AccureBundle.message("profile.personalAccount")) +
                 orgs.map { it.id to it.name }
 
         val target = profile.currentOrgId

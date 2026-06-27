@@ -12,7 +12,7 @@ import { iife } from "@/util/iife"
 import { useToast } from "../ui/toast"
 import { useArgs } from "./args"
 import { useSDK } from "./sdk"
-import { useProject } from "./project" // kilocode_change
+import { useProject } from "./project" // accurecode_change
 import { RGBA } from "@opentui/core"
 import { Filesystem } from "@/util/filesystem"
 
@@ -29,7 +29,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
   init: () => {
     const sync = useSync()
     const sdk = useSDK()
-    const project = useProject() // kilocode_change
+    const project = useProject() // accurecode_change
     const toast = useToast()
 
     function isModelValid(model: { providerID: string; modelID: string }) {
@@ -66,13 +66,13 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
           return agents()
         },
         current() {
-          // kilocode_change start - fall back to first agent when current is removed (e.g. org switch)
+          // accurecode_change start - fall back to first agent when current is removed (e.g. org switch)
           const found = agents().find((x) => x.name === agentStore.current)
           if (found) return found
           const fallback = agents().at(0)
           if (fallback) setAgentStore("current", fallback.name)
           return fallback
-          // kilocode_change end
+          // accurecode_change end
         },
         set(name: string) {
           if (!agents().some((x) => x.name === name))
@@ -91,7 +91,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
             if (next < 0) next = agents().length - 1
             if (next >= agents().length) next = 0
             const value = agents()[next]
-            if (!value) return // kilocode_change - guard against empty agent list during org switch
+            if (!value) return // accurecode_change - guard against empty agent list during org switch
             setAgentStore("current", value.name)
           })
         },
@@ -114,7 +114,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
     const model = iife(() => {
       const [modelStore, setModelStore] = createStore<{
         ready: boolean
-        // kilocode_change start - persisted picks plus process-local overrides
+        // accurecode_change start - persisted picks plus process-local overrides
         model: Record<
           string,
           | {
@@ -131,7 +131,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
             }
           | undefined
         >
-        // kilocode_change end
+        // accurecode_change end
         recent: {
           providerID: string
           modelID: string
@@ -144,7 +144,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
       }>({
         ready: false,
         model: {},
-        override: {}, // kilocode_change
+        override: {}, // accurecode_change
         recent: [],
         favorite: [],
         variant: {},
@@ -153,10 +153,10 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
       const filePath = path.join(Global.Path.state, "model.json")
       const state = {
         pending: false,
-        writer: Promise.resolve() as Promise<unknown>, // kilocode_change - serialize writes
+        writer: Promise.resolve() as Promise<unknown>, // accurecode_change - serialize writes
       }
 
-      // kilocode_change start - keep configured-agent selections process-local
+      // accurecode_change start - keep configured-agent selections process-local
       const scope = createMemo(() => project.workspace.current() ?? project.instance.directory())
 
       function key(name: string) {
@@ -175,7 +175,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
         }
         clear(name)
       }
-      // kilocode_change end
+      // accurecode_change end
 
       function save() {
         if (!modelStore.ready) {
@@ -183,7 +183,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
           return
         }
         state.pending = false
-        // kilocode_change start - serialize writes so a slow first write cannot overwrite a later one
+        // accurecode_change start - serialize writes so a slow first write cannot overwrite a later one
         const data = {
           model: modelStore.model,
           recent: modelStore.recent,
@@ -191,14 +191,14 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
           variant: modelStore.variant,
         }
         state.writer = state.writer.then(() => Filesystem.writeJson(filePath, data)).catch(() => {})
-        // kilocode_change end
+        // accurecode_change end
       }
 
       Filesystem.readJson(filePath)
         .then((x: any) => {
           if (Array.isArray(x.recent)) setModelStore("recent", x.recent)
           if (Array.isArray(x.favorite)) setModelStore("favorite", x.favorite)
-          if (typeof x.model === "object" && x.model !== null) setModelStore("model", x.model) // kilocode_change
+          if (typeof x.model === "object" && x.model !== null) setModelStore("model", x.model) // accurecode_change
           if (typeof x.variant === "object" && x.variant !== null) setModelStore("variant", x.variant)
         })
         .catch(() => {})
@@ -249,8 +249,8 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
 
       const currentModel = createMemo(() => {
         const a = agent.current()
-        if (!a) return fallbackModel() // kilocode_change - guard against empty agent list
-        // kilocode_change start - configured models beat stale persisted picks
+        if (!a) return fallbackModel() // accurecode_change - guard against empty agent list
+        // accurecode_change start - configured models beat stale persisted picks
         return (
           getFirstValidModel(
             () => a && modelStore.override[key(a.name)],
@@ -259,7 +259,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
             fallbackModel,
           ) ?? undefined
         )
-        // kilocode_change end
+        // accurecode_change end
       })
 
       return {
@@ -267,12 +267,12 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
         get ready() {
           return modelStore.ready
         },
-        // kilocode_change start - expose persisted per-agent pick separately from overrides
+        // accurecode_change start - expose persisted per-agent pick separately from overrides
         saved(name: string) {
           return modelStore.model[name]
         },
-        // kilocode_change end
-        // kilocode_change start - resolve once all queued writes (atomic write+rename) have settled.
+        // accurecode_change end
+        // accurecode_change start - resolve once all queued writes (atomic write+rename) have settled.
         // Used by tests to deterministically await the writer chain instead of sleeping for a fixed
         // duration, which is too slow on Windows CI where temp-file rename can exceed 50ms under AV.
         async flush() {
@@ -280,7 +280,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
           while (state.pending && Date.now() < deadline) await new Promise((r) => setTimeout(r, 0))
           await state.writer
         },
-        // kilocode_change end
+        // accurecode_change end
         recent() {
           return modelStore.recent
         },
@@ -317,8 +317,8 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
           if (!val) return
           const a = agent.current()
           if (!a) return
-          apply(a.name, val, !a.model) // kilocode_change
-          save() // kilocode_change
+          apply(a.name, val, !a.model) // accurecode_change
+          save() // accurecode_change
         },
         cycleFavorite(direction: 1 | -1) {
           const favorites = modelStore.favorite.filter((item) => isModelValid(item))
@@ -346,7 +346,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
           if (!next) return
           const a = agent.current()
           if (!a) return
-          apply(a.name, next, !a.model) // kilocode_change
+          apply(a.name, next, !a.model) // accurecode_change
           const uniq = uniqueBy([next, ...modelStore.recent], (x) => `${x.providerID}/${x.modelID}`)
           if (uniq.length > 10) uniq.pop()
           setModelStore(
@@ -367,7 +367,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
             }
             const a = agent.current()
             if (!a) return
-            apply(a.name, model, !a.model) // kilocode_change
+            apply(a.name, model, !a.model) // accurecode_change
             if (options?.recent) {
               const uniq = uniqueBy([model, ...modelStore.recent], (x) => `${x.providerID}/${x.modelID}`)
               if (uniq.length > 10) uniq.pop()
@@ -376,7 +376,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
                 uniq.map((x) => ({ providerID: x.providerID, modelID: x.modelID })),
               )
             }
-            save() // kilocode_change
+            save() // accurecode_change
           })
         },
         toggleFavorite(model: { providerID: string; modelID: string }) {
@@ -556,7 +556,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
     }
 
     createEffect(() => {
-      // kilocode_change start - configured models resolve directly without persistence
+      // accurecode_change start - configured models resolve directly without persistence
       if (!model.ready) return
       const value = agent.current()
       if (!value?.model) return
@@ -567,7 +567,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
         duration: 3000,
       })
     })
-    // kilocode_change end
+    // accurecode_change end
 
     const result = {
       model,

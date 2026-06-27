@@ -2,10 +2,10 @@
 // Local types — NOT from the SDK / API
 // ============================================
 // These types are specific to the VS Code extension and don't have
-// equivalents in @kilocode/sdk. All API types (Session, Event, Agent,
-// McpStatus, Config, etc.) should be imported from "@kilocode/sdk/v2/client".
+// equivalents in @accurecode/sdk. All API types (Session, Event, Agent,
+// McpStatus, Config, etc.) should be imported from "@accurecode/sdk/v2/client".
 
-import type { IndexingStatus as SdkIndexingStatus } from "@kilocode/sdk/v2/client"
+import type { IndexingStatus as SdkIndexingStatus } from "@accurecode/sdk/v2/client"
 
 /** Connection config used by the extension to reach the local CLI server */
 export interface ServerConfig {
@@ -21,29 +21,29 @@ interface ProviderAuthAuthorization {
 }
 
 // Profile types from accure-gateway
-export interface KilocodeOrganization {
+export interface AccurecodeOrganization {
   id: string
   name: string
   role: string
 }
 
-export interface KilocodeProfile {
+export interface AccurecodeProfile {
   email: string
   name?: string
-  organizations?: KilocodeOrganization[]
+  organizations?: AccurecodeOrganization[]
 }
 
-export interface KilocodeBalance {
+export interface AccurecodeBalance {
   balance: number
 }
 
 interface ProfileData {
-  profile: KilocodeProfile
-  balance: KilocodeBalance | null
+  profile: AccurecodeProfile
+  balance: AccurecodeBalance | null
   currentOrgId: string | null
 }
 
-// Cloud session from the Kilo cloud API (cli_sessions_v2)
+// Cloud session from the Accure cloud API (cli_sessions_v2)
 interface CloudSessionInfo {
   session_id: string
   title: string | null
@@ -52,7 +52,7 @@ interface CloudSessionInfo {
   version: number
 }
 
-// Full cloud session data for preview (from /kilo/cloud/session/:id)
+// Full cloud session data for preview (from /accure/cloud/session/:id)
 export interface CloudSessionMessage {
   info: {
     id: string

@@ -52,7 +52,7 @@ function layer(
   return Installation.layer.pipe(Layer.provide(http(request)), Layer.provide(proc))
 }
 
-describe("Kilo installation upgrade", () => {
+describe("Accure installation upgrade", () => {
   const release: string[] = []
   testEffect(
     layer(
@@ -62,11 +62,11 @@ describe("Kilo installation upgrade", () => {
         return json({ tag_name: "v8.8.8" })
       },
     ),
-  ).effect("reads fallback versions from Kilo GitHub releases", () =>
+  ).effect("reads fallback versions from Accure GitHub releases", () =>
     Effect.gen(function* () {
       const result = yield* Installation.Service.use((svc) => svc.latest("unknown"))
       expect(result).toBe("8.8.8")
-      expect(release).toContain("https://api.github.com/repos/Kilo-Org/kilocode/releases/latest")
+      expect(release).toContain("https://api.github.com/repos/Accure-Inc/accure-code/releases/latest")
     }),
   )
 
@@ -79,20 +79,20 @@ describe("Kilo installation upgrade", () => {
         return json({ version: "8.8.8" })
       },
     ),
-  ).effect("reads yarn versions from the Kilo package registry", () =>
+  ).effect("reads yarn versions from the Accure package registry", () =>
     Effect.gen(function* () {
       const result = yield* Installation.Service.use((svc) => svc.latest("yarn"))
       expect(result).toBe("8.8.8")
-      expect(urls).toContain(`https://registry.npmjs.org/@kilocode%2fcli/${InstallationChannel}`)
+      expect(urls).toContain(`https://registry.npmjs.org/@accurecode%2fcli/${InstallationChannel}`)
     }),
   )
 
   testEffect(
     layer((cmd, args) => {
-      if (cmd === "npm" && args.includes("list")) return "@kilocode/cli@7.3.45"
+      if (cmd === "npm" && args.includes("list")) return "@accurecode/cli@7.3.45"
       return ""
     }),
-  ).effect("detects npm installs from the Kilo package", () =>
+  ).effect("detects npm installs from the Accure package", () =>
     Effect.gen(function* () {
       const result = yield* Installation.Service.use((svc) => svc.method())
       expect(result).toBe("npm")
@@ -108,12 +108,12 @@ describe("Kilo installation upgrade", () => {
         return json({ d: { results: [{ Version: "8.8.8" }] } })
       },
     ),
-  ).effect("reads choco versions from the Kilo package", () =>
+  ).effect("reads choco versions from the Accure package", () =>
     Effect.gen(function* () {
       const result = yield* Installation.Service.use((svc) => svc.latest("choco"))
       expect(result).toBe("8.8.8")
       expect(choco).toContain(
-        "https://community.chocolatey.org/api/v2/Packages?$filter=Id%20eq%20%27kilo%27%20and%20IsLatestVersion&$select=Version",
+        "https://community.chocolatey.org/api/v2/Packages?$filter=Id%20eq%20%27accure%27%20and%20IsLatestVersion&$select=Version",
       )
     }),
   )
@@ -127,11 +127,11 @@ describe("Kilo installation upgrade", () => {
         return json({ version: "8.8.8" })
       },
     ),
-  ).effect("reads scoop versions from the Kilo manifest", () =>
+  ).effect("reads scoop versions from the Accure manifest", () =>
     Effect.gen(function* () {
       const result = yield* Installation.Service.use((svc) => svc.latest("scoop"))
       expect(result).toBe("8.8.8")
-      expect(scoop).toContain("https://raw.githubusercontent.com/ScoopInstaller/Main/master/bucket/kilo.json")
+      expect(scoop).toContain("https://raw.githubusercontent.com/ScoopInstaller/Main/master/bucket/accure.json")
     }),
   )
 
@@ -141,61 +141,61 @@ describe("Kilo installation upgrade", () => {
     return ""
   })
 
-  testEffect(upgrade).effect("installs the Kilo npm package", () =>
+  testEffect(upgrade).effect("installs the Accure npm package", () =>
     Effect.gen(function* () {
       yield* Installation.Service.use((svc) => svc.upgrade("npm", "9.9.9"))
-      expect(calls).toContain("npm install -g @kilocode/cli@9.9.9")
+      expect(calls).toContain("npm install -g @accurecode/cli@9.9.9")
     }),
   )
 
-  testEffect(upgrade).effect("installs the Kilo yarn package", () =>
+  testEffect(upgrade).effect("installs the Accure yarn package", () =>
     Effect.gen(function* () {
       yield* Installation.Service.use((svc) => svc.upgrade("yarn", "9.9.9"))
-      expect(calls).toContain("yarn global add @kilocode/cli@9.9.9")
+      expect(calls).toContain("yarn global add @accurecode/cli@9.9.9")
     }),
   )
 
-  testEffect(upgrade).effect("installs the Kilo pnpm package", () =>
+  testEffect(upgrade).effect("installs the Accure pnpm package", () =>
     Effect.gen(function* () {
       yield* Installation.Service.use((svc) => svc.upgrade("pnpm", "9.9.9"))
-      expect(calls).toContain("pnpm install -g @kilocode/cli@9.9.9")
+      expect(calls).toContain("pnpm install -g @accurecode/cli@9.9.9")
     }),
   )
 
-  testEffect(upgrade).effect("installs the Kilo bun package", () =>
+  testEffect(upgrade).effect("installs the Accure bun package", () =>
     Effect.gen(function* () {
       yield* Installation.Service.use((svc) => svc.upgrade("bun", "9.9.9"))
-      expect(calls).toContain("bun install -g @kilocode/cli@9.9.9")
+      expect(calls).toContain("bun install -g @accurecode/cli@9.9.9")
     }),
   )
 
   const brew: string[] = []
   const brewer = layer((cmd, args) => {
     brew.push([cmd, ...args].join(" "))
-    if (cmd === "brew" && args.includes("list")) return "kilo"
-    if (cmd === "brew" && args.includes("--repo")) return "/tmp/kilo-homebrew-tap"
+    if (cmd === "brew" && args.includes("list")) return "accure"
+    if (cmd === "brew" && args.includes("--repo")) return "/tmp/accure-homebrew-tap"
     return ""
   })
 
-  testEffect(brewer).effect("upgrades the Kilo brew formula", () =>
+  testEffect(brewer).effect("upgrades the Accure brew formula", () =>
     Effect.gen(function* () {
       yield* Installation.Service.use((svc) => svc.upgrade("brew", "9.9.9"))
-      expect(brew).toContain("brew tap Kilo-Org/tap")
-      expect(brew).toContain("brew upgrade Kilo-Org/tap/kilo")
+      expect(brew).toContain("brew tap Accure-Org/tap")
+      expect(brew).toContain("brew upgrade Accure-Org/tap/accure")
     }),
   )
 
-  testEffect(upgrade).effect("upgrades the Kilo choco package", () =>
+  testEffect(upgrade).effect("upgrades the Accure choco package", () =>
     Effect.gen(function* () {
       yield* Installation.Service.use((svc) => svc.upgrade("choco", "9.9.9"))
-      expect(calls).toContain("choco upgrade kilo --version=9.9.9 -y")
+      expect(calls).toContain("choco upgrade accure --version=9.9.9 -y")
     }),
   )
 
-  testEffect(upgrade).effect("installs the Kilo scoop package", () =>
+  testEffect(upgrade).effect("installs the Accure scoop package", () =>
     Effect.gen(function* () {
       yield* Installation.Service.use((svc) => svc.upgrade("scoop", "9.9.9"))
-      expect(calls).toContain("scoop install kilo@9.9.9")
+      expect(calls).toContain("scoop install accure@9.9.9")
     }),
   )
 
@@ -211,10 +211,10 @@ describe("Kilo installation upgrade", () => {
         return new Response("#!/usr/bin/env bash", { status: 200 })
       },
     ),
-  ).effect("uses the Kilo install script for curl upgrades", () =>
+  ).effect("uses the Accure install script for curl upgrades", () =>
     Effect.gen(function* () {
       yield* Installation.Service.use((svc) => svc.upgrade("curl", "9.9.9"))
-      expect(curl).toContain("https://kilo.ai/install")
+      expect(curl).toContain("https://accure.ai/install")
       expect(curl).toContain("bash")
     }),
   )

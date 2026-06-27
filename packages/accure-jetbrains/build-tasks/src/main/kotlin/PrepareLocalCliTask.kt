@@ -20,7 +20,7 @@ import javax.inject.Inject
  * immediately when the binary already exists.
  *
  * Bun is found in the following priority order:
- * 1. Explicit `-Pkilo.bun.path=...` Gradle property (forwarded via [bunPath])
+ * 1. Explicit `-Paccure.bun.path=...` Gradle property (forwarded via [bunPath])
  * 2. `BUN_EXE` environment variable (absolute path to the bun executable)
  * 3. `BUN_INSTALL/bin/bun` (from `BUN_INSTALL` environment variable)
  * 4. Each entry on `PATH`
@@ -98,8 +98,8 @@ abstract class PrepareLocalCliTask : DefaultTask() {
     }
 
     private fun exe(): String {
-        if (os() == "windows") return "kilo.exe"
-        return "kilo"
+        if (os() == "windows") return "accure.exe"
+        return "accure"
     }
 
     private fun findBun(): File {
@@ -123,7 +123,7 @@ abstract class PrepareLocalCliTask : DefaultTask() {
         candidates.addAll(names.map { File("/usr/local/bin", it) })
 
         return candidates.firstOrNull(::usable)
-            ?: throw GradleException("Could not find Bun. Install Bun or pass -Pkilo.bun.path=/absolute/path/to/bun.")
+            ?: throw GradleException("Could not find Bun. Install Bun or pass -Paccure.bun.path=/absolute/path/to/bun.")
     }
 
     private fun requireBun(file: File): File {

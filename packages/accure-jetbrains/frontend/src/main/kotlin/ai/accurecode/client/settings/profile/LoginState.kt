@@ -1,6 +1,6 @@
-package ai.kilocode.client.settings.profile
+package ai.accurecode.client.settings.profile
 
-import ai.kilocode.rpc.dto.DeviceAuthDto
+import ai.accurecode.rpc.dto.DeviceAuthDto
 
 internal sealed interface LoginState {
     data object Idle : LoginState

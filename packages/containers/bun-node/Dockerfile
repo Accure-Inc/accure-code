@@ -1,6 +1,6 @@
-# kilocode_change start
-ARG REGISTRY=ghcr.io/kilo-org
-# kilocode_change end
+# accurecode_change start
+ARG REGISTRY=ghcr.io/accure-org
+# accurecode_change end
 FROM ${REGISTRY}/build/base:24.04
 
 SHELL ["/bin/bash", "-lc"]

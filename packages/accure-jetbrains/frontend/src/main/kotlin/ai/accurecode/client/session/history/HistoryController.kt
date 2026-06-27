@@ -1,12 +1,12 @@
-package ai.kilocode.client.session.history
+package ai.accurecode.client.session.history
 
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.SessionRef
-import ai.kilocode.client.telemetry.Telemetry
-import ai.kilocode.rpc.dto.CloudSessionDto
-import ai.kilocode.rpc.dto.SessionDto
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.SessionRef
+import ai.accurecode.client.telemetry.Telemetry
+import ai.accurecode.rpc.dto.CloudSessionDto
+import ai.accurecode.rpc.dto.SessionDto
 import com.intellij.openapi.application.ApplicationManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +16,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 class HistoryController(
-    private val sessions: KiloSessionService,
+    private val sessions: AccureSessionService,
     private val workspace: Workspace,
     private val cs: CoroutineScope,
     open: (SessionRef) -> Unit = {},
@@ -73,7 +73,7 @@ class HistoryController(
                 edt { local.replace(items) }
             } catch (e: Exception) {
                 capture("History Load Failed", mapOf("source" to "local", "errorClass" to e::class.java.name))
-                edt { local.fail(e.message ?: KiloBundle.message("history.error.local")) }
+                edt { local.fail(e.message ?: AccureBundle.message("history.error.local")) }
             }
         }
     }
@@ -133,7 +133,7 @@ class HistoryController(
                 } catch (e: Exception) {
                     edt {
                         deleting.remove(item.id)
-                        local.fail(e.message ?: KiloBundle.message("history.error.local.delete"))
+                        local.fail(e.message ?: AccureBundle.message("history.error.local.delete"))
                     }
                 }
             }
@@ -150,7 +150,7 @@ class HistoryController(
                     capture("History Session Renamed", mapOf("sessionId" to item.id))
                 }
             } catch (e: Exception) {
-                edt { local.fail(e.message ?: KiloBundle.message("history.error.local.rename")) }
+                edt { local.fail(e.message ?: AccureBundle.message("history.error.local.rename")) }
             }
         }
     }
@@ -188,7 +188,7 @@ class HistoryController(
                 }
             } catch (e: Exception) {
                 capture("History Load Failed", mapOf("source" to "cloud", "errorClass" to e::class.java.name))
-                edt { cloud.fail(e.message ?: KiloBundle.message("history.error.cloud")) }
+                edt { cloud.fail(e.message ?: AccureBundle.message("history.error.cloud")) }
             }
         }
     }

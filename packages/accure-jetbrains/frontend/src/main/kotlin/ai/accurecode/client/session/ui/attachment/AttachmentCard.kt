@@ -1,12 +1,12 @@
-package ai.kilocode.client.session.ui.attachment
+package ai.accurecode.client.session.ui.attachment
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.iconButton
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.iconButton
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.util.text.StringUtil
@@ -86,7 +86,7 @@ open class AttachmentCard(
     private val action = remove?.let { callback ->
         CloseButton().apply {
             isVisible = false
-            toolTipText = KiloBundle.message("prompt.attachment.remove", item.name)
+            toolTipText = AccureBundle.message("prompt.attachment.remove", item.name)
             accessibleContext?.accessibleName = toolTipText
             addActionListener { callback() }
         }
@@ -96,7 +96,7 @@ open class AttachmentCard(
         isOpaque = false
         cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
         toolTipText = tip
-        accessibleContext?.accessibleName = KiloBundle.message("prompt.attachment.open", item.name)
+        accessibleContext?.accessibleName = AccureBundle.message("prompt.attachment.open", item.name)
         add(content)
         if (action != null) {
             add(action)
@@ -285,14 +285,14 @@ private fun local(item: AttachmentCardItem): Path? {
 
 private fun tooltip(item: AttachmentCardItem): String = XmlStringUtil.wrapInHtml(
     StringUtil.escapeXmlEntities(
-        KiloBundle.message("prompt.attachment.tooltip", item.name, item.mime, location(item)),
+        AccureBundle.message("prompt.attachment.tooltip", item.name, item.mime, location(item)),
     ).replace("\n", "<br>"),
 )
 
 private fun location(item: AttachmentCardItem): String {
     if (item.path != null) return item.path.toString()
     val uri = runCatching { URI.create(item.url) }.getOrNull()
-    if (uri?.scheme == "data") return KiloBundle.message("prompt.attachment.embedded")
+    if (uri?.scheme == "data") return AccureBundle.message("prompt.attachment.embedded")
     if (uri?.scheme == "file") return runCatching { Path.of(uri).toString() }
         .getOrElse { URLDecoder.decode(uri.rawSchemeSpecificPart.removePrefix("//"), StandardCharsets.UTF_8) }
     return item.url

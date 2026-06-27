@@ -1,7 +1,7 @@
-package ai.kilocode.client.ui.md
+package ai.accurecode.client.ui.md
 
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.selection.SessionSelection
 import com.intellij.openapi.Disposable
 import java.awt.Color
 import java.awt.Font

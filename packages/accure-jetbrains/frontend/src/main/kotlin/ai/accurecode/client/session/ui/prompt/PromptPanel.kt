@@ -1,25 +1,25 @@
-package ai.kilocode.client.session.ui.prompt
+package ai.accurecode.client.session.ui.prompt
 
-import ai.kilocode.client.KiloNotifications
-import ai.kilocode.client.actions.SendPromptAction
-import ai.kilocode.client.actions.StopSessionAction
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.ReasoningPicker
-import ai.kilocode.client.session.ui.SessionRootPanel
-import ai.kilocode.client.session.model.PromptAttachment
-import ai.kilocode.client.session.model.PromptAttachmentExtractor
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.ui.mode.ModePicker
-import ai.kilocode.client.session.ui.model.ModelPicker
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.ui.HoverIcon
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.iconButton
-import ai.kilocode.log.ChatLogSummary
-import ai.kilocode.log.KiloLog
-import ai.kilocode.rpc.dto.PromptPartDto
+import ai.accurecode.client.AccureNotifications
+import ai.accurecode.client.actions.SendPromptAction
+import ai.accurecode.client.actions.StopSessionAction
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.ReasoningPicker
+import ai.accurecode.client.session.ui.SessionRootPanel
+import ai.accurecode.client.session.model.PromptAttachment
+import ai.accurecode.client.session.model.PromptAttachmentExtractor
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.ui.mode.ModePicker
+import ai.accurecode.client.session.ui.model.ModelPicker
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.ui.HoverIcon
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.iconButton
+import ai.accurecode.log.ChatLogSummary
+import ai.accurecode.log.AccureLog
+import ai.accurecode.rpc.dto.PromptPartDto
 import com.intellij.icons.AllIcons
 import com.intellij.ide.DataManager
 import com.intellij.ide.dnd.DnDEvent
@@ -86,7 +86,7 @@ class PromptPanel(
 ) : BorderLayoutPanel(), SessionEditorStyleTarget, SendPromptContext, UiDataProvider {
 
     companion object {
-        private val LOG = KiloLog.create(PromptPanel::class.java)
+        private val LOG = AccureLog.create(PromptPanel::class.java)
         private val SEND_ICON: Icon = IconLoader.getIcon("/icons/send.svg", PromptPanel::class.java)
         private val STOP_ICON: Icon = IconLoader.getIcon("/icons/stop.svg", PromptPanel::class.java)
         private val SHIELD_ICON: Icon = IconLoader.getIcon("/icons/shield.svg", PromptPanel::class.java)
@@ -179,8 +179,8 @@ class PromptPanel(
 
     private val reset = HoverIcon().apply {
         icon = AllIcons.Actions.Cancel
-        toolTipText = KiloBundle.message("model.picker.reset")
-        accessibleContext.accessibleName = KiloBundle.message("model.picker.reset")
+        toolTipText = AccureBundle.message("model.picker.reset")
+        accessibleContext.accessibleName = AccureBundle.message("model.picker.reset")
         isVisible = false
         addActionListener { onReset() }
     }
@@ -193,8 +193,8 @@ class PromptPanel(
     private val enhancingIcon = AnimatedIcon.Default()
     private val enhance = HoverIcon().apply {
         icon = WAND_ICON
-        toolTipText = KiloBundle.message("prompt.action.enhance")
-        accessibleContext.accessibleName = KiloBundle.message("prompt.action.enhance")
+        toolTipText = AccureBundle.message("prompt.action.enhance")
+        accessibleContext.accessibleName = AccureBundle.message("prompt.action.enhance")
         addActionListener { enhance() }
     }
 
@@ -375,7 +375,7 @@ class PromptPanel(
         if (!enhance.isEnabled) return
         val source = editor.text
         if (source.isBlank()) {
-            editor.text = KiloBundle.message("prompt.action.enhance.description")
+            editor.text = AccureBundle.message("prompt.action.enhance.description")
             syncEditorHeight()
             focus()
             return
@@ -397,10 +397,10 @@ class PromptPanel(
             focus()
         }.onFailure {
             if (it is CancellationException) return@onFailure
-            KiloNotifications.error(
+            AccureNotifications.error(
                 project,
-                KiloBundle.message("prompt.action.enhance.failed"),
-                KiloBundle.message("prompt.action.enhance.failed.description"),
+                AccureBundle.message("prompt.action.enhance.failed"),
+                AccureBundle.message("prompt.action.enhance.failed.description"),
             )
         }
     }
@@ -417,9 +417,9 @@ class PromptPanel(
         enhance.isEnabled = ready && !busy && !enhancing
         enhance.icon = if (enhancing) enhancingIcon else WAND_ICON
         enhance.toolTipText = if (enhancing) {
-            KiloBundle.message("prompt.action.enhance.loading")
+            AccureBundle.message("prompt.action.enhance.loading")
         } else {
-            KiloBundle.message("prompt.action.enhance")
+            AccureBundle.message("prompt.action.enhance")
         }
     }
 
@@ -443,7 +443,7 @@ class PromptPanel(
                     submitting = false
                     if (project.isDisposed) return@invokeLater
                     LOG.warn("kind=prompt-submit src=$src failed message=${e.message}", e)
-                    notify(KiloBundle.message("prompt.attachment.send.failed", e.message ?: e.javaClass.simpleName))
+                    notify(AccureBundle.message("prompt.attachment.send.failed", e.message ?: e.javaClass.simpleName))
                 }
             }
         }
@@ -453,7 +453,7 @@ class PromptPanel(
     private fun addAttachment(item: PromptAttachment) {
         if (!attachment && PromptAttachmentExtractor.media(item.mime)) {
             LOG.debug { "kind=prompt-attachment add name=${item.name} mime=${item.mime} blocked=unsupported-model" }
-            notify(KiloBundle.message("prompt.attachment.unsupported.model"))
+            notify(AccureBundle.message("prompt.attachment.unsupported.model"))
             return
         }
         if (attachments.any { it.id == item.id }) {
@@ -475,7 +475,7 @@ class PromptPanel(
         onChange()
     }
 
-    private fun promptDto(text: String, files: List<PromptPartDto>) = ai.kilocode.rpc.dto.PromptDto(
+    private fun promptDto(text: String, files: List<PromptPartDto>) = ai.accurecode.rpc.dto.PromptDto(
         parts = buildList {
             text.takeIf { it.isNotBlank() }?.let { add(PromptPartDto(type = "text", text = it)) }
             addAll(files)
@@ -554,7 +554,7 @@ class PromptPanel(
     private fun elapsedMs(start: Long) = (System.nanoTime() - start) / 1_000_000
 
     private fun notify(text: String) {
-        com.intellij.notification.Notification("Kilo Code", text, com.intellij.notification.NotificationType.WARNING).notify(project)
+        com.intellij.notification.Notification("Accure Code", text, com.intellij.notification.NotificationType.WARNING).notify(project)
     }
 
     @RequiresEdt
@@ -587,14 +587,14 @@ class PromptPanel(
         auto.isSelected = autoApprove
         auto.icon = if (autoApprove) SHIELD_FILLED_ICON else SHIELD_ICON
         auto.toolTipText = if (autoApprove) {
-            KiloBundle.message("prompt.action.autoApprove.enabled.tooltip")
+            AccureBundle.message("prompt.action.autoApprove.enabled.tooltip")
         } else {
-            KiloBundle.message("prompt.action.autoApprove.disabled.tooltip")
+            AccureBundle.message("prompt.action.autoApprove.disabled.tooltip")
         }
         auto.accessibleContext.accessibleName = if (autoApprove) {
-            KiloBundle.message("prompt.action.autoApprove.disable")
+            AccureBundle.message("prompt.action.autoApprove.disable")
         } else {
-            KiloBundle.message("prompt.action.autoApprove.enable")
+            AccureBundle.message("prompt.action.autoApprove.enable")
         }
         auto.repaint()
     }
@@ -602,9 +602,9 @@ class PromptPanel(
     private fun tooltip(): String {
         val id = if (busy) StopSessionAction.ID else SendPromptAction.ID
         val text = if (busy) {
-            KiloBundle.message("prompt.button.stop")
+            AccureBundle.message("prompt.button.stop")
         } else {
-            KiloBundle.message("prompt.button.send")
+            AccureBundle.message("prompt.button.send")
         }
         val tip = KeymapUtil.createTooltipText(text, id)
         if (busy) return tip
@@ -612,7 +612,7 @@ class PromptPanel(
         if (stop.isEmpty()) return tip
         return XmlStringUtil.wrapInHtml(
             XmlStringUtil.escapeString(tip) + "<br>" +
-                XmlStringUtil.escapeString(KiloBundle.message("prompt.button.send.tooltip.stop", stop))
+                XmlStringUtil.escapeString(AccureBundle.message("prompt.button.send.tooltip.stop", stop))
         )
     }
 
@@ -620,11 +620,11 @@ class PromptPanel(
         val send = KeymapUtil.getFirstKeyboardShortcutText(SendPromptAction.ID)
         val line = KeymapUtil.getFirstKeyboardShortcutText(IdeActions.ACTION_EDITOR_START_NEW_LINE)
         if (send.isNotEmpty() && line.isNotEmpty()) {
-            return KiloBundle.message("prompt.placeholder.with.shortcuts", send, line)
+            return AccureBundle.message("prompt.placeholder.with.shortcuts", send, line)
         }
-        if (send.isNotEmpty()) return KiloBundle.message("prompt.placeholder.with.send", send)
-        if (line.isNotEmpty()) return KiloBundle.message("prompt.placeholder.with.newline", line)
-        return KiloBundle.message("prompt.placeholder")
+        if (send.isNotEmpty()) return AccureBundle.message("prompt.placeholder.with.send", send)
+        if (line.isNotEmpty()) return AccureBundle.message("prompt.placeholder.with.newline", line)
+        return AccureBundle.message("prompt.placeholder")
     }
 
     private fun separator() = JBColor.namedColor("EditorTabs.underTabsBorderColor", JBUI.CurrentTheme.EditorTabs.borderColor())

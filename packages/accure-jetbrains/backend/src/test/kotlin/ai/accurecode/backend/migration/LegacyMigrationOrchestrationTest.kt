@@ -1,4 +1,4 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
@@ -142,7 +142,7 @@ class LegacyMigrationOrchestrationTest {
             taskHistory = """[{"id":"t1","task":"Test"}]"""
             conversations["t1"] = """[{"role":"user","content":"hello"}]"""
         }
-        val sessionId = ai.kilocode.backend.migration.session.LegacySessionIds.createSessionId("t1")
+        val sessionId = ai.accurecode.backend.migration.session.LegacySessionIds.createSessionId("t1")
         backend.existingSessionIds = setOf(sessionId)
         val sel = noSelections().copy(sessions = listOf(MigrationSessionSelection("t1")))
         val items = mutableListOf<LegacyMigrationItemProgress>()

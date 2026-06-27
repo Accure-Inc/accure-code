@@ -4,7 +4,7 @@ import { GLOBALS_UPDATED, SET_GLOBALS } from "storybook/internal/core-events"
 addons.register("accure-ui/toolbar-visibility", (api) => {
   const update = (globals: Record<string, unknown>) => {
     const isVscode = globals["theme"] === "accure-vscode"
-    document.documentElement.setAttribute("data-kilo-theme", isVscode ? "accure-vscode" : "kilo")
+    document.documentElement.setAttribute("data-accure-theme", isVscode ? "accure-vscode" : "accure")
   }
 
   const channel = api.getChannel()

@@ -13,7 +13,7 @@ import path from "node:path"
 import { Project, SyntaxKind } from "ts-morph"
 
 const ROOT = path.resolve(import.meta.dir, "../..")
-const KILO_PROVIDER_FILE = path.join(ROOT, "src/KiloProvider.ts")
+const ACCURECODE_PROVIDER_FILE = path.join(ROOT, "src/AccureProvider.ts")
 const CSS_FILES = [
   path.join(ROOT, "webview-ui/agent-manager/agent-manager.css"),
   path.join(ROOT, "webview-ui/agent-manager/agent-manager-review.css"),
@@ -74,11 +74,11 @@ describe("Agent Manager CSS Prefix", () => {
     // Exceptions:
     // - VS Code sets these body classes on webview elements (scoping
     //   selectors for high contrast theme support).
-    // - `kilo-diff-theme` is the shared Pierre diff theme utility defined
+    // - `accure-diff-theme` is the shared Pierre diff theme utility defined
     //   in webview-ui/src/styles/diff.css and reused across webviews.
     // - `css` is matched from `@import "./diff.css"` file extension, not a
     //   class selector.
-    const host = new Set(["vscode-high-contrast", "vscode-high-contrast-light", "kilo-diff-theme", "css"])
+    const host = new Set(["vscode-high-contrast", "vscode-high-contrast-light", "accure-diff-theme", "css"])
     const invalid = names.filter((n) => !n!.startsWith("am-") && !host.has(n!))
 
     expect(invalid, `Classes missing "am-" prefix: ${invalid.join(", ")}`).toEqual([])
@@ -467,7 +467,7 @@ describe("Agent Manager Webview — non-git sessionsLoaded fix", () => {
   const tsx = readAllTsx()
 
   /**
-   * Regression: when isGitRepo is false, the Kilo server never sends a
+   * Regression: when isGitRepo is false, the Accure server never sends a
    * "sessionsLoaded" message, so the skeleton was stuck forever.
    * The fix must set sessionsLoaded(true) when receiving a state message
    * with isGitRepo === false.
@@ -485,12 +485,12 @@ describe("Agent Manager Webview — non-git sessionsLoaded fix", () => {
 })
 
 // ---------------------------------------------------------------------------
-// KiloProvider — pendingSessionRefresh race condition fix
+// AccureProvider — pendingSessionRefresh race condition fix
 // ---------------------------------------------------------------------------
 
-describe("KiloProvider — pending session refresh on reconnect", () => {
-  const provider = fs.readFileSync(KILO_PROVIDER_FILE, "utf-8")
-  const utils = fs.readFileSync(path.join(ROOT, "src/kilo-provider-utils.ts"), "utf-8")
+describe("AccureProvider — pending session refresh on reconnect", () => {
+  const provider = fs.readFileSync(ACCURECODE_PROVIDER_FILE, "utf-8")
+  const utils = fs.readFileSync(path.join(ROOT, "src/accure-provider-utils.ts"), "utf-8")
 
   /**
    * Regression: when the Agent Manager opens its panel, initializeState()
@@ -500,13 +500,13 @@ describe("KiloProvider — pending session refresh on reconnect", () => {
    * The worktree would show up in the sidebar but display "No sessions open".
    *
    * The fix uses a pendingSessionRefresh flag: loadSessions() (in
-   * kilo-provider-utils) sets it when httpClient is unavailable, and
+   * accure-provider-utils) sets it when httpClient is unavailable, and
    * both initializeConnection() and the "connected" state handler flush
    * the pending refresh.
    */
   it("loadSessions sets pendingSessionRefresh when client is null", () => {
     const start = utils.indexOf("export async function loadSessions")
-    expect(start, "loadSessions must exist in kilo-provider-utils").toBeGreaterThan(-1)
+    expect(start, "loadSessions must exist in accure-provider-utils").toBeGreaterThan(-1)
     const snippet = utils.slice(start, start + 700)
     expect(snippet, "must set pendingSessionRefresh when client missing").toContain("ctx.pendingSessionRefresh = true")
     expect(snippet, "must avoid noisy errors while still connecting").toContain('ctx.connectionState !== "connecting"')
@@ -769,7 +769,7 @@ describe("Agent Manager — VS Code import boundary", () => {
 // also be present in the agent manager's provider chain. A missing provider
 // crashes the entire SolidJS component tree silently.
 //
-// Regression: PR #7473 moved KiloNotifications into MessageList. It calls
+// Regression: PR #7473 moved AccureNotifications into MessageList. It calls
 // useNotifications(), but NotificationsProvider was only in App.tsx — the agent
 // manager rendered a blank screen.
 // ---------------------------------------------------------------------------

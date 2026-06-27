@@ -4,12 +4,12 @@
  */
 
 import { createSignal, createEffect, on, For, Index, onCleanup, Show, untrack, type Component } from "solid-js"
-import { Button } from "@kilocode/accure-ui/button"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
-import { Tooltip } from "@kilocode/accure-ui/tooltip"
-import { FileIcon } from "@kilocode/accure-ui/file-icon"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { showToast } from "@kilocode/accure-ui/toast"
+import { Button } from "@accurecode/accure-ui/button"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
+import { Tooltip } from "@accurecode/accure-ui/tooltip"
+import { FileIcon } from "@accurecode/accure-ui/file-icon"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { showToast } from "@accurecode/accure-ui/toast"
 import { useSession } from "../../context/session"
 import { useServer } from "../../context/server"
 import { useIndexing } from "../../context/indexing"
@@ -33,7 +33,7 @@ import { useSpeechToText } from "../speech-to-text/useSpeechToText"
 import { useImageAttachments, type ImageAttachment } from "../../hooks/useImageAttachments"
 import { convertToMentionPath } from "../../utils/path-mentions"
 import { usePromptHistory } from "../../hooks/usePromptHistory"
-import { WandSparkles } from "@kilocode/accure-ui/lucide"
+import { WandSparkles } from "@accurecode/accure-ui/lucide"
 import {
   fileName,
   dirName,

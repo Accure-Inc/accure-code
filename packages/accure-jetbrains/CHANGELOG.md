@@ -4,83 +4,83 @@
 
 ### Patch Changes
 
-- [#11221](https://github.com/Kilo-Org/kilocode/pull/11221) [`ef7aa7f`](https://github.com/Kilo-Org/kilocode/commit/ef7aa7fdf854f8a50681b56cb56377fa7763b18d) - Fix JetBrains provider settings after OAuth/connect actions by waiting through transient backend reloads and allowing longer OAuth exchanges.
+- [#11221](https://github.com/Accure-Inc/accure-code/pull/11221) [`ef7aa7f`](https://github.com/Accure-Inc/accure-code/commit/ef7aa7fdf854f8a50681b56cb56377fa7763b18d) - Fix JetBrains provider settings after OAuth/connect actions by waiting through transient backend reloads and allowing longer OAuth exchanges.
 
-- [#11095](https://github.com/Kilo-Org/kilocode/pull/11095) [`9eddaf1`](https://github.com/Kilo-Org/kilocode/commit/9eddaf17126a63822307e9a52d9a32794eca5176) - Highlight shell tool commands in JetBrains chat transcripts.
+- [#11095](https://github.com/Accure-Inc/accure-code/pull/11095) [`9eddaf1`](https://github.com/Accure-Inc/accure-code/commit/9eddaf17126a63822307e9a52d9a32794eca5176) - Highlight shell tool commands in JetBrains chat transcripts.
 
-- [#11095](https://github.com/Kilo-Org/kilocode/pull/11095) [`5058050`](https://github.com/Kilo-Org/kilocode/commit/50580501679ea0900c2102c0509575e89f15a48e) - Improve markdown readability in JetBrains chat transcripts.
+- [#11095](https://github.com/Accure-Inc/accure-code/pull/11095) [`5058050`](https://github.com/Accure-Inc/accure-code/commit/50580501679ea0900c2102c0509575e89f15a48e) - Improve markdown readability in JetBrains chat transcripts.
 
-- [#11077](https://github.com/Kilo-Org/kilocode/pull/11077) [`52dfa54`](https://github.com/Kilo-Org/kilocode/commit/52dfa5453ed6080270f9e07cf6e9cafd8df75cd7) - Hide generated read-tool payload lines from JetBrains prompt bubbles while keeping attachments and assistant tool output visible.
+- [#11077](https://github.com/Accure-Inc/accure-code/pull/11077) [`52dfa54`](https://github.com/Accure-Inc/accure-code/commit/52dfa5453ed6080270f9e07cf6e9cafd8df75cd7) - Hide generated read-tool payload lines from JetBrains prompt bubbles while keeping attachments and assistant tool output visible.
 
-- [#11077](https://github.com/Kilo-Org/kilocode/pull/11077) [`9f8f698`](https://github.com/Kilo-Org/kilocode/commit/9f8f698e38f8317b0f19d1f7406b0d6cc9777ad9) - Show JetBrains prompt attachments in one horizontal scrolling row in session history.
+- [#11077](https://github.com/Accure-Inc/accure-code/pull/11077) [`9f8f698`](https://github.com/Accure-Inc/accure-code/commit/9f8f698e38f8317b0f19d1f7406b0d6cc9777ad9) - Show JetBrains prompt attachments in one horizontal scrolling row in session history.
 
-- [#11324](https://github.com/Kilo-Org/kilocode/pull/11324) [`bc7f9b0`](https://github.com/Kilo-Org/kilocode/commit/bc7f9b05e8ca61ebf59d5a069923eef59c900a15) - Show a hover copy button for JetBrains session code and tool output blocks.
+- [#11324](https://github.com/Accure-Inc/accure-code/pull/11324) [`bc7f9b0`](https://github.com/Accure-Inc/accure-code/commit/bc7f9b05e8ca61ebf59d5a069923eef59c900a15) - Show a hover copy button for JetBrains session code and tool output blocks.
 
-- [#11324](https://github.com/Kilo-Org/kilocode/pull/11324) [`358135f`](https://github.com/Kilo-Org/kilocode/commit/358135f69ef6a4985cdd7aab0f1a2a8a0b631c27) - Add copy buttons below JetBrains session prompts and assistant responses.
+- [#11324](https://github.com/Accure-Inc/accure-code/pull/11324) [`358135f`](https://github.com/Accure-Inc/accure-code/commit/358135f69ef6a4985cdd7aab0f1a2a8a0b631c27) - Add copy buttons below JetBrains session prompts and assistant responses.
 
-- [#11221](https://github.com/Kilo-Org/kilocode/pull/11221) [`db96e31`](https://github.com/Kilo-Org/kilocode/commit/db96e31e655d77ef54ade03c32688218ca2e0e58) - Show provider names on JetBrains model picker buttons for non-Kilo Gateway models.
+- [#11221](https://github.com/Accure-Inc/accure-code/pull/11221) [`db96e31`](https://github.com/Accure-Inc/accure-code/commit/db96e31e655d77ef54ade03c32688218ca2e0e58) - Show provider names on JetBrains model picker buttons for non-Accure Gateway models.
 
-- [#11077](https://github.com/Kilo-Org/kilocode/pull/11077) [`49339a2`](https://github.com/Kilo-Org/kilocode/commit/49339a2583f6c51db9d1bfdc3f37ee5a4185b8a9) - Support pasting files and images into JetBrains chat prompts as attachments.
+- [#11077](https://github.com/Accure-Inc/accure-code/pull/11077) [`49339a2`](https://github.com/Accure-Inc/accure-code/commit/49339a2583f6c51db9d1bfdc3f37ee5a4185b8a9) - Support pasting files and images into JetBrains chat prompts as attachments.
 
-- [#11077](https://github.com/Kilo-Org/kilocode/pull/11077) [`9f8f698`](https://github.com/Kilo-Org/kilocode/commit/9f8f698e38f8317b0f19d1f7406b0d6cc9777ad9) - Show JetBrains prompt attachments inside the prompt bubble with previews and open embedded attachments in editor tabs.
+- [#11077](https://github.com/Accure-Inc/accure-code/pull/11077) [`9f8f698`](https://github.com/Accure-Inc/accure-code/commit/9f8f698e38f8317b0f19d1f7406b0d6cc9777ad9) - Show JetBrains prompt attachments inside the prompt bubble with previews and open embedded attachments in editor tabs.
 
-- [#11077](https://github.com/Kilo-Org/kilocode/pull/11077) [`a8b127e`](https://github.com/Kilo-Org/kilocode/commit/a8b127e0ca8a7f29a11d03e548e78d084ccc3aa6) - Support sending file and image attachments from the JetBrains chat prompt.
+- [#11077](https://github.com/Accure-Inc/accure-code/pull/11077) [`a8b127e`](https://github.com/Accure-Inc/accure-code/commit/a8b127e0ca8a7f29a11d03e548e78d084ccc3aa6) - Support sending file and image attachments from the JetBrains chat prompt.
 
-- [#11275](https://github.com/Kilo-Org/kilocode/pull/11275) [`3c319a5`](https://github.com/Kilo-Org/kilocode/commit/3c319a59a24a7fbf4a1d65eb88d1572ec178694b) - Limit JetBrains prompt input growth to the session while preserving scrolling for long prompts.
+- [#11275](https://github.com/Accure-Inc/accure-code/pull/11275) [`3c319a5`](https://github.com/Accure-Inc/accure-code/commit/3c319a59a24a7fbf4a1d65eb88d1572ec178694b) - Limit JetBrains prompt input growth to the session while preserving scrolling for long prompts.
 
-- [#11221](https://github.com/Kilo-Org/kilocode/pull/11221) [`b6bbb83`](https://github.com/Kilo-Org/kilocode/commit/b6bbb839e613a82e65ff445498e128a90851f8a5) - Show Connect for available JetBrains providers without explicit auth metadata, keep only actually configured providers disconnectable, and reduce provider settings diagnostics to debug logs.
+- [#11221](https://github.com/Accure-Inc/accure-code/pull/11221) [`b6bbb83`](https://github.com/Accure-Inc/accure-code/commit/b6bbb839e613a82e65ff445498e128a90851f8a5) - Show Connect for available JetBrains providers without explicit auth metadata, keep only actually configured providers disconnectable, and reduce provider settings diagnostics to debug logs.
 
-- [#11221](https://github.com/Kilo-Org/kilocode/pull/11221) [`b0183f9`](https://github.com/Kilo-Org/kilocode/commit/b0183f984611df1b09145aa9716e948ee6bb4780) - Prefer remote-safe provider OAuth methods in JetBrains and show device-code authorization details when available.
+- [#11221](https://github.com/Accure-Inc/accure-code/pull/11221) [`b0183f9`](https://github.com/Accure-Inc/accure-code/commit/b0183f984611df1b09145aa9716e948ee6bb4780) - Prefer remote-safe provider OAuth methods in JetBrains and show device-code authorization details when available.
 
-- [#11221](https://github.com/Kilo-Org/kilocode/pull/11221) [`d8b6efd`](https://github.com/Kilo-Org/kilocode/commit/d8b6efd58c0ee66b1f71e484282993aad27fc08e) - Show cancellable OAuth progress in JetBrains provider settings and prevent starting another provider action while one is running.
+- [#11221](https://github.com/Accure-Inc/accure-code/pull/11221) [`d8b6efd`](https://github.com/Accure-Inc/accure-code/commit/d8b6efd58c0ee66b1f71e484282993aad27fc08e) - Show cancellable OAuth progress in JetBrains provider settings and prevent starting another provider action while one is running.
 
-- [#11278](https://github.com/Kilo-Org/kilocode/pull/11278) [`62e42c1`](https://github.com/Kilo-Org/kilocode/commit/62e42c1efbeecd243c473e3cdde8d8a6ac55efc5) - Stop Kilo backend processes and clear JetBrains UI resources during restartless plugin unloads.
+- [#11278](https://github.com/Accure-Inc/accure-code/pull/11278) [`62e42c1`](https://github.com/Accure-Inc/accure-code/commit/62e42c1efbeecd243c473e3cdde8d8a6ac55efc5) - Stop Accure backend processes and clear JetBrains UI resources during restartless plugin unloads.
 
-- [#11324](https://github.com/Kilo-Org/kilocode/pull/11324) [`b4864eb`](https://github.com/Kilo-Org/kilocode/commit/b4864ebd43f211fe3f594edb29798f2f5d48b599) - Fix copying selected text from JetBrains session views.
+- [#11324](https://github.com/Accure-Inc/accure-code/pull/11324) [`b4864eb`](https://github.com/Accure-Inc/accure-code/commit/b4864ebd43f211fe3f594edb29798f2f5d48b599) - Fix copying selected text from JetBrains session views.
 
-- [#11077](https://github.com/Kilo-Org/kilocode/pull/11077) [`793cf93`](https://github.com/Kilo-Org/kilocode/commit/793cf934b72e7f9d71be3f23af058d88be67a9d3) - Support dropping files anywhere in a JetBrains chat session to add them to the prompt.
+- [#11077](https://github.com/Accure-Inc/accure-code/pull/11077) [`793cf93`](https://github.com/Accure-Inc/accure-code/commit/793cf934b72e7f9d71be3f23af058d88be67a9d3) - Support dropping files anywhere in a JetBrains chat session to add them to the prompt.
 
-- [#11095](https://github.com/Kilo-Org/kilocode/pull/11095) [`bb31723`](https://github.com/Kilo-Org/kilocode/commit/bb31723e7353c0649b9854812f9f803e04d92156) - Polish session header controls and align session view icons.
+- [#11095](https://github.com/Accure-Inc/accure-code/pull/11095) [`bb31723`](https://github.com/Accure-Inc/accure-code/commit/bb31723e7353c0649b9854812f9f803e04d92156) - Polish session header controls and align session view icons.
 
-- [#11077](https://github.com/Kilo-Org/kilocode/pull/11077) [`709a53c`](https://github.com/Kilo-Org/kilocode/commit/709a53cda17da96a74cbd5a8bb88a9c6a78bd28e) - Open embedded JetBrains message attachments in frontend-managed Kilo editor tabs with loading and connection retry states.
+- [#11077](https://github.com/Accure-Inc/accure-code/pull/11077) [`709a53c`](https://github.com/Accure-Inc/accure-code/commit/709a53cda17da96a74cbd5a8bb88a9c6a78bd28e) - Open embedded JetBrains message attachments in frontend-managed Accure editor tabs with loading and connection retry states.
 
-- [#11221](https://github.com/Kilo-Org/kilocode/pull/11221) [`ad3be6c`](https://github.com/Kilo-Org/kilocode/commit/ad3be6cae999b440277fd8c660ba1b5eead07020) - Organize JetBrains provider settings into connected, popular, and all-provider sections, hide custom-provider creation, and prevent Kilo Gateway disconnects from provider settings.
+- [#11221](https://github.com/Accure-Inc/accure-code/pull/11221) [`ad3be6c`](https://github.com/Accure-Inc/accure-code/commit/ad3be6cae999b440277fd8c660ba1b5eead07020) - Organize JetBrains provider settings into connected, popular, and all-provider sections, hide custom-provider creation, and prevent Accure Gateway disconnects from provider settings.
 
-- [#11077](https://github.com/Kilo-Org/kilocode/pull/11077) [`a8b127e`](https://github.com/Kilo-Org/kilocode/commit/a8b127e0ca8a7f29a11d03e548e78d084ccc3aa6) - Render file attachments as attachment cards in JetBrains prompts and session history.
+- [#11077](https://github.com/Accure-Inc/accure-code/pull/11077) [`a8b127e`](https://github.com/Accure-Inc/accure-code/commit/a8b127e0ca8a7f29a11d03e548e78d084ccc3aa6) - Render file attachments as attachment cards in JetBrains prompts and session history.
 
-- [#11095](https://github.com/Kilo-Org/kilocode/pull/11095) [`a73ee53`](https://github.com/Kilo-Org/kilocode/commit/a73ee5329cf4455d33d8c8fd363ccf83b46a3cdb) - Render JetBrains shell tool output with markdown code blocks.
+- [#11095](https://github.com/Accure-Inc/accure-code/pull/11095) [`a73ee53`](https://github.com/Accure-Inc/accure-code/commit/a73ee5329cf4455d33d8c8fd363ccf83b46a3cdb) - Render JetBrains shell tool output with markdown code blocks.
 
-- [#11221](https://github.com/Kilo-Org/kilocode/pull/11221) [`1c7d5ca`](https://github.com/Kilo-Org/kilocode/commit/1c7d5ca7d373770e8d731177e0b851253d9c7d57) - Restore popular provider suggestions in JetBrains provider settings when provider metadata is unavailable.
+- [#11221](https://github.com/Accure-Inc/accure-code/pull/11221) [`1c7d5ca`](https://github.com/Accure-Inc/accure-code/commit/1c7d5ca7d373770e8d731177e0b851253d9c7d57) - Restore popular provider suggestions in JetBrains provider settings when provider metadata is unavailable.
 
-- [#11221](https://github.com/Kilo-Org/kilocode/pull/11221) [`987da27`](https://github.com/Kilo-Org/kilocode/commit/987da2728731e1da1c974996b5bcddafe745cea7) - Show shared provider descriptions and provider icons in JetBrains and VS Code provider settings.
+- [#11221](https://github.com/Accure-Inc/accure-code/pull/11221) [`987da27`](https://github.com/Accure-Inc/accure-code/commit/987da2728731e1da1c974996b5bcddafe745cea7) - Show shared provider descriptions and provider icons in JetBrains and VS Code provider settings.
 
-- [#11077](https://github.com/Kilo-Org/kilocode/pull/11077) [`2f9c6ec`](https://github.com/Kilo-Org/kilocode/commit/2f9c6ecdd00c49b9c53a8e72bf8971cabf51821a) - Open embedded transcript attachments in stable Kilo editor tabs.
+- [#11077](https://github.com/Accure-Inc/accure-code/pull/11077) [`2f9c6ec`](https://github.com/Accure-Inc/accure-code/commit/2f9c6ecdd00c49b9c53a8e72bf8971cabf51821a) - Open embedded transcript attachments in stable Accure editor tabs.
 
 ## 7.4.0
 
 ### Minor Changes
 
-- [#11165](https://github.com/Kilo-Org/kilocode/pull/11165) [`bf67155`](https://github.com/Kilo-Org/kilocode/commit/bf6715594bae4a1160abb7cfdfdedaba4b8358ec) - Enhance draft prompts from the JetBrains chat composer using the configured small model.
+- [#11165](https://github.com/Accure-Inc/accure-code/pull/11165) [`bf67155`](https://github.com/Accure-Inc/accure-code/commit/bf6715594bae4a1160abb7cfdfdedaba4b8358ec) - Enhance draft prompts from the JetBrains chat composer using the configured small model.
 
 ## 7.3.42
 
 ### Patch Changes
 
-- [#11015](https://github.com/Kilo-Org/kilocode/pull/11015) [`c90846a`](https://github.com/Kilo-Org/kilocode/commit/c90846a98938d3cdd666c46294ed4bb4871f7fcd) - Fix JetBrains session scrolling so mouse wheel and keyboard scrolling no longer snap back or bounce near the transcript bottom.
+- [#11015](https://github.com/Accure-Inc/accure-code/pull/11015) [`c90846a`](https://github.com/Accure-Inc/accure-code/commit/c90846a98938d3cdd666c46294ed4bb4871f7fcd) - Fix JetBrains session scrolling so mouse wheel and keyboard scrolling no longer snap back or bounce near the transcript bottom.
 
-- [#11015](https://github.com/Kilo-Org/kilocode/pull/11015) [`d505677`](https://github.com/Kilo-Org/kilocode/commit/d505677d88816cf528b64392e23b7ccdddf98a4a) - Prevent the JetBrains session scrollbar from covering transcript content.
+- [#11015](https://github.com/Accure-Inc/accure-code/pull/11015) [`d505677`](https://github.com/Accure-Inc/accure-code/commit/d505677d88816cf528b64392e23b7ccdddf98a4a) - Prevent the JetBrains session scrollbar from covering transcript content.
 
-- [#11015](https://github.com/Kilo-Org/kilocode/pull/11015) [`5736a39`](https://github.com/Kilo-Org/kilocode/commit/5736a394597f250f64cf8c684d2426b56ca273ce) - Render glob search results in the JetBrains chat as collapsible tool output with separate directory and pattern rows.
+- [#11015](https://github.com/Accure-Inc/accure-code/pull/11015) [`5736a39`](https://github.com/Accure-Inc/accure-code/commit/5736a394597f250f64cf8c684d2426b56ca273ce) - Render glob search results in the JetBrains chat as collapsible tool output with separate directory and pattern rows.
 
-- [#11015](https://github.com/Kilo-Org/kilocode/pull/11015) [`d1fa450`](https://github.com/Kilo-Org/kilocode/commit/d1fa4506c8b8e65b21cd08e0c6600598366aed0f) - Use matching VS Code-style icons for JetBrains session views.
+- [#11015](https://github.com/Accure-Inc/accure-code/pull/11015) [`d1fa450`](https://github.com/Accure-Inc/accure-code/commit/d1fa4506c8b8e65b21cd08e0c6600598366aed0f) - Use matching VS Code-style icons for JetBrains session views.
 
-- [#11015](https://github.com/Kilo-Org/kilocode/pull/11015) [`952241e`](https://github.com/Kilo-Org/kilocode/commit/952241ee07eebd22717bdf54ce07b3a6c66228af) - Refine JetBrains session card borders so prompt and question surfaces use brighter outlines while reasoning and tool cards use softer default borders.
+- [#11015](https://github.com/Accure-Inc/accure-code/pull/11015) [`952241e`](https://github.com/Accure-Inc/accure-code/commit/952241ee07eebd22717bdf54ce07b3a6c66228af) - Refine JetBrains session card borders so prompt and question surfaces use brighter outlines while reasoning and tool cards use softer default borders.
 
-- [#11015](https://github.com/Kilo-Org/kilocode/pull/11015) [`b9bff3b`](https://github.com/Kilo-Org/kilocode/commit/b9bff3b69cf27fc7e0d88d411eaa368616fc32d6) - Reset stale hover styling when moving between JetBrains session cards and draw card outlines only while expanded.
+- [#11015](https://github.com/Accure-Inc/accure-code/pull/11015) [`b9bff3b`](https://github.com/Accure-Inc/accure-code/commit/b9bff3b69cf27fc7e0d88d411eaa368616fc32d6) - Reset stale hover styling when moving between JetBrains session cards and draw card outlines only while expanded.
 
-- [#11015](https://github.com/Kilo-Org/kilocode/pull/11015) [`5736a39`](https://github.com/Kilo-Org/kilocode/commit/5736a394597f250f64cf8c684d2426b56ca273ce) - Render grep searches in the JetBrains chat with a dedicated search header that shows stacked, clipped targets.
+- [#11015](https://github.com/Accure-Inc/accure-code/pull/11015) [`5736a39`](https://github.com/Accure-Inc/accure-code/commit/5736a394597f250f64cf8c684d2426b56ca273ce) - Render grep searches in the JetBrains chat with a dedicated search header that shows stacked, clipped targets.
 
-- [#11015](https://github.com/Kilo-Org/kilocode/pull/11015) [`01f2886`](https://github.com/Kilo-Org/kilocode/commit/01f28861900d4794d6329821f0c9f5c9efdedae3) - Improve mouse wheel scrolling speed in the JetBrains session view.
+- [#11015](https://github.com/Accure-Inc/accure-code/pull/11015) [`01f2886`](https://github.com/Accure-Inc/accure-code/commit/01f28861900d4794d6329821f0c9f5c9efdedae3) - Improve mouse wheel scrolling speed in the JetBrains session view.
 
 ## 7.3.29
 
@@ -164,7 +164,7 @@
 
 ### Changed
 
-- Update the bundled Kilo CLI runtime with the latest fixes used by the JetBrains plugin.
+- Update the bundled Accure CLI runtime with the latest fixes used by the JetBrains plugin.
 
 ## [7.0.1-rc.7] - 2026-06-04
 
@@ -194,9 +194,9 @@
 
 ### Added
 
-- Initial JetBrains plugin release with a native Kilo Code tool window.
+- Initial JetBrains plugin release with a native Accure Code tool window.
 - Chat sessions with streamed responses, tool output, reasoning, markdown, todos, and plan follow-ups.
 - Native mode/model selection, account sign-in, permission prompts, and question flows.
 - Local and cloud session history with search, reopen, rename/delete local sessions, and repository filtering.
 - Migration wizard for legacy JetBrains plugin settings and chat history.
-- Bundled Kilo CLI runtime for macOS, Linux, and Windows.
+- Bundled Accure CLI runtime for macOS, Linux, and Windows.

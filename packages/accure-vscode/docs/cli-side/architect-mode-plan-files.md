@@ -2,7 +2,7 @@
 
 **Priority:** P2
 **Status:** ❌ Not started
-**Issue:** [#6230](https://github.com/Kilo-Org/kilocode/issues/6230)
+**Issue:** [#6230](https://github.com/Accure-Inc/accure-code/issues/6230)
 
 ## Problem
 

@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test"
 import { afterEach, mock, spyOn } from "bun:test"
 import { Effect } from "effect"
-import { RemoteSender } from "../../../src/kilo-sessions/remote-sender"
-import type { RemoteWS } from "../../../src/kilo-sessions/remote-ws"
-import type { RemoteProtocol } from "../../../src/kilo-sessions/remote-protocol"
+import { RemoteSender } from "../../../src/accure-sessions/remote-sender"
+import type { RemoteWS } from "../../../src/accure-sessions/remote-ws"
+import type { RemoteProtocol } from "../../../src/accure-sessions/remote-protocol"
 import type { SessionPrompt } from "../../../src/session/prompt"
 import { Question } from "../../../src/question"
 import { QuestionID } from "../../../src/question/schema"
@@ -11,7 +11,7 @@ import { Permission } from "../../../src/permission"
 import { PermissionID } from "../../../src/permission/schema"
 import { ModelID, ProviderID } from "../../../src/provider/schema"
 import { SessionID } from "../../../src/session/schema"
-import { Suggestion } from "../../../src/kilocode/suggestion" // kilocode_change
+import { Suggestion } from "../../../src/accurecode/suggestion" // accurecode_change
 
 function fakeConn() {
   const sent: any[] = []
@@ -72,11 +72,11 @@ function prompts(calls: SessionPrompt.PromptInput[]) {
   }
 }
 
-// kilocode_change start
+// accurecode_change start
 afterEach(() => {
   mock.restore()
 })
-// kilocode_change end
+// accurecode_change end
 
 describe("RemoteSender", () => {
   test("subscribe adds bus subscription, event forwarded", () => {
@@ -335,7 +335,7 @@ describe("RemoteSender", () => {
     await provideStarted
   })
 
-  // kilocode_change start
+  // accurecode_change start
   test("send_message normalizes string model without prefix", async () => {
     const { conn, sent } = fakeConn()
     const calls: SessionPrompt.PromptInput[] = []
@@ -366,12 +366,12 @@ describe("RemoteSender", () => {
       {
         sessionID: SessionID.make("ses_x"),
         parts: [{ type: "text", text: "hello" }],
-        model: { providerID: ProviderID.make("kilo"), modelID: ModelID.make("anthropic/claude-sonnet-4-20250514") },
+        model: { providerID: ProviderID.make("accure"), modelID: ModelID.make("anthropic/claude-sonnet-4-20250514") },
       },
     ])
   })
 
-  test("send_message keeps kilocode-prefixed model unchanged before internal conversion", async () => {
+  test("send_message keeps accurecode-prefixed model unchanged before internal conversion", async () => {
     const { conn } = fakeConn()
     const calls: SessionPrompt.PromptInput[] = []
     const sender = RemoteSender.create({
@@ -385,12 +385,12 @@ describe("RemoteSender", () => {
 
     sender.handle({
       type: "command",
-      id: "req_model_kilocode",
+      id: "req_model_accurecode",
       command: "send_message",
       data: {
         sessionID: "ses_x",
         parts: [{ type: "text", text: "hello" }],
-        model: "kilocode/gpt-5-mini",
+        model: "accurecode/gpt-5-mini",
       },
     })
 
@@ -400,7 +400,7 @@ describe("RemoteSender", () => {
       {
         sessionID: SessionID.make("ses_x"),
         parts: [{ type: "text", text: "hello" }],
-        model: { providerID: ProviderID.make("kilo"), modelID: ModelID.make("gpt-5-mini") },
+        model: { providerID: ProviderID.make("accure"), modelID: ModelID.make("gpt-5-mini") },
       },
     ])
   })
@@ -422,7 +422,7 @@ describe("RemoteSender", () => {
       data: {
         sessionID: "ses_x",
         parts: [{ type: "text", text: "hello" }],
-        model: { providerID: "kilocode", modelID: "gpt-5-mini" },
+        model: { providerID: "accurecode", modelID: "gpt-5-mini" },
       },
     })
 
@@ -432,7 +432,7 @@ describe("RemoteSender", () => {
     expect(sent[0].error).toContain("invalid send_message data")
   })
 
-  test("send_message does not special-case kilo-prefixed model", async () => {
+  test("send_message does not special-case accure-prefixed model", async () => {
     const { conn, sent } = fakeConn()
     const calls: SessionPrompt.PromptInput[] = []
     const sender = RemoteSender.create({
@@ -446,27 +446,27 @@ describe("RemoteSender", () => {
 
     sender.handle({
       type: "command",
-      id: "req_model_kilo",
+      id: "req_model_accure",
       command: "send_message",
       data: {
         sessionID: "ses_x",
         parts: [{ type: "text", text: "hello" }],
-        model: "kilo/gpt-5-mini",
+        model: "accure/gpt-5-mini",
       },
     })
 
     await new Promise((r) => setTimeout(r, 0))
 
-    expect(sent[0]).toEqual({ type: "response", id: "req_model_kilo", result: {} })
+    expect(sent[0]).toEqual({ type: "response", id: "req_model_accure", result: {} })
     expect(calls).toEqual([
       {
         sessionID: SessionID.make("ses_x"),
         parts: [{ type: "text", text: "hello" }],
-        model: { providerID: ProviderID.make("kilo"), modelID: ModelID.make("kilo/gpt-5-mini") },
+        model: { providerID: ProviderID.make("accure"), modelID: ModelID.make("accure/gpt-5-mini") },
       },
     ])
   })
-  // kilocode_change end
+  // accurecode_change end
 
   test("question_reply sends response after work completes", async () => {
     const { conn, sent } = fakeConn()

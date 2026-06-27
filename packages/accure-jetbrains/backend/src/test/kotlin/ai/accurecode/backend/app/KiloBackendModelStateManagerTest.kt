@@ -1,12 +1,12 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.backend.cli.KiloBackendHttpClients
-import ai.kilocode.backend.testing.MockCliServer
-import ai.kilocode.backend.testing.TestLog
-import ai.kilocode.rpc.dto.ModelFavoriteUpdateDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.ModelSelectionUpdateDto
-import ai.kilocode.rpc.dto.ModelVariantUpdateDto
+import ai.accurecode.backend.cli.AccureBackendHttpClients
+import ai.accurecode.backend.testing.MockCliServer
+import ai.accurecode.backend.testing.TestLog
+import ai.accurecode.rpc.dto.ModelFavoriteUpdateDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.ModelSelectionUpdateDto
+import ai.accurecode.rpc.dto.ModelVariantUpdateDto
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Files
 import kotlin.io.path.createTempDirectory
@@ -17,15 +17,15 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class KiloBackendModelStateManagerTest {
+class AccureBackendModelStateManagerTest {
     private val mock = MockCliServer()
     private val log = TestLog()
-    private val dir = createTempDirectory("kilo-model-state-test")
-    private val http = KiloBackendHttpClients.api(mock.password)
+    private val dir = createTempDirectory("accure-model-state-test")
+    private val http = AccureBackendHttpClients.api(mock.password)
 
     @AfterTest
     fun tearDown() {
-        KiloBackendHttpClients.shutdown(http)
+        AccureBackendHttpClients.shutdown(http)
         mock.close()
         Files.walk(dir).sorted(Comparator.reverseOrder()).forEach { Files.deleteIfExists(it) }
     }
@@ -33,14 +33,14 @@ class KiloBackendModelStateManagerTest {
     @Test
     fun `state loads favorites from cli model json`() = runBlocking {
         val port = start()
-        dir.resolve("model.json").writeText("""{"favorite":[{"providerID":"kilo","modelID":"auto"}],"recent":[{"providerID":"anthropic","modelID":"claude"}],"model":{"code":{"providerID":"openai","modelID":"gpt"}},"variant":{"openai/gpt":"high"}}""")
-        val mgr = KiloBackendModelStateManager(log)
+        dir.resolve("model.json").writeText("""{"favorite":[{"providerID":"accure","modelID":"auto"}],"recent":[{"providerID":"anthropic","modelID":"claude"}],"model":{"code":{"providerID":"openai","modelID":"gpt"}},"variant":{"openai/gpt":"high"}}""")
+        val mgr = AccureBackendModelStateManager(log)
         mgr.start(http, port)
 
         val state = mgr.state()
 
         assertEquals(1, state.favorite.size)
-        assertEquals("kilo", state.favorite[0].providerID)
+        assertEquals("accure", state.favorite[0].providerID)
         assertEquals("auto", state.favorite[0].modelID)
         assertEquals("gpt", state.model["code"]?.modelID)
         assertEquals("high", state.variant["openai/gpt"])
@@ -52,9 +52,9 @@ class KiloBackendModelStateManagerTest {
     fun `favorite update writes parser built model json`() = runBlocking {
         val port = start()
         dir.resolve("model.json").writeText(
-            """{"model":{"code":{"providerID":"kilo","modelID":"auto"}},"recent":[{"providerID":"openai","modelID":"gpt"}],"variant":{"kilo/auto":"fast"},"favorite":[]}""",
+            """{"model":{"code":{"providerID":"accure","modelID":"auto"}},"recent":[{"providerID":"openai","modelID":"gpt"}],"variant":{"accure/auto":"fast"},"favorite":[]}""",
         )
-        val mgr = KiloBackendModelStateManager(log)
+        val mgr = AccureBackendModelStateManager(log)
         mgr.start(http, port)
 
         val state = mgr.favorite(ModelFavoriteUpdateDto("add", "anthropic", "claude"))
@@ -71,10 +71,10 @@ class KiloBackendModelStateManagerTest {
     fun `selection update writes model json`() = runBlocking {
         val port = start()
         dir.resolve("model.json").writeText("""{"favorite":[],"recent":[]}""")
-        val mgr = KiloBackendModelStateManager(log)
+        val mgr = AccureBackendModelStateManager(log)
         mgr.start(http, port)
 
-        val state = mgr.selection(ModelSelectionUpdateDto("code", "kilo", "auto"))
+        val state = mgr.selection(ModelSelectionUpdateDto("code", "accure", "auto"))
         val raw = dir.resolve("model.json").readText()
 
         assertEquals("auto", state.model["code"]?.modelID)
@@ -86,8 +86,8 @@ class KiloBackendModelStateManagerTest {
     @Test
     fun `clear selection removes agent model`() = runBlocking {
         val port = start()
-        dir.resolve("model.json").writeText("""{"model":{"code":{"providerID":"kilo","modelID":"auto"},"plan":{"providerID":"openai","modelID":"gpt"}}}""")
-        val mgr = KiloBackendModelStateManager(log)
+        dir.resolve("model.json").writeText("""{"model":{"code":{"providerID":"accure","modelID":"auto"},"plan":{"providerID":"openai","modelID":"gpt"}}}""")
+        val mgr = AccureBackendModelStateManager(log)
         mgr.start(http, port)
 
         val state = mgr.clear("code")
@@ -100,12 +100,12 @@ class KiloBackendModelStateManagerTest {
     fun `variant update writes model json`() = runBlocking {
         val port = start()
         dir.resolve("model.json").writeText("{}")
-        val mgr = KiloBackendModelStateManager(log)
+        val mgr = AccureBackendModelStateManager(log)
         mgr.start(http, port)
 
-        val state = mgr.variant(ModelVariantUpdateDto("kilo/auto", "medium"))
+        val state = mgr.variant(ModelVariantUpdateDto("accure/auto", "medium"))
 
-        assertEquals("medium", state.variant["kilo/auto"])
+        assertEquals("medium", state.variant["accure/auto"])
         assertTrue(dir.resolve("model.json").readText().contains("medium"))
     }
 
@@ -113,7 +113,7 @@ class KiloBackendModelStateManagerTest {
     fun `malformed model json returns empty favorites`() = runBlocking {
         val port = start()
         dir.resolve("model.json").writeText("not-json")
-        val mgr = KiloBackendModelStateManager(log)
+        val mgr = AccureBackendModelStateManager(log)
         mgr.start(http, port)
 
         assertTrue(mgr.state().favorite.isEmpty())

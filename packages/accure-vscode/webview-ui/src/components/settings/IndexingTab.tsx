@@ -1,19 +1,19 @@
 import { Component, For, Show, createMemo, createSignal } from "solid-js"
-import { Button } from "@kilocode/accure-ui/button"
-import { Card } from "@kilocode/accure-ui/card"
-import { DEFAULT_VECTOR_STORE } from "@kilocode/accure-indexing/config"
-import { formatKiloEmbeddingModelLabel, getKiloEmbeddingModel } from "@kilocode/accure-indexing/embedding-models"
-import { Select } from "@kilocode/accure-ui/select"
-import { Switch } from "@kilocode/accure-ui/switch"
-import { TextField } from "@kilocode/accure-ui/text-field"
+import { Button } from "@accurecode/accure-ui/button"
+import { Card } from "@accurecode/accure-ui/card"
+import { DEFAULT_VECTOR_STORE } from "@accurecode/accure-indexing/config"
+import { formatAccureEmbeddingModelLabel, getAccureEmbeddingModel } from "@accurecode/accure-indexing/embedding-models"
+import { Select } from "@accurecode/accure-ui/select"
+import { Switch } from "@accurecode/accure-ui/switch"
+import { TextField } from "@accurecode/accure-ui/text-field"
 import { useConfig } from "../../context/config"
 import { formatIndexingLabel, useIndexing } from "../../context/indexing"
-import { useKiloEmbeddingModels } from "../../context/kilo-embedding-models"
+import { useAccureEmbeddingModels } from "../../context/accure-embedding-models"
 import { useLanguage } from "../../context/language"
 import { useProvider } from "../../context/provider"
 import { useServer } from "../../context/server"
 import type { IndexingConfig, IndexingProvider as ProviderId } from "../../types/messages"
-import { KILO_PROVIDER_ID } from "../../../../src/shared/provider-model"
+import { ACCURECODE_PROVIDER_ID } from "../../../../src/shared/provider-model"
 import SettingsRow from "./SettingsRow"
 import {
   indexingConfig,
@@ -31,7 +31,7 @@ type Option = { value: string; label: string }
 type TuningKey = "searchMinScore" | "searchMaxResults" | "embeddingBatchSize" | "scannerMaxBatchRetries"
 
 const allProviders: { value: ProviderId; label: string }[] = [
-  { value: "kilo", label: "Kilo" },
+  { value: "accure", label: "Accure" },
   { value: "openai", label: "OpenAI" },
   { value: "ollama", label: "Ollama (local)" },
   { value: "openai-compatible", label: "OpenAI-Compatible" },
@@ -64,7 +64,7 @@ function sourceLabel(source: IndexingSource) {
 }
 
 function providerFields(provider: ProviderId | undefined): Array<{ key: string; label: string; placeholder: string }> {
-  if (provider === "kilo") return []
+  if (provider === "accure") return []
   if (provider === "openai") return [{ key: "apiKey", label: "API Key", placeholder: "sk-..." }]
   if (provider === "ollama") return [{ key: "baseUrl", label: "Base URL", placeholder: "http://localhost:11434" }]
   if (provider === "openai-compatible") {
@@ -95,7 +95,7 @@ function providerFields(provider: ProviderId | undefined): Array<{ key: string; 
 const IndexingTab: Component = () => {
   const { globalConfig, projectConfig, updateGlobalConfig, updateProjectConfig } = useConfig()
   const indexing = useIndexing()
-  const embeds = useKiloEmbeddingModels()
+  const embeds = useAccureEmbeddingModels()
   const language = useLanguage()
   const provider = useProvider()
   const server = useServer()
@@ -132,28 +132,28 @@ const IndexingTab: Component = () => {
   }
 
   const vectorStore = () => cfg().vectorStore ?? DEFAULT_VECTOR_STORE
-  const kiloDefault = () =>
-    getKiloEmbeddingModel(embeds.catalog().defaultModel, embeds.catalog())?.id ?? embeds.catalog().defaultModel
-  const kiloModels = createMemo(() =>
+  const accureDefault = () =>
+    getAccureEmbeddingModel(embeds.catalog().defaultModel, embeds.catalog())?.id ?? embeds.catalog().defaultModel
+  const accureModels = createMemo(() =>
     embeds.catalog().models.map((model) => ({
       value: model.id,
-      label: formatKiloEmbeddingModelLabel(model),
+      label: formatAccureEmbeddingModelLabel(model),
     })),
   )
-  const knownKiloModel = (model: string | null | undefined) =>
-    getKiloEmbeddingModel(model ?? undefined, embeds.catalog())?.id
-  const kiloValue = () => knownKiloModel(cfg().model) ?? kiloDefault()
-  const kiloAvailable = () => false
-  const selectedProvider = () => cfg().provider ?? (kiloAvailable() ? "kilo" : undefined)
-  const staleKiloModel = () => selectedProvider() === "kilo" && !!cfg().model && !knownKiloModel(cfg().model)
+  const knownAccureModel = (model: string | null | undefined) =>
+    getAccureEmbeddingModel(model ?? undefined, embeds.catalog())?.id
+  const accureValue = () => knownAccureModel(cfg().model) ?? accureDefault()
+  const accureAvailable = () => false
+  const selectedProvider = () => cfg().provider ?? (accureAvailable() ? "accure" : undefined)
+  const staleAccureModel = () => selectedProvider() === "accure" && !!cfg().model && !knownAccureModel(cfg().model)
   const providers = createMemo(() =>
-    allProviders.filter((item) => item.value !== "kilo" || kiloAvailable() || selectedProvider() === "kilo"),
+    allProviders.filter((item) => item.value !== "accure" || accureAvailable() || selectedProvider() === "accure"),
   )
   const fields = createMemo(() => providerFields(selectedProvider()))
 
   const saveProvider = (next: ProviderId | undefined) => {
-    if (next === "kilo") {
-      const model = knownKiloModel(cfg().model) ?? (kiloDefault() || null)
+    if (next === "accure") {
+      const model = knownAccureModel(cfg().model) ?? (accureDefault() || null)
       updateIndexing({
         provider: next,
         model,
@@ -165,11 +165,11 @@ const IndexingTab: Component = () => {
   }
 
   const saveEnabled = (enabled: boolean) => {
-    if (enabled && !cfg().provider && kiloAvailable()) {
+    if (enabled && !cfg().provider && accureAvailable()) {
       updateIndexing({
         enabled,
-        provider: "kilo",
-        model: knownKiloModel(cfg().model) ?? (kiloDefault() || null),
+        provider: "accure",
+        model: knownAccureModel(cfg().model) ?? (accureDefault() || null),
         dimension: null,
       })
       return
@@ -178,7 +178,7 @@ const IndexingTab: Component = () => {
   }
 
   const saveModel = (value: string) => {
-    if (selectedProvider() === "kilo") return
+    if (selectedProvider() === "accure") return
     const trimmed = value.trim()
     updateIndexing({ model: trimmed || null })
   }
@@ -318,19 +318,19 @@ const IndexingTab: Component = () => {
             placeholder={language.t("settings.providers.notSet")}
           />
         </SettingsRow>
-        <Show when={selectedProvider() === "kilo"}>
-          <Show when={kiloModels().length > 0}>
+        <Show when={selectedProvider() === "accure"}>
+          <Show when={accureModels().length > 0}>
             <SettingsRow
-              title={language.t("settings.indexing.kiloModel.title")}
-              description={description(language.t("settings.indexing.kiloModel.description"), [["model"]])}
+              title={language.t("settings.indexing.accureModel.title")}
+              description={description(language.t("settings.indexing.accureModel.description"), [["model"]])}
               tag={() => tag(scope(), [["model"]])}
             >
               <Select
-                options={kiloModels()}
-                current={kiloModels().find((item) => item.value === kiloValue())}
+                options={accureModels()}
+                current={accureModels().find((item) => item.value === accureValue())}
                 value={(item) => item.value}
                 label={(item) => item.label}
-                onSelect={(item) => updateIndexing({ model: item?.value ?? kiloDefault(), dimension: null })}
+                onSelect={(item) => updateIndexing({ model: item?.value ?? accureDefault(), dimension: null })}
                 variant="secondary"
                 size="small"
                 triggerVariant="settings"
@@ -339,7 +339,7 @@ const IndexingTab: Component = () => {
             </SettingsRow>
           </Show>
         </Show>
-        <Show when={selectedProvider() !== "kilo"}>
+        <Show when={selectedProvider() !== "accure"}>
           <SettingsRow
             title={language.t("settings.indexing.model.title")}
             description={description(language.t("settings.indexing.model.description"), [["model"]])}
@@ -351,30 +351,34 @@ const IndexingTab: Component = () => {
         <SettingsRow
           title={language.t("settings.indexing.dimension.title")}
           description={
-            selectedProvider() === "kilo"
+            selectedProvider() === "accure"
               ? language.t("settings.indexing.dimension.description")
               : description(language.t("settings.indexing.dimension.description"), [["dimension"]])
           }
-          tag={() => (selectedProvider() === "kilo" ? undefined : tag(scope(), [["dimension"]]))}
-          last={!selectedProvider() || (fields().length === 0 && !(selectedProvider() === "kilo" && !kiloAvailable()))}
+          tag={() => (selectedProvider() === "accure" ? undefined : tag(scope(), [["dimension"]]))}
+          last={
+            !selectedProvider() || (fields().length === 0 && !(selectedProvider() === "accure" && !accureAvailable()))
+          }
         >
           <TextField
             value={
-              staleKiloModel() || cfg().dimension === undefined || cfg().dimension === null
+              staleAccureModel() || cfg().dimension === undefined || cfg().dimension === null
                 ? ""
                 : String(cfg().dimension)
             }
             placeholder={
-              selectedProvider() === "kilo" ? "Provided by Kilo" : language.t("settings.indexing.dimension.placeholder")
+              selectedProvider() === "accure"
+                ? "Provided by Accure"
+                : language.t("settings.indexing.dimension.placeholder")
             }
-            disabled={selectedProvider() === "kilo"}
+            disabled={selectedProvider() === "accure"}
             onChange={(value) => saveNumber("dimension", value, { integer: true, min: 1 })}
           />
         </SettingsRow>
-        <Show when={selectedProvider() === "kilo" && !kiloAvailable()}>
+        <Show when={selectedProvider() === "accure" && !accureAvailable()}>
           <SettingsRow
-            title={language.t("settings.indexing.kiloSignIn.title")}
-            description={language.t("settings.indexing.kiloSignIn.description")}
+            title={language.t("settings.indexing.accureSignIn.title")}
+            description={language.t("settings.indexing.accureSignIn.description")}
             last
           >
             <span />

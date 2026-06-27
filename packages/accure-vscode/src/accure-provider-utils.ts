@@ -10,14 +10,14 @@ import type {
   SyncEventSessionCreated,
   SyncEventSessionUpdated,
   SyncEventSessionDeleted,
-} from "@kilocode/sdk/v2/client"
+} from "@accurecode/sdk/v2/client"
 import { prettifyError } from "zod/v4"
 import type { CloudSessionMessage, IndexingStatus } from "./services/cli-backend/types"
-import type { PartBatch, PartUpdate } from "./kilo-provider/session-stream-scheduler"
+import type { PartBatch, PartUpdate } from "./accure-provider/session-stream-scheduler"
 import type { PartRemove } from "./shared/stream-messages"
 import * as path from "path"
 
-export { SessionStreamScheduler } from "./kilo-provider/session-stream-scheduler"
+export { SessionStreamScheduler } from "./accure-provider/session-stream-scheduler"
 
 /** A single provider entry as returned by the /provider list endpoint. */
 export type ProviderInfo = ProviderListResponse["all"][number]
@@ -59,7 +59,7 @@ function safeStringify(value: unknown): string | undefined {
     const json = JSON.stringify(value)
     if (json !== "{}" && json.length < 500) return json
   } catch (err) {
-    console.warn("[Kilo New] getErrorMessage: JSON.stringify failed", err)
+    console.warn("[Accure New] getErrorMessage: JSON.stringify failed", err)
   }
   return undefined
 }
@@ -186,7 +186,7 @@ export async function runWithMessageConfirmation<T>(
     return await run()
   } catch (error) {
     if (await state.wait(id)) {
-      console.warn(`[Kilo New] ${label} ended after server accepted it; ignoring transport error`, {
+      console.warn(`[Accure New] ${label} ended after server accepted it; ignoring transport error`, {
         error: getErrorMessage(error),
       })
       return undefined
@@ -294,8 +294,8 @@ export function filterVisibleAgents(agents: Agent[]): { visible: Agent[]; defaul
 }
 
 /**
- * Shared interface for the subset of KiloProvider state needed by session-refresh helpers.
- * Extracted here so the logic can be tested without importing KiloProvider (and vscode).
+ * Shared interface for the subset of AccureProvider state needed by session-refresh helpers.
+ * Extracted here so the logic can be tested without importing AccureProvider (and vscode).
  */
 export interface SessionRefreshContext {
   pendingSessionRefresh: boolean
@@ -331,7 +331,7 @@ export async function loadSessions(ctx: SessionRefreshContext): Promise<string |
   const extra = await Promise.all(
     [...worktreeDirs].map((dir) =>
       list(dir).catch((err: unknown) => {
-        console.error(`[Kilo] Failed to list sessions for ${dir}:`, err)
+        console.error(`[Accure] Failed to list sessions for ${dir}:`, err)
         failed.add(dir)
         return [] as Session[]
       }),

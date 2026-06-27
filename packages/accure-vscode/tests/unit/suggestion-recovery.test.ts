@@ -4,7 +4,7 @@ import {
   recoverableSuggestions,
   type RecoverableSuggestion,
   type SuggestionContext,
-} from "../../src/kilo-provider/handlers/suggestion"
+} from "../../src/accure-provider/handlers/suggestion"
 
 function pending(id: string, sessionID: string): RecoverableSuggestion {
   return {

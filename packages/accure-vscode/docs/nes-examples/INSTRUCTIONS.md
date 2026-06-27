@@ -4,8 +4,8 @@ These tests are designed so that the source files contain **no hints** about wha
 
 ## One-time setup
 
-1. **`bun run watch`** is already running for the kilocode extension.
-2. In the kilocode VSCode window, press **F5** → opens the **Extension Development Host**.
+1. **`bun run watch`** is already running for the accurecode extension.
+2. In the accurecode VSCode window, press **F5** → opens the **Extension Development Host**.
 3. In the Dev Host: `File → Open Folder…` → `packages/accure-vscode/docs/nes-examples/` inside this repo.
 4. Open Settings (`Cmd+,`), confirm:
    - `accure-code.autocomplete.enableAutoTrigger` → ✓ (default true)

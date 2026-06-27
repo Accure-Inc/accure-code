@@ -1,27 +1,27 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.client.app
+package ai.accurecode.client.app
 
-import ai.kilocode.log.ChatLogSummary
-import ai.kilocode.rpc.KiloSessionRpcApi
-import ai.kilocode.client.session.SessionActivityKind
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.CloudSessionListDto
-import ai.kilocode.rpc.dto.ConfigUpdateDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.PermissionAlwaysRulesDto
-import ai.kilocode.rpc.dto.PermissionReplyDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PromptDto
-import ai.kilocode.rpc.dto.QuestionReplyDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionListDto
-import ai.kilocode.rpc.dto.SessionStatusDto
+import ai.accurecode.log.ChatLogSummary
+import ai.accurecode.rpc.AccureSessionRpcApi
+import ai.accurecode.client.session.SessionActivityKind
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.CloudSessionListDto
+import ai.accurecode.rpc.dto.ConfigUpdateDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.PermissionAlwaysRulesDto
+import ai.accurecode.rpc.dto.PermissionReplyDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PromptDto
+import ai.accurecode.rpc.dto.QuestionReplyDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionListDto
+import ai.accurecode.rpc.dto.SessionStatusDto
 import com.intellij.openapi.components.Service
-import ai.kilocode.log.KiloLog
+import ai.accurecode.log.AccureLog
 import com.intellij.openapi.project.Project
 import fleet.rpc.client.durable
 import kotlinx.coroutines.CoroutineScope
@@ -38,20 +38,20 @@ import kotlinx.coroutines.launch
  * Project-level frontend service for session management.
  *
  * Stateless with respect to "active session" — callers pass explicit
- * session IDs. [ai.kilocode.client.session.controller.SessionController] owns the
+ * session IDs. [ai.accurecode.client.session.controller.SessionController] owns the
  * active session concept.
  */
 @Service(Service.Level.PROJECT)
-class KiloSessionService internal constructor(
+class AccureSessionService internal constructor(
     private val project: Project,
     private val cs: CoroutineScope,
-    private val rpc: KiloSessionRpcApi?,
+    private val rpc: AccureSessionRpcApi?,
 ) {
     /** Platform constructor — resolves RPC from the service container. */
     constructor(project: Project, cs: CoroutineScope) : this(project, cs, null)
 
     companion object {
-        private val LOG = KiloLog.create(KiloSessionService::class.java)
+        private val LOG = AccureLog.create(AccureSessionService::class.java)
     }
 
     private val _sessions = MutableStateFlow<List<SessionDto>>(emptyList())
@@ -63,15 +63,15 @@ class KiloSessionService internal constructor(
 
     // ------ RPC helpers ------
 
-    private suspend fun <T> call(block: suspend KiloSessionRpcApi.() -> T): T {
+    private suspend fun <T> call(block: suspend AccureSessionRpcApi.() -> T): T {
         val api = rpc
-        return if (api != null) block(api) else durable { block(KiloSessionRpcApi.getInstance()) }
+        return if (api != null) block(api) else durable { block(AccureSessionRpcApi.getInstance()) }
     }
 
-    private fun <T> stream(block: suspend KiloSessionRpcApi.() -> Flow<T>): Flow<T> = flow {
+    private fun <T> stream(block: suspend AccureSessionRpcApi.() -> Flow<T>): Flow<T> = flow {
         val api = rpc
         if (api != null) block(api).collect { emit(it) }
-        else durable { block(KiloSessionRpcApi.getInstance()).collect { emit(it) } }
+        else durable { block(AccureSessionRpcApi.getInstance()).collect { emit(it) } }
     }
 
     // ------ Session CRUD ------
@@ -131,7 +131,7 @@ class KiloSessionService internal constructor(
         list(dir)
     }
 
-    suspend fun renameSession(id: String, dir: String, newTitle: String): ai.kilocode.rpc.dto.SessionDto {
+    suspend fun renameSession(id: String, dir: String, newTitle: String): ai.accurecode.rpc.dto.SessionDto {
         val session = call { rename(id, dir, newTitle) }
         _sessions.value = _sessions.value.map { if (it.id == id) session else it }
         return session
@@ -199,7 +199,7 @@ class KiloSessionService internal constructor(
             }
         } else flow {
             durable {
-                KiloSessionRpcApi.getInstance().events(id, dir).collect {
+                AccureSessionRpcApi.getInstance().events(id, dir).collect {
                     LOG.debug { ChatLogSummary.event(it) }
                     emit(it)
                 }

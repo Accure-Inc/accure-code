@@ -7,4 +7,4 @@ export {
   validAutocompleteProvider,
   type AutocompleteModelDef,
   type AutocompleteProviderID,
-} from "@kilocode/accure-gateway/autocomplete"
+} from "@accurecode/accure-gateway/autocomplete"

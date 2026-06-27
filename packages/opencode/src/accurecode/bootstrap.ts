@@ -1,33 +1,33 @@
 import { Cause, Context, Effect, Layer } from "effect"
 import { EffectBridge } from "@/effect/bridge"
-import { KiloSessions } from "@/kilo-sessions/kilo-sessions"
+import { AccureSessions } from "@/accure-sessions/accure-sessions"
 import * as Log from "@opencode-ai/core/util/log"
 import { Global } from "@opencode-ai/core/global"
 import { InstallationVersion } from "@opencode-ai/core/installation/version"
 import path from "node:path"
 import { Bus } from "@/bus"
-import { SessionExport } from "@/kilocode/session-export"
-import { createWorkspaceProvider } from "@/kilocode/session-export/workspace-provider"
-import { Instance } from "@/kilocode/instance"
-import { Identity } from "@kilocode/accure-telemetry"
+import { SessionExport } from "@/accurecode/session-export"
+import { createWorkspaceProvider } from "@/accurecode/session-export/workspace-provider"
+import { Instance } from "@/accurecode/instance"
+import { Identity } from "@accurecode/accure-telemetry"
 
-const log = Log.create({ service: "kilocode-bootstrap" })
+const log = Log.create({ service: "accurecode-bootstrap" })
 
-export namespace KilocodeBootstrap {
+export namespace AccurecodeBootstrap {
   export interface Interface {
     readonly init: () => Effect.Effect<void, unknown>
   }
 
-  export class Service extends Context.Service<Service, Interface>()("@kilocode/Bootstrap") {}
+  export class Service extends Context.Service<Service, Interface>()("@accurecode/Bootstrap") {}
 
   export const layer = Layer.effect(
     Service,
     Effect.gen(function* () {
-      const sessions = yield* KiloSessions.Service
+      const sessions = yield* AccureSessions.Service
 
-      const init = Effect.fn("KilocodeBootstrap.init")(function* () {
+      const init = Effect.fn("AccurecodeBootstrap.init")(function* () {
         yield* sessions.init()
-        // kilocode_change start - session export bootstrap
+        // accurecode_change start - session export bootstrap
         yield* Effect.gen(function* () {
           const anon = yield* EffectBridge.fromPromise(() =>
             Identity.getMachineId().catch((err) => {
@@ -51,9 +51,9 @@ export namespace KilocodeBootstrap {
             Effect.sync(() => log.warn("session export bootstrap failed", { err: Cause.squash(cause) })),
           ),
         )
-        // kilocode_change end
+        // accurecode_change end
         yield* EffectBridge.fromPromise(() =>
-          import("@/kilocode/indexing").then((mod) => mod.KiloIndexing.init()),
+          import("@/accurecode/indexing").then((mod) => mod.AccureIndexing.init()),
         ).pipe(
           Effect.catchCause((cause) =>
             Effect.sync(() => log.warn("indexing bootstrap failed", { err: Cause.squash(cause) })),
@@ -66,5 +66,5 @@ export namespace KilocodeBootstrap {
     }),
   )
 
-  export const defaultLayer = layer.pipe(Layer.provide(KiloSessions.defaultLayer))
+  export const defaultLayer = layer.pipe(Layer.provide(AccureSessions.defaultLayer))
 }

@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 // Verifies that:
 //   1. ModelCache.failedProviders() surfaces providers that encountered errors.
 //   2. ModelCache.getFailure() returns the typed error for a failed provider.
@@ -29,8 +29,8 @@ const auth = Layer.mock(Auth.Service)({
 
 function layer() {
   const models = Layer.succeed(
-    ModelCache.KiloModelsService,
-    ModelCache.KiloModelsService.of({
+    ModelCache.AccureModelsService,
+    ModelCache.AccureModelsService.of({
       fetch: () => (error ? Effect.fail(error) : Effect.succeed(result)),
     }),
   )
@@ -52,7 +52,7 @@ beforeEach(() => {
 it.live("failedProviders returns empty array when no fetch has occurred", () =>
   ModelCache.Service.use((cache) =>
     Effect.gen(function* () {
-      expect(yield* cache.failedProviders()).not.toContain("kilo")
+      expect(yield* cache.failedProviders()).not.toContain("accure")
     }),
   ).pipe(Effect.provide(layer())),
 )
@@ -76,9 +76,9 @@ it.live("getFailure returns undefined when fetch succeeds", () =>
     }
     yield* ModelCache.Service.use((cache) =>
       Effect.gen(function* () {
-        yield* cache.fetch("kilo")
-        expect(yield* cache.getFailure("kilo")).toBeUndefined()
-        expect(yield* cache.failedProviders()).not.toContain("kilo")
+        yield* cache.fetch("accure")
+        expect(yield* cache.getFailure("accure")).toBeUndefined()
+        expect(yield* cache.failedProviders()).not.toContain("accure")
       }),
     ).pipe(Effect.provide(layer()))
   }),
@@ -89,9 +89,9 @@ it.live("failedProviders includes provider after auth error", () =>
     result = { models: {}, error: { kind: "unauthorized", status: 401 } }
     yield* ModelCache.Service.use((cache) =>
       Effect.gen(function* () {
-        yield* cache.fetch("kilo")
-        expect(yield* cache.failedProviders()).toContain("kilo")
-        expect(yield* cache.getFailure("kilo")).toMatchObject({ kind: "unauthorized", status: 401 })
+        yield* cache.fetch("accure")
+        expect(yield* cache.failedProviders()).toContain("accure")
+        expect(yield* cache.getFailure("accure")).toMatchObject({ kind: "unauthorized", status: 401 })
       }),
     ).pipe(Effect.provide(layer()))
   }),
@@ -102,7 +102,7 @@ it.live("gateway rejection remains recoverable through the Effect error channel"
     error = new Error("gateway failed")
     yield* ModelCache.Service.use((cache) =>
       Effect.gen(function* () {
-        const models = yield* cache.fetch("kilo").pipe(Effect.catch(() => Effect.succeed({})))
+        const models = yield* cache.fetch("accure").pipe(Effect.catch(() => Effect.succeed({})))
         expect(models).toEqual({})
       }),
     ).pipe(Effect.provide(layer()))
@@ -114,11 +114,11 @@ it.live("clear removes failure state", () =>
     result = { models: {}, error: { kind: "network" } }
     yield* ModelCache.Service.use((cache) =>
       Effect.gen(function* () {
-        yield* cache.fetch("kilo")
-        expect(yield* cache.failedProviders()).toContain("kilo")
-        yield* cache.clear("kilo")
-        expect(yield* cache.failedProviders()).not.toContain("kilo")
-        expect(yield* cache.getFailure("kilo")).toBeUndefined()
+        yield* cache.fetch("accure")
+        expect(yield* cache.failedProviders()).toContain("accure")
+        yield* cache.clear("accure")
+        expect(yield* cache.failedProviders()).not.toContain("accure")
+        expect(yield* cache.getFailure("accure")).toBeUndefined()
       }),
     ).pipe(Effect.provide(layer()))
   }),
@@ -129,8 +129,8 @@ it.live("failure state is cleared when subsequent refresh succeeds", () =>
     result = { models: {}, error: { kind: "unauthorized", status: 401 } }
     yield* ModelCache.Service.use((cache) =>
       Effect.gen(function* () {
-        yield* cache.fetch("kilo")
-        expect(yield* cache.failedProviders()).toContain("kilo")
+        yield* cache.fetch("accure")
+        expect(yield* cache.failedProviders()).toContain("accure")
         result = {
           models: {
             "test/model": {
@@ -146,9 +146,9 @@ it.live("failure state is cleared when subsequent refresh succeeds", () =>
             },
           },
         }
-        yield* cache.refresh("kilo")
-        expect(yield* cache.failedProviders()).not.toContain("kilo")
-        expect(yield* cache.getFailure("kilo")).toBeUndefined()
+        yield* cache.refresh("accure")
+        expect(yield* cache.failedProviders()).not.toContain("accure")
+        expect(yield* cache.getFailure("accure")).toBeUndefined()
       }),
     ).pipe(Effect.provide(layer()))
   }),

@@ -1,20 +1,20 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.session.model.SessionModel
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.session.ui.attachment.AttachmentCard
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.AttachmentView
-import ai.kilocode.client.session.views.PromptAttachmentView
-import ai.kilocode.client.session.views.tool.ReadToolView
-import ai.kilocode.client.session.views.TextView
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.views.tool.ShellToolView
-import ai.kilocode.client.session.views.tool.ToolView
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.PartDto
+import ai.accurecode.client.session.model.SessionModel
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.session.ui.attachment.AttachmentCard
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.AttachmentView
+import ai.accurecode.client.session.views.PromptAttachmentView
+import ai.accurecode.client.session.views.tool.ReadToolView
+import ai.accurecode.client.session.views.TextView
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.views.tool.ShellToolView
+import ai.accurecode.client.session.views.tool.ToolView
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.PartDto
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
@@ -110,7 +110,7 @@ class SessionUiUpdateTest : BasePlatformTestCase() {
         model.updateContent("a1", toolPart("t1", "a1", "read", "completed"))
 
         val tv = panel.findMessage("a1")!!.part("t1")
-        assertTrue(tv is ai.kilocode.client.session.views.tool.ReadToolView)
+        assertTrue(tv is ai.accurecode.client.session.views.tool.ReadToolView)
     }
 
     fun `test glob tool renders as GlobToolView`() {
@@ -118,7 +118,7 @@ class SessionUiUpdateTest : BasePlatformTestCase() {
         model.updateContent("a1", toolPart("t1", "a1", "glob", "completed"))
 
         val tv = panel.findMessage("a1")!!.part("t1")
-        assertTrue(tv is ai.kilocode.client.session.views.tool.GlobToolView)
+        assertTrue(tv is ai.accurecode.client.session.views.tool.GlobToolView)
     }
 
     fun `test grep tool renders as SearchToolView`() {
@@ -126,7 +126,7 @@ class SessionUiUpdateTest : BasePlatformTestCase() {
         model.updateContent("a1", toolPart("t1", "a1", "grep", "completed"))
 
         val tv = panel.findMessage("a1")!!.part("t1")
-        assertTrue(tv is ai.kilocode.client.session.views.tool.SearchToolView)
+        assertTrue(tv is ai.accurecode.client.session.views.tool.SearchToolView)
     }
 
     // ------ multiple turns update correctly ------
@@ -155,7 +155,7 @@ class SessionUiUpdateTest : BasePlatformTestCase() {
 
         val mv = panel.findMessage("a1")!!
         assertEquals(listOf("cp1"), mv.partIds())
-        assertTrue(mv.part("cp1") is ai.kilocode.client.session.views.CompactionView)
+        assertTrue(mv.part("cp1") is ai.accurecode.client.session.views.CompactionView)
     }
 
     // ------ generic fallback ------
@@ -167,8 +167,8 @@ class SessionUiUpdateTest : BasePlatformTestCase() {
         val mv = panel.findMessage("a1")!!
         val gv = mv.part("g1")
         assertNotNull(gv)
-        assertTrue(gv is ai.kilocode.client.session.views.base.GenericView)
-        assertTrue((gv as ai.kilocode.client.session.views.base.GenericView).labelText().contains("snapshot"))
+        assertTrue(gv is ai.accurecode.client.session.views.base.GenericView)
+        assertTrue((gv as ai.accurecode.client.session.views.base.GenericView).labelText().contains("snapshot"))
         assertNull(gv.border)
     }
 
@@ -191,7 +191,7 @@ class SessionUiUpdateTest : BasePlatformTestCase() {
         assertTrue(view is AttachmentView)
         assertEquals("AttachmentView#f1:a.png", view!!.dumpLabel())
         assertNotNull(find(view, AttachmentCard::class.java))
-        assertFalse(buttons(view).any { it.accessibleContext.accessibleName == KiloBundle.message("prompt.attachment.remove", "a.png") })
+        assertFalse(buttons(view).any { it.accessibleContext.accessibleName == AccureBundle.message("prompt.attachment.remove", "a.png") })
     }
 
     fun `test user file part renders as prompt attachment strip`() {
@@ -213,7 +213,7 @@ class SessionUiUpdateTest : BasePlatformTestCase() {
         assertTrue(view is PromptAttachmentView)
         assertEquals("PromptAttachmentView#attachments:u1[f1]", view!!.dumpLabel())
         assertNotNull(find(view, AttachmentCard::class.java))
-        assertFalse(buttons(view).any { it.accessibleContext.accessibleName == KiloBundle.message("prompt.attachment.remove", "a.png") })
+        assertFalse(buttons(view).any { it.accessibleContext.accessibleName == AccureBundle.message("prompt.attachment.remove", "a.png") })
     }
 
     fun `test user text and attachments share one prompt container`() {

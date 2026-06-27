@@ -1,4 +1,4 @@
-package ai.kilocode.client.testing
+package ai.accurecode.client.testing
 
 import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineScope

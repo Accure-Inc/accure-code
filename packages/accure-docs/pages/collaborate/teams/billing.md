@@ -5,21 +5,21 @@ description: "Manage billing and subscriptions for your team"
 
 # Billing
 
-Kilo seats uses a transparent, two-part billing system: a monthly subscription per seat, plus pay-as-you-go Kilo credits with zero markup.
+Accure seats uses a transparent, two-part billing system: a monthly subscription per seat, plus pay-as-you-go Accure credits with zero markup.
 
 {% callout type="note" %}
 
-Kilo Code seats purchases of Teams or Enterprise are separate from Kilo credits.
+Accure Code seats purchases of Teams or Enterprise are separate from Accure credits.
 
-No Kilo credits are included with a Teams or Enterprise purchase.
+No Accure credits are included with a Teams or Enterprise purchase.
 
 {% /callout %}
 
 ## Organization Credits
 
-Organization Owners can purchase Kilo credits on the [Organization dashboard](https://app.kilo.ai).
+Organization Owners can purchase Accure credits on the [Organization dashboard](https://app.accurecode.ai).
 
-Organization credits are purchased on behalf of all users in the organization. Every member of the organization can use the credits in the organization's balance with the Kilo Code model provider.
+Organization credits are purchased on behalf of all users in the organization. Every member of the organization can use the credits in the organization's balance with the Accure Code model provider.
 
 Using organization credits works exactly like spending [individual credits](/docs/getting-started/adding-credits), except that the credits come from the organization's credit balance, rather than the individuals.
 
@@ -33,13 +33,13 @@ Using organization credits works exactly like spending [individual credits](/doc
 
 ### Using Organization Credits
 
-Organization members can use organization credits by choosing the correct organization profile in the dropdown in the Profiles tab of the Kilo Code extension.
+Organization members can use organization credits by choosing the correct organization profile in the dropdown in the Profiles tab of the Accure Code extension.
 
 {% image src="/docs/img/teams/org_credits.png" alt="Dropdown showing different organizations available" width="600" caption="Dropdown showing different organizations available" /%}
 
 ## Managing Seats Subscriptions
 
-In order to add Members to your Kilo Code Organization, you must have seat(s) available for them.
+In order to add Members to your Accure Code Organization, you must have seat(s) available for them.
 
 You can purchase more seats at any time during your billing cycle and will pay a pro-rated amount for the number of days left in your billing cycle.
 
@@ -68,12 +68,12 @@ To fill empty seats or remove members ahead of seat deletion, see the [team mana
 
 ## Automatic Top-Up
 
-Ensure your team has uninterrupted access to Kilo Code by enabling [Automatic Top-Up](https://kilo.ai/features/auto-top-ups). This feature keeps your organization's balance funded so you never have to worry about manual recharges. Auto top-up is also available for individual accounts — see [Adding Credits](/docs/getting-started/adding-credits) for details.
+Ensure your team has uninterrupted access to Accure Code by enabling [Automatic Top-Up](https://accure.ai/features/auto-top-ups). This feature keeps your organization's balance funded so you never have to worry about manual recharges. Auto top-up is also available for individual accounts — see [Adding Credits](/docs/getting-started/adding-credits) for details.
 
 ### How It Works
 
 - **Initial Verification** — To verify your payment method, a one-time charge for your selected top-up amount will be processed immediately upon enabling this feature.
-- **Automatic Thresholds** — Once enabled, Kilo Code will automatically recharge your balance whenever it falls below $50.00.
+- **Automatic Thresholds** — Once enabled, Accure Code will automatically recharge your balance whenever it falls below $50.00.
 
 {% callout type="warning" title="Payment Failure" %}
 If a payment fails, we will notify you via email and automatically pause auto-top-ups to prevent repeated billing attempts. You can resume this feature at any time from your settings.
@@ -99,7 +99,7 @@ Once saved, your initial top-up will be processed immediately to verify your pay
 
 ## Invoices
 
-Invoices for any payment on the Kilo Code platform, for seats or credits, will be available in the Invoices tab.
+Invoices for any payment on the Accure Code platform, for seats or credits, will be available in the Invoices tab.
 
 ### Service Suspension
 

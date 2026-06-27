@@ -8,7 +8,7 @@ import * as Encoding from "../encoding"
  * as typed errors that can be recovered with `.pipe(Effect.catch(...))`.
  *
  * Consumers should import this module as a namespace:
- *   import * as EncodedIO from "../kilocode/tool/encoded-io"
+ *   import * as EncodedIO from "../accurecode/tool/encoded-io"
  */
 
 const wrap = (cause: unknown) => (cause instanceof Error ? cause : new Error(String(cause)))

@@ -8,6 +8,6 @@ Agent Manager has its own output channel. No general "Accure Code" output channe
 
 - Create `vscode.window.createOutputChannel("Accure Code")` during activation
 - Centralized logging utility with log levels (debug, info, warn, error)
-- Route all `[Kilo New]` log messages to this channel
+- Route all `[Accure New]` log messages to this channel
 - Dispose on deactivation
-- Migrate existing `console.log("[Kilo New] ...")` calls to the logger
+- Migrate existing `console.log("[Accure New] ...")` calls to the logger

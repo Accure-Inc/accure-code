@@ -1,4 +1,4 @@
-import type { IndexingConfig } from "@kilocode/sdk/v2/client"
+import type { IndexingConfig } from "@accurecode/sdk/v2/client"
 
 function record(input: unknown): input is Record<string, unknown> {
   return typeof input === "object" && input !== null && !Array.isArray(input)
@@ -42,7 +42,7 @@ export function clean(input: IndexingConfig): IndexingConfig {
 export function providerPatch(provider: IndexingConfig["provider"] | "", model?: string): IndexingConfig {
   return {
     provider: provider || undefined,
-    model: provider === "kilo" ? model || undefined : undefined,
+    model: provider === "accure" ? model || undefined : undefined,
     dimension: undefined,
   }
 }

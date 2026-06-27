@@ -1,11 +1,11 @@
-// kilocode_change - new file
-import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@kilocode/plugin/tui"
+// accurecode_change - new file
+import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@accurecode/plugin/tui"
 import { createMemo, Show } from "solid-js"
 import { useLocal } from "@tui/context/local"
 import { formatCount, getUsage } from "@tui/routes/session/usage"
-import { fmtAttemptCost, fmtScore } from "@/kilocode/components/model-info-panel-utils"
+import { fmtAttemptCost, fmtScore } from "@/accurecode/components/model-info-panel-utils"
 
-const id = "internal:kilo-sidebar-usage"
+const id = "internal:accure-sidebar-usage"
 
 function View(props: { api: TuiPluginApi; session_id: string }) {
   const theme = () => props.api.theme.current

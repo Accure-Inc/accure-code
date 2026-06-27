@@ -31,8 +31,11 @@ export function findModel(models: EnrichedModel[], selection: ModelSelection | n
 
 /**
  * True when the selection points to an existing model in a connected provider.
- * Kilo gateway models remain usable whenever the provider catalog exposes them.
+ * Accure gateway, amazon-bedrock, and accure-models remain usable whenever
+ * the provider catalog exposes them (no entry in connected[] required).
  */
+const ALWAYS_VALID_PROVIDERS = new Set(["accure", "amazon-bedrock", "accure-models"])
+
 export function isModelValid(
   providers: Record<string, Provider>,
   connected: string[],
@@ -41,6 +44,6 @@ export function isModelValid(
   if (!selection) return false
   const provider = providers[selection.providerID]
   if (!provider) return false
-  if (selection.providerID !== "kilo" && !connected.includes(selection.providerID)) return false
+  if (!ALWAYS_VALID_PROVIDERS.has(selection.providerID) && !connected.includes(selection.providerID)) return false
   return !!provider.models[selection.modelID]
 }

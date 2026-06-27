@@ -1,21 +1,21 @@
-// Kilo-specific translations and overrides
+// Accure-specific translations and overrides
 // Keys here will override any matching keys from upstream translations
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1":
-    "Kilo Gateway gives you access to a curated set of reliable optimized models for coding agents.",
-  "provider.connect.kiloGateway.line2":
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1":
+    "Accure Gateway gives you access to a curated set of reliable optimized models for coding agents.",
+  "provider.connect.accureGateway.line2":
     "With a single API key you'll get access to models such as Claude, GPT, Gemini, GLM and more.",
-  "provider.connect.kiloGateway.visit.prefix": "Visit ",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": " to collect your API key.",
-  "provider.connect.kiloGateway.byok.prefix": "For more usage stats, ",
-  "provider.connect.kiloGateway.byok.link": "BYOK via Kilo's Gateway",
-  "provider.connect.kiloGateway.byok.suffix": ".",
+  "provider.connect.accureGateway.visit.prefix": "Visit ",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": " to collect your API key.",
+  "provider.connect.accureGateway.byok.prefix": "For more usage stats, ",
+  "provider.connect.accureGateway.byok.link": "BYOK via Accure's Gateway",
+  "provider.connect.accureGateway.byok.suffix": ".",
 
   // Provider settings translations
   "settings.providers.group.recommended": "Recommended",
-  "settings.providers.note.kilo": "Access 500+ AI models",
+  "settings.providers.note.accurecode": "Access 500+ AI models",
   "settings.providers.note.opencode": "Curated models including Claude, GPT, Gemini and more",
   "settings.providers.note.anthropic": "Direct access to Claude models, including Pro and Max",
   "settings.providers.note.deepseek": "DeepSeek models for reasoning and coding tasks",
@@ -89,7 +89,7 @@ export const dict = {
 
   // Plan follow-up question shown after plan_exit. The English strings here must match
   // the canonical `label`/`header`/`question` sent by the backend — those canonical labels
-  // are still what the backend matches on (see packages/opencode/src/kilocode/plan-followup.ts).
+  // are still what the backend matches on (see packages/opencode/src/accurecode/plan-followup.ts).
   "plan.followup.header": "Implement",
   "plan.followup.question": "Ready to implement?",
   "plan.followup.answer.newSession": "Start new session",
@@ -99,7 +99,7 @@ export const dict = {
 
   // Slow-repo snapshot prompt. The English strings here are the canonical
   // labels sent by the backend and must stay in sync with
-  // packages/opencode/src/kilocode/snapshot/track.ts.
+  // packages/opencode/src/accurecode/snapshot/track.ts.
   "snapshot.slowRepo.header": "Snapshot is slow",
   "snapshot.slowRepo.question":
     "It is taking a long time to initialize the snapshot system, likely due to the size of the repository.\n\nDo you want to disable Snapshots for this repository?",
@@ -108,7 +108,7 @@ export const dict = {
     "Keep waiting for the snapshot to complete. Subsequent turns are fast once the initial snapshot is built.",
   "snapshot.slowRepo.answer.disable": "Disable for this project",
   "snapshot.slowRepo.answer.disable.description":
-    "Turn off Kilo's snapshots for this project. You will lose undo/redo of Kilo file changes, but git still tracks everything.",
+    "Turn off Accure's snapshots for this project. You will lose undo/redo of Accure file changes, but git still tracks everything.",
 
   // Edit-tool header: hover-revealed action opening the diff in a full tab.
   "ui.messagePart.openInDiffViewer": "Open in Diff Viewer",

@@ -12,7 +12,7 @@ import { ProviderTransform } from "@/provider/transform"
 import { Config } from "@/config/config"
 import type { Agent } from "@/agent/agent"
 import type { MessageV2 } from "./message-v2"
-import { usable } from "./overflow" // kilocode_change
+import { usable } from "./overflow" // accurecode_change
 import { Plugin } from "@/plugin"
 import { Permission } from "@/permission"
 import { PermissionID } from "@/permission/schema"
@@ -20,15 +20,16 @@ import { Bus } from "@/bus"
 import { Wildcard } from "@/util/wildcard"
 import { SessionID } from "@/session/schema"
 import { Auth } from "@/auth"
-// kilocode_change start
+// accurecode_change start
+import { ModelID } from "@/provider/schema"
 import { InstanceState } from "@/effect/instance-state"
-import { KiloSession } from "@/kilocode/session"
-import { KiloLLM } from "@/kilocode/session/llm"
-import { KiloSessionOverflow } from "@/kilocode/session/overflow"
-import { SessionExport } from "@/kilocode/session-export"
-import { getActiveOrg } from "@/kilocode/session-export/eligibility"
-import { normalizeUsageForExport, observeFullStreamForExport } from "@/kilocode/session-export/llm"
-// kilocode_change end
+import { AccureSession } from "@/accurecode/session"
+import { AccureLLM } from "@/accurecode/session/llm"
+import { AccureSessionOverflow } from "@/accurecode/session/overflow"
+import { SessionExport } from "@/accurecode/session-export"
+import { getActiveOrg } from "@/accurecode/session-export/eligibility"
+import { normalizeUsageForExport, observeFullStreamForExport } from "@/accurecode/session-export/llm"
+// accurecode_change end
 import { EffectBridge } from "@/effect/bridge"
 import { RuntimeFlags } from "@/effect/runtime-flags"
 import { LLMAISDK } from "./llm/ai-sdk"
@@ -51,7 +52,7 @@ export type StreamInput = {
   tools: Record<string, Tool>
   retries?: number
   toolChoice?: "auto" | "required" | "none"
-  preflight?: boolean // kilocode_change - enable proactive threshold compaction for normal session turns
+  preflight?: boolean // accurecode_change - enable proactive threshold compaction for normal session turns
 }
 
 export type StreamRequest = StreamInput & {
@@ -88,6 +89,19 @@ const live: Layer.Layer<
     const flags = yield* RuntimeFlags.Service
 
     const run = Effect.fn("LLM.run")(function* (input: StreamRequest) {
+      // accurecode_change start - apply custom/selected model overrides from provider options at request startup
+      const providerInfo = yield* provider.getProvider(input.model.providerID)
+      if (providerInfo) {
+        const customModelID = providerInfo.options?.[`${input.model.id}-modelId`] ?? providerInfo.options?.selectedModelId
+        if (customModelID && typeof customModelID === "string") {
+          const resolved = yield* provider.getModel(input.model.providerID, ModelID.make(customModelID))
+          if (resolved) {
+            input.model = resolved
+          }
+        }
+      }
+      // accurecode_change end
+
       const l = log
         .clone()
         .tag("providerID", input.model.providerID)
@@ -120,7 +134,7 @@ const live: Layer.Layer<
         isWorkflow,
       })
 
-      // kilocode_change start - compact at the configured threshold before contacting the provider
+      // accurecode_change start - compact at the configured threshold before contacting the provider
       const isOpenaiOauth = item.id === "openai" && info?.type === "oauth"
       const estimated: ModelMessage[] =
         isOpenaiOauth || isWorkflow
@@ -132,11 +146,11 @@ const live: Layer.Layer<
               ...base.messages,
             ]
           : base.messages
-      const preflight = input.preflight === true && KiloSessionOverflow.enabled({ cfg, model: input.model })
-      const cap = KiloLLM.needsEstimate({ model: input.model, configured: base.params.maxOutputTokens })
+      const preflight = input.preflight === true && AccureSessionOverflow.enabled({ cfg, model: input.model })
+      const cap = AccureLLM.needsEstimate({ model: input.model, configured: base.params.maxOutputTokens })
       const usage =
-        cap || preflight ? KiloSessionOverflow.measure({ messages: estimated, tools: base.tools }) : undefined
-      const maxOutputTokens = KiloLLM.capOutputTokens({
+        cap || preflight ? AccureSessionOverflow.measure({ messages: estimated, tools: base.tools }) : undefined
+      const maxOutputTokens = AccureLLM.capOutputTokens({
         model: input.model,
         messages: estimated,
         tools: base.tools,
@@ -146,18 +160,18 @@ const live: Layer.Layer<
       if (
         preflight &&
         usage &&
-        KiloSessionOverflow.shouldCompact({
+        AccureSessionOverflow.shouldCompact({
           cfg,
           model: input.model,
-          usable: usable({ cfg, model: input.model, outputTokenMax: flags.outputTokenMax }), // kilocode_change
+          usable: usable({ cfg, model: input.model, outputTokenMax: flags.outputTokenMax }), // accurecode_change
           tokens: usage.normalized,
           continuation: usage.continuation,
         })
       ) {
-        return yield* Effect.fail(new KiloSessionOverflow.PreflightError())
+        return yield* Effect.fail(new AccureSessionOverflow.PreflightError())
       }
       const prepared = { ...base, params: { ...base.params, maxOutputTokens } }
-      // kilocode_change end
+      // accurecode_change end
 
       // Wire up toolExecutor for DWS workflow models so that tool calls
       // from the workflow service are executed via opencode's tool system
@@ -247,17 +261,17 @@ const live: Layer.Layer<
       }
 
       const instance = yield* InstanceState.context
-      // kilocode_change start - capture eligible session export request start
-      const isKilo = input.model.api.npm === "@kilocode/accure-gateway"
-      const org = yield* isKilo && input.model.isFree === true
+      // accurecode_change start - capture eligible session export request start
+      const isAccure = input.model.api.npm === "@accurecode/accure-gateway"
+      const org = yield* isAccure && input.model.isFree === true
         ? Effect.promise(() => getActiveOrg())
         : Effect.succeed({ type: "unknown" as const })
       const started = Date.now()
-      const parent = input.parentSessionID ?? KiloSession.resolveParent(input.sessionID)
-      const found = KiloSession.resolveRoot(input.sessionID)
+      const parent = input.parentSessionID ?? AccureSession.resolveParent(input.sessionID)
+      const found = AccureSession.resolveRoot(input.sessionID)
       const root = parent ? (found === input.sessionID ? parent : found) : input.sessionID
       const exportable =
-        isKilo && input.model.isFree === true && org.type === "personal" && input.agent.name !== "title"
+        isAccure && input.model.isFree === true && org.type === "personal" && input.agent.name !== "title"
       if (exportable) {
         SessionExport.beforeRequest({
           input: { model: input.model, org },
@@ -282,7 +296,7 @@ const live: Layer.Layer<
           },
         })
       }
-      // kilocode_change end
+      // accurecode_change end
 
       // Runtime seam: native is an opt-in adapter over @opencode-ai/llm. It
       // either returns a ready LLMEvent stream or a concrete fallback reason.
@@ -336,12 +350,55 @@ const live: Layer.Layer<
       )
       // Default runtime path: AI SDK owns provider execution and tool dispatch;
       // LLMAISDK.toLLMEvents below normalizes fullStream parts for the processor.
+      // accurecode_change start - debug dump for Bedrock empty response investigation
+      if (input.model.api.npm === "@ai-sdk/amazon-bedrock") {
+        try {
+          const fsNode = require("fs")
+          const dump = {
+            ts: new Date().toISOString(),
+            modelId: input.model.id,
+            apiId: input.model.api.id,
+            providerID: input.model.providerID,
+            npm: input.model.api.npm,
+            preflight: input.preflight,
+            temperature: prepared.params.temperature,
+            topP: prepared.params.topP,
+            topK: prepared.params.topK,
+            maxOutputTokens: prepared.params.maxOutputTokens,
+            providerOptions: ProviderTransform.providerOptions(input.model, prepared.params.options),
+            toolCount: Object.keys(prepared.tools).length,
+            toolNames: Object.keys(prepared.tools).slice(0, 20),
+            messageCount: prepared.messages.length,
+            systemCount: prepared.messages.filter((m: any) => m.role === "system").length,
+            messages: prepared.messages,
+          }
+          fsNode.writeFileSync(
+            "/Users/ansarisam/accure/accure-code/packages/opencode/bedrock_debug.log",
+            `[Bedrock Request Start]\n` + JSON.stringify(dump, null, 2) + "\n---\n",
+            { flag: "a" },
+          )
+        } catch (err) {
+          l.error("bedrock debug write error", { err })
+        }
+      }
+      // accurecode_change end
       const result = streamText({
-        // kilocode_change
+        // accurecode_change
         onError(error) {
           l.error("stream error", {
             error,
           })
+          if (input.model.api.npm === "@ai-sdk/amazon-bedrock") {
+            try {
+              const fsNode = require("fs")
+              const actualError = (error as any)?.error ?? error
+              fsNode.writeFileSync(
+                "/Users/ansarisam/accure/accure-code/packages/opencode/bedrock_debug.log",
+                `STREAM ERROR: ${actualError?.message ?? actualError}\nStack: ${actualError?.stack}\n---\n`,
+                { flag: "a" }
+              )
+            } catch {}
+          }
         },
         async experimental_repairToolCall(failed) {
           const lower = failed.toolCall.toolName.toLowerCase()
@@ -370,10 +427,17 @@ const live: Layer.Layer<
         providerOptions: ProviderTransform.providerOptions(input.model, prepared.params.options),
         activeTools: Object.keys(prepared.tools).filter((x) => x !== "invalid"),
         tools: prepared.tools,
-        toolChoice: input.toolChoice,
+        // accurecode_change start - Nova Pro requires explicit toolChoice when tools are present
+        toolChoice:
+          input.model.api.npm === "@ai-sdk/amazon-bedrock" &&
+          input.toolChoice === undefined &&
+          Object.keys(prepared.tools).length > 0
+            ? "auto"
+            : input.toolChoice,
+        // accurecode_change end
         maxOutputTokens: prepared.params.maxOutputTokens,
         abortSignal: input.abort,
-        ...KiloLLM.timeout({ options: prepared.params.options, fallback: item.options, log: l }), // kilocode_change
+        ...AccureLLM.timeout({ options: prepared.params.options, fallback: item.options, log: l }), // accurecode_change
         headers: prepared.headers,
         maxRetries: input.retries ?? 0,
         messages: prepared.messages,
@@ -390,17 +454,78 @@ const live: Layer.Layer<
                     input.model,
                     prepared.messageTransformOptions,
                   )
+                  // accurecode_change start - strip Bedrock-incompatible fields from tool inputSchemas.
+                  // Effect's Schema.toJsonSchemaDocument adds $schema (Draft 2020-12 URI) and may
+                  // produce $defs; Bedrock Converse API rejects both, returning a silent empty stream.
+                  if (input.model.api.npm === "@ai-sdk/amazon-bedrock") {
+                    const sanitize = (obj: unknown): void => {
+                      if (Array.isArray(obj)) { obj.forEach(sanitize); return }
+                      if (!obj || typeof obj !== "object") return
+                      const rec = obj as Record<string, unknown>
+                      delete rec.$schema
+                      delete rec.$defs
+                      delete rec.definitions
+                      delete rec.additionalProperties
+                      Object.values(rec).forEach(sanitize)
+                    }
+                    const tools = (args.params as any).tools
+                    if (tools && typeof tools === "object") {
+                      for (const t of Object.values(tools) as any[]) {
+                        if (t?.inputSchema && typeof t.inputSchema === "object") {
+                          sanitize(t.inputSchema)
+                        }
+                      }
+                    }
+                    // accurecode_change start - log the actual post-transform request sent to Bedrock
+                    try {
+                      const fsNode = require("fs")
+                      const prompt = (args.params as any).prompt ?? []
+                      const toolsAfter = (args.params as any).tools ?? []
+                      const dump = {
+                        ts: new Date().toISOString(),
+                        label: "[POST-TRANSFORM actual messages sent to Bedrock]",
+                        maxTokens: (args.params as any).maxTokens,
+                        temperature: (args.params as any).temperature,
+                        topP: (args.params as any).topP,
+                        topK: (args.params as any).topK,
+                        providerOptions: (args.params as any).providerOptions,
+                        toolChoice: (args.params as any).toolChoice,
+                        promptMessageCount: Array.isArray(prompt) ? prompt.length : "not-array",
+                        systemLen: Array.isArray((args.params as any).system) ? (args.params as any).system.join("").length : 0,
+                        prompt: Array.isArray(prompt) ? prompt.map((m: any) => ({
+                          role: m.role,
+                          content: Array.isArray(m.content)
+                            ? m.content.map((p: any) => ({ type: p.type, text: p.text?.slice?.(0, 120) }))
+                            : String(m.content).slice(0, 120),
+                        })) : prompt,
+                        toolCount: Array.isArray(toolsAfter) ? toolsAfter.length : Object.keys(toolsAfter).length,
+                        tools: Array.isArray(toolsAfter)
+                          ? toolsAfter.map((t: any) => ({ name: t.name, schemaKeys: Object.keys(t.inputSchema ?? {}) }))
+                          : Object.entries(toolsAfter).map(([k, t]: any) => ({ name: k, schemaKeys: Object.keys(t.inputSchema ?? {}) })),
+                        firstToolSchema: Array.isArray(toolsAfter) && toolsAfter[0]
+                          ? toolsAfter[0].inputSchema
+                          : undefined,
+                      }
+                      fsNode.writeFileSync(
+                        "/Users/ansarisam/accure/accure-code/packages/opencode/bedrock_debug.log",
+                        JSON.stringify(dump, null, 2) + "\n---\n",
+                        { flag: "a" },
+                      )
+                    } catch {}
+                    // accurecode_change end
+                  }
+                  // accurecode_change end
                 }
                 return args.params
               },
             },
           ],
         }),
-        // kilocode_change start - disable AI SDK span recording (ai.* / gen_ai.*)
+        // accurecode_change start - disable AI SDK span recording (ai.* / gen_ai.*)
         experimental_telemetry: { isEnabled: false },
       })
-      // kilocode_change end
-      // kilocode_change start - capture eligible session export request completion off the stream path
+      // accurecode_change end
+      // accurecode_change start - capture eligible session export request completion off the stream path
       if (!exportable) return { type: "ai-sdk" as const, result }
       return {
         type: "ai-sdk" as const,
@@ -416,7 +541,7 @@ const live: Layer.Layer<
           }),
         },
       }
-      // kilocode_change end
+      // accurecode_change end
     })
 
     const stream: Interface["stream"] = (input) =>
@@ -438,7 +563,21 @@ const live: Layer.Layer<
             return Stream.fromAsyncIterable(result.result.fullStream, (e) =>
               e instanceof Error ? e : new Error(String(e)),
             ).pipe(
-              Stream.mapEffect((event) => LLMAISDK.toLLMEvents(state, event)),
+              Stream.mapEffect((event) => {
+                if (input.model.api.npm === "@ai-sdk/amazon-bedrock") {
+                  try {
+                    const fsNode = require("fs")
+                    fsNode.writeFileSync(
+                      "/Users/ansarisam/accure/accure-code/packages/opencode/bedrock_debug.log",
+                      `EVENT: ${JSON.stringify(event)}\n`,
+                      { flag: "a" }
+                    )
+                  } catch (err) {
+                    log.error("bedrock debug write event error", { err })
+                  }
+                }
+                return LLMAISDK.toLLMEvents(state, event)
+              }),
               Stream.flatMap((events) => Stream.fromIterable(events)),
             )
           }),
@@ -464,9 +603,9 @@ export const defaultLayer = Layer.suspend(() =>
   ),
 )
 
-// kilocode_change start - session export stream observer
+// accurecode_change start - session export stream observer
 export { normalizeUsageForExport, observeFullStreamForExport }
-// kilocode_change end
+// accurecode_change end
 export const hasToolCalls = LLMRequestPrep.hasToolCalls
 
 export * as LLM from "./llm"

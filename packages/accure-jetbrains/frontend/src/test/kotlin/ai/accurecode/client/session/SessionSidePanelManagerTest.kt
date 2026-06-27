@@ -1,36 +1,36 @@
-package ai.kilocode.client.session
+package ai.accurecode.client.session
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.history.HistoryController
-import ai.kilocode.client.session.history.HistoryDataKeys
-import ai.kilocode.client.session.history.HistoryPanel
-import ai.kilocode.client.session.history.LocalHistoryItem
-import ai.kilocode.client.session.model.Permission
-import ai.kilocode.client.session.model.PermissionMeta
-import ai.kilocode.client.session.model.Question
-import ai.kilocode.client.session.model.QuestionItem
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.testing.FakeAppRpcApi
-import ai.kilocode.client.testing.FakeSessionRpcApi
-import ai.kilocode.client.testing.TestUiTimers
-import ai.kilocode.client.testing.FakeWorkspaceRpcApi
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.CloudSessionDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.QuestionInfoDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionStatusDto
-import ai.kilocode.rpc.dto.SessionTimeDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.history.HistoryController
+import ai.accurecode.client.session.history.HistoryDataKeys
+import ai.accurecode.client.session.history.HistoryPanel
+import ai.accurecode.client.session.history.LocalHistoryItem
+import ai.accurecode.client.session.model.Permission
+import ai.accurecode.client.session.model.PermissionMeta
+import ai.accurecode.client.session.model.Question
+import ai.accurecode.client.session.model.QuestionItem
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.testing.FakeAppRpcApi
+import ai.accurecode.client.testing.FakeSessionRpcApi
+import ai.accurecode.client.testing.TestUiTimers
+import ai.accurecode.client.testing.FakeWorkspaceRpcApi
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.CloudSessionDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.QuestionInfoDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.SessionTimeDto
 import com.intellij.openapi.actionSystem.DataProvider
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.registry.Registry
@@ -48,10 +48,10 @@ import javax.swing.JPanel
 class SessionSidePanelManagerTest : BasePlatformTestCase() {
     private lateinit var scope: CoroutineScope
     private lateinit var rpc: FakeSessionRpcApi
-    private lateinit var workspaces: KiloWorkspaceService
+    private lateinit var workspaces: AccureWorkspaceService
     private lateinit var workspace: Workspace
-    private lateinit var sessions: KiloSessionService
-    private lateinit var app: KiloAppService
+    private lateinit var sessions: AccureSessionService
+    private lateinit var app: AccureAppService
     private lateinit var timers: TestUiTimers
     private val managers = mutableListOf<SessionSidePanelManager>()
     private val created = mutableListOf<Pair<String, String?>>()
@@ -63,12 +63,12 @@ class SessionSidePanelManagerTest : BasePlatformTestCase() {
         timers = TestUiTimers()
         scope = CoroutineScope(SupervisorJob())
         rpc = FakeSessionRpcApi()
-        sessions = KiloSessionService(project, scope, rpc)
-        app = KiloAppService(scope, FakeAppRpcApi().also {
-            it.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        sessions = AccureSessionService(project, scope, rpc)
+        app = AccureAppService(scope, FakeAppRpcApi().also {
+            it.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         })
-        workspaces = KiloWorkspaceService(scope, FakeWorkspaceRpcApi().also {
-            it.state.value = KiloWorkspaceStateDto(KiloWorkspaceStatusDto.READY)
+        workspaces = AccureWorkspaceService(scope, FakeWorkspaceRpcApi().also {
+            it.state.value = AccureWorkspaceStateDto(AccureWorkspaceStatusDto.READY)
         })
         workspace = workspaces.workspace("/test")
     }
@@ -208,7 +208,7 @@ class SessionSidePanelManagerTest : BasePlatformTestCase() {
         manager.openSession(session("ses_1"))
         val first = active(manager) as SessionUi
         manager.openSession(session("ses_2"))
-        val style = ai.kilocode.client.session.ui.style.SessionEditorStyle.create(family = "Courier New", size = 24)
+        val style = ai.accurecode.client.session.ui.style.SessionEditorStyle.create(family = "Courier New", size = 24)
 
         first.applyStyle(style)
         manager.openSession(session("ses_1"))
@@ -312,7 +312,7 @@ class SessionSidePanelManagerTest : BasePlatformTestCase() {
 
         assertTrue(ui.contains(first))
         assertEquals("Live", history.titleText(0))
-        assertEquals(KiloBundle.message("history.badge.question"), history.badgeText(0))
+        assertEquals(AccureBundle.message("history.badge.question"), history.badgeText(0))
     }
 
     fun `test history overlays update from hidden session stream metadata`() {
@@ -338,7 +338,7 @@ class SessionSidePanelManagerTest : BasePlatformTestCase() {
         settle()
 
         assertEquals(mapOf("ses_1" to SessionActivityKind.QUESTION), manager.activity())
-        assertEquals(KiloBundle.message("history.badge.question"), history.badgeText(0))
+        assertEquals(AccureBundle.message("history.badge.question"), history.badgeText(0))
 
         kotlinx.coroutines.runBlocking {
             rpc.events.emit(ChatEventDto.SessionUpdated("ses_1", session("ses_1", "/test", "Live")))
@@ -676,7 +676,7 @@ class SessionSidePanelManagerTest : BasePlatformTestCase() {
     private fun useLongInactiveDisposeTimeout() = setInactiveDisposeTimeout(60_000)
 
     private fun setInactiveDisposeTimeout(ms: Int) {
-        val key = "kilo.session.inactive.disposeTimeoutMs"
+        val key = "accure.session.inactive.disposeTimeoutMs"
         Registry.mutateContributedKeys {
             it + (key to RegistryKeyDescriptor(
                 key,
@@ -694,10 +694,10 @@ class SessionSidePanelManagerTest : BasePlatformTestCase() {
         Registry.get(key).setValue(ms, testRootDisposable)
     }
 
-    private fun JPanel.controller(): ai.kilocode.client.session.controller.SessionController {
+    private fun JPanel.controller(): ai.accurecode.client.session.controller.SessionController {
         val field = SessionUi::class.java.getDeclaredField("controller")
         field.isAccessible = true
-        return field.get(this) as ai.kilocode.client.session.controller.SessionController
+        return field.get(this) as ai.accurecode.client.session.controller.SessionController
     }
 
     private fun remove(manager: SessionSidePanelManager, id: String) {

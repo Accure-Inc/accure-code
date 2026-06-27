@@ -288,13 +288,13 @@ describe("DirectoryScanner", () => {
     expect(count?.candidate).toBe(1)
   })
 
-  test("skips files matched by .kilocodeignore during full scans", async () => {
+  test("skips files matched by .accurecodeignore during full scans", async () => {
     const root = await mkdtemp(join(tmpdir(), "scanner-test-"))
     const cacheDir = await mkdtemp(join(tmpdir(), "scanner-cache-"))
     const blocked = join(root, "blocked.ts")
     const open = join(root, "open.ts")
 
-    await Bun.write(join(root, ".kilocodeignore"), "blocked.ts\n")
+    await Bun.write(join(root, ".accurecodeignore"), "blocked.ts\n")
     await Bun.write(blocked, "export const blocked = 1\n")
     await Bun.write(open, "export const open = 1\n")
 

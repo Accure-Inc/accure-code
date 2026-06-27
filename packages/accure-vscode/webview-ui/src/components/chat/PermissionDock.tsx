@@ -10,10 +10,10 @@
  */
 
 import { Component, For, Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
-import { Button } from "@kilocode/accure-ui/button"
-import { DockPrompt } from "@kilocode/accure-ui/dock-prompt"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { Tooltip } from "@kilocode/accure-ui/tooltip"
+import { Button } from "@accurecode/accure-ui/button"
+import { DockPrompt } from "@accurecode/accure-ui/dock-prompt"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { Tooltip } from "@accurecode/accure-ui/tooltip"
 import { useSession } from "../../context/session"
 import { useLanguage } from "../../context/language"
 import { useConfig } from "../../context/config"
@@ -21,7 +21,7 @@ import { describePatterns, describeRule, savedRuleStates, type RuleDecision } fr
 import { PermissionCommand } from "./PermissionCommand"
 import { PermissionDiff } from "./PermissionDiff"
 import { permissionDiffs } from "./permission-diff-utils"
-import { normalizeUrls } from "../../../../../opencode/src/kilocode/util/url"
+import { normalizeUrls } from "../../../../../opencode/src/accurecode/util/url"
 import type { PermissionRequest } from "../../types/messages"
 import { isEnterKeyCommitNotIme } from "../../utils/ime-enter"
 

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { Schema } from "effect"
-import { CloudSessionData } from "../../src/kilocode/server/httpapi/groups/accure-gateway"
+import { CloudSessionData } from "../../src/accurecode/server/httpapi/groups/accure-gateway"
 
 describe("cloud session HTTP schema", () => {
   test("preserves transcript fields needed by the VS Code preview", () => {

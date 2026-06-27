@@ -4,12 +4,12 @@
  * When the CLI backend detects a network failure (timeout, DNS, connection refused, etc.)
  * it pauses the session and emits session.network.asked. A background DNS probe polls for
  * recovery and emits session.network.restored when connectivity returns. The TUI asks the
- * user to press Enter; `kilo run` auto-retries with backoff. This module implements auto-reply
+ * user to press Enter; `accure run` auto-retries with backoff. This module implements auto-reply
  * for the VS Code extension: once restored, it immediately calls network.reply() so the
  * session resumes without user intervention.
  */
 
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 
 /** Pending network-offline requests: requestID -> { sessionID, refcount }. */
 const waits = new Map<string, { sid: string; refs: number }>()
@@ -22,7 +22,7 @@ type GetDir = (sessionID: string) => string
  * type cast to `string` and properties cast to `Props` (these event types
  * are not yet in the SDK Event union, pending SDK regeneration).
  */
-export function handleNetworkEvent(type: string, props: Props, client: KiloClient | null, dir: GetDir) {
+export function handleNetworkEvent(type: string, props: Props, client: AccureClient | null, dir: GetDir) {
   if (type === "session.network.asked" && props.id && props.sessionID) {
     const existing = waits.get(props.id)
     if (existing) existing.refs++
@@ -32,7 +32,7 @@ export function handleNetworkEvent(type: string, props: Props, client: KiloClien
   if (type === "session.network.restored" && props.requestID) {
     const entry = waits.get(props.requestID)
     if (!entry) return
-    console.log("[Kilo New] network: auto-replying to restore", props.requestID)
+    console.log("[Accure New] network: auto-replying to restore", props.requestID)
     void (client as any)?.network?.reply({ requestID: props.requestID, directory: dir(entry.sid) })
     waits.delete(props.requestID)
     return

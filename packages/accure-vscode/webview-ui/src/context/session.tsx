@@ -22,7 +22,7 @@ import { useServer } from "./server"
 import { useProvider } from "./provider"
 import { useConfig } from "./config"
 import { useLanguage } from "./language"
-import { showToast } from "@kilocode/accure-ui/toast"
+import { showToast } from "@accurecode/accure-ui/toast"
 import type {
   SessionInfo,
   SessionUpdate,
@@ -70,7 +70,7 @@ import { PartStash } from "./part-stash"
 import { mergeParts, sameParts } from "./session-parts"
 import { state as todoState } from "./todo-revert"
 import { getVariant, sessionVariantKeys, transferVariants, variantKey } from "./session-variant-store"
-import { KILO_AUTO, KILO_PROVIDER_ID, parseModelString } from "../../../src/shared/provider-model"
+import { ACCURECODE_AUTO, ACCURECODE_PROVIDER_ID, parseModelString } from "../../../src/shared/provider-model"
 import { reviewMetadata, type ReviewMessageData } from "../../../src/shared/review-comments"
 import { visibleMessages as filterVisibleMessages } from "./session-queue"
 import { createAbortState } from "./abort-state"
@@ -369,7 +369,7 @@ export const SessionProvider: ParentComponent = (props) => {
   const [agents, setAgents] = createSignal<AgentInfo[]>([])
   const [allAgents, setAllAgents] = createSignal<AgentInfo[]>([])
   const [defaultAgent, setDefaultAgent] = createSignal("code")
-  const [pendingKiloModel, setPendingKiloModel] = createSignal<{
+  const [pendingAccureModel, setPendingAccureModel] = createSignal<{
     modelID?: string
     agent?: string
     after: number
@@ -536,7 +536,7 @@ export const SessionProvider: ParentComponent = (props) => {
       mode: getModeModel(agentName),
       global: getGlobalModel(),
       recent: store.recentModels,
-      fallback: KILO_AUTO,
+      fallback: ACCURECODE_AUTO,
     })
   }
 
@@ -603,35 +603,35 @@ export const SessionProvider: ParentComponent = (props) => {
     }
   }
 
-  function selectKiloModel(modelID?: string, agent?: string) {
+  function selectAccureModel(modelID?: string, agent?: string) {
     if (!modelID && !agent) return
-    setPendingKiloModel({ ...(modelID && { modelID }), ...(agent && { agent }), after: catalog() })
+    setPendingAccureModel({ ...(modelID && { modelID }), ...(agent && { agent }), after: catalog() })
     if (modelID) vscode.postMessage({ type: "requestProviders" })
   }
 
-  const unsubKiloModel = vscode.onMessage((message: ExtensionMessage) => {
+  const unsubAccureModel = vscode.onMessage((message: ExtensionMessage) => {
     if (message.type === "providersLoaded") {
       setCatalog((value) => value + 1)
       return
     }
-    if (message.type === "selectKiloModel") selectKiloModel(message.modelID, message.agent)
+    if (message.type === "selectAccureModel") selectAccureModel(message.modelID, message.agent)
   })
-  onCleanup(unsubKiloModel)
+  onCleanup(unsubAccureModel)
 
   createEffect(() => {
-    const pending = pendingKiloModel()
+    const pending = pendingAccureModel()
     if (!pending || agents().length === 0 || (pending.modelID && catalog() <= pending.after)) return
-    setPendingKiloModel(null)
-    if (pending.modelID && !provider.providers()[KILO_PROVIDER_ID]?.models[pending.modelID]) {
-      console.warn("[Kilo New] Ignoring unavailable Kilo catalog model:", pending.modelID)
+    setPendingAccureModel(null)
+    if (pending.modelID && !provider.providers()[ACCURECODE_PROVIDER_ID]?.models[pending.modelID]) {
+      console.warn("[Accure New] Ignoring unavailable Accure catalog model:", pending.modelID)
       return
     }
     if (pending.agent && !agentNames().has(pending.agent)) {
-      console.warn("[Kilo New] Ignoring unavailable Kilo agent:", pending.agent)
+      console.warn("[Accure New] Ignoring unavailable Accure agent:", pending.agent)
       return
     }
     if (pending.agent) selectAgent(pending.agent)
-    if (pending.modelID) selectModel(KILO_PROVIDER_ID, pending.modelID)
+    if (pending.modelID) selectModel(ACCURECODE_PROVIDER_ID, pending.modelID)
   })
 
   function promptAgent(sessionID?: string) {
@@ -1098,7 +1098,7 @@ export const SessionProvider: ParentComponent = (props) => {
           title: language.t("session.cloud.import.failed") ?? "Failed to import cloud session",
           description: message.error,
         })
-        console.error("[Kilo New] Cloud session import failed:", message.error)
+        console.error("[Accure New] Cloud session import failed:", message.error)
         break
 
       case "worktreeStatsLoaded":
@@ -1472,7 +1472,7 @@ export const SessionProvider: ParentComponent = (props) => {
     const effectiveMessageID = messageID || part.messageID
 
     if (!effectiveMessageID) {
-      console.warn("[Kilo New] Part updated without messageID:", part.id, part.type)
+      console.warn("[Accure New] Part updated without messageID:", part.id, part.type)
       return
     }
 
@@ -2140,7 +2140,7 @@ export const SessionProvider: ParentComponent = (props) => {
     review?: ReviewMessageData,
   ) {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot send message: not connected")
+      console.warn("[Accure New] Cannot send message: not connected")
       return
     }
 
@@ -2207,7 +2207,7 @@ export const SessionProvider: ParentComponent = (props) => {
     context?: string,
   ) {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot send command: not connected")
+      console.warn("[Accure New] Cannot send command: not connected")
       return
     }
 
@@ -2269,7 +2269,7 @@ export const SessionProvider: ParentComponent = (props) => {
     const sessionID = currentSessionID()
     const scope = sessionID ?? draftSessionID()
     if (!scope) {
-      console.warn("[Kilo New] Cannot abort: no current or pending session")
+      console.warn("[Accure New] Cannot abort: no current or pending session")
       return
     }
     const messageID = [...pendingSubmissions].reverse().find(([, sid]) => sid === scope)?.[0]
@@ -2283,13 +2283,13 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function compact() {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot compact: not connected")
+      console.warn("[Accure New] Cannot compact: not connected")
       return
     }
 
     const sessionID = currentSessionID()
     if (!sessionID) {
-      console.warn("[Kilo New] Cannot compact: no current session")
+      console.warn("[Accure New] Cannot compact: no current session")
       return
     }
 
@@ -2392,7 +2392,7 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function createSession() {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot create session: not connected")
+      console.warn("[Accure New] Cannot create session: not connected")
       return
     }
 
@@ -2412,7 +2412,7 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function loadSessions() {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot load sessions: not connected")
+      console.warn("[Accure New] Cannot load sessions: not connected")
       return
     }
     vscode.postMessage({ type: "loadSessions" })
@@ -2435,11 +2435,11 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function selectSession(id: string) {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot select session: not connected")
+      console.warn("[Accure New] Cannot select session: not connected")
       return
     }
     if (id.startsWith("cloud:")) {
-      console.warn("[Kilo New] Cannot select cloud preview session via selectSession")
+      console.warn("[Accure New] Cannot select cloud preview session via selectSession")
       return
     }
     const ready = loaded().has(id)
@@ -2456,7 +2456,7 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function selectCloudSession(cloudSessionId: string) {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot select cloud session: not connected")
+      console.warn("[Accure New] Cannot select cloud session: not connected")
       return
     }
     const key = `cloud:${cloudSessionId}`
@@ -2469,7 +2469,7 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function deleteSession(id: string) {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot delete session: not connected")
+      console.warn("[Accure New] Cannot delete session: not connected")
       return
     }
     // Optimistically remove from the list so the UI updates immediately
@@ -2490,7 +2490,7 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function renameSession(id: string, title: string) {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot rename session: not connected")
+      console.warn("[Accure New] Cannot rename session: not connected")
       return
     }
     vscode.postMessage({ type: "renameSession", sessionID: id, title })
@@ -2498,11 +2498,11 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function exportSessionTranscript(id: string) {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot export session transcript: not connected")
+      console.warn("[Accure New] Cannot export session transcript: not connected")
       return
     }
     if (id.startsWith("cloud:")) {
-      console.warn("[Kilo New] Cannot export cloud session transcript")
+      console.warn("[Accure New] Cannot export cloud session transcript")
       return
     }
     vscode.postMessage({ type: "exportSessionTranscript", sessionID: id })

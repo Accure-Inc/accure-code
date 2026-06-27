@@ -1,8 +1,8 @@
 import { Component, For, Show, createMemo } from "solid-js"
-import { Card } from "@kilocode/accure-ui/card"
-import { Select } from "@kilocode/accure-ui/select"
-import { Switch } from "@kilocode/accure-ui/switch"
-import { Tooltip } from "@kilocode/accure-ui/tooltip"
+import { Card } from "@accurecode/accure-ui/card"
+import { Select } from "@accurecode/accure-ui/select"
+import { Switch } from "@accurecode/accure-ui/switch"
+import { Tooltip } from "@accurecode/accure-ui/tooltip"
 import { useConfig } from "../../context/config"
 import { useLanguage } from "../../context/language"
 import { useProvider } from "../../context/provider"
@@ -44,7 +44,7 @@ const ModelsTab: Component = () => {
   const subagentModel = createMemo(() => parseModelString(config().subagent_model ?? undefined))
   const speechModel = createMemo(() => selectedSpeechToTextModel(config()))
   const speechOption = createMemo(() => SPEECH_TO_TEXT_MODEL_OPTIONS.find((item) => item.value === speechModel()))
-  const kiloReady = createMemo(() => hasSpeechToTextAccess(config(), provider.authStates()))
+  const accureReady = createMemo(() => hasSpeechToTextAccess(config(), provider.authStates()))
   const variantKey = createMemo(() => config().subagent_model ?? undefined)
   const subagentVariants = createMemo(() => Object.keys(provider.findModel(subagentModel())?.variants ?? {}))
   const subagentVariant = createMemo(() => {
@@ -179,7 +179,7 @@ const ModelsTab: Component = () => {
         <SettingsRow
           title={language.t("settings.models.speechToTextModel.title")}
           description={
-            kiloReady()
+            accureReady()
               ? language.t("settings.models.speechToTextModel.description")
               : language.t("settings.models.speechToText.disabledDescription")
           }
@@ -187,7 +187,7 @@ const ModelsTab: Component = () => {
           <Tooltip
             value={language.t("settings.models.speechToText.disabledDescription")}
             placement="top"
-            inactive={kiloReady()}
+            inactive={accureReady()}
           >
             <Select
               options={SPEECH_TO_TEXT_MODEL_OPTIONS}
@@ -208,7 +208,7 @@ const ModelsTab: Component = () => {
               triggerProps={{
                 "aria-label": `${language.t("settings.models.speechToTextModel.title")}: ${speechOption()?.label}`,
               }}
-              disabled={!kiloReady()}
+              disabled={!accureReady()}
               placeholder={DEFAULT_SPEECH_TO_TEXT_MODEL.label}
             />
           </Tooltip>

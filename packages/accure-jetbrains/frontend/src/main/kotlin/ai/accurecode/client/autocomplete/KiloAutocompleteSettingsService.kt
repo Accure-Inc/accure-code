@@ -1,6 +1,6 @@
-package ai.kilocode.client.autocomplete
+package ai.accurecode.client.autocomplete
 
-import ai.kilocode.rpc.dto.LegacyAutocompleteSettingsDto
+import ai.accurecode.rpc.dto.LegacyAutocompleteSettingsDto
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
@@ -9,10 +9,10 @@ import com.intellij.openapi.components.service
 
 @Service(Service.Level.APP)
 @State(
-    name = "KiloAutocompleteSettings",
-    storages = [Storage("kiloAutocompleteSettings.xml")],
+    name = "AccureAutocompleteSettings",
+    storages = [Storage("accureAutocompleteSettings.xml")],
 )
-class KiloAutocompleteSettingsService : PersistentStateComponent<KiloAutocompleteSettingsService.State> {
+class AccureAutocompleteSettingsService : PersistentStateComponent<AccureAutocompleteSettingsService.State> {
 
     data class State(
         var enableAutoTrigger: Boolean? = null,
@@ -35,6 +35,6 @@ class KiloAutocompleteSettingsService : PersistentStateComponent<KiloAutocomplet
     }
 
     companion object {
-        fun getInstance(): KiloAutocompleteSettingsService = service()
+        fun getInstance(): AccureAutocompleteSettingsService = service()
     }
 }

@@ -1,5 +1,5 @@
 import { render } from "solid-js/web"
-import "@kilocode/accure-ui/styles"
+import "@accurecode/accure-ui/styles"
 import { MarketplaceApp } from "./MarketplaceApp"
 
 const root = document.getElementById("root")

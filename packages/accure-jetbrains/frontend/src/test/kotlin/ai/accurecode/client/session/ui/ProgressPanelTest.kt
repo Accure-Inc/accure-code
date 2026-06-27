@@ -1,11 +1,11 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.session.model.Permission
-import ai.kilocode.client.session.model.PermissionMeta
-import ai.kilocode.client.session.model.SessionModel
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.session.model.Permission
+import ai.accurecode.client.session.model.PermissionMeta
+import ai.accurecode.client.session.model.SessionModel
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
 import com.intellij.testFramework.fixtures.BasePlatformTestCase

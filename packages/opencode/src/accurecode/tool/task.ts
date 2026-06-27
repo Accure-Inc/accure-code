@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { Effect, Schema } from "effect"
 import path from "path"
 import { Permission } from "@/permission"
@@ -12,7 +12,7 @@ import type { Config } from "../../config/config"
 import { Provider } from "../../provider/provider"
 import z from "zod"
 
-const log = Log.create({ service: "kilocode-task-model" })
+const log = Log.create({ service: "accurecode-task-model" })
 
 // RATIONALE: Mirror narrow state slice Task tool consumes and ignore unrelated TUI fields.
 const ModelState = z
@@ -30,13 +30,13 @@ const ModelState = z
   })
   .passthrough()
 
-export namespace KiloTask {
+export namespace AccureTask {
   /** Reject primary agents used as subagents */
   export function validate(info: Agent.Info, name: string) {
     if (info.mode === "primary") throw new Error(`Agent "${name}" is a primary agent and cannot be used as a subagent`)
   }
 
-  /** Kilo keeps delegation one level deep to avoid recursive subagent chains. */
+  /** Accure keeps delegation one level deep to avoid recursive subagent chains. */
   export function nestedTask(): false {
     return false
   }
@@ -48,7 +48,7 @@ export namespace KiloTask {
    * overriding the selected subagent's own allowlist with parent ask/allow rules.
    *
    * OpenCode removed parent-agent inheritance entirely in anomalyco/opencode#31696.
-   * Kilo intentionally differs: parent denials remain hard ceilings for Plan Mode
+   * Accure intentionally differs: parent denials remain hard ceilings for Plan Mode
    * and MCP restrictions, while parent ask/allow rules must not replace the
    * selected subagent's policy. Preserve this distinction during upstream merges.
    *
@@ -107,8 +107,8 @@ export namespace KiloTask {
     }
   }
 
-  const saved = Effect.fn("KiloTask.savedModel")(function* (name: string) {
-    if (Flag.KILO_CLIENT !== "cli") return undefined
+  const saved = Effect.fn("AccureTask.savedModel")(function* (name: string) {
+    if (Flag.ACCURECODE_CLIENT !== "cli") return undefined
     const file = path.join(Global.Path.state, "model.json")
     const state = yield* Effect.tryPromise({
       try: () =>
@@ -128,7 +128,7 @@ export namespace KiloTask {
   })
 
   /** Resolve the task subagent model while discarding stale unavailable overrides. */
-  export const resolveModel = Effect.fn("KiloTask.resolveModel")(function* (input: {
+  export const resolveModel = Effect.fn("AccureTask.resolveModel")(function* (input: {
     name: string
     agent: Pick<Agent.Info, "model" | "variant">
     config: Pick<Config.Info, "subagent_model" | "subagent_variant" | "subagent_variant_overrides">

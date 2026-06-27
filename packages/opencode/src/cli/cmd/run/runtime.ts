@@ -12,7 +12,7 @@
 //   3. starts the stream transport (SDK event subscription), lazily for fresh
 //      local sessions,
 //   4. runs the prompt queue until the footer closes.
-import { createKiloClient } from "@kilocode/sdk/v2"
+import { createAccureClient } from "@accurecode/sdk/v2"
 import { Flag } from "@opencode-ai/core/flag/flag"
 import { createRunDemo } from "./demo"
 import { resolveDiffStyle, resolveFooterKeybinds, resolveModelInfo, resolveSessionInfo } from "./runtime.boot"
@@ -418,7 +418,7 @@ async function runInteractiveRuntime(input: RunRuntimeInput): Promise<void> {
         .then(loadCatalog)
         .catch(() => {})
 
-      if (Flag.KILO_SHOW_TTFD) {
+      if (Flag.ACCURECODE_SHOW_TTFD) {
         footer.append({
           kind: "system",
           text: `startup ${Math.max(0, Math.round(performance.now() - start))}ms`,
@@ -717,8 +717,8 @@ export async function runInteractiveLocalMode(input: RunLocalInput): Promise<voi
       "opencode.demo": input.demo,
     },
     async () => {
-      const sdk = createKiloClient({
-        baseUrl: "http://kilo.internal",
+      const sdk = createAccureClient({
+        baseUrl: "http://accure.internal",
         fetch: input.fetch,
         directory: input.directory,
       })

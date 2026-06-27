@@ -1,17 +1,17 @@
 import path from "path"
 import os from "os"
-import { KiloSessionPrompt } from "@/kilocode/session/prompt" // kilocode_change
-import { KiloSessionMessageOrder } from "@/kilocode/session/message-order" // kilocode_change
-import { KiloSessionPromptQueue } from "@/kilocode/session/prompt-queue" // kilocode_change
-import { KiloSession } from "@/kilocode/session" // kilocode_change
-import { KiloCostPropagation } from "@/kilocode/session/cost-propagation" // kilocode_change
-import { KiloSessionProcessor } from "@/kilocode/session/processor" // kilocode_change
-import { CommandTimeout } from "@/kilocode/command-timeout" // kilocode_change
-import { Suggestion } from "@/kilocode/suggestion" // kilocode_change
-import { Question } from "@/question" // kilocode_change
-import { BUILTIN_COMMANDS } from "@/kilocode/session/builtin-commands" // kilocode_change
-import { zod } from "@opencode-ai/core/effect-zod" // kilocode_change
-import { withStatics } from "@opencode-ai/core/schema" // kilocode_change
+import { AccureSessionPrompt } from "@/accurecode/session/prompt" // accurecode_change
+import { AccureSessionMessageOrder } from "@/accurecode/session/message-order" // accurecode_change
+import { AccureSessionPromptQueue } from "@/accurecode/session/prompt-queue" // accurecode_change
+import { AccureSession } from "@/accurecode/session" // accurecode_change
+import { AccureCostPropagation } from "@/accurecode/session/cost-propagation" // accurecode_change
+import { AccureSessionProcessor } from "@/accurecode/session/processor" // accurecode_change
+import { CommandTimeout } from "@/accurecode/command-timeout" // accurecode_change
+import { Suggestion } from "@/accurecode/suggestion" // accurecode_change
+import { Question } from "@/question" // accurecode_change
+import { BUILTIN_COMMANDS } from "@/accurecode/session/builtin-commands" // accurecode_change
+import { zod } from "@opencode-ai/core/effect-zod" // accurecode_change
+import { withStatics } from "@opencode-ai/core/schema" // accurecode_change
 import { SessionID, MessageID, PartID } from "./schema"
 import type { NotFoundError } from "@/storage/storage"
 import { MessageV2 } from "./message-v2"
@@ -91,12 +91,12 @@ IMPORTANT:
 
 const STRUCTURED_OUTPUT_SYSTEM_PROMPT = `IMPORTANT: The user has requested structured output. You MUST use the StructuredOutput tool to provide your final response. Do NOT respond with plain text - you MUST call the StructuredOutput tool with your answer formatted according to the schema.`
 
-// kilocode_change
-export const shouldAskPlanFollowup = KiloSessionPrompt.shouldAskPlanFollowup
+// accurecode_change
+export const shouldAskPlanFollowup = AccureSessionPrompt.shouldAskPlanFollowup
 
-// kilocode_change start - persistent tool-output pruning when payload is already large
+// accurecode_change start - persistent tool-output pruning when payload is already large
 const REQUEST_PRUNE_BYTES = 1_250_000
-// kilocode_change end
+// accurecode_change end
 
 const log = Log.create({ service: "session.prompt" })
 const elog = EffectLogger.create({ service: "session.prompt" })
@@ -126,7 +126,7 @@ export const layer = Layer.effect(
     const commands = yield* Command.Service
     const config = yield* Config.Service
     const permission = yield* Permission.Service
-    const question = yield* Question.Service // kilocode_change - dismiss superseded pending questions through the shared service
+    const question = yield* Question.Service // accurecode_change - dismiss superseded pending questions through the shared service
     const fsys = yield* AppFileSystem.Service
     const mcp = yield* MCP.Service
     const lsp = yield* LSP.Service
@@ -155,8 +155,8 @@ export const layer = Layer.effect(
 
     const cancel = Effect.fn("SessionPrompt.cancel")(function* (sessionID: SessionID) {
       yield* elog.info("cancel", { sessionID })
-      yield* KiloSessionPromptQueue.cancel(sessionID) // kilocode_change - drop queued follow-up loops on abort
-      KiloSessionPrompt.abortPlanFollowup(sessionID) // kilocode_change - abort pending plan-followup handover work
+      yield* AccureSessionPromptQueue.cancel(sessionID) // accurecode_change - drop queued follow-up loops on abort
+      AccureSessionPrompt.abortPlanFollowup(sessionID) // accurecode_change - abort pending plan-followup handover work
       yield* state.cancel(sessionID)
     })
 
@@ -296,7 +296,7 @@ export const layer = Layer.effect(
           small: true,
           tools: {},
           model: mdl,
-          sessionID: KiloSessionPrompt.titleID(input.session.id), // kilocode_change - isolate title requests from the agent task
+          sessionID: AccureSessionPrompt.titleID(input.session.id), // accurecode_change - isolate title requests from the agent task
           retries: 2,
           messages: [{ role: "user", content: "Generate a title for this conversation:\n" }, ...msgs],
         })
@@ -304,13 +304,15 @@ export const layer = Layer.effect(
           Stream.filter(LLMEvent.is.textDelta),
           Stream.map((e) => e.text),
           Stream.mkString,
-          Effect.orDie,
+          // accurecode_change start - prevent title generation failure from crashing the main session prompt loop
+          Effect.catch(() => Effect.succeed("")),
+          // accurecode_change end
         )
       const cleaned = text
         .replace(/<think>[\s\S]*?<\/think>\s*/g, "")
         .split("\n")
-        .map((line) => line.trim())
-        .find((line) => line.length > 0)
+        .map((line: string) => line.trim())
+        .find((line: string) => line.length > 0)
       if (!cleaned) return
       const t = cleaned.length > 100 ? cleaned.substring(0, 97) + "..." : cleaned
       yield* sessions
@@ -387,12 +389,12 @@ export const layer = Layer.effect(
 
       let error: Error | undefined
       const taskAbort = new AbortController()
-      // kilocode_change start - shared reader for the child session id written by task.ts ctx.metadata (#6321)
+      // accurecode_change start - shared reader for the child session id written by task.ts ctx.metadata (#6321)
       const childID = () => {
         const meta = part.state.status !== "pending" ? part.state.metadata : undefined
         return (meta as { sessionId?: string } | undefined)?.sessionId
       }
-      // kilocode_change end
+      // accurecode_change end
       const result = yield* taskTool
         .execute(taskArgs, {
           agent: task.agent,
@@ -410,9 +412,9 @@ export const layer = Layer.effect(
                 state: { ...part.state, ...val },
               } satisfies MessageV2.ToolPart)
             }),
-          // kilocode_change start - resolve permissions at ask time so active tools see config edits
+          // accurecode_change start - resolve permissions at ask time so active tools see config edits
           ask: (req: any) =>
-            KiloSessionPrompt.askPermission({
+            AccureSessionPrompt.askPermission({
               permission,
               agents,
               sessions,
@@ -423,7 +425,7 @@ export const layer = Layer.effect(
                 sessionID,
               },
             }).pipe(Effect.orDie),
-          // kilocode_change end
+          // accurecode_change end
         })
         .pipe(
           Effect.catchCause((cause) => {
@@ -437,12 +439,12 @@ export const layer = Layer.effect(
               taskAbort.abort()
               assistantMessage.finish = "tool-calls"
               assistantMessage.time.completed = Date.now()
-              // kilocode_change start - propagate partial subagent cost on cancel (#6321)
+              // accurecode_change start - propagate partial subagent cost on cancel (#6321)
               const cid = childID()
               if (cid) {
-                assistantMessage.cost = yield* KiloCostPropagation.childCost(sessions, SessionID.make(cid))
+                assistantMessage.cost = yield* AccureCostPropagation.childCost(sessions, SessionID.make(cid))
               }
-              // kilocode_change end
+              // accurecode_change end
               yield* sessions.updateMessage(assistantMessage)
               if (part.state.status === "running") {
                 yield* sessions.updatePart({
@@ -475,12 +477,12 @@ export const layer = Layer.effect(
 
       assistantMessage.finish = "tool-calls"
       assistantMessage.time.completed = Date.now()
-      // kilocode_change start - include subagent total cost on the wrapper message (#6321)
+      // accurecode_change start - include subagent total cost on the wrapper message (#6321)
       const cid = result?.metadata?.sessionId ?? childID()
       if (cid) {
-        assistantMessage.cost = yield* KiloCostPropagation.childCost(sessions, SessionID.make(cid))
+        assistantMessage.cost = yield* AccureCostPropagation.childCost(sessions, SessionID.make(cid))
       }
-      // kilocode_change end
+      // accurecode_change end
       yield* sessions.updateMessage(assistantMessage)
 
       if (result && part.state.status === "running") {
@@ -523,7 +525,7 @@ export const layer = Layer.effect(
         time: { created: Date.now() },
         agent: lastUser.agent,
         model: lastUser.model,
-        editorContext: lastUser.editorContext, // kilocode_change — preserve editor context
+        editorContext: lastUser.editorContext, // accurecode_change — preserve editor context
       }
       yield* sessions.updateMessage(summaryUserMsg)
       yield* sessions.updatePart({
@@ -589,7 +591,7 @@ export const layer = Layer.effect(
               providerID: model.providerID,
             }
             yield* sessions.updateMessage(msg)
-            const callID = ulid() // kilocode_change - correlate v2 shell events with the persisted tool part
+            const callID = ulid() // accurecode_change - correlate v2 shell events with the persisted tool part
             const started = Date.now()
             const part: MessageV2.ToolPart = {
               type: "tool",
@@ -597,7 +599,7 @@ export const layer = Layer.effect(
               messageID: msg.id,
               sessionID: input.sessionID,
               tool: ShellID.ToolID,
-              callID, // kilocode_change
+              callID, // accurecode_change
               state: {
                 status: "running",
                 time: { start: started },
@@ -621,14 +623,14 @@ export const layer = Layer.effect(
           const args = Shell.args(sh, input.command, cwd)
           let output = ""
           let aborted = false
-          let timeout: string | undefined // kilocode_change
+          let timeout: string | undefined // accurecode_change
 
           const finish = Effect.uninterruptible(
             Effect.gen(function* () {
               if (aborted) {
                 output += "\n\n" + ["<metadata>", "User aborted the command", "</metadata>"].join("\n")
               }
-              if (timeout) output += "\n\n" + ["<metadata>", timeout, "</metadata>"].join("\n") // kilocode_change
+              if (timeout) output += "\n\n" + ["<metadata>", timeout, "</metadata>"].join("\n") // accurecode_change
               const completed = Date.now()
               if (flags.experimentalEventSystem) {
                 yield* events.publish(SessionEvent.Shell.Ended, {
@@ -671,7 +673,7 @@ export const layer = Layer.effect(
                 forceKillAfter: "3 seconds",
               })
               const handle = yield* spawner.spawn(cmd)
-              // kilocode_change start
+              // accurecode_change start
               timeout = yield* CommandTimeout.drain(
                 handle,
                 Stream.runForEach(Stream.decodeText(handle.all), (chunk) =>
@@ -685,7 +687,7 @@ export const layer = Layer.effect(
                 ),
                 "shell command terminated",
               )
-              // kilocode_change end
+              // accurecode_change end
             }).pipe(Effect.scoped, Effect.orDie),
           ).pipe(Effect.exit)
 
@@ -713,11 +715,11 @@ export const layer = Layer.effect(
       const err = Cause.squash(exit.cause)
       if (Provider.ModelNotFoundError.isInstance(err)) {
         const hint = err.suggestions?.length ? ` Did you mean: ${err.suggestions.join(", ")}?` : ""
-        const empty = err.modelsEmpty ? " No models are currently available." : "" // kilocode_change
+        const empty = err.modelsEmpty ? " No models are currently available." : "" // accurecode_change
         yield* bus.publish(Session.Event.Error, {
           sessionID,
           error: new NamedError.Unknown({
-            message: `Model not found: ${err.providerID}/${err.modelID}.${hint}${empty}`, // kilocode_change
+            message: `Model not found: ${err.providerID}/${err.modelID}.${hint}${empty}`, // accurecode_change
           }).toObject(),
         })
       }
@@ -784,7 +786,7 @@ export const layer = Layer.effect(
         },
         system: input.system,
         format: input.format,
-        editorContext: input.editorContext, // kilocode_change
+        editorContext: input.editorContext, // accurecode_change
       }
 
       if (current?.agent !== info.agent) {
@@ -920,7 +922,7 @@ export const layer = Layer.effect(
                   { ...part, messageID: info.id, sessionID: input.sessionID },
                 ]
               }
-              // kilocode_change start - normalize user image data before persistence
+              // accurecode_change start - normalize user image data before persistence
               if (part.mime.startsWith("image/")) {
                 const file: MessageV2.FilePart = {
                   ...part,
@@ -930,7 +932,7 @@ export const layer = Layer.effect(
                 }
                 return [yield* image.normalize(file).pipe(Effect.orDie)]
               }
-              // kilocode_change end
+              // accurecode_change end
               break
             case "file:": {
               log.info("file", { mime: part.mime })
@@ -1039,7 +1041,7 @@ export const layer = Layer.effect(
 
               if (mime === "application/x-directory") {
                 const args = { filePath: filepath }
-                const exit = yield* execRead(args, { includeDirectoryFiles: true }).pipe(Effect.exit) // kilocode_change inline folder files
+                const exit = yield* execRead(args, { includeDirectoryFiles: true }).pipe(Effect.exit) // accurecode_change inline folder files
                 if (Exit.isFailure(exit)) {
                   const error = Cause.squash(exit.cause)
                   log.error("failed to read directory", { error })
@@ -1083,7 +1085,7 @@ export const layer = Layer.effect(
                 ]
               }
 
-              // kilocode_change start - reject oversized user image files before reading and base64 allocation
+              // accurecode_change start - reject oversized user image files before reading and base64 allocation
               if (mime.startsWith("image/")) {
                 const limit = (yield* config.get()).attachment?.image?.max_base64_bytes ?? Image.MAX_BASE64_BYTES
                 const stat = yield* fsys.stat(filepath).pipe(Effect.catch(Effect.die))
@@ -1100,7 +1102,7 @@ export const layer = Layer.effect(
                     }),
                   )
               }
-              // kilocode_change end
+              // accurecode_change end
               const file: MessageV2.FilePart = {
                 id: part.id ? PartID.make(part.id) : PartID.ascending(),
                 messageID: info.id,
@@ -1113,9 +1115,9 @@ export const layer = Layer.effect(
                 filename: part.filename!,
                 source: part.source,
               }
-              // kilocode_change start - apply image limits after resolving user file URLs
+              // accurecode_change start - apply image limits after resolving user file URLs
               const attachment = mime.startsWith("image/") ? yield* image.normalize(file).pipe(Effect.orDie) : file
-              // kilocode_change end
+              // accurecode_change end
               return [
                 ...(referenceContext ? [{ ...referenceContext, messageID: info.id, sessionID: input.sessionID }] : []),
                 {
@@ -1152,7 +1154,7 @@ export const layer = Layer.effect(
         return [{ ...part, messageID: info.id, sessionID: input.sessionID }]
       })
 
-      // kilocode_change start - resolve and persist the exact transformed Kilo prompt parts
+      // accurecode_change start - resolve and persist the exact transformed Accure prompt parts
       const resolvedParts = yield* Effect.forEach(input.parts, resolvePart, { concurrency: "unbounded" }).pipe(
         Effect.map((x) => x.flat().map(assign)),
       )
@@ -1170,7 +1172,7 @@ export const layer = Layer.effect(
       )
 
       const parts = resolvedParts
-      // kilocode_change end
+      // accurecode_change end
 
       const parsed = decodeMessageInfo(info, { errors: "all", propertyOrder: "original" })
       if (Exit.isFailure(parsed)) {
@@ -1295,10 +1297,10 @@ export const layer = Layer.effect(
       function* (input: PromptInput) {
         const session = yield* sessions.get(input.sessionID).pipe(Effect.orDie)
         yield* revert.cleanup(session)
-        // kilocode_change start - recover interrupted Kilo turns before accepting a follow-up
-        yield* KiloSessionPrompt.recoverDanglingAssistant({ sessionID: input.sessionID, status, sessions })
-        yield* KiloSessionPrompt.recoverProviderFinishError({ sessionID: input.sessionID, status, sessions })
-        // kilocode_change end
+        // accurecode_change start - recover interrupted Accure turns before accepting a follow-up
+        yield* AccureSessionPrompt.recoverDanglingAssistant({ sessionID: input.sessionID, status, sessions })
+        yield* AccureSessionPrompt.recoverProviderFinishError({ sessionID: input.sessionID, status, sessions })
+        // accurecode_change end
         const message = yield* createUserMessage(input)
         yield* sessions.touch(input.sessionID)
 
@@ -1307,17 +1309,17 @@ export const layer = Layer.effect(
           permissions.push({ permission: t, action: enabled ? "allow" : "deny", pattern: "*" })
         }
         if (permissions.length > 0) {
-          // kilocode_change start - preserve inherited task restrictions while refreshing prompt tool toggles
-          const merged = KiloSessionPrompt.mergeToolPermissions({
+          // accurecode_change start - preserve inherited task restrictions while refreshing prompt tool toggles
+          const merged = AccureSessionPrompt.mergeToolPermissions({
             existing: session.permission ?? [],
             toggles: permissions,
           })
           session.permission = merged
           yield* sessions.setPermission({ sessionID: session.id, permission: merged })
-          // kilocode_change end
+          // accurecode_change end
         }
 
-        // kilocode_change start — unblock tools waiting on user input so any in-flight
+        // accurecode_change start — unblock tools waiting on user input so any in-flight
         // handle.process can return. Adding a new user message is the signal that any
         // pending tool prompt is superseded, so we dismiss even on the noReply path.
         // Critically we never cancel the in-flight fiber here — that would abort the
@@ -1331,23 +1333,23 @@ export const layer = Layer.effect(
         // Queue tails and runner fibers can resume outside the HTTP request's
         // ambient instance context; bridge both Effect refs and legacy ALS.
         const bridge = yield* EffectBridge.make()
-        return yield* KiloSessionPromptQueue.enqueue(
+        return yield* AccureSessionPromptQueue.enqueue(
           input.sessionID,
           message.info.id,
           bridge.run(
             loop({ sessionID: input.sessionID, snapshotInitialization: input.snapshotInitialization }).pipe(
               Effect.orDie,
             ),
-          ), // kilocode_change
+          ), // accurecode_change
           bridge.run(lastAssistant(input.sessionID)),
         )
-        // kilocode_change end
+        // accurecode_change end
       },
       Effect.catchTag("NotFoundError", Effect.die),
     )
 
     const lastAssistant = Effect.fnUntraced(function* (sessionID: SessionID) {
-      // kilocode_change start - retry when cancel races before shellImpl writes messages
+      // accurecode_change start - retry when cancel races before shellImpl writes messages
       for (let attempt = 0; attempt < 10; attempt++) {
         const match = yield* sessions.findMessage(sessionID, (m) => m.info.role !== "user")
         if (Option.isSome(match)) return match.value
@@ -1355,23 +1357,23 @@ export const layer = Layer.effect(
         if (msgs.length > 0) return msgs[0]
         yield* Effect.sleep("50 millis")
       }
-      // kilocode_change end
+      // accurecode_change end
       throw new Error("Impossible")
     })
 
-    // kilocode_change — mutable close-reason per session, set by runLoop and read by loop
-    const closeReasons = new Map<string, KiloSession.CloseReason>()
+    // accurecode_change — mutable close-reason per session, set by runLoop and read by loop
+    const closeReasons = new Map<string, AccureSession.CloseReason>()
 
-    // kilocode_change start - retain request-scoped snapshot initialization policy
+    // accurecode_change start - retain request-scoped snapshot initialization policy
     const runLoop: (input: LoopInput) => Effect.Effect<MessageV2.WithParts, NotFoundError> = Effect.fn(
       "SessionPrompt.run",
     )(function* (input: LoopInput) {
       const sessionID = input.sessionID
-      // kilocode_change end
-      // kilocode_change — cache environment details per turn (prompt caching)
-      const envCache: KiloSessionPrompt.EnvCache = {}
-      closeReasons.delete(sessionID) // kilocode_change
-      let compactionAttempts = 0 // kilocode_change - cap compaction attempts per turn to avoid infinite loops
+      // accurecode_change end
+      // accurecode_change — cache environment details per turn (prompt caching)
+      const envCache: AccureSessionPrompt.EnvCache = {}
+      closeReasons.delete(sessionID) // accurecode_change
+      let compactionAttempts = 0 // accurecode_change - cap compaction attempts per turn to avoid infinite loops
       const ctx = yield* InstanceState.context
       const slog = elog.with({ sessionID })
       let structured: unknown
@@ -1383,31 +1385,31 @@ export const layer = Layer.effect(
         yield* slog.info("loop", { step })
 
         let msgs = yield* MessageV2.filterCompactedEffect(sessionID)
-        msgs = KiloSessionPromptQueue.scope(sessionID, msgs) // kilocode_change - hide later queued prompts
-        msgs = KiloSessionPrompt.trimBeforeLastSummary(msgs) // kilocode_change - trim on any completed summary (e.g. manual /compact against a text user)
+        msgs = AccureSessionPromptQueue.scope(sessionID, msgs) // accurecode_change - hide later queued prompts
+        msgs = AccureSessionPrompt.trimBeforeLastSummary(msgs) // accurecode_change - trim on any completed summary (e.g. manual /compact against a text user)
 
-        // kilocode_change start - select loop state by chronology after retained-tail projection
-        const latest = KiloSessionMessageOrder.latest(msgs)
+        // accurecode_change start - select loop state by chronology after retained-tail projection
+        const latest = AccureSessionMessageOrder.latest(msgs)
         const { user: lastUser, assistant: lastAssistant, finished: lastFinished, tasks } = latest
-        // kilocode_change end
+        // accurecode_change end
 
         if (!lastUser) throw new Error("No user message found in stream. This should never happen.")
 
         const lastAssistantMsg = msgs.findLast(
           (msg) => msg.info.role === "assistant" && msg.info.id === lastAssistant?.id,
         )
-        // kilocode_change start - compare chronology, not generated IDs
+        // accurecode_change start - compare chronology, not generated IDs
         const userBeforeAssistant =
           latest.userMessage &&
           latest.assistantMessage &&
-          KiloSessionMessageOrder.compare(latest.userMessage, latest.assistantMessage) < 0
-        // kilocode_change end
-        // kilocode_change start - carry local review command marker into LLM telemetry
+          AccureSessionMessageOrder.compare(latest.userMessage, latest.assistantMessage) < 0
+        // accurecode_change end
+        // accurecode_change start - carry local review command marker into LLM telemetry
         const telemetry =
-          KiloSessionProcessor.extractReviewTelemetry(
+          AccureSessionProcessor.extractReviewTelemetry(
             msgs.findLast((m) => m.info.role === "user" && m.info.id === lastUser.id)?.parts ?? [],
-          ) ?? KiloSessionProcessor.extractSuggestionReviewTelemetry(lastAssistantMsg?.parts ?? [])
-        // kilocode_change end
+          ) ?? AccureSessionProcessor.extractSuggestionReviewTelemetry(lastAssistantMsg?.parts ?? [])
+        // accurecode_change end
 
         // Some providers return "stop" even when the assistant message contains tool calls.
         // Keep the loop running so tool results can be sent back to the model.
@@ -1416,36 +1418,36 @@ export const layer = Layer.effect(
         const hasToolCalls =
           lastAssistantMsg?.parts.some((part) => part.type === "tool" && !part.metadata?.providerExecuted) ?? false
 
-        // kilocode_change start - plan_exit is a hard stop before another model call
+        // accurecode_change start - plan_exit is a hard stop before another model call
         if (
           lastAssistant?.finish &&
           hasToolCalls &&
           lastAssistant.parentID === lastUser.id &&
           userBeforeAssistant &&
-          KiloSessionPrompt.shouldAskPlanFollowup({ messages: msgs, abort: AbortSignal.any([]) })
+          AccureSessionPrompt.shouldAskPlanFollowup({ messages: msgs, abort: AbortSignal.any([]) })
         ) {
           const action = yield* Effect.promise((signal) =>
-            KiloSessionPrompt.askPlanFollowup({ sessionID, messages: msgs, abort: signal, question }),
+            AccureSessionPrompt.askPlanFollowup({ sessionID, messages: msgs, abort: signal, question }),
           )
           if (action === "continue") continue
           yield* slog.info("exiting loop")
           break
         }
-        // kilocode_change end
+        // accurecode_change end
 
         if (
           lastAssistant?.finish &&
           !["tool-calls"].includes(lastAssistant.finish) &&
           !hasToolCalls &&
-          lastAssistant.parentID === lastUser.id && // kilocode_change - unrelated later assistants do not answer this turn
-          userBeforeAssistant // kilocode_change - compare chronology, not generated IDs
+          lastAssistant.parentID === lastUser.id && // accurecode_change - unrelated later assistants do not answer this turn
+          userBeforeAssistant // accurecode_change - compare chronology, not generated IDs
         ) {
-          // kilocode_change start - ask follow-up when plan_exit tool was called
+          // accurecode_change start - ask follow-up when plan_exit tool was called
           const action = yield* Effect.promise((signal) =>
-            KiloSessionPrompt.askPlanFollowup({ sessionID, messages: msgs, abort: signal, question }),
+            AccureSessionPrompt.askPlanFollowup({ sessionID, messages: msgs, abort: signal, question }),
           )
           if (action === "continue") continue
-          // kilocode_change end
+          // accurecode_change end
           yield* slog.info("exiting loop")
           break
         }
@@ -1475,13 +1477,13 @@ export const layer = Layer.effect(
             auto: task.auto,
             overflow: task.overflow,
           })
-          // kilocode_change start - compaction.process only returns "stop" after
+          // accurecode_change start - compaction.process only returns "stop" after
           // setting ContextOverflowError on the summary message; surface as turn error
           if (result === "stop") {
             closeReasons.set(sessionID, "error")
             break
           }
-          // kilocode_change end
+          // accurecode_change end
           continue
         }
 
@@ -1490,8 +1492,8 @@ export const layer = Layer.effect(
           lastFinished.summary !== true &&
           (yield* compaction.isOverflow({ tokens: lastFinished.tokens, model }))
         ) {
-          // kilocode_change start
-          const guard = KiloSessionPrompt.guardCompactionAttempt({
+          // accurecode_change start
+          const guard = AccureSessionPrompt.guardCompactionAttempt({
             sessionID,
             attempts: compactionAttempts,
             closeReasons,
@@ -1505,7 +1507,7 @@ export const layer = Layer.effect(
             break
           }
           compactionAttempts++
-          // kilocode_change end
+          // accurecode_change end
           yield* compaction.create({ sessionID, agent: lastUser.agent, model: lastUser.model, auto: true })
           continue
         }
@@ -1556,8 +1558,8 @@ export const layer = Layer.effect(
             assistantMessage: msg,
             sessionID,
             model,
-            telemetry, // kilocode_change
-            snapshotInitialization: input.snapshotInitialization, // kilocode_change
+            telemetry, // accurecode_change
+            snapshotInitialization: input.snapshotInitialization, // accurecode_change
           })
           .pipe(Effect.onInterrupt(() => finalize))
 
@@ -1577,8 +1579,8 @@ export const layer = Layer.effect(
           }).pipe(
             Effect.provideService(Plugin.Service, plugin),
             Effect.provideService(Permission.Service, permission),
-            Effect.provideService(Agent.Service, agents), // kilocode_change
-            Effect.provideService(Session.Service, sessions), // kilocode_change
+            Effect.provideService(Agent.Service, agents), // accurecode_change
+            Effect.provideService(Session.Service, sessions), // accurecode_change
             Effect.provideService(ToolRegistry.Service, registry),
             Effect.provideService(MCP.Service, mcp),
             Effect.provideService(Truncate.Service, truncate),
@@ -1598,11 +1600,11 @@ export const layer = Layer.effect(
 
           if (step > 1 && lastFinished) {
             for (const m of msgs) {
-              // kilocode_change start - compare chronology, not generated IDs
+              // accurecode_change start - compare chronology, not generated IDs
               const finishedBeforeMessage =
-                latest.finishedMessage && KiloSessionMessageOrder.compare(latest.finishedMessage, m) < 0
+                latest.finishedMessage && AccureSessionMessageOrder.compare(latest.finishedMessage, m) < 0
               if (m.info.role !== "user" || !finishedBeforeMessage) continue
-              // kilocode_change end
+              // accurecode_change end
               for (const p of m.parts) {
                 if (p.type !== "text" || p.ignored || p.synthetic) continue
                 if (!p.text.trim()) continue
@@ -1620,17 +1622,17 @@ export const layer = Layer.effect(
 
           yield* plugin.trigger("experimental.chat.messages.transform", {}, { messages: msgs })
 
-          // kilocode_change start — ephemeral context injection + post-summary
+          // accurecode_change start — ephemeral context injection + post-summary
           // media strip (keeps outgoing body under the gateway body-size limit
           // even when filterCompacted couldn't trim the pre-summary history).
-          KiloSessionPrompt.injectEditorContext({ msgs, lastUser, sessionID, cache: envCache })
-          msgs = KiloSessionPrompt.maybeStripHistoricalMedia(msgs)
-          // kilocode_change end
+          AccureSessionPrompt.injectEditorContext({ msgs, lastUser, sessionID, cache: envCache })
+          msgs = AccureSessionPrompt.maybeStripHistoricalMedia(msgs)
+          // accurecode_change end
 
-          // kilocode_change start - persistently prune stale tool outputs when payload is already large
+          // accurecode_change start - persistently prune stale tool outputs when payload is already large
           const [skills, env, instructions] = yield* Effect.all([
             sys.skills(agent),
-            sys.environment(model, lastUser.editorContext), // kilocode_change
+            sys.environment(model, lastUser.editorContext), // accurecode_change
             instruction.system().pipe(Effect.orDie),
           ])
           let modelMsgs = yield* MessageV2.toModelMessagesEffect(msgs, model)
@@ -1638,25 +1640,25 @@ export const layer = Layer.effect(
           if (size > REQUEST_PRUNE_BYTES) {
             yield* compaction.prune({ sessionID, reason: "payload-limit" })
             msgs = yield* MessageV2.filterCompactedEffect(sessionID)
-            msgs = KiloSessionPromptQueue.scope(sessionID, msgs)
-            msgs = KiloSessionPrompt.trimBeforeLastSummary(msgs)
+            msgs = AccureSessionPromptQueue.scope(sessionID, msgs)
+            msgs = AccureSessionPrompt.trimBeforeLastSummary(msgs)
             yield* plugin.trigger("experimental.chat.messages.transform", {}, { messages: msgs })
-            KiloSessionPrompt.injectEditorContext({ msgs, lastUser, sessionID, cache: envCache })
-            msgs = KiloSessionPrompt.maybeStripHistoricalMedia(msgs)
+            AccureSessionPrompt.injectEditorContext({ msgs, lastUser, sessionID, cache: envCache })
+            msgs = AccureSessionPrompt.maybeStripHistoricalMedia(msgs)
             modelMsgs = yield* MessageV2.toModelMessagesEffect(msgs, model)
             const nextSize = Buffer.byteLength(JSON.stringify(modelMsgs))
             if (nextSize > REQUEST_PRUNE_BYTES) log.warn("payload still large after pruning", { size: nextSize })
           }
-          // kilocode_change end
+          // accurecode_change end
           const system = [...env, ...instructions, ...(skills ? [skills] : [])]
           const format = lastUser.format ?? { type: "text" as const }
           if (format.type === "json_schema") system.push(STRUCTURED_OUTPUT_SYSTEM_PROMPT)
           const result = yield* handle.process({
-            // kilocode_change start - keep Ask/Plan tool filtering hardened against session allows
+            // accurecode_change start - keep Ask/Plan tool filtering hardened against session allows
             user: lastUser,
             agent,
-            permission: KiloSessionPrompt.guardPermissions({ agent, session }),
-            // kilocode_change end
+            permission: AccureSessionPrompt.guardPermissions({ agent, session }),
+            // accurecode_change end
             sessionID,
             parentSessionID: session.parentID,
             system,
@@ -1683,25 +1685,25 @@ export const layer = Layer.effect(
               yield* sessions.updateMessage(handle.message)
               return "break" as const
             }
-            // kilocode_change start
+            // accurecode_change start
             if (handle.message.finish === "error") {
-              KiloSessionProcessor.providerFinishError(handle.message)
+              AccureSessionProcessor.providerFinishError(handle.message)
               yield* sessions.updateMessage(handle.message)
               closeReasons.set(sessionID, "error")
               return "break" as const
             }
-            // kilocode_change end
+            // accurecode_change end
           }
 
-          // kilocode_change start
+          // accurecode_change start
           if (result === "stop") {
             if (handle.message.error) closeReasons.set(sessionID, "error")
             return "break" as const
           }
-          // kilocode_change end
+          // accurecode_change end
           if (result === "compact") {
-            // kilocode_change start
-            const guard = KiloSessionPrompt.guardCompactionAttempt({
+            // accurecode_change start
+            const guard = AccureSessionPrompt.guardCompactionAttempt({
               sessionID,
               attempts: compactionAttempts,
               closeReasons,
@@ -1713,26 +1715,26 @@ export const layer = Layer.effect(
               return "break" as const
             }
             compactionAttempts++
-            // kilocode_change end
+            // accurecode_change end
             yield* compaction.create({
               sessionID,
               agent: lastUser.agent,
               model: lastUser.model,
               auto: true,
-              // kilocode_change - preflight compaction replays the pending turn without treating media as provider overflow
-              overflow: !handle.message.finish && handle.compactError?.() !== undefined, // kilocode_change
+              // accurecode_change - preflight compaction replays the pending turn without treating media as provider overflow
+              overflow: !handle.message.finish && handle.compactError?.() !== undefined, // accurecode_change
             })
           }
-          // kilocode_change start — break out so a newer queued prompt can take over
+          // accurecode_change start — break out so a newer queued prompt can take over
           // instead of starting another LLM step for the now-superseded turn. The
           // current handle.process has fully drained (tokens + inline tool calls) by
           // the time we get here, so nothing is cut off.
-          if (KiloSessionPromptQueue.hasFollowup(sessionID)) {
+          if (AccureSessionPromptQueue.hasFollowup(sessionID)) {
             closeReasons.set(sessionID, "interrupted")
             return "break" as const
           }
-          // kilocode_change end
-          // kilocode_change start - guard against providers that end the stream
+          // accurecode_change end
+          // accurecode_change start - guard against providers that end the stream
           // without a terminal stop_reason (e.g. an Anthropic-style message_delta
           // with stop_reason: null followed immediately by message_stop). Without
           // a finishReason, the loop-exit check at the top of the next iteration
@@ -1746,7 +1748,7 @@ export const layer = Layer.effect(
             handle.message.finish = "unknown"
             yield* sessions.updateMessage(handle.message)
           }
-          // kilocode_change end
+          // accurecode_change end
           return "continue" as const
         }).pipe(
           Effect.ensuring(instruction.clear(handle.message.id)),
@@ -1763,22 +1765,22 @@ export const layer = Layer.effect(
     const loop: (input: LoopInput) => Effect.Effect<MessageV2.WithParts, NotFoundError> = Effect.fn(
       "SessionPrompt.loop",
     )(function* (input: LoopInput) {
-      // kilocode_change start
+      // accurecode_change start
       const session = yield* sessions.get(input.sessionID)
-      yield* KiloSessionPrompt.recoverDanglingAssistant({ sessionID: input.sessionID, status, sessions })
-      yield* KiloSessionPrompt.recoverProviderFinishError({ sessionID: input.sessionID, status, sessions })
-      yield* bus.publish(KiloSession.Event.TurnOpen, { sessionID: input.sessionID })
+      yield* AccureSessionPrompt.recoverDanglingAssistant({ sessionID: input.sessionID, status, sessions })
+      yield* AccureSessionPrompt.recoverProviderFinishError({ sessionID: input.sessionID, status, sessions })
+      yield* bus.publish(AccureSession.Event.TurnOpen, { sessionID: input.sessionID })
       return yield* Effect.onExit(
         state.ensureRunning(
           input.sessionID,
           lastAssistant(input.sessionID).pipe(Effect.orDie),
           runLoop(input).pipe(Effect.orDie),
-        ), // kilocode_change
+        ), // accurecode_change
         Effect.fnUntraced(function* (exit) {
-          yield* bus.publish(KiloSession.Event.TurnClose, {
+          yield* bus.publish(AccureSession.Event.TurnClose, {
             sessionID: input.sessionID,
             parentID: session.parentID,
-            reason: KiloSessionPrompt.resolveCloseReason({
+            reason: AccureSessionPrompt.resolveCloseReason({
               sessionID: input.sessionID,
               closeReasons,
               exit,
@@ -1786,7 +1788,7 @@ export const layer = Layer.effect(
           })
         }),
       )
-      // kilocode_change end
+      // accurecode_change end
     })
 
     const shell: (input: ShellInput) => Effect.Effect<MessageV2.WithParts, Session.BusyError> = Effect.fn(
@@ -1806,8 +1808,8 @@ export const layer = Layer.effect(
       const cmd = yield* commands.get(input.command)
       if (!cmd) {
         const available = (yield* commands.list()).map((c) => c.name)
-        available.push(...BUILTIN_COMMANDS) // kilocode_change - surface built-in session commands in error hint
-        available.sort() // kilocode_change - alphabetical for stable, easy-to-scan output
+        available.push(...BUILTIN_COMMANDS) // accurecode_change - surface built-in session commands in error hint
+        available.sort() // accurecode_change - alphabetical for stable, easy-to-scan output
         const hint = available.length ? ` Available commands: ${available.join(", ")}` : ""
         const error = new NamedError.Unknown({ message: `Command not found: "${input.command}".${hint}` })
         yield* bus.publish(Session.Event.Error, { sessionID: input.sessionID, error: error.toObject() })
@@ -1844,12 +1846,12 @@ export const layer = Layer.effect(
       if (shellMatches.length > 0) {
         const cfg = yield* config.get()
         const sh = Shell.preferred(cfg.shell)
-        // kilocode_change start
+        // accurecode_change start
         const results = yield* CommandTimeout.texts(
           shellMatches.map(([, cmd]) => cmd),
           sh,
         ).pipe(Effect.provideService(ChildProcessSpawner.ChildProcessSpawner, spawner))
-        // kilocode_change end
+        // accurecode_change end
         let index = 0
         template = template.replace(bashRegex, () => results[index++])
       }
@@ -1877,7 +1879,7 @@ export const layer = Layer.effect(
       }
 
       const templateParts = yield* resolvePromptParts(template)
-      KiloSessionProcessor.markReviewTelemetry(templateParts, input.command) // kilocode_change - mark review commands for completion telemetry
+      AccureSessionProcessor.markReviewTelemetry(templateParts, input.command) // accurecode_change - mark review commands for completion telemetry
       const isSubtask = (agent.mode === "subagent" && cmd.subtask !== false) || cmd.subtask === true
       const parts = isSubtask
         ? [
@@ -1912,7 +1914,7 @@ export const layer = Layer.effect(
         agent: userAgent,
         parts,
         variant: input.variant,
-        snapshotInitialization: input.snapshotInitialization, // kilocode_change
+        snapshotInitialization: input.snapshotInitialization, // accurecode_change
       })
       yield* bus.publish(Command.Event.Executed, {
         name: input.command,
@@ -1943,7 +1945,7 @@ export const defaultLayer = Layer.suspend(() =>
       Layer.provide(SessionProcessor.defaultLayer),
       Layer.provide(Command.defaultLayer),
       Layer.provide(Permission.defaultLayer),
-      Layer.provide(Question.defaultLayer), // kilocode_change - provide pending question dismissal dependency
+      Layer.provide(Question.defaultLayer), // accurecode_change - provide pending question dismissal dependency
       Layer.provide(MCP.defaultLayer),
       Layer.provide(LSP.defaultLayer),
       Layer.provide(ToolRegistry.defaultLayer),
@@ -1958,7 +1960,7 @@ export const defaultLayer = Layer.suspend(() =>
       Layer.provide(Session.defaultLayer),
       Layer.provide(SessionRevert.defaultLayer),
       Layer.provide(SessionSummary.defaultLayer),
-      Layer.provide(Image.defaultLayer), // kilocode_change - provide user image normalization service
+      Layer.provide(Image.defaultLayer), // accurecode_change - provide user image normalization service
       Layer.provide(
         Layer.mergeAll(
           EventV2Bridge.defaultLayer,
@@ -1991,14 +1993,14 @@ export const PromptInput = Schema.Struct({
   format: Schema.optional(MessageV2.Format),
   system: Schema.optional(Schema.String),
   variant: Schema.optional(Schema.String),
-  // kilocode_change start - managed product slow-snapshot policy
+  // accurecode_change start - managed product slow-snapshot policy
   snapshotInitialization: Schema.optional(Schema.Literal("wait")).annotate({
     description: "Wait silently if snapshot initialization is slow instead of asking the user.",
   }),
-  // kilocode_change end
-  // kilocode_change start - reuse shared editor context schema
+  // accurecode_change end
+  // accurecode_change start - reuse shared editor context schema
   editorContext: Schema.optional(MessageV2.EditorContext),
-  // kilocode_change end
+  // accurecode_change end
   parts: Schema.Array(
     Schema.Union([
       MessageV2.TextPartInput,
@@ -2008,7 +2010,7 @@ export const PromptInput = Schema.Struct({
     ]).annotate({ discriminator: "type" }),
   ),
 }).pipe(withStatics((s) => ({ zod: zod(s) })))
-// kilocode_change start - retain precise prompt input types for Kilo callers
+// accurecode_change start - retain precise prompt input types for Accure callers
 // `z.discriminatedUnion` erases the discriminated members' shapes back to
 // `{}` when walked from the generic `z.ZodType` input. Restore the precise
 // `parts` type from the exported Schema input types so callers see a proper
@@ -2022,11 +2024,11 @@ export type PromptInput = Omit<Schema.Schema.Type<typeof PromptInput>, "parts" |
   parts: PartInputUnion[]
   editorContext?: MessageV2.EditorContext
 }
-// kilocode_change end
+// accurecode_change end
 
 export class LoopInput extends Schema.Class<LoopInput>("SessionPrompt.LoopInput")({
   sessionID: SessionID,
-  snapshotInitialization: Schema.optional(Schema.Literal("wait")), // kilocode_change
+  snapshotInitialization: Schema.optional(Schema.Literal("wait")), // accurecode_change
 }) {
   static readonly zod = zod(this)
 }
@@ -2048,11 +2050,11 @@ export const CommandInput = Schema.Struct({
   arguments: Schema.String,
   command: Schema.String,
   variant: Schema.optional(Schema.String),
-  // kilocode_change start - managed product slow-snapshot policy
+  // accurecode_change start - managed product slow-snapshot policy
   snapshotInitialization: Schema.optional(Schema.Literal("wait")).annotate({
     description: "Wait silently if snapshot initialization is slow instead of asking the user.",
   }),
-  // kilocode_change end
+  // accurecode_change end
   // Inlined (no identifier annotation) to keep the original SDK output — the
   // PromptInput call site below references FilePartInput by ref via the
   // Schema export in message-v2.ts.

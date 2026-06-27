@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.model
+package ai.accurecode.client.session.model
 
 /**
  * A conversational turn: one user message (the "anchor") and the

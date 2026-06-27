@@ -16,8 +16,8 @@ Access settings from your town dashboard → **Settings**.
 The primary model used by all agents (polecats, refinery, mayor). This affects quality, speed, and cost.
 
 Popular choices:
-- **Kilo Auto Frontier** — highest quality models, best results (recommended)
-- **Kilo Auto Balanced** — good balance of quality and cost (minimum for Gas Town)
+- **Accure Auto Frontier** — highest quality models, best results (recommended)
+- **Accure Auto Balanced** — good balance of quality and cost (minimum for Gas Town)
 
 ### Role-Specific Models
 
@@ -32,7 +32,7 @@ Used for lightweight tasks (classification, routing, summarization). Usually a s
 ### GitHub Personal Access Token
 
 {% callout type="tip" title="Strongly Recommended" %}
-Adding a GitHub PAT ensures that all commits, branches, and PRs created by your agents appear as **you** in git history. Without it, activity shows up under the Kilo GitHub App bot account.
+Adding a GitHub PAT ensures that all commits, branches, and PRs created by your agents appear as **you** in git history. Without it, activity shows up under the Accure GitHub App bot account.
 {% /callout %}
 
 **To add a PAT:**
@@ -54,12 +54,12 @@ Use a fine-grained token limited to only the repository your town is connected t
 
 **Without a PAT:**
 - The GitHub App installation token is used (functional but less personal)
-- PRs show as created by the Kilo bot
+- PRs show as created by the Accure bot
 - Some `gh` CLI operations may not work
 
 ### GitHub App Installation
 
-The [Kilo GitHub App](https://github.com/apps/kilo-code) provides base-level repository access. It's installed per-organization or per-repository and gives agents read/write access to code, PRs, and issues.
+The [Accure GitHub App](https://github.com/apps/accure-code) provides base-level repository access. It's installed per-organization or per-repository and gives agents read/write access to code, PRs, and issues.
 
 The GitHub App is **required** — it's how Gastown gets installation tokens for cloning and pushing. The PAT is **optional but recommended** — it provides user-level attribution.
 

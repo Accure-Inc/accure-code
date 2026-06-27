@@ -1,4 +1,4 @@
-package ai.kilocode.client.test
+package ai.accurecode.client.test
 
 import com.intellij.ide.CopyProvider
 import com.intellij.openapi.actionSystem.DataKey

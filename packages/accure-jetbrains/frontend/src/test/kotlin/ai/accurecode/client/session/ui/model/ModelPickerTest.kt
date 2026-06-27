@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.ui.model
+package ai.accurecode.client.session.ui.model
 
-import ai.kilocode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
 import com.intellij.icons.AllIcons
 import com.intellij.ui.CollectionListModel
 import com.intellij.ui.NewUI
@@ -31,13 +31,13 @@ class ModelPickerTest : BasePlatformTestCase() {
         val rows = modelPickerRows(listOf(
             item("gpt-4o", "GPT 4o", "openai", "OpenAI"),
             item("claude", "Claude Sonnet", "anthropic", "Anthropic", 1.0),
-            item("auto", "Kilo Auto", "kilo", "Kilo", 0.0),
+            item("auto", "Accure Auto", "accure", "Accure", 0.0),
         ), listOf(ModelSelectionDto("openai", "gpt-4o")), "")
 
         assertEquals("Favorites", modelPickerSectionTitle(rows, 0))
         assertEquals("openai/gpt-4o", rows[0].key)
         assertEquals("Recommended", modelPickerSectionTitle(rows, 1))
-        assertEquals("kilo/auto", rows[1].key)
+        assertEquals("accure/auto", rows[1].key)
         assertEquals("anthropic/claude", rows[2].key)
     }
 
@@ -85,14 +85,14 @@ class ModelPickerTest : BasePlatformTestCase() {
         assertEquals(listOf("anthropic/claude-sonnet"), rows.map { it.key })
     }
 
-    fun `test kilo provider group is first and other providers keep source order`() {
+    fun `test accure provider group is first and other providers keep source order`() {
         val rows = modelPickerRows(listOf(
             item("gpt", "GPT", "openai", "OpenAI"),
-            item("auto", "Auto", "kilo", "Kilo"),
+            item("auto", "Auto", "accure", "Accure"),
             item("claude", "Claude", "anthropic", "Anthropic"),
         ), emptyList(), "")
 
-        assertEquals(listOf("Kilo", "OpenAI", "Anthropic"), rows.indices.mapNotNull { modelPickerSectionTitle(rows, it) })
+        assertEquals(listOf("Accure", "OpenAI", "Anthropic"), rows.indices.mapNotNull { modelPickerSectionTitle(rows, it) })
     }
 
     fun `test index prefers favorite row over normal duplicate`() {
@@ -172,15 +172,15 @@ class ModelPickerTest : BasePlatformTestCase() {
 
     fun `test small rows are included only when requested`() {
         val items = listOf(
-            item("auto-small", "Small", "kilo", "Kilo"),
-            item("auto", "Auto", "kilo", "Kilo"),
+            item("auto-small", "Small", "accure", "Accure"),
+            item("auto", "Auto", "accure", "Accure"),
         )
 
         val default = modelPickerRows(items, emptyList(), "")
         val small = modelPickerRows(items, emptyList(), "", includeSmall = true)
 
-        assertEquals(listOf("kilo/auto"), default.mapNotNull { it.key })
-        assertEquals(listOf("kilo/auto", "kilo/auto-small"), small.mapNotNull { it.key }.sorted())
+        assertEquals(listOf("accure/auto"), default.mapNotNull { it.key })
+        assertEquals(listOf("accure/auto", "accure/auto-small"), small.mapNotNull { it.key }.sorted())
     }
 
     fun `test setItems preserves selected model when refreshed without default`() {
@@ -205,7 +205,7 @@ class ModelPickerTest : BasePlatformTestCase() {
         assertEquals("OpenAI / A ▾", picker.text)
     }
 
-    fun `test non-kilo selected model uses provider prefix`() {
+    fun `test non-accure selected model uses provider prefix`() {
         val picker = ModelPicker()
 
         picker.setItems(listOf(item("gpt-55", "GPT-5.5", "openai", "OpenAI")))
@@ -213,7 +213,7 @@ class ModelPickerTest : BasePlatformTestCase() {
         assertEquals("OpenAI / GPT-5.5 ▾", picker.text)
     }
 
-    fun `test non-kilo selected model strips duplicate provider prefix`() {
+    fun `test non-accure selected model strips duplicate provider prefix`() {
         val picker = ModelPicker()
 
         picker.setItems(listOf(item("gpt-55", "OpenAI GPT-5.5", "openai", "OpenAI")))
@@ -221,7 +221,7 @@ class ModelPickerTest : BasePlatformTestCase() {
         assertEquals("OpenAI / GPT-5.5 ▾", picker.text)
     }
 
-    fun `test non-kilo selected model strips vscode provider prefix`() {
+    fun `test non-accure selected model strips vscode provider prefix`() {
         val picker = ModelPicker()
 
         picker.setItems(listOf(item("gpt-55", "OpenAI: GPT-5.5", "openai", "OpenAI")))
@@ -229,10 +229,10 @@ class ModelPickerTest : BasePlatformTestCase() {
         assertEquals("OpenAI / GPT-5.5 ▾", picker.text)
     }
 
-    fun `test kilo selected model remains unprefixed`() {
+    fun `test accure selected model remains unprefixed`() {
         val picker = ModelPicker()
 
-        picker.setItems(listOf(item("auto", "Kilo Auto", "kilo", "Kilo")))
+        picker.setItems(listOf(item("auto", "Accure Auto", "accure", "Accure")))
 
         assertEquals("Auto ▾", picker.text)
     }
@@ -268,7 +268,7 @@ class ModelPickerTest : BasePlatformTestCase() {
     fun `test selected paid model with training flag indicates data collection`() {
         val picker = ModelPicker()
 
-        picker.setItems(listOf(item("paid", "Paid", "kilo", "Kilo", training = true)))
+        picker.setItems(listOf(item("paid", "Paid", "accure", "Accure", training = true)))
 
         assertFalse(picker.text.contains("Data may be used for training"))
         assertSame(ModelPickerRenderer.DATA_COLLECTED, picker.icon)
@@ -278,7 +278,7 @@ class ModelPickerTest : BasePlatformTestCase() {
     fun `test selected free model without training flag does not indicate data collection`() {
         val picker = ModelPicker()
 
-        picker.setItems(listOf(item("free", "Free", "kilo", "Kilo", free = true)))
+        picker.setItems(listOf(item("free", "Free", "accure", "Accure", free = true)))
 
         assertNull(picker.icon)
         assertEquals("Select model", picker.toolTipText)
@@ -313,14 +313,14 @@ class ModelPickerTest : BasePlatformTestCase() {
     }
 
     fun `test display parts sanitize free suffix`() {
-        val parts = ModelText.parts(item("auto", "Auto Free (free)", "kilo", "Kilo"))
+        val parts = ModelText.parts(item("auto", "Auto Free (free)", "accure", "Accure"))
 
         assertNull(parts.provider)
         assertEquals("Auto Free", parts.model)
     }
 
     fun `test renderer shows empty favorite star only for selected row`() {
-        val row = ModelPickerRow(item("auto", "Auto", "kilo", "Kilo"), "Kilo", false)
+        val row = ModelPickerRow(item("auto", "Auto", "accure", "Accure"), "Accure", false)
         val model = CollectionListModel(listOf(row))
         val renderer = ModelPickerRenderer(model, { null }, { emptySet() })
         val list = JBList(model)
@@ -333,9 +333,9 @@ class ModelPickerTest : BasePlatformTestCase() {
     }
 
     fun `test renderer keeps favorite star visible`() {
-        val row = ModelPickerRow(item("auto", "Auto", "kilo", "Kilo"), "Kilo", false)
+        val row = ModelPickerRow(item("auto", "Auto", "accure", "Accure"), "Accure", false)
         val model = CollectionListModel(listOf(row))
-        val renderer = ModelPickerRenderer(model, { null }, { setOf("kilo/auto") })
+        val renderer = ModelPickerRenderer(model, { null }, { setOf("accure/auto") })
         val list = JBList(model)
 
         renderer.getListCellRendererComponent(list, row, 0, false, false)
@@ -344,7 +344,7 @@ class ModelPickerTest : BasePlatformTestCase() {
     }
 
     fun `test renderer updates favorite star after favorites change`() {
-        val row = ModelPickerRow(item("auto", "Auto", "kilo", "Kilo"), "Kilo", false)
+        val row = ModelPickerRow(item("auto", "Auto", "accure", "Accure"), "Accure", false)
         val model = CollectionListModel(listOf(row))
         val fav = mutableSetOf<String>()
         val renderer = ModelPickerRenderer(model, { null }, { fav })
@@ -353,7 +353,7 @@ class ModelPickerTest : BasePlatformTestCase() {
         renderer.getListCellRendererComponent(list, row, 0, false, false)
         assertSame(EmptyIcon.ICON_16, renderer.starIcon())
 
-        fav += "kilo/auto"
+        fav += "accure/auto"
         renderer.getListCellRendererComponent(list, row, 0, false, false)
         assertSame(AllIcons.Nodes.Favorite, renderer.starIcon())
     }
@@ -384,7 +384,7 @@ class ModelPickerTest : BasePlatformTestCase() {
     }
 
     fun `test renderer shows free badge for free model`() {
-        val row = ModelPickerRow(ModelPicker.Item("auto", "Auto", "kilo", "Kilo", free = true), "Kilo", false)
+        val row = ModelPickerRow(ModelPicker.Item("auto", "Auto", "accure", "Accure", free = true), "Accure", false)
         val model = CollectionListModel(listOf(row))
         val renderer = ModelPickerRenderer(model, { null }, { emptySet() })
         val list = JBList(model)
@@ -397,7 +397,7 @@ class ModelPickerTest : BasePlatformTestCase() {
     }
 
     fun `test renderer shows data collection warning for paid training model`() {
-        val row = ModelPickerRow(item("paid", "Paid", "kilo", "Kilo", training = true), "Kilo", false)
+        val row = ModelPickerRow(item("paid", "Paid", "accure", "Accure", training = true), "Accure", false)
         val model = CollectionListModel(listOf(row))
         val renderer = ModelPickerRenderer(model, { null }, { emptySet() })
         val list = JBList(model)
@@ -411,8 +411,8 @@ class ModelPickerTest : BasePlatformTestCase() {
 
     fun `test renderer shows BYOK instead of free when both are available`() {
         val row = ModelPickerRow(
-            ModelPicker.Item("claude", "Claude", "kilo", "Kilo", free = true, byok = true),
-            "Kilo",
+            ModelPicker.Item("claude", "Claude", "accure", "Accure", free = true, byok = true),
+            "Accure",
             false,
         )
         val model = CollectionListModel(listOf(row))
@@ -441,7 +441,7 @@ class ModelPickerTest : BasePlatformTestCase() {
     fun `test renderer hides favorite and free affordances for empty row`() {
         val row = ModelPickerRow(null, null, false, "Not set")
         val model = CollectionListModel(listOf(row))
-        val renderer = ModelPickerRenderer(model, { null }, { setOf("kilo/auto") })
+        val renderer = ModelPickerRenderer(model, { null }, { setOf("accure/auto") })
         val list = JBList(model)
 
         renderer.getListCellRendererComponent(list, row, 0, true, false)

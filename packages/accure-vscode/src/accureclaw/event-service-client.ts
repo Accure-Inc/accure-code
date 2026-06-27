@@ -1,21 +1,21 @@
 /**
  * Event Service WebSocket client for the VS Code extension host.
  *
- * Minimal inline port of `@kilocode/event-service` (cloud monorepo). Connects
- * to the kilo events Cloudflare Worker using a two-step ticket flow:
+ * Minimal inline port of `@accurecode/event-service` (cloud monorepo). Connects
+ * to the accure events Cloudflare Worker using a two-step ticket flow:
  *   1. POST `/connect-ticket` with `Authorization: Bearer <JWT>` to mint a
  *      single-use ticket (30 s TTL).
  *   2. Open WebSocket to `/connect?ticket=<ticket>` with subprotocol
- *      `kilo.events.v1`.
+ *      `accure.events.v1`.
  *
  * Runs in Node.js (the VS Code extension host). `WebSocket` is available in
  * Node 22+ without any import, matching the environment used elsewhere in
  * this extension (see `src/services/cli-backend/sdk-sse-adapter.ts`).
  */
 
-import type { KiloChatEventMap, KiloChatEventName } from "./types"
+import type { AccureChatEventMap, AccureChatEventName } from "./types"
 
-const WS_SUBPROTOCOL = "kilo.events.v1"
+const WS_SUBPROTOCOL = "accure.events.v1"
 const HANDSHAKE_TIMEOUT_MS = 10_000
 const PING_INTERVAL_MS = 15_000
 const TICKET_FETCH_TIMEOUT_MS = 10_000
@@ -149,12 +149,15 @@ export class EventServiceClient {
     }
   }
 
-  on<N extends KiloChatEventName>(event: N, handler: (ctx: string, payload: KiloChatEventMap[N]) => void): () => void {
+  on<N extends AccureChatEventName>(
+    event: N,
+    handler: (ctx: string, payload: AccureChatEventMap[N]) => void,
+  ): () => void {
     const set = this.eventHandlers.get(event) ?? new Set<EventHandler>()
     // The raw dispatcher receives `unknown` payloads; the caller supplied a
     // typed handler. We trust server payloads here — they're validated at the
-    // kilo-chat worker edge before broadcast.
-    const wrapped: EventHandler = (ctx, payload) => handler(ctx, payload as KiloChatEventMap[N])
+    // accure-chat worker edge before broadcast.
+    const wrapped: EventHandler = (ctx, payload) => handler(ctx, payload as AccureChatEventMap[N])
     set.add(wrapped)
     this.eventHandlers.set(event, set)
     return () => {
@@ -339,7 +342,7 @@ export class EventServiceClient {
       return
     }
     if (m.type === "error") {
-      console.warn("[Kilo New] event-service server error", m)
+      console.warn("[Accure New] event-service server error", m)
     }
   }
 

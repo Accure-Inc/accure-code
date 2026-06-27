@@ -1,6 +1,6 @@
 /** @jsxImportSource solid-js */
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
-import { Code } from "@kilocode/accure-ui/code"
+import { Code } from "@accurecode/accure-ui/code"
 
 const meta: Meta = {
   title: "Components/Code",

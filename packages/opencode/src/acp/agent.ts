@@ -51,15 +51,15 @@ import type {
   AssistantMessage,
   Event,
   GlobalEvent,
-  KiloClient,
+  AccureClient,
   SessionMessageResponse,
   SyncEventMessagePartUpdated,
   ToolPart,
-} from "@kilocode/sdk/v2"
+} from "@accurecode/sdk/v2"
 import { applyPatch } from "diff"
 import { InstallationVersion } from "@opencode-ai/core/installation/version"
 
-import { fetchDefaultModel } from "@kilocode/accure-gateway" // kilocode_change
+import { fetchDefaultModel } from "@accurecode/accure-gateway" // accurecode_change
 import { ShellID } from "@/tool/shell/id"
 
 type ModeOption = { id: string; name: string; description?: string }
@@ -77,7 +77,7 @@ const DEFAULT_VARIANT_VALUE = "default"
 const log = Log.create({ service: "acp-agent" })
 
 async function getContextLimit(
-  sdk: KiloClient,
+  sdk: AccureClient,
   providerID: ProviderID,
   modelID: ModelID,
   directory: string,
@@ -97,7 +97,7 @@ async function getContextLimit(
 
 async function sendUsageUpdate(
   connection: AgentSideConnection,
-  sdk: KiloClient,
+  sdk: AccureClient,
   sessionID: string,
   directory: string,
 ): Promise<void> {
@@ -145,7 +145,7 @@ async function sendUsageUpdate(
     })
 }
 
-export function init({ sdk: _sdk }: { sdk: KiloClient }) {
+export function init({ sdk: _sdk }: { sdk: AccureClient }) {
   return {
     create: (connection: AgentSideConnection, fullConfig: ACPConfig) => {
       return new Agent(connection, fullConfig)
@@ -156,7 +156,7 @@ export function init({ sdk: _sdk }: { sdk: KiloClient }) {
 export class Agent implements ACPAgent {
   private connection: AgentSideConnection
   private config: ACPConfig
-  private sdk: KiloClient
+  private sdk: AccureClient
   private sessionManager: ACPSessionManager
   private eventAbort = new AbortController()
   private eventStarted = false
@@ -528,13 +528,13 @@ export class Agent implements ACPAgent {
   async initialize(params: InitializeRequest): Promise<InitializeResponse> {
     log.info("initialize", { protocolVersion: params.protocolVersion })
 
-    // kilocode_change start
+    // accurecode_change start
     const authMethod: AuthMethod = {
-      description: "Run `kilo auth login` in the terminal",
-      name: "Login with Kilo",
-      id: "kilo-login",
+      description: "Run `accure auth login` in the terminal",
+      name: "Login with Accure",
+      id: "accure-login",
     }
-    // kilocode_change end
+    // accurecode_change end
 
     // If client supports terminal-auth capability, use that instead.
     if (params.clientCapabilities?._meta?.["terminal-auth"] === true) {
@@ -542,7 +542,7 @@ export class Agent implements ACPAgent {
         "terminal-auth": {
           command: "opencode",
           args: ["auth", "login"],
-          label: "Kilo Login",
+          label: "Accure Login",
         },
       }
     }
@@ -568,7 +568,7 @@ export class Agent implements ACPAgent {
       },
       authMethods: [authMethod],
       agentInfo: {
-        name: "Kilo",
+        name: "Accure",
         version: InstallationVersion,
       },
     }
@@ -1717,13 +1717,13 @@ async function defaultModel(config: ACPConfig, cwd?: string): Promise<{ provider
 
   if (specified && !providers.length) return specified
 
-  // kilocode_change start
+  // accurecode_change start
   const lastUsed = await lastUsedModel(sdk, directory, providers)
   if (lastUsed) return lastUsed
 
-  const kiloProvider = providers.find((p) => p.id === "kilo")
-  if (kiloProvider) {
-    const [best] = Provider.sort(Object.values(kiloProvider.models))
+  const accureProvider = providers.find((p) => p.id === "accure")
+  if (accureProvider) {
+    const [best] = Provider.sort(Object.values(accureProvider.models))
     if (best) {
       return {
         providerID: ProviderID.make(best.providerID),
@@ -1731,7 +1731,7 @@ async function defaultModel(config: ACPConfig, cwd?: string): Promise<{ provider
       }
     }
   }
-  // kilocode_change end
+  // accurecode_change end
 
   const models = providers.flatMap((p) => Object.values(p.models))
   const [best] = Provider.sort(models)
@@ -1744,22 +1744,22 @@ async function defaultModel(config: ACPConfig, cwd?: string): Promise<{ provider
 
   if (specified) return specified
 
-  // kilocode_change start - prefer kilo free-tier default before erroring.
-  // Only fall back to the Kilo provider if it was present in the available
+  // accurecode_change start - prefer accure free-tier default before erroring.
+  // Only fall back to the Accure provider if it was present in the available
   // providers list. When teams configure enabled_providers to use only their
   // own models, this prevents silently routing requests to an external API.
   // Note: LiteLLM / custom provider users won't reach here — the function
   // returns earlier via `specified` (config.model) or the sorted providers list.
-  if (providers.some((p) => p.id === "kilo")) {
+  if (providers.some((p) => p.id === "accure")) {
     const freeModel = await fetchDefaultModel()
-    return { providerID: ProviderID.kilo, modelID: ModelID.make(freeModel) }
+    return { providerID: ProviderID.accure, modelID: ModelID.make(freeModel) }
   }
-  // kilocode_change end
+  // accurecode_change end
   throw new Error("No models available")
 }
 
 async function lastUsedModel(
-  sdk: KiloClient,
+  sdk: AccureClient,
   directory: string,
   providers: Array<{ id: string; models: Record<string, unknown> }>,
 ): Promise<{ providerID: ProviderID; modelID: ModelID } | undefined> {

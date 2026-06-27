@@ -18,7 +18,7 @@ import * as path from "path"
 
 describe("parseServerPort", () => {
   it("parses port from standard CLI startup message", () => {
-    expect(parseServerPort("kilo server listening on http://127.0.0.1:12345")).toBe(12345)
+    expect(parseServerPort("accure server listening on http://127.0.0.1:12345")).toBe(12345)
   })
 
   it("parses port from localhost variant", () => {
@@ -26,7 +26,7 @@ describe("parseServerPort", () => {
   })
 
   it("parses port when embedded in longer output", () => {
-    const output = "[INFO] 2024-01-01 kilo server listening on http://127.0.0.1:54321\n[INFO] ready"
+    const output = "[INFO] 2024-01-01 accure server listening on http://127.0.0.1:54321\n[INFO] ready"
     expect(parseServerPort(output)).toBe(54321)
   })
 
@@ -63,29 +63,29 @@ describe("parseServerPort", () => {
 describe("cli tree-sitter resources", () => {
   it("resolves resources next to the VS Code bundled CLI", () => {
     const root = "/Users/test/.vscode/extensions/accure.accure-code-7.2.50-darwin-arm64"
-    const bin = `${root}/bin/kilo`
+    const bin = `${root}/bin/accure`
 
     expect(treeSitterDirForBinary(bin)).toBe(`${root}/bin/tree-sitter`)
     expect(treeSitterDirForExtension(root)).toBe(`${root}/bin/tree-sitter`)
-    expect(resolveTreeSitterEnv(root)).toEqual({ KILO_TREE_SITTER_WASM_DIR: `${root}/bin/tree-sitter` })
+    expect(resolveTreeSitterEnv(root)).toEqual({ ACCURECODE_TREE_SITTER_WASM_DIR: `${root}/bin/tree-sitter` })
   })
 
   it("resolves resources next to a Windows packaged CLI", () => {
     const root = String.raw`C:\Users\test\.vscode\extensions\accure.accure-code-7.2.50-win32-x64`
-    const bin = String.raw`${root}\bin\kilo.exe`
+    const bin = String.raw`${root}\bin\accure.exe`
 
     expect(treeSitterDirForBinary(bin)).toBe(String.raw`${root}\bin\tree-sitter`)
     expect(treeSitterDirForExtension(root)).toBe(String.raw`${root}\bin\tree-sitter`)
     expect(resolveTreeSitterEnv(root)).toEqual({
-      KILO_TREE_SITTER_WASM_DIR: String.raw`${root}\bin\tree-sitter`,
+      ACCURECODE_TREE_SITTER_WASM_DIR: String.raw`${root}\bin\tree-sitter`,
     })
   })
 
   it("copies runtime and language WASMs with the packaged CLI binary", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "accure-vscode-tree-sitter-"))
     try {
-      const source = path.join(root, "dist", "@kilocode", "cli-darwin-arm64", "bin", "kilo")
-      const target = path.join(root, "extension", "bin", "kilo")
+      const source = path.join(root, "dist", "@accurecode", "cli-darwin-arm64", "bin", "accure")
+      const target = path.join(root, "extension", "bin", "accure")
       const dir = treeSitterDirForBinary(source)
 
       await fs.mkdir(dir, { recursive: true })
@@ -119,9 +119,9 @@ describe("toErrorMessage", () => {
   })
 
   it("strips ANSI codes before matching Error:", () => {
-    const ansiError = "\x1b[91m\x1b[1mError: \x1b[0mConfig file at /path/kilo.json is not valid JSON(C):"
+    const ansiError = "\x1b[91m\x1b[1mError: \x1b[0mConfig file at /path/accure.json is not valid JSON(C):"
     const result = toErrorMessage("startup failed", [ansiError])
-    expect(result.userMessage).toBe("Config file at /path/kilo.json is not valid JSON(C):")
+    expect(result.userMessage).toBe("Config file at /path/accure.json is not valid JSON(C):")
   })
 
   it("finds Error: line anywhere, not just the last line", () => {
@@ -150,8 +150,8 @@ describe("toErrorMessage", () => {
   })
 
   it("includes CLI path in userDetails when provided", () => {
-    const result = toErrorMessage("startup failed", [], "/usr/local/bin/kilo")
-    expect(result.userDetails).toContain("CLI path: /usr/local/bin/kilo")
+    const result = toErrorMessage("startup failed", [], "/usr/local/bin/accure")
+    expect(result.userDetails).toContain("CLI path: /usr/local/bin/accure")
   })
 
   it("does not include CLI path in userDetails when not provided", () => {
@@ -178,15 +178,15 @@ describe("server workspace helpers", () => {
   })
 
   it("disables codebase indexing only when no workspace folder is open", () => {
-    expect(resolveIndexingEnv(undefined)).toEqual({ KILO_DISABLE_CODEBASE_INDEXING: "vscode-no-workspace" })
-    expect(resolveIndexingEnv([])).toEqual({ KILO_DISABLE_CODEBASE_INDEXING: "vscode-no-workspace" })
+    expect(resolveIndexingEnv(undefined)).toEqual({ ACCURECODE_DISABLE_CODEBASE_INDEXING: "vscode-no-workspace" })
+    expect(resolveIndexingEnv([])).toEqual({ ACCURECODE_DISABLE_CODEBASE_INDEXING: "vscode-no-workspace" })
     expect(resolveIndexingEnv([{ uri: { fsPath: "/repo" } }])).toEqual({})
   })
 
   it("uses the shared database for the managed backend while preserving the environment", () => {
-    expect(resolveManagedServerEnv({ PATH: "/usr/bin", KILO_DISABLE_CHANNEL_DB: "false" })).toEqual({
+    expect(resolveManagedServerEnv({ PATH: "/usr/bin", ACCURECODE_DISABLE_CHANNEL_DB: "false" })).toEqual({
       PATH: "/usr/bin",
-      KILO_DISABLE_CHANNEL_DB: "true",
+      ACCURECODE_DISABLE_CHANNEL_DB: "true",
     })
   })
 })

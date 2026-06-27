@@ -1,7 +1,7 @@
-import type { TuiPluginApi } from "@kilocode/plugin/tui"
+import type { TuiPluginApi } from "@accurecode/plugin/tui"
 import { createMemo, For, type Accessor } from "solid-js"
 import { DEFAULT_THEMES, useTheme } from "@tui/context/theme"
-import { KILO_TIPS } from "@/kilocode/cli/cmd/tui/feature-plugins/home/tips" // kilocode_change
+import { ACCURECODE_TIPS } from "@/accurecode/cli/cmd/tui/feature-plugins/home/tips" // accurecode_change
 import { useCommandShortcut } from "../../keymap"
 
 const themeCount = Object.keys(DEFAULT_THEMES).length
@@ -135,7 +135,8 @@ export function Tips(props: { api: TuiPluginApi; connected?: boolean }) {
   }
   const tip = createMemo(() => {
     if (props.connected === false) return NO_MODELS_TIP
-    const tips = KILO_TIPS.flatMap((item) => { // kilocode_change
+    const tips = ACCURECODE_TIPS.flatMap((item) => {
+      // accurecode_change
       const value = typeof item === "string" ? item : item(shortcuts)
       return value ? [value] : []
     })
@@ -163,7 +164,7 @@ export function Tips(props: { api: TuiPluginApi; connected?: boolean }) {
 }
 
 const TIPS: Tip[] = [
-  /* kilocode_change hide the entire list for if it is accidentally used
+  /* accurecode_change hide the entire list for if it is accidentally used
   "Type {highlight}@{/highlight} followed by a filename to fuzzy search and attach files",
   "Start a message with {highlight}!{/highlight} to run shell commands directly (e.g., {highlight}!ls -la{/highlight})",
   (shortcuts) => press(shortcuts.agentCycle(), "to cycle between Build and Plan agents"),
@@ -287,5 +288,5 @@ const TIPS: Tip[] = [
     : ([
         (shortcuts) => press(shortcuts.terminalSuspend(), "to suspend the terminal and return to your shell"),
       ] satisfies Tip[])),
-  kilocode_change hide the entire list for if it is accidentally used */
+  accurecode_change hide the entire list for if it is accidentally used */
 ]

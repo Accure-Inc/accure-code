@@ -1,1 +1,1 @@
-export { Parameters, PlanExitTool } from "@/kilocode/tool/plan" // kilocode_change
+export { Parameters, PlanExitTool } from "@/accurecode/tool/plan" // accurecode_change

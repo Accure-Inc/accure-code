@@ -1,4 +1,4 @@
-import type { TuiPlugin, TuiPluginApi, TuiPluginStatus } from "@kilocode/plugin/tui"
+import type { TuiPlugin, TuiPluginApi, TuiPluginStatus } from "@accurecode/plugin/tui"
 import type { InternalTuiPlugin } from "../../plugin/internal"
 import { useTerminalDimensions } from "@opentui/solid"
 import { fileURLToPath } from "url"

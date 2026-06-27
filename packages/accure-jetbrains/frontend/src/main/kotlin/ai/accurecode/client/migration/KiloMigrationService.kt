@@ -1,23 +1,23 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.client.migration
+package ai.accurecode.client.migration
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.autocomplete.KiloAutocompleteSettingsService
-import ai.kilocode.client.telemetry.Telemetry
-import ai.kilocode.log.KiloLog
-import ai.kilocode.rpc.KiloMigrationRpcApi
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.LegacyAutocompleteSettingsDto
-import ai.kilocode.rpc.dto.LegacyCleanupTargetsDto
-import ai.kilocode.rpc.dto.LegacyMigrationEventDto
-import ai.kilocode.rpc.dto.LegacyMigrationResultItemDto
-import ai.kilocode.rpc.dto.LegacyMigrationStatusDto
-import ai.kilocode.rpc.dto.MigrationItemCategoryDto
-import ai.kilocode.rpc.dto.MigrationItemProgressStatusDto
-import ai.kilocode.rpc.dto.MigrationItemStatusDto
-import ai.kilocode.rpc.dto.MigrationSessionPhaseDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.autocomplete.AccureAutocompleteSettingsService
+import ai.accurecode.client.telemetry.Telemetry
+import ai.accurecode.log.AccureLog
+import ai.accurecode.rpc.AccureMigrationRpcApi
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.LegacyAutocompleteSettingsDto
+import ai.accurecode.rpc.dto.LegacyCleanupTargetsDto
+import ai.accurecode.rpc.dto.LegacyMigrationEventDto
+import ai.accurecode.rpc.dto.LegacyMigrationResultItemDto
+import ai.accurecode.rpc.dto.LegacyMigrationStatusDto
+import ai.accurecode.rpc.dto.MigrationItemCategoryDto
+import ai.accurecode.rpc.dto.MigrationItemProgressStatusDto
+import ai.accurecode.rpc.dto.MigrationItemStatusDto
+import ai.accurecode.rpc.dto.MigrationSessionPhaseDto
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import fleet.rpc.client.durable
@@ -44,32 +44,32 @@ interface MigrationUiController {
 /**
  * App-level service that manages migration wizard state shared across all session UIs.
  *
- * Detects and runs legacy migration via [KiloMigrationRpcApi].
+ * Detects and runs legacy migration via [AccureMigrationRpcApi].
  * All Swing interactions must happen on EDT; service coroutines run off EDT.
  */
 @Service(Service.Level.APP)
-class KiloMigrationService internal constructor(
+class AccureMigrationService internal constructor(
     private val cs: CoroutineScope,
-    private val rpc: KiloMigrationRpcApi?,
-    appState: StateFlow<KiloAppStateDto>?,
+    private val rpc: AccureMigrationRpcApi?,
+    appState: StateFlow<AccureAppStateDto>?,
     private val autocomplete: ((LegacyAutocompleteSettingsDto) -> Unit)?,
 ) : MigrationUiController {
 
     /** Platform constructor — resolves RPC lazily. */
-    constructor(cs: CoroutineScope) : this(cs, null, service<KiloAppService>().state, null)
+    constructor(cs: CoroutineScope) : this(cs, null, service<AccureAppService>().state, null)
 
-    internal constructor(cs: CoroutineScope, rpc: KiloMigrationRpcApi?) : this(cs, rpc, null, null)
+    internal constructor(cs: CoroutineScope, rpc: AccureMigrationRpcApi?) : this(cs, rpc, null, null)
 
     internal constructor(
         cs: CoroutineScope,
-        rpc: KiloMigrationRpcApi?,
-        appState: StateFlow<KiloAppStateDto>?,
+        rpc: AccureMigrationRpcApi?,
+        appState: StateFlow<AccureAppStateDto>?,
     ) : this(cs, rpc, appState, null)
 
     companion object {
-        private val LOG = KiloLog.create(KiloMigrationService::class.java)
+        private val LOG = AccureLog.create(AccureMigrationService::class.java)
 
-        fun getInstance(): KiloMigrationService = service()
+        fun getInstance(): AccureMigrationService = service()
     }
 
     private val _state = MutableStateFlow<MigrationUiState>(MigrationUiState.Hidden)
@@ -87,9 +87,9 @@ class KiloMigrationService internal constructor(
 
     // ------ RPC helper ------
 
-    private suspend fun <T> call(block: suspend KiloMigrationRpcApi.() -> T): T {
+    private suspend fun <T> call(block: suspend AccureMigrationRpcApi.() -> T): T {
         val api = rpc
-        return if (api != null) block(api) else durable { block(KiloMigrationRpcApi.getInstance()) }
+        return if (api != null) block(api) else durable { block(AccureMigrationRpcApi.getInstance()) }
     }
 
     // ------ MigrationUiController ------
@@ -207,7 +207,7 @@ class KiloMigrationService internal constructor(
                     MigrationSessionPhaseDto.done -> {
                         val item = LegacyMigrationResultItemDto(
                             item = sp.session?.id ?: "",
-                            category = ai.kilocode.rpc.dto.MigrationItemCategoryDto.session,
+                            category = ai.accurecode.rpc.dto.MigrationItemCategoryDto.session,
                             status = MigrationItemStatusDto.success,
                         )
                         current.sessionSummary.copy(imported = current.sessionSummary.imported + item)
@@ -215,7 +215,7 @@ class KiloMigrationService internal constructor(
                     MigrationSessionPhaseDto.error -> {
                         val item = LegacyMigrationResultItemDto(
                             item = sp.session?.id ?: "",
-                            category = ai.kilocode.rpc.dto.MigrationItemCategoryDto.session,
+                            category = ai.accurecode.rpc.dto.MigrationItemCategoryDto.session,
                             status = MigrationItemStatusDto.error,
                             message = sp.error,
                         )
@@ -251,9 +251,9 @@ class KiloMigrationService internal constructor(
         }
     }
 
-    private fun onAppState(state: KiloAppStateDto) {
+    private fun onAppState(state: AccureAppStateDto) {
         val migration = state.migration
-        if (state.status == KiloAppStatusDto.MIGRATION_REQUIRED && migration != null) {
+        if (state.status == AccureAppStatusDto.MIGRATION_REQUIRED && migration != null) {
             val current = _state.value
             if (current is MigrationUiState.Needed && current.detection == migration && current.phase != MigrationUiPhase.selecting) return
             LOG.info("Migration wizard: showing because backend requires migration ${detectionSummary(migration)}")
@@ -272,7 +272,7 @@ class KiloMigrationService internal constructor(
         val current = _state.value as? MigrationUiState.Needed ?: return
         val errItem = LegacyMigrationResultItemDto(
             item = "Migration",
-            category = ai.kilocode.rpc.dto.MigrationItemCategoryDto.settings,
+            category = ai.accurecode.rpc.dto.MigrationItemCategoryDto.settings,
             status = MigrationItemStatusDto.error,
             message = msg,
         )
@@ -285,11 +285,11 @@ class KiloMigrationService internal constructor(
 
     private fun applyAutocomplete(
         selections: MigrationUiSelections,
-        detection: ai.kilocode.rpc.dto.LegacyMigrationDetectionDto,
+        detection: ai.accurecode.rpc.dto.LegacyMigrationDetectionDto,
     ) {
         if (!selections.settings.autocomplete) return
         val settings = detection.settings?.autocomplete ?: return
-        val apply = autocomplete ?: { KiloAutocompleteSettingsService.getInstance().applyLegacy(it) }
+        val apply = autocomplete ?: { AccureAutocompleteSettingsService.getInstance().applyLegacy(it) }
         apply(settings)
     }
 
@@ -308,10 +308,10 @@ class KiloMigrationService internal constructor(
     private fun settingsSummary(settings: MigrationSettingsUiSelections): String =
         "commandRules=${settings.autoApproval.commandRules},read=${settings.autoApproval.readPermission},write=${settings.autoApproval.writePermission},execute=${settings.autoApproval.executePermission},mcp=${settings.autoApproval.mcpPermission},task=${settings.autoApproval.taskPermission},language=${settings.language},autocomplete=${settings.autocomplete}"
 
-    private fun detectionSummary(detection: ai.kilocode.rpc.dto.LegacyMigrationDetectionDto): String =
+    private fun detectionSummary(detection: ai.accurecode.rpc.dto.LegacyMigrationDetectionDto): String =
         "providers=${detection.providers.size} mcp=${detection.mcpServers.size} modes=${detection.customModes.size} sessions=${detection.sessions.size} model=${detection.defaultModel != null} settings=${detection.settings != null}"
 
-    private fun detectionProps(detection: ai.kilocode.rpc.dto.LegacyMigrationDetectionDto): Map<String, String> = mapOf(
+    private fun detectionProps(detection: ai.accurecode.rpc.dto.LegacyMigrationDetectionDto): Map<String, String> = mapOf(
         "settings" to (detection.settings != null).toString(),
         "providers" to detection.providers.size.toString(),
         "mcpServers" to detection.mcpServers.size.toString(),
@@ -335,7 +335,7 @@ class KiloMigrationService internal constructor(
 
     private fun buildInitialProgress(
         selections: MigrationUiSelections,
-        detection: ai.kilocode.rpc.dto.LegacyMigrationDetectionDto,
+        detection: ai.accurecode.rpc.dto.LegacyMigrationDetectionDto,
     ): List<MigrationItemUiProgress> {
         val list = mutableListOf<MigrationItemUiProgress>()
         for (id in selections.providers) {

@@ -1,4 +1,4 @@
-import type { GlobalEvent } from "@kilocode/sdk/v2/client"
+import type { GlobalEvent } from "@accurecode/sdk/v2/client"
 
 export type SSEPayload = GlobalEvent["payload"]
 type SyncPayload = Extract<SSEPayload, { type: "sync" }>

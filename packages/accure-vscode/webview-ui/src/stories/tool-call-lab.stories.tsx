@@ -6,7 +6,7 @@ import type {
   ReasoningPart,
   TextPart,
   ToolPart,
-} from "@kilocode/sdk/v2"
+} from "@accurecode/sdk/v2"
 import { StoryProviders, defaultMockData } from "./StoryProviders"
 import { AssistantMessage } from "../components/chat/AssistantMessage"
 import { registerVscodeToolOverrides } from "../components/chat/VscodeToolOverrides"
@@ -26,7 +26,7 @@ const base: SDKAssistantMessage = {
   parentID: "tool-call-lab-user-message",
   time: { created: stamp - 9000, completed: stamp - 1000 },
   modelID: "anthropic/claude-sonnet-4-6",
-  providerID: "kilo",
+  providerID: "accure",
   mode: "default",
   agent: "default",
   path: { cwd: "/project", root: "/project" },

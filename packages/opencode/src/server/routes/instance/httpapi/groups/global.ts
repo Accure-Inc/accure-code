@@ -2,7 +2,7 @@ import { Config } from "@/config/config"
 import { BusEvent } from "@/bus/bus-event"
 import { SyncEvent } from "@/sync"
 import "@/server/event"
-import "@/kilocode/indexing-event" // kilocode_change - register indexing.status before HttpApi event schemas
+import "@/accurecode/indexing-event" // accurecode_change - register indexing.status before HttpApi event schemas
 import { Schema } from "effect"
 import { HttpApi, HttpApiEndpoint, HttpApiError, HttpApiGroup, OpenApi } from "effect/unstable/httpapi"
 import { described } from "./metadata"
@@ -51,7 +51,7 @@ export const GlobalApi = HttpApi.make("global").add(
         OpenApi.annotations({
           identifier: "global.health",
           summary: "Get health",
-          description: "Get health information about the Kilo server.", // kilocode_change
+          description: "Get health information about the Accure server.", // accurecode_change
         }),
       ),
       HttpApiEndpoint.get("event", GlobalPaths.event, {
@@ -60,7 +60,7 @@ export const GlobalApi = HttpApi.make("global").add(
         OpenApi.annotations({
           identifier: "global.event",
           summary: "Get global events",
-          description: "Subscribe to global events from the Kilo system using server-sent events.", // kilocode_change
+          description: "Subscribe to global events from the Accure system using server-sent events.", // accurecode_change
         }),
       ),
       HttpApiEndpoint.get("configGet", GlobalPaths.config, {
@@ -69,7 +69,7 @@ export const GlobalApi = HttpApi.make("global").add(
         OpenApi.annotations({
           identifier: "global.config.get",
           summary: "Get global configuration",
-          description: "Retrieve the current global Kilo configuration settings and preferences.", // kilocode_change
+          description: "Retrieve the current global Accure configuration settings and preferences.", // accurecode_change
         }),
       ),
       HttpApiEndpoint.patch("configUpdate", GlobalPaths.config, {
@@ -80,7 +80,7 @@ export const GlobalApi = HttpApi.make("global").add(
         OpenApi.annotations({
           identifier: "global.config.update",
           summary: "Update global configuration",
-          description: "Update global Kilo configuration settings and preferences.", // kilocode_change
+          description: "Update global Accure configuration settings and preferences.", // accurecode_change
         }),
       ),
       HttpApiEndpoint.post("dispose", GlobalPaths.dispose, {
@@ -89,7 +89,7 @@ export const GlobalApi = HttpApi.make("global").add(
         OpenApi.annotations({
           identifier: "global.dispose",
           summary: "Dispose instance",
-          description: "Clean up and dispose all Kilo instances, releasing all resources.", // kilocode_change
+          description: "Clean up and dispose all Accure instances, releasing all resources.", // accurecode_change
         }),
       ),
       HttpApiEndpoint.post("upgrade", GlobalPaths.upgrade, {
@@ -99,8 +99,8 @@ export const GlobalApi = HttpApi.make("global").add(
       }).annotateMerge(
         OpenApi.annotations({
           identifier: "global.upgrade",
-          summary: "Upgrade kilo", // kilocode_change
-          description: "Upgrade kilo to the specified version or latest if not specified.", // kilocode_change
+          summary: "Upgrade accure", // accurecode_change
+          description: "Upgrade accure to the specified version or latest if not specified.", // accurecode_change
         }),
       ),
     )

@@ -1,18 +1,18 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.MessageErrorDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.QuestionInfoDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionStatusDto
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.MessageErrorDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.QuestionInfoDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionStatusDto
 
 class TurnLifecycleTest : SessionControllerTestBase() {
 
@@ -23,7 +23,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [busy] [considering next steps]
+            [code] [accure/gpt-5] [busy] [considering next steps]
             """,
             m,
         )
@@ -37,7 +37,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -53,7 +53,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
         // Error state must survive
         assertSession(
             """
-            [code] [kilo/gpt-5] [error] [Timed out]
+            [code] [accure/gpt-5] [error] [Timed out]
             """,
             m,
         )
@@ -68,7 +68,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
         // "completed" always wins over error
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -95,7 +95,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [error] [Bad Request]
+            [code] [accure/gpt-5] [error] [Bad Request]
             """,
             m,
         )
@@ -108,7 +108,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [error] [timeout]
+            [code] [accure/gpt-5] [error] [timeout]
             """,
             m,
         )
@@ -149,7 +149,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -164,7 +164,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
         // Error state must survive
         assertSession(
             """
-            [code] [kilo/gpt-5] [error] [Timed out]
+            [code] [accure/gpt-5] [error] [Timed out]
             """,
             m,
         )
@@ -185,14 +185,14 @@ class TurnLifecycleTest : SessionControllerTestBase() {
         })
         assertSession(
             """
-            [code] [kilo/gpt-5] [login-required] [Go to User Profile settings to sign in, then continue this session.]
+            [code] [accure/gpt-5] [login-required] [Go to User Profile settings to sign in, then continue this session.]
             """,
             m,
         )
     }
 
     fun `test paid model auth error opens empty new session`() {
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, config = ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, config = ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         val m = controller()
         flush()
@@ -207,7 +207,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [login-required] [Go to User Profile settings to sign in, then continue this session.]
+            [code] [accure/gpt-5] [login-required] [Go to User Profile settings to sign in, then continue this session.]
             """,
             m,
         )
@@ -225,7 +225,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
         assertTrue(m.model.state is SessionState.Error)
         assertSession(
             """
-            [code] [kilo/gpt-5] [error] [Bad Request]
+            [code] [accure/gpt-5] [error] [Bad Request]
             """,
             m,
         )
@@ -241,16 +241,16 @@ class TurnLifecycleTest : SessionControllerTestBase() {
         ))
         assertTrue(m.model.state is SessionState.LoginRequired)
 
-        appRpc.state.value = KiloAppStateDto(
-            KiloAppStatusDto.READY,
-            config = ConfigDto(model = "kilo/gpt-5"),
+        appRpc.state.value = AccureAppStateDto(
+            AccureAppStatusDto.READY,
+            config = ConfigDto(model = "accure/gpt-5"),
             profile = ProfileDto(email = "user@example.com"),
         )
         flush()
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -265,7 +265,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
             role = "user",
             time = MessageTimeDto(created = 0.0),
             agent = "code",
-            providerID = "kilo/openai",
+            providerID = "accure/openai",
             modelID = "gpt-5.5",
         )
         emit(ChatEventDto.MessageUpdated("ses_test", msg))
@@ -280,9 +280,9 @@ class TurnLifecycleTest : SessionControllerTestBase() {
             "ses_test",
             MessageErrorDto(type = "APIError", message = "Unauthorized", statusCode = 401, responseBody = body),
         ))
-        appRpc.state.value = KiloAppStateDto(
-            KiloAppStatusDto.READY,
-            config = ConfigDto(model = "kilo/gpt-5"),
+        appRpc.state.value = AccureAppStateDto(
+            AccureAppStatusDto.READY,
+            config = ConfigDto(model = "accure/gpt-5"),
             profile = ProfileDto(email = "user@example.com"),
         )
         flush()
@@ -292,7 +292,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
         assertEquals("msg_user", prompt.messageID)
         assertEquals(false, prompt.noReply)
         assertEquals("code", prompt.agent)
-        assertEquals("kilo/openai", prompt.providerID)
+        assertEquals("accure/openai", prompt.providerID)
         assertEquals("gpt-5.5", prompt.modelID)
         assertTrue(m.model.state is SessionState.Busy)
     }
@@ -354,7 +354,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
         })
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -368,7 +368,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
             role = "user",
             time = MessageTimeDto(created = 0.0),
             agent = "code",
-            providerID = "kilo/openai",
+            providerID = "accure/openai",
             modelID = "gpt-5.5",
         )
         emit(ChatEventDto.MessageUpdated("ses_test", msg))
@@ -385,9 +385,9 @@ class TurnLifecycleTest : SessionControllerTestBase() {
         flush()
 
         // profile becomes available, but there should be no auto-retry
-        appRpc.state.value = KiloAppStateDto(
-            KiloAppStatusDto.READY,
-            config = ConfigDto(model = "kilo/gpt-5"),
+        appRpc.state.value = AccureAppStateDto(
+            AccureAppStatusDto.READY,
+            config = ConfigDto(model = "accure/gpt-5"),
             profile = ProfileDto(email = "user@example.com"),
         )
         flush()
@@ -404,7 +404,7 @@ class TurnLifecycleTest : SessionControllerTestBase() {
         // No state change — event was filtered out
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )

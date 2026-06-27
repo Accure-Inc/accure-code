@@ -54,7 +54,7 @@ export const dict = {
 
   "dialog.usageExceeded.freeTier.title": "무료 한도에 도달했습니다",
   "dialog.usageExceeded.freeTier.description":
-    "Kilo Go를 구독하여 최고의 오픈 소스 모델에 안정적으로 액세스하세요. 월 $5부터 시작합니다.",
+    "Accure Go를 구독하여 최고의 오픈 소스 모델에 안정적으로 액세스하세요. 월 $5부터 시작합니다.",
   "dialog.usageExceeded.freeTier.actionLabel": "구독",
   "dialog.usageExceeded.accountRateLimit.title": "Go 한도에 도달했습니다",
   "dialog.usageExceeded.accountRateLimit.description":
@@ -105,7 +105,7 @@ export const dict = {
   "ui.textField.copied": "복사됨",
 
   "ui.imagePreview.alt": "이미지 미리보기",
-  // kilocode_change start
+  // accurecode_change start
   "ui.mermaid.rendering": "Mermaid 다이어그램 렌더링 중...",
   "ui.mermaid.renderError": "Mermaid 렌더링 실패: {{message}}",
   "ui.mermaid.errorDefault": "Mermaid 다이어그램을 렌더링할 수 없습니다.",
@@ -116,7 +116,7 @@ export const dict = {
   "ui.mermaid.copyPng": "PNG 복사",
   "ui.mermaid.downloadSvg": "SVG 다운로드",
   "ui.mermaid.downloadPng": "PNG 다운로드",
-  // kilocode_change end
+  // accurecode_change end
   "ui.scrollView.ariaLabel": "스크롤 가능한 콘텐츠",
 
   "ui.tool.read": "읽기",

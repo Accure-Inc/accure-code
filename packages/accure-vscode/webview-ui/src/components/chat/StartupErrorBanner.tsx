@@ -4,7 +4,7 @@
  */
 
 import { Component, createSignal, Show } from "solid-js"
-import { Icon } from "@kilocode/accure-ui/icon"
+import { Icon } from "@accurecode/accure-ui/icon"
 import { useLanguage } from "../../context/language"
 import { useVSCode } from "../../context/vscode"
 

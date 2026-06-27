@@ -1,16 +1,16 @@
-package ai.kilocode.client.session.ui.attachment
+package ai.accurecode.client.session.ui.attachment
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.FileAttachment
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.vfs.KiloEditorKind
-import ai.kilocode.client.vfs.KiloEditorKindRegistry
-import ai.kilocode.client.vfs.KiloVirtualFile
-import ai.kilocode.log.KiloLog
-import ai.kilocode.rpc.dto.KiloAppStatusDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.FileAttachment
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.vfs.AccureEditorKind
+import ai.accurecode.client.vfs.AccureEditorKindRegistry
+import ai.accurecode.client.vfs.AccureVirtualFile
+import ai.accurecode.log.AccureLog
+import ai.accurecode.rpc.dto.AccureAppStatusDto
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
@@ -42,22 +42,22 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal object AttachmentEditorKind : KiloEditorKind {
+internal object AttachmentEditorKind : AccureEditorKind {
     const val ID = "attachment"
 
     override val id: String = ID
 
-    override fun title(params: Map<String, String>): String = ref(params)?.filename ?: KiloBundle.message("session.attachment.title")
+    override fun title(params: Map<String, String>): String = ref(params)?.filename ?: AccureBundle.message("session.attachment.title")
     override fun icon(params: Map<String, String>): Icon? = attachmentIcon(params["mime"].orEmpty(), title(params))
     override fun presentablePath(params: Map<String, String>): String {
         val ref = ref(params)
-        return KiloBundle.message("session.attachment.path", ref?.sessionId.orEmpty(), ref?.filename ?: title(params))
+        return AccureBundle.message("session.attachment.path", ref?.sessionId.orEmpty(), ref?.filename ?: title(params))
     }
 
     override fun isValid(params: Map<String, String>): Boolean = ref(params) != null
 
     @RequiresEdt
-    override fun createContent(project: Project, file: KiloVirtualFile, parent: Disposable): JComponent {
+    override fun createContent(project: Project, file: AccureVirtualFile, parent: Disposable): JComponent {
         val panel = JPanel(BorderLayout()).apply {
             border = JBUI.Borders.empty(UiStyle.Gap.pad())
         }
@@ -69,7 +69,7 @@ internal object AttachmentEditorKind : KiloEditorKind {
             panel.add(component(AttachmentData.Missing), BorderLayout.CENTER)
             return panel
         }
-        project.service<KiloAttachmentEditorService>().load(ref, parent) { data ->
+        project.service<AccureAttachmentEditorService>().load(ref, parent) { data ->
             LOG.info("kind=attachment-editor phase=render data=${describe(data)} ref=${brief(ref)}")
             panel.removeAll()
             panel.add(component(data), BorderLayout.CENTER)
@@ -95,15 +95,15 @@ internal object AttachmentEditorKind : KiloEditorKind {
         )
     }
 
-    private val LOG = KiloLog.create(AttachmentEditorKind::class.java)
+    private val LOG = AccureLog.create(AttachmentEditorKind::class.java)
 }
 
 private fun component(data: AttachmentData): JComponent = when (data) {
     is AttachmentData.Text -> text(data.text)
     is AttachmentData.Image -> JBScrollPane(JBLabel(ImageIcon(data.image), SwingConstants.CENTER))
     is AttachmentData.Binary -> metadata(data.name, data.mime, data.size)
-    is AttachmentData.Missing -> center(KiloBundle.message("session.attachment.missing"))
-    is AttachmentData.Error -> center(KiloBundle.message("session.attachment.error", data.message))
+    is AttachmentData.Missing -> center(AccureBundle.message("session.attachment.missing"))
+    is AttachmentData.Error -> center(AccureBundle.message("session.attachment.error", data.message))
     AttachmentData.Connecting -> connecting()
     AttachmentData.ConnectionFailed -> failed()
 }
@@ -112,16 +112,16 @@ private fun connecting(): JComponent {
     return Stack.horizontal(gap = UiStyle.Gap.sm()).apply {
         border = JBUI.Borders.empty(UiStyle.Gap.pad())
         next(JBLabel(AnimatedIcon.Default()))
-        next(JBLabel(KiloBundle.message("session.connection.connecting")))
+        next(JBLabel(AccureBundle.message("session.connection.connecting")))
     }.let { Centerizer(it, Centerizer.TYPE.BOTH) }
 }
 
 private fun failed(): JComponent {
     return Stack.horizontal(gap = UiStyle.Gap.sm()).apply {
         border = JBUI.Borders.empty(UiStyle.Gap.pad())
-        next(JBLabel(KiloBundle.message("session.connection.error.app")))
-        next(ActionLink(KiloBundle.message("session.connection.retry")) {
-            service<KiloAppService>().retryAsync()
+        next(JBLabel(AccureBundle.message("session.connection.error.app")))
+        next(ActionLink(AccureBundle.message("session.connection.retry")) {
+            service<AccureAppService>().retryAsync()
         })
     }.let { Centerizer(it, Centerizer.TYPE.BOTH) }
 }
@@ -138,28 +138,28 @@ private fun text(value: String): JComponent {
 private fun metadata(name: String, mime: String, size: Int): JComponent {
     return Stack.vertical(gap = UiStyle.Gap.sm()).apply {
         border = JBUI.Borders.empty(UiStyle.Gap.pad())
-        next(JBLabel(KiloBundle.message("session.attachment.unsupported", name)))
-        next(JBLabel(KiloBundle.message("session.attachment.mime", mime.ifBlank { "unknown" })))
-        next(JBLabel(KiloBundle.message("session.attachment.size", size)))
+        next(JBLabel(AccureBundle.message("session.attachment.unsupported", name)))
+        next(JBLabel(AccureBundle.message("session.attachment.mime", mime.ifBlank { "unknown" })))
+        next(JBLabel(AccureBundle.message("session.attachment.size", size)))
     }
 }
 
 private fun center(value: String): JComponent = Centerizer(JBLabel(value), Centerizer.TYPE.BOTH)
 
 @Service(Service.Level.PROJECT)
-internal class KiloAttachmentEditorService(
+internal class AccureAttachmentEditorService(
     private val project: Project,
     private val cs: CoroutineScope,
 ) {
     companion object {
-        private val LOG = KiloLog.create(KiloAttachmentEditorService::class.java)
+        private val LOG = AccureLog.create(AccureAttachmentEditorService::class.java)
     }
 
     fun load(ref: AttachmentRef, parent: Disposable, done: (AttachmentData) -> Unit) {
         LOG.info("kind=attachment-load phase=start project=${project.name} hash=${project.locationHash} ref=${brief(ref)}")
         val disposed = AtomicBoolean(false)
         val job = cs.launch {
-            val app = service<KiloAppService>()
+            val app = service<AccureAppService>()
             app.connect()
             while (!disposed.get()) {
                 withContext(Dispatchers.Main) {
@@ -168,16 +168,16 @@ internal class KiloAttachmentEditorService(
                         done(AttachmentData.Connecting)
                     }
                 }
-                val state = app.state.first { it.status == KiloAppStatusDto.READY || it.status == KiloAppStatusDto.ERROR }
+                val state = app.state.first { it.status == AccureAppStatusDto.READY || it.status == AccureAppStatusDto.ERROR }
                 LOG.info("kind=attachment-load phase=app-state status=${state.status} ref=${brief(ref)}")
-                if (state.status == KiloAppStatusDto.ERROR) {
+                if (state.status == AccureAppStatusDto.ERROR) {
                     withContext(Dispatchers.Main) {
                         if (alive(disposed)) {
                             LOG.info("kind=attachment-load phase=connection-failed ref=${brief(ref)}")
                             done(AttachmentData.ConnectionFailed)
                         }
                     }
-                    app.state.first { it.status != KiloAppStatusDto.ERROR }
+                    app.state.first { it.status != AccureAppStatusDto.ERROR }
                     continue
                 }
                 val data = runCatching { fetch(ref) }
@@ -204,7 +204,7 @@ internal class KiloAttachmentEditorService(
     private fun alive(disposed: AtomicBoolean): Boolean = !project.isDisposed && !disposed.get()
 
     private suspend fun fetch(ref: AttachmentRef): AttachmentData {
-        val item = project.service<KiloSessionService>().attachmentPart(
+        val item = project.service<AccureSessionService>().attachmentPart(
             ref.sessionId,
             ref.directory,
             ref.messageId,
@@ -246,11 +246,11 @@ internal data class AttachmentRef(
 )
 
 fun ensureAttachmentEditorKind() {
-    service<KiloEditorKindRegistry>().register(AttachmentEditorKind)
+    service<AccureEditorKindRegistry>().register(AttachmentEditorKind)
 }
 
 internal fun unregisterAttachmentEditorKind() {
-    service<KiloEditorKindRegistry>().unregister(AttachmentEditorKind.ID)
+    service<AccureEditorKindRegistry>().unregister(AttachmentEditorKind.ID)
 }
 
 internal fun attachmentParams(

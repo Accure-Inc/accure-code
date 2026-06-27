@@ -1,9 +1,9 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
 import kotlinx.serialization.json.JsonObject
 
 /**
- * Backend adapter for writing migrated data to the CLI (kilo serve).
+ * Backend adapter for writing migrated data to the CLI (accure serve).
  *
  * Implementations use raw OkHttp or the generated Kotlin client.
  * No threading or synchronization is assumed; callers own sequencing.
@@ -18,16 +18,16 @@ interface LegacyMigrationBackend {
     /** GET /session/{sessionID} — returns true if the session already exists */
     fun sessionExists(id: String): Boolean
 
-    /** POST /kilocode/session-import/project — returns the project ID */
+    /** POST /accurecode/session-import/project — returns the project ID */
     fun importProject(project: JsonObject): String
 
-    /** POST /kilocode/session-import/session */
+    /** POST /accurecode/session-import/session */
     fun importSession(session: JsonObject): LegacyImportResult
 
-    /** POST /kilocode/session-import/message */
+    /** POST /accurecode/session-import/message */
     fun importMessage(message: JsonObject)
 
-    /** POST /kilocode/session-import/part */
+    /** POST /accurecode/session-import/part */
     fun importPart(part: JsonObject)
 }
 

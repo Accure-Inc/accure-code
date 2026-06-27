@@ -1,13 +1,13 @@
 declare global {
-  const KILO_VERSION: string
-  const KILO_CHANNEL: string
-  const KILO_BUILD_KIND: string // kilocode_change
+  const ACCURECODE_VERSION: string
+  const ACCURECODE_CHANNEL: string
+  const ACCURECODE_BUILD_KIND: string // accurecode_change
 }
 
-export const InstallationVersion = typeof KILO_VERSION === "string" ? KILO_VERSION : "local"
-export const InstallationChannel = typeof KILO_CHANNEL === "string" ? KILO_CHANNEL : "local"
+export const InstallationVersion = typeof ACCURECODE_VERSION === "string" ? ACCURECODE_VERSION : "local"
+export const InstallationChannel = typeof ACCURECODE_CHANNEL === "string" ? ACCURECODE_CHANNEL : "local"
 export const InstallationLocal = InstallationChannel === "local"
-// kilocode_change start - distinguish release builds from source / local builds
+// accurecode_change start - distinguish release builds from source / local builds
 export const InstallationBuildKind: "source" | "release" =
-  typeof KILO_BUILD_KIND === "string" && KILO_BUILD_KIND === "release" ? "release" : "source"
-// kilocode_change end
+  typeof ACCURECODE_BUILD_KIND === "string" && ACCURECODE_BUILD_KIND === "release" ? "release" : "source"
+// accurecode_change end

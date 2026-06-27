@@ -1,7 +1,7 @@
 # Markdown Rendering Improvements
 
 **Priority:** P1
-**Issue:** [#6088](https://github.com/Kilo-Org/kilocode/issues/6088)
+**Issue:** [#6088](https://github.com/Accure-Inc/accure-code/issues/6088)
 
 Headings h1-h6 render at the same visual size as body text. accure-ui CSS only resets margins, no distinct font sizes/weights.
 

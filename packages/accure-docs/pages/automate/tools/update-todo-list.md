@@ -1,5 +1,5 @@
 ---
-title: Update Todo List Tool | Kilo Code Docs
+title: Update Todo List Tool | Accure Code Docs
 description: Learn how the update_todo_list tool tracks step-by-step task progress, replacing the entire TODO list to reflect current completion state during complex tasks.
 ---
 

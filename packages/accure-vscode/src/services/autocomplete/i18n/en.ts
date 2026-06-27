@@ -1,5 +1,5 @@
 // English runtime translations for autocomplete (accure:autocomplete.* namespace)
-// Source: src/i18n/locales/en/kilocode.json → "autocomplete" section
+// Source: src/i18n/locales/en/accurecode.json → "autocomplete" section
 
 export const dict = {
   "accure:autocomplete.statusBar.enabled": "$(accure-logo) Autocomplete",

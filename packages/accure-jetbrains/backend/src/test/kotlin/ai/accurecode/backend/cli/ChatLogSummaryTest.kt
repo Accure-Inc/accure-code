@@ -1,18 +1,18 @@
-package ai.kilocode.backend.cli
+package ai.accurecode.backend.cli
 
-import ai.kilocode.log.ChatLogSummary
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.PromptDto
-import ai.kilocode.rpc.dto.PromptPartDto
-import ai.kilocode.rpc.dto.QuestionInfoDto
-import ai.kilocode.rpc.dto.QuestionOptionDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionStatusDto
-import ai.kilocode.rpc.dto.ToolRefDto
+import ai.accurecode.log.ChatLogSummary
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.PromptDto
+import ai.accurecode.rpc.dto.PromptPartDto
+import ai.accurecode.rpc.dto.QuestionInfoDto
+import ai.accurecode.rpc.dto.QuestionOptionDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.ToolRefDto
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,8 +23,8 @@ class ChatLogSummaryTest {
 
     @AfterTest
     fun tearDown() {
-        System.clearProperty("kilo.dev.log.chat.content")
-        System.clearProperty("kilo.dev.log.chat.preview.max")
+        System.clearProperty("accurecode.dev.log.chat.content")
+        System.clearProperty("accurecode.dev.log.chat.preview.max")
     }
 
     @Test
@@ -41,8 +41,8 @@ class ChatLogSummaryTest {
 
     @Test
     fun `prompt summary includes truncated preview in preview mode`() {
-        System.setProperty("kilo.dev.log.chat.content", "preview")
-        System.setProperty("kilo.dev.log.chat.preview.max", "10")
+        System.setProperty("accurecode.dev.log.chat.content", "preview")
+        System.setProperty("accurecode.dev.log.chat.preview.max", "10")
 
         val out = ChatLogSummary.prompt("line one\nline two")
 
@@ -78,7 +78,7 @@ class ChatLogSummaryTest {
 
     @Test
     fun `permission and question summaries include request correlation`() {
-        System.setProperty("kilo.dev.log.chat.content", "preview")
+        System.setProperty("accurecode.dev.log.chat.content", "preview")
 
         val permission = ChatLogSummary.permission(
             PermissionRequestDto(
@@ -132,7 +132,7 @@ class ChatLogSummaryTest {
 
     @Test
     fun `prompt dto summary includes types and model`() {
-        System.setProperty("kilo.dev.log.chat.content", "preview")
+        System.setProperty("accurecode.dev.log.chat.content", "preview")
 
         val out = ChatLogSummary.prompt(
             PromptDto(
@@ -140,7 +140,7 @@ class ChatLogSummaryTest {
                     PromptPartDto(type = "text", text = "hello"),
                     PromptPartDto(type = "text", text = "world"),
                 ),
-                providerID = "kilo",
+                providerID = "accure",
                 modelID = "gpt-5",
                 agent = "code",
                 variant = "medium",
@@ -150,13 +150,13 @@ class ChatLogSummaryTest {
         assertTrue(out.contains("parts=2"), out)
         assertTrue(out.contains("types=text"), out)
         assertTrue(out.contains("agent=code"), out)
-        assertTrue(out.contains("model=kilo/gpt-5"), out)
+        assertTrue(out.contains("model=accure/gpt-5"), out)
         assertTrue(out.contains("variant=medium"), out)
     }
 
     @Test
     fun `prompt dto summary redacts file attachment urls`() {
-        System.setProperty("kilo.dev.log.chat.content", "preview")
+        System.setProperty("accurecode.dev.log.chat.content", "preview")
 
         val out = ChatLogSummary.prompt(
             PromptDto(
@@ -184,7 +184,7 @@ class ChatLogSummaryTest {
                     sessionID = "ses_1",
                     role = "assistant",
                     agent = "code",
-                    providerID = "kilo",
+                    providerID = "accure",
                     modelID = "gpt-5",
                     time = MessageTimeDto(created = 0.0),
                 ),
@@ -194,6 +194,6 @@ class ChatLogSummaryTest {
         assertTrue(out.contains("mid=msg_1"), out)
         assertTrue(out.contains("role=assistant"), out)
         assertTrue(out.contains("agent=code"), out)
-        assertTrue(out.contains("model=kilo/gpt-5"), out)
+        assertTrue(out.contains("model=accure/gpt-5"), out)
     }
 }

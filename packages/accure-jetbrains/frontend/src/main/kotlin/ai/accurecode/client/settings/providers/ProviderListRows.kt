@@ -1,9 +1,9 @@
-package ai.kilocode.client.settings.providers
+package ai.accurecode.client.settings.providers
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.model.ModelSearch
-import ai.kilocode.rpc.dto.ProviderSettingsDto
-import ai.kilocode.rpc.dto.ProviderSettingsProviderDto
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.model.ModelSearch
+import ai.accurecode.rpc.dto.ProviderSettingsDto
+import ai.accurecode.rpc.dto.ProviderSettingsProviderDto
 
 internal enum class ProviderListAction {
     CONNECT,
@@ -46,9 +46,9 @@ internal fun providerListRows(state: ProviderSettingsDto, query: String, disable
         .filter { !hiddenProvider(it) }
         .sortedWith(compareBy<ProviderSettingsProviderDto> { it.name.lowercase() }.thenBy { it.id })
     val rows = mutableListOf<ProviderListRow>()
-    rows += connected.map { ProviderListRow(it, KiloBundle.message("settings.providers.connected"), providerActions(it, state, disabled), connected = true, disabled = disabledRows) }
-    rows += popular.map { ProviderListRow(it, KiloBundle.message("settings.providers.popular"), providerActions(it, state, disabled), disabled = disabledRows) }
-    rows += all.map { ProviderListRow(it, KiloBundle.message("settings.providers.all"), providerActions(it, state, disabled), disabled = disabledRows) }
+    rows += connected.map { ProviderListRow(it, AccureBundle.message("settings.providers.connected"), providerActions(it, state, disabled), connected = true, disabled = disabledRows) }
+    rows += popular.map { ProviderListRow(it, AccureBundle.message("settings.providers.popular"), providerActions(it, state, disabled), disabled = disabledRows) }
+    rows += all.map { ProviderListRow(it, AccureBundle.message("settings.providers.all"), providerActions(it, state, disabled), disabled = disabledRows) }
     return rows
 }
 
@@ -74,7 +74,7 @@ internal fun providerActions(
     disabled: Set<String> = state.disabled.toSet(),
 ): List<ProviderListAction> {
     if (provider.id in disabled) return listOf(ProviderListAction.ENABLE)
-    if (provider.id == KILO_PROVIDER_ID && configured(provider, state, state.connected.toSet())) return emptyList()
+    if (provider.id == ACCURECODE_PROVIDER_ID && configured(provider, state, state.connected.toSet())) return emptyList()
     if (configured(provider, state, state.connected.toSet())) return listOf(ProviderListAction.DISCONNECT)
     val methods = providerMethods(provider, state)
     return buildList {

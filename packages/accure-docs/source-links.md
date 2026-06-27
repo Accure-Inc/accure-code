@@ -9,28 +9,28 @@
   <!-- packages/opencode/src/provider/models.ts -->
 - <https://api.digitalocean.com>
   <!-- packages/opencode/src/plugin/digitalocean.ts -->
-- <https://api.kilo.ai>
+- <https://api.accurecode.ai>
   <!-- packages/opencode/src/cli/cmd/github.ts -->
 - <https://api.x.ai/v1>
   <!-- packages/opencode/src/plugin/xai.ts -->
-- <https://app.kilo.ai>
-  <!-- packages/opencode/src/kilocode/kilo-commands.tsx -->
-- <https://app.kilo.ai/claw>
-  <!-- packages/accure-vscode/webview-ui/kiloclaw/components/SetupView.tsx -->
-  <!-- packages/accure-vscode/webview-ui/kiloclaw/components/UpgradeView.tsx -->
-  <!-- packages/opencode/src/kilocode/components/dialog-claw-setup.tsx -->
-  <!-- packages/opencode/src/kilocode/components/dialog-claw-upgrade.tsx -->
-- <https://app.kilo.ai/config.json>
-  <!-- packages/accure-vscode/src/kilo-provider/config-file.ts -->
+- <https://app.accurecode.ai>
+  <!-- packages/opencode/src/accurecode/accure-commands.tsx -->
+- <https://app.accurecode.ai/claw>
+  <!-- packages/accure-vscode/webview-ui/accureclaw/components/SetupView.tsx -->
+  <!-- packages/accure-vscode/webview-ui/accureclaw/components/UpgradeView.tsx -->
+  <!-- packages/opencode/src/accurecode/components/dialog-claw-setup.tsx -->
+  <!-- packages/opencode/src/accurecode/components/dialog-claw-upgrade.tsx -->
+- <https://app.accurecode.ai/config.json>
+  <!-- packages/accure-vscode/src/accure-provider/config-file.ts -->
   <!-- packages/opencode/src/config/config.ts -->
-- <https://app.kilo.ai/credits>
+- <https://app.accurecode.ai/credits>
   <!-- packages/accure-vscode/src/services/autocomplete/AutocompleteServiceManager.ts -->
-- <https://app.kilo.ai/profile>
+- <https://app.accurecode.ai/profile>
   <!-- packages/accure-vscode/webview-ui/src/components/profile/ProfileView.tsx -->
-- <https://app.kilo.ai/tui.json>
+- <https://app.accurecode.ai/tui.json>
   <!-- packages/opencode/src/cli/cmd/tui/config/tui-migrate.ts -->
-- <https://app.kilo.ai/usage>
-  <!-- packages/opencode/src/kilocode/components/dialog-kilo-profile.tsx -->
+- <https://app.accurecode.ai/usage>
+  <!-- packages/opencode/src/accurecode/components/dialog-accure-profile.tsx -->
 - <https://auth.x.ai>
   <!-- packages/opencode/src/plugin/xai.ts -->
 - <https://auth.x.ai/oauth2/authorize>
@@ -39,9 +39,9 @@
   <!-- packages/opencode/src/plugin/xai.ts -->
 - <https://auth.x.ai/oauth2/token>
   <!-- packages/opencode/src/plugin/xai.ts -->
-- <https://blog.kilo.ai/p/accure-gateway-now-supports-byok-20-providers>
+- <https://blog.accurecode.ai/p/accure-gateway-now-supports-byok-20-providers>
   <!-- packages/accure-vscode/webview-ui/src/components/settings/ProviderConnectDialog.tsx -->
-- <https://blog.kilo.ai/p/new-kilo-for-vs-code-is-live>
+- <https://blog.accurecode.ai/p/new-accure-for-vs-code-is-live>
   <!-- packages/accure-vscode/webview-ui/src/components/migration/MigrationWizard.tsx -->
 - <https://chatgpt.com/explore/plus>
   <!-- packages/opencode/src/provider/error.ts -->
@@ -54,7 +54,7 @@
 - <https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services>
   <!-- packages/opencode/src/cli/cmd/github.ts -->
 - <https://docs.inceptionlabs.ai/capabilities/next-edit>
-  <!-- packages/opencode/src/kilocode/server/httpapi/groups/accure-gateway.ts -->
+  <!-- packages/opencode/src/accurecode/server/httpapi/groups/accure-gateway.ts -->
 - <https://docs.mistral.ai/studio-api/conversations/reasoning>
   <!-- packages/opencode/src/provider/transform.ts -->
 - <https://docs.venice.ai/overview/guides/reasoning-models#reasoning-effort>
@@ -64,8 +64,8 @@
 - <https://git-scm.com>
   <!-- packages/accure-vscode/src/agent-manager/WorktreeManager.ts -->
 - <https://github.com>
-  <!-- packages/opencode/src/kilocode/security/github.ts -->
-- <https://github.com/apps/kiloconnect>
+  <!-- packages/opencode/src/accurecode/security/github.ts -->
+- <https://github.com/apps/accureconnect>
   <!-- packages/opencode/src/cli/cmd/github.ts -->
 - <https://github.com/badlogic/pi-mono/blob/main/packages/ai/src/utils/overflow.ts>
   <!-- packages/opencode/src/provider/error.ts -->
@@ -77,20 +77,20 @@
   <!-- packages/opencode/src/lsp/server.ts -->
 - <https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/utils/editCorrector.ts>
   <!-- packages/opencode/src/tool/edit.ts -->
-- <https://github.com/Kilo-Org/kilo-marketplace>
+- <https://github.com/Accure-Org/accure-marketplace>
   <!-- packages/accure-vscode/webview-ui/src/components/marketplace/MarketplaceContribute.tsx -->
-- <https://github.com/Kilo-Org/kilocode>
-  <!-- packages/accure-vscode/webview-ui/src/components/settings/AboutKiloCodeTab.tsx -->
-- <https://github.com/Kilo-Org/kilocode/issues/6986>
+- <https://github.com/Accure-Inc/accure-code>
+  <!-- packages/accure-vscode/webview-ui/src/components/settings/AboutAccureCodeTab.tsx -->
+- <https://github.com/Accure-Inc/accure-code/issues/6986>
   <!-- packages/accure-vscode/src/agent-manager/constants.ts -->
-- <https://github.com/Kilo-Org/kilocode/issues/9618>
-  <!-- packages/opencode/src/kilocode/encoding.ts -->
-- <https://github.com/Kilo-Org/kilocode/issues/9755>
-  <!-- packages/opencode/src/kilocode/encoding.ts -->
-- <https://github.com/Kilo-Org/kilocode/issues/new?template=bug-report.yml>
+- <https://github.com/Accure-Inc/accure-code/issues/9618>
+  <!-- packages/opencode/src/accurecode/encoding.ts -->
+- <https://github.com/Accure-Inc/accure-code/issues/9755>
+  <!-- packages/opencode/src/accurecode/encoding.ts -->
+- <https://github.com/Accure-Inc/accure-code/issues/new?template=bug-report.yml>
   <!-- packages/opencode/src/cli/cmd/tui/app.tsx -->
   <!-- packages/opencode/src/cli/cmd/tui/component/error-component.tsx -->
-- <https://github.com/Kilo-Org/kilocode/issues/new/choose>
+- <https://github.com/Accure-Inc/accure-code/issues/new/choose>
   <!-- packages/accure-vscode/webview-ui/src/components/chat/FeedbackDialog.tsx -->
 - <https://github.com/microsoft/vscode-eslint/archive/refs/heads/main.zip>
   <!-- packages/opencode/src/lsp/server.ts -->
@@ -104,55 +104,55 @@
   <!-- packages/opencode/src/plugin/digitalocean.ts -->
 - <https://julialang.org/downloads/>
   <!-- packages/opencode/src/lsp/server.ts -->
-- <https://kilo.ai>
+- <https://accure.ai>
   <!-- packages/opencode/src/cli/cmd/github.ts -->
   <!-- packages/opencode/src/mcp/oauth-provider.ts -->
   <!-- packages/opencode/src/session/network.ts -->
-- <https://kilo.ai/>
+- <https://accure.ai/>
   <!-- packages/opencode/src/cli/cmd/generate.ts -->
-  <!-- packages/opencode/src/kilocode/server/httpapi/public.ts -->
+  <!-- packages/opencode/src/accurecode/server/httpapi/public.ts -->
   <!-- packages/opencode/src/provider/provider.ts -->
-- <https://kilo.ai/discord>
+- <https://accure.ai/discord>
   <!-- packages/accure-vscode/webview-ui/src/components/chat/FeedbackDialog.tsx -->
-  <!-- packages/accure-vscode/webview-ui/src/components/settings/AboutKiloCodeTab.tsx -->
-- <https://kilo.ai/docs>
+  <!-- packages/accure-vscode/webview-ui/src/components/settings/AboutAccureCodeTab.tsx -->
+- <https://accure.ai/docs>
   <!-- packages/accure-vscode/webview-ui/src/hooks/useSlashCommand.ts -->
-  <!-- packages/opencode/src/kilocode/cli/cmd/tui/app.tsx -->
-- <https://kilo.ai/docs/ai-providers/cloudflare>
+  <!-- packages/opencode/src/accurecode/cli/cmd/tui/app.tsx -->
+- <https://accure.ai/docs/ai-providers/cloudflare>
   <!-- packages/opencode/src/cli/cmd/providers.ts -->
-- <https://kilo.ai/docs/ai-providers#custom-provider>
+- <https://accure.ai/docs/ai-providers#custom-provider>
   <!-- packages/accure-vscode/webview-ui/src/components/settings/CustomProviderDialog.tsx -->
-- <https://kilo.ai/docs/code-with-ai/platforms/vscode/whats-new>
+- <https://accure.ai/docs/code-with-ai/platforms/vscode/whats-new>
   <!-- packages/accure-vscode/webview-ui/src/components/migration/MigrationWizard.tsx -->
-- <https://kilo.ai/docs/customize/custom-subagents>
+- <https://accure.ai/docs/customize/custom-subagents>
   <!-- packages/opencode/src/config/config.ts -->
-- <https://kilo.ai/docs/customize/workflows>
+- <https://accure.ai/docs/customize/workflows>
   <!-- packages/opencode/src/config/config.ts -->
-- <https://kilo.ai/gateway>
-  <!-- packages/opencode/src/kilocode/cli/cmd/tui/component/dialog-provider.tsx -->
-- <https://kilo.ai/install>
-  <!-- packages/opencode/src/kilocode/installation/index.ts -->
-- <https://kilo.ai/kiloclaw>
-  <!-- packages/accure-vscode/webview-ui/kiloclaw/components/SetupView.tsx -->
-  <!-- packages/opencode/src/kilocode/components/dialog-claw-setup.tsx -->
-- <https://kilo.ai/pricing>
+- <https://accure.ai/gateway>
+  <!-- packages/opencode/src/accurecode/cli/cmd/tui/component/dialog-provider.tsx -->
+- <https://accure.ai/install>
+  <!-- packages/opencode/src/accurecode/installation/index.ts -->
+- <https://accure.ai/accureclaw>
+  <!-- packages/accure-vscode/webview-ui/accureclaw/components/SetupView.tsx -->
+  <!-- packages/opencode/src/accurecode/components/dialog-claw-setup.tsx -->
+- <https://accure.ai/pricing>
   <!-- packages/opencode/src/cli/cmd/tui/component/dialog-retry-action.tsx -->
-- <https://kilo.ai/support>
+- <https://accure.ai/support>
   <!-- packages/accure-vscode/webview-ui/src/components/chat/FeedbackDialog.tsx -->
-  <!-- packages/accure-vscode/webview-ui/src/components/settings/AboutKiloCodeTab.tsx -->
-- <https://kilocode.ai>
-  <!-- packages/opencode/src/kilocode/const.ts -->
+  <!-- packages/accure-vscode/webview-ui/src/components/settings/AboutAccureCodeTab.tsx -->
+- <https://accurecode.ai>
+  <!-- packages/opencode/src/accurecode/const.ts -->
 - <https://opencode.ai/>
   <!-- packages/opencode/src/cli/cmd/generate.ts -->
-  <!-- packages/opencode/src/kilocode/server/httpapi/public.ts -->
+  <!-- packages/opencode/src/accurecode/server/httpapi/public.ts -->
 - <https://opencode.ai/zen>
   <!-- packages/accure-vscode/webview-ui/src/i18n/en.ts -->
 - <https://openrouter.ai/docs/cookbook/administration/usage-accounting>
-  <!-- packages/opencode/src/kilocode/session/index.ts -->
+  <!-- packages/opencode/src/accurecode/session/index.ts -->
 - <https://opncd.ai>
   <!-- packages/opencode/src/share/share-next.ts -->
-- <https://reddit.com/r/kilocode>
-  <!-- packages/accure-vscode/webview-ui/src/components/settings/AboutKiloCodeTab.tsx -->
+- <https://reddit.com/r/accurecode>
+  <!-- packages/accure-vscode/webview-ui/src/components/settings/AboutAccureCodeTab.tsx -->
 - <https://search.parallel.ai/mcp>
   <!-- packages/opencode/src/tool/mcp-websearch.ts -->
 - <https://v5.ai-sdk.dev/providers/ai-sdk-providers/amazon-bedrock>
@@ -194,8 +194,8 @@
 - <https://www.rfc-editor.org/rfc/rfc8628#section-3.5>
   <!-- packages/opencode/src/plugin/github-copilot/copilot.ts -->
 - <https://x.com>
-  <!-- packages/opencode/src/kilocode/util/url.ts -->
+  <!-- packages/opencode/src/accurecode/util/url.ts -->
 - <https://xn--pitest-2nf.com/status>
-  <!-- packages/opencode/src/kilocode/util/url.ts -->
+  <!-- packages/opencode/src/accurecode/util/url.ts -->
 - <https://аpitest.com/status>
-  <!-- packages/opencode/src/kilocode/util/url.ts -->
+  <!-- packages/opencode/src/accurecode/util/url.ts -->

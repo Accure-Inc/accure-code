@@ -1,7 +1,7 @@
-package ai.kilocode.client.session.ui.header
+package ai.accurecode.client.session.ui.header
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.ContextUsage
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.ContextUsage
 import com.intellij.ui.components.JBLabel
 
 internal fun set(label: JBLabel, value: String?) {
@@ -29,15 +29,15 @@ internal fun contextText(value: ContextUsage?): String? {
 internal fun contextTip(value: ContextUsage?): String? {
     val ctx = value ?: return null
     val pct = ctx.percentage
-    if (pct != null) return KiloBundle.message("session.header.context.tooltip.percent", num(ctx.tokens), pct)
-    if (ctx.tokens > 0) return KiloBundle.message("session.header.context.tooltip.tokens", num(ctx.tokens))
+    if (pct != null) return AccureBundle.message("session.header.context.tooltip.percent", num(ctx.tokens), pct)
+    if (ctx.tokens > 0) return AccureBundle.message("session.header.context.tooltip.tokens", num(ctx.tokens))
     return null
 }
 
 internal fun todo(done: Int, total: Int): String? {
     if (total <= 0) return null
-    if (done >= total) return KiloBundle.message("session.header.todos.done", total)
-    return KiloBundle.message("session.header.todos.progress", done, total)
+    if (done >= total) return AccureBundle.message("session.header.todos.done", total)
+    return AccureBundle.message("session.header.todos.progress", done, total)
 }
 
 internal fun num(value: Long): String {

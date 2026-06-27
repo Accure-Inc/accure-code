@@ -1,9 +1,15 @@
 import { z } from "zod"
-import { getKiloUrlFromToken } from "../auth/token.js"
-import { getDefaultHeaders, buildKiloHeaders } from "../headers.js"
-import { KILO_API_BASE, KILO_OPENROUTER_BASE, MODELS_FETCH_TIMEOUT_MS, PROMPTS, AI_SDK_PROVIDERS } from "./constants.js"
+import { getAccureUrlFromToken } from "../auth/token.js"
+import { getDefaultHeaders, buildAccureHeaders } from "../headers.js"
+import {
+  ACCURECODE_API_BASE,
+  ACCURECODE_OPENROUTER_BASE,
+  MODELS_FETCH_TIMEOUT_MS,
+  PROMPTS,
+  AI_SDK_PROVIDERS,
+} from "./constants.js"
 
-export type KiloModelsResult = {
+export type AccureModelsResult = {
   models: Record<string, any>
   error?: { kind: "unauthorized" | "network" | "schema" | "http"; status?: number }
 }
@@ -74,26 +80,28 @@ function parseApiPrice(price: string | null | undefined): number | undefined {
 }
 
 /**
- * Fetch models from Kilo API (OpenRouter-compatible endpoint)
+ * Fetch models from Accure API (OpenRouter-compatible endpoint)
  *
  * @param options - Configuration options
  * @returns Typed result with models and optional error info
  */
-export async function fetchKiloModels(options?: {
-  kilocodeToken?: string
-  kilocodeOrganizationId?: string
+export async function fetchAccureModels(options?: {
+  accurecodeToken?: string
+  accurecodeOrganizationId?: string
   baseURL?: string
-}): Promise<KiloModelsResult> {
-  const token = options?.kilocodeToken
-  const organizationId = options?.kilocodeOrganizationId
+}): Promise<AccureModelsResult> {
+  const token = options?.accurecodeToken
+  const organizationId = options?.accurecodeOrganizationId
 
   // Construct base URL
-  const defaultBaseURL = organizationId ? `${KILO_API_BASE}/api/organizations/${organizationId}` : KILO_OPENROUTER_BASE
+  const defaultBaseURL = organizationId
+    ? `${ACCURECODE_API_BASE}/api/organizations/${organizationId}`
+    : ACCURECODE_OPENROUTER_BASE
 
   const baseURL = options?.baseURL ?? defaultBaseURL
 
   // Transform URL with token if available
-  const finalBaseURL = token ? getKiloUrlFromToken(baseURL, token) : baseURL
+  const finalBaseURL = token ? getAccureUrlFromToken(baseURL, token) : baseURL
 
   // Construct models endpoint
   const modelsURL = `${finalBaseURL}/models`
@@ -101,7 +109,7 @@ export async function fetchKiloModels(options?: {
   const response = await fetch(modelsURL, {
     headers: {
       ...getDefaultHeaders(),
-      ...buildKiloHeaders(undefined, { kilocodeOrganizationId: organizationId }),
+      ...buildAccureHeaders(undefined, { accurecodeOrganizationId: organizationId }),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     signal: AbortSignal.timeout(MODELS_FETCH_TIMEOUT_MS),
@@ -114,7 +122,7 @@ export async function fetchKiloModels(options?: {
   if (!response.ok) {
     // 401 with auth credentials: fall back to unauthenticated public endpoint
     if (response.status === 401 && (token || organizationId)) {
-      return fetchKiloModels({})
+      return fetchAccureModels({})
     }
     const kind = response.status === 401 || response.status === 403 ? "unauthorized" : "http"
     return { models: {}, error: { kind, status: response.status } }
@@ -142,7 +150,7 @@ export async function fetchKiloModels(options?: {
       continue
     }
 
-    // Skip models that don't support tools — Kilo requires tool calling
+    // Skip models that don't support tools — Accure requires tool calling
     if (!model.supported_parameters?.includes("tools")) {
       continue
     }

@@ -5,29 +5,29 @@
 
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
 import { createSignal, type ParentComponent } from "solid-js"
-import { DialogProvider } from "@kilocode/accure-ui/context/dialog"
-import { DataProvider } from "@kilocode/accure-ui/context/data"
-import { DiffComponentProvider } from "@kilocode/accure-ui/context/diff"
-import { CodeComponentProvider } from "@kilocode/accure-ui/context/code"
-import { FileComponentProvider } from "@kilocode/accure-ui/context/file"
-import { MarkedProvider } from "@kilocode/accure-ui/context/marked"
-import { I18nProvider } from "@kilocode/accure-ui/context"
-import { Diff } from "@kilocode/accure-ui/diff"
-import { Code } from "@kilocode/accure-ui/code"
-import { File } from "@kilocode/accure-ui/file"
+import { DialogProvider } from "@accurecode/accure-ui/context/dialog"
+import { DataProvider } from "@accurecode/accure-ui/context/data"
+import { DiffComponentProvider } from "@accurecode/accure-ui/context/diff"
+import { CodeComponentProvider } from "@accurecode/accure-ui/context/code"
+import { FileComponentProvider } from "@accurecode/accure-ui/context/file"
+import { MarkedProvider } from "@accurecode/accure-ui/context/marked"
+import { I18nProvider } from "@accurecode/accure-ui/context"
+import { Diff } from "@accurecode/accure-ui/diff"
+import { Code } from "@accurecode/accure-ui/code"
+import { File } from "@accurecode/accure-ui/file"
 import { VSCodeProvider } from "../context/vscode"
 import { ServerProvider } from "../context/server"
 import { ConfigProvider } from "../context/config"
 import { ProviderProvider } from "../context/provider"
 import { SessionContext } from "../context/session"
 import { LanguageContext } from "../context/language"
-import { dict as uiEn } from "@kilocode/accure-ui/i18n/en"
+import { dict as uiEn } from "@accurecode/accure-ui/i18n/en"
 import { dict as appEn } from "../i18n/en"
-import { dict as kiloEn } from "@kilocode/accure-i18n/en"
+import { dict as accureEn } from "@accurecode/accure-i18n/en"
 import SessionList from "../components/history/SessionList"
 import HistoryView from "../components/history/HistoryView"
 
-const dict: Record<string, string> = { ...appEn, ...uiEn, ...kiloEn }
+const dict: Record<string, string> = { ...appEn, ...uiEn, ...accureEn }
 function t(key: string) {
   return dict[key] ?? key
 }
@@ -69,7 +69,7 @@ const WithSessions: ParentComponent<{ sessions?: typeof mockSessions }> = (props
     questionErrors: () => new Set<string>(),
     scopedPermissions: () => [] as any[],
     scopedQuestions: () => [] as any[],
-    selected: () => ({ providerID: "kilo", modelID: "anthropic/claude-sonnet-4-6" }),
+    selected: () => ({ providerID: "accure", modelID: "anthropic/claude-sonnet-4-6" }),
     selectModel: noop,
     hasModelOverride: () => false,
     clearModelOverride: noop,
@@ -79,7 +79,7 @@ const WithSessions: ParentComponent<{ sessions?: typeof mockSessions }> = (props
     selectedAgent: () => "code",
     selectAgent: noop,
     getSessionAgent: () => "code",
-    getSessionModel: () => ({ providerID: "kilo", modelID: "anthropic/claude-sonnet-4-6" }),
+    getSessionModel: () => ({ providerID: "accure", modelID: "anthropic/claude-sonnet-4-6" }),
     setSessionModel: noop,
     setSessionAgent: noop,
     setSessionVariant: noop,

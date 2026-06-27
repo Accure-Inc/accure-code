@@ -15,14 +15,14 @@ import { testEffect } from "../lib/effect"
 const it = testEffect(Layer.mergeAll(Config.defaultLayer, AppFileSystem.defaultLayer))
 const winIt = process.platform === "win32" ? it.instance : it.instance.skip
 
-const globalConfigFiles = ["kilo.json", "kilo.jsonc", "tui.json", "tui.jsonc"].map((file) =>
+const globalConfigFiles = ["accure.json", "accure.jsonc", "tui.json", "tui.jsonc"].map((file) =>
   path.join(Global.Path.config, file),
 )
 
 const cleanState = Effect.gen(function* () {
   const fs = yield* AppFileSystem.Service
-  delete process.env.KILO_CONFIG
-  delete process.env.KILO_TUI_CONFIG
+  delete process.env.ACCURECODE_CONFIG
+  delete process.env.ACCURECODE_TUI_CONFIG
   yield* Effect.forEach(globalConfigFiles, (file) => fs.remove(file, { force: true }).pipe(Effect.ignore), {
     discard: true,
   })
@@ -31,15 +31,15 @@ const cleanState = Effect.gen(function* () {
 const withCleanState = <A, E, R>(self: Effect.Effect<A, E, R>) =>
   Effect.acquireUseRelease(
     Effect.gen(function* () {
-      const disabled = Flag.KILO_DISABLE_DEFAULT_PLUGINS
-      Flag.KILO_DISABLE_DEFAULT_PLUGINS = true
+      const disabled = Flag.ACCURECODE_DISABLE_DEFAULT_PLUGINS
+      Flag.ACCURECODE_DISABLE_DEFAULT_PLUGINS = true
       yield* cleanState
       return disabled
     }),
     () => self,
     (disabled) =>
       Effect.gen(function* () {
-        Flag.KILO_DISABLE_DEFAULT_PLUGINS = disabled
+        Flag.ACCURECODE_DISABLE_DEFAULT_PLUGINS = disabled
         yield* cleanState
       }),
   )
@@ -90,13 +90,13 @@ it.instance("keeps server and tui plugin merge semantics aligned", () =>
       const local = path.join(test.directory, ".opencode")
       yield* fs.makeDirectory(local, { recursive: true })
 
-      yield* fs.writeJson(path.join(Global.Path.config, "kilo.json"), {
+      yield* fs.writeJson(path.join(Global.Path.config, "accure.json"), {
         plugin: [["shared-plugin@1.0.0", { source: "global" }], "global-only@1.0.0"],
       })
       yield* fs.writeJson(path.join(Global.Path.config, "tui.json"), {
         plugin: [["shared-plugin@1.0.0", { source: "global" }], "global-only@1.0.0"],
       })
-      yield* fs.writeJson(path.join(local, "kilo.json"), {
+      yield* fs.writeJson(path.join(local, "accure.json"), {
         plugin: [["shared-plugin@2.0.0", { source: "local" }], "local-only@1.0.0"],
       })
       yield* fs.writeJson(path.join(local, "tui.json"), {
@@ -151,7 +151,7 @@ it.instance("resolves attention config defaults and overrides", () =>
         notifications: true,
         sound: true,
         volume: 0.4,
-        sound_pack: "kilo.default", // kilocode_change
+        sound_pack: "accure.default", // accurecode_change
         sounds: {},
       })
 
@@ -188,12 +188,12 @@ it.instance("resolves attention config defaults and overrides", () =>
   ),
 )
 
-it.instance("migrates tui-specific keys from kilo.json when tui.json does not exist", () =>
+it.instance("migrates tui-specific keys from accure.json when tui.json does not exist", () =>
   withCleanState(
     Effect.gen(function* () {
       const fs = yield* AppFileSystem.Service
       const test = yield* TestInstance
-      const source = path.join(test.directory, "kilo.json")
+      const source = path.join(test.directory, "accure.json")
       yield* fs.writeJson(source, {
         theme: "migrated-theme",
         tui: { scroll_speed: 5 },
@@ -212,7 +212,7 @@ it.instance("migrates tui-specific keys from kilo.json when tui.json does not ex
       expect(server.theme).toBeUndefined()
       expect(server.keybinds).toBeUndefined()
       expect(server.tui).toBeUndefined()
-      expect(yield* fs.existsSafe(path.join(test.directory, "kilo.json.tui-migration.bak"))).toBe(true)
+      expect(yield* fs.existsSafe(path.join(test.directory, "accure.json.tui-migration.bak"))).toBe(true)
       expect(yield* fs.existsSafe(path.join(test.directory, "tui.json"))).toBe(true)
     }),
   ),
@@ -224,7 +224,7 @@ it.instance("migrates project legacy tui keys even when global tui.json already 
       const fs = yield* AppFileSystem.Service
       const test = yield* TestInstance
       yield* fs.writeJson(path.join(Global.Path.config, "tui.json"), { theme: "global" })
-      yield* fs.writeJson(path.join(test.directory, "kilo.json"), {
+      yield* fs.writeJson(path.join(test.directory, "accure.json"), {
         theme: "project-migrated",
         tui: { scroll_speed: 2 },
       })
@@ -234,7 +234,7 @@ it.instance("migrates project legacy tui keys even when global tui.json already 
       expect(config.scroll_speed).toBe(2)
       expect(yield* fs.existsSafe(path.join(test.directory, "tui.json"))).toBe(true)
 
-      const server = JSON.parse(yield* fs.readFileString(path.join(test.directory, "kilo.json")))
+      const server = JSON.parse(yield* fs.readFileString(path.join(test.directory, "accure.json")))
       expect(server.theme).toBeUndefined()
       expect(server.tui).toBeUndefined()
     }),
@@ -246,7 +246,7 @@ it.instance("drops unknown legacy tui keys during migration", () =>
     Effect.gen(function* () {
       const fs = yield* AppFileSystem.Service
       const test = yield* TestInstance
-      yield* fs.writeJson(path.join(test.directory, "kilo.json"), {
+      yield* fs.writeJson(path.join(test.directory, "accure.json"), {
         theme: "migrated-theme",
         tui: { scroll_speed: 2, foo: 1 },
       })
@@ -262,13 +262,13 @@ it.instance("drops unknown legacy tui keys during migration", () =>
   ),
 )
 
-it.instance("skips migration when kilo.jsonc is syntactically invalid", () =>
+it.instance("skips migration when accure.jsonc is syntactically invalid", () =>
   withCleanState(
     Effect.gen(function* () {
       const fs = yield* AppFileSystem.Service
       const test = yield* TestInstance
       yield* fs.writeFileString(
-        path.join(test.directory, "kilo.jsonc"),
+        path.join(test.directory, "accure.jsonc"),
         `{
   "theme": "broken-theme",
   "tui": { "scroll_speed": 2 }
@@ -280,8 +280,8 @@ it.instance("skips migration when kilo.jsonc is syntactically invalid", () =>
       expect(config.theme).toBeUndefined()
       expect(config.scroll_speed).toBeUndefined()
       expect(yield* fs.existsSafe(path.join(test.directory, "tui.json"))).toBe(false)
-      expect(yield* fs.existsSafe(path.join(test.directory, "kilo.jsonc.tui-migration.bak"))).toBe(false)
-      const source = yield* fs.readFileString(path.join(test.directory, "kilo.jsonc"))
+      expect(yield* fs.existsSafe(path.join(test.directory, "accure.jsonc.tui-migration.bak"))).toBe(false)
+      const source = yield* fs.readFileString(path.join(test.directory, "accure.jsonc"))
       expect(source).toContain('"theme": "broken-theme"')
       expect(source).toContain('"tui": { "scroll_speed": 2 }')
     }),
@@ -293,16 +293,16 @@ it.instance("skips migration when tui.json already exists", () =>
     Effect.gen(function* () {
       const fs = yield* AppFileSystem.Service
       const test = yield* TestInstance
-      yield* fs.writeJson(path.join(test.directory, "kilo.json"), { theme: "legacy" })
+      yield* fs.writeJson(path.join(test.directory, "accure.json"), { theme: "legacy" })
       yield* fs.writeJson(path.join(test.directory, "tui.json"), { diff_style: "stacked" })
 
       const config = yield* getTuiConfig(test.directory)
       expect(config.diff_style).toBe("stacked")
       expect(config.theme).toBeUndefined()
 
-      const server = JSON.parse(yield* fs.readFileString(path.join(test.directory, "kilo.json")))
+      const server = JSON.parse(yield* fs.readFileString(path.join(test.directory, "accure.json")))
       expect(server.theme).toBe("legacy")
-      expect(yield* fs.existsSafe(path.join(test.directory, "kilo.json.tui-migration.bak"))).toBe(false)
+      expect(yield* fs.existsSafe(path.join(test.directory, "accure.json.tui-migration.bak"))).toBe(false)
     }),
   ),
 )
@@ -312,7 +312,7 @@ it.instance("continues loading tui config when legacy source cannot be stripped"
     Effect.gen(function* () {
       const fs = yield* AppFileSystem.Service
       const test = yield* TestInstance
-      const source = path.join(test.directory, "kilo.json")
+      const source = path.join(test.directory, "accure.json")
       yield* fs.writeJson(source, { theme: "readonly-theme" })
 
       yield* Effect.acquireUseRelease(
@@ -338,7 +338,7 @@ it.instance("migration backup preserves JSONC comments", () =>
       const fs = yield* AppFileSystem.Service
       const test = yield* TestInstance
       yield* fs.writeFileString(
-        path.join(test.directory, "kilo.jsonc"),
+        path.join(test.directory, "accure.jsonc"),
         `{
   // top-level comment
   "theme": "jsonc-theme",
@@ -350,7 +350,7 @@ it.instance("migration backup preserves JSONC comments", () =>
       )
 
       yield* getTuiConfig(test.directory)
-      const backup = yield* fs.readFileString(path.join(test.directory, "kilo.jsonc.tui-migration.bak"))
+      const backup = yield* fs.readFileString(path.join(test.directory, "accure.jsonc.tui-migration.bak"))
       expect(backup).toContain("// top-level comment")
       expect(backup).toContain("// nested comment")
       expect(backup).toContain('"theme": "jsonc-theme"')
@@ -359,15 +359,15 @@ it.instance("migration backup preserves JSONC comments", () =>
   ),
 )
 
-it.instance("migrates legacy tui keys across multiple kilo.json levels", () =>
+it.instance("migrates legacy tui keys across multiple accure.json levels", () =>
   withCleanState(
     Effect.gen(function* () {
       const fs = yield* AppFileSystem.Service
       const test = yield* TestInstance
       const nested = path.join(test.directory, "apps", "client")
       yield* fs.makeDirectory(nested, { recursive: true })
-      yield* fs.writeJson(path.join(test.directory, "kilo.json"), { theme: "root-theme" })
-      yield* fs.writeJson(path.join(nested, "kilo.json"), { theme: "nested-theme" })
+      yield* fs.writeJson(path.join(test.directory, "accure.json"), { theme: "root-theme" })
+      yield* fs.writeJson(path.join(nested, "accure.json"), { theme: "nested-theme" })
 
       const config = yield* getTuiConfig(nested)
       expect(config.theme).toBe("nested-theme")
@@ -412,7 +412,7 @@ it.instance("top-level keys in tui.json take precedence over nested tui key", ()
   ),
 )
 
-it.instance("project config takes precedence over KILO_TUI_CONFIG (matches KILO_CONFIG)", () =>
+it.instance("project config takes precedence over ACCURECODE_TUI_CONFIG (matches ACCURECODE_CONFIG)", () =>
   withCleanState(
     Effect.gen(function* () {
       const fs = yield* AppFileSystem.Service
@@ -422,7 +422,7 @@ it.instance("project config takes precedence over KILO_TUI_CONFIG (matches KILO_
       yield* fs.writeJson(custom, { theme: "custom", diff_style: "stacked" })
 
       yield* withEnv(
-        "KILO_TUI_CONFIG",
+        "ACCURECODE_TUI_CONFIG",
         custom,
         Effect.gen(function* () {
           const config = yield* getTuiConfig(test.directory)
@@ -635,7 +635,7 @@ it.instance("keeps explicit configured keybind input undo on Windows", () =>
   ),
 )
 
-it.instance("KILO_TUI_CONFIG provides settings when no project config exists", () =>
+it.instance("ACCURECODE_TUI_CONFIG provides settings when no project config exists", () =>
   withCleanState(
     Effect.gen(function* () {
       const fs = yield* AppFileSystem.Service
@@ -644,7 +644,7 @@ it.instance("KILO_TUI_CONFIG provides settings when no project config exists", (
       yield* fs.writeJson(custom, { theme: "from-env", diff_style: "stacked" })
 
       yield* withEnv(
-        "KILO_TUI_CONFIG",
+        "ACCURECODE_TUI_CONFIG",
         custom,
         Effect.gen(function* () {
           const config = yield* getTuiConfig(test.directory)
@@ -656,19 +656,19 @@ it.instance("KILO_TUI_CONFIG provides settings when no project config exists", (
   ),
 )
 
-it.instance("does not derive tui path from KILO_CONFIG", () =>
+it.instance("does not derive tui path from ACCURECODE_CONFIG", () =>
   withCleanState(
     Effect.gen(function* () {
       const fs = yield* AppFileSystem.Service
       const test = yield* TestInstance
       const customDir = path.join(test.directory, "custom")
       yield* fs.makeDirectory(customDir, { recursive: true })
-      yield* fs.writeJson(path.join(customDir, "kilo.json"), { model: "test/model" })
+      yield* fs.writeJson(path.join(customDir, "accure.json"), { model: "test/model" })
       yield* fs.writeJson(path.join(customDir, "tui.json"), { theme: "should-not-load" })
 
       yield* withEnv(
-        "KILO_CONFIG",
-        path.join(customDir, "kilo.json"),
+        "ACCURECODE_CONFIG",
+        path.join(customDir, "accure.json"),
         Effect.gen(function* () {
           const config = yield* getTuiConfig(test.directory)
           expect(config.theme).toBeUndefined()
@@ -720,13 +720,13 @@ it.instance("applies file substitutions when first identical token is in a comme
   ),
 )
 
-it.instance("loads .kilo/tui.json", () =>
+it.instance("loads .accurecode/tui.json", () =>
   withCleanState(
     Effect.gen(function* () {
       const fs = yield* AppFileSystem.Service
       const test = yield* TestInstance
       yield* fs.writeWithDirs(
-        path.join(test.directory, ".kilo", "tui.json"),
+        path.join(test.directory, ".accurecode", "tui.json"),
         JSON.stringify({ diff_style: "stacked" }, null, 2),
       )
 

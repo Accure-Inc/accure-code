@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.ui.selection
+package ai.accurecode.client.session.ui.selection
 
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
 import com.intellij.openapi.util.Disposer
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.ui.components.JBTextArea

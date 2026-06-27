@@ -1,7 +1,7 @@
 {
   "$schema": "https://v2-8-13.turborepo.dev/schema.json",
-  "globalEnv": ["CI", "KILO_DISABLE_SHARE"],
-  "globalPassThroughEnv": ["CI", "KILO_DISABLE_SHARE"],
+  "globalEnv": ["CI", "ACCURECODE_DISABLE_SHARE"],
+  "globalPassThroughEnv": ["CI", "ACCURECODE_DISABLE_SHARE"],
   "tasks": {
     "typecheck": {
       "dependsOn": ["^typecheck"]
@@ -10,11 +10,11 @@
       "dependsOn": [],
       "outputs": ["dist/**"]
     },
-    "@kilocode/cli#build": {
-      "dependsOn": ["@kilocode/sdk#build"],
+    "@accurecode/cli#build": {
+      "dependsOn": ["@accurecode/sdk#build"],
       "outputs": ["dist/**"]
     },
-    "@kilocode/cli#test": {
+    "@accurecode/cli#test": {
       "dependsOn": ["^build"],
       "outputs": [],
       "passThroughEnv": ["*"]
@@ -23,27 +23,27 @@
       "outputs": [".artifacts/unit/junit.xml"],
       "passThroughEnv": ["*"]
     },
-    "@kilocode/cli#test:ci": {
+    "@accurecode/cli#test:ci": {
       "dependsOn": ["^build"],
       "outputs": [".artifacts/unit/junit.xml"],
       "passThroughEnv": ["*"]
     },
-    "@kilocode/accure-gateway#test:ci": {
+    "@accurecode/accure-gateway#test:ci": {
       "outputs": [".artifacts/unit/junit.xml"]
     },
-    "@kilocode/accure-docs#build": {
+    "@accurecode/accure-docs#build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**"],
       "env": ["POSTHOG_API_KEY", "FREE_TIER_AMOUNT", "NEXT_PUBLIC_POSTHOG_KEY", "NEXT_PUBLIC_POSTHOG_HOST"]
     },
-    "@kilocode/accure-jetbrains#build": {
-      "dependsOn": ["@kilocode/cli#build"],
+    "@accurecode/accure-jetbrains#build": {
+      "dependsOn": ["@accurecode/cli#build"],
       "outputs": ["build/distributions/**"]
     },
-    "@kilocode/accure-jetbrains#typecheck": {
+    "@accurecode/accure-jetbrains#typecheck": {
       "outputs": []
     },
-    "@kilocode/accure-jetbrains#test:ci": {
+    "@accurecode/accure-jetbrains#test:ci": {
       "outputs": [".artifacts/unit/junit.xml"]
     },
     "@opencode-ai/ui#test": {

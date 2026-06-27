@@ -1,8 +1,8 @@
 import { Component, Show, createMemo, createSignal, For } from "solid-js"
-import { TextField } from "@kilocode/accure-ui/text-field"
-import { Card } from "@kilocode/accure-ui/card"
-import { Button } from "@kilocode/accure-ui/button"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
+import { TextField } from "@accurecode/accure-ui/text-field"
+import { Card } from "@accurecode/accure-ui/card"
+import { Button } from "@accurecode/accure-ui/button"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
 
 import { useConfig } from "../../context/config"
 import { useLanguage } from "../../context/language"
@@ -76,7 +76,7 @@ const McpEditView: Component<Props> = (props) => {
       >
         <div style={{ display: "flex", "align-items": "center" }}>
           <IconButton size="small" variant="ghost" icon="arrow-left" onClick={props.onBack} />
-          <span style={{ "font-weight": "600", "font-size": "var(--kilo-font-size-14)", "margin-left": "8px" }}>
+          <span style={{ "font-weight": "600", "font-size": "var(--accure-font-size-14)", "margin-left": "8px" }}>
             {language.t("settings.agentBehaviour.editMcp")} — {props.name}
           </span>
         </div>
@@ -87,7 +87,7 @@ const McpEditView: Component<Props> = (props) => {
       <Card style={{ "margin-bottom": "12px" }}>
         <div
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--accure-font-size-12)",
             color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
             padding: "4px 0",
           }}
@@ -197,7 +197,7 @@ const McpEditView: Component<Props> = (props) => {
                 <span
                   style={{
                     "font-family": "var(--vscode-editor-font-family, monospace)",
-                    "font-size": "var(--kilo-font-size-12)",
+                    "font-size": "var(--accure-font-size-12)",
                   }}
                 >
                   {key}={val}

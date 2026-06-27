@@ -1,9 +1,9 @@
-import { render, TimeToFirstDraw, useKeyboard, useRenderer, useTerminalDimensions } from "@opentui/solid" // kilocode_change
+import { render, TimeToFirstDraw, useKeyboard, useRenderer, useTerminalDimensions } from "@opentui/solid" // accurecode_change
 import { createDefaultOpenTuiKeymap } from "@opentui/keymap/opentui"
 import * as Clipboard from "@tui/util/clipboard"
 import * as Selection from "@tui/util/selection"
 import * as TuiAudio from "@tui/util/audio"
-import { createCliRenderer, MouseButton, TextAttributes, type CliRendererConfig } from "@opentui/core" // kilocode_change
+import { createCliRenderer, MouseButton, TextAttributes, type CliRendererConfig } from "@opentui/core" // accurecode_change
 import { RouteProvider, useRoute } from "@tui/context/route"
 import {
   Switch,
@@ -17,14 +17,14 @@ import {
   batch,
   Show,
   on,
-  untrack, // kilocode_change
+  untrack, // accurecode_change
 } from "solid-js"
-import { win32DisableProcessedInput, win32FlushInputBuffer, win32InstallCtrlCGuard } from "./win32" // kilocode_change
+import { win32DisableProcessedInput, win32FlushInputBuffer, win32InstallCtrlCGuard } from "./win32" // accurecode_change
 import { Flag } from "@opencode-ai/core/flag/flag"
 import semver from "semver"
 import { DialogProvider, useDialog } from "@tui/ui/dialog"
 import { DialogProvider as DialogProviderList } from "@tui/component/dialog-provider"
-import { InstallationVersion } from "@opencode-ai/core/installation/version" // kilocode_change
+import { InstallationVersion } from "@opencode-ai/core/installation/version" // accurecode_change
 import { PluginRouteMissing } from "@tui/component/plugin-route-missing"
 import { ProjectProvider, useProject } from "@tui/context/project"
 import { EditorContextProvider } from "@tui/context/editor"
@@ -40,7 +40,7 @@ import { DialogMcp } from "@tui/component/dialog-mcp"
 import { DialogStatus } from "@tui/component/dialog-status"
 import { DialogThemeList } from "@tui/component/dialog-theme-list"
 import { DialogHelp } from "./ui/dialog-help"
-import { DialogHeadlessLink } from "@/kilocode/cli/cmd/tui/component/dialog-headless-link" // kilocode_change
+import { DialogHeadlessLink } from "@/accurecode/cli/cmd/tui/component/dialog-headless-link" // accurecode_change
 import { DialogAgent } from "@tui/component/dialog-agent"
 import { DialogSessionList } from "@tui/component/dialog-session-list"
 import { DialogConsoleOrg } from "@tui/component/dialog-console-org"
@@ -54,17 +54,17 @@ import { DialogAlert } from "./ui/dialog-alert"
 import { DialogConfirm } from "./ui/dialog-confirm"
 import { ToastProvider, useToast } from "./ui/toast"
 import { ExitProvider, useExit } from "./context/exit"
-// kilocode_change start
+// accurecode_change start
 import { DialogSelect } from "./ui/dialog-select"
 import { Link } from "./ui/link"
-// kilocode_change end
+// accurecode_change end
 import { TuiEvent } from "./event"
 import { KVProvider, useKV } from "./context/kv"
 import { Provider } from "@/provider/provider"
 import { ArgsProvider, useArgs, type Args } from "./context/args"
 import open from "open"
 import { PromptRefProvider, usePromptRef } from "./context/prompt"
-import * as KiloApp from "@/kilocode/cli/cmd/tui/app" // kilocode_change
+import * as AccureApp from "@/accurecode/cli/cmd/tui/app" // accurecode_change
 import { TuiConfigProvider, useTuiConfig } from "./context/tui-config"
 import { TuiConfig } from "@/cli/cmd/tui/config/tui"
 import { TuiPluginRuntime } from "@/cli/cmd/tui/plugin/runtime"
@@ -72,12 +72,12 @@ import { createTuiApi } from "@/cli/cmd/tui/plugin/api"
 import type { RouteMap } from "@/cli/cmd/tui/plugin/api"
 import { createTuiAttention } from "@/cli/cmd/tui/attention"
 import { FormatError, FormatUnknownError } from "@/cli/error"
-import { kitty, resetTerminalState } from "@/kilocode/cli/cmd/tui/util/terminal" // kilocode_change
-import { hasDisplay } from "@/kilocode/cli/cmd/tui/util/display" // kilocode_change
+import { kitty, resetTerminalState } from "@/accurecode/cli/cmd/tui/util/terminal" // accurecode_change
+import { hasDisplay } from "@/accurecode/cli/cmd/tui/util/display" // accurecode_change
 import { CommandPaletteDialog } from "./component/command-palette"
 import {
   COMMAND_PALETTE_COMMAND,
-  KILO_BASE_MODE,
+  ACCURECODE_BASE_MODE,
   OpencodeKeymapProvider,
   registerOpencodeKeymap,
   useBindings,
@@ -132,15 +132,15 @@ const appBindingCommands = [
 ] as const
 
 function rendererConfig(_config: TuiConfig.Resolved): CliRendererConfig {
-  const mouseEnabled = !Flag.KILO_DISABLE_MOUSE && (_config.mouse ?? true)
-  const keyboard = kitty() // kilocode_change
+  const mouseEnabled = !Flag.ACCURECODE_DISABLE_MOUSE && (_config.mouse ?? true)
+  const keyboard = kitty() // accurecode_change
 
   return {
     externalOutputMode: "passthrough",
     targetFps: 60,
     gatherStats: false,
     exitOnCtrlC: false,
-    ...(keyboard ? { useKittyKeyboard: {} } : {}), // kilocode_change
+    ...(keyboard ? { useKittyKeyboard: {} } : {}), // accurecode_change
     autoFocus: false,
     openConsoleOnError: false,
     useMouse: mouseEnabled,
@@ -198,7 +198,7 @@ export function tui(input: {
       TuiAudio.dispose()
     }
 
-    process.on("exit", resetTerminalState) // kilocode_change
+    process.on("exit", resetTerminalState) // accurecode_change
 
     const renderer = await createCliRenderer(rendererConfig(input.config))
     // Prewarm palette before ThemeProvider mounts so `system` theme avoids a first-paint fallback flash.
@@ -334,7 +334,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
   const offSelectionKeys = keymap.intercept(
     "key",
     ({ event }) => {
-      if (!Flag.KILO_EXPERIMENTAL_DISABLE_COPY_ON_SELECT) return
+      if (!Flag.ACCURECODE_EXPERIMENTAL_DISABLE_COPY_ON_SELECT) return
       Selection.handleSelectionKey(renderer, toast, event)
     },
     { priority: 1 },
@@ -355,39 +355,39 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
     renderer.clearSelection()
   }
   const [terminalTitleEnabled, setTerminalTitleEnabled] = createSignal(kv.get("terminal_title_enabled", true))
-  const [done, setDone] = createSignal<Record<string, true>>({}) // kilocode_change
+  const [done, setDone] = createSignal<Record<string, true>>({}) // accurecode_change
   const [pasteSummaryEnabled, setPasteSummaryEnabled] = createSignal(
     kv.get("paste_summary_enabled", !sync.data.config.experimental?.disable_paste_summary),
   )
 
-  // kilocode_change start
-  KiloApp.useSessionEffects({ route, sdk, sync })
-  KiloApp.useTuiConfigHotReload()
-  // kilocode_change end
+  // accurecode_change start
+  AccureApp.useSessionEffects({ route, sdk, sync })
+  AccureApp.useTuiConfigHotReload()
+  // accurecode_change end
 
   // Update terminal window title based on current route and session
   createEffect(() => {
-    if (!terminalTitleEnabled() || Flag.KILO_DISABLE_TERMINAL_TITLE) return
+    if (!terminalTitleEnabled() || Flag.ACCURECODE_DISABLE_TERMINAL_TITLE) return
 
-    const titleDefault = KiloApp.APP_TITLE // kilocode_change
+    const titleDefault = AccureApp.APP_TITLE // accurecode_change
 
-    // kilocode_change start
-    const kiloTitle = KiloApp.getTerminalTitle({
+    // accurecode_change start
+    const accureTitle = AccureApp.getTerminalTitle({
       route,
       base: titleDefault,
       sync,
       done: untrack(done),
       icon: tuiConfig.title_icon,
     })
-    if (kiloTitle) {
-      const id = kiloTitle.id
-      if (id && kiloTitle.active && untrack(() => done()[id]) !== true) {
+    if (accureTitle) {
+      const id = accureTitle.id
+      if (id && accureTitle.active && untrack(() => done()[id]) !== true) {
         setDone((prev) => ({ ...prev, [id]: true }))
       }
-      renderer.setTerminalTitle(kiloTitle.title)
+      renderer.setTerminalTitle(accureTitle.title)
       return
     }
-    // kilocode_change end
+    // accurecode_change end
   })
 
   const args = useArgs()
@@ -705,14 +705,14 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
         name: "docs.open",
         title: "Open docs",
         run: () => {
-          // kilocode_change start
+          // accurecode_change start
           if (!hasDisplay()) {
-            DialogHeadlessLink.show(dialog, KiloApp.DOCS_URL)
+            DialogHeadlessLink.show(dialog, AccureApp.DOCS_URL)
             return
           }
-          open(KiloApp.DOCS_URL).catch(() => {})
+          open(AccureApp.DOCS_URL).catch(() => {})
           dialog.clear()
-          // kilocode_change end
+          // accurecode_change end
         },
         category: "System",
       },
@@ -849,12 +849,12 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
   }))
 
   useBindings(() => ({
-    mode: KILO_BASE_MODE,
+    mode: ACCURECODE_BASE_MODE,
     bindings: tuiConfig.keybinds.gather("app", appBindingCommands),
   }))
 
   useBindings(() => ({
-    mode: KILO_BASE_MODE,
+    mode: ACCURECODE_BASE_MODE,
     enabled: () => {
       const current = promptRef.current
       if (!current?.focused) return true
@@ -863,7 +863,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
     bindings: tuiConfig.keybinds.gather("app_exit", ["app.exit"]),
   }))
 
-  KiloApp.init() // kilocode_change
+  AccureApp.init() // accurecode_change
 
   event.on(TuiEvent.CommandExecute.type, (evt) => {
     keymap.dispatchCommand(evt.properties.command)
@@ -898,7 +898,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
   event.on("session.error", (evt) => {
     const error = evt.properties.error
     if (error && typeof error === "object" && error.name === "MessageAbortedError") return
-    if (KiloApp.handleSessionError(error, toast)) return // kilocode_change
+    if (AccureApp.handleSessionError(error, toast)) return // accurecode_change
 
     const message = errorMessage(error)
 
@@ -950,7 +950,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
     await DialogAlert.show(
       dialog,
       "Update Complete",
-      `Successfully updated to ${KiloApp.APP_NAME} v${result.data.version}. Please restart the application.`, // kilocode_change
+      `Successfully updated to ${AccureApp.APP_NAME} v${result.data.version}. Please restart the application.`, // accurecode_change
     )
 
     void exit()
@@ -971,16 +971,18 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
       flexDirection="column"
       backgroundColor={theme.background}
       onMouseDown={(evt) => {
-        if (!Flag.KILO_EXPERIMENTAL_DISABLE_COPY_ON_SELECT) return
+        if (!Flag.ACCURECODE_EXPERIMENTAL_DISABLE_COPY_ON_SELECT) return
         if (evt.button !== MouseButton.RIGHT) return
 
         if (!Selection.copy(renderer, toast)) return
         evt.preventDefault()
         evt.stopPropagation()
       }}
-      onMouseUp={Flag.KILO_EXPERIMENTAL_DISABLE_COPY_ON_SELECT ? undefined : () => Selection.copy(renderer, toast)}
+      onMouseUp={
+        Flag.ACCURECODE_EXPERIMENTAL_DISABLE_COPY_ON_SELECT ? undefined : () => Selection.copy(renderer, toast)
+      }
     >
-      <Show when={Flag.KILO_SHOW_TTFD}>
+      <Show when={Flag.ACCURECODE_SHOW_TTFD}>
         <TimeToFirstDraw />
       </Show>
       <Show when={ready()}>
@@ -992,11 +994,11 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
             <Match when={route.data.type === "session"}>
               <Session />
             </Match>
-            {/* kilocode_change start */}
-            <Match when={route.data.type === "kiloclaw"}>
-              <KiloApp.KiloClawView />
+            {/* accurecode_change start */}
+            <Match when={route.data.type === "accureclaw"}>
+              <AccureApp.AccureClawView />
             </Match>
-            {/* kilocode_change end */}
+            {/* accurecode_change end */}
           </Switch>
           {plugin()}
         </box>
@@ -1010,7 +1012,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
   )
 }
 
-// kilocode_change start — guard against missing renderer context in ErrorBoundary fallback
+// accurecode_change start — guard against missing renderer context in ErrorBoundary fallback
 function tryUseRenderer() {
   try {
     return useRenderer()
@@ -1061,7 +1063,7 @@ function ErrorComponent(props: {
 
   const [copied, setCopied] = createSignal(false)
 
-  const issueURL = new URL("https://github.com/Kilo-Org/kilocode/issues/new?template=bug-report.yml")
+  const issueURL = new URL("https://github.com/Accure-Inc/accure-code/issues/new?template=bug-report.yml")
 
   // Choose safe fallback colors per mode since theme context may not be available
   const isLight = props.mode === "light"
@@ -1120,4 +1122,4 @@ function ErrorComponent(props: {
     </box>
   )
 }
-// kilocode_change end
+// accurecode_change end

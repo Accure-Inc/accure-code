@@ -6,71 +6,71 @@ import Link from "next/link"
 const terminalContent = {
   installation: (
     <>
-      <span className="terminal-comment"># Install Kilo Code VS Code Extension</span>
+      <span className="terminal-comment"># Install Accure Code VS Code Extension</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> code --install-extension kilocode.kilo-code
+      <span className="terminal-prompt">$</span> code --install-extension accurecode.accurecode-code
       {"\n"}
       {"\n"}
       <span className="terminal-comment"># Or install via CLI</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> npm install -g @kilocode/cli
+      <span className="terminal-prompt">$</span> npm install -g @accurecode/cli
     </>
   ),
   gateway: (
     <>
-      <span className="terminal-comment"># Call Kilo Gateway with a quick curl script</span>
+      <span className="terminal-comment"># Call Accure Gateway with a quick curl script</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> export KILO_API_KEY="YOUR_API_KEY"
+      <span className="terminal-prompt">$</span> export ACCURECODE_API_KEY="YOUR_API_KEY"
       {"\n"}
-      <span className="terminal-prompt">$</span> curl https://api.kilo.ai/api/gateway/chat/completions \{"\n"}
-      -H "Authorization: Bearer $KILO_API_KEY" \{"\n"}
+      <span className="terminal-prompt">$</span> curl https://api.accurecode.ai/api/gateway/chat/completions \{"\n"}
+      -H "Authorization: Bearer $ACCURECODE_API_KEY" \{"\n"}
       -H "Content-Type: application/json" \{"\n"}
-      {`  -d '{"model":"anthropic/claude-sonnet-4.5","messages":[{"role":"user","content":"Say hi from Kilo Gateway"}]}'`}
+      {`  -d '{"model":"anthropic/claude-sonnet-4.5","messages":[{"role":"user","content":"Say hi from Accure Gateway"}]}'`}
     </>
   ),
   firstTask: (
     <>
-      <span className="terminal-comment"># Start a new task with Kilo Code</span>
+      <span className="terminal-comment"># Start a new task with Accure Code</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo "Create a React component for a user profile"
+      <span className="terminal-prompt">$</span> accure "Create a React component for a user profile"
       {"\n"}
       {"\n"}
       <span className="terminal-comment">
-        # Or for interactive sessions, just run the Kilo CLI in your project folder
+        # Or for interactive sessions, just run the Accure CLI in your project folder
       </span>
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo
+      <span className="terminal-prompt">$</span> accure
       {"\n"}
       {"\n"}
       <span className="terminal-comment"># Run in architect mode for planning</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo --mode architect "Design a REST API"
+      <span className="terminal-prompt">$</span> accure --mode architect "Design a REST API"
     </>
   ),
   customRules: (
     <>
       <span className="terminal-comment"># Create a custom rules file in your project</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> touch .kilocode/rules.md
+      <span className="terminal-prompt">$</span> touch .accurecode/rules.md
       {"\n"}
       {"\n"}
       <span className="terminal-comment"># Or use the CLI to add rules</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo rules add "Always use TypeScript"
+      <span className="terminal-prompt">$</span> accure rules add "Always use TypeScript"
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo rules add "Follow React best practices"
+      <span className="terminal-prompt">$</span> accure rules add "Follow React best practices"
       {"\n"}
       {"\n"}
       <span className="terminal-comment"># List all active rules</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo rules list
+      <span className="terminal-prompt">$</span> accure rules list
     </>
   ),
-  kiloclaw: (
+  accureclaw: (
     <>
-      <span className="terminal-comment"># Chat with your KiloClaw agent from the CLI</span>
+      <span className="terminal-comment"># Chat with your AccureClaw agent from the CLI</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo /claw
+      <span className="terminal-prompt">$</span> accure /claw
       {"\n"}
       {"\n"}
       <span className="terminal-comment"># Or connect via chat platforms</span>
@@ -80,7 +80,7 @@ const terminalContent = {
       {"\n"}
       <span className="terminal-comment"># Trigger your agent via webhook</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> curl -X POST https://your-instance.kiloclaw.ai/webhook \{"\n"}
+      <span className="terminal-prompt">$</span> curl -X POST https://your-instance.accureclaw.ai/webhook \{"\n"}
       -H "Content-Type: application/json" \{"\n"}
       {`  -d '{"event":"deploy","repo":"my-app"}'`}
     </>
@@ -91,7 +91,7 @@ const terminalContent = {
 const categories = [
   {
     title: "Get Started",
-    description: "Install Kilo Code and get up and running in minutes",
+    description: "Install Accure Code and get up and running in minutes",
     href: "/getting-started",
     icon: (
       <svg className="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -106,7 +106,7 @@ const categories = [
   },
   {
     title: "Code with AI",
-    description: "Learn how to use Kilo Code to write, edit, and understand code",
+    description: "Learn how to use Accure Code to write, edit, and understand code",
     href: "/code-with-ai",
     icon: (
       <svg className="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -121,10 +121,10 @@ const categories = [
     ],
   },
   {
-    title: "KiloClaw",
+    title: "AccureClaw",
     description:
       "Hosted OpenClaw agents — deploy, manage, and integrate AI agents with chat platforms, dev tools, and triggers without self-hosting.",
-    href: "/kiloclaw/overview",
+    href: "/accureclaw/overview",
     icon: (
       <svg className="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M12 2L2 7l10 5 10-5-10-5z" strokeLinecap="round" strokeLinejoin="round" />
@@ -133,9 +133,9 @@ const categories = [
       </svg>
     ),
     links: [
-      { title: "Overview", href: "/kiloclaw/overview" },
-      { title: "Chat Platforms", href: "/kiloclaw/chat-platforms" },
-      { title: "Development Tools", href: "/kiloclaw/development-tools" },
+      { title: "Overview", href: "/accureclaw/overview" },
+      { title: "Chat Platforms", href: "/accureclaw/chat-platforms" },
+      { title: "Development Tools", href: "/accureclaw/development-tools" },
     ],
   },
   {
@@ -152,7 +152,7 @@ const categories = [
     ),
     links: [
       { title: "Sessions & Sharing", href: "/collaborate" },
-      { title: "Kilo for Teams", href: "/collaborate" },
+      { title: "Accure for Teams", href: "/collaborate" },
       { title: "Enterprise", href: "/collaborate" },
     ],
   },
@@ -191,7 +191,7 @@ const categories = [
     ],
   },
   {
-    title: "Kilo Gateway",
+    title: "Accure Gateway",
     description:
       "A unified API to access hundreds of AI models through a single endpoint with streaming, BYOK, and usage tracking.",
     href: "/gateway",
@@ -210,7 +210,7 @@ const categories = [
   },
   {
     title: "Contributing",
-    description: "Help improve Kilo Code and learn about its architecture",
+    description: "Help improve Accure Code and learn about its architecture",
     href: "/contributing",
     icon: (
       <svg className="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -230,14 +230,14 @@ const categories = [
 ]
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState<"installation" | "firstTask" | "customRules" | "gateway" | "kiloclaw">(
+  const [activeTab, setActiveTab] = useState<"installation" | "firstTask" | "customRules" | "gateway" | "accureclaw">(
     "installation",
   )
 
   return (
     <div className="homepage">
       <Head>
-        <title>Kilo Code Docs: Setup, Models, MCP, Custom Modes & CLI</title>
+        <title>Accure Code Docs: Setup, Models, MCP, Custom Modes & CLI</title>
       </Head>
       {/* Dotted background pattern */}
       <div className="dot-pattern" />
@@ -245,17 +245,17 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
-          <h1 className="hero-title">Kilo Documentation</h1>
+          <h1 className="hero-title">Accure Documentation</h1>
           <p className="hero-subtitle">
-            Explore guides and examples for the Kilo platform — from coding agents and AI-powered development to hosted
-            agentic infrastructure with KiloClaw.
+            Explore guides and examples for the Accure platform — from coding agents and AI-powered development to
+            hosted agentic infrastructure with AccureClaw.
           </p>
           <div className="hero-buttons">
             <Link href="/getting-started" className="btn btn-primary">
-              Get started with Kilo Code →
+              Get started with Accure Code →
             </Link>
-            <Link href="/kiloclaw/overview" className="btn btn-secondary">
-              Explore KiloClaw
+            <Link href="/accureclaw/overview" className="btn btn-secondary">
+              Explore AccureClaw
             </Link>
           </div>
         </div>
@@ -263,7 +263,7 @@ export default function HomePage() {
         {/* Quick Links Panel - Stripe style */}
         <div className="quick-panel">
           <div className="quick-section">
-            <h3 className="quick-title">KILO CODE</h3>
+            <h3 className="quick-title">ACCURE CODE</h3>
             <div className="quick-links">
               <Link href="/getting-started/installing" className="quick-link">
                 Installation Guide
@@ -277,15 +277,15 @@ export default function HomePage() {
             </div>
           </div>
           <div className="quick-section">
-            <h3 className="quick-title">KILOCLAW</h3>
+            <h3 className="quick-title">ACCURECLAW</h3>
             <div className="quick-links">
-              <Link href="/kiloclaw/overview" className="quick-link">
+              <Link href="/accureclaw/overview" className="quick-link">
                 Overview
               </Link>
-              <Link href="/kiloclaw/chat-platforms" className="quick-link">
+              <Link href="/accureclaw/chat-platforms" className="quick-link">
                 Chat Platforms
               </Link>
-              <Link href="/kiloclaw/development-tools" className="quick-link">
+              <Link href="/accureclaw/development-tools" className="quick-link">
                 Development Tools
               </Link>
             </div>
@@ -348,7 +348,7 @@ export default function HomePage() {
       <section className="terminal-section">
         <div className="terminal-intro">
           <h2 className="section-title">Try it out</h2>
-          <p className="terminal-description">Get started quickly with Kilo Code, KiloClaw, and Kilo Gateway</p>
+          <p className="terminal-description">Get started quickly with Accure Code, AccureClaw, and Accure Gateway</p>
         </div>
         <div className="terminal-container">
           <div className="terminal-tabs">
@@ -371,16 +371,16 @@ export default function HomePage() {
               Custom Rules
             </button>
             <button
-              className={`terminal-tab ${activeTab === "kiloclaw" ? "active" : ""}`}
-              onClick={() => setActiveTab("kiloclaw")}
+              className={`terminal-tab ${activeTab === "accureclaw" ? "active" : ""}`}
+              onClick={() => setActiveTab("accureclaw")}
             >
-              KiloClaw
+              AccureClaw
             </button>
             <button
               className={`terminal-tab ${activeTab === "gateway" ? "active" : ""}`}
               onClick={() => setActiveTab("gateway")}
             >
-              Kilo Gateway
+              Accure Gateway
             </button>
           </div>
           <div className="terminal-window">
@@ -408,7 +408,7 @@ export default function HomePage() {
             <span className="footer-icon">💬</span>
             <div>
               <strong>Need help?</strong>
-              <Link href="https://kilo.ai/discord" className="footer-link">
+              <Link href="https://accure.ai/discord" className="footer-link">
                 Join our Discord
               </Link>
             </div>
@@ -417,7 +417,7 @@ export default function HomePage() {
             <span className="footer-icon">📝</span>
             <div>
               <strong>Check out our</strong>
-              <Link href="https://github.com/Kilo-Org/kilocode/releases" className="footer-link">
+              <Link href="https://github.com/Accure-Inc/accure-code/releases" className="footer-link">
                 Changelog
               </Link>
             </div>
@@ -426,7 +426,7 @@ export default function HomePage() {
             <span className="footer-icon">🐛</span>
             <div>
               <strong>Found a bug?</strong>
-              <Link href="https://github.com/Kilo-Org/kilocode/issues" className="footer-link">
+              <Link href="https://github.com/Accure-Inc/accure-code/issues" className="footer-link">
                 Report an issue
               </Link>
             </div>

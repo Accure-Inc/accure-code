@@ -30,17 +30,17 @@ export function DialogSessionList() {
   const toast = useToast()
   const [toDelete, setToDelete] = createSignal<string>()
   const [search, setSearch] = createDebouncedSignal("", 150)
-  const [global, setGlobal] = createSignal(false) // kilocode_change - show current worktree by default
+  const [global, setGlobal] = createSignal(false) // accurecode_change - show current worktree by default
   const deleteHint = useCommandShortcut("session.delete")
   const quickSwitch1 = useCommandShortcut("session.quick_switch.1")
   const quickSwitch9 = useCommandShortcut("session.quick_switch.9")
 
-  // kilocode_change start - always fetch from experimental endpoint (returns GlobalSession with worktree info)
+  // accurecode_change start - always fetch from experimental endpoint (returns GlobalSession with worktree info)
   // TODO: extend /experimental/session to accept `scope`/`path` so this dialog can respect the
   // upstream `session_directory_filter_enabled` KV toggle (via sync.session.query()) while
   // keeping worktree grouping.
   const [searchResults, searchActions] = createResource(
-    () => ({ query: search(), global: global(), directory: project.instance.directory() }), // kilocode_change
+    () => ({ query: search(), global: global(), directory: project.instance.directory() }), // accurecode_change
     async (input) => {
       const result = await sdk.client.experimental.session.list(
         {
@@ -56,11 +56,11 @@ export function DialogSessionList() {
       return result.data ?? []
     },
   )
-  // kilocode_change end
+  // accurecode_change end
 
   const currentSessionID = createMemo(() => (route.data.type === "session" ? route.data.sessionID : undefined))
 
-  const sessions = createMemo(() => searchResults() ?? []) // kilocode_change - endpoint applies worktree scope
+  const sessions = createMemo(() => searchResults() ?? []) // accurecode_change - endpoint applies worktree scope
 
   function recover(session: NonNullable<ReturnType<typeof sessions>[number]>) {
     const workspace = project.workspace.get(session.workspaceID!)
@@ -116,7 +116,7 @@ export function DialogSessionList() {
           }
           await project.workspace.sync()
           await sync.session.refresh()
-          if (search()) await searchActions.refetch() // kilocode_change - use createResource actions
+          if (search()) await searchActions.refetch() // accurecode_change - use createResource actions
           if (info?.workspaceID === session.workspaceID) {
             route.navigate({ type: "home" })
           }
@@ -139,7 +139,7 @@ export function DialogSessionList() {
     ))
   }
 
-  // kilocode_change - support local and global sessions
+  // accurecode_change - support local and global sessions
   function orderByRecency(sessionsList: { id: string; parentID?: string; time: { updated: number } }[]) {
     return sessionsList
       .filter((x) => x.parentID === undefined)
@@ -160,14 +160,14 @@ export function DialogSessionList() {
 
   const options = createMemo(() => {
     const today = new Date().toDateString()
-    const all = global() // kilocode_change
+    const all = global() // accurecode_change
     const sessionMap = new Map(
       sessions()
         .filter((x) => x.parentID === undefined)
         .map((x) => [x.id, x]),
     )
 
-    const displayOrder = orderByRecency(sessions()) // kilocode_change - respect current scope
+    const displayOrder = orderByRecency(sessions()) // accurecode_change - respect current scope
 
     const pinned = local.session.pinned().filter((id) => sessionMap.has(id))
     const pinnedSet = new Set(pinned)
@@ -179,7 +179,7 @@ export function DialogSessionList() {
       const workspace = x.workspaceID ? project.workspace.get(x.workspaceID) : undefined
 
       let footer: JSX.Element | string = ""
-      if (Flag.KILO_EXPERIMENTAL_WORKSPACES) {
+      if (Flag.ACCURECODE_EXPERIMENTAL_WORKSPACES) {
         if (x.workspaceID) {
           footer = workspace ? (
             <WorkspaceLabel
@@ -206,7 +206,7 @@ export function DialogSessionList() {
           : undefined
       return {
         title: isDeleting ? `Press ${deleteHint()} again to confirm` : x.title,
-        description: all && x.worktreeName ? `(${x.worktreeName})` : undefined, // kilocode_change - worktree label
+        description: all && x.worktreeName ? `(${x.worktreeName})` : undefined, // accurecode_change - worktree label
         bg: isDeleting ? theme.error : undefined,
         value: x.id,
         category,
@@ -234,7 +234,7 @@ export function DialogSessionList() {
 
   return (
     <DialogSelect
-      title={global() ? "Sessions (all worktrees)" : "Sessions (current worktree)"} // kilocode_change
+      title={global() ? "Sessions (all worktrees)" : "Sessions (current worktree)"} // accurecode_change
       options={options()}
       skipFilter={true}
       current={currentSessionID()}
@@ -298,7 +298,7 @@ export function DialogSessionList() {
               if (status && status !== "connected") {
                 await sync.session.refresh()
               }
-              void searchActions.refetch() // kilocode_change
+              void searchActions.refetch() // accurecode_change
               setToDelete(undefined)
               return
             }
@@ -308,7 +308,7 @@ export function DialogSessionList() {
         {
           command: "session.rename",
           title: "rename",
-          // kilocode_change start
+          // accurecode_change start
           onTrigger: async (option) => {
             const item = sessions().find((x) => x.id === option.value)
             dialog.replace(() => (
@@ -331,11 +331,11 @@ export function DialogSessionList() {
             setGlobal((v) => !v)
           },
         },
-        // kilocode_change end
+        // accurecode_change end
       ]}
-      // kilocode_change start - preserve Ctrl+A worktree scope toggle with the upstream keymap engine
+      // accurecode_change start - preserve Ctrl+A worktree scope toggle with the upstream keymap engine
       bindings={[{ key: "ctrl+a", cmd: "session.scope.toggle" }]}
-      // kilocode_change end
+      // accurecode_change end
       footerHints={quickSwitchFooterHints()}
     />
   )

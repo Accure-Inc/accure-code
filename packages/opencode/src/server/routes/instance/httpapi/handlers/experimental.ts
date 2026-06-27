@@ -1,23 +1,23 @@
 import { Account } from "@/account/account"
 import { Agent } from "@/agent/agent"
 import { Config } from "@/config/config"
-import { EffectBridge } from "@/effect/bridge" // kilocode_change
+import { EffectBridge } from "@/effect/bridge" // accurecode_change
 import { InstanceState } from "@/effect/instance-state"
 import { MCP } from "@/mcp"
 import { Project } from "@/project/project"
 import { Session } from "@/session/session"
 import { ToolJsonSchema } from "@/tool/json-schema"
 import { ToolRegistry } from "@/tool/registry"
-import { Filesystem } from "@/util/filesystem" // kilocode_change
-import { Review } from "@/kilocode/review/review" // kilocode_change
-import { WorktreeDiff } from "@/kilocode/review/worktree-diff" // kilocode_change
-import { WorktreeFamily } from "@/kilocode/worktree-family" // kilocode_change
+import { Filesystem } from "@/util/filesystem" // accurecode_change
+import { Review } from "@/accurecode/review/review" // accurecode_change
+import { WorktreeDiff } from "@/accurecode/review/worktree-diff" // accurecode_change
+import { WorktreeFamily } from "@/accurecode/worktree-family" // accurecode_change
 import { Worktree } from "@/worktree"
 import { Effect, Option } from "effect"
 import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse"
 import { HttpApiBuilder, HttpApiError } from "effect/unstable/httpapi"
-import * as Log from "@opencode-ai/core/util/log" // kilocode_change
-import path from "path" // kilocode_change
+import * as Log from "@opencode-ai/core/util/log" // accurecode_change
+import path from "path" // accurecode_change
 import { InstanceHttpApi } from "../api"
 import {
   ConsoleSwitchPayload,
@@ -112,7 +112,7 @@ export const experimentalHandlers = HttpApiBuilder.group(InstanceHttpApi, "exper
       return yield* registry.ids()
     })
 
-    // kilocode_change start - discover Agent Manager and external git worktrees
+    // accurecode_change start - discover Agent Manager and external git worktrees
     const worktree = Effect.fn("ExperimentalHttpApi.worktree")(function* () {
       const ctx = yield* InstanceState.context
       const managed = new Set((yield* project.sandboxes(ctx.project.id)).map((dir) => Filesystem.resolve(dir)))
@@ -125,7 +125,7 @@ export const experimentalHandlers = HttpApiBuilder.group(InstanceHttpApi, "exper
         ),
       )
     })
-    // kilocode_change end
+    // accurecode_change end
 
     const worktreeCreate = Effect.fn("ExperimentalHttpApi.worktreeCreate")(function* (ctx: {
       payload: Worktree.CreateInput | undefined
@@ -149,7 +149,7 @@ export const experimentalHandlers = HttpApiBuilder.group(InstanceHttpApi, "exper
       return true
     })
 
-    // kilocode_change start - worktree diff endpoints for agent manager
+    // accurecode_change start - worktree diff endpoints for agent manager
     const base = Effect.fn("ExperimentalHttpApi.worktreeDiffBase")(function* (input: { base?: string }) {
       if (input.base) return input.base
       return yield* EffectBridge.fromPromise(() => Review.getBaseBranch())
@@ -195,25 +195,25 @@ export const experimentalHandlers = HttpApiBuilder.group(InstanceHttpApi, "exper
         Effect.map((item) => item ?? null),
       )
     })
-    // kilocode_change end
+    // accurecode_change end
 
     const session = Effect.fn("ExperimentalHttpApi.session")(function* (ctx: { query: typeof SessionListQuery.Type }) {
       const limit = ctx.query.limit ?? 100
-      // kilocode_change start
+      // accurecode_change start
       const state = yield* InstanceState.context
       const projectID = ctx.query.worktrees && !ctx.query.projectID ? state.project.id : ctx.query.projectID
       const roots = ctx.query.worktrees ? yield* WorktreeFamily.list() : undefined
       const directory = ctx.query.current ? ctx.query.directory : undefined
       const sorted = roots ? [...roots].sort((a, b) => b.length - a.length) : undefined
       const current = sorted && directory ? sorted.find((dir) => Filesystem.contains(dir, directory)) : undefined
-      // kilocode_change end
-      if (roots && directory && !current) return HttpServerResponse.jsonUnsafe([]) // kilocode_change
+      // accurecode_change end
+      if (roots && directory && !current) return HttpServerResponse.jsonUnsafe([]) // accurecode_change
       const sessions = Array.from(
         Session.listGlobal({
-          projectID, // kilocode_change
-          directory: ctx.query.worktrees ? undefined : ctx.query.directory, // kilocode_change
-          directories: roots, // kilocode_change
-          currentDirectory: directory, // kilocode_change
+          projectID, // accurecode_change
+          directory: ctx.query.worktrees ? undefined : ctx.query.directory, // accurecode_change
+          directories: roots, // accurecode_change
+          currentDirectory: directory, // accurecode_change
           roots: ctx.query.roots,
           start: ctx.query.start,
           cursor: ctx.query.cursor,
@@ -222,7 +222,7 @@ export const experimentalHandlers = HttpApiBuilder.group(InstanceHttpApi, "exper
           archived: ctx.query.archived,
         }),
       )
-      // kilocode_change start - resolve worktree folder name for each session
+      // accurecode_change start - resolve worktree folder name for each session
       const result = sorted
         ? sessions.map((session) => {
             const root = sorted.find((dir) => Filesystem.contains(dir, session.directory))
@@ -230,10 +230,10 @@ export const experimentalHandlers = HttpApiBuilder.group(InstanceHttpApi, "exper
           })
         : sessions
       const list = result.length > limit ? result.slice(0, limit) : result
-      // kilocode_change end
+      // accurecode_change end
       return HttpServerResponse.jsonUnsafe(list, {
         headers:
-          result.length > limit && list.length > 0 // kilocode_change
+          result.length > limit && list.length > 0 // accurecode_change
             ? { "x-next-cursor": String(list[list.length - 1].time.updated) }
             : undefined,
       })
@@ -254,11 +254,11 @@ export const experimentalHandlers = HttpApiBuilder.group(InstanceHttpApi, "exper
         .handle("worktreeCreate", worktreeCreate)
         .handle("worktreeRemove", worktreeRemove)
         .handle("worktreeReset", worktreeReset)
-        // kilocode_change start
+        // accurecode_change start
         .handle("worktreeDiff", worktreeDiff)
         .handle("worktreeDiffSummary", worktreeDiffSummary)
         .handle("worktreeDiffFile", worktreeDiffFile)
-        // kilocode_change end
+        // accurecode_change end
         .handle("session", session)
         .handle("resource", resource)
     )

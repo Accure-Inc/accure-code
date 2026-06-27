@@ -6,14 +6,14 @@
  */
 
 import * as vscode from "vscode"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 import type {
   McpLocalConfig,
   McpRemoteConfig,
   AgentConfig,
   PermissionConfig,
   PermissionObjectConfig,
-} from "@kilocode/sdk/v2/client"
+} from "@accurecode/sdk/v2/client"
 import { PROVIDER_MAP, UNSUPPORTED_PROVIDERS, DEFAULT_MODE_SLUGS } from "./provider-mapping"
 import type { ProviderMapping } from "./provider-mapping"
 import { NATIVE_MODE_DEFAULTS } from "./native-mode-defaults"
@@ -49,7 +49,7 @@ import { migrate as migrateSession } from "./sessions/migrate"
 
 const SECRET_KEY = "roo_cline_config_api_config"
 const CODEX_OAUTH_SECRET_KEY = "openai-codex-oauth-credentials"
-const MIGRATION_STATUS_KEY = "kilo.legacyMigrationStatus"
+const MIGRATION_STATUS_KEY = "accure.legacyMigrationStatus"
 
 type MigrationStatus = "completed" | "completed_with_errors" | "skipped"
 
@@ -145,7 +145,7 @@ export type SessionProgressCallback = (progress: MigrationSessionProgress) => vo
  */
 export async function migrate(
   context: vscode.ExtensionContext,
-  client: KiloClient,
+  client: AccureClient,
   selections: MigrationSelections,
   onProgress: ProgressCallback,
   onSessionProgress?: SessionProgressCallback,
@@ -392,7 +392,7 @@ async function migrateProvider(
   context: vscode.ExtensionContext,
   profileName: string,
   settings: LegacyProviderSettings,
-  client: KiloClient,
+  client: AccureClient,
 ): Promise<MigrationResultItem> {
   const provider = settings.apiProvider
   if (!provider) {
@@ -448,13 +448,13 @@ async function migrateProvider(
     return { item: profileName, category: "provider", status: "warning", message: "No API key found in profile" }
   }
 
-  // The profile endpoint requires type:"oauth". The legacy extension stored the same Kilo
+  // The profile endpoint requires type:"oauth". The legacy extension stored the same Accure
   // API token — write it in the OAuth format the new extension expects (matching device-auth:
   // access + refresh + 1-year expiry).
-  if (mapping.id === "kilo") {
+  if (mapping.id === "accure") {
     const org = mapping.organizationIdField ? (settings[mapping.organizationIdField] as string | undefined) : undefined
     await client.auth.set({
-      providerID: "kilo",
+      providerID: "accure",
       auth: {
         type: "oauth" as const,
         access: apiKey,
@@ -466,7 +466,7 @@ async function migrateProvider(
     return { item: profileName, category: "provider", status: "success" }
   }
 
-  // For providers that support an organization ID (e.g. Kilo Gateway), migrate using OAuth
+  // For providers that support an organization ID (e.g. Accure Gateway), migrate using OAuth
   // auth so the CLI can read accountId for org-scoped API requests.
   const organizationId = mapping.organizationIdField
     ? (settings[mapping.organizationIdField] as string | undefined)
@@ -496,7 +496,7 @@ async function migrateProvider(
 async function migrateConfigFields(
   mapping: ProviderMapping,
   settings: LegacyProviderSettings,
-  client: KiloClient,
+  client: AccureClient,
 ): Promise<void> {
   if (!mapping.configFields?.length) return
   const opts: Record<string, string> = {}
@@ -511,7 +511,10 @@ async function migrateConfigFields(
   }
 }
 
-async function migrateDefaultModel(settings: LegacyProviderSettings, client: KiloClient): Promise<MigrationResultItem> {
+async function migrateDefaultModel(
+  settings: LegacyProviderSettings,
+  client: AccureClient,
+): Promise<MigrationResultItem> {
   const provider = settings.apiProvider
   if (!provider) {
     return { item: "Default model", category: "defaultModel", status: "error", message: "No provider type found" }
@@ -544,7 +547,7 @@ async function migrateDefaultModel(settings: LegacyProviderSettings, client: Kil
 async function migrateAutoApproval(
   settings: LegacySettings,
   sel: MigrationAutoApprovalSelections,
-  client: KiloClient,
+  client: AccureClient,
   onProgress: ProgressCallback,
 ): Promise<MigrationResultItem[]> {
   const {

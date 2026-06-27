@@ -1,19 +1,19 @@
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1":
-    "Kilo Gateway te da acceso a un conjunto seleccionado de modelos optimizados y confiables para agentes de codificación.",
-  "provider.connect.kiloGateway.line2":
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1":
+    "Accure Gateway te da acceso a un conjunto seleccionado de modelos optimizados y confiables para agentes de codificación.",
+  "provider.connect.accureGateway.line2":
     "Con una sola clave API tendrás acceso a modelos como Claude, GPT, Gemini, GLM y más.",
-  "provider.connect.kiloGateway.visit.prefix": "Visita ",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": " para obtener tu clave API.",
-  "provider.connect.kiloGateway.byok.prefix": "Para más estadísticas de uso, utiliza ",
-  "provider.connect.kiloGateway.byok.link": "BYOK a través de Kilo's Gateway",
-  "provider.connect.kiloGateway.byok.suffix": ".",
+  "provider.connect.accureGateway.visit.prefix": "Visita ",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": " para obtener tu clave API.",
+  "provider.connect.accureGateway.byok.prefix": "Para más estadísticas de uso, utiliza ",
+  "provider.connect.accureGateway.byok.link": "BYOK a través de Accure's Gateway",
+  "provider.connect.accureGateway.byok.suffix": ".",
 
   // Provider settings translations
   "settings.providers.group.recommended": "Recomendados",
-  "settings.providers.note.kilo": "Acceso a más de 500 modelos de IA",
+  "settings.providers.note.accurecode": "Acceso a más de 500 modelos de IA",
   "settings.providers.note.opencode": "Modelos seleccionados, incluidos Claude, GPT, Gemini y más",
   "settings.providers.note.anthropic": "Acceso directo a modelos Claude, incluidos Pro y Max",
   "settings.providers.note.deepseek": "Modelos DeepSeek para tareas de razonamiento y programación",
@@ -102,7 +102,7 @@ export const dict = {
     "Sigue esperando hasta que termine la instantánea. Los turnos siguientes serán rápidos una vez creada la instantánea inicial.",
   "snapshot.slowRepo.answer.disable": "Desactivar para este proyecto",
   "snapshot.slowRepo.answer.disable.description":
-    "Apaga las instantáneas de Kilo para este proyecto. Perderás deshacer/rehacer de los cambios de Kilo, pero git seguirá rastreando todo.",
+    "Apaga las instantáneas de Accure para este proyecto. Perderás deshacer/rehacer de los cambios de Accure, pero git seguirá rastreando todo.",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "Abrir en el visor de diferencias",

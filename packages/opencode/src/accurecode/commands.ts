@@ -8,7 +8,7 @@ import { AttachCommand } from "../cli/cmd/tui/attach"
 import { RunCommand } from "../cli/cmd/run"
 import { GenerateCommand } from "../cli/cmd/generate"
 import { DebugCommand } from "../cli/cmd/debug"
-import { ProvidersCommand } from "../cli/cmd/providers" // kilocode_change — upstream renamed auth → providers
+import { ProvidersCommand } from "../cli/cmd/providers" // accurecode_change — upstream renamed auth → providers
 import { AgentCommand } from "../cli/cmd/agent"
 import { UpgradeCommand } from "../cli/cmd/upgrade"
 import { UninstallCommand } from "../cli/cmd/uninstall"
@@ -29,7 +29,7 @@ import { DevSetupCommand, DevAliasCommand } from "./cli/dev-setup"
 import { RollCallCommand } from "./cli/cmd/roll-call"
 import { ProfileCommand } from "./cli/cmd/profile"
 import { DaemonCommand } from "./cli/cmd/daemon"
-import { KiloConsoleCommand } from "./cli/cmd/console"
+import { AccureConsoleCommand } from "./cli/cmd/console"
 import { HelpCommand } from "./help-command"
 import { InstallationBuildKind } from "@opencode-ai/core/installation/version"
 
@@ -42,9 +42,9 @@ const CompletionCommand = {
 }
 
 // Dev-only commands are spread in conditionally so release builds omit them
-// from `kilo help --all` and the docs table. They're also guarded the same way
+// from `accure help --all` and the docs table. They're also guarded the same way
 // at the yargs registration site in src/index.ts, so the commands-in-sync
-// regex in test/kilocode/help.test.ts sees DevSetup/DevAlias on neither side.
+// regex in test/accurecode/help.test.ts sees DevSetup/DevAlias on neither side.
 const dev = InstallationBuildKind === "release" ? [] : [DevSetupCommand, DevAliasCommand]
 
 export const commands = [
@@ -55,7 +55,7 @@ export const commands = [
   RunCommand,
   GenerateCommand,
   DebugCommand,
-  ProvidersCommand, // kilocode_change — upstream renamed AuthCommand → ProvidersCommand
+  ProvidersCommand, // accurecode_change — upstream renamed AuthCommand → ProvidersCommand
   AgentCommand,
   UpgradeCommand,
   UninstallCommand,
@@ -72,7 +72,7 @@ export const commands = [
   SessionCommand,
   RemoteCommand,
   DaemonCommand,
-  KiloConsoleCommand,
+  AccureConsoleCommand,
   DbCommand,
   ConfigCLICommand,
   ...dev,

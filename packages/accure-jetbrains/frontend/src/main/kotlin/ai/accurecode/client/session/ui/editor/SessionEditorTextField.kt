@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.ui.editor
+package ai.accurecode.client.session.ui.editor
 
-import ai.kilocode.client.session.ui.prompt.PromptDataKeys
-import ai.kilocode.client.session.ui.prompt.SendPromptContext
-import ai.kilocode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.prompt.PromptDataKeys
+import ai.accurecode.client.session.ui.prompt.SendPromptContext
+import ai.accurecode.client.session.ui.selection.SessionSelection
 import com.intellij.openapi.actionSystem.DataSink
 import com.intellij.openapi.fileTypes.PlainTextFileType
 import com.intellij.openapi.project.Project

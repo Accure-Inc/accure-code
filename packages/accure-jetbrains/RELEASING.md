@@ -6,15 +6,15 @@ The published code comes from `jetbrains/v<version>`. Marketplace and GitHub rel
 
 ## Skill-Assisted Release
 
-Maintainers can use the Kilo `release-jetbrains` skill to drive this process from a version request such as `next rc` or an explicit version. The skill resolves and confirms the version, dispatches and watches the prepare workflow, helps produce a filtered human-readable JetBrains/CLI changelog draft, commits the reviewed changelog to the release PR, and watches publishing after the PR is merged.
+Maintainers can use the Accure `release-jetbrains` skill to drive this process from a version request such as `next rc` or an explicit version. The skill resolves and confirms the version, dispatches and watches the prepare workflow, helps produce a filtered human-readable JetBrains/CLI changelog draft, commits the reviewed changelog to the release PR, and watches publishing after the PR is merged.
 
-The skill lives at `.kilo/skills/release-jetbrains/SKILL.md`. It does not move or recreate release tags, and merge permission is only required if the user explicitly asks the skill to merge the release PR automatically.
+The skill lives at `.accurecode/skills/release-jetbrains/SKILL.md`. It does not move or recreate release tags, and merge permission is only required if the user explicitly asks the skill to merge the release PR automatically.
 
 ## Create Release Tag And PR
 
 1. Open the GitHub Actions workflow:
 
-[https://github.com/Kilo-Org/kilocode/actions/workflows/prepare-jetbrains-release.yml](https://github.com/Kilo-Org/kilocode/actions/workflows/prepare-jetbrains-release.yml)
+[https://github.com/Accure-Inc/accure-code/actions/workflows/prepare-jetbrains-release.yml](https://github.com/Accure-Inc/accure-code/actions/workflows/prepare-jetbrains-release.yml)
 
 2. Click **Run workflow**. This immediately creates `jetbrains/v<version>` at the current `origin/main` commit, then creates or updates the release PR.
 
@@ -64,7 +64,7 @@ The PR updates:
 
 | File | Purpose |
 |---|---|
-| `packages/accure-jetbrains/gradle.properties` | JetBrains plugin version in `kilo.jetbrains.version`. |
+| `packages/accure-jetbrains/gradle.properties` | JetBrains plugin version in `accurecode.jetbrains.version`. |
 | `packages/accure-jetbrains/CHANGELOG.md` | Release notes packaged into the plugin. |
 
 Review `packages/accure-jetbrains/gradle.properties` and edit `packages/accure-jetbrains/CHANGELOG.md` before merging. This changelog entry is rendered into JetBrains `<change-notes>`, so it appears on the Marketplace and inside IntelliJ plugin UI.
@@ -81,7 +81,7 @@ jetbrains/v<version>
 
 Then it publishes from that tag:
 
-[https://github.com/Kilo-Org/kilocode/actions/workflows/publish-jetbrains.yml](https://github.com/Kilo-Org/kilocode/actions/workflows/publish-jetbrains.yml)
+[https://github.com/Accure-Inc/accure-code/actions/workflows/publish-jetbrains.yml](https://github.com/Accure-Inc/accure-code/actions/workflows/publish-jetbrains.yml)
 
 Publishing behavior:
 
@@ -104,7 +104,7 @@ RC builds are published to the `eap` channel. To get them in IntelliJ IDEA:
 https://plugins.jetbrains.com/plugins/list?channel=eap&pluginId=28350
 ```
 
-4. Search for **Kilo Code** in the Marketplace tab.
+4. Search for **Accure Code** in the Marketplace tab.
 
 ## Manual Recovery
 
@@ -128,8 +128,8 @@ git push origin jetbrains/v7.3.13
 
 | Secret | Purpose |
 |---|---|
-| `KILO_MAINTAINER_APP_ID` | GitHub App ID used to create/update release PRs and immediate release tags. |
-| `KILO_MAINTAINER_APP_SECRET` | GitHub App private key used to create/update release PRs and immediate release tags. |
+| `ACCURECODE_MAINTAINER_APP_ID` | GitHub App ID used to create/update release PRs and immediate release tags. |
+| `ACCURECODE_MAINTAINER_APP_SECRET` | GitHub App private key used to create/update release PRs and immediate release tags. |
 | `JETBRAINS_MARKETPLACE_TOKEN` | Marketplace API token for publishing. |
 | `JETBRAINS_CERTIFICATE_CHAIN` | PEM certificate chain for plugin signing. |
 | `JETBRAINS_PRIVATE_KEY` | PEM private key for plugin signing. |

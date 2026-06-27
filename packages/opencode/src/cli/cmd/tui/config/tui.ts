@@ -21,9 +21,9 @@ import { Filesystem } from "@/util/filesystem"
 import * as Log from "@opencode-ai/core/util/log"
 import { ConfigVariable } from "@/config/variable"
 import { Npm } from "@opencode-ai/core/npm"
-import { KilocodeDefaultPlugins } from "@/kilocode/config/default-plugins" // kilocode_change
+import { AccurecodeDefaultPlugins } from "@/accurecode/config/default-plugins" // accurecode_change
 import type { DeepMutable } from "@opencode-ai/core/schema"
-import type { TuiAttentionSoundName } from "@kilocode/plugin/tui"
+import type { TuiAttentionSoundName } from "@accurecode/plugin/tui"
 import { FormatError, FormatUnknownError } from "@/cli/error"
 
 const log = Log.create({ service: "tui.config" })
@@ -192,11 +192,11 @@ const loadState = Effect.fn("TuiConfig.loadState")(function* (ctx: { directory: 
     })
 
   // Every config dir we may read from: global config dir, any `.opencode`
-  // folders between cwd and home, and KILO_CONFIG_DIR.
+  // folders between cwd and home, and ACCURECODE_CONFIG_DIR.
   const directories = yield* ConfigPaths.directories(ctx.directory)
   yield* Effect.promise(() => migrateTuiConfig({ directories, cwd: ctx.directory }))
 
-  const projectFiles = Flag.KILO_DISABLE_PROJECT_CONFIG ? [] : yield* ConfigPaths.files("tui", ctx.directory)
+  const projectFiles = Flag.ACCURECODE_DISABLE_PROJECT_CONFIG ? [] : yield* ConfigPaths.files("tui", ctx.directory)
 
   const acc: Acc = {
     result: {},
@@ -208,9 +208,9 @@ const loadState = Effect.fn("TuiConfig.loadState")(function* (ctx: { directory: 
     yield* mergeFile(acc, file)
   }
 
-  // 2. Explicit KILO_TUI_CONFIG override, if set.
-  if (Flag.KILO_TUI_CONFIG) {
-    const configFile = Flag.KILO_TUI_CONFIG
+  // 2. Explicit ACCURECODE_TUI_CONFIG override, if set.
+  if (Flag.ACCURECODE_TUI_CONFIG) {
+    const configFile = Flag.ACCURECODE_TUI_CONFIG
     yield* mergeFile(acc, configFile)
     log.debug("loaded custom tui config", { path: configFile })
   }
@@ -220,18 +220,21 @@ const loadState = Effect.fn("TuiConfig.loadState")(function* (ctx: { directory: 
     yield* mergeFile(acc, file)
   }
 
-  // 4. `.opencode` directories (and KILO_CONFIG_DIR) discovered while
+  // 4. `.opencode` directories (and ACCURECODE_CONFIG_DIR) discovered while
   // walking up the tree. Also returned below so callers can install plugin
   // dependencies from each location.
-  // kilocode_change start - also load tui.json from .kilo/.kilocode
+  // accurecode_change start - also load tui.json from .accurecode/.accurecode
   const dirs = unique(directories).filter(
     (dir) =>
-      dir.endsWith(".kilo") || dir.endsWith(".kilocode") || dir.endsWith(".opencode") || dir === Flag.KILO_CONFIG_DIR,
+      dir.endsWith(".accurecode") ||
+      dir.endsWith(".accurecode") ||
+      dir.endsWith(".opencode") ||
+      dir === Flag.ACCURECODE_CONFIG_DIR,
   )
-  // kilocode_change end
+  // accurecode_change end
 
   for (const dir of dirs) {
-    // if (!dir.endsWith(".opencode") && dir !== Flag.KILO_CONFIG_DIR) continue // kilocode_change
+    // if (!dir.endsWith(".opencode") && dir !== Flag.ACCURECODE_CONFIG_DIR) continue // accurecode_change
     for (const file of ConfigPaths.fileInDirectory(dir, "tui")) {
       yield* mergeFile(acc, file)
     }
@@ -253,7 +256,7 @@ const loadState = Effect.fn("TuiConfig.loadState")(function* (ctx: { directory: 
       notifications: acc.result.attention?.notifications ?? true,
       sound: acc.result.attention?.sound ?? true,
       volume: acc.result.attention?.volume ?? 0.4,
-      sound_pack: acc.result.attention?.sound_pack ?? "kilo.default", // kilocode_change
+      sound_pack: acc.result.attention?.sound_pack ?? "accure.default", // accurecode_change
       sounds: acc.result.attention?.sounds ?? {},
     },
     keybinds: createBindingLookup(TuiKeybind.toBindingConfig(parsedKeybinds), {
@@ -264,10 +267,10 @@ const loadState = Effect.fn("TuiConfig.loadState")(function* (ctx: { directory: 
     plugin_origins: acc.plugin_origins.length ? acc.plugin_origins : undefined,
   }
 
-  // kilocode_change start - inject Kilo default plugins to keep TUI aligned with server config
-  KilocodeDefaultPlugins.apply(result, { disabled: Flag.KILO_DISABLE_DEFAULT_PLUGINS, log })
+  // accurecode_change start - inject Accure default plugins to keep TUI aligned with server config
+  AccurecodeDefaultPlugins.apply(result, { disabled: Flag.ACCURECODE_DISABLE_DEFAULT_PLUGINS, log })
   info.plugin = result.plugin
-  // kilocode_change end
+  // accurecode_change end
 
   return {
     config: result,
@@ -289,7 +292,7 @@ export const layer = Layer.effect(
           .install(dir, {
             add: [
               {
-                name: "@kilocode/plugin",
+                name: "@accurecode/plugin",
                 version: InstallationLocal ? undefined : InstallationVersion,
               },
             ],

@@ -1,8 +1,8 @@
-package ai.kilocode.client.app
+package ai.accurecode.client.app
 
-import ai.kilocode.client.testing.FakeSessionRpcApi
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionTimeDto
+import ai.accurecode.client.testing.FakeSessionRpcApi
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionTimeDto
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,16 +12,16 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 @Suppress("UnstableApiUsage")
-class KiloSessionServiceTest : BasePlatformTestCase() {
+class AccureSessionServiceTest : BasePlatformTestCase() {
     private lateinit var scope: CoroutineScope
     private lateinit var rpc: FakeSessionRpcApi
-    private lateinit var service: KiloSessionService
+    private lateinit var service: AccureSessionService
 
     override fun setUp() {
         super.setUp()
         scope = CoroutineScope(SupervisorJob())
         rpc = FakeSessionRpcApi()
-        service = KiloSessionService(project, scope, rpc)
+        service = AccureSessionService(project, scope, rpc)
     }
 
     override fun tearDown() {

@@ -2,7 +2,7 @@
  * Reactive TUI config provider with hot reload.
  *
  * Replaces the static upstream `TuiConfigProvider` so declarative TUI settings apply live when
- * changed from the Kilo Console. Fetched config stays serializable and is resolved into a fresh
+ * changed from the Accure Console. Fetched config stays serializable and is resolved into a fresh
  * OpenTUI keymap lookup before the reactive store is reconciled.
  */
 import { createContext, useContext, type ParentProps } from "solid-js"
@@ -11,14 +11,14 @@ import { TuiConfig } from "@/cli/cmd/tui/config/tui"
 import { TuiKeybind } from "@/cli/cmd/tui/config/keybind"
 import { KeymapLeaderTimeoutDefault } from "@/cli/cmd/tui/config/tui-schema"
 import { createBindingLookup } from "@opentui/keymap/extras"
-import { KiloTitleIcon } from "@/kilocode/cli/cmd/tui/title-icon"
+import { AccureTitleIcon } from "@/accurecode/cli/cmd/tui/title-icon"
 
 export type SetTuiConfig = (next: TuiConfig.Info) => void
 
 const ConfigContext = createContext<TuiConfig.Resolved>()
 const SetContext = createContext<SetTuiConfig>()
 
-export namespace KiloTuiConfig {
+export namespace AccureTuiConfig {
   // Pure factory so reactive behavior is unit-testable without JSX or contexts.
   export function makeStore(initial: TuiConfig.Resolved) {
     const [store, setStore] = createStore<TuiConfig.Resolved>(initial)
@@ -26,13 +26,13 @@ export namespace KiloTuiConfig {
       const keybinds = TuiKeybind.parse(next.keybinds ?? {})
       const config: TuiConfig.Resolved = {
         ...next,
-        title_icon: next.title_icon ?? KiloTitleIcon.Default,
+        title_icon: next.title_icon ?? AccureTitleIcon.Default,
         attention: {
           enabled: next.attention?.enabled ?? false,
           notifications: next.attention?.notifications ?? true,
           sound: next.attention?.sound ?? true,
           volume: next.attention?.volume ?? 0.4,
-          sound_pack: next.attention?.sound_pack ?? "kilo.default",
+          sound_pack: next.attention?.sound_pack ?? "accure.default",
           sounds: next.attention?.sounds ?? {},
         },
         keybinds: createBindingLookup(TuiKeybind.toBindingConfig(keybinds), {

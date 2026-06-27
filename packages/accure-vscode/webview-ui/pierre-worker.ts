@@ -1,4 +1,4 @@
-// Kilo-specific replacement for the shared `@opencode-ai/ui/pierre/worker`
+// Accure-specific replacement for the shared `@opencode-ai/ui/pierre/worker`
 // module (wired up by the pierre-worker-alias plugin in esbuild.js).
 //
 // The upstream module loads Pierre's Shiki worker through a Vite-only
@@ -12,16 +12,16 @@
 // the page. Pierre can offload highlighted updates to the pool after its initial
 // plain render. The diff wrapper still needs to keep that initial render cheap,
 // which is why review surfaces pass hunk-bounded patches instead of full files.
-import { LINE_DIFF_TYPE } from "@kilocode/accure-ui/pierre"
+import { LINE_DIFF_TYPE } from "@accurecode/accure-ui/pierre"
 import { WorkerPoolManager } from "@pierre/diffs/worker"
-import { ensureKiloDiffTheme, KILO_DIFF_THEME } from "@opencode-ai/ui/pierre/kilo-diff-theme"
+import { ensureAccureDiffTheme, ACCURECODE_DIFF_THEME } from "@opencode-ai/ui/pierre/accure-diff-theme"
 
-// Register the "Kilo" theme before any pool initializes. resolveThemes([theme])
+// Register the "Accure" theme before any pool initializes. resolveThemes([theme])
 // runs on the main thread during initialize() and throws "resolveTheme: No valid
-// loader for Kilo" if the theme name was never registered. Registering here makes
+// loader for Accure" if the theme name was never registered. Registering here makes
 // the worker self-sufficient rather than depending on the markdown context module
 // having been imported first.
-ensureKiloDiffTheme()
+ensureAccureDiffTheme()
 
 export type WorkerPoolStyle = "unified" | "split"
 
@@ -33,21 +33,21 @@ const ENGINE = "shiki-wasm"
 
 function uri(): string | undefined {
   if (typeof window === "undefined") return undefined
-  return (window as { KILO_SHIKI_WORKER_URI?: string }).KILO_SHIKI_WORKER_URI
+  return (window as { ACCURECODE_SHIKI_WORKER_URI?: string }).ACCURECODE_SHIKI_WORKER_URI
 }
 
 export function workerFactory(): Worker {
   const url = uri()
-  if (!url) throw new Error("KILO_SHIKI_WORKER_URI is not set")
+  if (!url) throw new Error("ACCURECODE_SHIKI_WORKER_URI is not set")
   return new Worker(url)
 }
 
 function createPool() {
   const pool = new WorkerPoolManager(
     { workerFactory, poolSize: 2 },
-    { theme: KILO_DIFF_THEME, lineDiffType: LINE_DIFF_TYPE, preferredHighlighter: ENGINE },
+    { theme: ACCURECODE_DIFF_THEME, lineDiffType: LINE_DIFF_TYPE, preferredHighlighter: ENGINE },
   )
-  void pool.initialize().catch((err) => console.warn("[Kilo New] Failed to initialize Pierre worker pool", err))
+  void pool.initialize().catch((err) => console.warn("[Accure New] Failed to initialize Pierre worker pool", err))
   return pool
 }
 

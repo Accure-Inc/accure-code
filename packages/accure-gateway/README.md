@@ -1,18 +1,18 @@
-# @kilocode/accure-gateway
+# @accurecode/accure-gateway
 
-Unified Kilo Gateway package for OpenCode providing authentication, AI provider integration, and API access.
+Unified Accure Gateway package for OpenCode providing authentication, AI provider integration, and API access.
 
 ## Features
 
-- **Authentication**: Device authorization flow for Kilo Gateway
-- **AI Provider**: OpenRouter-based provider with Kilo Gateway integration
+- **Authentication**: Device authorization flow for Accure Gateway
+- **AI Provider**: OpenRouter-based provider with Accure Gateway integration
 - **API Integration**: Profile, balance, and model management
 - **TUI Helpers**: Utilities for terminal UI components
 
 ## Installation
 
 ```bash
-bun add @kilocode/accure-gateway
+bun add @accurecode/accure-gateway
 ```
 
 ## Usage
@@ -20,20 +20,20 @@ bun add @kilocode/accure-gateway
 ### Plugin Registration
 
 ```typescript
-import { KiloAuthPlugin } from "@kilocode/accure-gateway"
+import { AccureAuthPlugin } from "@accurecode/accure-gateway"
 
 // Register with OpenCode
-const plugins = [KiloAuthPlugin]
+const plugins = [AccureAuthPlugin]
 ```
 
 ### Provider Usage
 
 ```typescript
-import { createKilo } from "@kilocode/accure-gateway"
+import { createAccure } from "@accurecode/accure-gateway"
 
-const provider = createKilo({
-  kilocodeToken: process.env.KILOCODE_API_KEY,
-  kilocodeOrganizationId: "org-123",
+const provider = createAccure({
+  accurecodeToken: process.env.ACCURECODE_API_KEY,
+  accurecodeOrganizationId: "org-123",
 })
 
 const model = provider.languageModel("anthropic/claude-sonnet-4")
@@ -42,7 +42,7 @@ const model = provider.languageModel("anthropic/claude-sonnet-4")
 ### API Access
 
 ```typescript
-import { fetchProfile, fetchBalance } from "@kilocode/accure-gateway"
+import { fetchProfile, fetchBalance } from "@accurecode/accure-gateway"
 
 const profile = await fetchProfile(token)
 const balance = await fetchBalance(token)

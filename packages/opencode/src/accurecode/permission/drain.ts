@@ -1,8 +1,8 @@
 import { Bus } from "@/bus"
 import { Deferred, Effect } from "effect"
 import { Permission } from "@/permission"
-import { ConfigProtection } from "@/kilocode/permission/config-paths"
-import { Instance } from "@/kilocode/instance"
+import { ConfigProtection } from "@/accurecode/permission/config-paths"
+import { Instance } from "@/accurecode/instance"
 
 interface PendingEntry {
   info: Permission.Request

@@ -8,10 +8,10 @@ import * as Vcs from "./vcs"
 import { Bus } from "../bus"
 import { InstanceState } from "@/effect/instance-state"
 import { FileWatcher } from "@/file/watcher"
-// kilocode_change start
-import { KilocodeBootstrap } from "@/kilocode/bootstrap"
+// accurecode_change start
+import { AccurecodeBootstrap } from "@/accurecode/bootstrap"
 // import { ShareNext } from "@/share/share-next"
-// kilocode_change end
+// accurecode_change end
 import { Effect, Layer } from "effect"
 import { Config } from "@/config/config"
 import { Service } from "./bootstrap-service"
@@ -34,25 +34,27 @@ export const layer = Layer.effect(
     const plugin = yield* Plugin.Service
     const project = yield* Project.Service
     const reference = yield* Reference.Service
-    // kilocode_change start
-    const kilocode = yield* KilocodeBootstrap.Service
+    // accurecode_change start
+    const accurecode = yield* AccurecodeBootstrap.Service
     // const shareNext = yield* ShareNext.Service
-    // kilocode_change end
+    // accurecode_change end
     const snapshot = yield* Snapshot.Service
     const vcs = yield* Vcs.Service
 
     const run = Effect.gen(function* () {
       const ctx = yield* InstanceState.context
-      yield* Effect.logDebug("bootstrapping").pipe(Effect.annotateLogs("directory", ctx.directory)) // kilocode_change - was logInfo; downgraded to avoid printing to TUI on every startup
+      yield* Effect.logDebug("bootstrapping").pipe(Effect.annotateLogs("directory", ctx.directory)) // accurecode_change - was logInfo; downgraded to avoid printing to TUI on every startup
       // everything depends on config so eager load it for nice traces
       yield* config.get()
       // Plugin can mutate config so it has to be initialized before anything else.
       yield* plugin.init()
-      yield* kilocode.init().pipe(Effect.catchCause((cause) => Effect.logWarning("kilocode init failed", { cause }))) // kilocode_change
+      yield* accurecode
+        .init()
+        .pipe(Effect.catchCause((cause) => Effect.logWarning("accurecode init failed", { cause }))) // accurecode_change
       // Each service self-manages its own slow work via Effect.forkScoped against
       // its per-instance state scope. We just await materialization here.
       yield* Effect.forEach(
-        [reference, lsp, format, file, fileWatcher, vcs, snapshot, project], // kilocode_change - shareNext removed, handled by KilocodeBootstrap
+        [reference, lsp, format, file, fileWatcher, vcs, snapshot, project], // accurecode_change - shareNext removed, handled by AccurecodeBootstrap
         (s) => s.init().pipe(Effect.catchCause((cause) => Effect.logWarning("init failed", { cause }))),
         { concurrency: "unbounded", discard: true },
       ).pipe(Effect.withSpan("InstanceBootstrap.init"))
@@ -73,10 +75,10 @@ export const defaultLayer: Layer.Layer<Service> = layer.pipe(
     Plugin.defaultLayer,
     Project.defaultLayer,
     Reference.defaultLayer,
-    // kilocode_change start
-    KilocodeBootstrap.defaultLayer,
+    // accurecode_change start
+    AccurecodeBootstrap.defaultLayer,
     // ShareNext.defaultLayer,
-    // kilocode_change end
+    // accurecode_change end
     Snapshot.defaultLayer,
     Vcs.defaultLayer,
   ]),

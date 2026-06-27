@@ -48,8 +48,8 @@ export const CustomizeNav: NavSection[] = [
         children: "Context Condensing",
       },
       {
-        href: "/customize/context/kilocodeignore",
-        children: ".kilocodeignore",
+        href: "/customize/context/accurecodeignore",
+        children: ".accurecodeignore",
       },
       {
         href: "/customize/context/large-projects",

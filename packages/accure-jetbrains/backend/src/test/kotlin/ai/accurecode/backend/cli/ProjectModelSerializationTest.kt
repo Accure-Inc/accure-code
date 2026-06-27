@@ -1,10 +1,10 @@
-package ai.kilocode.backend.cli
+package ai.accurecode.backend.cli
 
-import ai.kilocode.jetbrains.api.infrastructure.Serializer
-import ai.kilocode.jetbrains.api.model.Agent
-import ai.kilocode.jetbrains.api.model.AppSkills200ResponseInner
-import ai.kilocode.jetbrains.api.model.Command
-import ai.kilocode.jetbrains.api.model.ProviderList200Response
+import ai.accurecode.jetbrains.api.infrastructure.Serializer
+import ai.accurecode.jetbrains.api.model.Agent
+import ai.accurecode.jetbrains.api.model.AppSkills200ResponseInner
+import ai.accurecode.jetbrains.api.model.Command
+import ai.accurecode.jetbrains.api.model.ProviderList200Response
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -125,7 +125,7 @@ class ProjectModelSerializationTest {
         assertEquals(true, model.isFree)
         assertEquals(true, model.hasUserByokAvailable)
         assertEquals(
-            ai.kilocode.jetbrains.api.model.Model.Status.BETA,
+            ai.accurecode.jetbrains.api.model.Model.Status.BETA,
             model.status,
         )
     }

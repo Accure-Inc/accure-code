@@ -17,9 +17,9 @@ import {
 
 describe("parsePRUrl", () => {
   it("parses a standard GitHub PR URL", () => {
-    expect(parsePRUrl("https://github.com/Kilo-Org/kilocode/pull/6164")).toEqual({
-      owner: "Kilo-Org",
-      repo: "kilocode",
+    expect(parsePRUrl("https://github.com/Accure-Inc/accure-code/pull/6164")).toEqual({
+      owner: "Accure-Org",
+      repo: "accurecode",
       number: 6164,
     })
   })

@@ -2,7 +2,7 @@ import { describe, it, expect, spyOn } from "bun:test"
 import type { PartUpdate } from "../../src/shared/stream-messages"
 
 // vscode mock is provided by the shared preload (tests/setup/vscode-mock.ts)
-const { KiloProvider, unwrapSyncEvent } = await import("../../src/KiloProvider")
+const { AccureProvider, unwrapSyncEvent } = await import("../../src/AccureProvider")
 
 type State = "connecting" | "connected" | "disconnected" | "error"
 
@@ -113,7 +113,7 @@ function createClient(options?: {
     provider: { list: async () => ({ data: { all: [], connected: {}, default: {} } }) },
     app: { agents: async () => ({ data: [] }) },
     config: { get: async () => ({ data: {} }) },
-    kilo: {
+    accure: {
       notifications: async () => ({ data: [] }),
       profile: async () => ({ data: {} }),
     },
@@ -170,7 +170,7 @@ type ProviderInternals = {
 
 function makeProvider(client: ReturnType<typeof createClient>) {
   const connection = createConnection(client)
-  const provider = new KiloProvider({} as never, connection as never)
+  const provider = new AccureProvider({} as never, connection as never)
   const internal = provider as unknown as ProviderInternals
   internal.connectionState = "connected"
   const sent: unknown[] = []
@@ -182,7 +182,7 @@ function makeProvider(client: ReturnType<typeof createClient>) {
   return { provider, internal, sent }
 }
 
-describe("KiloProvider.handleAbort", () => {
+describe("AccureProvider.handleAbort", () => {
   it("aborts the original owner after a running session moves to a worktree", async () => {
     const client = createClient()
     const { provider, internal, sent } = makeProvider(client)
@@ -246,7 +246,7 @@ describe("KiloProvider.handleAbort", () => {
   })
 })
 
-describe("KiloProvider revert ordering", () => {
+describe("AccureProvider revert ordering", () => {
   it("unwraps the nested sync payload emitted by the live SSE endpoint", () => {
     const event = unwrapSyncEvent({
       type: "sync",
@@ -480,7 +480,7 @@ describe("KiloProvider revert ordering", () => {
   })
 })
 
-describe("KiloProvider.handleLoadMessages / focus mode freshness", () => {
+describe("AccureProvider.handleLoadMessages / focus mode freshness", () => {
   it("stops background processes for the previous session when switching sessions", async () => {
     const client = createClient({
       sessionData: { id: "s2", directory: "/repo/worktree", time: { created: 1, updated: 1 } },
@@ -636,7 +636,7 @@ describe("KiloProvider.handleLoadMessages / focus mode freshness", () => {
   })
 })
 
-describe("KiloProvider.handleDeleteSession / background processes", () => {
+describe("AccureProvider.handleDeleteSession / background processes", () => {
   it("stops session background processes in the session directory before deletion", async () => {
     const client = createClient()
     const { internal } = makeProvider(client)
@@ -648,7 +648,7 @@ describe("KiloProvider.handleDeleteSession / background processes", () => {
   })
 })
 
-describe("KiloProvider.handleLoadMessages / slim payload", () => {
+describe("AccureProvider.handleLoadMessages / slim payload", () => {
   it("strips transcript-only metadata before posting messages to the webview", async () => {
     const user = mkMessage("m1", "user", 1)
     const assistant = mkMessage("m2", "assistant", 2)
@@ -716,7 +716,7 @@ describe("KiloProvider.handleLoadMessages / slim payload", () => {
   })
 })
 
-describe("KiloProvider.loadMessages / sub-agent viewer", () => {
+describe("AccureProvider.loadMessages / sub-agent viewer", () => {
   it("uses the same paginated initial load as normal sessions", async () => {
     const page = Array.from({ length: 80 }, (_, i) => mkMessage(`m${i}`, i % 2 === 0 ? "user" : "assistant", i))
     const client = createClient({ messagesData: page })
@@ -777,7 +777,7 @@ describe("KiloProvider.loadMessages / sub-agent viewer", () => {
   })
 })
 
-describe("KiloProvider.handleLoadMessages / prepend into deleted session", () => {
+describe("AccureProvider.handleLoadMessages / prepend into deleted session", () => {
   it("does not post messagesLoaded for a session deleted mid-prepend", async () => {
     // Regression: handleLoadMessages fires fire-and-forget from the webview
     // message dispatcher. If the user deletes the session while a prepend

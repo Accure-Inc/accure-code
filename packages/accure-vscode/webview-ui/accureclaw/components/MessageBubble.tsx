@@ -1,7 +1,7 @@
-// Individual chat message bubble — renders Kilo Chat ContentBlock[] content
+// Individual chat message bubble — renders Accure Chat ContentBlock[] content
 // with reactions, action approvals, edit/delete/reply controls.
 //
-// Layout mirrors the web client (cloud/apps/web/src/app/(app)/claw/kilo-chat/
+// Layout mirrors the web client (cloud/apps/web/src/app/(app)/claw/accure-chat/
 // components/MessageBubble.tsx): own messages right-justified with a primary
 // bubble, bot/other messages left-justified with a muted bubble, author name
 // and reply preview stacked above the bubble, timestamp/edited markers
@@ -9,10 +9,10 @@
 // per-message toolbar positioned to the side and revealed on hover.
 
 import { Show, For, createMemo, createSignal } from "solid-js"
-import { Markdown } from "@kilocode/accure-ui/markdown"
-import { showToast } from "@kilocode/accure-ui/toast"
+import { Markdown } from "@accurecode/accure-ui/markdown"
+import { showToast } from "@accurecode/accure-ui/toast"
 import type { ContentBlock, ExecApprovalDecision, Message } from "../lib/types"
-import { useKiloClawLanguage } from "../context/language"
+import { useAccureClawLanguage } from "../context/language"
 import { isEnterKeyCommitNotIme } from "../../src/utils/ime-enter"
 
 const ULID_TIME_LEN = 10
@@ -62,7 +62,7 @@ type MessageBubbleProps = {
 }
 
 export function MessageBubble(props: MessageBubbleProps) {
-  const { t } = useKiloClawLanguage()
+  const { t } = useAccureClawLanguage()
   const [isEditing, setIsEditing] = createSignal(false)
   const [editText, setEditText] = createSignal("")
   const [showReactionPick, setShowReactionPick] = createSignal(false)
@@ -108,32 +108,32 @@ export function MessageBubble(props: MessageBubbleProps) {
     if (!text) return
     try {
       await navigator.clipboard.writeText(text)
-      showToast({ title: t("kiloClaw.message.copied"), variant: "success", duration: 2000 })
+      showToast({ title: t("accureClaw.message.copied"), variant: "success", duration: 2000 })
     } catch {
-      showToast({ title: t("kiloClaw.message.copyFailed"), variant: "error", duration: 3000 })
+      showToast({ title: t("accureClaw.message.copyFailed"), variant: "error", duration: 3000 })
     }
   }
 
   return (
-    <div class={`kiloclaw-msg kiloclaw-msg-${variant()}`}>
-      <div class="kiloclaw-msg-column">
+    <div class={`accureclaw-msg accureclaw-msg-${variant()}`}>
+      <div class="accureclaw-msg-column">
         {/* Author label — above the bubble for bot messages only */}
         <Show when={showAuthor()}>
-          <span class="kiloclaw-msg-author">{props.assistantName ?? t("kiloClaw.message.bot")}</span>
+          <span class="accureclaw-msg-author">{props.assistantName ?? t("accureClaw.message.bot")}</span>
         </Show>
 
         {/* Reply preview — above the bubble, aligned with the author label */}
         <Show when={props.replyToMessage}>
           {(reply) => (
-            <div class="kiloclaw-msg-reply">
-              <span class="kiloclaw-msg-reply-arrow" aria-hidden="true">
+            <div class="accureclaw-msg-reply">
+              <span class="accureclaw-msg-reply-arrow" aria-hidden="true">
                 ↩
               </span>
               <Show
                 when={!reply().deleted}
-                fallback={<span class="kiloclaw-msg-reply-deleted">{t("kiloClaw.message.replyDeleted")}</span>}
+                fallback={<span class="accureclaw-msg-reply-deleted">{t("accureClaw.message.replyDeleted")}</span>}
               >
-                <span class="kiloclaw-msg-reply-text">
+                <span class="accureclaw-msg-reply-text">
                   {(() => {
                     const txt = contentBlocksToText(reply().content)
                     return txt.length > 60 ? `${txt.slice(0, 60)}…` : txt
@@ -145,15 +145,15 @@ export function MessageBubble(props: MessageBubbleProps) {
         </Show>
 
         {/* Bubble + side-positioned toolbar */}
-        <div class="kiloclaw-msg-bubble-wrap">
+        <div class="accureclaw-msg-bubble-wrap">
           <Show when={!props.message.deleted && !isEditing() && !isDeleting() && !isOptimistic()}>
-            <div class="kiloclaw-msg-toolbar">
+            <div class="accureclaw-msg-toolbar">
               <button
                 type="button"
-                class="kiloclaw-iconbtn-sm"
+                class="accureclaw-iconbtn-sm"
                 onClick={() => setShowReactionPick((v) => !v)}
-                title={t("kiloClaw.message.react")}
-                aria-label={t("kiloClaw.message.react")}
+                title={t("accureClaw.message.react")}
+                aria-label={t("accureClaw.message.react")}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="10" />
@@ -165,10 +165,10 @@ export function MessageBubble(props: MessageBubbleProps) {
               <Show when={!empty()}>
                 <button
                   type="button"
-                  class="kiloclaw-iconbtn-sm"
+                  class="accureclaw-iconbtn-sm"
                   onClick={copyText}
-                  title={t("kiloClaw.message.copy")}
-                  aria-label={t("kiloClaw.message.copy")}
+                  title={t("accureClaw.message.copy")}
+                  aria-label={t("accureClaw.message.copy")}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
@@ -179,10 +179,10 @@ export function MessageBubble(props: MessageBubbleProps) {
               <Show when={!props.message.deliveryFailed}>
                 <button
                   type="button"
-                  class="kiloclaw-iconbtn-sm"
+                  class="accureclaw-iconbtn-sm"
                   onClick={() => props.onReply(props.message)}
-                  title={t("kiloClaw.message.reply")}
-                  aria-label={t("kiloClaw.message.reply")}
+                  title={t("accureClaw.message.reply")}
+                  aria-label={t("accureClaw.message.reply")}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="9 17 4 12 9 7" />
@@ -193,10 +193,10 @@ export function MessageBubble(props: MessageBubbleProps) {
               <Show when={props.isOwn && !props.message.deliveryFailed}>
                 <button
                   type="button"
-                  class="kiloclaw-iconbtn-sm"
+                  class="accureclaw-iconbtn-sm"
                   onClick={startEdit}
-                  title={t("kiloClaw.message.edit")}
-                  aria-label={t("kiloClaw.message.edit")}
+                  title={t("accureClaw.message.edit")}
+                  aria-label={t("accureClaw.message.edit")}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -207,10 +207,10 @@ export function MessageBubble(props: MessageBubbleProps) {
               <Show when={props.isOwn}>
                 <button
                   type="button"
-                  class="kiloclaw-iconbtn-sm kiloclaw-iconbtn-danger"
+                  class="accureclaw-iconbtn-sm accureclaw-iconbtn-danger"
                   onClick={() => props.onRequestDelete(props.message.id)}
-                  title={t("kiloClaw.message.delete")}
-                  aria-label={t("kiloClaw.message.delete")}
+                  title={t("accureClaw.message.delete")}
+                  aria-label={t("accureClaw.message.delete")}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="3 6 5 6 21 6" />
@@ -225,12 +225,12 @@ export function MessageBubble(props: MessageBubbleProps) {
 
           {/* Quick reaction picker (popover, toggled from the toolbar) */}
           <Show when={showReactionPick()}>
-            <div class="kiloclaw-msg-reactionpick">
+            <div class="accureclaw-msg-reactionpick">
               <For each={["👍", "❤️", "😂", "🎉", "🚀", "👀"]}>
                 {(emoji) => (
                   <button
                     type="button"
-                    class="kiloclaw-msg-reactionpick-btn"
+                    class="accureclaw-msg-reactionpick-btn"
                     onClick={() => {
                       setShowReactionPick(false)
                       props.onAddReaction(props.message.id, emoji)
@@ -243,15 +243,15 @@ export function MessageBubble(props: MessageBubbleProps) {
             </div>
           </Show>
 
-          <div class="kiloclaw-msg-bubble">
+          <div class="accureclaw-msg-bubble">
             <Show
               when={!props.message.deleted}
-              fallback={<span class="kiloclaw-msg-deleted">{t("kiloClaw.message.deleted")}</span>}
+              fallback={<span class="accureclaw-msg-deleted">{t("accureClaw.message.deleted")}</span>}
             >
               <Show when={isEditing()}>
-                <div class="kiloclaw-msg-edit">
+                <div class="accureclaw-msg-edit">
                   <textarea
-                    class="kiloclaw-msg-edit-input"
+                    class="accureclaw-msg-edit-input"
                     value={editText()}
                     onInput={(e) => setEditText(e.currentTarget.value)}
                     onKeyDown={(e) => {
@@ -264,20 +264,20 @@ export function MessageBubble(props: MessageBubbleProps) {
                     }}
                     autofocus
                   />
-                  <div class="kiloclaw-msg-edit-actions">
+                  <div class="accureclaw-msg-edit-actions">
                     <button
                       type="button"
-                      class="kiloclaw-iconbtn-sm"
+                      class="accureclaw-iconbtn-sm"
                       onClick={saveEdit}
-                      title={t("kiloClaw.message.save")}
+                      title={t("accureClaw.message.save")}
                     >
                       ✓
                     </button>
                     <button
                       type="button"
-                      class="kiloclaw-iconbtn-sm"
+                      class="accureclaw-iconbtn-sm"
                       onClick={cancelEdit}
-                      title={t("kiloClaw.message.cancel")}
+                      title={t("accureClaw.message.cancel")}
                     >
                       ×
                     </button>
@@ -286,21 +286,21 @@ export function MessageBubble(props: MessageBubbleProps) {
               </Show>
 
               <Show when={isDeleting()}>
-                <div class="kiloclaw-msg-confirm-delete">
-                  <span>{t("kiloClaw.message.confirmDelete")}</span>
+                <div class="accureclaw-msg-confirm-delete">
+                  <span>{t("accureClaw.message.confirmDelete")}</span>
                   <button
                     type="button"
-                    class="kiloclaw-iconbtn-sm"
+                    class="accureclaw-iconbtn-sm"
                     onClick={() => props.onConfirmDelete(props.message.id)}
-                    title={t("kiloClaw.message.confirmDelete")}
+                    title={t("accureClaw.message.confirmDelete")}
                   >
                     ✓
                   </button>
                   <button
                     type="button"
-                    class="kiloclaw-iconbtn-sm"
+                    class="accureclaw-iconbtn-sm"
                     onClick={() => props.onCancelDelete()}
-                    title={t("kiloClaw.message.cancel")}
+                    title={t("accureClaw.message.cancel")}
                   >
                     ×
                   </button>
@@ -308,12 +308,12 @@ export function MessageBubble(props: MessageBubbleProps) {
               </Show>
 
               <Show when={!isEditing() && !isDeleting()}>
-                <div class="kiloclaw-msg-body">
+                <div class="accureclaw-msg-body">
                   <Show
                     when={!empty()}
-                    fallback={<span class="kiloclaw-msg-thinking">{t("kiloClaw.message.thinking")}</span>}
+                    fallback={<span class="accureclaw-msg-thinking">{t("accureClaw.message.thinking")}</span>}
                   >
-                    <Show when={isBot()} fallback={<span class="kiloclaw-msg-text">{textContent()}</span>}>
+                    <Show when={isBot()} fallback={<span class="accureclaw-msg-text">{textContent()}</span>}>
                       <Markdown text={textContent()} />
                     </Show>
                   </Show>
@@ -328,8 +328,8 @@ export function MessageBubble(props: MessageBubbleProps) {
                     <Show
                       when={!block.resolved}
                       fallback={
-                        <div class="kiloclaw-msg-actions-resolved">
-                          <span class="kiloclaw-msg-actions-resolved-icon">
+                        <div class="accureclaw-msg-actions-resolved">
+                          <span class="accureclaw-msg-actions-resolved-icon">
                             {block.resolved!.value === "deny" ? "✗" : "✓"}
                           </span>
                           <span>
@@ -339,12 +339,12 @@ export function MessageBubble(props: MessageBubbleProps) {
                         </div>
                       }
                     >
-                      <div class="kiloclaw-msg-actions">
+                      <div class="accureclaw-msg-actions">
                         <For each={block.actions}>
                           {(action) => (
                             <button
                               type="button"
-                              class={`kiloclaw-msg-action kiloclaw-msg-action-${action.style}`}
+                              class={`accureclaw-msg-action accureclaw-msg-action-${action.style}`}
                               onClick={() => props.onExecuteAction(props.message.id, block.groupId, action.value)}
                             >
                               {action.label}
@@ -360,12 +360,12 @@ export function MessageBubble(props: MessageBubbleProps) {
 
             {/* Footer: delivery status + edited marker + timestamp (inside bubble, right-aligned) */}
             <Show when={!isEditing() && !isDeleting()}>
-              <div class="kiloclaw-msg-footer">
+              <div class="accureclaw-msg-footer">
                 <Show when={props.message.deliveryFailed}>
-                  <span class="kiloclaw-msg-failed">{t("kiloClaw.message.notDelivered")}</span>
+                  <span class="accureclaw-msg-failed">{t("accureClaw.message.notDelivered")}</span>
                 </Show>
                 <Show when={props.message.clientUpdatedAt && !props.message.deleted}>
-                  <span>{t("kiloClaw.message.edited")}</span>
+                  <span>{t("accureClaw.message.edited")}</span>
                 </Show>
                 <span>{formatTime(timestamp())}</span>
               </div>
@@ -374,14 +374,14 @@ export function MessageBubble(props: MessageBubbleProps) {
 
           {/* Reaction summaries — below the bubble, aligned with the bubble edge */}
           <Show when={!props.message.deleted && props.message.reactions.length > 0}>
-            <div class="kiloclaw-msg-reactions">
+            <div class="accureclaw-msg-reactions">
               <For each={props.message.reactions}>
                 {(r) => (
                   <button
                     type="button"
-                    class="kiloclaw-msg-reaction-pill"
+                    class="accureclaw-msg-reaction-pill"
                     onClick={() => props.onRemoveReaction(props.message.id, r.emoji)}
-                    title={t("kiloClaw.message.removeReaction")}
+                    title={t("accureClaw.message.removeReaction")}
                   >
                     <span>{r.emoji}</span>
                     <span>{r.count}</span>

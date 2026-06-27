@@ -1,26 +1,26 @@
 export const Npm = {
-  name: "@kilocode/cli",
-  path: "@kilocode%2fcli",
+  name: "@accurecode/cli",
+  path: "@accurecode%2fcli",
 }
 
 export const Brew = {
-  name: "kilo",
-  tap: "Kilo-Org/tap",
-  formula: "Kilo-Org/tap/kilo",
-  api: "https://formulae.brew.sh/api/formula/kilo.json",
+  name: "accure",
+  tap: "Accure-Org/tap",
+  formula: "Accure-Org/tap/accure",
+  api: "https://formulae.brew.sh/api/formula/accure.json",
 }
 
 export const Choco = {
-  name: "kilo",
-  api: "https://community.chocolatey.org/api/v2/Packages?$filter=Id%20eq%20%27kilo%27%20and%20IsLatestVersion&$select=Version",
+  name: "accure",
+  api: "https://community.chocolatey.org/api/v2/Packages?$filter=Id%20eq%20%27accure%27%20and%20IsLatestVersion&$select=Version",
 }
 
 export const Scoop = {
-  name: "kilo",
-  manifest: "https://raw.githubusercontent.com/ScoopInstaller/Main/master/bucket/kilo.json",
+  name: "accure",
+  manifest: "https://raw.githubusercontent.com/ScoopInstaller/Main/master/bucket/accure.json",
 }
 
 export const Release = {
-  api: "https://api.github.com/repos/Kilo-Org/kilocode/releases/latest",
-  install: "https://kilo.ai/install",
+  api: "https://api.github.com/repos/Accure-Inc/accure-code/releases/latest",
+  install: "https://accure.ai/install",
 }

@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.rpc.dto.MessageErrorDto
+import ai.accurecode.rpc.dto.MessageErrorDto
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

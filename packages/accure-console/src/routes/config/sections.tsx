@@ -1,5 +1,5 @@
 import type { Component } from "solid-js"
-import type { IconProps } from "@kilocode/accure-web-ui/icon"
+import type { IconProps } from "@accurecode/accure-web-ui/icon"
 import { AgentBuilderRoute, AgentsRoute } from "./AgentsRoute"
 import { CliNotificationsRoute } from "./CliNotificationsRoute"
 import { CliUiRoute } from "./CliUiRoute"

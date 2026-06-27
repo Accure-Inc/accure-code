@@ -9,15 +9,15 @@
 
 import { Component, For, Show, createMemo } from "solid-js"
 import { Dynamic } from "solid-js/web"
-import { Part, PART_MAPPING, ToolRegistry } from "@kilocode/accure-ui/message-part"
-import type { MessageFeedbackControls } from "@kilocode/accure-ui/message-part"
+import { Part, PART_MAPPING, ToolRegistry } from "@accurecode/accure-ui/message-part"
+import type { MessageFeedbackControls } from "@accurecode/accure-ui/message-part"
 import type {
   AssistantMessage as SDKAssistantMessage,
   Part as SDKPart,
   Message as SDKMessage,
   ToolPart,
-} from "@kilocode/sdk/v2"
-import { useData } from "@kilocode/accure-ui/context/data"
+} from "@accurecode/sdk/v2"
+import { useData } from "@accurecode/accure-ui/context/data"
 import { useSession } from "../../context/session"
 import { useDisplay } from "../../context/display"
 import { useConfig } from "../../context/config"

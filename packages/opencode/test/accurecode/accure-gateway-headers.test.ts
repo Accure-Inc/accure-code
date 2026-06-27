@@ -1,6 +1,12 @@
 import { describe, it, expect, afterEach, beforeEach } from "bun:test"
-import { buildKiloHeaders, getFeatureHeader, getEditorNameHeader } from "@kilocode/accure-gateway"
-import { HEADER_FEATURE, ENV_FEATURE, ENV_EDITOR_NAME, ENV_VERSION, DEFAULT_EDITOR_NAME } from "@kilocode/accure-gateway"
+import { buildAccureHeaders, getFeatureHeader, getEditorNameHeader } from "@accurecode/accure-gateway"
+import {
+  HEADER_FEATURE,
+  ENV_FEATURE,
+  ENV_EDITOR_NAME,
+  ENV_VERSION,
+  DEFAULT_EDITOR_NAME,
+} from "@accurecode/accure-gateway"
 
 describe("getFeatureHeader", () => {
   const original = process.env[ENV_FEATURE]
@@ -51,18 +57,18 @@ describe("getEditorNameHeader", () => {
     }
   })
 
-  it("returns default editor name without version when KILOCODE_VERSION is not set", () => {
+  it("returns default editor name without version when ACCURECODE_VERSION is not set", () => {
     delete process.env[ENV_VERSION]
     expect(getEditorNameHeader()).toBe(DEFAULT_EDITOR_NAME)
   })
 
-  it("appends version when KILOCODE_VERSION is set", () => {
+  it("appends version when ACCURECODE_VERSION is set", () => {
     process.env[ENV_VERSION] = "1.2.3"
     expect(getEditorNameHeader()).toBe(`${DEFAULT_EDITOR_NAME} 1.2.3`)
   })
 })
 
-describe("buildKiloHeaders", () => {
+describe("buildAccureHeaders", () => {
   const original = process.env[ENV_FEATURE]
 
   afterEach(() => {
@@ -75,25 +81,25 @@ describe("buildKiloHeaders", () => {
 
   it("includes feature header when env var is set", () => {
     process.env[ENV_FEATURE] = "vscode-extension"
-    const headers = buildKiloHeaders()
+    const headers = buildAccureHeaders()
     expect(headers[HEADER_FEATURE]).toBe("vscode-extension")
   })
 
   it("omits feature header when env var is not set", () => {
     delete process.env[ENV_FEATURE]
-    const headers = buildKiloHeaders()
+    const headers = buildAccureHeaders()
     expect(headers[HEADER_FEATURE]).toBeUndefined()
   })
 
   it("always includes editor name header", () => {
     delete process.env[ENV_FEATURE]
-    const headers = buildKiloHeaders()
-    expect(headers["X-KILOCODE-EDITORNAME"]).toBe(getEditorNameHeader())
+    const headers = buildAccureHeaders()
+    expect(headers["X-ACCURECODE-EDITORNAME"]).toBe(getEditorNameHeader())
   })
 
   it("passes through any feature value from env", () => {
     process.env[ENV_FEATURE] = "custom-feature"
-    const headers = buildKiloHeaders()
+    const headers = buildAccureHeaders()
     expect(headers[HEADER_FEATURE]).toBe("custom-feature")
   })
 })

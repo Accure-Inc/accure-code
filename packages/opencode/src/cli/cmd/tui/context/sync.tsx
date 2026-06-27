@@ -9,8 +9,8 @@ import type {
   Command,
   PermissionRequest,
   QuestionRequest,
-  SuggestionRequest, // kilocode_change
-  SessionNetworkWait, // kilocode_change
+  SuggestionRequest, // accurecode_change
+  SessionNetworkWait, // accurecode_change
   LspStatus,
   McpStatus,
   McpResource,
@@ -19,8 +19,8 @@ import type {
   ProviderListResponse,
   ProviderAuthMethod,
   VcsInfo,
-  BackgroundProcessInfo, // kilocode_change
-} from "@kilocode/sdk/v2"
+  BackgroundProcessInfo, // accurecode_change
+} from "@accurecode/sdk/v2"
 import { createStore, produce, reconcile } from "solid-js/store"
 import { useProject } from "@tui/context/project"
 import { useEvent } from "@tui/context/event"
@@ -30,12 +30,12 @@ import { createSimpleContext } from "./helper"
 import type { Snapshot } from "@/snapshot"
 import { useExit } from "./exit"
 import { useArgs } from "./args"
-import { batch, createEffect, on, onMount } from "solid-js" // kilocode_change - add createEffect/on for workspace re-bootstrap
-import { handleSuggestionEvent } from "@/kilocode/suggestion/tui/sync" // kilocode_change
-import { useToast } from "@tui/ui/toast" // kilocode_change
+import { batch, createEffect, on, onMount } from "solid-js" // accurecode_change - add createEffect/on for workspace re-bootstrap
+import { handleSuggestionEvent } from "@/accurecode/suggestion/tui/sync" // accurecode_change
+import { useToast } from "@tui/ui/toast" // accurecode_change
 import * as Log from "@opencode-ai/core/util/log"
 import { emptyConsoleState, type ConsoleState } from "@/config/console-state"
-import type { IndexingStatus } from "@kilocode/accure-indexing/status" // kilocode_change
+import type { IndexingStatus } from "@accurecode/accure-indexing/status" // accurecode_change
 import path from "path"
 import { useKV } from "./kv"
 import { aggregateFailures } from "./aggregate-failures"
@@ -58,31 +58,31 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
       question: {
         [sessionID: string]: QuestionRequest[]
       }
-      // kilocode_change start
+      // accurecode_change start
       suggestion: {
         [sessionID: string]: SuggestionRequest[]
       }
       network: {
         [sessionID: string]: SessionNetworkWait[]
       }
-      // kilocode_change end
+      // accurecode_change end
       config: Config
-      globalConfig: Config // kilocode_change
+      globalConfig: Config // accurecode_change
       session: Session[]
       session_status: {
         [sessionID: string]: SessionStatus
       }
       session_diff: {
-        [sessionID: string]: Omit<Snapshot.FileDiff, "before" | "after">[] // kilocode_change
+        [sessionID: string]: Omit<Snapshot.FileDiff, "before" | "after">[] // accurecode_change
       }
       todo: {
         [sessionID: string]: Todo[]
       }
-      // kilocode_change start
+      // accurecode_change start
       background_process: {
         [sessionID: string]: BackgroundProcessInfo[]
       }
-      // kilocode_change end
+      // accurecode_change end
       message: {
         [sessionID: string]: Message[]
       }
@@ -98,26 +98,26 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
       }
       formatter: FormatterStatus[]
       vcs: VcsInfo | undefined
-      indexing: IndexingStatus // kilocode_change
+      indexing: IndexingStatus // accurecode_change
     }>({
       provider_next: {
         all: [],
         default: {},
         connected: [],
-        failed: [], // kilocode_change
+        failed: [], // accurecode_change
       },
       console_state: emptyConsoleState,
       provider_auth: {},
       config: {},
-      globalConfig: {}, // kilocode_change
+      globalConfig: {}, // accurecode_change
       status: "loading",
       agent: [],
       permission: {},
       question: {},
-      // kilocode_change start
+      // accurecode_change start
       suggestion: {},
       network: {},
-      // kilocode_change end
+      // accurecode_change end
       command: [],
       provider: [],
       provider_default: {},
@@ -125,7 +125,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
       session_status: {},
       session_diff: {},
       todo: {},
-      background_process: {}, // kilocode_change
+      background_process: {}, // accurecode_change
       message: {},
       part: {},
       lsp: [],
@@ -133,16 +133,16 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
       mcp_resource: {},
       formatter: [],
       vcs: undefined,
-      indexing: { state: "Disabled", message: "Indexing disabled.", processedFiles: 0, totalFiles: 0, percent: 0 }, // kilocode_change
+      indexing: { state: "Disabled", message: "Indexing disabled.", processedFiles: 0, totalFiles: 0, percent: 0 }, // accurecode_change
     })
 
     const event = useEvent()
     const project = useProject()
     const sdk = useSDK()
-    const toast = useToast() // kilocode_change
+    const toast = useToast() // accurecode_change
     const kv = useKV()
 
-    // kilocode_change start
+    // accurecode_change start
     function evict(sessionID: string) {
       // Collect child session IDs so we can evict them too.
       const children = store.session.filter((s) => s.parentID === sessionID).map((s) => s.id)
@@ -156,7 +156,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
           delete draft.session_diff[sessionID]
           delete draft.session_status[sessionID]
           delete draft.todo[sessionID]
-          delete draft.background_process[sessionID] // kilocode_change
+          delete draft.background_process[sessionID] // accurecode_change
           delete draft.permission[sessionID]
           delete draft.question[sessionID]
           delete draft.suggestion[sessionID]
@@ -173,12 +173,12 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
       if (msg.role !== "user" || !msg.summary?.diffs) return msg
       return { ...msg, summary: { ...msg.summary, diffs: [] } } as Message
     }
-    // kilocode_change end
+    // accurecode_change end
 
     const fullSyncedSessions = new Set<string>()
-    const deleted = new Set<string>() // kilocode_change
+    const deleted = new Set<string>() // accurecode_change
     let syncedWorkspace = project.workspace.current()
-    let vcsVersion = 0 // kilocode_change
+    let vcsVersion = 0 // accurecode_change
 
     function sessionListQuery(): { scope?: "project"; path?: string } {
       if (!kv.get("session_directory_filter_enabled", true)) return { scope: "project" }
@@ -199,10 +199,10 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
     event.subscribe((event, { workspace }) => {
       switch (event.type) {
         case "server.instance.disposed":
-          // kilocode_change start
+          // accurecode_change start
           deleted.clear()
           setStore("background_process", {})
-          // kilocode_change end
+          // accurecode_change end
           void bootstrap()
           break
         case "permission.replied": {
@@ -278,9 +278,9 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
             }),
           )
           break
-        } // kilocode_change
+        } // accurecode_change
 
-        // kilocode_change start
+        // accurecode_change start
         case "session.network.replied":
         case "session.network.rejected": {
           const requests = store.network[event.properties.sessionID]
@@ -310,7 +310,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
           const match = Binary.search(requests, event.properties.requestID, (r) => r.id)
           if (match.found) {
             setStore("network", event.properties.sessionID, match.index, "restored", true)
-            setStore("network", event.properties.sessionID, match.index, "time", "restored", event.properties.time) // kilocode_change
+            setStore("network", event.properties.sessionID, match.index, "time", "restored", event.properties.time) // accurecode_change
           }
           break
         }
@@ -336,7 +336,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
           )
           break
         }
-        // kilocode_change end
+        // accurecode_change end
         case "todo.updated":
           setStore("todo", event.properties.sessionID, event.properties.todos)
           break
@@ -345,14 +345,14 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
           setStore("session_diff", event.properties.sessionID, event.properties.diff)
           break
 
-        // kilocode_change start
+        // accurecode_change start
         case "session.status": {
           setStore("session_status", event.properties.sessionID, event.properties.status)
           break
         }
-        // kilocode_change end
+        // accurecode_change end
 
-        // kilocode_change start
+        // accurecode_change start
         case "background_process.updated": {
           const info = event.properties.info
           deleted.delete(info.id)
@@ -391,7 +391,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
           )
           break
         }
-        // kilocode_change end
+        // accurecode_change end
 
         case "message.part.delta": {
           const parts = store.part[event.properties.messageID]
@@ -425,7 +425,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
           break
         }
 
-        // kilocode_change start
+        // accurecode_change start
         case "global.config.updated": {
           sdk.client.global.config.get().then((x) => {
             if (x.data) setStore("globalConfig", reconcile(x.data))
@@ -439,7 +439,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
           setStore("indexing", reconcile(event.properties.status))
           break
         }
-        // kilocode_change end
+        // accurecode_change end
       }
     })
 
@@ -585,15 +585,15 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
       const workspace = project.workspace.current()
       if (workspace !== syncedWorkspace) {
         fullSyncedSessions.clear()
-        // kilocode_change start
+        // accurecode_change start
         deleted.clear()
         setStore("background_process", {})
-        // kilocode_change end
+        // accurecode_change end
         syncedWorkspace = workspace
       }
       const projectPromise = project.sync()
       const sessionListPromise = projectPromise.then(() => listSessions())
-      const version = vcsVersion // kilocode_change
+      const version = vcsVersion // accurecode_change
 
       // blocking - include session.list when continuing a session
       const providersPromise = sdk.client.config.providers({ workspace }, { throwOnError: true })
@@ -604,13 +604,13 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
         .catch(() => emptyConsoleState)
       const agentsPromise = sdk.client.app.agents({ workspace }, { throwOnError: true })
       const configPromise = sdk.client.config.get({ workspace }, { throwOnError: true })
-      const globalConfigPromise = sdk.client.global.config.get({ throwOnError: true }) // kilocode_change
+      const globalConfigPromise = sdk.client.global.config.get({ throwOnError: true }) // accurecode_change
       const blockingRequests: { name: string; promise: Promise<unknown> }[] = [
         { name: "config.providers", promise: providersPromise },
         { name: "provider.list", promise: providerListPromise },
         { name: "app.agents", promise: agentsPromise },
         { name: "config.get", promise: configPromise },
-        { name: "global.config", promise: globalConfigPromise }, // kilocode_change
+        { name: "global.config", promise: globalConfigPromise }, // accurecode_change
         { name: "project.sync", promise: projectPromise },
         ...(args.continue ? [{ name: "session.list", promise: sessionListPromise }] : []),
       ]
@@ -629,7 +629,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
           const consoleStateResponse = consoleStatePromise
           const agentsResponse = agentsPromise.then((x) => x.data ?? [])
           const configResponse = configPromise.then((x) => x.data!)
-          const globalConfigResponse = globalConfigPromise.then((x) => x.data!) // kilocode_change
+          const globalConfigResponse = globalConfigPromise.then((x) => x.data!) // accurecode_change
           const sessionListResponse = args.continue ? sessionListPromise : undefined
 
           return Promise.all([
@@ -638,7 +638,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
             consoleStateResponse,
             agentsResponse,
             configResponse,
-            globalConfigResponse, // kilocode_change
+            globalConfigResponse, // accurecode_change
             ...(sessionListResponse ? [sessionListResponse] : []),
           ]).then((responses) => {
             const providers = responses[0]
@@ -646,8 +646,8 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
             const consoleState = responses[2]
             const agents = responses[3]
             const config = responses[4]
-            const globalConfig = responses[5] // kilocode_change
-            const sessions = responses[6] // kilocode_change
+            const globalConfig = responses[5] // accurecode_change
+            const sessions = responses[6] // accurecode_change
 
             batch(() => {
               setStore("provider", reconcile(providers.providers))
@@ -656,7 +656,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
               setStore("console_state", reconcile(consoleState))
               setStore("agent", reconcile(agents))
               setStore("config", reconcile(config))
-              setStore("globalConfig", reconcile(globalConfig)) // kilocode_change
+              setStore("globalConfig", reconcile(globalConfig)) // accurecode_change
               if (sessions !== undefined) setStore("session", reconcile(sessions))
             })
           })
@@ -670,13 +670,13 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
             sdk.client.command.list({ workspace }).then((x) => setStore("command", reconcile(x.data ?? []))),
             sdk.client.lsp.status({ workspace }).then((x) => setStore("lsp", reconcile(x.data ?? []))),
             sdk.client.mcp.status({ workspace }).then((x) => setStore("mcp", reconcile(x.data ?? {}))),
-            // kilocode_change start
+            // accurecode_change start
             sdk.client.experimental.resource
               .list({ workspace })
               .then((x) => setStore("mcp_resource", reconcile(x.data ?? {}))),
-            // kilocode_change end
-            sdk.client.formatter.status({ workspace }).then((x) => setStore("formatter", reconcile(x.data!))), // kilocode_change
-            // kilocode_change start
+            // accurecode_change end
+            sdk.client.formatter.status({ workspace }).then((x) => setStore("formatter", reconcile(x.data!))), // accurecode_change
+            // accurecode_change start
             sdk.client.network.list().then((x) => {
               const next: Record<string, SessionNetworkWait[]> = {}
               for (const item of x.data ?? []) {
@@ -709,7 +709,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
                 }),
               )
             }),
-            // kilocode_change end
+            // accurecode_change end
             sdk.client.session.status({ workspace }).then((x) => {
               setStore("session_status", reconcile(x.data ?? {}))
             }),
@@ -720,7 +720,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
               }
             }),
             project.workspace.sync(),
-            // kilocode_change start - show config warnings as persistent toast
+            // accurecode_change start - show config warnings as persistent toast
             sdk.client.config
               .warnings()
               .then((x) => {
@@ -739,7 +739,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
             sdk.client.indexing
               .status({ workspace })
               .then((x) => setStore("indexing", reconcile(x.data ?? store.indexing))),
-            // kilocode_change end
+            // accurecode_change end
           ]).then(() => {
             setStore("status", "complete")
           })
@@ -762,7 +762,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
       void bootstrap()
     })
 
-    // kilocode_change start - re-bootstrap when workspace changes (Agent Manager)
+    // accurecode_change start - re-bootstrap when workspace changes (Agent Manager)
     createEffect(
       on(
         () => project.workspace.current(),
@@ -773,7 +773,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
         { defer: true },
       ),
     )
-    // kilocode_change end
+    // accurecode_change end
 
     const result = {
       data: store,
@@ -782,8 +782,8 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
         return store.status
       },
       get ready() {
-        // return true // kilocode_change - upstream #23037 left this debug path enabled; keep it commented so future merges do not restore eager ready state.
-        if (process.env.KILO_FAST_BOOT) return true
+        // return true // accurecode_change - upstream #23037 left this debug path enabled; keep it commented so future merges do not restore eager ready state.
+        if (process.env.ACCURECODE_FAST_BOOT) return true
         return store.status !== "loading"
       },
       get path() {
@@ -828,7 +828,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
               draft.todo[sessionID] = todo.data ?? []
               const infos: (typeof draft.message)[string] = []
               for (const message of messages.data ?? []) {
-                infos.push(strip(message.info)) // kilocode_change
+                infos.push(strip(message.info)) // accurecode_change
                 draft.part[message.info.id] = message.parts
               }
               draft.message[sessionID] = infos
@@ -837,7 +837,7 @@ export const { use: useSync, provider: SyncProvider } = createSimpleContext({
           )
           fullSyncedSessions.add(sessionID)
         },
-        evict, // kilocode_change
+        evict, // accurecode_change
       },
       bootstrap,
     }

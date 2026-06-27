@@ -13,7 +13,7 @@
 //
 // permissionInfo() extracts display info (icon, title, lines, diff) from
 // the request, delegating to tool.ts for tool-specific formatting.
-import type { PermissionRequest } from "@kilocode/sdk/v2"
+import type { PermissionRequest } from "@accurecode/sdk/v2"
 import type { PermissionReply } from "./types"
 import { toolPath, toolPermissionInfo } from "./tool"
 
@@ -125,11 +125,11 @@ export function permissionInfo(request: PermissionRequest): PermissionInfo {
 
 export function permissionAlwaysLines(request: PermissionRequest): string[] {
   if (request.always.length === 1 && request.always[0] === "*") {
-    return [`This will allow ${request.permission} until Kilo is restarted.`] // kilocode_change
+    return [`This will allow ${request.permission} until Accure is restarted.`] // accurecode_change
   }
 
   return [
-    "This will allow the following patterns until Kilo is restarted.", // kilocode_change
+    "This will allow the following patterns until Accure is restarted.", // accurecode_change
     ...request.always.map((item) => `- ${item}`),
   ]
 }

@@ -1,4 +1,4 @@
-import { hasIndexingPlugin } from "@kilocode/accure-indexing/detect"
+import { hasIndexingPlugin } from "@accurecode/accure-indexing/detect"
 
 type PluginSpec = string | [string, Record<string, unknown>]
 

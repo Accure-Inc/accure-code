@@ -23,16 +23,16 @@ afterEach(async () => {
 })
 
 async function createTempWorkspace(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-ignore-"))
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "accure-ignore-"))
   tempDirs.push(dir)
   return dir
 }
 
 describe("FileIgnoreController", () => {
-  describe("when .kilocodeignore exists", () => {
-    it("applies only .kilocodeignore patterns", async () => {
+  describe("when .accurecodeignore exists", () => {
+    it("applies only .accurecodeignore patterns", async () => {
       const workspace = await createTempWorkspace()
-      await fs.writeFile(path.join(workspace, ".kilocodeignore"), "secret/**\n*.snap\n")
+      await fs.writeFile(path.join(workspace, ".accurecodeignore"), "secret/**\n*.snap\n")
 
       const controller = new FileIgnoreController(workspace)
       await controller.initialize()
@@ -44,7 +44,7 @@ describe("FileIgnoreController", () => {
 
     it("does NOT block .env files unless explicitly listed", async () => {
       const workspace = await createTempWorkspace()
-      await fs.writeFile(path.join(workspace, ".kilocodeignore"), "dist/\n")
+      await fs.writeFile(path.join(workspace, ".accurecodeignore"), "dist/\n")
 
       const controller = new FileIgnoreController(workspace)
       await controller.initialize()
@@ -57,19 +57,19 @@ describe("FileIgnoreController", () => {
     it("does NOT apply .gitignore patterns", async () => {
       const workspace = await createTempWorkspace()
       await fs.writeFile(path.join(workspace, ".gitignore"), "node_modules/\n")
-      await fs.writeFile(path.join(workspace, ".kilocodeignore"), "dist/\n")
+      await fs.writeFile(path.join(workspace, ".accurecodeignore"), "dist/\n")
 
       const controller = new FileIgnoreController(workspace)
       await controller.initialize()
 
       // .gitignore pattern should NOT apply
       expect(controller.validateAccess(path.join(workspace, "node_modules", "foo.js"))).toBe(true)
-      // .kilocodeignore pattern should apply
+      // .accurecodeignore pattern should apply
       expect(controller.validateAccess(path.join(workspace, "dist", "bundle.js"))).toBe(false)
     })
   })
 
-  describe("when no .kilocodeignore exists (fallback)", () => {
+  describe("when no .accurecodeignore exists (fallback)", () => {
     it("applies .gitignore patterns", async () => {
       const workspace = await createTempWorkspace()
       await fs.writeFile(path.join(workspace, ".gitignore"), "node_modules/\nbuild/\n")
@@ -84,7 +84,7 @@ describe("FileIgnoreController", () => {
 
     it("blocks .env files via hardcoded sensitive patterns", async () => {
       const workspace = await createTempWorkspace()
-      // No .kilocodeignore, no .gitignore
+      // No .accurecodeignore, no .gitignore
 
       const controller = new FileIgnoreController(workspace)
       await controller.initialize()

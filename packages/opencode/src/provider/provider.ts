@@ -9,7 +9,7 @@ import { Hash } from "@opencode-ai/core/util/hash"
 import { Plugin } from "../plugin"
 import { serviceUse } from "@/effect/service-use"
 import { type LanguageModelV3 } from "@ai-sdk/provider"
-import * as ModelsDev from "./models" // kilocode_change - assemble dynamic Kilo models around upstream core catalog
+import * as ModelsDev from "./models" // accurecode_change - assemble dynamic Accure models around upstream core catalog
 import { Auth } from "../auth"
 import { Env } from "../env"
 import { InstallationVersion } from "@opencode-ai/core/installation/version"
@@ -28,21 +28,21 @@ import * as ProviderTransform from "./transform"
 import { ModelID, ProviderID } from "./schema"
 import { ModelStatus } from "./model-status"
 import { RuntimeFlags } from "@/effect/runtime-flags"
-// kilocode_change start
+// accurecode_change start
 import {
-  KILO_BUNDLED_PROVIDERS,
-  kiloCustomLoaders,
-  KILO_MODEL_SCHEMA_EXTENSIONS,
-  patchModelsDevModel as patchKiloModel,
-  patchConfigModel as patchKiloConfigModel,
+  ACCURECODE_BUNDLED_PROVIDERS,
+  accureCustomLoaders,
+  ACCURECODE_MODEL_SCHEMA_EXTENSIONS,
+  patchModelsDevModel as patchAccureModel,
+  patchConfigModel as patchAccureConfigModel,
   patchCustomLoaderResult,
-  patchKiloProviderPrivacy,
-  kiloSmallModelPriority,
+  patchAccureProviderPrivacy,
+  accureSmallModelPriority,
   buildTimeoutSignal,
   REQUEST_TIMEOUT_MS,
-} from "@/kilocode/provider/provider"
-import * as ModelsRefresh from "@/kilocode/provider/models-refresh"
-// kilocode_change end
+} from "@/accurecode/provider/provider"
+import * as ModelsRefresh from "@/accurecode/provider/models-refresh"
+// accurecode_change end
 
 const log = Log.create({ service: "provider" })
 
@@ -137,7 +137,7 @@ const BUNDLED_PROVIDERS: Record<string, () => Promise<(opts: any) => BundledSDK>
   "@ai-sdk/github-copilot": () =>
     import("@opencode-ai/core/github-copilot/copilot-provider").then((m) => m.createOpenaiCompatible),
   "venice-ai-sdk-provider": () => import("venice-ai-sdk-provider").then((m) => m.createVenice),
-  ...KILO_BUNDLED_PROVIDERS, // kilocode_change
+  ...ACCURECODE_BUNDLED_PROVIDERS, // accurecode_change
 }
 
 type CustomModelLoader = (sdk: any, modelID: string, options?: Record<string, any>) => Promise<any>
@@ -232,7 +232,7 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
     azure: Effect.fnUntraced(function* (provider: Info) {
       const env = yield* dep.env()
       const auth = yield* dep.auth(provider.id)
-      // kilocode_change start - prefer explicit Azure endpoint over resource name to avoid conflicting SDK options
+      // accurecode_change start - prefer explicit Azure endpoint over resource name to avoid conflicting SDK options
       const endpoint = iife(() => {
         return [
           provider.options?.baseURL,
@@ -250,15 +250,15 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
               env["AZURE_OPENAI_RESOURCE_NAME"],
             ].find((name) => typeof name === "string" && name.trim() !== "")
           })
-      // kilocode_change end
+      // accurecode_change end
 
       if (!resource && !endpoint) {
-        // kilocode_change
+        // accurecode_change
         return {
           autoload: false,
           async getModel() {
             throw new Error(
-              "Azure resource name or endpoint is missing. Set AZURE_RESOURCE_NAME, AZURE_OPENAI_RESOURCE_NAME, AZURE_OPENAI_ENDPOINT, or reconnect the azure provider.", // kilocode_change
+              "Azure resource name or endpoint is missing. Set AZURE_RESOURCE_NAME, AZURE_OPENAI_RESOURCE_NAME, AZURE_OPENAI_ENDPOINT, or reconnect the azure provider.", // accurecode_change
             )
           },
         }
@@ -270,7 +270,7 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
           return selectAzureLanguageModel(sdk, modelID, Boolean(options?.["useCompletionUrls"]))
         },
         options: {
-          ...(endpoint ? { baseURL: endpoint } : { resourceName: resource }), // kilocode_change
+          ...(endpoint ? { baseURL: endpoint } : { resourceName: resource }), // accurecode_change
         },
         vars(_options): Record<string, string> {
           if (resource) {
@@ -309,7 +309,8 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
       const envProfile = env["AWS_PROFILE"]
       const profile = configProfile ?? envProfile
 
-      const awsAccessKeyId = env["AWS_ACCESS_KEY_ID"]
+      const awsAccessKeyId = env["AWS_ACCESS_KEY_ID"] ?? providerConfig?.options?.accessKeyId // accurecode_change
+      const awsSecretAccessKey = env["AWS_SECRET_ACCESS_KEY"] ?? providerConfig?.options?.secretAccessKey // accurecode_change
 
       // TODO: Using process.env directly because Env.set only updates a process.env shallow copy,
       // until the scope of the Env API is clarified (test only or runtime?)
@@ -332,7 +333,8 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
       if (!profile && !awsAccessKeyId && !awsBearerToken && !awsWebIdentityTokenFile && !containerCreds)
         return { autoload: false }
 
-      const { fromNodeProviderChain } = yield* Effect.promise(() => import("@aws-sdk/credential-providers"))
+      // fromNodeProviderChain is only needed when we don't have static config creds
+      const { fromNodeProviderChain } = yield* Effect.promise(() => import("@aws-sdk/credential-providers")) // accurecode_change
 
       const providerOptions: Record<string, any> = {
         region: defaultRegion,
@@ -341,10 +343,20 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
       // Only use credential chain if no bearer token exists
       // Bearer token takes precedence over credential chain (profiles, access keys, IAM roles, web identity tokens)
       if (!awsBearerToken) {
-        // Build credential provider options (only pass profile if specified)
-        const credentialProviderOptions = profile ? { profile } : {}
-
-        providerOptions.credentialProvider = fromNodeProviderChain(credentialProviderOptions)
+        // accurecode_change start
+        if (awsAccessKeyId && awsSecretAccessKey && !profile) {
+          // Static credentials from config — use fromEnv-style static object
+          providerOptions.credentialProvider = () =>
+            Promise.resolve({
+              accessKeyId: awsAccessKeyId,
+              secretAccessKey: awsSecretAccessKey,
+            })
+        } else {
+          // Build credential provider options (only pass profile if specified)
+          const credentialProviderOptions = profile ? { profile } : {}
+          providerOptions.credentialProvider = fromNodeProviderChain(credentialProviderOptions)
+        }
+        // accurecode_change end
       }
 
       // Add custom endpoint if specified (endpoint takes precedence over baseURL)
@@ -353,10 +365,44 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
         providerOptions.baseURL = endpoint
       }
 
+      // accurecode_change start - intercept fetch to log exact Bedrock request body
+      const origFetch = globalThis.fetch
+      providerOptions.fetch = async (url: any, init: any) => {
+        try {
+          const fsNode = require("fs")
+          const reqBody = typeof init?.body === "string" ? init.body
+            : "(non-string body)"
+          fsNode.appendFileSync(
+            "/Users/ansarisam/accure/accure-code/packages/opencode/bedrock_debug.log",
+            `BEDROCK_RAW_REQUEST url=${url}\nbody=${reqBody}\n---RAW---\n`
+          )
+        } catch {}
+
+        const response = await origFetch(url, init)
+
+        try {
+          const fsNode = require("fs")
+          fsNode.appendFileSync(
+            "/Users/ansarisam/accure/accure-code/packages/opencode/bedrock_debug.log",
+            `BEDROCK_RAW_RESPONSE_STATUS status=${response.status}\n---RAW---\n`
+          )
+        } catch {}
+
+        return response
+      }
+      // accurecode_change end
+
       return {
         autoload: true,
         options: providerOptions,
         async getModel(sdk: any, modelID: string, options?: Record<string, any>) {
+          // accurecode_change start - use custom model ID from options if set
+          const customModelID = options?.[`${modelID}-modelId`] ?? options?.selectedModelId
+          if (customModelID) {
+            modelID = customModelID
+          }
+          // accurecode_change end
+
           // Skip region prefixing if model already has a cross-region inference profile prefix
           // Models from models.dev may already include prefixes like us., eu., global., etc.
           const crossRegionPrefixes = ["global.", "us.", "eu.", "jp.", "apac.", "au."]
@@ -375,14 +421,10 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
           switch (regionPrefix) {
             case "us": {
               const modelRequiresPrefix = [
-                "nova-micro",
-                "nova-lite",
-                "nova-pro",
-                "nova-premier",
-                "nova-2",
                 "claude",
                 "deepseek",
-              ].some((m) => modelID.includes(m))
+                "nova", // accurecode_change - Nova models require cross-region prefix
+              ].some((m) => modelID.includes(m)) // accurecode_change - removed nova-* (native us-east-1 models, no cross-region needed)
               const isGovCloud = region.startsWith("us-gov")
               if (modelRequiresPrefix && !isGovCloud) {
                 modelID = `${regionPrefix}.${modelID}`
@@ -399,7 +441,7 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
                 "eu-south-1",
                 "eu-south-2",
               ].some((r) => region.includes(r))
-              const modelRequiresPrefix = ["claude", "nova-lite", "nova-micro", "llama3", "pixtral"].some((m) =>
+              const modelRequiresPrefix = ["claude", "nova", "llama3", "pixtral"].some((m) => // accurecode_change
                 modelID.includes(m),
               )
               if (regionRequiresPrefix && modelRequiresPrefix) {
@@ -418,7 +460,7 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
                 modelID = `${regionPrefix}.${modelID}`
               } else if (isTokyoRegion) {
                 // Tokyo region uses jp. prefix for cross-region inference
-                const modelRequiresPrefix = ["claude", "nova-lite", "nova-micro", "nova-pro"].some((m) =>
+                const modelRequiresPrefix = ["claude", "nova"].some((m) => // accurecode_change
                   modelID.includes(m),
                 )
                 if (modelRequiresPrefix) {
@@ -427,7 +469,7 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
                 }
               } else {
                 // Other APAC regions use apac. prefix
-                const modelRequiresPrefix = ["claude", "nova-lite", "nova-micro", "nova-pro"].some((m) =>
+                const modelRequiresPrefix = ["claude", "nova"].some((m) => // accurecode_change
                   modelID.includes(m),
                 )
                 if (modelRequiresPrefix) {
@@ -448,9 +490,9 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
         autoload: false,
         options: {
           headers: {
-            "HTTP-Referer": "https://kilo.ai/", // kilocode_change
-            "X-Title": "Accure Code", // kilocode_change
-            "X-Source": "kilo", // kilocode_change
+            "HTTP-Referer": "https://accure.ai/", // accurecode_change
+            "X-Title": "Accure Code", // accurecode_change
+            "X-Source": "accure", // accurecode_change
           },
         },
       }),
@@ -459,8 +501,8 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
         autoload: false,
         options: {
           headers: {
-            "HTTP-Referer": "https://kilo.ai/", // kilocode_change
-            "X-Title": "Accure Code", // kilocode_change
+            "HTTP-Referer": "https://accure.ai/", // accurecode_change
+            "X-Title": "Accure Code", // accurecode_change
           },
         },
       }),
@@ -469,9 +511,9 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
         autoload: provider.source === "config",
         options: {
           headers: {
-            "HTTP-Referer": "https://kilo.ai/", // kilocode_change
-            "X-Title": "Accure Code", // kilocode_change
-            "X-BILLING-INVOKE-ORIGIN": "AccureCode", // kilocode_change
+            "HTTP-Referer": "https://accure.ai/", // accurecode_change
+            "X-Title": "Accure Code", // accurecode_change
+            "X-BILLING-INVOKE-ORIGIN": "AccureCode", // accurecode_change
           },
         },
       }),
@@ -480,8 +522,8 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
         autoload: false,
         options: {
           headers: {
-            "http-referer": "https://kilo.ai/", // kilocode_change
-            "x-title": "Accure Code", // kilocode_change
+            "http-referer": "https://accure.ai/", // accurecode_change
+            "x-title": "Accure Code", // accurecode_change
           },
         },
       }),
@@ -586,8 +628,8 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
         autoload: false,
         options: {
           headers: {
-            "HTTP-Referer": "https://accure.ai/", // kilocode_change
-            "X-Title": "Accure Code", // kilocode_change
+            "HTTP-Referer": "https://accure.ai/", // accurecode_change
+            "X-Title": "Accure Code", // accurecode_change
           },
         },
       }),
@@ -612,7 +654,7 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
       const directory = yield* InstanceState.directory
 
       const aiGatewayHeaders = {
-        "User-Agent": `kilo/${InstallationVersion} gitlab-ai-provider/${GITLAB_PROVIDER_VERSION} (${os.platform()} ${os.release()}; ${os.arch()})`, // kilocode_change
+        "User-Agent": `accure/${InstallationVersion} gitlab-ai-provider/${GITLAB_PROVIDER_VERSION} (${os.platform()} ${os.release()}; ${os.arch()})`, // accurecode_change
         "anthropic-beta": "context-1m-2025-08-07",
         ...providerConfig?.options?.aiGatewayHeaders,
       }
@@ -814,7 +856,7 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
       if (!apiToken) {
         throw new Error(
           "CLOUDFLARE_API_TOKEN (or CF_AIG_TOKEN) is required for Cloudflare AI Gateway. " +
-            "Set it via environment variable or run `kilo auth cloudflare-ai-gateway`.", // kilocode_change
+            "Set it via environment variable or run `accure auth cloudflare-ai-gateway`.", // accurecode_change
         )
       }
 
@@ -863,17 +905,17 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
         autoload: false,
         options: {
           headers: {
-            "X-Cerebras-3rd-Party-Integration": "Accure Code", // kilocode_change
+            "X-Cerebras-3rd-Party-Integration": "Accure Code", // accurecode_change
           },
         },
       }),
-    kilo: () =>
+    accure: () =>
       Effect.succeed({
         autoload: false,
         options: {
           headers: {
-            "HTTP-Referer": "https://kilo.ai/", // kilocode_change
-            "X-Title": "Accure Code", // kilocode_change
+            "HTTP-Referer": "https://accure.ai/", // accurecode_change
+            "X-Title": "Accure Code", // accurecode_change
           },
         },
       }),
@@ -946,13 +988,13 @@ const ProviderLimit = Schema.Struct({
   output: Schema.Finite,
 })
 
-// kilocode_change start
+// accurecode_change start
 const ProviderMetadata = Schema.Struct({
   noteKey: optionalOmitUndefined(Schema.String),
   icon: optionalOmitUndefined(Schema.String),
   priority: optionalOmitUndefined(Schema.Int),
 })
-// kilocode_change end
+// accurecode_change end
 
 export const Model = Schema.Struct({
   id: ModelID,
@@ -968,18 +1010,18 @@ export const Model = Schema.Struct({
   headers: Schema.Record(Schema.String, Schema.String),
   release_date: Schema.String,
   variants: optionalOmitUndefined(Schema.Record(Schema.String, Schema.Record(Schema.String, Schema.Any))),
-  ...KILO_MODEL_SCHEMA_EXTENSIONS, // kilocode_change
+  ...ACCURECODE_MODEL_SCHEMA_EXTENSIONS, // accurecode_change
 }).annotate({ identifier: "Model" })
 export type Model = Types.DeepMutable<Schema.Schema.Type<typeof Model>>
 
 export const Info = Schema.Struct({
   id: ProviderID,
   name: Schema.String,
-  description: optionalOmitUndefined(Schema.String), // kilocode_change
+  description: optionalOmitUndefined(Schema.String), // accurecode_change
   source: Schema.Literals(["env", "config", "custom", "api"]),
   env: Schema.Array(Schema.String),
-  key: optionalOmitUndefined(Schema.String), // kilocode_change
-  metadata: optionalOmitUndefined(ProviderMetadata), // kilocode_change
+  key: optionalOmitUndefined(Schema.String), // accurecode_change
+  metadata: optionalOmitUndefined(ProviderMetadata), // accurecode_change
   options: Schema.Record(Schema.String, Schema.Any),
   models: Schema.Record(Schema.String, Model),
 }).annotate({ identifier: "Provider" })
@@ -991,7 +1033,7 @@ export const ListResult = Schema.Struct({
   all: Schema.Array(Info),
   default: DefaultModelIDs,
   connected: Schema.Array(Schema.String),
-  failed: Schema.Array(Schema.String), // kilocode_change
+  failed: Schema.Array(Schema.String), // accurecode_change
 })
 export type ListResult = Types.DeepMutable<Schema.Schema.Type<typeof ListResult>>
 
@@ -1019,7 +1061,7 @@ export class ModelNotFoundError extends Schema.TaggedErrorClass<ModelNotFoundErr
   providerID: ProviderID,
   modelID: ModelID,
   suggestions: Schema.optional(Schema.Array(Schema.String)),
-  modelsEmpty: Schema.optional(Schema.Boolean), // kilocode_change
+  modelsEmpty: Schema.optional(Schema.Boolean), // accurecode_change
   cause: Schema.optional(Schema.Defect),
 }) {
   static isInstance(input: unknown): input is ModelNotFoundError {
@@ -1156,7 +1198,7 @@ function fromModelsDevModel(provider: ModelsDev.Provider, model: ModelsDev.Model
     release_date: model.release_date ?? "",
     variants: {},
   }
-  Object.assign(base, patchKiloModel(provider.id, model)) // kilocode_change
+  Object.assign(base, patchAccureModel(provider.id, model)) // accurecode_change
 
   return {
     ...base,
@@ -1192,7 +1234,7 @@ export function fromModelsDevProvider(provider: ModelsDev.Provider): Info {
     id: ProviderID.make(provider.id),
     source: "custom",
     name: provider.name,
-    description: provider.description, // kilocode_change
+    description: provider.description, // accurecode_change
     env: [...(provider.env ?? [])],
     options: {},
     models,
@@ -1328,7 +1370,7 @@ export const layer = Layer.effect(
 
         // extend database from config
         for (const [providerID, provider] of configProviders) {
-          if (!provider) continue // kilocode_change - null entries are transient delete sentinels
+          if (!provider) continue // accurecode_change - null entries are transient delete sentinels
           const existing = database[providerID]
           const parsed: Info = {
             id: ProviderID.make(providerID),
@@ -1340,7 +1382,7 @@ export const layer = Layer.effect(
           }
 
           for (const [modelID, model] of Object.entries(provider.models ?? {})) {
-            if (!model) continue // kilocode_change - null entries are transient delete sentinels
+            if (!model) continue // accurecode_change - null entries are transient delete sentinels
             const existingModel = parsed.models[model.id ?? modelID]
             const apiID = model.id ?? existingModel?.api.id ?? modelID
             const apiNpm =
@@ -1410,12 +1452,12 @@ export const layer = Layer.effect(
               headers: mergeDeep(existingModel?.headers ?? {}, model.headers ?? {}),
               family: model.family ?? existingModel?.family ?? "",
               release_date: model.release_date ?? existingModel?.release_date ?? "",
-              // variants: {}, // kilocode_change, moved into patchKiloConfigModel
-              ...patchKiloConfigModel(model, existingModel), // kilocode_change
+              // variants: {}, // accurecode_change, moved into patchAccureConfigModel
+              ...patchAccureConfigModel(model, existingModel), // accurecode_change
             }
             const merged = mergeDeep(ProviderTransform.variants(parsedModel), model.variants ?? {})
             parsedModel.variants = mapValues(
-              pickBy(merged, (v): v is NonNullable<typeof v> => !!v && !v.disabled), // kilocode_change - drop null delete sentinels
+              pickBy(merged, (v): v is NonNullable<typeof v> => !!v && !v.disabled), // accurecode_change - drop null delete sentinels
               (v) => omit(v, ["disabled"]),
             )
             parsed.models[modelID] = parsedModel
@@ -1423,14 +1465,14 @@ export const layer = Layer.effect(
           database[providerID] = parsed
         }
 
-        // kilocode_change start - load auths before env so OAuth plugins can override inherited credentials
+        // accurecode_change start - load auths before env so OAuth plugins can override inherited credentials
         const auths = yield* auth.all().pipe(Effect.orDie)
         // load env
         const envs = yield* env.all()
         for (const [id, provider] of Object.entries(database)) {
           const providerID = ProviderID.make(id)
           if (disabled.has(providerID)) continue
-          // kilocode_change start - prefer explicit OAuth auth over inherited env credentials
+          // accurecode_change start - prefer explicit OAuth auth over inherited env credentials
           if (
             auths[providerID]?.type === "oauth" &&
             plugins.some((x) => x.auth?.provider === providerID && x.auth.loader)
@@ -1438,7 +1480,7 @@ export const layer = Layer.effect(
             continue
           }
           const apiKey = provider.env.map((item) => envs[item]).find(Boolean)
-          // kilocode_change end
+          // accurecode_change end
           if (!apiKey) continue
           mergeProvider(providerID, {
             source: "env",
@@ -1479,11 +1521,11 @@ export const layer = Layer.effect(
           mergeProvider(providerID, patch)
         }
 
-        // kilocode_change start - resolve env once for patchCustomLoaderResult (azure env fallback)
-        const kiloEnv = yield* env.all()
-        // kilocode_change end
-        for (const [id, fn] of Object.entries({ ...custom(dep), ...kiloCustomLoaders(dep) })) {
-          // kilocode_change
+        // accurecode_change start - resolve env once for patchCustomLoaderResult (azure env fallback)
+        const accureEnv = yield* env.all()
+        // accurecode_change end
+        for (const [id, fn] of Object.entries({ ...custom(dep), ...accureCustomLoaders(dep) })) {
+          // accurecode_change
           const providerID = ProviderID.make(id)
           if (disabled.has(providerID)) continue
           const data = database[providerID]
@@ -1492,7 +1534,7 @@ export const layer = Layer.effect(
             continue
           }
           const result = yield* fn(data)
-          if (result) patchCustomLoaderResult(id, result, kiloEnv) // kilocode_change
+          if (result) patchCustomLoaderResult(id, result, accureEnv) // accurecode_change
           if (result && (result.autoload || providers[providerID])) {
             if (result.getModel) modelLoaders[providerID] = result.getModel
             if (result.vars) varsLoaders[providerID] = result.vars
@@ -1505,19 +1547,19 @@ export const layer = Layer.effect(
 
         // load config - re-apply with updated data
         for (const [id, provider] of configProviders) {
-          if (!provider) continue // kilocode_change - null entries are transient delete sentinels
+          if (!provider) continue // accurecode_change - null entries are transient delete sentinels
           const providerID = ProviderID.make(id)
-          // kilocode_change start - keep OAuth plugin source when config and Codex auth coexist
+          // accurecode_change start - keep OAuth plugin source when config and Codex auth coexist
           const oauth =
             auths[providerID]?.type === "oauth" && plugins.some((x) => x.auth?.provider === providerID && x.auth.loader)
           const partial: Partial<Info> = oauth ? {} : { source: "config" }
           if (provider.env) partial.env = provider.env
-          // kilocode_change end
+          // accurecode_change end
           if (provider.name) partial.name = provider.name
           if (provider.options) partial.options = provider.options
           mergeProvider(providerID, partial)
         }
-        patchKiloProviderPrivacy(providers[ProviderID.make("kilo")], cfg) // kilocode_change
+        patchAccureProviderPrivacy(providers[ProviderID.make("accure")], cfg) // accurecode_change
 
         const gitlab = ProviderID.make("gitlab")
         if (discoveryLoaders[gitlab] && providers[gitlab] && isProviderAllowed(gitlab)) {
@@ -1572,7 +1614,7 @@ export const layer = Layer.effect(
             if (configVariants && model.variants) {
               const merged = mergeDeep(model.variants, configVariants)
               model.variants = mapValues(
-                pickBy(merged, (v): v is NonNullable<typeof v> => !!v && !v.disabled), // kilocode_change - drop null delete sentinels
+                pickBy(merged, (v): v is NonNullable<typeof v> => !!v && !v.disabled), // accurecode_change - drop null delete sentinels
                 (v) => omit(v, ["disabled"]),
               )
             }
@@ -1596,7 +1638,7 @@ export const layer = Layer.effect(
         }
       }),
     )
-    yield* ModelsRefresh.watch(state) // kilocode_change
+    yield* ModelsRefresh.watch(state) // accurecode_change
 
     const list = Effect.fn("Provider.list")(() => InstanceState.use(state, (s) => s.providers))
 
@@ -1675,14 +1717,14 @@ export const layer = Layer.effect(
           const fetchFn = customFetch ?? fetch
           const opts = init ?? {}
           const chunkAbortCtl = typeof chunkTimeout === "number" && chunkTimeout > 0 ? new AbortController() : undefined
-          // kilocode_change start - use cancellable timeout for connection phase
+          // accurecode_change start - use cancellable timeout for connection phase
           const timeout = buildTimeoutSignal(options)
           const signals: AbortSignal[] = []
 
           if (opts.signal) signals.push(opts.signal)
           if (chunkAbortCtl) signals.push(chunkAbortCtl.signal)
           if (timeout.signal) signals.push(timeout.signal)
-          // kilocode_change end
+          // accurecode_change end
 
           const combined = signals.length === 0 ? null : signals.length === 1 ? signals[0] : AbortSignal.any(signals)
           if (combined) opts.signal = combined
@@ -1705,7 +1747,7 @@ export const layer = Layer.effect(
             }
           }
 
-          // kilocode_change start - clear connection-phase timeout once headers arrive
+          // accurecode_change start - clear connection-phase timeout once headers arrive
           try {
             const res = await fetchFn(input, {
               ...opts,
@@ -1719,7 +1761,7 @@ export const layer = Layer.effect(
             timeout.clear()
             throw err
           }
-          // kilocode_change end
+          // accurecode_change end
         }
 
         const bundledLoader = BUNDLED_PROVIDERS[model.api.npm]
@@ -1759,7 +1801,8 @@ export const layer = Layer.effect(
         })
         s.sdk.set(key, loaded)
         return loaded as SDK
-      } catch (e) {
+      } catch (e: any) {
+        log.error("resolveSDK failed", { providerID: model.providerID, error: e?.message ?? e, stack: e?.stack }) // accurecode_change
         throw new InitError({ providerID: model.providerID, cause: e })
       }
     }
@@ -1778,18 +1821,63 @@ export const layer = Layer.effect(
           : fuzzysort
               .go(providerID, Object.keys({ ...s.catalog, ...s.providers }), { limit: 3, threshold: -10000 })
               .map((m) => m.target)
-        const empty = false // kilocode_change
-        return yield* new ModelNotFoundError({ providerID, modelID, suggestions, modelsEmpty: empty }) // kilocode_change
+        const empty = false // accurecode_change
+        return yield* new ModelNotFoundError({ providerID, modelID, suggestions, modelsEmpty: empty }) // accurecode_change
       }
 
-      const info = provider.models[modelID]
+      // accurecode_change start - apply custom/selected model overrides from provider options
+      const customModelID = provider.options?.[`${modelID}-modelId`] ?? provider.options?.selectedModelId
+      let targetModelID = modelID
+      if (customModelID && typeof customModelID === "string") {
+        targetModelID = ModelID.make(customModelID)
+      }
+      // accurecode_change end
+
+      let info = provider.models[targetModelID]
       if (!info) {
-        const current = modelSuggestions(provider, modelID, runtimeFlags.enableExperimentalModels)
-        const suggestions = current.length
-          ? current
-          : modelSuggestions(s.catalog[providerID], modelID, runtimeFlags.enableExperimentalModels)
-        const empty = Object.keys(provider.models).length === 0 // kilocode_change
-        return yield* new ModelNotFoundError({ providerID, modelID, suggestions, modelsEmpty: empty }) // kilocode_change
+        // accurecode_change start - fallback to original modelID if override info is not found in provider
+        if (targetModelID !== modelID) {
+          info = provider.models[modelID]
+        }
+        // accurecode_change end
+        // accurecode_change start - let API handle model ID validation, don't fail client-side for Accure providers
+        if (!info && (providerID === "accure-models" || providerID === "accure" || providerID === "accureiqx")) {
+          const sibling = Object.values(provider.models)[0] as any
+          info = {
+            id: targetModelID,
+            providerID,
+            name: targetModelID,
+            api: {
+              id: targetModelID,
+              npm: sibling?.api?.npm ?? "@ai-sdk/openai-compatible",
+              url: sibling?.api?.url ?? "",
+            },
+            capabilities: {
+              temperature: true,
+              reasoning: false,
+              attachment: true,
+              toolcall: true,
+              input: { text: true, audio: false, image: true, video: false, pdf: false },
+              output: { text: true, audio: false, image: false, video: false, pdf: false },
+              interleaved: false,
+            },
+            cost: { input: 0, output: 0, cache: { read: 0, write: 0 } },
+            limit: { context: 128000, output: 8192 },
+            status: "active" as const,
+            options: {},
+            headers: {},
+            release_date: "",
+          }
+        }
+        // accurecode_change end
+        if (!info) {
+          const current = modelSuggestions(provider, modelID, runtimeFlags.enableExperimentalModels)
+          const suggestions = current.length
+            ? current
+            : modelSuggestions(s.catalog[providerID], modelID, runtimeFlags.enableExperimentalModels)
+          const empty = Object.keys(provider.models).length === 0 // accurecode_change
+          return yield* new ModelNotFoundError({ providerID, modelID, suggestions, modelsEmpty: empty }) // accurecode_change
+        }
       }
       return info
     })
@@ -1804,12 +1892,24 @@ export const layer = Layer.effect(
       return yield* EffectPromise.refineRejection(
         async () => {
           const sdk = await resolveSDK(model, s, envs)
-          const language = s.modelLoaders[model.providerID]
-            ? await s.modelLoaders[model.providerID](sdk, model.api.id, {
-                ...provider.options,
-                ...model.options,
-              })
-            : sdk.languageModel(model.api.id)
+          // accurecode_change - api.id can be null for newly-added catalog models (e.g. Bedrock NVIDIA);
+          // fall back to model.id (the catalog key) which IS the correct API ID in those cases
+          const apiId = model.api.id ?? model.id
+          let language;
+          try {
+            language = s.modelLoaders[model.providerID]
+              ? await s.modelLoaders[model.providerID](sdk, apiId, {
+                  ...provider.options,
+                  ...model.options,
+                })
+              : sdk.languageModel(apiId)
+          } catch (err: any) {
+            try {
+              const fsNode = require("fs");
+              fsNode.writeFileSync("/Users/ansarisam/accure/accure-code/packages/opencode/bedrock_debug.log", `[Bedrock Debug] getLanguage error: ${err?.message ?? err}\nStack: ${err?.stack}\n`, { flag: "a" });
+            } catch {}
+            throw err;
+          }
           s.models.set(key, language)
           return language
         },
@@ -1861,10 +1961,10 @@ export const layer = Layer.effect(
       if (providerID.startsWith("github-copilot")) {
         priority = ["gpt-5-mini", "claude-haiku-4.5", ...priority]
       }
-      // kilocode_change start
-      const kiloPriority = kiloSmallModelPriority(providerID)
-      if (kiloPriority) priority = kiloPriority
-      // kilocode_change end
+      // accurecode_change start
+      const accurePriority = accureSmallModelPriority(providerID)
+      if (accurePriority) priority = accurePriority
+      // accurecode_change end
       for (const item of priority) {
         if (providerID === ProviderID.amazonBedrock) {
           const crossRegionPrefixes = ["global.", "us.", "eu."]
@@ -1891,10 +1991,10 @@ export const layer = Layer.effect(
         }
       }
 
-      // kilocode_change start - fall back to kilo's auto small model
-      const kiloFallback = s.providers[ProviderID.make("kilo")]
-      if (kiloFallback?.models["kilo-auto/small"]) return kiloFallback.models["kilo-auto/small"]
-      // kilocode_change end
+      // accurecode_change start - fall back to accure's auto small model
+      const accureFallback = s.providers[ProviderID.make("accure")]
+      if (accureFallback?.models["accure-auto/small"]) return accureFallback.models["accure-auto/small"]
+      // accurecode_change end
 
       return undefined
     })

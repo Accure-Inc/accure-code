@@ -19,25 +19,27 @@ describe("indexing plugin detection", () => {
   test("normalizes supported plugin forms", () => {
     expect(normalizePluginName("accure-indexing")).toBe("accure-indexing")
     expect(normalizePluginName("accure-indexing@1.2.3")).toBe("accure-indexing")
-    expect(normalizePluginName("@kilocode/accure-indexing")).toBe("@kilocode/accure-indexing")
-    expect(normalizePluginName("@kilocode/accure-indexing@1.2.3")).toBe("@kilocode/accure-indexing")
-    expect(normalizePluginName("../../packages/accure-indexing")).toBe("@kilocode/accure-indexing")
+    expect(normalizePluginName("@accurecode/accure-indexing")).toBe("@accurecode/accure-indexing")
+    expect(normalizePluginName("@accurecode/accure-indexing@1.2.3")).toBe("@accurecode/accure-indexing")
+    expect(normalizePluginName("../../packages/accure-indexing")).toBe("@accurecode/accure-indexing")
     expect(normalizePluginName("file:///tmp/.opencode/plugin/accure-indexing.js")).toBe("accure-indexing")
-    expect(normalizePluginName("file:///tmp/node_modules/@kilocode/accure-indexing/index.js")).toBe(
-      "@kilocode/accure-indexing",
+    expect(normalizePluginName("file:///tmp/node_modules/@accurecode/accure-indexing/index.js")).toBe(
+      "@accurecode/accure-indexing",
     )
-    expect(normalizePluginName("file:///tmp/repo/packages/accure-indexing/src/index.ts")).toBe("@kilocode/accure-indexing")
+    expect(normalizePluginName("file:///tmp/repo/packages/accure-indexing/src/index.ts")).toBe(
+      "@accurecode/accure-indexing",
+    )
   })
 
   test("detects supported indexing plugin specifiers", () => {
     const values = [
       "accure-indexing",
       "accure-indexing@1.2.3",
-      "@kilocode/accure-indexing",
-      "@kilocode/accure-indexing@1.2.3",
+      "@accurecode/accure-indexing",
+      "@accurecode/accure-indexing@1.2.3",
       "../../packages/accure-indexing",
       "file:///tmp/.opencode/plugin/accure-indexing.js",
-      "file:///tmp/node_modules/@kilocode/accure-indexing/index.js",
+      "file:///tmp/node_modules/@accurecode/accure-indexing/index.js",
       "file:///tmp/repo/packages/accure-indexing/src/index.ts",
     ]
 
@@ -47,14 +49,17 @@ describe("indexing plugin detection", () => {
   })
 
   test("ignores unrelated plugin specifiers", () => {
-    expect(isIndexingPlugin("@kilocode/accure-gateway")).toBe(false)
+    expect(isIndexingPlugin("@accurecode/accure-gateway")).toBe(false)
     expect(isIndexingPlugin("file:///tmp/.opencode/plugin/index.js")).toBe(false)
-    expect(hasIndexingPlugin(["@kilocode/accure-gateway", "foo@1.0.0"])).toBe(false)
+    expect(hasIndexingPlugin(["@accurecode/accure-gateway", "foo@1.0.0"])).toBe(false)
   })
 
   test("detects indexing plugin in merged plugin lists", () => {
     expect(
-      hasIndexingPlugin(["@kilocode/accure-gateway", "file:///tmp/node_modules/@kilocode/accure-indexing/index.js"]),
+      hasIndexingPlugin([
+        "@accurecode/accure-gateway",
+        "file:///tmp/node_modules/@accurecode/accure-indexing/index.js",
+      ]),
     ).toBe(true)
   })
 })

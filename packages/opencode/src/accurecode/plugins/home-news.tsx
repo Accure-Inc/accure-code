@@ -1,6 +1,6 @@
-import type { TuiPlugin, TuiPluginModule } from "@kilocode/plugin/tui"
+import type { TuiPlugin, TuiPluginModule } from "@accurecode/plugin/tui"
 import { createMemo, Show } from "solid-js"
-import { KiloNews } from "@/kilocode/components/kilo-news"
+import { AccureNews } from "@/accurecode/components/accure-news"
 
 const id = "internal:home-news"
 
@@ -34,7 +34,7 @@ const tui: TuiPlugin = async (api) => {
         return (
           <box width="100%" maxWidth={75} alignItems="center" paddingTop={2}>
             <Show when={!hidden()}>
-              <KiloNews />
+              <AccureNews />
             </Show>
           </box>
         )

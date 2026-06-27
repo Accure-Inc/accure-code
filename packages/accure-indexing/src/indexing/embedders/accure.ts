@@ -1,15 +1,15 @@
-import { resolveKiloGatewayBaseUrl } from "@kilocode/accure-gateway"
-import { HEADER_FEATURE, HEADER_ORGANIZATIONID } from "@kilocode/accure-gateway"
+import { resolveAccureGatewayBaseUrl } from "@accurecode/accure-gateway"
+import { HEADER_FEATURE, HEADER_ORGANIZATIONID } from "@accurecode/accure-gateway"
 import { MAX_ITEM_TOKENS } from "../constants"
 import type { EmbedderInfo, EmbeddingResponse, IEmbedder } from "../interfaces/embedder"
 import { Log } from "../../util/log"
 import { OpenAICompatibleEmbedder } from "./openai-compatible"
 
-const log = Log.create({ service: "embedder-kilo" })
+const log = Log.create({ service: "embedder-accure" })
 
-export const KILO_INDEXING_FEATURE = "managed-indexing"
+export const ACCURECODE_INDEXING_FEATURE = "managed-indexing"
 
-export class KiloEmbedder implements IEmbedder {
+export class AccureEmbedder implements IEmbedder {
   private readonly embedder: OpenAICompatibleEmbedder
   private readonly model: string
 
@@ -20,17 +20,17 @@ export class KiloEmbedder implements IEmbedder {
     modelId?: string
     dimensions?: number
   }) {
-    if (!input.apiKey) throw new Error("Kilo API key is required for embedding.")
+    if (!input.apiKey) throw new Error("Accure API key is required for embedding.")
 
-    if (!input.modelId) throw new Error("Kilo embedding model is required.")
+    if (!input.modelId) throw new Error("Accure embedding model is required.")
     this.model = input.modelId
     const headers: Record<string, string> = {
-      [HEADER_FEATURE]: KILO_INDEXING_FEATURE,
+      [HEADER_FEATURE]: ACCURECODE_INDEXING_FEATURE,
       ...(input.organizationId ? { [HEADER_ORGANIZATIONID]: input.organizationId } : {}),
     }
 
     this.embedder = new OpenAICompatibleEmbedder(
-      resolveKiloGatewayBaseUrl({ baseURL: input.baseUrl, token: input.apiKey }),
+      resolveAccureGatewayBaseUrl({ baseURL: input.baseUrl, token: input.apiKey }),
       input.apiKey,
       this.model,
       MAX_ITEM_TOKENS,
@@ -42,9 +42,9 @@ export class KiloEmbedder implements IEmbedder {
     try {
       return await this.embedder.createEmbeddings(texts, model || this.model)
     } catch (err) {
-      log.error("Kilo embedder error", {
+      log.error("Accure embedder error", {
         err: err instanceof Error ? err.message : String(err),
-        location: "KiloEmbedder:createEmbeddings",
+        location: "AccureEmbedder:createEmbeddings",
       })
       throw err
     }
@@ -54,15 +54,15 @@ export class KiloEmbedder implements IEmbedder {
     try {
       return await this.embedder.validateConfiguration()
     } catch (err) {
-      log.error("Kilo embedder validation error", {
+      log.error("Accure embedder validation error", {
         err: err instanceof Error ? err.message : String(err),
-        location: "KiloEmbedder:validateConfiguration",
+        location: "AccureEmbedder:validateConfiguration",
       })
       throw err
     }
   }
 
   get embedderInfo(): EmbedderInfo {
-    return { name: "kilo" }
+    return { name: "accure" }
   }
 }

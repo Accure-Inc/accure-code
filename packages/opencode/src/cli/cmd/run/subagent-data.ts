@@ -1,4 +1,4 @@
-import type { Message, Part, PermissionRequest, QuestionRequest, ToolPart } from "@kilocode/sdk/v2"
+import type { Message, Part, PermissionRequest, QuestionRequest, ToolPart } from "@accurecode/sdk/v2"
 import type { Event } from "./event"
 import * as Locale from "@/util/locale"
 import {

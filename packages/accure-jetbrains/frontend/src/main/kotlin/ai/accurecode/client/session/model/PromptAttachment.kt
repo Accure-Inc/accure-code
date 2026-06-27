@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.model
+package ai.accurecode.client.session.model
 
-import ai.kilocode.rpc.dto.PromptPartDto
+import ai.accurecode.rpc.dto.PromptPartDto
 import java.awt.Image
 import java.awt.image.BufferedImage
 import java.awt.image.MultiResolutionImage

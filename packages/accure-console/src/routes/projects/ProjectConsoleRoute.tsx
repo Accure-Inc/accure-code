@@ -1,14 +1,14 @@
 import { A, useLocation, useParams } from "@solidjs/router"
 import { createEffect, createMemo, createResource, createSignal, For, on, onCleanup, onMount, Show } from "solid-js"
-import { Badge } from "@kilocode/accure-web-ui/badge"
-import { Button } from "@kilocode/accure-web-ui/button"
-import { Card } from "@kilocode/accure-web-ui/card"
-import { Icon } from "@kilocode/accure-web-ui/icon"
-import { ResizeHandle } from "@kilocode/accure-web-ui/resize-handle"
-import { Spinner } from "@kilocode/accure-web-ui/spinner"
-import { File } from "@kilocode/accure-web-ui/file"
-import { FileComponentProvider } from "@kilocode/accure-web-ui/context/file"
-import { SessionReview, type SessionReviewDiffStyle } from "@kilocode/accure-web-ui/session-review"
+import { Badge } from "@accurecode/accure-web-ui/badge"
+import { Button } from "@accurecode/accure-web-ui/button"
+import { Card } from "@accurecode/accure-web-ui/card"
+import { Icon } from "@accurecode/accure-web-ui/icon"
+import { ResizeHandle } from "@accurecode/accure-web-ui/resize-handle"
+import { Spinner } from "@accurecode/accure-web-ui/spinner"
+import { File } from "@accurecode/accure-web-ui/file"
+import { FileComponentProvider } from "@accurecode/accure-web-ui/context/file"
+import { SessionReview, type SessionReviewDiffStyle } from "@accurecode/accure-web-ui/session-review"
 import { ConfirmDialog } from "../../components/ConfirmDialog"
 import { LoadingScreen } from "../../components/LoadingScreen"
 import { PromptDialog } from "../../components/PromptDialog"
@@ -150,8 +150,10 @@ export function ProjectConsoleRoute() {
   const search = createMemo(() => new URLSearchParams(loc.search))
   const fallback = () => base(search())
   const [url, setUrl] = createSignal(fallback())
-  const [selected, setSelected] = createSignal(window.localStorage.getItem(`kilo.console.${params.project}.dir`) ?? "")
-  const [active, setActive] = createSignal(window.localStorage.getItem(`kilo.console.${params.project}.pty`) ?? "")
+  const [selected, setSelected] = createSignal(
+    window.localStorage.getItem(`accure.console.${params.project}.dir`) ?? "",
+  )
+  const [active, setActive] = createSignal(window.localStorage.getItem(`accure.console.${params.project}.pty`) ?? "")
   const [local, setLocal] = createSignal<ProjectTerminalItem[]>([])
   const [openFiles, setOpenFiles] = createSignal<string[]>([])
   const [details, setDetails] = createSignal<Record<string, ProjectDiffItem>>({})
@@ -268,7 +270,7 @@ export function ProjectConsoleRoute() {
   }
 
   function labelKey(dir: string) {
-    return `kilo.console.${project()}.worktree.${encodeURIComponent(dir)}.label`
+    return `accure.console.${project()}.worktree.${encodeURIComponent(dir)}.label`
   }
 
   function displayLabel(item: Context) {
@@ -337,12 +339,12 @@ export function ProjectConsoleRoute() {
   }
 
   function remember(dir: string, pty?: string) {
-    window.localStorage.setItem(`kilo.console.${project()}.dir`, dir)
+    window.localStorage.setItem(`accure.console.${project()}.dir`, dir)
     if (pty) {
-      window.localStorage.setItem(`kilo.console.${project()}.pty`, pty)
+      window.localStorage.setItem(`accure.console.${project()}.pty`, pty)
       return
     }
-    window.localStorage.removeItem(`kilo.console.${project()}.pty`)
+    window.localStorage.removeItem(`accure.console.${project()}.pty`)
   }
 
   function select(item: Context) {
@@ -448,7 +450,7 @@ export function ProjectConsoleRoute() {
     run("Creating worktree", async () => {
       const next = await createProjectWorktree(input, name)
       setSelected(next.directory)
-      window.localStorage.setItem(`kilo.console.${project()}.dir`, next.directory)
+      window.localStorage.setItem(`accure.console.${project()}.dir`, next.directory)
     })
   }
 
@@ -456,7 +458,7 @@ export function ProjectConsoleRoute() {
     const base = query()
     if (!base || !item) return
     const input = { url: base.url, dir: item.dir, scope: "project" as const }
-    const label = `Kilo ${terminalsFor(item.dir).length + 1}`
+    const label = `Accure ${terminalsFor(item.dir).length + 1}`
     setSaving("Creating session")
     setFailure(undefined)
     void createProjectPty(input, item.dir, label)
@@ -476,7 +478,7 @@ export function ProjectConsoleRoute() {
     setLocal((rows) => rows.filter((row) => row.id !== id))
     if (active() === id) {
       setActive("")
-      window.localStorage.removeItem(`kilo.console.${project()}.pty`)
+      window.localStorage.removeItem(`accure.console.${project()}.pty`)
     }
   }
 
@@ -931,7 +933,7 @@ export function ProjectConsoleRoute() {
         <Show when={!terminal() && !snap.loading && !snap.error && !failure()}>
           <div class="project-terminal-empty">
             <strong>No terminal session selected</strong>
-            <span>Use + next to a worktree to start Kilo CLI.</span>
+            <span>Use + next to a worktree to start Accure CLI.</span>
           </div>
         </Show>
       </main>

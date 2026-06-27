@@ -1,12 +1,12 @@
-package ai.kilocode.backend.workspace
+package ai.accurecode.backend.workspace
 
-import ai.kilocode.backend.app.KiloAppState
-import ai.kilocode.backend.app.KiloBackendAppService
-import ai.kilocode.backend.workspace.KiloBackendWorkspace
-import ai.kilocode.backend.workspace.KiloWorkspaceState
-import ai.kilocode.backend.testing.FakeCliServer
-import ai.kilocode.backend.testing.MockCliServer
-import ai.kilocode.backend.testing.TestLog
+import ai.accurecode.backend.app.AccureAppState
+import ai.accurecode.backend.app.AccureBackendAppService
+import ai.accurecode.backend.workspace.AccureBackendWorkspace
+import ai.accurecode.backend.workspace.AccureWorkspaceState
+import ai.accurecode.backend.testing.FakeCliServer
+import ai.accurecode.backend.testing.MockCliServer
+import ai.accurecode.backend.testing.TestLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -26,7 +26,7 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class KiloBackendWorkspaceTest {
+class AccureBackendWorkspaceTest {
 
     private val mock = MockCliServer()
     private val log = TestLog()
@@ -38,13 +38,13 @@ class KiloBackendWorkspaceTest {
         mock.close()
     }
 
-    private fun setup(): KiloBackendAppService =
-        KiloBackendAppService.create(scope, FakeCliServer(mock), log)
+    private fun setup(): AccureBackendAppService =
+        AccureBackendAppService.create(scope, FakeCliServer(mock), log)
 
-    private suspend fun ready(app: KiloBackendAppService): KiloBackendWorkspace {
+    private suspend fun ready(app: AccureBackendAppService): AccureBackendWorkspace {
         app.connect()
         withTimeout(10_000) {
-            app.appState.first { it is KiloAppState.Ready }
+            app.appState.first { it is AccureAppState.Ready }
         }
         return app.workspaces.get("/test/project")
     }
@@ -70,10 +70,10 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Ready }
+            ws.state.first { it is AccureWorkspaceState.Ready }
         }
 
-        val state = ws.state.value as KiloWorkspaceState.Ready
+        val state = ws.state.value as AccureWorkspaceState.Ready
         assertEquals(1, state.providers.providers.size)
         assertEquals("anthropic", state.providers.providers[0].id)
     }
@@ -82,7 +82,7 @@ class KiloBackendWorkspaceTest {
     fun `same directory returns same workspace instance`() = runBlocking {
         val app = setup()
         app.connect()
-        withTimeout(10_000) { app.appState.first { it is KiloAppState.Ready } }
+        withTimeout(10_000) { app.appState.first { it is AccureAppState.Ready } }
 
         val ws1 = app.workspaces.get("/test")
         val ws2 = app.workspaces.get("/test")
@@ -93,7 +93,7 @@ class KiloBackendWorkspaceTest {
     fun `different directories return different workspaces`() = runBlocking {
         val app = setup()
         app.connect()
-        withTimeout(10_000) { app.appState.first { it is KiloAppState.Ready } }
+        withTimeout(10_000) { app.appState.first { it is AccureAppState.Ready } }
 
         val ws1 = app.workspaces.get("/project-a")
         val ws2 = app.workspaces.get("/project-b")
@@ -108,13 +108,13 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Ready }
+            ws.state.first { it is AccureWorkspaceState.Ready }
         }
 
         app.dispose()
 
         // Workspace state should be Pending (stopped)
-        assertIs<KiloWorkspaceState.Pending>(ws.state.value)
+        assertIs<AccureWorkspaceState.Pending>(ws.state.value)
 
         // Manager should throw since app is disconnected
         assertFailsWith<IllegalStateException> {
@@ -135,10 +135,10 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Ready }
+            ws.state.first { it is AccureWorkspaceState.Ready }
         }
 
-        val state = ws.state.value as KiloWorkspaceState.Ready
+        val state = ws.state.value as AccureWorkspaceState.Ready
         assertEquals(1, state.providers.providers.size)
         assertEquals(listOf("anthropic"), state.providers.connected)
         assertEquals(1, state.agents.agents.size)
@@ -153,16 +153,16 @@ class KiloBackendWorkspaceTest {
     fun `workspace reaches Ready after creation`() = runBlocking {
         val app = setup()
         app.connect()
-        withTimeout(10_000) { app.appState.first { it is KiloAppState.Ready } }
+        withTimeout(10_000) { app.appState.first { it is AccureAppState.Ready } }
 
         // get() creates workspace and starts loading immediately
         val ws = app.workspaces.get("/test")
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Ready }
+            ws.state.first { it is AccureWorkspaceState.Ready }
         }
 
-        assertIs<KiloWorkspaceState.Ready>(ws.state.value)
+        assertIs<AccureWorkspaceState.Ready>(ws.state.value)
     }
 
     // ------ Error handling ------
@@ -174,10 +174,10 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Error }
+            ws.state.first { it is AccureWorkspaceState.Error }
         }
 
-        val err = ws.state.value as KiloWorkspaceState.Error
+        val err = ws.state.value as AccureWorkspaceState.Error
         assertTrue(err.message.contains("providers"))
         assertTrue(err.errors.any { it.resource == "providers" })
         assertTrue(log.messages.any { it.contains("Workspace error [/test/project]: Failed to load:") && it.contains("providers") })
@@ -190,10 +190,10 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Error }
+            ws.state.first { it is AccureWorkspaceState.Error }
         }
 
-        val err = ws.state.value as KiloWorkspaceState.Error
+        val err = ws.state.value as AccureWorkspaceState.Error
         val detail = err.errors.single { it.resource == "providers" }.detail
         assertTrue(detail?.isNotBlank() == true)
     }
@@ -205,10 +205,10 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Error }
+            ws.state.first { it is AccureWorkspaceState.Error }
         }
 
-        val err = ws.state.value as KiloWorkspaceState.Error
+        val err = ws.state.value as AccureWorkspaceState.Error
         assertTrue(err.message.contains("agents"))
     }
 
@@ -219,10 +219,10 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Error }
+            ws.state.first { it is AccureWorkspaceState.Error }
         }
 
-        val err = ws.state.value as KiloWorkspaceState.Error
+        val err = ws.state.value as AccureWorkspaceState.Error
         assertTrue(err.message.contains("commands"))
     }
 
@@ -233,10 +233,10 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Error }
+            ws.state.first { it is AccureWorkspaceState.Error }
         }
 
-        val err = ws.state.value as KiloWorkspaceState.Error
+        val err = ws.state.value as AccureWorkspaceState.Error
         assertTrue(err.message.contains("skills"))
     }
 
@@ -248,10 +248,10 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Error }
+            ws.state.first { it is AccureWorkspaceState.Error }
         }
 
-        val err = ws.state.value as KiloWorkspaceState.Error
+        val err = ws.state.value as AccureWorkspaceState.Error
         assertTrue(err.message.contains("providers") || err.message.contains("skills"))
         assertTrue(err.errors.any { it.resource == "providers" } || err.errors.any { it.resource == "skills" })
     }
@@ -267,14 +267,14 @@ class KiloBackendWorkspaceTest {
         ws.reload()
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Ready }
+            ws.state.first { it is AccureWorkspaceState.Ready }
         }
 
-        assertIs<KiloWorkspaceState.Ready>(ws.state.value)
+        assertIs<AccureWorkspaceState.Ready>(ws.state.value)
     }
 
     // ------ Data mapping ------
-    // Detailed provider/command/path parsing correctness is covered in KiloCliDataParserTest.
+    // Detailed provider/command/path parsing correctness is covered in AccureCliDataParserTest.
     // These integration tests verify end-to-end data flow: server → workspace state.
 
     @Test
@@ -284,10 +284,10 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Ready }
+            ws.state.first { it is AccureWorkspaceState.Ready }
         }
 
-        val state = ws.state.value as KiloWorkspaceState.Ready
+        val state = ws.state.value as AccureWorkspaceState.Ready
         assertEquals(1, state.providers.providers.size)
         assertEquals("anthropic", state.providers.providers[0].id)
         assertNotNull(state.providers.providers[0].models["claude-4"])
@@ -305,10 +305,10 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Ready }
+            ws.state.first { it is AccureWorkspaceState.Ready }
         }
 
-        val state = ws.state.value as KiloWorkspaceState.Ready
+        val state = ws.state.value as AccureWorkspaceState.Ready
         assertEquals(1, state.agents.agents.size)
         assertEquals("code", state.agents.agents[0].name)
         assertEquals(3, state.agents.all.size)
@@ -325,10 +325,10 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Ready }
+            ws.state.first { it is AccureWorkspaceState.Ready }
         }
 
-        val state = ws.state.value as KiloWorkspaceState.Ready
+        val state = ws.state.value as AccureWorkspaceState.Ready
         assertEquals(2, state.commands.size)
         assertEquals("command", state.commands[0].source)
         assertEquals("mcp", state.commands[1].source)
@@ -341,10 +341,10 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Ready }
+            ws.state.first { it is AccureWorkspaceState.Ready }
         }
 
-        val state = ws.state.value as KiloWorkspaceState.Ready
+        val state = ws.state.value as AccureWorkspaceState.Ready
         assertTrue(state.providers.providers.isEmpty())
         assertTrue(state.agents.all.isEmpty())
         assertTrue(state.commands.isEmpty())
@@ -384,7 +384,7 @@ class KiloBackendWorkspaceTest {
     fun `concurrent get for same directory returns same instance`() = runBlocking {
         val app = setup()
         app.connect()
-        withTimeout(10_000) { app.appState.first { it is KiloAppState.Ready } }
+        withTimeout(10_000) { app.appState.first { it is AccureAppState.Ready } }
 
         // Launch many concurrent get() calls for the same directory
         val results = (1..10).map {
@@ -409,7 +409,7 @@ class KiloBackendWorkspaceTest {
         val ws = ready(app)
 
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Ready }
+            ws.state.first { it is AccureWorkspaceState.Ready }
         }
 
         // Fire rapid reloads — simulates rapid SSE disposed events
@@ -419,15 +419,15 @@ class KiloBackendWorkspaceTest {
         withTimeout(15_000) {
             while (true) {
                 val state = ws.state.value
-                if (state is KiloWorkspaceState.Ready) {
+                if (state is AccureWorkspaceState.Ready) {
                     delay(300)
-                    if (ws.state.value is KiloWorkspaceState.Ready) break
+                    if (ws.state.value is AccureWorkspaceState.Ready) break
                 }
                 delay(100)
             }
         }
 
-        val state = ws.state.value as KiloWorkspaceState.Ready
+        val state = ws.state.value as AccureWorkspaceState.Ready
         assertEquals(1, state.providers.providers.size)
         assertEquals(1, state.agents.agents.size)
     }
@@ -466,9 +466,9 @@ class KiloBackendWorkspaceTest {
             // App may briefly leave Ready during reload
             while (true) {
                 val state = app.appState.value
-                if (state is KiloAppState.Ready) {
+                if (state is AccureAppState.Ready) {
                     delay(300)
-                    if (app.appState.value is KiloAppState.Ready) break
+                    if (app.appState.value is AccureAppState.Ready) break
                 }
                 delay(100)
             }
@@ -477,10 +477,10 @@ class KiloBackendWorkspaceTest {
         // Get a fresh workspace — old one was stopped during reload
         val ws = app.workspaces.get("/test/project")
         withTimeout(15_000) {
-            ws.state.first { it is KiloWorkspaceState.Ready }
+            ws.state.first { it is AccureWorkspaceState.Ready }
         }
 
-        val state = ws.state.value as KiloWorkspaceState.Ready
+        val state = ws.state.value as AccureWorkspaceState.Ready
         assertEquals("openai", state.providers.providers[0].id)
     }
 

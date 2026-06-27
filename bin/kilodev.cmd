@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 set "dir=%~dp0.."
-set "KILO_DEV_REPO=%dir%"
+set "ACCURECODE_DEV_REPO=%dir%"
 rem Find the first non-flag arg. If there isn't one, the user is launching the
 rem TUI, so point it at the caller's directory via --project. Otherwise
 rem forward untouched so subcommands don't collide with --project.

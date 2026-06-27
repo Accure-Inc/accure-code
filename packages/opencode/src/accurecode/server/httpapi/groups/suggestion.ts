@@ -1,6 +1,6 @@
 import { Schema } from "effect"
 import { HttpApi, HttpApiEndpoint, HttpApiError, HttpApiGroup, OpenApi } from "effect/unstable/httpapi"
-import { Suggestion } from "@/kilocode/suggestion"
+import { Suggestion } from "@/accurecode/suggestion"
 import { Authorization } from "@/server/routes/instance/httpapi/middleware/authorization"
 import { InstanceContextMiddleware } from "@/server/routes/instance/httpapi/middleware/instance-context"
 import {
@@ -68,7 +68,7 @@ export const SuggestionApi = HttpApi.make("suggestion")
       .annotateMerge(
         OpenApi.annotations({
           title: "suggestion",
-          description: "Kilo suggestion routes.",
+          description: "Accure suggestion routes.",
         }),
       )
       .middleware(InstanceContextMiddleware)
@@ -77,8 +77,8 @@ export const SuggestionApi = HttpApi.make("suggestion")
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "accure HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Accure HttpApi surface.",
     }),
   )

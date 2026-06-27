@@ -1,10 +1,10 @@
 ---
-title: "Using Moonshot AI (Kimi) with Kilo Code"
-description: "Connect Moonshot's Kimi models to Kilo Code. Setup guide for getting an API key and selecting models in VS Code and the CLI."
+title: "Using Moonshot AI (Kimi) with Accure Code"
+description: "Connect Moonshot's Kimi models to Accure Code. Setup guide for getting an API key and selecting models in VS Code and the CLI."
 sidebar_label: Moonshot.ai
 ---
 
-# Using Moonshot.ai With Kilo Code
+# Using Moonshot.ai With Accure Code
 
 Moonshot.ai is a Chinese AI company known for their **Kimi** models featuring ultra-long context windows (up to 200K tokens) and advanced reasoning capabilities. Their K2-Thinking model delivers extended thinking and problem-solving abilities.
 
@@ -14,15 +14,15 @@ Moonshot.ai is a Chinese AI company known for their **Kimi** models featuring ul
 
 1. **Sign Up/Sign In:** Go to the [Moonshot.ai Platform](https://platform.moonshot.cn/). Create an account or sign in.
 2. **Navigate to API Keys:** Access the API Keys section in your account dashboard.
-3. **Create a Key:** Click to generate a new API key. Give it a descriptive name (e.g., "Kilo Code").
+3. **Create a Key:** Click to generate a new API key. Give it a descriptive name (e.g., "Accure Code").
 4. **Copy the Key:** **Important:** Copy the API key _immediately_. Store it securely.
 
-## Configuration in Kilo Code
+## Configuration in Accure Code
 
 {% tabs %}
 {% tab label="VSCode (Legacy)" %}
 
-1. **Open Kilo Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Kilo Code panel.
+1. **Open Accure Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Accure Code panel.
 2. **Select Provider:** Choose "Moonshot.ai" from the "API Provider" dropdown.
 3. **Enter API Key:** Paste your Moonshot.ai API key into the "Moonshot.ai API Key" field.
 4. **Select Model:** Choose your desired model from the "Model" dropdown.
@@ -32,12 +32,12 @@ Moonshot.ai is a Chinese AI company known for their **Kimi** models featuring ul
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add Moonshot.ai and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `accure.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `accure.json` config file:
 
 **Environment variable:**
 
@@ -45,7 +45,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export MOONSHOT_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/accure/accure.json` or `./accure.json`):
 
 ```jsonc
 {
@@ -72,6 +72,6 @@ Then set your default model:
 
 - **Ultra-Long Context:** Kimi models excel at handling large codebases and complex projects with their extended context windows.
 - **Reasoning Capabilities:** The K2-Thinking variant provides enhanced problem-solving through extended reasoning chains.
-- **Kimi-specific prompting:** Kilo automatically uses a Kimi-tuned system prompt for model IDs containing `kimi`; no extra configuration is required.
+- **Kimi-specific prompting:** Accure automatically uses a Kimi-tuned system prompt for model IDs containing `kimi`; no extra configuration is required.
 - **Language Support:** Kimi models have strong support for both English and Chinese languages.
 - **Pricing:** Refer to the Moonshot.ai platform for current pricing information on different models.

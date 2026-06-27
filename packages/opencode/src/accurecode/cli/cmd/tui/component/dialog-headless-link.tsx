@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { TextAttributes } from "@opentui/core"
 import { useTheme } from "@tui/context/theme"
 import { useDialog, type DialogContext } from "@tui/ui/dialog"
@@ -13,9 +13,7 @@ export function DialogHeadlessLink(props: DialogHeadlessLinkProps) {
   const { theme } = useTheme()
 
   useBindings(() => ({
-    bindings: [
-      { key: "return", desc: "Close dialog", group: "Dialog", cmd: () => dialog.clear() },
-    ],
+    bindings: [{ key: "return", desc: "Close dialog", group: "Dialog", cmd: () => dialog.clear() }],
   }))
 
   return (

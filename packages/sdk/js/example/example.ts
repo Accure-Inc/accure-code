@@ -1,8 +1,8 @@
-import { createKiloClient, createKiloServer } from "@kilocode/sdk"
+import { createAccureClient, createAccureServer } from "@accurecode/sdk"
 import { pathToFileURL } from "bun"
 
-const server = await createKiloServer()
-const client = createKiloClient({ baseUrl: server.url })
+const server = await createAccureServer()
+const client = createAccureClient({ baseUrl: server.url })
 
 const input = await Array.fromAsync(new Bun.Glob("packages/core/*.ts").scan())
 

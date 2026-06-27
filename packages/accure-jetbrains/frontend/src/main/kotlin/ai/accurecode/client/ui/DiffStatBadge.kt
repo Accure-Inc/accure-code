@@ -1,4 +1,4 @@
-package ai.kilocode.client.ui
+package ai.accurecode.client.ui
 
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
@@ -48,16 +48,16 @@ internal class DiffStatBadge(
 }
 
 private fun backgroundColor(): Color = JBColor.namedColor(
-    "Kilo.DiffStat.background",
+    "Accure.DiffStat.background",
     JBColor(Color(0x26, 0x26, 0x26), Color(0x26, 0x26, 0x26)),
 )
 
 private fun removedColor(): Color = JBColor.namedColor(
-    "Kilo.DiffStat.removedForeground",
+    "Accure.DiffStat.removedForeground",
     JBColor(Color(0xdb, 0x58, 0x66), Color(0xff, 0x6b, 0x7a)),
 )
 
 private fun addedColor(): Color = JBColor.namedColor(
-    "Kilo.DiffStat.addedForeground",
+    "Accure.DiffStat.addedForeground",
     JBColor(Color(0x1f, 0x9d, 0x66), Color(0x35, 0xd4, 0x9a)),
 )

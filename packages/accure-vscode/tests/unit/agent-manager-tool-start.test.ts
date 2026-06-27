@@ -1,14 +1,14 @@
 import { describe, expect, it, mock } from "bun:test"
 import { parseToolRequest, startFromTool, type ToolDeps, type ToolRequest } from "../../src/agent-manager/tool-start"
 import type { CreateWorktreeResult } from "../../src/agent-manager/WorktreeManager"
-import type { Session } from "@kilocode/sdk/v2/client"
+import type { Session } from "@accurecode/sdk/v2/client"
 
 function session(id: string): Session {
   return { id, title: id, createdAt: "", updatedAt: "" } as Session
 }
 
 function result(path: string): CreateWorktreeResult {
-  return { path, branch: "kilo/test", parentBranch: "main", startPointSource: "fallback" } as CreateWorktreeResult
+  return { path, branch: "accure/test", parentBranch: "main", startPointSource: "fallback" } as CreateWorktreeResult
 }
 
 function deps(overrides: Partial<ToolDeps> = {}): ToolDeps {
@@ -30,7 +30,10 @@ function deps(overrides: Partial<ToolDeps> = {}): ToolDeps {
     getPanel: () => panel as never,
     openPanel: mock(() => calls.push("openPanel")),
     waitReady: mock(async () => calls.push("waitReady")),
-    createWorktree: mock(async () => ({ worktree: { id: "wt-1" }, result: result("/repo/.kilo/worktrees/wt-1") })),
+    createWorktree: mock(async () => ({
+      worktree: { id: "wt-1" },
+      result: result("/repo/.accurecode/worktrees/wt-1"),
+    })),
     cleanupWorktree: mock(async () => calls.push("cleanupWorktree")),
     setup: mock(async () => calls.push("setup")),
     createSessionInWorktree: mock(async () => session("s-wt")),
@@ -102,7 +105,7 @@ describe("agent manager tool start", () => {
     )
     expect(c.setup).toHaveBeenCalled()
     expect(c.createSessionInWorktree).toHaveBeenCalled()
-    expect(c.registerWorktreeSession).toHaveBeenCalledWith("s-wt", "/repo/.kilo/worktrees/wt-1")
+    expect(c.registerWorktreeSession).toHaveBeenCalledWith("s-wt", "/repo/.accurecode/worktrees/wt-1")
     expect(c.notifyReady).toHaveBeenCalled()
   })
 
@@ -179,7 +182,7 @@ describe("agent manager tool start", () => {
       createWorktree: mock(async () => {
         pending.resolve()
         await resume.promise
-        return { worktree: { id: "wt-1" }, result: result("/repo/.kilo/worktrees/wt-1") }
+        return { worktree: { id: "wt-1" }, result: result("/repo/.accurecode/worktrees/wt-1") }
       }),
     })
     const req: ToolRequest = {

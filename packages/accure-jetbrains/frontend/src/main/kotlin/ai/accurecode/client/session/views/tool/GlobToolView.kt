@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.views.tool
+package ai.accurecode.client.session.views.tool
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.ui.selection.SessionSelection
 
 /** Renders glob calls with a stacked, collapsible search-result header. */
 class GlobToolView(
@@ -17,7 +17,7 @@ class GlobToolView(
     }
 
     override fun toolIcon(tool: Tool) = icon(tool)
-    override fun toolTitle(tool: Tool) = KiloBundle.message("session.part.tool.glob")
+    override fun toolTitle(tool: Tool) = AccureBundle.message("session.part.tool.glob")
     override fun targets(tool: Tool, repo: String?) = listOf(globDirectory(tool, repo), globPattern(tool)).filter { it.isNotBlank() }
     override fun viewName() = "GlobToolView"
 }

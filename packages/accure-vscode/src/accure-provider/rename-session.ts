@@ -1,8 +1,8 @@
-import type { KiloClient, Session } from "@kilocode/sdk/v2/client"
+import type { AccureClient, Session } from "@accurecode/sdk/v2/client"
 import { parseSessionTitle } from "../shared/session-title"
 
 export async function renameSession(input: {
-  client: KiloClient | null
+  client: AccureClient | null
   sessionID: string
   title: unknown
   directory: string

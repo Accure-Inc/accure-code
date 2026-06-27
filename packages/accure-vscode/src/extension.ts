@@ -1,8 +1,8 @@
 import * as vscode from "vscode"
-import { KiloProvider } from "./KiloProvider"
+import { AccureProvider } from "./AccureProvider"
 import { AgentManagerProvider } from "./agent-manager/AgentManagerProvider"
 import { VscodeHost } from "./agent-manager/vscode-host"
-import { KiloClawProvider } from "./kiloclaw/KiloClawProvider"
+import { AccureClawProvider } from "./accureclaw/AccureClawProvider"
 import { DiffViewerProvider } from "./diff/DiffViewerProvider"
 import { DiffSourceCatalog } from "./diff/sources/catalog"
 import { DiffVirtualProvider } from "./DiffVirtualProvider"
@@ -10,7 +10,7 @@ import { SettingsEditorProvider } from "./SettingsEditorProvider"
 import { MarketplacePanelProvider } from "./MarketplacePanelProvider"
 import { SubAgentViewerProvider } from "./SubAgentViewerProvider"
 import { EXTENSION_DISPLAY_NAME } from "./constants"
-import { KiloConnectionService } from "./services/cli-backend"
+import { AccureConnectionService } from "./services/cli-backend"
 import { registerAutocompleteProvider } from "./services/autocomplete"
 import { ensureBackendForAutocomplete } from "./services/autocomplete/ensure-backend"
 import { AutocompleteServiceManager } from "./services/autocomplete/AutocompleteServiceManager"
@@ -18,7 +18,7 @@ import { AttentionService } from "./services/attention"
 import { BrowserAutomationService } from "./services/browser-automation"
 import { TelemetryEventName, TelemetryProxy } from "./services/telemetry"
 import { registerCommitMessageService } from "./services/commit-message"
-import { registerCodeActions, registerTerminalActions, KiloCodeActionProvider } from "./services/code-actions"
+import { registerCodeActions, registerTerminalActions, AccureCodeActionProvider } from "./services/code-actions"
 import { registerToggleAutoApprove } from "./commands/toggle-auto-approve"
 import { registerHeapSnapshot } from "./commands/heap-snapshot"
 import { RemoteStatusService } from "./services/RemoteStatusService"
@@ -27,7 +27,7 @@ import { markWorkspace } from "./util/spotlight"
 let agentManager: AgentManagerProvider | undefined
 let shuttingDown = false
 
-const RESTORE_KEY = "kilo.workbench.restore"
+const RESTORE_KEY = "accure.workbench.restore"
 
 type RestoreState = {
   agentManager?: boolean
@@ -39,7 +39,7 @@ const panelTitleHandler = (panel: vscode.WebviewPanel) => (title: string) => {
 
 // Activated via "onStartupFinished" and "onUri" (package.json) so that commands, code actions,
 // keybindings, autocomplete, commit-message generation, and URI deep links all work immediately —
-// without requiring the user to open a Kilo sidebar or panel first. The CLI backend is NOT spawned here;
+// without requiring the user to open a Accure sidebar or panel first. The CLI backend is NOT spawned here;
 // it starts lazily when a webview connects or when ensureBackendForAutocomplete() triggers it.
 export function activate(context: vscode.ExtensionContext) {
   console.log("Accure Code extension is now active")
@@ -48,7 +48,7 @@ export function activate(context: vscode.ExtensionContext) {
   const telemetry = TelemetryProxy.getInstance()
 
   // Create shared connection service (one server for all webviews)
-  const connectionService = new KiloConnectionService(context)
+  const connectionService = new AccureConnectionService(context)
   const attention = new AttentionService(connectionService)
   let restore = context.workspaceState.get<RestoreState>(RESTORE_KEY) ?? {}
   const remember = (patch: RestoreState) => {
@@ -76,15 +76,15 @@ export function activate(context: vscode.ExtensionContext) {
       if (config) {
         telemetry.configure(config.baseUrl, config.password)
         // Sync the CLI's PostHog client with the current consent state. The
-        // CLI reads KILO_TELEMETRY_LEVEL once at spawn, so without this call
+        // CLI reads ACCURECODE_TELEMETRY_LEVEL once at spawn, so without this call
         // a fresh CLI started while VS Code telemetry was off would stay
         // opted out for the rest of the session.
         telemetry.setEnabled(vscode.env.isTelemetryEnabled)
       }
       try {
         remoteService.setClient(connectionService.getClient())
-        console.log("[Kilo New] CLI connected, calling remoteService.refresh()")
-        remoteService.refresh().catch((err) => console.warn("[Kilo New] initial remote refresh failed:", err))
+        console.log("[Accure New] CLI connected, calling remoteService.refresh()")
+        remoteService.refresh().catch((err) => console.warn("[Accure New] initial remote refresh failed:", err))
       } catch {
         remoteService.setClient(null)
       }
@@ -107,14 +107,14 @@ export function activate(context: vscode.ExtensionContext) {
   ensureBackendForAutocomplete(connectionService)
 
   for (const folder of vscode.workspace.workspaceFolders ?? []) {
-    void markWorkspace(folder.uri.fsPath, (msg) => console.warn(`[Kilo New] ${msg}`))
+    void markWorkspace(folder.uri.fsPath, (msg) => console.warn(`[Accure New] ${msg}`))
   }
 
   // Track all open tab panel providers so toolbar button commands can target them.
   // NOTE: The editor/title toolbar for tab panels intentionally omits Agent Manager
   // and Marketplace buttons (unlike the sidebar). Too many icons causes VS Code to
   // collapse them into a "..." overflow menu, hiding important buttons like Settings.
-  const tabPanels = new Map<vscode.WebviewPanel, KiloProvider>()
+  const tabPanels = new Map<vscode.WebviewPanel, AccureProvider>()
   const activeTabProvider = () => {
     for (const [panel, p] of tabPanels) {
       if (panel.active) return p
@@ -123,13 +123,13 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   // Create the provider with shared service
-  const provider = new KiloProvider(context.extensionUri, connectionService, context)
+  const provider = new AccureProvider(context.extensionUri, connectionService, context)
   provider.setRemoteService(remoteService)
 
   // Register the webview view provider for the sidebar.
   // retainContextWhenHidden keeps the webview alive when switching to other sidebar panels.
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(KiloProvider.viewType, provider, {
+    vscode.window.registerWebviewViewProvider(AccureProvider.viewType, provider, {
       webviewOptions: { retainContextWhenHidden: true },
     }),
   )
@@ -142,9 +142,9 @@ export function activate(context: vscode.ExtensionContext) {
   if (process.platform === "darwin") skip.push("accure-code.agentManager.runScript")
   ensureCommandsSkipShell(skip)
 
-  // Create KiloClaw chat provider for editor panel
-  const kiloClawProvider = new KiloClawProvider(context.extensionUri, connectionService)
-  context.subscriptions.push(kiloClawProvider)
+  // Create AccureClaw chat provider for editor panel
+  const accureClawProvider = new AccureClawProvider(context.extensionUri, connectionService)
+  context.subscriptions.push(accureClawProvider)
 
   // Create Agent Manager provider for editor panel
   const agentManagerHost = new VscodeHost(context.extensionUri, connectionService, context, remoteService)
@@ -202,11 +202,11 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   )
 
-  // Register serializer so KiloClaw panel restores when VS Code restarts
+  // Register serializer so AccureClaw panel restores when VS Code restarts
   context.subscriptions.push(
-    vscode.window.registerWebviewPanelSerializer(KiloClawProvider.viewType, {
+    vscode.window.registerWebviewPanelSerializer(AccureClawProvider.viewType, {
       deserializeWebviewPanel(panel: vscode.WebviewPanel) {
-        kiloClawProvider.restorePanel(panel)
+        accureClawProvider.restorePanel(panel)
         return Promise.resolve()
       },
     }),
@@ -216,7 +216,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.window.registerWebviewPanelSerializer("accure-code.TabPanel", {
       deserializeWebviewPanel(panel: vscode.WebviewPanel) {
-        const tabProvider = new KiloProvider(context.extensionUri, connectionService, context, {
+        const tabProvider = new AccureProvider(context.extensionUri, connectionService, context, {
           tabTitle: panelTitleHandler(panel),
         })
         tabProvider.setRemoteService(remoteService)
@@ -232,7 +232,7 @@ export function activate(context: vscode.ExtensionContext) {
         tabPanels.set(panel, tabProvider)
         panel.onDidDispose(
           () => {
-            console.log("[Kilo New] Tab panel restored from restart disposed")
+            console.log("[Accure New] Tab panel restored from restart disposed")
             tabPanels.delete(panel)
             tabProvider.dispose()
           },
@@ -333,8 +333,8 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("accure-code.sidebarTitle.agentManagerOpen", () => {
       track("agent_manager", "accure-code.agentManagerOpen")
     }),
-    vscode.commands.registerCommand("accure-code.sidebarTitle.kiloClawOpen", () => {
-      track("kiloclaw", "accure-code.kiloClawOpen")
+    vscode.commands.registerCommand("accure-code.sidebarTitle.accureClawOpen", () => {
+      track("accureclaw", "accure-code.accureClawOpen")
     }),
     vscode.commands.registerCommand("accure-code.sidebarTitle.marketplaceButtonClicked", () => {
       track("marketplace", "accure-code.marketplaceButtonClicked")
@@ -356,8 +356,8 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("accure-code.marketplaceButtonClicked", (directory?: string | null) => {
       marketplacePanelProvider.openPanel(directory)
     }),
-    vscode.commands.registerCommand("accure-code.kiloClawOpen", () => {
-      kiloClawProvider.openPanel()
+    vscode.commands.registerCommand("accure-code.accureClawOpen", () => {
+      accureClawProvider.openPanel()
     }),
     vscode.commands.registerCommand("accure-code.historyButtonClicked", () => {
       const tab = activeTabProvider()
@@ -401,10 +401,10 @@ export function activate(context: vscode.ExtensionContext) {
       provider.postMessage({ type: "triggerTask", text: `Generate a terminal command: ${input}` })
     }),
     vscode.commands.registerCommand("accure-code.toggleRemote", () => {
-      remoteService.toggle().catch((err) => console.error("[Kilo New] toggleRemote command failed:", err))
+      remoteService.toggle().catch((err) => console.error("[Accure New] toggleRemote command failed:", err))
     }),
     vscode.commands.registerCommand("accure-code.openInTab", () => {
-      return openKiloInNewTab(
+      return openAccureInNewTab(
         context,
         connectionService,
         agentManagerProvider,
@@ -484,27 +484,27 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   )
 
-  // Register URI handler for extension deep links (vscode://accure.accure-code/kilocode/...)
+  // Register URI handler for extension deep links (vscode://accure.accure-code/accurecode/...)
   context.subscriptions.push(
     vscode.window.registerUriHandler({
       async handleUri(uri: vscode.Uri) {
-        const sessionMatch = uri.path.match(/^\/kilocode\/s\/([a-zA-Z0-9_-]+)$/)
+        const sessionMatch = uri.path.match(/^\/accurecode\/s\/([a-zA-Z0-9_-]+)$/)
         const sessionId = sessionMatch?.[1]
         if (sessionId) {
-          console.log("[Kilo New] URI handler: opening cloud session:", sessionId)
-          await vscode.commands.executeCommand(`${KiloProvider.viewType}.focus`)
+          console.log("[Accure New] URI handler: opening cloud session:", sessionId)
+          await vscode.commands.executeCommand(`${AccureProvider.viewType}.focus`)
           provider.openCloudSession(sessionId)
           return
         }
 
-        if (uri.path !== "/kilocode/switch" && uri.path !== "/kilocode/model") return
+        if (uri.path !== "/accurecode/switch" && uri.path !== "/accurecode/model") return
         const params = new URLSearchParams(uri.query)
         const modelID = params.get("model") || undefined
         const agent = params.get("agent") || undefined
         if (!modelID && !agent) return
-        console.log("[Kilo New] URI handler: applying linked Kilo selection:", { modelID, agent })
-        await vscode.commands.executeCommand(`${KiloProvider.viewType}.focus`)
-        provider.selectKiloModel(modelID, agent)
+        console.log("[Accure New] URI handler: applying linked Accure selection:", { modelID, agent })
+        await vscode.commands.executeCommand(`${AccureProvider.viewType}.focus`)
+        provider.selectAccureModel(modelID, agent)
       },
     }),
   )
@@ -525,8 +525,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.languages.registerCodeActionsProvider(
       { scheme: "file" },
-      new KiloCodeActionProvider(),
-      KiloCodeActionProvider.metadata,
+      new AccureCodeActionProvider(),
+      AccureCodeActionProvider.metadata,
     ),
   )
 
@@ -549,11 +549,11 @@ export async function deactivate() {
   TelemetryProxy.getInstance().shutdown()
 }
 
-async function openKiloInNewTab(
+async function openAccureInNewTab(
   context: vscode.ExtensionContext,
-  connectionService: KiloConnectionService,
+  connectionService: AccureConnectionService,
   agentManagerProvider: AgentManagerProvider,
-  tabPanels: Map<vscode.WebviewPanel, KiloProvider>,
+  tabPanels: Map<vscode.WebviewPanel, AccureProvider>,
   diffVirtualProvider: DiffVirtualProvider,
   remoteService: RemoteStatusService,
   autoApprove: ReturnType<typeof registerToggleAutoApprove>,
@@ -574,11 +574,11 @@ async function openKiloInNewTab(
   })
 
   panel.iconPath = {
-    light: vscode.Uri.joinPath(context.extensionUri, "assets", "icons", "kilo-light.svg"),
-    dark: vscode.Uri.joinPath(context.extensionUri, "assets", "icons", "kilo-dark.svg"),
+    light: vscode.Uri.joinPath(context.extensionUri, "assets", "icons", "accure-light.svg"),
+    dark: vscode.Uri.joinPath(context.extensionUri, "assets", "icons", "accure-dark.svg"),
   }
 
-  const tabProvider = new KiloProvider(context.extensionUri, connectionService, context, {
+  const tabProvider = new AccureProvider(context.extensionUri, connectionService, context, {
     tabTitle: panelTitleHandler(panel),
   })
   tabProvider.setRemoteService(remoteService)
@@ -600,7 +600,7 @@ async function openKiloInNewTab(
 
   panel.onDidDispose(
     () => {
-      console.log("[Kilo New] Tab panel disposed")
+      console.log("[Accure New] Tab panel disposed")
       tabPanels.delete(panel)
       tabProvider.dispose()
     },

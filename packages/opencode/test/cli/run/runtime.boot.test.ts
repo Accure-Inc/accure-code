@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, mock, spyOn, test } from "bun:test"
-import { KiloClient, type Provider } from "@kilocode/sdk/v2"
+import { AccureClient, type Provider } from "@accurecode/sdk/v2"
 import { TuiConfig, type Resolved } from "@/cli/cmd/tui/config/tui"
 import { formatBindings } from "@/cli/cmd/run/keymap.shared"
 import { resolveDiffStyle, resolveFooterKeybinds, resolveModelInfo } from "@/cli/cmd/run/runtime.boot"
@@ -152,7 +152,7 @@ describe("run runtime boot", () => {
   })
 
   test("prefers configured providers for model selector data", async () => {
-    const sdk = new KiloClient()
+    const sdk = new AccureClient()
     const data: {
       all: Provider[]
       default: Record<string, string>
@@ -220,7 +220,7 @@ describe("run runtime boot", () => {
   })
 
   test("falls back to provider list when configured providers are unavailable", async () => {
-    const sdk = new KiloClient()
+    const sdk = new AccureClient()
     const data: {
       all: Provider[]
       default: Record<string, string>

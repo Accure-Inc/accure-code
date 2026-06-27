@@ -9,24 +9,24 @@ describe("sitemap.xml", () => {
     expect(xml).toContain("</urlset>")
   })
 
-  it("all <loc> values start with https://kilo.ai/docs", () => {
+  it("all <loc> values start with https://accure.ai/docs", () => {
     const xml = buildSitemapXml()
     const locs = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1])
     expect(locs.length).toBeGreaterThan(0)
     for (const loc of locs) {
-      expect(loc).toMatch(/^https:\/\/kilo\.ai\/docs/)
+      expect(loc).toMatch(/^https:\/\/accure\.ai\/docs/)
     }
   })
 
   it("includes the docs root URL", () => {
     const xml = buildSitemapXml()
-    expect(xml).toContain("<loc>https://kilo.ai/docs</loc>")
+    expect(xml).toContain("<loc>https://accure.ai/docs</loc>")
   })
 
   it("includes known pages from the nav", () => {
     const xml = buildSitemapXml()
-    expect(xml).toContain("https://kilo.ai/docs/getting-started/installing")
-    expect(xml).toContain("https://kilo.ai/docs/getting-started")
+    expect(xml).toContain("https://accure.ai/docs/getting-started/installing")
+    expect(xml).toContain("https://accure.ai/docs/getting-started")
   })
 
   it("has no duplicate <loc> entries", () => {

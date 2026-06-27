@@ -1,12 +1,12 @@
 #!/usr/bin/env bun
-// kilocode_change - new file
+// accurecode_change - new file
 
 import { $ } from "bun"
 import { appendFileSync } from "node:fs"
 import semver from "semver"
 import { parseArgs } from "util"
 
-const repo = process.env.GH_REPO ?? process.env.GITHUB_REPOSITORY ?? "Kilo-Org/kilocode"
+const repo = process.env.GH_REPO ?? process.env.GITHUB_REPOSITORY ?? "Accure-Inc/accure-code"
 const { values } = parseArgs({
   args: Bun.argv.slice(2),
   options: {
@@ -72,7 +72,9 @@ if (sha !== commit) throw new Error(`${tag} points at ${sha}, expected ${commit}
 
 const prop = await props()
 if (prop !== ver)
-  throw new Error(`packages/accure-jetbrains/gradle.properties kilo.jetbrains.version is ${prop}, expected ${ver}`)
+  throw new Error(
+    `packages/accure-jetbrains/gradle.properties accurecode.jetbrains.version is ${prop}, expected ${ver}`,
+  )
 
 const changelog = await Bun.file("packages/accure-jetbrains/CHANGELOG.md").text()
 if (!changelog.includes(`## [${ver}]`)) throw new Error(`CHANGELOG.md is missing section for ${ver}`)
@@ -112,8 +114,8 @@ function need(body: string, key: string) {
 
 async function props() {
   const text = await Bun.file("packages/accure-jetbrains/gradle.properties").text()
-  const line = text.split(/\r?\n/).find((item) => item.startsWith("kilo.jetbrains.version="))
+  const line = text.split(/\r?\n/).find((item) => item.startsWith("accurecode.jetbrains.version="))
   const value = line?.split("=", 2)[1]?.trim()
-  if (!value) throw new Error("packages/accure-jetbrains/gradle.properties is missing kilo.jetbrains.version")
+  if (!value) throw new Error("packages/accure-jetbrains/gradle.properties is missing accurecode.jetbrains.version")
   return value
 }

@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import path from "path"
 import { type ParseError, parse, printParseErrorCode } from "jsonc-parser"
 import { Schema } from "effect"
@@ -9,7 +9,7 @@ import { Config } from "@/config/config"
 import { ConfigAgent } from "@/config/agent"
 import { ConfigCommand } from "@/config/command"
 import { JsonError } from "@/config/error"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/accurecode/instance"
 import { Filesystem } from "@/util/filesystem"
 
 export namespace ConfigValidation {
@@ -118,9 +118,9 @@ export namespace ConfigValidation {
 
   function isConfig(filepath: string): boolean {
     if (!path.isAbsolute(filepath)) return ConfigProtection.isRelative(filepath)
-    // Global config dirs (e.g. ~/.config/kilo/)
+    // Global config dirs (e.g. ~/.config/accure/)
     if (ConfigProtection.isAbsolute(filepath)) return true
-    // Project-local config (e.g. /project/.kilo/command/foo.md)
+    // Project-local config (e.g. /project/.accurecode/command/foo.md)
     try {
       const rel = path.relative(Instance.worktree, filepath)
       if (!rel.startsWith("..")) return ConfigProtection.isRelative(rel)

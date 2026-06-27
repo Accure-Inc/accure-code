@@ -64,10 +64,10 @@ async function main() {
   process.env.XDG_CACHE_HOME = path.join(msg.root, "cache")
   process.env.XDG_CONFIG_HOME = path.join(msg.root, "config")
   process.env.XDG_STATE_HOME = path.join(msg.root, "state")
-  process.env.KILO_TEST_HOME = path.join(msg.root, "home")
+  process.env.ACCURECODE_TEST_HOME = path.join(msg.root, "home")
 
   const { Path } = await import("@opencode-ai/core/global")
-  const { refreshCodexAuth } = await import("../../../src/kilocode/provider/codex-refresh")
+  const { refreshCodexAuth } = await import("../../../src/accurecode/provider/codex-refresh")
   const file = path.join(Path.data, "auth.json")
   const read = async () => {
     const data = z.object({ openai: Auth }).parse(JSON.parse(await fs.readFile(file, "utf8")))

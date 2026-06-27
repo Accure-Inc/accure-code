@@ -1,9 +1,9 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Reasoning
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.base.SecondarySessionPartView
+import ai.accurecode.client.session.model.Reasoning
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.base.SecondarySessionPartView
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBUI
@@ -260,13 +260,13 @@ class ReasoningViewTest : BasePlatformTestCase() {
 
     fun `test link opens url callback`() {
         val urls = mutableListOf<String>()
-        val view = ReasoningView(reasoning("p1", done = true, text = "[docs](https://kilocode.ai/docs)"), openUrl = {
+        val view = ReasoningView(reasoning("p1", done = true, text = "[docs](https://accurecode.ai/docs)"), openUrl = {
             urls.add(it)
         })
 
-        view.md.simulateLink("https://kilocode.ai/docs")
+        view.md.simulateLink("https://accurecode.ai/docs")
 
-        assertEquals(listOf("https://kilocode.ai/docs"), urls)
+        assertEquals(listOf("https://accurecode.ai/docs"), urls)
     }
 
     private fun assertEditorSheet(sheet: String, style: SessionEditorStyle) {

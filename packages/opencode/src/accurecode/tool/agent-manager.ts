@@ -1,6 +1,6 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { Bus } from "@/bus"
-import { AgentManagerEvent } from "@/kilocode/agent-manager/event"
+import { AgentManagerEvent } from "@/accurecode/agent-manager/event"
 import { Tool } from "@/tool/tool"
 import { Effect, Schema } from "effect"
 import DESCRIPTION from "./agent-manager.txt"

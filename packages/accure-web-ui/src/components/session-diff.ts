@@ -1,1 +1,1 @@
-export * from "@kilocode/accure-ui/session-diff"
+export * from "@accurecode/accure-ui/session-diff"

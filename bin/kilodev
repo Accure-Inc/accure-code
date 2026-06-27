@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-export KILO_DEV_REPO="$dir"
+export ACCURECODE_DEV_REPO="$dir"
 # Find the first non-flag arg. If there isn't one, the user is launching the
 # TUI, so point it at the caller's directory via the project positional.
 # Otherwise forward args untouched so subcommands (run, dev-alias, ...) don't

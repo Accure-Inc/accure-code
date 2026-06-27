@@ -1,4 +1,4 @@
-package ai.kilocode.backend.migration.session
+package ai.accurecode.backend.migration.session
 
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -8,8 +8,8 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
-import ai.kilocode.backend.migration.LegacyHistoryItem
-import ai.kilocode.backend.migration.LegacyMigrationJson
+import ai.accurecode.backend.migration.LegacyHistoryItem
+import ai.accurecode.backend.migration.LegacyMigrationJson
 
 /**
  * Parses legacy conversation history files into normalized session-import payloads.

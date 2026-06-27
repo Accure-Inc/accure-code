@@ -11,7 +11,7 @@ import { Config } from "../../src/config/config"
 import { RuntimeFlags } from "../../src/effect/runtime-flags"
 import * as CrossSpawnSpawner from "@opencode-ai/core/cross-spawn-spawner"
 import { Global } from "@opencode-ai/core/global"
-import { Instance } from "../../src/kilocode/instance"
+import { Instance } from "../../src/accurecode/instance"
 import { Session } from "../../src/session/session"
 import { MessageV2 } from "../../src/session/message-v2"
 import type { SessionPrompt } from "../../src/session/prompt"
@@ -27,13 +27,13 @@ import { testEffect } from "../lib/effect"
 const state = path.join(Global.Path.state, "model.json")
 
 afterEach(async () => {
-  process.env.KILO_CLIENT = "cli"
+  process.env.ACCURECODE_CLIENT = "cli"
   await fs.rm(state, { force: true }).catch(() => undefined)
   await disposeAllInstances()
 })
 
 beforeAll(async () => {
-  process.env.KILO_CLIENT = "cli"
+  process.env.ACCURECODE_CLIENT = "cli"
   await fs.rm(state, { force: true }).catch(() => undefined)
 })
 
@@ -204,7 +204,7 @@ function run(input: {
   return provideTmpdirInstance(
     () =>
       Effect.gen(function* () {
-        process.env.KILO_CLIENT = input.client ?? "cli"
+        process.env.ACCURECODE_CLIENT = input.client ?? "cli"
         if (input.state) yield* writeState(input.state)
 
         const { chat, assistant } = yield* seed(input.agent, input.variant)
@@ -509,7 +509,7 @@ describe("tool.task model resolution", () => {
     provideTmpdirInstance(
       () =>
         Effect.gen(function* () {
-          process.env.KILO_CLIENT = "cli"
+          process.env.ACCURECODE_CLIENT = "cli"
           yield* Effect.promise(async () => {
             await fs.mkdir(Global.Path.state, { recursive: true })
             await fs.writeFile(state, "{bad json")

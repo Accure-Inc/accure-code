@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { mergeFileSearchItems } from "../../src/kilo-provider/file-search-items"
+import { mergeFileSearchItems } from "../../src/accure-provider/file-search-items"
 
 describe("mergeFileSearchItems", () => {
   it("puts exact folder matches before file matches", () => {
@@ -32,12 +32,12 @@ describe("mergeFileSearchItems", () => {
   it("normalizes Windows separators for matching and output", () => {
     const result = mergeFileSearchItems({
       query: "accure-vscode",
-      files: ["packages\\accure-vscode\\src\\KiloProvider.ts"],
+      files: ["packages\\accure-vscode\\src\\AccureProvider.ts"],
       folders: ["packages\\accure-vscode\\"],
     })
     expect(result).toEqual([
       { path: "packages/accure-vscode/", type: "folder" },
-      { path: "packages/accure-vscode/src/KiloProvider.ts", type: "file" },
+      { path: "packages/accure-vscode/src/AccureProvider.ts", type: "file" },
     ])
   })
 

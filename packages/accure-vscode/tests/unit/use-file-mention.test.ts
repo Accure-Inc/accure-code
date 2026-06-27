@@ -40,11 +40,15 @@ describe("useFileMention", () => {
       })
     }
 
-    expect(mention.mentionResults()).toEqual([{ type: "opened-file", value: "packages/accure-vscode/src/extension.ts" }])
+    expect(mention.mentionResults()).toEqual([
+      { type: "opened-file", value: "packages/accure-vscode/src/extension.ts" },
+    ])
 
     mention.onInput("@ex", 3)
 
-    expect(mention.mentionResults()).toEqual([{ type: "opened-file", value: "packages/accure-vscode/src/extension.ts" }])
+    expect(mention.mentionResults()).toEqual([
+      { type: "opened-file", value: "packages/accure-vscode/src/extension.ts" },
+    ])
 
     dispose.fn?.()
   })

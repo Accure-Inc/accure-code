@@ -9,7 +9,7 @@ import DESCRIPTION from "./glob.txt"
 import * as Tool from "./tool"
 import { Reference } from "@/reference/reference"
 
-// kilocode_change start — support absolute glob patterns (e.g. ~/.config/kilo/command/*.md)
+// accurecode_change start — support absolute glob patterns (e.g. ~/.config/accure/command/*.md)
 function normalize(p: string) {
   return p.replaceAll("\\", "/")
 }
@@ -25,7 +25,7 @@ function split(pattern: string) {
   const next = normalized.slice(cut + 1)
   return { dir, pattern: next || "*" }
 }
-// kilocode_change end
+// accurecode_change end
 
 export const Parameters = Schema.Struct({
   pattern: Schema.String.annotate({ description: "The glob pattern to match files against" }),
@@ -47,7 +47,7 @@ export const GlobTool = Tool.define(
       execute: (params: { pattern: string; path?: string }, ctx: Tool.Context) =>
         Effect.gen(function* () {
           const ins = yield* InstanceState.context
-          const absolute = split(params.pattern) // kilocode_change
+          const absolute = split(params.pattern) // accurecode_change
           yield* ctx.ask({
             permission: "glob",
             patterns: [params.pattern],
@@ -58,10 +58,10 @@ export const GlobTool = Tool.define(
             },
           })
 
-          // kilocode_change start
+          // accurecode_change start
           const base = absolute?.dir ?? params.path ?? ins.directory
           const search = path.isAbsolute(base) ? base : path.resolve(ins.directory, base)
-          // kilocode_change end
+          // accurecode_change end
           yield* reference.ensure(search)
           const info = yield* fs.stat(search).pipe(Effect.catch(() => Effect.succeed(undefined)))
           if (info?.type === "File") {
@@ -74,7 +74,7 @@ export const GlobTool = Tool.define(
 
           const limit = 100
           let truncated = false
-          // kilocode_change start
+          // accurecode_change start
           const files = yield* rg
             .files({ cwd: search, glob: [absolute?.pattern ?? params.pattern], signal: ctx.abort })
             .pipe(
@@ -94,7 +94,7 @@ export const GlobTool = Tool.define(
               Stream.runCollect,
               Effect.map((chunk) => [...chunk]),
             )
-          // kilocode_change end
+          // accurecode_change end
 
           if (files.length > limit) {
             truncated = true

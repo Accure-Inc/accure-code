@@ -93,11 +93,11 @@ export const rpc = {
 
     await InstanceRuntime.disposeAllInstances()
     if (server) await server.stop(true)
-    // kilocode_change start - Clear the Rpc message channel so the worker's event loop can drain and
+    // accurecode_change start - Clear the Rpc message channel so the worker's event loop can drain and
     // exit naturally. Without this, the active onmessage handle keeps the
     // worker alive even after all async work is done.
     onmessage = null
-    // kilocode_change end
+    // accurecode_change end
   },
 }
 

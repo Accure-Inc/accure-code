@@ -12,7 +12,7 @@ export type Event =
   | EventTuiCommandExecute
   | EventTuiToastShow1
   | EventTuiSessionSelect
-  | EventKilocodeAgentManagerStart
+  | EventAccurecodeAgentManagerStart
   | EventIndexingStatus
   | EventIndexingWarning
   | EventServerInstanceDisposed
@@ -50,7 +50,7 @@ export type Event =
   | EventProjectUpdated
   | EventSessionCompacted
   | EventVcsBranchUpdated
-  | EventKiloSessionsRemoteStatusChanged
+  | EventAccureSessionsRemoteStatusChanged
   | EventWorkspaceReady
   | EventWorkspaceFailed
   | EventWorkspaceStatus
@@ -922,7 +922,7 @@ export type GlobalEvent = {
     | EventTuiCommandExecute
     | EventTuiToastShow
     | EventTuiSessionSelect
-    | EventKilocodeAgentManagerStart
+    | EventAccurecodeAgentManagerStart
     | EventIndexingStatus
     | EventIndexingWarning
     | EventServerInstanceDisposed
@@ -960,7 +960,7 @@ export type GlobalEvent = {
     | EventProjectUpdated
     | EventSessionCompacted
     | EventVcsBranchUpdated
-    | EventKiloSessionsRemoteStatusChanged
+    | EventAccureSessionsRemoteStatusChanged
     | EventWorkspaceReady
     | EventWorkspaceFailed
     | EventWorkspaceStatus
@@ -1049,7 +1049,7 @@ export type GlobalEvent = {
 export type LogLevel = "DEBUG" | "INFO" | "WARN" | "ERROR"
 
 /**
- * Server configuration for the kilo serve command
+ * Server configuration for the accure serve command
  */
 export type ServerConfig = {
   port?: number
@@ -1082,7 +1082,7 @@ export type ReferenceConfig = {
 export type IndexingConfig = {
   enabled?: boolean
   provider?:
-    | "kilo"
+    | "accure"
     | "openai"
     | "ollama"
     | "openai-compatible"
@@ -1095,7 +1095,7 @@ export type IndexingConfig = {
   model?: string | null
   dimension?: number | null
   vectorStore?: "lancedb" | "qdrant"
-  kilo?: {
+  accure?: {
     apiKey?: string
     baseUrl?: string
     organizationId?: string
@@ -1411,7 +1411,7 @@ export type Config = {
   indexing?: IndexingConfig
   console?: {
     /**
-     * Width of the Kilo Console project context sidebar in pixels
+     * Width of the Accure Console project context sidebar in pixels
      */
     context_sidebar_width?: number
     diff_style?: "unified" | "split"
@@ -2372,7 +2372,7 @@ export type TuiKeybindListResponse = {
   keybinds: Array<TuiKeybindInfo>
 }
 
-export type KiloEmbeddingModelCatalog = {
+export type AccureEmbeddingModelCatalog = {
   defaultModel: string
   models: Array<{
     id: string
@@ -2394,7 +2394,7 @@ export type EffectHttpApiErrorServiceUnavailable = {
   _tag: "ServiceUnavailable"
 }
 
-export type KilocodeSessionImportResult = {
+export type AccurecodeSessionImportResult = {
   ok: boolean
   id: string
   skipped?: boolean
@@ -2960,9 +2960,9 @@ export type EventGlobalConfigUpdated = {
   }
 }
 
-export type EventKilocodeAgentManagerStart = {
+export type EventAccurecodeAgentManagerStart = {
   id: string
-  type: "kilocode.agent_manager.start"
+  type: "accurecode.agent_manager.start"
   properties: {
     requestID: string
     sessionID: string
@@ -3300,9 +3300,9 @@ export type EventVcsBranchUpdated = {
   }
 }
 
-export type EventKiloSessionsRemoteStatusChanged = {
+export type EventAccureSessionsRemoteStatusChanged = {
   id: string
-  type: "kilo-sessions.remote-status-changed"
+  type: "accure-sessions.remote-status-changed"
   properties: {
     enabled: boolean
     connected: boolean
@@ -9824,33 +9824,33 @@ export type IndexingModelsError = IndexingModelsErrors[keyof IndexingModelsError
 
 export type IndexingModelsResponses = {
   /**
-   * Kilo embedding model catalog
+   * Accure embedding model catalog
    */
-  200: KiloEmbeddingModelCatalog
+  200: AccureEmbeddingModelCatalog
 }
 
 export type IndexingModelsResponse = IndexingModelsResponses[keyof IndexingModelsResponses]
 
-export type KiloProfileData = {
+export type AccureProfileData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/profile"
+  url: "/accure/profile"
 }
 
-export type KiloProfileErrors = {
+export type AccureProfileErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloProfileError = KiloProfileErrors[keyof KiloProfileErrors]
+export type AccureProfileError = AccureProfileErrors[keyof AccureProfileErrors]
 
-export type KiloProfileResponses = {
+export type AccureProfileResponses = {
   /**
    * Profile data
    */
@@ -9871,30 +9871,30 @@ export type KiloProfileResponses = {
   }
 }
 
-export type KiloProfileResponse = KiloProfileResponses[keyof KiloProfileResponses]
+export type AccureProfileResponse = AccureProfileResponses[keyof AccureProfileResponses]
 
-export type KiloAuthStatusData = {
+export type AccureAuthStatusData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/auth-status"
+  url: "/accure/auth-status"
 }
 
-export type KiloAuthStatusErrors = {
+export type AccureAuthStatusErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloAuthStatusError = KiloAuthStatusErrors[keyof KiloAuthStatusErrors]
+export type AccureAuthStatusError = AccureAuthStatusErrors[keyof AccureAuthStatusErrors]
 
-export type KiloAuthStatusResponses = {
+export type AccureAuthStatusResponses = {
   /**
-   * Kilo authentication status
+   * Accure authentication status
    */
   200: {
     authenticated: boolean
@@ -9902,28 +9902,28 @@ export type KiloAuthStatusResponses = {
   }
 }
 
-export type KiloAuthStatusResponse = KiloAuthStatusResponses[keyof KiloAuthStatusResponses]
+export type AccureAuthStatusResponse = AccureAuthStatusResponses[keyof AccureAuthStatusResponses]
 
-export type KiloModesData = {
+export type AccureModesData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/modes"
+  url: "/accure/modes"
 }
 
-export type KiloModesErrors = {
+export type AccureModesErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KiloModesError = KiloModesErrors[keyof KiloModesErrors]
+export type AccureModesError = AccureModesErrors[keyof AccureModesErrors]
 
-export type KiloModesResponses = {
+export type AccureModesResponses = {
   /**
    * Organization modes list
    */
@@ -9956,9 +9956,9 @@ export type KiloModesResponses = {
   }
 }
 
-export type KiloModesResponse = KiloModesResponses[keyof KiloModesResponses]
+export type AccureModesResponse = AccureModesResponses[keyof AccureModesResponses]
 
-export type KiloFimData = {
+export type AccureFimData = {
   body?: {
     prefix: string
     suffix: string
@@ -9972,19 +9972,19 @@ export type KiloFimData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/fim"
+  url: "/accure/fim"
 }
 
-export type KiloFimErrors = {
+export type AccureFimErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloFimError = KiloFimErrors[keyof KiloFimErrors]
+export type AccureFimError = AccureFimErrors[keyof AccureFimErrors]
 
-export type KiloFimResponses = {
+export type AccureFimResponses = {
   /**
    * Streaming FIM completion response
    */
@@ -10003,9 +10003,9 @@ export type KiloFimResponses = {
   }
 }
 
-export type KiloFimResponse = KiloFimResponses[keyof KiloFimResponses]
+export type AccureFimResponse = AccureFimResponses[keyof AccureFimResponses]
 
-export type KiloEditData = {
+export type AccureEditData = {
   body?: {
     provider?: string
     model?: string
@@ -10027,19 +10027,19 @@ export type KiloEditData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/edit"
+  url: "/accure/edit"
 }
 
-export type KiloEditErrors = {
+export type AccureEditErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloEditError = KiloEditErrors[keyof KiloEditErrors]
+export type AccureEditError = AccureEditErrors[keyof AccureEditErrors]
 
-export type KiloEditResponses = {
+export type AccureEditResponses = {
   /**
    * Next Edit completion
    */
@@ -10052,9 +10052,9 @@ export type KiloEditResponses = {
   }
 }
 
-export type KiloEditResponse = KiloEditResponses[keyof KiloEditResponses]
+export type AccureEditResponse = AccureEditResponses[keyof AccureEditResponses]
 
-export type KiloAudioTranscriptionsData = {
+export type AccureAudioTranscriptionsData = {
   body?: {
     model: string
     input_audio: {
@@ -10070,19 +10070,19 @@ export type KiloAudioTranscriptionsData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/audio/transcriptions"
+  url: "/accure/audio/transcriptions"
 }
 
-export type KiloAudioTranscriptionsErrors = {
+export type AccureAudioTranscriptionsErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloAudioTranscriptionsError = KiloAudioTranscriptionsErrors[keyof KiloAudioTranscriptionsErrors]
+export type AccureAudioTranscriptionsError = AccureAudioTranscriptionsErrors[keyof AccureAudioTranscriptionsErrors]
 
-export type KiloAudioTranscriptionsResponses = {
+export type AccureAudioTranscriptionsResponses = {
   /**
    * Transcription response
    */
@@ -10092,28 +10092,29 @@ export type KiloAudioTranscriptionsResponses = {
   }
 }
 
-export type KiloAudioTranscriptionsResponse = KiloAudioTranscriptionsResponses[keyof KiloAudioTranscriptionsResponses]
+export type AccureAudioTranscriptionsResponse =
+  AccureAudioTranscriptionsResponses[keyof AccureAudioTranscriptionsResponses]
 
-export type KiloNotificationsData = {
+export type AccureNotificationsData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/notifications"
+  url: "/accure/notifications"
 }
 
-export type KiloNotificationsErrors = {
+export type AccureNotificationsErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloNotificationsError = KiloNotificationsErrors[keyof KiloNotificationsErrors]
+export type AccureNotificationsError = AccureNotificationsErrors[keyof AccureNotificationsErrors]
 
-export type KiloNotificationsResponses = {
+export type AccureNotificationsResponses = {
   /**
    * Notifications list
    */
@@ -10130,9 +10131,9 @@ export type KiloNotificationsResponses = {
   }>
 }
 
-export type KiloNotificationsResponse = KiloNotificationsResponses[keyof KiloNotificationsResponses]
+export type AccureNotificationsResponse = AccureNotificationsResponses[keyof AccureNotificationsResponses]
 
-export type KiloOrganizationSetData = {
+export type AccureOrganizationSetData = {
   body?: {
     organizationId: string | null
   }
@@ -10141,38 +10142,38 @@ export type KiloOrganizationSetData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/organization"
+  url: "/accure/organization"
 }
 
-export type KiloOrganizationSetErrors = {
+export type AccureOrganizationSetErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloOrganizationSetError = KiloOrganizationSetErrors[keyof KiloOrganizationSetErrors]
+export type AccureOrganizationSetError = AccureOrganizationSetErrors[keyof AccureOrganizationSetErrors]
 
-export type KiloOrganizationSetResponses = {
+export type AccureOrganizationSetResponses = {
   /**
    * Organization updated successfully
    */
   200: boolean
 }
 
-export type KiloOrganizationSetResponse = KiloOrganizationSetResponses[keyof KiloOrganizationSetResponses]
+export type AccureOrganizationSetResponse = AccureOrganizationSetResponses[keyof AccureOrganizationSetResponses]
 
-export type KiloClawStatusData = {
+export type AccureClawStatusData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/claw/status"
+  url: "/accure/claw/status"
 }
 
-export type KiloClawStatusErrors = {
+export type AccureClawStatusErrors = {
   /**
    * Bad request
    */
@@ -10183,9 +10184,9 @@ export type KiloClawStatusErrors = {
   503: EffectHttpApiErrorServiceUnavailable
 }
 
-export type KiloClawStatusError = KiloClawStatusErrors[keyof KiloClawStatusErrors]
+export type AccureClawStatusError = AccureClawStatusErrors[keyof AccureClawStatusErrors]
 
-export type KiloClawStatusResponses = {
+export type AccureClawStatusResponses = {
   /**
    * Instance status
    */
@@ -10216,42 +10217,43 @@ export type KiloClawStatusResponses = {
   }
 }
 
-export type KiloClawStatusResponse = KiloClawStatusResponses[keyof KiloClawStatusResponses]
+export type AccureClawStatusResponse = AccureClawStatusResponses[keyof AccureClawStatusResponses]
 
-export type KiloClawChatCredentialsData = {
+export type AccureClawChatCredentialsData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/claw/chat-credentials"
+  url: "/accure/claw/chat-credentials"
 }
 
-export type KiloClawChatCredentialsErrors = {
+export type AccureClawChatCredentialsErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KiloClawChatCredentialsError = KiloClawChatCredentialsErrors[keyof KiloClawChatCredentialsErrors]
+export type AccureClawChatCredentialsError = AccureClawChatCredentialsErrors[keyof AccureClawChatCredentialsErrors]
 
-export type KiloClawChatCredentialsResponses = {
+export type AccureClawChatCredentialsResponses = {
   /**
-   * Kilo Chat credentials or null
+   * Accure Chat credentials or null
    */
   200: {
     token: string
     expiresAt: string
-    kiloChatUrl: string
+    accureChatUrl: string
     eventServiceUrl: string
   } | null
 }
 
-export type KiloClawChatCredentialsResponse = KiloClawChatCredentialsResponses[keyof KiloClawChatCredentialsResponses]
+export type AccureClawChatCredentialsResponse =
+  AccureClawChatCredentialsResponses[keyof AccureClawChatCredentialsResponses]
 
-export type KiloCloudSessionsData = {
+export type AccureCloudSessionsData = {
   body?: never
   path?: never
   query?: {
@@ -10261,19 +10263,19 @@ export type KiloCloudSessionsData = {
     limit?: number
     gitUrl?: string
   }
-  url: "/kilo/cloud-sessions"
+  url: "/accure/cloud-sessions"
 }
 
-export type KiloCloudSessionsErrors = {
+export type AccureCloudSessionsErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloCloudSessionsError = KiloCloudSessionsErrors[keyof KiloCloudSessionsErrors]
+export type AccureCloudSessionsError = AccureCloudSessionsErrors[keyof AccureCloudSessionsErrors]
 
-export type KiloCloudSessionsResponses = {
+export type AccureCloudSessionsResponses = {
   /**
    * Cloud sessions list
    */
@@ -10289,9 +10291,9 @@ export type KiloCloudSessionsResponses = {
   }
 }
 
-export type KiloCloudSessionsResponse = KiloCloudSessionsResponses[keyof KiloCloudSessionsResponses]
+export type AccureCloudSessionsResponse = AccureCloudSessionsResponses[keyof AccureCloudSessionsResponses]
 
-export type KiloCloudSessionGetData = {
+export type AccureCloudSessionGetData = {
   body?: never
   path: {
     id: string
@@ -10300,10 +10302,10 @@ export type KiloCloudSessionGetData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/cloud/session/{id}"
+  url: "/accure/cloud/session/{id}"
 }
 
-export type KiloCloudSessionGetErrors = {
+export type AccureCloudSessionGetErrors = {
   /**
    * Bad request
    */
@@ -10314,9 +10316,9 @@ export type KiloCloudSessionGetErrors = {
   404: NotFoundError
 }
 
-export type KiloCloudSessionGetError = KiloCloudSessionGetErrors[keyof KiloCloudSessionGetErrors]
+export type AccureCloudSessionGetError = AccureCloudSessionGetErrors[keyof AccureCloudSessionGetErrors]
 
-export type KiloCloudSessionGetResponses = {
+export type AccureCloudSessionGetResponses = {
   /**
    * Cloud session data
    */
@@ -10349,9 +10351,9 @@ export type KiloCloudSessionGetResponses = {
   }
 }
 
-export type KiloCloudSessionGetResponse = KiloCloudSessionGetResponses[keyof KiloCloudSessionGetResponses]
+export type AccureCloudSessionGetResponse = AccureCloudSessionGetResponses[keyof AccureCloudSessionGetResponses]
 
-export type KiloCloudSessionImportData = {
+export type AccureCloudSessionImportData = {
   body?: {
     sessionId: string
   }
@@ -10360,10 +10362,10 @@ export type KiloCloudSessionImportData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/cloud/session/import"
+  url: "/accure/cloud/session/import"
 }
 
-export type KiloCloudSessionImportErrors = {
+export type AccureCloudSessionImportErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
@@ -10374,9 +10376,9 @@ export type KiloCloudSessionImportErrors = {
   404: NotFoundError
 }
 
-export type KiloCloudSessionImportError = KiloCloudSessionImportErrors[keyof KiloCloudSessionImportErrors]
+export type AccureCloudSessionImportError = AccureCloudSessionImportErrors[keyof AccureCloudSessionImportErrors]
 
-export type KiloCloudSessionImportResponses = {
+export type AccureCloudSessionImportResponses = {
   /**
    * Imported session info
    */
@@ -10390,37 +10392,38 @@ export type KiloCloudSessionImportResponses = {
   }
 }
 
-export type KiloCloudSessionImportResponse = KiloCloudSessionImportResponses[keyof KiloCloudSessionImportResponses]
+export type AccureCloudSessionImportResponse =
+  AccureCloudSessionImportResponses[keyof AccureCloudSessionImportResponses]
 
-export type KilocodeHeapSnapshotData = {
+export type AccurecodeHeapSnapshotData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/heap/snapshot"
+  url: "/accurecode/heap/snapshot"
 }
 
-export type KilocodeHeapSnapshotErrors = {
+export type AccurecodeHeapSnapshotErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeHeapSnapshotError = KilocodeHeapSnapshotErrors[keyof KilocodeHeapSnapshotErrors]
+export type AccurecodeHeapSnapshotError = AccurecodeHeapSnapshotErrors[keyof AccurecodeHeapSnapshotErrors]
 
-export type KilocodeHeapSnapshotResponses = {
+export type AccurecodeHeapSnapshotResponses = {
   /**
    * Heap snapshot file path
    */
   200: string
 }
 
-export type KilocodeHeapSnapshotResponse = KilocodeHeapSnapshotResponses[keyof KilocodeHeapSnapshotResponses]
+export type AccurecodeHeapSnapshotResponse = AccurecodeHeapSnapshotResponses[keyof AccurecodeHeapSnapshotResponses]
 
-export type KilocodeRemoveSkillData = {
+export type AccurecodeRemoveSkillData = {
   body?: {
     location: string
   }
@@ -10429,28 +10432,28 @@ export type KilocodeRemoveSkillData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/skill/remove"
+  url: "/accurecode/skill/remove"
 }
 
-export type KilocodeRemoveSkillErrors = {
+export type AccurecodeRemoveSkillErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeRemoveSkillError = KilocodeRemoveSkillErrors[keyof KilocodeRemoveSkillErrors]
+export type AccurecodeRemoveSkillError = AccurecodeRemoveSkillErrors[keyof AccurecodeRemoveSkillErrors]
 
-export type KilocodeRemoveSkillResponses = {
+export type AccurecodeRemoveSkillResponses = {
   /**
    * Skill removed
    */
   200: boolean
 }
 
-export type KilocodeRemoveSkillResponse = KilocodeRemoveSkillResponses[keyof KilocodeRemoveSkillResponses]
+export type AccurecodeRemoveSkillResponse = AccurecodeRemoveSkillResponses[keyof AccurecodeRemoveSkillResponses]
 
-export type KilocodeRemoveAgentData = {
+export type AccurecodeRemoveAgentData = {
   body?: {
     name: string
   }
@@ -10459,26 +10462,26 @@ export type KilocodeRemoveAgentData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/agent/remove"
+  url: "/accurecode/agent/remove"
 }
 
-export type KilocodeRemoveAgentErrors = {
+export type AccurecodeRemoveAgentErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeRemoveAgentError = KilocodeRemoveAgentErrors[keyof KilocodeRemoveAgentErrors]
+export type AccurecodeRemoveAgentError = AccurecodeRemoveAgentErrors[keyof AccurecodeRemoveAgentErrors]
 
-export type KilocodeRemoveAgentResponses = {
+export type AccurecodeRemoveAgentResponses = {
   /**
    * Agent removed
    */
   200: boolean
 }
 
-export type KilocodeRemoveAgentResponse = KilocodeRemoveAgentResponses[keyof KilocodeRemoveAgentResponses]
+export type AccurecodeRemoveAgentResponse = AccurecodeRemoveAgentResponses[keyof AccurecodeRemoveAgentResponses]
 
 export type NetworkListData = {
   body?: never
@@ -10669,7 +10672,7 @@ export type RemoteStatusResponses = {
 
 export type RemoteStatusResponse = RemoteStatusResponses[keyof RemoteStatusResponses]
 
-export type KilocodeSessionImportProjectData = {
+export type AccurecodeSessionImportProjectData = {
   body?: {
     id: string
     worktree: string
@@ -10690,30 +10693,30 @@ export type KilocodeSessionImportProjectData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session-import/project"
+  url: "/accurecode/session-import/project"
 }
 
-export type KilocodeSessionImportProjectErrors = {
+export type AccurecodeSessionImportProjectErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeSessionImportProjectError =
-  KilocodeSessionImportProjectErrors[keyof KilocodeSessionImportProjectErrors]
+export type AccurecodeSessionImportProjectError =
+  AccurecodeSessionImportProjectErrors[keyof AccurecodeSessionImportProjectErrors]
 
-export type KilocodeSessionImportProjectResponses = {
+export type AccurecodeSessionImportProjectResponses = {
   /**
    * Project import result
    */
-  200: KilocodeSessionImportResult
+  200: AccurecodeSessionImportResult
 }
 
-export type KilocodeSessionImportProjectResponse =
-  KilocodeSessionImportProjectResponses[keyof KilocodeSessionImportProjectResponses]
+export type AccurecodeSessionImportProjectResponse =
+  AccurecodeSessionImportProjectResponses[keyof AccurecodeSessionImportProjectResponses]
 
-export type KilocodeSessionImportSessionData = {
+export type AccurecodeSessionImportSessionData = {
   body?: {
     id: string
     projectID: string
@@ -10752,30 +10755,30 @@ export type KilocodeSessionImportSessionData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session-import/session"
+  url: "/accurecode/session-import/session"
 }
 
-export type KilocodeSessionImportSessionErrors = {
+export type AccurecodeSessionImportSessionErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeSessionImportSessionError =
-  KilocodeSessionImportSessionErrors[keyof KilocodeSessionImportSessionErrors]
+export type AccurecodeSessionImportSessionError =
+  AccurecodeSessionImportSessionErrors[keyof AccurecodeSessionImportSessionErrors]
 
-export type KilocodeSessionImportSessionResponses = {
+export type AccurecodeSessionImportSessionResponses = {
   /**
    * Session import result
    */
-  200: KilocodeSessionImportResult
+  200: AccurecodeSessionImportResult
 }
 
-export type KilocodeSessionImportSessionResponse =
-  KilocodeSessionImportSessionResponses[keyof KilocodeSessionImportSessionResponses]
+export type AccurecodeSessionImportSessionResponse =
+  AccurecodeSessionImportSessionResponses[keyof AccurecodeSessionImportSessionResponses]
 
-export type KilocodeSessionImportMessageData = {
+export type AccurecodeSessionImportMessageData = {
   body?: {
     id: string
     sessionID: string
@@ -10832,30 +10835,30 @@ export type KilocodeSessionImportMessageData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session-import/message"
+  url: "/accurecode/session-import/message"
 }
 
-export type KilocodeSessionImportMessageErrors = {
+export type AccurecodeSessionImportMessageErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeSessionImportMessageError =
-  KilocodeSessionImportMessageErrors[keyof KilocodeSessionImportMessageErrors]
+export type AccurecodeSessionImportMessageError =
+  AccurecodeSessionImportMessageErrors[keyof AccurecodeSessionImportMessageErrors]
 
-export type KilocodeSessionImportMessageResponses = {
+export type AccurecodeSessionImportMessageResponses = {
   /**
    * Message import result
    */
-  200: KilocodeSessionImportResult
+  200: AccurecodeSessionImportResult
 }
 
-export type KilocodeSessionImportMessageResponse =
-  KilocodeSessionImportMessageResponses[keyof KilocodeSessionImportMessageResponses]
+export type AccurecodeSessionImportMessageResponse =
+  AccurecodeSessionImportMessageResponses[keyof AccurecodeSessionImportMessageResponses]
 
-export type KilocodeSessionImportPartData = {
+export type AccurecodeSessionImportPartData = {
   body?: {
     id: string
     messageID: string
@@ -10951,27 +10954,28 @@ export type KilocodeSessionImportPartData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session-import/part"
+  url: "/accurecode/session-import/part"
 }
 
-export type KilocodeSessionImportPartErrors = {
+export type AccurecodeSessionImportPartErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeSessionImportPartError = KilocodeSessionImportPartErrors[keyof KilocodeSessionImportPartErrors]
+export type AccurecodeSessionImportPartError =
+  AccurecodeSessionImportPartErrors[keyof AccurecodeSessionImportPartErrors]
 
-export type KilocodeSessionImportPartResponses = {
+export type AccurecodeSessionImportPartResponses = {
   /**
    * Part import result
    */
-  200: KilocodeSessionImportResult
+  200: AccurecodeSessionImportResult
 }
 
-export type KilocodeSessionImportPartResponse =
-  KilocodeSessionImportPartResponses[keyof KilocodeSessionImportPartResponses]
+export type AccurecodeSessionImportPartResponse =
+  AccurecodeSessionImportPartResponses[keyof AccurecodeSessionImportPartResponses]
 
 export type SuggestionListData = {
   body?: never

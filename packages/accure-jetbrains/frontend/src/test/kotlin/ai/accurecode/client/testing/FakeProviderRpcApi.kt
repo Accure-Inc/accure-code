@@ -1,20 +1,20 @@
-package ai.kilocode.client.testing
+package ai.accurecode.client.testing
 
-import ai.kilocode.rpc.KiloProviderRpcApi
-import ai.kilocode.rpc.dto.CustomModelFetchDto
-import ai.kilocode.rpc.dto.CustomModelFetchResultDto
-import ai.kilocode.rpc.dto.CustomProviderSaveDto
-import ai.kilocode.rpc.dto.ProviderActionResultDto
-import ai.kilocode.rpc.dto.ProviderConnectDto
-import ai.kilocode.rpc.dto.ProviderDisconnectDto
-import ai.kilocode.rpc.dto.ProviderEnableDto
-import ai.kilocode.rpc.dto.ProviderOAuthAuthorizeDto
-import ai.kilocode.rpc.dto.ProviderOAuthCallbackDto
-import ai.kilocode.rpc.dto.ProviderOAuthReadyDto
-import ai.kilocode.rpc.dto.ProviderSettingsDto
+import ai.accurecode.rpc.AccureProviderRpcApi
+import ai.accurecode.rpc.dto.CustomModelFetchDto
+import ai.accurecode.rpc.dto.CustomModelFetchResultDto
+import ai.accurecode.rpc.dto.CustomProviderSaveDto
+import ai.accurecode.rpc.dto.ProviderActionResultDto
+import ai.accurecode.rpc.dto.ProviderConnectDto
+import ai.accurecode.rpc.dto.ProviderDisconnectDto
+import ai.accurecode.rpc.dto.ProviderEnableDto
+import ai.accurecode.rpc.dto.ProviderOAuthAuthorizeDto
+import ai.accurecode.rpc.dto.ProviderOAuthCallbackDto
+import ai.accurecode.rpc.dto.ProviderOAuthReadyDto
+import ai.accurecode.rpc.dto.ProviderSettingsDto
 import kotlinx.coroutines.CompletableDeferred
 
-class FakeProviderRpcApi : KiloProviderRpcApi {
+class FakeProviderRpcApi : AccureProviderRpcApi {
     var state = ProviderSettingsDto()
     val states = ArrayDeque<CompletableDeferred<ProviderSettingsDto>>()
     val stateCalls = mutableListOf<String>()

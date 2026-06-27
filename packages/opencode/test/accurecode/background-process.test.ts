@@ -1,6 +1,6 @@
 import { describe, expect } from "bun:test"
 import { Bus } from "@/bus"
-import { BackgroundProcess } from "@/kilocode/background-process"
+import { BackgroundProcess } from "@/accurecode/background-process"
 import { SessionID } from "@/session/schema"
 import { Shell } from "@/shell/shell"
 import { Effect } from "effect"
@@ -113,8 +113,8 @@ setInterval(() => {}, 1_000)
 `,
         ),
       )
-      const client = process.env["KILO_CLIENT"]
-      process.env["KILO_CLIENT"] = "vscode"
+      const client = process.env["ACCURECODE_CLIENT"]
+      process.env["ACCURECODE_CLIENT"] = "vscode"
 
       try {
         const info = yield* Effect.promise(() =>
@@ -130,8 +130,8 @@ setInterval(() => {}, 1_000)
         expect(info.ports).toEqual([listen])
       } finally {
         yield* Effect.promise(() => BackgroundProcess.stopSession(sessionID))
-        if (client === undefined) delete process.env["KILO_CLIENT"]
-        else process.env["KILO_CLIENT"] = client
+        if (client === undefined) delete process.env["ACCURECODE_CLIENT"]
+        else process.env["ACCURECODE_CLIENT"] = client
       }
     }),
   )
@@ -149,10 +149,10 @@ setInterval(() => {}, 1_000)
 `,
         ),
       )
-      const client = process.env["KILO_CLIENT"]
-      const scans = process.env["KILO_BACKGROUND_PROCESS_PORTS"]
-      process.env["KILO_CLIENT"] = "cli"
-      process.env["KILO_BACKGROUND_PROCESS_PORTS"] = "true"
+      const client = process.env["ACCURECODE_CLIENT"]
+      const scans = process.env["ACCURECODE_BACKGROUND_PROCESS_PORTS"]
+      process.env["ACCURECODE_CLIENT"] = "cli"
+      process.env["ACCURECODE_BACKGROUND_PROCESS_PORTS"] = "true"
 
       try {
         const info = yield* Effect.promise(() =>
@@ -173,10 +173,10 @@ setInterval(() => {}, 1_000)
         expect(found?.ports).toEqual(process.platform === "win32" ? [] : [listen])
       } finally {
         yield* Effect.promise(() => BackgroundProcess.stopSession(sessionID))
-        if (client === undefined) delete process.env["KILO_CLIENT"]
-        else process.env["KILO_CLIENT"] = client
-        if (scans === undefined) delete process.env["KILO_BACKGROUND_PROCESS_PORTS"]
-        else process.env["KILO_BACKGROUND_PROCESS_PORTS"] = scans
+        if (client === undefined) delete process.env["ACCURECODE_CLIENT"]
+        else process.env["ACCURECODE_CLIENT"] = client
+        if (scans === undefined) delete process.env["ACCURECODE_BACKGROUND_PROCESS_PORTS"]
+        else process.env["ACCURECODE_BACKGROUND_PROCESS_PORTS"] = scans
       }
     }),
   )
@@ -194,10 +194,10 @@ setInterval(() => {}, 1_000)
 `,
         ),
       )
-      const client = process.env["KILO_CLIENT"]
-      const scans = process.env["KILO_BACKGROUND_PROCESS_PORTS"]
-      process.env["KILO_CLIENT"] = "cli"
-      delete process.env["KILO_BACKGROUND_PROCESS_PORTS"]
+      const client = process.env["ACCURECODE_CLIENT"]
+      const scans = process.env["ACCURECODE_BACKGROUND_PROCESS_PORTS"]
+      process.env["ACCURECODE_CLIENT"] = "cli"
+      delete process.env["ACCURECODE_BACKGROUND_PROCESS_PORTS"]
 
       try {
         const info = yield* Effect.promise(() =>
@@ -213,10 +213,10 @@ setInterval(() => {}, 1_000)
         expect(found?.ports).toEqual([])
       } finally {
         yield* Effect.promise(() => BackgroundProcess.stopSession(sessionID))
-        if (client === undefined) delete process.env["KILO_CLIENT"]
-        else process.env["KILO_CLIENT"] = client
-        if (scans === undefined) delete process.env["KILO_BACKGROUND_PROCESS_PORTS"]
-        else process.env["KILO_BACKGROUND_PROCESS_PORTS"] = scans
+        if (client === undefined) delete process.env["ACCURECODE_CLIENT"]
+        else process.env["ACCURECODE_CLIENT"] = client
+        if (scans === undefined) delete process.env["ACCURECODE_BACKGROUND_PROCESS_PORTS"]
+        else process.env["ACCURECODE_BACKGROUND_PROCESS_PORTS"] = scans
       }
     }),
   )
@@ -234,8 +234,8 @@ setInterval(() => {}, 1_000)
 `,
         ),
       )
-      const client = process.env["KILO_CLIENT"]
-      process.env["KILO_CLIENT"] = "vscode"
+      const client = process.env["ACCURECODE_CLIENT"]
+      process.env["ACCURECODE_CLIENT"] = "vscode"
 
       try {
         const info = yield* Effect.promise(() =>
@@ -251,8 +251,8 @@ setInterval(() => {}, 1_000)
         expect(found?.ports).toEqual([])
       } finally {
         yield* Effect.promise(() => BackgroundProcess.stopSession(sessionID))
-        if (client === undefined) delete process.env["KILO_CLIENT"]
-        else process.env["KILO_CLIENT"] = client
+        if (client === undefined) delete process.env["ACCURECODE_CLIENT"]
+        else process.env["ACCURECODE_CLIENT"] = client
       }
     }),
   )

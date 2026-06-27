@@ -1,19 +1,19 @@
-package ai.kilocode.client.session.views.question
+package ai.accurecode.client.session.views.question
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.Question
-import ai.kilocode.client.session.model.QuestionItem
-import ai.kilocode.client.session.model.QuestionOption
-import ai.kilocode.client.session.ui.SessionView
-import ai.kilocode.client.session.ui.editor.SessionEditorTextField
-import ai.kilocode.client.session.views.SessionViewIcons
-import ai.kilocode.client.session.views.base.BaseQuestionView
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.ui.HoverIcon
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.rpc.dto.QuestionReplyDto
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.Question
+import ai.accurecode.client.session.model.QuestionItem
+import ai.accurecode.client.session.model.QuestionOption
+import ai.accurecode.client.session.ui.SessionView
+import ai.accurecode.client.session.ui.editor.SessionEditorTextField
+import ai.accurecode.client.session.views.SessionViewIcons
+import ai.accurecode.client.session.views.base.BaseQuestionView
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.ui.HoverIcon
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.rpc.dto.QuestionReplyDto
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.project.Project
@@ -82,14 +82,14 @@ class QuestionView(
         val ico = SessionViewIcons.chevronLeft
         icon = ico
         disabledIcon = IconLoader.getDisabledIcon(ico)
-        toolTipText = KiloBundle.message("session.question.back")
+        toolTipText = AccureBundle.message("session.question.back")
         addActionListener { goBack() }
     }
     private val fwd = HoverIcon().apply {
         val ico = SessionViewIcons.chevronRight
         icon = ico
         disabledIcon = IconLoader.getDisabledIcon(ico)
-        toolTipText = KiloBundle.message("session.question.next")
+        toolTipText = AccureBundle.message("session.question.next")
         addActionListener { goForward() }
     }
     private val topPanel = JPanel(BorderLayout()).apply {
@@ -182,11 +182,11 @@ class QuestionView(
         customFocus = null
         body.removeAll()
         if (review(q)) {
-            card.setHeader(KiloBundle.message("session.question.review.title"))
+            card.setHeader(AccureBundle.message("session.question.review.title"))
             addReview(q)
         } else {
             val item = q.items[idx]
-            val hint = KiloBundle.message(
+            val hint = AccureBundle.message(
                 if (item.multiple) "session.question.hint.multi" else "session.question.hint.single"
             )
             card.setHeader(item.question, hint)
@@ -202,7 +202,7 @@ class QuestionView(
     private fun syncHeader(q: Question) {
         val total = q.items.size
         val shown = minOf(idx + 1, total)
-        summary.text = KiloBundle.message("session.question.summary", shown, total)
+        summary.text = AccureBundle.message("session.question.summary", shown, total)
         summary.foreground = UiStyle.Colors.weak()
         summary.isVisible = total > 1
         nav.isVisible = total > 1
@@ -218,16 +218,16 @@ class QuestionView(
     @RequiresEdt
     private fun syncFooter(q: Question) {
         val actions = mutableListOf<BaseQuestionView.Action>()
-        actions.add(BaseQuestionView.Action(ID_DISMISS, KiloBundle.message("session.question.dismiss"), primary = false) { doReject() })
+        actions.add(BaseQuestionView.Action(ID_DISMISS, AccureBundle.message("session.question.dismiss"), primary = false) { doReject() })
 
         if (review(q)) {
-            actions.add(BaseQuestionView.Action(ID_BACK, KiloBundle.message("session.question.back"), primary = false) { goBack() })
-            actions.add(BaseQuestionView.Action(ID_MAIN, KiloBundle.message("session.question.submit"), primary = true) { doReply() })
+            actions.add(BaseQuestionView.Action(ID_BACK, AccureBundle.message("session.question.back"), primary = false) { goBack() })
+            actions.add(BaseQuestionView.Action(ID_MAIN, AccureBundle.message("session.question.submit"), primary = true) { doReply() })
         } else {
             val label = when {
-                direct(q) -> KiloBundle.message("session.question.submit")
-                lastItem(q) -> KiloBundle.message("session.question.review")
-                else -> KiloBundle.message("session.question.next")
+                direct(q) -> AccureBundle.message("session.question.submit")
+                lastItem(q) -> AccureBundle.message("session.question.review")
+                else -> AccureBundle.message("session.question.next")
             }
             val isPrimary = direct(q) || lastItem(q)
             actions.add(BaseQuestionView.Action(ID_MAIN, label, isPrimary) {
@@ -318,7 +318,7 @@ class QuestionView(
         val answers = effectiveAnswers(i)
         val joined = answers.joinToString(", ")
         val answer = text(
-            joined.ifBlank { KiloBundle.message("session.question.review.notAnswered") },
+            joined.ifBlank { AccureBundle.message("session.question.review.notAnswered") },
             UiStyle.Colors.fg(),
             true,
         )
@@ -422,7 +422,7 @@ class QuestionView(
             addMouseListener(press)
         }
 
-        val label = text(KiloBundle.message("session.question.custom.label"), UiStyle.Colors.fg(), true)
+        val label = text(AccureBundle.message("session.question.custom.label"), UiStyle.Colors.fg(), true)
         label.alignmentX = Component.LEFT_ALIGNMENT
         label.addMouseListener(press)
         col.add(label)
@@ -491,7 +491,7 @@ class QuestionView(
         val ed = SessionEditorTextField(project, selection = selection)
         ed.border = JBUI.Borders.empty()
         ed.setFontInheritedFromLAF(false)
-        ed.setPlaceholder(KiloBundle.message("session.question.custom.placeholder"))
+        ed.setPlaceholder(AccureBundle.message("session.question.custom.placeholder"))
         ed.setShowPlaceholderWhenFocused(true)
         ed.setOneLineMode(false)
         ed.addSettingsProvider { ex ->

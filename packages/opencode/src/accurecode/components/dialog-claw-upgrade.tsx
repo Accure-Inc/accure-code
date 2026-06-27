@@ -1,9 +1,9 @@
-// kilocode_change - new file
+// accurecode_change - new file
 
 /**
- * KiloClaw Upgrade Dialog
+ * AccureClaw Upgrade Dialog
  *
- * Shown when the user has an active KiloClaw instance but no chat credentials,
+ * Shown when the user has an active AccureClaw instance but no chat credentials,
  * indicating the instance was provisioned before chat was enabled and needs
  * an upgrade to the latest version.
  */
@@ -17,7 +17,9 @@ export function DialogClawUpgrade(props: { orgId?: string | null }) {
   const { theme } = useTheme()
   const dialog = useDialog()
 
-  const url = props.orgId ? `https://app.kilo.ai/organizations/${props.orgId}/claw` : "https://app.kilo.ai/claw"
+  const url = props.orgId
+    ? `https://app.accurecode.ai/organizations/${props.orgId}/claw`
+    : "https://app.accurecode.ai/claw"
 
   useKeyboard((evt: any) => {
     if (evt.name === "return") {
@@ -29,7 +31,7 @@ export function DialogClawUpgrade(props: { orgId?: string | null }) {
     <box paddingLeft={2} paddingRight={2} gap={1}>
       <box flexDirection="row" justifyContent="space-between">
         <text fg={theme.text}>
-          <span style={{ bold: true }}>KiloClaw Chat requires an upgrade</span>
+          <span style={{ bold: true }}>AccureClaw Chat requires an upgrade</span>
         </text>
         <text fg={theme.textMuted}>esc</text>
       </box>
@@ -39,7 +41,7 @@ export function DialogClawUpgrade(props: { orgId?: string | null }) {
           This instance was provisioned before chat was enabled.
         </text>
         <text fg={theme.textMuted} wrapMode="word">
-          Use the <span style={{ fg: theme.warning, bold: true }}>↻ Upgrade to Latest</span> button on the KiloClaw
+          Use the <span style={{ fg: theme.warning, bold: true }}>↻ Upgrade to Latest</span> button on the AccureClaw
           dashboard to activate real-time chat with your bot.
         </text>
       </box>

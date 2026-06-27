@@ -1,9 +1,9 @@
-package ai.kilocode.client.ui.md
+package ai.accurecode.client.ui.md
 
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.test.CopyProviderSink
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.test.CopyProviderSink
 import com.intellij.execution.process.ProcessOutputTypes
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.actionSystem.DataContext

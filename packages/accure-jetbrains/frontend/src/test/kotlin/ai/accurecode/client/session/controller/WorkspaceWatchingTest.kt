@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.rpc.dto.AgentDto
-import ai.kilocode.rpc.dto.ModelDto
-import ai.kilocode.rpc.dto.ProviderDto
+import ai.accurecode.rpc.dto.AgentDto
+import ai.accurecode.rpc.dto.ModelDto
+import ai.accurecode.rpc.dto.ProviderDto
 
 class WorkspaceWatchingTest : SessionControllerTestBase() {
 
@@ -15,8 +15,8 @@ class WorkspaceWatchingTest : SessionControllerTestBase() {
         projectRpc.state.value = workspaceReady(
             providers = listOf(
                 ProviderDto(
-                    id = "kilo",
-                    name = "Kilo",
+                    id = "accure",
+                    name = "Accure",
                     models = mapOf(
                         "gpt-5" to ModelDto(
                             id = "gpt-5",
@@ -43,7 +43,7 @@ class WorkspaceWatchingTest : SessionControllerTestBase() {
         """, events)
         assertSession(
             """
-            [code] [kilo/gpt-5] [app: DISCONNECTED] [workspace: READY]
+            [code] [accure/gpt-5] [app: DISCONNECTED] [workspace: READY]
             """,
             m,
             show = false,
@@ -59,7 +59,7 @@ class WorkspaceWatchingTest : SessionControllerTestBase() {
         flush()
 
         assertEquals("code", m.model.agent)
-        assertEquals("kilo/gpt-5", m.model.model)
+        assertEquals("accure/gpt-5", m.model.model)
     }
 
     fun `test workspace ready preserves agent metadata`() {

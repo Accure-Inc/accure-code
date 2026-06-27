@@ -1,52 +1,52 @@
-package ai.kilocode.backend.cli
+package ai.accurecode.backend.cli
 
-import ai.kilocode.backend.workspace.CommandInfo
-import ai.kilocode.backend.workspace.ModelInfo
-import ai.kilocode.backend.workspace.ModelLimitInfo
-import ai.kilocode.backend.workspace.ProviderData
-import ai.kilocode.backend.workspace.ProviderInfo
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.CloudSessionDto
-import ai.kilocode.rpc.dto.CloudSessionListDto
-import ai.kilocode.rpc.dto.ConfigPatchDto
-import ai.kilocode.rpc.dto.ConfigUpdateDto
-import ai.kilocode.rpc.dto.CustomModelDto
-import ai.kilocode.rpc.dto.CustomProviderConfigDto
-import ai.kilocode.rpc.dto.CustomProviderSaveDto
-import ai.kilocode.rpc.dto.DiffFileDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageErrorDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.ModelDto
-import ai.kilocode.rpc.dto.ModelLimitDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.ModelStateDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PermissionAlwaysRulesDto
-import ai.kilocode.rpc.dto.PermissionFileDiffDto
-import ai.kilocode.rpc.dto.PermissionReplyDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.ProviderAuthMethodDto
-import ai.kilocode.rpc.dto.ProviderAuthOptionDto
-import ai.kilocode.rpc.dto.ProviderAuthPromptDto
-import ai.kilocode.rpc.dto.ProviderMetadataDto
-import ai.kilocode.rpc.dto.ProviderSettingsProviderDto
-import ai.kilocode.rpc.dto.PartTimeDto
-import ai.kilocode.rpc.dto.PromptDto
-import ai.kilocode.rpc.dto.PromptPartDto
-import ai.kilocode.rpc.dto.QuestionInfoDto
-import ai.kilocode.rpc.dto.QuestionOptionDto
-import ai.kilocode.rpc.dto.QuestionReplyDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionStatusDto
-import ai.kilocode.rpc.dto.SessionSummaryDto
-import ai.kilocode.rpc.dto.SessionTimeDto
-import ai.kilocode.rpc.dto.TodoDto
-import ai.kilocode.rpc.dto.TodoViewDto
-import ai.kilocode.rpc.dto.TokensDto
-import ai.kilocode.rpc.dto.ToolRefDto
+import ai.accurecode.backend.workspace.CommandInfo
+import ai.accurecode.backend.workspace.ModelInfo
+import ai.accurecode.backend.workspace.ModelLimitInfo
+import ai.accurecode.backend.workspace.ProviderData
+import ai.accurecode.backend.workspace.ProviderInfo
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.CloudSessionDto
+import ai.accurecode.rpc.dto.CloudSessionListDto
+import ai.accurecode.rpc.dto.ConfigPatchDto
+import ai.accurecode.rpc.dto.ConfigUpdateDto
+import ai.accurecode.rpc.dto.CustomModelDto
+import ai.accurecode.rpc.dto.CustomProviderConfigDto
+import ai.accurecode.rpc.dto.CustomProviderSaveDto
+import ai.accurecode.rpc.dto.DiffFileDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageErrorDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.ModelDto
+import ai.accurecode.rpc.dto.ModelLimitDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.ModelStateDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PermissionAlwaysRulesDto
+import ai.accurecode.rpc.dto.PermissionFileDiffDto
+import ai.accurecode.rpc.dto.PermissionReplyDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.ProviderAuthMethodDto
+import ai.accurecode.rpc.dto.ProviderAuthOptionDto
+import ai.accurecode.rpc.dto.ProviderAuthPromptDto
+import ai.accurecode.rpc.dto.ProviderMetadataDto
+import ai.accurecode.rpc.dto.ProviderSettingsProviderDto
+import ai.accurecode.rpc.dto.PartTimeDto
+import ai.accurecode.rpc.dto.PromptDto
+import ai.accurecode.rpc.dto.PromptPartDto
+import ai.accurecode.rpc.dto.QuestionInfoDto
+import ai.accurecode.rpc.dto.QuestionOptionDto
+import ai.accurecode.rpc.dto.QuestionReplyDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.SessionSummaryDto
+import ai.accurecode.rpc.dto.SessionTimeDto
+import ai.accurecode.rpc.dto.TodoDto
+import ai.accurecode.rpc.dto.TodoViewDto
+import ai.accurecode.rpc.dto.TokensDto
+import ai.accurecode.rpc.dto.ToolRefDto
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -77,7 +77,7 @@ import java.util.concurrent.ConcurrentHashMap
  * no dependencies). When a new parsing bug is found, add a test case
  * with the raw JSON that caused the issue.
  */
-object KiloCliDataParser {
+object AccureCliDataParser {
 
     private val json = Json { ignoreUnknownKeys = true }
     private val pretty = Json { ignoreUnknownKeys = true; prettyPrint = true }
@@ -1231,7 +1231,7 @@ private fun JsonObject?.rules(): List<String> {
     val text = runCatching { raw.jsonPrimitive.contentOrNull }.getOrNull() ?: return emptyList()
     if (text.startsWith("[")) {
         return runCatching {
-            KiloCliDataParser.parseRulesJson(text)
+            AccureCliDataParser.parseRulesJson(text)
         }.getOrElse { listOf(text) }
     }
     return listOf(text)

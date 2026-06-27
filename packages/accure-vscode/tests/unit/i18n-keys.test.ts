@@ -42,7 +42,7 @@ import { dict as appNl } from "../../webview-ui/src/i18n/nl"
 import { dict as appUk } from "../../webview-ui/src/i18n/uk"
 import { dict as appIt } from "../../webview-ui/src/i18n/it"
 
-// Layer 2: upstream UI (@opencode-ai/ui re-exported via @kilocode/accure-ui)
+// Layer 2: upstream UI (@opencode-ai/ui re-exported via @accurecode/accure-ui)
 import { dict as uiEn } from "../../../ui/src/i18n/en"
 import { dict as uiZh } from "../../../ui/src/i18n/zh"
 import { dict as uiZht } from "../../../ui/src/i18n/zht"
@@ -65,26 +65,26 @@ import { dict as uiUk } from "../../../ui/src/i18n/uk"
 import { dict as uiIt } from "../../../ui/src/i18n/it"
 
 // Layer 3: accure-i18n overrides
-import { dict as kiloEn } from "../../../accure-i18n/src/en"
-import { dict as kiloZh } from "../../../accure-i18n/src/zh"
-import { dict as kiloZht } from "../../../accure-i18n/src/zht"
-import { dict as kiloKo } from "../../../accure-i18n/src/ko"
-import { dict as kiloDe } from "../../../accure-i18n/src/de"
-import { dict as kiloEs } from "../../../accure-i18n/src/es"
-import { dict as kiloFr } from "../../../accure-i18n/src/fr"
-import { dict as kiloDa } from "../../../accure-i18n/src/da"
-import { dict as kiloJa } from "../../../accure-i18n/src/ja"
-import { dict as kiloPl } from "../../../accure-i18n/src/pl"
-import { dict as kiloRu } from "../../../accure-i18n/src/ru"
-import { dict as kiloAr } from "../../../accure-i18n/src/ar"
-import { dict as kiloNo } from "../../../accure-i18n/src/no"
-import { dict as kiloBr } from "../../../accure-i18n/src/br"
-import { dict as kiloTh } from "../../../accure-i18n/src/th"
-import { dict as kiloBs } from "../../../accure-i18n/src/bs"
-import { dict as kiloTr } from "../../../accure-i18n/src/tr"
-import { dict as kiloNl } from "../../../accure-i18n/src/nl"
-import { dict as kiloUk } from "../../../accure-i18n/src/uk"
-import { dict as kiloIt } from "../../../accure-i18n/src/it"
+import { dict as accureEn } from "../../../accure-i18n/src/en"
+import { dict as accureZh } from "../../../accure-i18n/src/zh"
+import { dict as accureZht } from "../../../accure-i18n/src/zht"
+import { dict as accureKo } from "../../../accure-i18n/src/ko"
+import { dict as accureDe } from "../../../accure-i18n/src/de"
+import { dict as accureEs } from "../../../accure-i18n/src/es"
+import { dict as accureFr } from "../../../accure-i18n/src/fr"
+import { dict as accureDa } from "../../../accure-i18n/src/da"
+import { dict as accureJa } from "../../../accure-i18n/src/ja"
+import { dict as accurePl } from "../../../accure-i18n/src/pl"
+import { dict as accureRu } from "../../../accure-i18n/src/ru"
+import { dict as accureAr } from "../../../accure-i18n/src/ar"
+import { dict as accureNo } from "../../../accure-i18n/src/no"
+import { dict as accureBr } from "../../../accure-i18n/src/br"
+import { dict as accureTh } from "../../../accure-i18n/src/th"
+import { dict as accureBs } from "../../../accure-i18n/src/bs"
+import { dict as accureTr } from "../../../accure-i18n/src/tr"
+import { dict as accureNl } from "../../../accure-i18n/src/nl"
+import { dict as accureUk } from "../../../accure-i18n/src/uk"
+import { dict as accureIt } from "../../../accure-i18n/src/it"
 
 // Layer 4: agent manager (locale alignment already tested in agent-manager-i18n-split.test.ts)
 import { dict as amEn } from "../../webview-ui/agent-manager/i18n/en"
@@ -144,27 +144,27 @@ const appLocales: Record<string, Record<string, string>> = {
   it: appIt,
 }
 
-const kiloLocales: Record<string, Record<string, string>> = {
-  en: kiloEn,
-  zh: kiloZh,
-  zht: kiloZht,
-  ko: kiloKo,
-  de: kiloDe,
-  es: kiloEs,
-  fr: kiloFr,
-  da: kiloDa,
-  ja: kiloJa,
-  pl: kiloPl,
-  ru: kiloRu,
-  ar: kiloAr,
-  no: kiloNo,
-  br: kiloBr,
-  th: kiloTh,
-  bs: kiloBs,
-  tr: kiloTr,
-  nl: kiloNl,
-  uk: kiloUk,
-  it: kiloIt,
+const accureLocales: Record<string, Record<string, string>> = {
+  en: accureEn,
+  zh: accureZh,
+  zht: accureZht,
+  ko: accureKo,
+  de: accureDe,
+  es: accureEs,
+  fr: accureFr,
+  da: accureDa,
+  ja: accureJa,
+  pl: accurePl,
+  ru: accureRu,
+  ar: accureAr,
+  no: accureNo,
+  br: accureBr,
+  th: accureTh,
+  bs: accureBs,
+  tr: accureTr,
+  nl: accureNl,
+  uk: accureUk,
+  it: accureIt,
 }
 
 const uiLocales: Record<string, Record<string, string>> = {
@@ -214,7 +214,7 @@ const cliLocales: Record<string, Record<string, string>> = {
 }
 
 // Merge webview dictionaries in the same priority order as language.tsx
-const webviewKeys = new Set(Object.keys({ ...appEn, ...uiEn, ...kiloEn, ...amEn }))
+const webviewKeys = new Set(Object.keys({ ...appEn, ...uiEn, ...accureEn, ...amEn }))
 const cliKeys = new Set(Object.keys(cliEn))
 const acKeys = new Set(Object.keys(acEn))
 
@@ -419,7 +419,7 @@ describe("i18n locale completeness — every English key exists in all locales",
   })
 
   it("accure-i18n: every English key has a translation in all locales", () => {
-    const missing = findMissingLocaleKeys(kiloEn, kiloLocales)
+    const missing = findMissingLocaleKeys(accureEn, accureLocales)
     if (missing.length > 0) {
       expect(
         missing,

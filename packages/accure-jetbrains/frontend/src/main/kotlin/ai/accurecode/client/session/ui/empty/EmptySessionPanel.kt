@@ -1,20 +1,20 @@
-package ai.kilocode.client.session.ui.empty
+package ai.accurecode.client.session.ui.empty
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.SessionActivityKind
-import ai.kilocode.client.session.controller.SessionController
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.Align
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
-import ai.kilocode.client.util.UiTimerSource
-import ai.kilocode.client.util.UiTimers
-import ai.kilocode.rpc.dto.SessionDto
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.SessionActivityKind
+import ai.accurecode.client.session.controller.SessionController
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.Align
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
+import ai.accurecode.client.util.UiTimerSource
+import ai.accurecode.client.util.UiTimers
+import ai.accurecode.rpc.dto.SessionDto
 import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.Disposable
@@ -108,7 +108,7 @@ class EmptySessionPanel(
         layout = BorderLayout(0, gap)
 
         val logo = JBLabel(
-            IconLoader.getIcon("/icons/kilo-content.svg", EmptySessionPanel::class.java),
+            IconLoader.getIcon("/icons/accure-content.svg", EmptySessionPanel::class.java),
         ).apply {
             horizontalAlignment = JBLabel.CENTER
         }
@@ -148,7 +148,7 @@ class EmptySessionPanel(
 
     internal fun showHistoryText() = historyButton.text
 
-    internal fun feedbackText() = KiloBundle.message("feedback.button")
+    internal fun feedbackText() = AccureBundle.message("feedback.button")
 
     internal fun feedbackCursor() = feedback.button.cursor.type
 
@@ -166,7 +166,7 @@ class EmptySessionPanel(
 
     internal fun recentVisible() = recent.hasSessions()
 
-    internal fun explanationText() = KiloBundle.message("session.empty.welcome")
+    internal fun explanationText() = AccureBundle.message("session.empty.welcome")
 
     internal fun welcomeLabelAlignment() = welcomeLabel.horizontalAlignment
 
@@ -199,7 +199,7 @@ class EmptySessionPanel(
     }
 
     internal open class ShowHistoryButton(
-        text: String = KiloBundle.message("session.showHistory"),
+        text: String = AccureBundle.message("session.showHistory"),
         icon: javax.swing.Icon = AllIcons.Vcs.History,
     ) : JButton(text, icon) {
         private var over = false
@@ -256,7 +256,7 @@ class EmptySessionPanel(
     }
 
     private fun welcomeHtml() = XmlStringUtil.wrapInHtml(
-        "<div style='text-align:center'>${XmlStringUtil.escapeString(KiloBundle.message("session.empty.welcome"))}</div>"
+        "<div style='text-align:center'>${XmlStringUtil.escapeString(AccureBundle.message("session.empty.welcome"))}</div>"
     )
 
     private companion object {

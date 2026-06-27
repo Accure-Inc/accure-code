@@ -1,4 +1,4 @@
-package ai.kilocode.client.vfs
+package ai.accurecode.client.vfs
 
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorState
@@ -8,7 +8,7 @@ import com.intellij.openapi.util.UserDataHolderBase
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeSupport
 
-abstract class KiloFileEditorBase : UserDataHolderBase(), FileEditor, CheckedDisposable {
+abstract class AccureFileEditorBase : UserDataHolderBase(), FileEditor, CheckedDisposable {
     private var disposed = false
     private val support = PropertyChangeSupport(this)
 

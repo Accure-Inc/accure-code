@@ -1,7 +1,7 @@
-package ai.kilocode.client.testing
+package ai.accurecode.client.testing
 
-import ai.kilocode.client.util.UiTimer
-import ai.kilocode.client.util.UiTimerSource
+import ai.accurecode.client.util.UiTimer
+import ai.accurecode.client.util.UiTimerSource
 import com.intellij.openapi.application.ApplicationManager
 
 class TestUiTimers : UiTimerSource {

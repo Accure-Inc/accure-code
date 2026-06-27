@@ -2,9 +2,9 @@ import { Effect } from "effect"
 import type { ModelID, ProviderID } from "@/provider/schema"
 import type { MessageV2 } from "@/session/message-v2"
 import { MessageID, PartID, type SessionID } from "@/session/schema"
-import { KiloSessionPromptQueue } from "./prompt-queue"
+import { AccureSessionPromptQueue } from "./prompt-queue"
 
-export namespace KiloSessionCompaction {
+export namespace AccureSessionCompaction {
   type Store = {
     updateMessage: <T extends MessageV2.Info>(msg: T) => Effect.Effect<T>
     updatePart: <T extends MessageV2.Part>(part: T) => Effect.Effect<T>
@@ -35,7 +35,7 @@ export namespace KiloSessionCompaction {
         auto: input.auto,
         overflow: input.overflow,
       })
-      KiloSessionPromptQueue.retarget(input.sessionID, msg.id)
+      AccureSessionPromptQueue.retarget(input.sessionID, msg.id)
       return msg
     })
   }

@@ -9,10 +9,10 @@ import { ConfigParse } from "@/config/parse"
 import { ConfigVariable } from "@/config/variable"
 import { Filesystem } from "@/util/filesystem"
 import { isRecord } from "@/util/record"
-import { KilocodeConfig } from "./config"
-import { KilocodeConfigSources } from "./sources"
+import { AccurecodeConfig } from "./config"
+import { AccurecodeConfigSources } from "./sources"
 
-export namespace KilocodeConfigOverlay {
+export namespace AccurecodeConfigOverlay {
   export const Scope = z.enum(["global", "project"])
   export type Scope = z.infer<typeof Scope>
 
@@ -50,7 +50,7 @@ export namespace KilocodeConfigOverlay {
     effective: z.custom<Config.Info>(Schema.is(Config.Info)),
     global: z.custom<Config.Info>(Schema.is(Config.Info)),
     project: z.custom<Config.Info>(Schema.is(Config.Info)),
-    sources: z.array(KilocodeConfigSources.Source),
+    sources: z.array(AccurecodeConfigSources.Source),
     targets: z.object({
       global: z.string().optional(),
       project: z.string().optional(),
@@ -67,11 +67,11 @@ export namespace KilocodeConfigOverlay {
     scope: Scope
     effective: Config.Info
     global: Config.Info
-    sources: KilocodeConfigSources.Source[]
+    sources: AccurecodeConfigSources.Source[]
   }
 
-  const files = ["kilo.jsonc", "kilo.json", "opencode.jsonc", "opencode.json"] as const
-  const dirs = [".kilo", ".kilocode", ".opencode"] as const
+  const files = ["accure.jsonc", "accure.json", "opencode.jsonc", "opencode.json"] as const
+  const dirs = [".accurecode", ".accurecode", ".opencode"] as const
 
   const fieldPaths = [
     ["model"],
@@ -90,9 +90,9 @@ export namespace KilocodeConfigOverlay {
     ["indexing", "model"],
     ["indexing", "dimension"],
     ["indexing", "vectorStore"],
-    ["indexing", "kilo", "apiKey"],
-    ["indexing", "kilo", "baseUrl"],
-    ["indexing", "kilo", "organizationId"],
+    ["indexing", "accure", "apiKey"],
+    ["indexing", "accure", "baseUrl"],
+    ["indexing", "accure", "organizationId"],
     ["indexing", "openai", "apiKey"],
     ["indexing", "ollama", "baseUrl"],
     ["indexing", "openai-compatible", "baseUrl"],
@@ -120,18 +120,18 @@ export namespace KilocodeConfigOverlay {
   export async function project(input: { directory: string; worktree?: string }): Promise<Config.Info> {
     const found = await projectFiles(input)
     const configs = await Promise.all(found.map(load))
-    return configs.reduce((result, cfg) => KilocodeConfig.mergeConfig(result, cfg), {} as Config.Info)
+    return configs.reduce((result, cfg) => AccurecodeConfig.mergeConfig(result, cfg), {} as Config.Info)
   }
 
   export async function projectTarget(input: { directory: string; worktree?: string }) {
     const found = await Filesystem.findUp([...dirs], input.directory, input.worktree)
     const roots = await Filesystem.findUp([...files], input.directory, input.worktree)
     const candidates = [...found.flatMap((dir) => files.map((file) => path.join(dir, file))), ...roots]
-    return candidates.find((file) => existsSync(file)) ?? path.join(input.directory, ".kilo", "kilo.jsonc")
+    return candidates.find((file) => existsSync(file)) ?? path.join(input.directory, ".accurecode", "accure.jsonc")
   }
 
   export function globalTarget() {
-    const candidates = ["kilo.jsonc", "kilo.json", "opencode.jsonc", "opencode.json", "config.json"].map((file) =>
+    const candidates = ["accure.jsonc", "accure.json", "opencode.jsonc", "opencode.json", "config.json"].map((file) =>
       path.join(Global.Path.config, file),
     )
     return candidates.find((file) => existsSync(file)) ?? candidates[0]
@@ -184,8 +184,8 @@ export namespace KilocodeConfigOverlay {
   function globalDirs() {
     return [
       Global.Path.config,
-      path.join(Global.Path.home, ".kilocode"),
-      path.join(Global.Path.home, ".kilo"),
+      path.join(Global.Path.home, ".accurecode"),
+      path.join(Global.Path.home, ".accurecode"),
       path.join(Global.Path.home, ".opencode"),
     ]
   }
@@ -196,7 +196,7 @@ export namespace KilocodeConfigOverlay {
     if (!existsSync(dir)) return withAgents(input, rest)
     const agent = await ConfigAgent.load(dir)
     const mode = await ConfigAgent.loadMode(dir)
-    const next = KilocodeConfig.mergeConfig(KilocodeConfig.mergeConfig(input, { agent }), { agent: mode })
+    const next = AccurecodeConfig.mergeConfig(AccurecodeConfig.mergeConfig(input, { agent }), { agent: mode })
     return withAgents(next, rest)
   }
 

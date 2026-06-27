@@ -20,7 +20,7 @@ export class OAuthCredential extends Schema.Class<OAuthCredential>("AccountV2.OA
   refresh: Schema.String,
   access: Schema.String,
   expires: NonNegativeInt,
-  accountId: Schema.optional(Schema.String), // kilocode_change - preserve Kilo organization during v1 migration
+  accountId: Schema.optional(Schema.String), // accurecode_change - preserve Accure organization during v1 migration
 }) {}
 
 export class ApiKeyCredential extends Schema.Class<ApiKeyCredential>("AccountV2.ApiKeyCredential")({
@@ -127,7 +127,7 @@ export const layer = Layer.effect(
     const events = yield* EventV2.Service
     const file = path.join(global.data, "account.json")
     const legacyFile = path.join(global.data, "auth.json")
-    const prior = path.join(global.data, "auth-v2.json") // kilocode_change
+    const prior = path.join(global.data, "auth-v2.json") // accurecode_change
 
     const writeMigrated = Effect.fnUntraced(function* (raw: Record<string, unknown>) {
       const migrated = migrate(raw)
@@ -139,12 +139,12 @@ export const layer = Layer.effect(
 
     const parseAuthContent = () => {
       try {
-        return JSON.parse(process.env.KILO_AUTH_CONTENT ?? "")
+        return JSON.parse(process.env.ACCURECODE_AUTH_CONTENT ?? "")
       } catch {}
     }
 
     const load: () => Effect.Effect<Writable, Error> = Effect.fnUntraced(function* () {
-      if (process.env.KILO_AUTH_CONTENT) {
+      if (process.env.ACCURECODE_AUTH_CONTENT) {
         const raw = parseAuthContent()
         if (raw && typeof raw === "object") {
           if ("version" in raw && raw.version === 2) return raw as Writable
@@ -163,7 +163,7 @@ export const layer = Layer.effect(
         return yield* writeMigrated(raw as Record<string, unknown>)
       }
 
-      // kilocode_change start - migrate the previous Kilo multi-account store after the current store
+      // accurecode_change start - migrate the previous Accure multi-account store after the current store
       const previous = yield* fsys.readJson(prior).pipe(Effect.orElseSucceed(() => null))
       if (previous && typeof previous === "object" && "version" in previous && previous.version === 2) {
         yield* fsys
@@ -171,7 +171,7 @@ export const layer = Layer.effect(
           .pipe(Effect.mapError((cause) => new FileWriteError({ operation: "migrate", cause })))
         return previous as Writable
       }
-      // kilocode_change end
+      // accurecode_change end
 
       return { version: 2, accounts: {}, active: {} }
     })

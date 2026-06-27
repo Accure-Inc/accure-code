@@ -29,7 +29,7 @@ describe("session action routes", () => {
           Promise.resolve(
             Server.Default().app.request(`/session/${session.id}/abort`, {
               method: "POST",
-              headers: { "x-kilo-directory": test.directory },
+              headers: { "x-accure-directory": test.directory },
             }),
           ),
         )

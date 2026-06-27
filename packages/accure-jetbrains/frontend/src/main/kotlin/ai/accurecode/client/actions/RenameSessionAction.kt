@@ -1,9 +1,9 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.history.HistoryDataKeys
-import ai.kilocode.client.session.history.title
-import ai.kilocode.client.session.SessionManager
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.history.HistoryDataKeys
+import ai.accurecode.client.session.history.title
+import ai.accurecode.client.session.SessionManager
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -15,8 +15,8 @@ class RenameSessionAction : AnAction() {
     internal var input: (project: Project?, current: String) -> String? = { project, current ->
         Messages.showInputDialog(
             project,
-            KiloBundle.message("history.rename.prompt"),
-            KiloBundle.message("history.rename.title"),
+            AccureBundle.message("history.rename.prompt"),
+            AccureBundle.message("history.rename.title"),
             null,
             current,
             null,

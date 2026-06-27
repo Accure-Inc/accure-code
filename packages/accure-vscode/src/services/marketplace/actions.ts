@@ -1,6 +1,6 @@
 import * as path from "path"
 import * as vscode from "vscode"
-import type { KiloConnectionService } from "../cli-backend"
+import type { AccureConnectionService } from "../cli-backend"
 import { retry } from "../cli-backend/retry"
 import type { MarketplaceService } from "."
 import type {
@@ -13,13 +13,13 @@ import type {
 } from "./types"
 
 export interface MarketplaceActionContext {
-  connection: KiloConnectionService
+  connection: AccureConnectionService
   marketplace: MarketplaceService
   storage?: vscode.Uri
 }
 
 export interface MarketplaceRemoveContext {
-  connection: KiloConnectionService
+  connection: AccureConnectionService
   storage?: vscode.Uri
   remove: (item: MarketplaceItemRef, scope: "project" | "global", project?: string) => Promise<RemoveResult>
 }
@@ -89,7 +89,7 @@ export async function removeMarketplaceItemFromAllScopes(
     await invalidate(ctx, global.success ? "global" : "project", global.success ? dir : project!)
     return true
   } catch (err) {
-    console.warn("[Kilo New] Marketplace removal failed:", err)
+    console.warn("[Accure New] Marketplace removal failed:", err)
     return false
   }
 }
@@ -100,29 +100,29 @@ async function fetchSkills(ctx: MarketplaceActionContext, dir: string) {
     const { data } = await retry(() => client.app.skills({ directory: dir }, { throwOnError: true }))
     return data
   } catch (err) {
-    console.warn("[Kilo New] Failed to fetch CLI skills for marketplace:", err)
+    console.warn("[Accure New] Failed to fetch CLI skills for marketplace:", err)
     return undefined
   }
 }
 
 async function invalidate(
-  ctx: { connection: KiloConnectionService },
+  ctx: { connection: AccureConnectionService },
   scope: "project" | "global",
   dir: string,
 ): Promise<void> {
   const client = await ctx.connection.getClientAsync(dir).catch((err: unknown) => {
-    console.warn("[Kilo New] Marketplace CLI invalidation deferred:", err)
+    console.warn("[Accure New] Marketplace CLI invalidation deferred:", err)
     return null
   })
   if (!client) return
 
   if (scope === "global") {
     await client.global.config.update({ config: {} }).catch((err: unknown) => {
-      console.warn("[Kilo New] global.config.update after marketplace change failed:", err)
+      console.warn("[Accure New] global.config.update after marketplace change failed:", err)
     })
   }
   await client.instance.dispose({ directory: dir }).catch((err: unknown) => {
-    console.warn("[Kilo New] instance.dispose() after marketplace change failed:", err)
+    console.warn("[Accure New] instance.dispose() after marketplace change failed:", err)
   })
 }
 
@@ -134,8 +134,8 @@ async function removeLegacyMcp(
 ): Promise<boolean> {
   const files: vscode.Uri[] = []
   if (project && scope !== "global") {
-    files.push(vscode.Uri.file(path.join(project, ".kilo", "mcp.json")))
-    files.push(vscode.Uri.file(path.join(project, ".kilocode", "mcp.json")))
+    files.push(vscode.Uri.file(path.join(project, ".accurecode", "mcp.json")))
+    files.push(vscode.Uri.file(path.join(project, ".accurecode", "mcp.json")))
   }
 
   if (ctx.storage && scope !== "project") files.push(vscode.Uri.joinPath(ctx.storage, "settings", "mcp_settings.json"))
@@ -156,7 +156,7 @@ async function removeLegacyMcp(
       await vscode.workspace.fs.writeFile(uri, Buffer.from(JSON.stringify(parsed, null, 2), "utf8"))
       removed = true
     } catch (err) {
-      console.warn("[Kilo New] Failed to remove legacy MCP from", uri.fsPath, err)
+      console.warn("[Accure New] Failed to remove legacy MCP from", uri.fsPath, err)
     }
   }
   return removed

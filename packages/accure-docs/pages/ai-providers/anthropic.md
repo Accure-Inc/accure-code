@@ -1,10 +1,10 @@
 ---
-title: "Using Anthropic Claude with Kilo Code"
-description: "Configure Anthropic's Claude models in Kilo Code. Guide to getting an API key, setting up Claude Sonnet and Opus in VS Code and the CLI."
+title: "Using Anthropic Claude with Accure Code"
+description: "Configure Anthropic's Claude models in Accure Code. Guide to getting an API key, setting up Claude Sonnet and Opus in VS Code and the CLI."
 sidebar_label: Anthropic
 ---
 
-# Using Anthropic With Kilo Code
+# Using Anthropic With Accure Code
 
 Anthropic is an AI safety and research company that builds reliable, interpretable, and steerable AI systems. Their Claude models are known for their strong reasoning abilities, helpfulness, and honesty.
 
@@ -14,15 +14,15 @@ Anthropic is an AI safety and research company that builds reliable, interpretab
 
 1.  **Sign Up/Sign In:** Go to the [Anthropic Console](https://console.anthropic.com/). Create an account or sign in.
 2.  **Navigate to API Keys:** Go to the [API keys](https://console.anthropic.com/settings/keys) section.
-3.  **Create a Key:** Click "Create Key". Give your key a descriptive name (e.g., "Kilo Code").
+3.  **Create a Key:** Click "Create Key". Give your key a descriptive name (e.g., "Accure Code").
 4.  **Copy the Key:** **Important:** Copy the API key _immediately_. You will not be able to see it again. Store it securely.
 
-## Configuration in Kilo Code
+## Configuration in Accure Code
 
 {% tabs %}
 {% tab label="VSCode (Legacy)" %}
 
-1.  **Open Kilo Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Kilo Code panel.
+1.  **Open Accure Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Accure Code panel.
 2.  **Select Provider:** Choose "Anthropic" from the "API Provider" dropdown.
 3.  **Enter API Key:** Paste your Anthropic API key into the "Anthropic API Key" field.
 4.  **Select Model:** Choose your desired Claude model from the "Model" dropdown.
@@ -33,12 +33,12 @@ Anthropic is an AI safety and research company that builds reliable, interpretab
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add Anthropic and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `accure.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `accure.json` config file:
 
 **Environment variable:**
 
@@ -46,7 +46,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export ANTHROPIC_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/accure/accure.json` or `./accure.json`):
 
 ```jsonc
 {

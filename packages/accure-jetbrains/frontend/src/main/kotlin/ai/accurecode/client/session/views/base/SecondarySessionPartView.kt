@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.views.base
+package ai.accurecode.client.session.views.base
 
-import ai.kilocode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
 import com.intellij.util.ui.JBUI
 import javax.swing.JComponent
 

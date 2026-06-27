@@ -14,7 +14,7 @@
   node_modules ? callPackage ./node-modules.nix { },
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
-  pname = "kilo";
+  pname = "accure";
   inherit (node_modules) version src;
   inherit node_modules;
 
@@ -38,9 +38,9 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   '';
 
   env.MODELS_DEV_API_JSON = "${models-dev}/dist/_api.json";
-  env.KILO_DISABLE_MODELS_FETCH = true;
-  env.KILO_VERSION = finalAttrs.version;
-  env.KILO_CHANNEL = "local";
+  env.ACCURECODE_DISABLE_MODELS_FETCH = true;
+  env.ACCURECODE_VERSION = finalAttrs.version;
+  env.ACCURECODE_CHANNEL = "local";
 
   buildPhase = ''
     runHook preBuild
@@ -55,10 +55,10 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   installPhase = ''
     runHook preInstall
 
-    install -Dm755 dist/@kilocode/cli-*/bin/kilo $out/bin/kilo
-    install -Dm644 schema.json $out/share/kilo/schema.json
+    install -Dm755 dist/@accurecode/cli-*/bin/accure $out/bin/accure
+    install -Dm644 schema.json $out/share/accure/schema.json
 
-    wrapProgram $out/bin/kilo \
+    wrapProgram $out/bin/accure \
       --prefix PATH : ${
         lib.makeBinPath (
           [
@@ -74,9 +74,9 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
   postInstall = lib.optionalString (stdenvNoCC.buildPlatform.canExecute stdenvNoCC.hostPlatform) ''
     # trick yargs into also generating zsh completions
-    installShellCompletion --cmd kilo \
-      --bash <($out/bin/kilo completion) \
-      --zsh <(SHELL=/bin/zsh $out/bin/kilo completion)
+    installShellCompletion --cmd accure \
+      --bash <($out/bin/accure completion) \
+      --zsh <(SHELL=/bin/zsh $out/bin/accure completion)
   '';
 
   nativeInstallCheckInputs = [
@@ -86,19 +86,19 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   doInstallCheck = true;
   versionCheckKeepEnvironment = [
     "HOME"
-    "KILO_DISABLE_MODELS_FETCH"
+    "ACCURECODE_DISABLE_MODELS_FETCH"
   ];
   versionCheckProgramArg = "--version";
 
   passthru = {
-    jsonschema = "${placeholder "out"}/share/kilo/schema.json";
+    jsonschema = "${placeholder "out"}/share/accure/schema.json";
   };
 
   meta = {
     description = "AI-powered development tool";
-    homepage = "https://kilo.ai/";
+    homepage = "https://accure.ai/";
     license = lib.licenses.mit;
-    mainProgram = "kilo";
+    mainProgram = "accure";
     inherit (node_modules.meta) platforms;
   };
 })

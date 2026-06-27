@@ -15,7 +15,7 @@
 // The tick counter prevents stale idle events from resolving the wrong turn.
 // We also re-check live session status before resolving an idle event so a
 // delayed idle from an older turn cannot complete a newer busy turn.
-import type { GlobalEvent, KiloClient } from "@kilocode/sdk/v2"
+import type { GlobalEvent, AccureClient } from "@accurecode/sdk/v2"
 import { event as normalizeEvent, type Event } from "./event"
 import { Context, Deferred, Effect, Exit, Layer, Scope, Stream } from "effect"
 import { makeRuntime } from "@/effect/run-service"
@@ -66,7 +66,7 @@ type Trace = {
 const StreamClosed = undefined as never
 
 type StreamInput = {
-  sdk: KiloClient
+  sdk: AccureClient
   directory?: string
   sessionID: string
   thinking: boolean

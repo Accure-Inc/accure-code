@@ -24,19 +24,19 @@ export const directories = Effect.fn("ConfigPaths.directories")(function* (direc
   const afs = yield* AppFileSystem.Service
   return unique([
     Global.Path.config,
-    ...(!Flag.KILO_DISABLE_PROJECT_CONFIG
+    ...(!Flag.ACCURECODE_DISABLE_PROJECT_CONFIG
       ? yield* afs.up({
-          targets: [".kilocode", ".kilo", ".opencode"], // kilocode_change
+          targets: [".accurecode", ".accurecode", ".opencode"], // accurecode_change
           start: directory,
           stop: worktree,
         })
       : []),
     ...(yield* afs.up({
-      targets: [".kilocode", ".kilo", ".opencode"], // kilocode_change
+      targets: [".accurecode", ".accurecode", ".opencode"], // accurecode_change
       start: Global.Path.home,
       stop: Global.Path.home,
     })),
-    ...(Flag.KILO_CONFIG_DIR ? [Flag.KILO_CONFIG_DIR] : []),
+    ...(Flag.ACCURECODE_CONFIG_DIR ? [Flag.ACCURECODE_CONFIG_DIR] : []),
   ])
 })
 

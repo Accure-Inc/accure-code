@@ -1,5 +1,5 @@
-// kilocode_change - new file
-export namespace KiloRunAuto {
+// accurecode_change - new file
+export namespace AccureRunAuto {
   export interface State {
     root: string
     sessions: Set<string>

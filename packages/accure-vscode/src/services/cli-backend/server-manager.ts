@@ -25,11 +25,11 @@ export function resolveServerCwd(folders: readonly WorkspaceFolderLike[] | undef
 
 export function resolveIndexingEnv(folders: readonly WorkspaceFolderLike[] | undefined): Record<string, string> {
   if (folders && folders.length > 0) return {}
-  return { KILO_DISABLE_CODEBASE_INDEXING: "vscode-no-workspace" }
+  return { ACCURECODE_DISABLE_CODEBASE_INDEXING: "vscode-no-workspace" }
 }
 
 export function resolveManagedServerEnv(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
-  return { ...env, KILO_DISABLE_CHANNEL_DB: "true" }
+  return { ...env, ACCURECODE_DISABLE_CHANNEL_DB: "true" }
 }
 
 export class ServerManager {
@@ -45,22 +45,22 @@ export class ServerManager {
    * Get or start the server instance
    */
   async getServer(): Promise<ServerInstance> {
-    console.log("[Kilo New] ServerManager: 🔍 getServer called")
+    console.log("[Accure New] ServerManager: 🔍 getServer called")
     if (this.instance) {
-      console.log("[Kilo New] ServerManager: ♻️ Returning existing instance:", { port: this.instance.port })
+      console.log("[Accure New] ServerManager: ♻️ Returning existing instance:", { port: this.instance.port })
       return this.instance
     }
 
     if (this.startupPromise) {
-      console.log("[Kilo New] ServerManager: ⏳ Startup already in progress, waiting...")
+      console.log("[Accure New] ServerManager: ⏳ Startup already in progress, waiting...")
       return this.startupPromise
     }
 
-    console.log("[Kilo New] ServerManager: 🚀 Starting new server instance...")
+    console.log("[Accure New] ServerManager: 🚀 Starting new server instance...")
     this.startupPromise = this.startServer()
     try {
       this.instance = await this.startupPromise
-      console.log("[Kilo New] ServerManager: ✅ Server started successfully:", { port: this.instance.port })
+      console.log("[Accure New] ServerManager: ✅ Server started successfully:", { port: this.instance.port })
       return this.instance
     } finally {
       this.startupPromise = null
@@ -70,8 +70,8 @@ export class ServerManager {
   private async startServer(): Promise<ServerInstance> {
     const password = crypto.randomBytes(32).toString("hex")
     const cliPath = this.getCliPath()
-    console.log("[Kilo New] ServerManager: 📍 CLI path:", cliPath)
-    console.log("[Kilo New] ServerManager: 🔐 Generated password (length):", password.length)
+    console.log("[Accure New] ServerManager: 📍 CLI path:", cliPath)
+    console.log("[Accure New] ServerManager: 🔐 Generated password (length):", password.length)
 
     // Verify the CLI binary exists
     if (!fs.existsSync(cliPath)) {
@@ -81,11 +81,11 @@ export class ServerManager {
     }
 
     const stat = fs.statSync(cliPath)
-    console.log("[Kilo New] ServerManager: 📄 CLI isFile:", stat.isFile())
-    console.log("[Kilo New] ServerManager: 📄 CLI mode (octal):", (stat.mode & 0o777).toString(8))
+    console.log("[Accure New] ServerManager: 📄 CLI isFile:", stat.isFile())
+    console.log("[Accure New] ServerManager: 📄 CLI mode (octal):", (stat.mode & 0o777).toString(8))
 
     return new Promise((resolve, reject) => {
-      console.log("[Kilo New] ServerManager: 🎬 Spawning CLI process:", cliPath, ["serve", "--port", "0"])
+      console.log("[Accure New] ServerManager: 🎬 Spawning CLI process:", cliPath, ["serve", "--port", "0"])
       const cfg = vscode.workspace.getConfiguration("accure-code")
       const claudeCompat = cfg.get<boolean>("claudeCodeCompat", false)
       // Pin cwd so the CLI doesn't inherit the extension host's cwd ("/" under F5 debug)
@@ -126,57 +126,56 @@ export class ServerManager {
           // once per second per worktree) to reach multi-GB RSS in minutes.
           // See oven-sh/bun#18265 and Jarred's workaround note in #21560.
           MIMALLOC_PURGE_DELAY: "0",
-          KILO_SERVER_PASSWORD: password,
-          KILO_CLIENT: "vscode",
-          KILO_ENABLE_QUESTION_TOOL: "true",
-          KILOCODE_FEATURE: "vscode-extension",
+          ACCURECODE_SERVER_PASSWORD: password,
+          ACCURECODE_CLIENT: "vscode",
+          ACCURECODE_ENABLE_QUESTION_TOOL: "true",
+          ACCURECODE_FEATURE: "vscode-extension",
           ...indexingEnv,
-          KILO_TELEMETRY_LEVEL: vscode.env.isTelemetryEnabled ? "all" : "off",
-          KILO_APP_NAME: "accure-code",
-          KILO_EDITOR_NAME: vscode.env.appName,
-          KILO_PLATFORM: "vscode",
-          KILO_MACHINE_ID: vscode.env.machineId,
-          KILO_APP_VERSION: this.context.extension.packageJSON.version,
-          KILO_VSCODE_VERSION: vscode.version,
-          KILOCODE_EDITOR_NAME: `${vscode.env.appName} ${vscode.version}`,
-          ...(!claudeCompat && { KILO_DISABLE_CLAUDE_CODE: "true" }),
+          ACCURECODE_TELEMETRY_LEVEL: vscode.env.isTelemetryEnabled ? "all" : "off",
+          ACCURECODE_APP_NAME: "accure-code",
+          ACCURECODE_PLATFORM: "vscode",
+          ACCURECODE_MACHINE_ID: vscode.env.machineId,
+          ACCURECODE_APP_VERSION: this.context.extension.packageJSON.version,
+          ACCURECODE_VSCODE_VERSION: vscode.version,
+          ACCURECODE_EDITOR_NAME: `${vscode.env.appName} ${vscode.version}`,
+          ...(!claudeCompat && { ACCURECODE_DISABLE_CLAUDE_CODE: "true" }),
           ...resolveTreeSitterEnv(this.context.extensionPath),
         },
         stdio: ["ignore", "pipe", "pipe"],
         detached: true,
       })
-      console.log("[Kilo New] ServerManager: 📦 Process spawned with PID:", serverProcess.pid)
+      console.log("[Accure New] ServerManager: 📦 Process spawned with PID:", serverProcess.pid)
 
       let resolved = false
       const stderrLines: string[] = []
 
       serverProcess.stdout?.on("data", (data: Buffer) => {
         const output = data.toString()
-        console.log("[Kilo New] ServerManager: 📥 CLI Server stdout:", output)
+        console.log("[Accure New] ServerManager: 📥 CLI Server stdout:", output)
 
         const port = parseServerPort(output)
         if (port !== null && !resolved) {
           resolved = true
-          console.log("[Kilo New] ServerManager: 🎯 Port detected:", port)
+          console.log("[Accure New] ServerManager: 🎯 Port detected:", port)
           resolve({ port, password, process: serverProcess })
         }
       })
 
       serverProcess.stderr?.on("data", (data: Buffer) => {
         const errorOutput = data.toString()
-        console.error("[Kilo New] ServerManager: ⚠️ CLI Server stderr:", errorOutput)
+        console.error("[Accure New] ServerManager: ⚠️ CLI Server stderr:", errorOutput)
         stderrLines.push(errorOutput)
       })
 
       serverProcess.on("error", (error) => {
-        console.error("[Kilo New] ServerManager: ❌ Process error:", error)
+        console.error("[Accure New] ServerManager: ❌ Process error:", error)
         if (!resolved) {
           reject(error)
         }
       })
 
       serverProcess.on("exit", (code) => {
-        console.log("[Kilo New] ServerManager: 🛑 Process exited with code:", code)
+        console.log("[Accure New] ServerManager: 🛑 Process exited with code:", code)
         if (this.instance?.process === serverProcess) {
           this.instance = null
           this.onExit?.(code)
@@ -193,7 +192,7 @@ export class ServerManager {
 
       setTimeout(() => {
         if (!resolved) {
-          console.error(`[Kilo New] ServerManager: ⏰ Server startup timeout (${STARTUP_TIMEOUT_SECONDS}s)`)
+          console.error(`[Accure New] ServerManager: ⏰ Server startup timeout (${STARTUP_TIMEOUT_SECONDS}s)`)
           ServerManager.killProcess(serverProcess)
           const { userMessage, userDetails } = toErrorMessage(
             t("server.startupTimeout", { seconds: STARTUP_TIMEOUT_SECONDS }),
@@ -208,9 +207,9 @@ export class ServerManager {
 
   private getCliPath(): string {
     // Always use the bundled binary from the extension directory
-    const binName = process.platform === "win32" ? "kilo.exe" : "kilo"
+    const binName = process.platform === "win32" ? "accure.exe" : "accure"
     const cliPath = path.join(this.context.extensionPath, "bin", binName)
-    console.log("[Kilo New] ServerManager: 📦 Using CLI path:", cliPath)
+    console.log("[Accure New] ServerManager: 📦 Using CLI path:", cliPath)
     return cliPath
   }
 
@@ -242,14 +241,14 @@ export class ServerManager {
     const proc = this.instance.process
     this.instance = null
 
-    console.log("[Kilo New] ServerManager: 🔴 Disposing — sending SIGTERM to process group, PID:", proc.pid)
+    console.log("[Accure New] ServerManager: 🔴 Disposing — sending SIGTERM to process group, PID:", proc.pid)
     ServerManager.killProcess(proc, "SIGTERM")
 
     // SIGKILL fallback after 5s. Ensures the process tree dies even if SIGTERM is ignored
     // or Instance.disposeAll() hangs past the serve.ts shutdown timeout.
     const timer = setTimeout(() => {
       if (proc.exitCode === null) {
-        console.warn("[Kilo New] ServerManager: ⚠️ Process did not exit after SIGTERM, sending SIGKILL")
+        console.warn("[Accure New] ServerManager: ⚠️ Process did not exit after SIGTERM, sending SIGKILL")
         ServerManager.killProcess(proc, "SIGKILL")
       }
     }, 5000)

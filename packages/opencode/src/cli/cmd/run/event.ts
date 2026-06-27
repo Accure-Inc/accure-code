@@ -5,7 +5,7 @@ import type {
   SyncEventMessagePartUpdated,
   SyncEventMessageRemoved,
   SyncEventMessageUpdated,
-} from "@kilocode/sdk/v2"
+} from "@accurecode/sdk/v2"
 
 type MessageUpdated = {
   id: string

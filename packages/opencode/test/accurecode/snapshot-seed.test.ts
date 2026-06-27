@@ -9,10 +9,10 @@ import { AppFileSystem } from "@opencode-ai/core/filesystem"
 import { AppProcess } from "@opencode-ai/core/process"
 import { Hash } from "@opencode-ai/core/util/hash"
 import { Snapshot } from "../../src/snapshot"
-import { Instance } from "../../src/kilocode/instance"
+import { Instance } from "../../src/accurecode/instance"
 import { Filesystem } from "../../src/util/filesystem"
-import { KiloSnapshotMaterialize } from "../../src/kilocode/snapshot/materialize"
-import { KiloSnapshotSeed } from "../../src/kilocode/snapshot/seed"
+import { AccureSnapshotMaterialize } from "../../src/accurecode/snapshot/materialize"
+import { AccureSnapshotSeed } from "../../src/accurecode/snapshot/seed"
 import { disposeAllInstances, provideInstance, tmpdir } from "../fixture/fixture"
 
 const fwd = (...parts: string[]) => path.join(...parts).replaceAll("\\", "/")
@@ -134,7 +134,7 @@ test(
     const common = (await $`git rev-parse --path-format=absolute --git-common-dir`.cwd(seeded).text()).trim()
     expect(
       (
-        await $`git --git-dir=${common} rev-parse --verify --quiet ${KiloSnapshotMaterialize.ref(fast.gitdir)}`
+        await $`git --git-dir=${common} rev-parse --verify --quiet ${AccureSnapshotMaterialize.ref(fast.gitdir)}`
           .nothrow()
           .text()
       ).trim(),
@@ -254,7 +254,7 @@ test(
 
     await fs.writeFile(alt, `${path.join(common, "objects")}\n`)
     await fs.rename(alt, `${alt}.materializing`)
-    const sourceRef = KiloSnapshotMaterialize.ref(result.gitdir)
+    const sourceRef = AccureSnapshotMaterialize.ref(result.gitdir)
     const sourceHash = (await $`git write-tree`.cwd(tmp.path).text()).trim()
     await $`git --git-dir=${common} update-ref ${sourceRef} ${sourceHash}`.quiet()
     await disposeAllInstances()
@@ -282,17 +282,17 @@ test(
     expect((await $`git --git-dir=${common} rev-parse --verify --quiet ${sourceRef}`.nothrow().text()).trim()).toBe("")
     expect((await run(tmp.path, (snapshot) => snapshot.patch(result.value!))).value.files).toEqual([])
 
-    const expired = `refs/kilo/snapshots/1/${result.value!}`
+    const expired = `refs/accure/snapshots/1/${result.value!}`
     await $`git --git-dir=${result.gitdir} update-ref ${expired} ${result.value!}`.quiet()
     await run(tmp.path, (snapshot) => snapshot.cleanup())
     expect(
       (await $`git --git-dir=${result.gitdir} rev-parse --verify --quiet ${expired}`.nothrow().text()).trim(),
     ).toBe("")
-    expect((await $`git --git-dir=${result.gitdir} for-each-ref refs/kilo/snapshots`.text()).trim()).toContain(
+    expect((await $`git --git-dir=${result.gitdir} for-each-ref refs/accure/snapshots`.text()).trim()).toContain(
       result.value!,
     )
 
-    const locked = `refs/kilo/snapshots/2/${result.value!}`
+    const locked = `refs/accure/snapshots/2/${result.value!}`
     await $`git --git-dir=${result.gitdir} update-ref ${locked} ${result.value!}`.quiet()
     const lock = path.join(result.gitdir, `${locked}.lock`)
     await Filesystem.write(lock, "")
@@ -338,7 +338,7 @@ test("interrupted seed removes borrowed state after source gc", async () => {
   await $`git init --bare ${gitdir}`.quiet()
   const index = (await $`git rev-parse --path-format=absolute --git-path index`.cwd(source.path).text()).trim()
   const original = await fs.readFile(index)
-  const ref = KiloSnapshotMaterialize.ref(gitdir)
+  const ref = AccureSnapshotMaterialize.ref(gitdir)
 
   await Effect.runPromise(
     Effect.gen(function* () {
@@ -369,7 +369,7 @@ test("interrupted seed removes borrowed state after source gc", async () => {
         if (read) return Deferred.succeed(reached, undefined).pipe(Effect.andThen(Effect.never))
         return raw(cmd, opts)
       }
-      const fiber = yield* KiloSnapshotSeed.seed({
+      const fiber = yield* AccureSnapshotSeed.seed({
         dir: source.path,
         worktree: source.path,
         gitdir,

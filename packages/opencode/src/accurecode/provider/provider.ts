@@ -1,13 +1,13 @@
-// kilocode_change - new file
+// accurecode_change - new file
 //
-// Kilo-specific provider logic extracted from packages/opencode/src/provider/provider.ts
+// Accure-specific provider logic extracted from packages/opencode/src/provider/provider.ts
 // to minimize merge conflicts with upstream opencode.
 //
 // This module exports patch functions and data that the upstream provider.ts
-// calls at well-defined injection points (each marked with kilocode_change).
+// calls at well-defined injection points (each marked with accurecode_change).
 
-import { createKilo, type KiloProvider, AI_SDK_PROVIDERS, PROMPTS } from "@kilocode/accure-gateway"
-import { DEFAULT_HEADERS } from "@/kilocode/const"
+import { createAccure, type AccureProvider, AI_SDK_PROVIDERS, PROMPTS } from "@accurecode/accure-gateway"
+import { DEFAULT_HEADERS } from "@/accurecode/const"
 import { ProviderID, ModelID } from "@/provider/schema"
 import { optionalOmitUndefined } from "@opencode-ai/core/schema"
 import { Effect, Schema } from "effect"
@@ -23,15 +23,19 @@ export const REQUEST_TIMEOUT_MS = 300_000 // 5 minutes
 
 type BundledSDK = { languageModel(modelId: string): LanguageModelV3 }
 
-export const KILO_BUNDLED_PROVIDERS: Record<string, () => Promise<(options: any) => BundledSDK>> = {
-  "@kilocode/accure-gateway": async () => createKilo as unknown as (options: any) => BundledSDK,
+export const ACCURECODE_BUNDLED_PROVIDERS: Record<string, () => Promise<(options: any) => BundledSDK>> = {
+  "@accurecode/accure-gateway": async () => createAccure as unknown as (options: any) => BundledSDK,
+  "@ai-sdk/amazon-bedrock": async () => {
+    const { createCustomBedrockSDK } = await import("./bedrock-custom")
+    return createCustomBedrockSDK as unknown as (options: any) => BundledSDK
+  },
 }
 
 // ---------------------------------------------------------------------------
 // Model schema extensions  (spread into Provider.Model Schema.Struct)
 // ---------------------------------------------------------------------------
 
-export const KILO_MODEL_SCHEMA_EXTENSIONS = {
+export const ACCURECODE_MODEL_SCHEMA_EXTENSIONS = {
   recommendedIndex: optionalOmitUndefined(Schema.Finite),
   prompt: Schema.optional(Schema.Literals(PROMPTS)),
   isFree: Schema.optional(Schema.Boolean),
@@ -47,12 +51,12 @@ export const KILO_MODEL_SCHEMA_EXTENSIONS = {
 }
 
 // ---------------------------------------------------------------------------
-// fromModelsDevModel patch — returns kilo-specific fields
+// fromModelsDevModel patch — returns accure-specific fields
 // ---------------------------------------------------------------------------
 
 export function patchModelsDevModel(providerID: string, source: any) {
   return {
-    variants: providerID === "kilo" ? (source.variants ?? {}) : {},
+    variants: providerID === "accure" ? (source.variants ?? {}) : {},
     recommendedIndex: source.recommendedIndex,
     prompt: source.prompt,
     isFree: source.isFree,
@@ -65,7 +69,7 @@ export function patchModelsDevModel(providerID: string, source: any) {
 }
 
 // ---------------------------------------------------------------------------
-// Config model patch — merges kilo-specific fields from config + existing
+// Config model patch — merges accure-specific fields from config + existing
 // ---------------------------------------------------------------------------
 
 export function patchConfigModel(cfg: any, existing: any) {
@@ -118,12 +122,12 @@ function useLanguageModel(sdk: any) {
   return sdk.responses === undefined && sdk.chat === undefined
 }
 
-export function patchKiloProviderPrivacy(provider: { options?: Record<string, any> } | undefined, config: any) {
+export function patchAccureProviderPrivacy(provider: { options?: Record<string, any> } | undefined, config: any) {
   if (!provider || config.hide_prompt_training_models !== true) return
   provider.options = { ...provider.options, dataCollection: "deny" }
 }
 
-export function kiloCustomLoaders(dep: CustomDep): Record<string, CustomLoader> {
+export function accureCustomLoaders(dep: CustomDep): Record<string, CustomLoader> {
   return {
     "github-copilot-enterprise": () =>
       Effect.succeed({
@@ -135,19 +139,19 @@ export function kiloCustomLoaders(dep: CustomDep): Record<string, CustomLoader> 
         options: {},
       }),
 
-    kilo: Effect.fnUntraced(function* (input: any) {
+    accure: Effect.fnUntraced(function* (input: any) {
       const env = yield* dep.env()
       const config = yield* dep.config()
       const hasKey = yield* Effect.gen(function* () {
         if (input.env.some((item: string) => env[item])) return true
         if (yield* dep.auth(input.id)) return true
-        if (config.provider?.["kilo"]?.options?.apiKey) return true
+        if (config.provider?.["accure"]?.options?.apiKey) return true
         return false
       })
 
       const options: Record<string, string> = {}
-      if (env.KILO_ORG_ID) {
-        options.kilocodeOrganizationId = env.KILO_ORG_ID
+      if (env.ACCURECODE_ORG_ID) {
+        options.accurecodeOrganizationId = env.ACCURECODE_ORG_ID
       }
       if (config.hide_prompt_training_models === true) {
         options.dataCollection = "deny"
@@ -159,7 +163,7 @@ export function kiloCustomLoaders(dep: CustomDep): Record<string, CustomLoader> 
       return {
         autoload: Object.keys(input.models).length > 0,
         options,
-        async getModel(sdk: KiloProvider, modelID: string) {
+        async getModel(sdk: AccureProvider, modelID: string) {
           const provider = input.models[modelID]?.ai_sdk_provider
           if (provider === "alibaba") return sdk.alibaba(modelID)
           if (provider === "anthropic") return sdk.anthropic(modelID)
@@ -177,6 +181,34 @@ export function kiloCustomLoaders(dep: CustomDep): Record<string, CustomLoader> 
         autoload: false,
         options: { headers: DEFAULT_HEADERS },
       }),
+
+    // Accure Models (ATM-3, ATM-4, AVM-3): vLLM-based OpenAI-compatible provider
+    "accure-models": Effect.fnUntraced(function* (input: any) {
+      const env = yield* dep.env()
+      const config = yield* dep.config()
+      const auth = yield* dep.auth("accure-models") // accurecode_change
+      const opts = config.provider?.["accure-models"]?.options
+
+      const baseURL =
+        env["ACCURE_MODELS_URL"] || opts?.baseURL || "http://jenkins.accure.ai:9006/v1"
+      const authKey = auth?.type === "api" ? auth.key : undefined // accurecode_change
+      const isDefaultURL = baseURL.startsWith("http://jenkins.accure.ai:9006") // accurecode_change
+      const defaultKey = isDefaultURL ? "sk-Fs75pLJeP7zb3bqtLSJLYxE__IuC8IJfOOf_EI7_Vy8-v4" : "" // accurecode_change
+      const apiKey =
+        env["ACCURE_MODELS_API_KEY"] || authKey || opts?.apiKey || defaultKey // accurecode_change
+
+      return {
+        autoload: true,
+        options: {
+          baseURL: baseURL.endsWith("/") ? baseURL : `${baseURL}/`,
+          apiKey,
+        },
+        // Pass model ID directly to vLLM — the API handles routing
+        async getModel(sdk: any, modelID: string) {
+          return sdk.languageModel(modelID)
+        },
+      }
+    }),
   }
 }
 
@@ -202,7 +234,7 @@ export function patchCustomLoaderResult(
     case "cerebras":
       result.options.headers = {
         ...result.options.headers,
-        "X-Cerebras-3rd-Party-Integration": "kilo",
+        "X-Cerebras-3rd-Party-Integration": "accure",
       }
       break
     case "azure": {
@@ -223,7 +255,7 @@ export function patchCustomLoaderResult(
       break
     }
     // gitlab User-Agent and cloudflare error message are patched inline
-    // in provider.ts with single-line kilocode_change markers
+    // in provider.ts with single-line accurecode_change markers
   }
 }
 
@@ -231,8 +263,8 @@ export function patchCustomLoaderResult(
 // getSmallModel helpers
 // ---------------------------------------------------------------------------
 
-export function kiloSmallModelPriority(providerID: string): string[] | undefined {
-  if (providerID.startsWith("kilo")) return ["kilo-auto/small"]
+export function accureSmallModelPriority(providerID: string): string[] | undefined {
+  if (providerID.startsWith("accure")) return ["accure-auto/small"]
   return undefined
 }
 

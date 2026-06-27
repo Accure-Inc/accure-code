@@ -1,4 +1,4 @@
-package ai.kilocode.client.ui.md
+package ai.accurecode.client.ui.md
 
 import com.intellij.openapi.util.Disposer
 import com.intellij.testFramework.fixtures.BasePlatformTestCase

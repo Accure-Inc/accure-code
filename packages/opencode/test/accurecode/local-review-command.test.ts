@@ -3,7 +3,7 @@ import {
   localReviewCommand,
   localReviewUncommittedCommand,
   parseReviewCommand,
-} from "../../src/kilocode/review/command"
+} from "../../src/accurecode/review/command"
 
 function expectReviewFixContract(text: string) {
   expect(text).toContain("During the initial review phase")

@@ -1,6 +1,6 @@
 import { parseDiffFromFile, parsePatchFiles, type FileDiffMetadata } from "@pierre/diffs"
 import { formatPatch, parsePatch, structuredPatch } from "diff"
-import type { SnapshotFileDiff, VcsFileDiff } from "@kilocode/sdk/v2"
+import type { SnapshotFileDiff, VcsFileDiff } from "@accurecode/sdk/v2"
 
 type LegacyDiff = {
   file: string
@@ -15,7 +15,7 @@ type LegacyDiff = {
 type SnapshotDiff = SnapshotFileDiff & { file: string }
 type ReviewDiff = SnapshotDiff | VcsFileDiff | LegacyDiff
 
-// kilocode_change start - expose patch text extraction without building FileDiffMetadata on the UI thread
+// accurecode_change start - expose patch text extraction without building FileDiffMetadata on the UI thread
 export type DiffText = {
   before: string
   after: string
@@ -26,8 +26,8 @@ export type DiffText = {
 export type ViewDiff = {
   file: string
   patch: string
-  before: string // kilocode_change
-  after: string // kilocode_change
+  before: string // accurecode_change
+  after: string // accurecode_change
   additions: number
   deletions: number
   status?: "added" | "deleted" | "modified"
@@ -102,7 +102,7 @@ export function contents(diff: ReviewDiff): DiffText {
     patchIsPartial: false,
   }
 }
-// kilocode_change end
+// accurecode_change end
 
 function file(file: string, patch: string, before: string, after: string, partial = false) {
   const hit = cache.get(patch)
@@ -117,13 +117,13 @@ function file(file: string, patch: string, before: string, after: string, partia
 }
 
 export function normalize(diff: ReviewDiff): ViewDiff {
-  const next = contents(diff) // kilocode_change
+  const next = contents(diff) // accurecode_change
   const fileDiff = file(diff.file, next.patch, next.before, next.after, next.patchIsPartial)
   return {
-    file: diff.file, // kilocode_change
-    patch: next.patch, // kilocode_change
-    before: next.before, // kilocode_change
-    after: next.after, // kilocode_change
+    file: diff.file, // accurecode_change
+    patch: next.patch, // accurecode_change
+    before: next.before, // accurecode_change
+    after: next.after, // accurecode_change
     additions: diff.additions,
     deletions: diff.deletions,
     status: diff.status,

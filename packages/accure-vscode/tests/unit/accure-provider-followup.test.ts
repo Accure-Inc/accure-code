@@ -1,8 +1,8 @@
 import { describe, expect, it } from "bun:test"
-import type { Event, Session } from "@kilocode/sdk/v2/client"
+import type { Event, Session } from "@accurecode/sdk/v2/client"
 
 // vscode mock is provided by the shared preload (tests/setup/vscode-mock.ts)
-const { KiloProvider } = await import("../../src/KiloProvider")
+const { AccureProvider } = await import("../../src/AccureProvider")
 
 type Internals = {
   webview: { postMessage: (message: unknown) => Promise<unknown> } | null
@@ -76,10 +76,10 @@ function connection() {
   }
 }
 
-describe("KiloProvider follow-up sessions", () => {
+describe("AccureProvider follow-up sessions", () => {
   it("adopts pending follow-up sessions for single-session views", async () => {
     const service = connection()
-    const provider = new KiloProvider({} as never, service as never)
+    const provider = new AccureProvider({} as never, service as never)
     const internal = provider as unknown as Internals
     const sent: unknown[] = []
     const loaded: string[] = []
@@ -135,7 +135,7 @@ describe("KiloProvider follow-up sessions", () => {
 
   it("calls onFollowupAdopted listeners with session and directory", async () => {
     const service = connection()
-    const provider = new KiloProvider({} as never, service as never)
+    const provider = new AccureProvider({} as never, service as never)
     const internal = provider as unknown as Internals
     const adopted: Array<{ id: string; dir: string }> = []
 
@@ -159,10 +159,10 @@ describe("KiloProvider follow-up sessions", () => {
       adopted.push({ id: session.id, dir: directory })
     })
 
-    internal.pendingFollowup = { dir: "/repo/.kilo/worktrees/feat", time: Date.now() }
-    service.emit(created({ id: "ses-wt", directory: "/repo/.kilo/worktrees/feat" }))
+    internal.pendingFollowup = { dir: "/repo/.accurecode/worktrees/feat", time: Date.now() }
+    service.emit(created({ id: "ses-wt", directory: "/repo/.accurecode/worktrees/feat" }))
     await Promise.resolve()
 
-    expect(adopted).toEqual([{ id: "ses-wt", dir: "/repo/.kilo/worktrees/feat" }])
+    expect(adopted).toEqual([{ id: "ses-wt", dir: "/repo/.accurecode/worktrees/feat" }])
   })
 })

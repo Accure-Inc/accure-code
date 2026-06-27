@@ -2,14 +2,14 @@ import type {
   IndexingConfigInput,
   IndexingTelemetryEvent,
   VectorStoreSearchResult,
-} from "@kilocode/accure-indexing/engine"
-import type { IndexingStatus } from "@kilocode/accure-indexing/status"
+} from "@accurecode/accure-indexing/engine"
+import type { IndexingStatus } from "@accurecode/accure-indexing/status"
 import { withTimeout } from "@/util/timeout"
 import type { Event, Log, Message, Request, Result } from "./indexing-worker-protocol"
 import type { IndexingWarning } from "./indexing-warning"
 
 declare global {
-  const KILO_INDEXING_WORKER_PATH: string
+  const ACCURECODE_INDEXING_WORKER_PATH: string
 }
 
 export namespace IndexingWorker {
@@ -55,8 +55,8 @@ export namespace IndexingWorker {
     if (shared && !shared.stopped) return shared
 
     const file =
-      typeof KILO_INDEXING_WORKER_PATH !== "undefined"
-        ? KILO_INDEXING_WORKER_PATH
+      typeof ACCURECODE_INDEXING_WORKER_PATH !== "undefined"
+        ? ACCURECODE_INDEXING_WORKER_PATH
         : new URL("./indexing-worker.ts", import.meta.url)
     const state: Channel = {
       task: new Worker(file, { ref: false }),
@@ -160,7 +160,7 @@ export namespace IndexingWorker {
               root,
               config,
               baselineDirectory,
-              lancedbPath: process.env.KILO_LANCEDB_PATH,
+              lancedbPath: process.env.ACCURECODE_LANCEDB_PATH,
             },
           },
           (message) => {

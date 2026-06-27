@@ -1,6 +1,6 @@
-package ai.kilocode.backend.cli
+package ai.accurecode.backend.cli
 
-import ai.kilocode.backend.cli.KiloBackendHttpClients
+import ai.accurecode.backend.cli.AccureBackendHttpClients
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import java.util.Base64
@@ -8,7 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class KiloBackendHttpClientsTest {
+class AccureBackendHttpClientsTest {
 
     @Test
     fun `api client sends correct basic auth header`() {
@@ -17,7 +17,7 @@ class KiloBackendHttpClientsTest {
         server.enqueue(MockResponse().setBody("ok"))
         server.start()
 
-        val client = KiloBackendHttpClients.api(pwd)
+        val client = AccureBackendHttpClients.api(pwd)
         try {
             val request = okhttp3.Request.Builder()
                 .url(server.url("/test"))
@@ -27,43 +27,43 @@ class KiloBackendHttpClientsTest {
             }
 
             val recorded = server.takeRequest()
-            val expected = "Basic ${Base64.getEncoder().encodeToString("kilo:$pwd".toByteArray())}"
+            val expected = "Basic ${Base64.getEncoder().encodeToString("accure:$pwd".toByteArray())}"
             assertEquals(expected, recorded.getHeader("Authorization"))
         } finally {
-            KiloBackendHttpClients.shutdown(client)
+            AccureBackendHttpClients.shutdown(client)
             server.shutdown()
         }
     }
 
     @Test
     fun `api client has no call or read timeout`() {
-        val client = KiloBackendHttpClients.api("test")
+        val client = AccureBackendHttpClients.api("test")
         try {
             assertEquals(0, client.callTimeoutMillis)
             assertEquals(0, client.readTimeoutMillis)
         } finally {
-            KiloBackendHttpClients.shutdown(client)
+            AccureBackendHttpClients.shutdown(client)
         }
     }
 
     @Test
     fun `api client has connect timeout`() {
-        val client = KiloBackendHttpClients.api("test")
+        val client = AccureBackendHttpClients.api("test")
         try {
             assertTrue(client.connectTimeoutMillis > 0)
         } finally {
-            KiloBackendHttpClients.shutdown(client)
+            AccureBackendHttpClients.shutdown(client)
         }
     }
 
     @Test
     fun `health client has short timeout`() {
-        val client = KiloBackendHttpClients.health("test")
+        val client = AccureBackendHttpClients.health("test")
         try {
             assertEquals(3000, client.callTimeoutMillis)
             assertEquals(3000, client.connectTimeoutMillis)
         } finally {
-            KiloBackendHttpClients.shutdown(client)
+            AccureBackendHttpClients.shutdown(client)
         }
     }
 
@@ -74,7 +74,7 @@ class KiloBackendHttpClientsTest {
         server.enqueue(MockResponse().setBody("ok"))
         server.start()
 
-        val client = KiloBackendHttpClients.health(pwd)
+        val client = AccureBackendHttpClients.health(pwd)
         try {
             val request = okhttp3.Request.Builder()
                 .url(server.url("/global/health"))
@@ -84,18 +84,18 @@ class KiloBackendHttpClientsTest {
             }
 
             val recorded = server.takeRequest()
-            val expected = "Basic ${Base64.getEncoder().encodeToString("kilo:$pwd".toByteArray())}"
+            val expected = "Basic ${Base64.getEncoder().encodeToString("accure:$pwd".toByteArray())}"
             assertEquals(expected, recorded.getHeader("Authorization"))
         } finally {
-            KiloBackendHttpClients.shutdown(client)
+            AccureBackendHttpClients.shutdown(client)
             server.shutdown()
         }
     }
 
     @Test
     fun `shutdown evicts connection pool`() {
-        val client = KiloBackendHttpClients.api("test")
-        KiloBackendHttpClients.shutdown(client)
+        val client = AccureBackendHttpClients.api("test")
+        AccureBackendHttpClients.shutdown(client)
         assertEquals(0, client.connectionPool.connectionCount())
     }
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it, mock } from "bun:test"
-import { removeAgent, removeMcp, type RemoveConfigItemContext } from "../../src/kilo-provider/remove-config-item"
+import { removeAgent, removeMcp, type RemoveConfigItemContext } from "../../src/accure-provider/remove-config-item"
 
 function context(opts: {
   project?: string

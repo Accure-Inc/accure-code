@@ -1,10 +1,10 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { Config } from "@/config/config"
 import { Auth } from "@/auth"
 import { ModelCache } from "./model-cache"
 import * as Core from "@opencode-ai/core/models-dev"
 import { Context, Effect, Layer } from "effect"
-import { AI_SDK_PROVIDERS, KILO_OPENROUTER_BASE, PROMPTS } from "@kilocode/accure-gateway"
+import { AI_SDK_PROVIDERS, ACCURECODE_OPENROUTER_BASE, PROMPTS } from "@accurecode/accure-gateway"
 
 export const Model = Core.Model
 export type Model = Core.Model
@@ -46,7 +46,7 @@ export const layer: Layer.Layer<Service, never, Core.Service | Config.Service | 
         const cfg = yield* config.get()
         const disabled = new Set(cfg.disabled_providers ?? [])
         const enabled = cfg.enabled_providers ? new Set(cfg.enabled_providers) : undefined
-        const allowed = (!enabled || enabled.has("kilo")) && !disabled.has("kilo")
+        const allowed = (!enabled || enabled.has("accure")) && !disabled.has("accure")
         const apt = cfg.provider?.apertis?.options
         const aptURL = apt?.baseURL ?? "https://api.apertis.ai/v1"
         const aptOpts = apt?.baseURL ? { baseURL: apt.baseURL } : {}
@@ -66,30 +66,6 @@ export const layer: Layer.Layer<Service, never, Core.Service | Config.Service | 
             yield* cache.refresh("apertis", aptOpts).pipe(Effect.ignore, Effect.forkDetach)
         })
 
-        if (!allowed) {
-          yield* addApertis()
-          return providers
-        }
-
-        const opts = cfg.provider?.kilo?.options
-        const info = yield* auth.get("kilo").pipe(Effect.catch(() => Effect.succeed(undefined)))
-        const org = opts?.kilocodeOrganizationId ?? (info?.type === "oauth" ? info.accountId : undefined)
-        const url = baseURL(opts?.baseURL, org)
-        const fetch = {
-          ...(url ? { baseURL: url } : {}),
-          ...(org ? { kilocodeOrganizationId: org } : {}),
-        }
-        const models = yield* cache.fetch("kilo", fetch).pipe(Effect.catch(() => Effect.succeed({})))
-        providers.kilo = {
-          id: "kilo",
-          name: "Kilo Gateway",
-          env: ["KILO_API_KEY"],
-          api: KILO_OPENROUTER_BASE.endsWith("/") ? KILO_OPENROUTER_BASE : `${KILO_OPENROUTER_BASE}/`,
-          npm: "@kilocode/accure-gateway",
-          models,
-        }
-        if (Object.keys(models).length === 0) yield* cache.refresh("kilo", fetch).pipe(Effect.ignore, Effect.forkDetach)
-        
         const accureIqxUrl = process.env.VLLM_BASE_URL || process.env.ACCUREIQX_API_URL || "http://localhost:8000/v1"
         const accureIqxUrlNormalized = accureIqxUrl.endsWith("/") ? accureIqxUrl : `${accureIqxUrl}/`
         providers.accureiqx = {
@@ -111,9 +87,87 @@ export const layer: Layer.Layer<Service, never, Core.Service | Config.Service | 
               tool_call: true,
               release_date: "",
               modalities: { input: ["text", "image"], output: ["text"] },
-            }
-          }
+            },
+          },
         }
+
+        // Accure Models: vLLM-based provider with ATM-3, ATM-4, AVM-3
+        // Always injected so models appear in the picker; the dialog collects credentials.
+        const accureModelsCfg = cfg.provider?.["accure-models"]?.options
+        const accureBaseUrl = process.env.ACCURE_MODELS_URL || accureModelsCfg?.baseURL || "http://jenkins.accure.ai:9006/v1"
+        providers["accure-models"] = {
+          id: "accure-models",
+          name: "Accure Models",
+          env: ["ACCURE_MODELS_API_KEY"],
+          npm: "@ai-sdk/openai-compatible",
+          api: accureBaseUrl.endsWith("/") ? accureBaseUrl : `${accureBaseUrl}/`,
+          models: {
+            "atm-3": {
+              id: "atm-3",
+              name: "Accure ATM-3",
+              family: "openai",
+              cost: { input: 0, output: 0 },
+              limit: { context: 128000, output: 8192 },
+              attachment: false,
+              reasoning: false,
+              temperature: true,
+              tool_call: true,
+              release_date: "",
+              modalities: { input: ["text"], output: ["text"] },
+            },
+            "atm-4": {
+              id: "atm-4",
+              name: "Accure ATM-4",
+              family: "openai",
+              cost: { input: 0, output: 0 },
+              limit: { context: 128000, output: 8192 },
+              attachment: true,
+              reasoning: false,
+              temperature: true,
+              tool_call: true,
+              release_date: "",
+              modalities: { input: ["text", "image"], output: ["text"] },
+            },
+            "avm-3": {
+              id: "avm-3",
+              name: "Accure AVM-3",
+              family: "openai",
+              cost: { input: 0, output: 0 },
+              limit: { context: 128000, output: 8192 },
+              attachment: true,
+              reasoning: false,
+              temperature: true,
+              tool_call: true,
+              release_date: "",
+              modalities: { input: ["text", "image"], output: ["text"] },
+            },
+          },
+        }
+
+        if (!allowed) {
+          yield* addApertis()
+          return providers
+        }
+
+        const opts = cfg.provider?.accurecode?.options
+        const info = yield* auth.get("accure").pipe(Effect.catch(() => Effect.succeed(undefined)))
+        const org = opts?.accurecodeOrganizationId ?? (info?.type === "oauth" ? info.accountId : undefined)
+        const url = baseURL(opts?.baseURL, org)
+        const fetch = {
+          ...(url ? { baseURL: url } : {}),
+          ...(org ? { accurecodeOrganizationId: org } : {}),
+        }
+        const models = yield* cache.fetch("accure", fetch).pipe(Effect.catch(() => Effect.succeed({})))
+        providers.accure = {
+          id: "accure",
+          name: "Accure Gateway",
+          env: ["ACCURECODE_API_KEY"],
+          api: ACCURECODE_OPENROUTER_BASE.endsWith("/") ? ACCURECODE_OPENROUTER_BASE : `${ACCURECODE_OPENROUTER_BASE}/`,
+          npm: "@accurecode/accure-gateway",
+          models,
+        }
+        if (Object.keys(models).length === 0)
+          yield* cache.refresh("accure", fetch).pipe(Effect.ignore, Effect.forkDetach)
 
         yield* addApertis()
         return providers

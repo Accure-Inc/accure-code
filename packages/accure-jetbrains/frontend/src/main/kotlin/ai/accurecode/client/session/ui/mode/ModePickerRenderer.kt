@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.ui.mode
+package ai.accurecode.client.session.ui.mode
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.PickerRow
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.PickerRow
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.icons.AllIcons
 import com.intellij.ui.RoundedLineBorder
 import com.intellij.ui.SimpleColoredComponent
@@ -35,7 +35,7 @@ internal class ModePickerRenderer(
     }
     private val title = SimpleColoredComponent()
     private val desc = SimpleColoredComponent()
-    private val badge = JBLabel(KiloBundle.message("mode.picker.deprecated"))
+    private val badge = JBLabel(AccureBundle.message("mode.picker.deprecated"))
     private val head = JPanel(FlowLayout(FlowLayout.LEFT, 0, 0)).apply {
         add(title)
         add(badge)

@@ -1,8 +1,8 @@
 import { For, Show } from "solid-js"
-import { Button } from "@kilocode/accure-web-ui/button"
-import { Card } from "@kilocode/accure-web-ui/card"
-import { IconButton } from "@kilocode/accure-web-ui/icon-button"
-import type { Model } from "@kilocode/sdk/v2/client"
+import { Button } from "@accurecode/accure-web-ui/button"
+import { Card } from "@accurecode/accure-web-ui/card"
+import { IconButton } from "@accurecode/accure-web-ui/icon-button"
+import type { Model } from "@accurecode/sdk/v2/client"
 import { SearchField } from "../../components/SearchField"
 import { text } from "../../shared/utils"
 import { ConfigPage, ConfigTag as Tag, SourceBadge } from "./ConfigPage"
@@ -146,7 +146,7 @@ export function ModelsDefaultRoute() {
     <Show when={state.snap()}>
       <ConfigPage
         title="Model defaults"
-        description="The models Kilo uses when an agent or command doesn't pin its own."
+        description="The models Accure uses when an agent or command doesn't pin its own."
       >
         <div class="resolved-grid model-defaults model-default-fields">
           <For each={slots}>
@@ -201,7 +201,7 @@ export function ModelsDefaultRoute() {
           <header class="ui-card-header">
             <div>
               <h2>Model visibility</h2>
-              <p>Control which Kilo Gateway models appear in model lists.</p>
+              <p>Control which Accure Gateway models appear in model lists.</p>
             </div>
             <Show when={state.ctx.query()?.scope === "project" && privacy()?.overridden}>
               <Button
@@ -224,7 +224,7 @@ export function ModelsDefaultRoute() {
             >
               <span>
                 <strong>Hide prompt-training models</strong>
-                <small>Hide Kilo Gateway models whose providers may use your prompts for training.</small>
+                <small>Hide Accure Gateway models whose providers may use your prompts for training.</small>
                 <Show when={privacy()?.reason}>{(reason) => <small>{reason()}</small>}</Show>
               </span>
               <span class="tags">
@@ -428,7 +428,7 @@ export function ModelsAvailableRoute() {
                   class="models-privacy-filter"
                   classList={{ selected: state.privacy() }}
                   type="button"
-                  aria-label="Hide Kilo Gateway models whose providers may use prompts for training"
+                  aria-label="Hide Accure Gateway models whose providers may use prompts for training"
                   aria-pressed={state.privacy()}
                   onClick={() => state.setPrivacy(!state.privacy())}
                 >

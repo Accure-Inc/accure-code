@@ -1,10 +1,10 @@
-package ai.kilocode.client
+package ai.accurecode.client
 
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.session.SessionSidePanelManager
-import ai.kilocode.client.telemetry.Telemetry
-import ai.kilocode.log.KiloLog
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.session.SessionSidePanelManager
+import ai.accurecode.client.telemetry.Telemetry
+import ai.accurecode.log.AccureLog
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
@@ -19,30 +19,30 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Creates the Kilo Code tool window and delegates session content management.
+ * Creates the Accure Code tool window and delegates session content management.
  *
  * Resolves the project directory through the backend (handles split-mode
  * where `project.basePath` is a synthetic frontend path) before creating
  * the workspace. The tool window shows a loading state until resolution
  * completes.
  */
-class KiloToolWindowFactory : ToolWindowFactory, DumbAware {
+class AccureToolWindowFactory : ToolWindowFactory, DumbAware {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        project.service<KiloToolWindowSetupService>().create(toolWindow)
+        project.service<AccureToolWindowSetupService>().create(toolWindow)
     }
 }
 
-private val LOG = KiloLog.create(KiloToolWindowFactory::class.java)
+private val LOG = AccureLog.create(AccureToolWindowFactory::class.java)
 
 @Service(Service.Level.PROJECT)
-internal class KiloToolWindowSetupService(
+internal class AccureToolWindowSetupService(
     private val project: Project,
     private val cs: CoroutineScope,
 ) {
     fun create(toolWindow: ToolWindow) {
         val start = System.currentTimeMillis()
         try {
-            val workspaces = service<KiloWorkspaceService>()
+            val workspaces = service<AccureWorkspaceService>()
             val hint = project.basePath ?: ""
 
             cs.launch {
@@ -58,7 +58,7 @@ internal class KiloToolWindowSetupService(
             }
         } catch (e: Exception) {
             Telemetry.send("Tool Window Setup Failed", mapOf("stage" to "create", "errorClass" to e::class.java.name))
-            LOG.error("Failed to create Kilo tool window content", e)
+            LOG.error("Failed to create Accure tool window content", e)
         }
     }
 
@@ -77,14 +77,14 @@ internal class KiloToolWindowSetupService(
             manager.newSession()
 
             val actions = listOfNotNull(
-                ActionManager.getInstance().getAction("Kilo.NewSession"),
-                ActionManager.getInstance().getAction("Kilo.History"),
-                ActionManager.getInstance().getAction("Kilo.Settings"),
+                ActionManager.getInstance().getAction("Accure.NewSession"),
+                ActionManager.getInstance().getAction("Accure.History"),
+                ActionManager.getInstance().getAction("Accure.Settings"),
             )
             toolWindow.setTitleActions(actions)
         } catch (e: Exception) {
             Telemetry.send("Tool Window Setup Failed", mapOf("stage" to "setup", "errorClass" to e::class.java.name))
-            LOG.error("Failed to set up Kilo tool window content", e)
+            LOG.error("Failed to set up Accure tool window content", e)
         }
     }
 }

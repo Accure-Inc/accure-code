@@ -1,22 +1,22 @@
 @file:Suppress("TooManyFunctions")
 
-package ai.kilocode.client.session.views.tool
+package ai.accurecode.client.session.views.tool
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.selection.SessionCopyTarget
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.SessionViewIcons
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
-import ai.kilocode.cli.KiloCliParser
-import ai.kilocode.log.KiloLog
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.selection.SessionCopyTarget
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.SessionViewIcons
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
+import ai.accurecode.cli.AccureCliParser
+import ai.accurecode.log.AccureLog
 import com.intellij.openapi.actionSystem.DataSink
 import com.intellij.openapi.actionSystem.UiDataProvider
 import com.intellij.openapi.Disposable
@@ -46,7 +46,7 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants
 
-private val LOG = KiloLog.create(ToolParts::class.java)
+private val LOG = AccureLog.create(ToolParts::class.java)
 
 enum class ToolBodyMode { EDITOR, TEXT }
 
@@ -427,8 +427,8 @@ internal fun icon(tool: Tool) = when (tool.name) {
 }
 
 internal fun title(tool: Tool) = when (tool.name) {
-    "read" -> KiloBundle.message("session.part.tool.read")
-    "bash" -> KiloBundle.message("session.part.tool.shell")
+    "read" -> AccureBundle.message("session.part.tool.read")
+    "bash" -> AccureBundle.message("session.part.tool.shell")
     else -> toolTitle(tool)
 }
 
@@ -515,10 +515,10 @@ internal fun titleColor(tool: Tool) = if (tool.state == ToolExecState.ERROR) {
 }
 
 internal fun stateText(tool: Tool) = when (tool.state) {
-    ToolExecState.PENDING -> KiloBundle.message("session.part.tool.pending")
-    ToolExecState.RUNNING -> KiloBundle.message("session.part.tool.running")
+    ToolExecState.PENDING -> AccureBundle.message("session.part.tool.pending")
+    ToolExecState.RUNNING -> AccureBundle.message("session.part.tool.running")
     ToolExecState.COMPLETED -> ""
-    ToolExecState.ERROR -> KiloBundle.message("session.part.tool.error")
+    ToolExecState.ERROR -> AccureBundle.message("session.part.tool.error")
 }
 
 private fun readPath(tool: Tool): String {
@@ -568,8 +568,8 @@ internal data class Target(
 internal fun target(tool: Tool): Target? {
     val out = output(tool)
     if (out.isBlank()) return null
-    val path = KiloCliParser.tag(out, "path") ?: return null
-    val type = KiloCliParser.tag(out, "type") ?: return null
+    val path = AccureCliParser.tag(out, "path") ?: return null
+    val type = AccureCliParser.tag(out, "type") ?: return null
     return Target(path, type.lowercase())
 }
 
@@ -695,7 +695,7 @@ private class Preview {
     fun build(): String {
         if (!cut) return text.toString()
         if (text.isNotEmpty()) text.append("\n\n")
-        text.append(KiloBundle.message("session.part.tool.truncated"))
+        text.append(AccureBundle.message("session.part.tool.truncated"))
         return text.toString()
     }
 }

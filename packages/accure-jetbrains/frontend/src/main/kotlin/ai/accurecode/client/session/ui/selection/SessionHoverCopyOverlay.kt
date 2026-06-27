@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.ui.selection
+package ai.accurecode.client.session.ui.selection
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer

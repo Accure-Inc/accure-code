@@ -31,7 +31,7 @@ export interface DialogSelectProps<T> {
   onSelect?: (option: DialogSelectOption<T>) => void
   skipFilter?: boolean
   renderFilter?: boolean
-  actions?: DialogSelectAction<T>[] // kilocode_change - supports actions without a selected option
+  actions?: DialogSelectAction<T>[] // accurecode_change - supports actions without a selected option
   footerHints?: {
     title: string
     label: string
@@ -41,7 +41,7 @@ export interface DialogSelectProps<T> {
   current?: T
 }
 
-// kilocode_change start - support list-level actions when no option is selected
+// accurecode_change start - support list-level actions when no option is selected
 type DialogSelectActionBase = {
   command: string
   title: string
@@ -60,7 +60,7 @@ type DialogSelectAction<T> = DialogSelectActionBase &
         onTrigger: () => void
       }
   )
-// kilocode_change end
+// accurecode_change end
 
 export interface DialogSelectOption<T = any> {
   title: string
@@ -318,12 +318,12 @@ export function DialogSelect<T>(props: DialogSelectProps<T>) {
           category: "Dialog",
           run() {
             setStore("input", "keyboard")
-            // kilocode_change start - allow actions such as scope toggles on empty lists
+            // accurecode_change start - allow actions such as scope toggles on empty lists
             if (item.requiresSelection === false) {
               item.onTrigger()
               return
             }
-            // kilocode_change end
+            // accurecode_change end
             const option = selected()
             if (!option) return
             item.onTrigger(option)

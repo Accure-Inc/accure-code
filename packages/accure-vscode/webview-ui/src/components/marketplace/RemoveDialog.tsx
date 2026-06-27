@@ -1,5 +1,5 @@
-import { Dialog } from "@kilocode/accure-ui/dialog"
-import { Button } from "@kilocode/accure-ui/button"
+import { Dialog } from "@accurecode/accure-ui/dialog"
+import { Button } from "@accurecode/accure-ui/button"
 import type { MarketplaceItem } from "../../types/marketplace"
 import { useLanguage } from "../../context/language"
 

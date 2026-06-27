@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
 import { Effect } from "effect"
-import { KiloSessionPromptQueue } from "../../../src/kilocode/session/prompt-queue"
-import { Suggestion } from "../../../src/kilocode/suggestion"
+import { AccureSessionPromptQueue } from "../../../src/accurecode/session/prompt-queue"
+import { Suggestion } from "../../../src/accurecode/suggestion"
 import { provideTestInstance } from "../../fixture/fixture"
 import { MessageID, SessionID } from "../../../src/session/schema"
 import { tmpdir } from "../../fixture/fixture"
@@ -22,7 +22,7 @@ describe("Suggestion.show auto-dismiss on queued followup", () => {
 
         // Slot 1 stays running so activeSince is pinned to its seq.
         const first = Effect.runPromise(
-          KiloSessionPromptQueue.enqueue(
+          AccureSessionPromptQueue.enqueue(
             sessionID,
             MessageID.make("msg_show_1"),
             Effect.gen(function* () {
@@ -37,7 +37,7 @@ describe("Suggestion.show auto-dismiss on queued followup", () => {
 
         // Slot 2 arrives while slot 1 is active — latest > activeSince.
         const second = Effect.runPromise(
-          KiloSessionPromptQueue.enqueue(
+          AccureSessionPromptQueue.enqueue(
             sessionID,
             MessageID.make("msg_show_2"),
             Effect.succeed("second" as const),
@@ -45,7 +45,7 @@ describe("Suggestion.show auto-dismiss on queued followup", () => {
           ),
         )
         await Bun.sleep(10)
-        expect(KiloSessionPromptQueue.hasFollowup(sessionID)).toBe(true)
+        expect(AccureSessionPromptQueue.hasFollowup(sessionID)).toBe(true)
 
         await expect(
           Suggestion.show({

@@ -1,4 +1,4 @@
-export type KiloProviderOptions = {
+export type AccureProviderOptions = {
   projectDirectory?: string | null
   platform?: string
   snapshotInitialization?: "wait"

@@ -58,7 +58,7 @@ function run(msg: Msg) {
   })
 }
 
-// kilocode_change start - make worker finalization await the process close event without a Windows race
+// accurecode_change start - make worker finalization await the process close event without a Windows race
 const closed = new WeakMap<ReturnType<typeof spawn>, Promise<void>>()
 
 function spawnWorker(msg: Msg) {
@@ -85,7 +85,7 @@ async function stopWorker(proc: ReturnType<typeof spawnWorker>) {
   proc.kill()
   return close
 }
-// kilocode_change end
+// accurecode_change end
 
 async function waitForFile(file: string, timeout = 3_000) {
   const stop = Date.now() + timeout
@@ -369,7 +369,7 @@ describe("util.effect-flock", () => {
 
         try {
           await waitForFile(ready, 5_000)
-          await stopWorker(proc) // kilocode_change - stopWorker now awaits close before returning
+          await stopWorker(proc) // accurecode_change - stopWorker now awaits close before returning
 
           // Backdate lock files so they're past STALE_MS (60s)
           const lockDir = lock(dir, "eflock:crash")

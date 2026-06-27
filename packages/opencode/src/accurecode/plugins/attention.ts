@@ -1,6 +1,6 @@
-import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@kilocode/plugin/tui"
+import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@accurecode/plugin/tui"
 
-const id = "internal:kilo-attention"
+const id = "internal:accure-attention"
 
 function notify(api: TuiPluginApi, sessionID: string, message: string) {
   const session = api.state.session.get(sessionID)

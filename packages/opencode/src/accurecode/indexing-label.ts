@@ -1,4 +1,4 @@
-import type { IndexingStatus } from "@kilocode/accure-indexing/status"
+import type { IndexingStatus } from "@accurecode/accure-indexing/status"
 
 export function formatIndexingLabel(status: IndexingStatus): string {
   if (status.state === "In Progress") {

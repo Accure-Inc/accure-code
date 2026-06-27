@@ -173,7 +173,7 @@ export const layer: Layer.Layer<
         }),
       )
 
-    const fakeVcs = Schema.decodeUnknownSync(Schema.optional(ProjectVcs))(Flag.KILO_FAKE_VCS)
+    const fakeVcs = Schema.decodeUnknownSync(Schema.optional(ProjectVcs))(Flag.ACCURECODE_FAKE_VCS)
 
     const resolveGitPath = (cwd: string, name: string) => {
       if (!name) return cwd
@@ -187,9 +187,9 @@ export const layer: Layer.Layer<
     const scope = yield* Scope.Scope
 
     const readCachedProjectId = Effect.fnUntraced(function* (dir: string) {
-      // kilocode change start
-      return yield* fs.readFileString(pathSvc.join(dir, "kilo")).pipe(
-        // kilocode change end
+      // accurecode change start
+      return yield* fs.readFileString(pathSvc.join(dir, "accure")).pipe(
+        // accurecode change end
         Effect.map((x) => x.trim()),
         Effect.map((x) => ProjectID.make(x)),
         Effect.catch(() => Effect.void),
@@ -256,7 +256,7 @@ export const layer: Layer.Layer<
 
           id = roots[0] ? ProjectID.make(roots[0]) : undefined
           if (id) {
-            yield* fs.writeFileString(pathSvc.join(common, "kilo"), id).pipe(Effect.ignore) // kilocode_change
+            yield* fs.writeFileString(pathSvc.join(common, "accure"), id).pipe(Effect.ignore) // accurecode_change
           }
         }
 

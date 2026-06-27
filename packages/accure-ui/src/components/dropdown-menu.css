@@ -1,4 +1,4 @@
-/* Kilo Dropdown Menu overrides – sized to match @vscode/webview-ui-toolkit */
+/* Accure Dropdown Menu overrides – sized to match @vscode/webview-ui-toolkit */
 
 [data-component="dropdown-menu-content"],
 [data-component="dropdown-menu-sub-content"] {
@@ -11,7 +11,7 @@
   [data-slot="dropdown-menu-sub-trigger"] {
     border-radius: 0;
     padding: 0 2px 1px;
-    font-size: var(--kilo-font-size-13);
+    font-size: var(--accure-font-size-13);
     line-height: normal;
     cursor: pointer;
 

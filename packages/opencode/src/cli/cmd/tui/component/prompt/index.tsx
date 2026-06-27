@@ -36,7 +36,7 @@ import { useRenderer, useTerminalDimensions, type JSX } from "@opentui/solid"
 import * as Editor from "@tui/util/editor"
 import { useExit } from "../../context/exit"
 import * as Clipboard from "../../util/clipboard"
-import type { AssistantMessage, FilePart, UserMessage } from "@kilocode/sdk/v2"
+import type { AssistantMessage, FilePart, UserMessage } from "@accurecode/sdk/v2"
 import { TuiEvent } from "../../event"
 import { iife } from "@/util/iife"
 import { Locale } from "@/util/locale"
@@ -57,13 +57,13 @@ import {
 } from "../dialog-workspace-create"
 import { DialogWorkspaceUnavailable } from "../dialog-workspace-unavailable"
 import { useArgs } from "@tui/context/args"
-// kilocode_change start
-import { KiloSessionTuiSync } from "@/kilocode/session/tui-sync"
-import { slashMatches } from "@/kilocode/cli/cmd/command-display"
-// kilocode_change end
+// accurecode_change start
+import { AccureSessionTuiSync } from "@/accurecode/session/tui-sync"
+import { slashMatches } from "@/accurecode/cli/cmd/command-display"
+// accurecode_change end
 import { Flag } from "@opencode-ai/core/flag/flag"
 import { type WorkspaceStatus } from "../workspace-label"
-import { KILO_BASE_MODE, useBindings, useCommandShortcut, useLeaderActive, useOpencodeKeymap } from "../../keymap"
+import { ACCURECODE_BASE_MODE, useBindings, useCommandShortcut, useLeaderActive, useOpencodeKeymap } from "../../keymap"
 import { useTuiConfig } from "../../context/tui-config"
 
 export type PromptProps = {
@@ -360,7 +360,7 @@ export function Prompt(props: PromptProps) {
     mode: "normal" | "shell"
     extmarkToPartIndex: Map<number, number>
     interrupt: number
-    exitPress: number // kilocode_change - track double ctrl+c to exit
+    exitPress: number // accurecode_change - track double ctrl+c to exit
     placeholder: number
   }>({
     placeholder: randomIndex(list().length),
@@ -371,7 +371,7 @@ export function Prompt(props: PromptProps) {
     mode: "normal",
     extmarkToPartIndex: new Map(),
     interrupt: 0,
-    exitPress: 0, // kilocode_change
+    exitPress: 0, // accurecode_change
   })
 
   createEffect(
@@ -384,7 +384,7 @@ export function Prompt(props: PromptProps) {
     ),
   )
 
-  // kilocode_change start - sync local agent/model whenever newest user message changes
+  // accurecode_change start - sync local agent/model whenever newest user message changes
   let syncedKey: string | undefined
   createEffect(() => {
     const sessionID = props.sessionID
@@ -392,7 +392,7 @@ export function Prompt(props: PromptProps) {
     if (!sessionID || !msg) return
     const parts = sync.data.part[msg.id]
     if (!parts) return
-    if (!KiloSessionTuiSync.model({ role: msg.role, parts })) return
+    if (!AccureSessionTuiSync.model({ role: msg.role, parts })) return
 
     const key = [sessionID, msg.id].join(":")
     if (key === syncedKey) return
@@ -409,7 +409,7 @@ export function Prompt(props: PromptProps) {
       }
     }
   })
-  // kilocode_change end
+  // accurecode_change end
 
   const promptCommands = createMemo(() =>
     [
@@ -608,7 +608,7 @@ export function Prompt(props: PromptProps) {
         desc: "Change the workspace for the session",
         name: "workspace.set",
         category: "Session",
-        enabled: Flag.KILO_EXPERIMENTAL_WORKSPACES,
+        enabled: Flag.ACCURECODE_EXPERIMENTAL_WORKSPACES,
         slashName: "warp",
         run: () => {
           void openWorkspaceSelect({
@@ -634,7 +634,7 @@ export function Prompt(props: PromptProps) {
   }))
 
   useBindings(() => ({
-    mode: KILO_BASE_MODE,
+    mode: ACCURECODE_BASE_MODE,
     bindings: tuiConfig.keybinds.gather("prompt.palette", [
       "prompt.submit",
       "prompt.editor",
@@ -700,13 +700,13 @@ export function Prompt(props: PromptProps) {
     props.ref?.(undefined)
   })
 
-  // kilocode_change start - close autocomplete while blocking overlays hide the prompt
+  // accurecode_change start - close autocomplete while blocking overlays hide the prompt
   createEffect(() => {
     if (props.visible === false || props.disabled) {
       auto()?.dismiss()
     }
   })
-  // kilocode_change end
+  // accurecode_change end
 
   createEffect(() => {
     if (!input || input.isDestroyed) return
@@ -889,7 +889,7 @@ export function Prompt(props: PromptProps) {
     }
   })
 
-  // kilocode_change start - require a double Ctrl+C to exit from an empty focused prompt
+  // accurecode_change start - require a double Ctrl+C to exit from an empty focused prompt
   useBindings(() => ({
     target: inputTarget,
     enabled: inputTarget() !== undefined && !props.disabled && store.prompt.input === "",
@@ -908,7 +908,7 @@ export function Prompt(props: PromptProps) {
       },
     ],
   }))
-  // kilocode_change end
+  // accurecode_change end
 
   useBindings(() => {
     return {
@@ -1173,7 +1173,7 @@ export function Prompt(props: PromptProps) {
     if (store.mode === "shell") {
       void sdk.client.session.shell({
         sessionID,
-        agent: local.agent.current()?.name ?? "", // kilocode_change
+        agent: local.agent.current()?.name ?? "", // accurecode_change
         model: {
           providerID: selectedModel.providerID,
           modelID: selectedModel.modelID,
@@ -1186,7 +1186,7 @@ export function Prompt(props: PromptProps) {
       iife(() => {
         const firstLine = inputText.split("\n")[0]
         const command = firstLine.split(" ")[0].slice(1)
-        return sync.data.command.some((x) => slashMatches(x, command)) // kilocode_change
+        return sync.data.command.some((x) => slashMatches(x, command)) // accurecode_change
       })
     ) {
       // Parse command from first line, preserve multi-line content in arguments
@@ -1200,7 +1200,7 @@ export function Prompt(props: PromptProps) {
         sessionID,
         command: command.slice(1),
         arguments: args,
-        agent: local.agent.current()?.name ?? "", // kilocode_change
+        agent: local.agent.current()?.name ?? "", // accurecode_change
         model: `${selectedModel.providerID}/${selectedModel.modelID}`,
         messageID,
         variant,
@@ -1217,7 +1217,7 @@ export function Prompt(props: PromptProps) {
           sessionID,
           ...selectedModel,
           messageID,
-          agent: local.agent.current()?.name ?? "", // kilocode_change
+          agent: local.agent.current()?.name ?? "", // accurecode_change
           model: selectedModel,
           variant,
           parts: [
@@ -1233,7 +1233,7 @@ export function Prompt(props: PromptProps) {
         .catch(() => {})
       if (editorParts.length > 0) editor.markSelectionSent()
     }
-    toast.dismiss() // kilocode_change - dismiss persistent config warning on first submit
+    toast.dismiss() // accurecode_change - dismiss persistent config warning on first submit
     history.append({
       ...store.prompt,
       mode: currentMode,
@@ -1339,7 +1339,7 @@ export function Prompt(props: PromptProps) {
 
     const lineCount = (pastedContent.match(/\n/g)?.length ?? 0) + 1
     if (
-      (lineCount >= 5 || pastedContent.length > 800) && // kilocode_change #7252 delay paste summary
+      (lineCount >= 5 || pastedContent.length > 800) && // accurecode_change #7252 delay paste summary
       kv.get("paste_summary_enabled", !sync.data.config.experimental?.disable_paste_summary)
     ) {
       pasteText(pastedContent, `[Pasted ~${lineCount} lines]`)
@@ -1424,7 +1424,7 @@ export function Prompt(props: PromptProps) {
     if (store.mode === "shell") return theme.primary
     const agent = local.agent.current()
     if (!agent) return theme.border
-    return local.agent.color(agent.name ?? "") // kilocode_change
+    return local.agent.color(agent.name ?? "") // accurecode_change
   })
 
   const showVariant = createMemo(() => {
@@ -1481,7 +1481,7 @@ export function Prompt(props: PromptProps) {
       status().type !== "idle"
         ? (local.agent.list().find((a) => a.name === lastUserMessage()?.agent) ?? local.agent.current())
         : local.agent.current()
-    const color = agent ? local.agent.color(agent.name ?? "") : theme.border // kilocode_change
+    const color = agent ? local.agent.color(agent.name ?? "") : theme.border // accurecode_change
     return {
       frames: createFrames({
         color,
@@ -1533,7 +1533,7 @@ export function Prompt(props: PromptProps) {
                 syncExtmarksWithPromptParts()
                 setCursorVersion((value) => value + 1)
               }}
-              /* kilocode_change */ onCursorChange={() => {
+              /* accurecode_change */ onCursorChange={() => {
                 setCursorVersion((value) => value + 1)
                 if (store.mode === "normal") auto()?.onCursorChange()
               }}
@@ -1600,12 +1600,12 @@ export function Prompt(props: PromptProps) {
                   {(agent) => (
                     <>
                       <text fg={fadeColor(highlight(), agentMetaAlpha())}>
-                        {/* kilocode_change start */}
+                        {/* accurecode_change start */}
                         {store.mode === "shell"
                           ? "Shell"
                           : (local.agent.current()?.displayName ??
                             Locale.titlecase(local.agent.current()?.name ?? ""))}{" "}
-                        {/* kilocode_change end */}
+                        {/* accurecode_change end */}
                       </text>
                       <Show when={store.mode === "normal"}>
                         <box flexDirection="row" gap={1}>
@@ -1641,7 +1641,7 @@ export function Prompt(props: PromptProps) {
         </box>
         <box
           height={1}
-          /* kilocode_change */ flexShrink={0}
+          /* accurecode_change */ flexShrink={0}
           border={["left"]}
           borderColor={borderHighlight()}
           customBorderChars={{
@@ -1787,13 +1787,13 @@ export function Prompt(props: PromptProps) {
           </Switch>
           <Show when={status().type !== "retry"}>
             <box gap={2} flexDirection="row">
-              {/* kilocode_change start - show "ctrl+c again to exit" hint */}
+              {/* accurecode_change start - show "ctrl+c again to exit" hint */}
               <Show when={store.exitPress > 0}>
                 <text fg={theme.primary}>
                   ctrl+c <span style={{ fg: theme.primary }}>again to exit</span>
                 </text>
               </Show>
-              {/* kilocode_change end */}
+              {/* accurecode_change end */}
               <Show when={editorContextLabelState() !== "none" ? editorFileLabelDisplay() : undefined}>
                 {(file) => (
                   <text fg={editorContextLabelState() === "pending" ? theme.secondary : theme.textMuted}>{file()}</text>

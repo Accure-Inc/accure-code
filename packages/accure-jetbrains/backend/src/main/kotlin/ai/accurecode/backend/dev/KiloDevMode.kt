@@ -1,7 +1,7 @@
-package ai.kilocode.backend.dev
+package ai.accurecode.backend.dev
 
-import ai.kilocode.log.KiloLog
+import ai.accurecode.log.AccureLog
 
-object KiloDevMode {
-    fun enabled(): Boolean = KiloLog.sandbox()
+object AccureDevMode {
+    fun enabled(): Boolean = AccureLog.sandbox()
 }

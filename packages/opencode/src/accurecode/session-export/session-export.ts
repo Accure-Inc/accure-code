@@ -6,7 +6,7 @@ import { createSequencer } from "./sequence"
 import { SyncSubscriber } from "./sync-subscriber"
 
 declare global {
-  const KILO_SESSION_EXPORT_WORKER_PATH: string
+  const ACCURECODE_SESSION_EXPORT_WORKER_PATH: string
 }
 
 type WorkerTarget = string | URL
@@ -144,7 +144,7 @@ export const shutdown = async (): Promise<void> => {
 }
 
 function target(): WorkerTarget {
-  if (typeof KILO_SESSION_EXPORT_WORKER_PATH !== "undefined") return KILO_SESSION_EXPORT_WORKER_PATH
+  if (typeof ACCURECODE_SESSION_EXPORT_WORKER_PATH !== "undefined") return ACCURECODE_SESSION_EXPORT_WORKER_PATH
   return new URL("./worker.ts", import.meta.url)
 }
 
@@ -199,7 +199,7 @@ function configure(options: Opts): void {
 }
 
 function currentSurface(): string {
-  return process.env.KILOCODE_FEATURE?.trim() || "unknown"
+  return process.env.ACCURECODE_FEATURE?.trim() || "unknown"
 }
 
 function respawn(err: unknown): void {

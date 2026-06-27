@@ -1,4 +1,4 @@
-const env = "KILO_LANCEDB_PATH"
+const env = "ACCURECODE_LANCEDB_PATH"
 
 export function resolveLanceDBSpecifier() {
   return process.env[env] || "@lancedb/lancedb"

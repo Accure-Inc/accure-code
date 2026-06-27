@@ -1,10 +1,10 @@
-package ai.kilocode.client.settings.base
+package ai.accurecode.client.settings.base
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.testing.FakeAppRpcApi
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.testing.FakeAppRpcApi
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.testFramework.replaceService
@@ -23,18 +23,18 @@ import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.text.JTextComponent
 
-class KiloReadyConfigurableTest : BasePlatformTestCase() {
+class AccureReadyConfigurableTest : BasePlatformTestCase() {
     private lateinit var scope: CoroutineScope
     private lateinit var rpc: FakeAppRpcApi
-    private lateinit var app: KiloAppService
+    private lateinit var app: AccureAppService
     private var cfg: FakeConfigurable? = null
 
     override fun setUp() {
         super.setUp()
         scope = CoroutineScope(SupervisorJob())
         rpc = FakeAppRpcApi()
-        app = KiloAppService(scope, rpc)
-        ApplicationManager.getApplication().replaceService(KiloAppService::class.java, app, testRootDisposable)
+        app = AccureAppService(scope, rpc)
+        ApplicationManager.getApplication().replaceService(AccureAppService::class.java, app, testRootDisposable)
     }
 
     override fun tearDown() {
@@ -53,8 +53,8 @@ class KiloReadyConfigurableTest : BasePlatformTestCase() {
 
         edt {
             val text = text(root)
-            assertTrue(text, text.contains(KiloBundle.message("settings.cli.unavailable.title")))
-            assertTrue(text, text.contains(KiloBundle.message("settings.cli.unavailable.message")))
+            assertTrue(text, text.contains(AccureBundle.message("settings.cli.unavailable.title")))
+            assertTrue(text, text.contains(AccureBundle.message("settings.cli.unavailable.message")))
             assertEquals(0, cfg?.created)
         }
     }
@@ -63,15 +63,15 @@ class KiloReadyConfigurableTest : BasePlatformTestCase() {
         val root = edt { create().createComponent() }
         flushUntil { rpc.connected }
 
-        rpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        rpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         flushUntil { edt { cfg?.created == 1 } }
-        rpc.state.value = KiloAppStateDto(KiloAppStatusDto.DISCONNECTED)
+        rpc.state.value = AccureAppStateDto(AccureAppStatusDto.DISCONNECTED)
         flush()
 
         edt {
             assertEquals(1, cfg?.created)
             assertTrue(text(root).contains("Ready content"))
-            assertFalse(text(root).contains(KiloBundle.message("settings.cli.unavailable.title")))
+            assertFalse(text(root).contains(AccureBundle.message("settings.cli.unavailable.title")))
         }
     }
 
@@ -87,7 +87,7 @@ class KiloReadyConfigurableTest : BasePlatformTestCase() {
             assertEquals(0, view.reset)
         }
 
-        rpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        rpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         flushUntil { edt { view.created == 1 } }
 
         edt {
@@ -109,7 +109,7 @@ class KiloReadyConfigurableTest : BasePlatformTestCase() {
             assertNull(view.preferredFocusedComponent)
         }
 
-        rpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        rpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         flushUntil { edt { view.created == 1 } }
 
         edt { assertSame(view.field, view.preferredFocusedComponent) }
@@ -118,7 +118,7 @@ class KiloReadyConfigurableTest : BasePlatformTestCase() {
     fun `test dispose cancels scope and disposes ready UI on edt`() {
         val view = create()
         edt { view.createComponent() }
-        rpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        rpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         flushUntil { edt { view.created == 1 } }
 
         edt { view.disposeUIResources() }
@@ -133,7 +133,7 @@ class KiloReadyConfigurableTest : BasePlatformTestCase() {
         val root = edt { view.createComponent() as SettingsPanel }
         flushUntil { rpc.connected }
 
-        rpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        rpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         flushUntil { edt { view.readyPanel != null } }
 
         edt {
@@ -158,7 +158,7 @@ class KiloReadyConfigurableTest : BasePlatformTestCase() {
         val root = edt { view.createComponent() as SettingsOverlayPanel }
         flushUntil { rpc.connected }
 
-        rpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        rpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         flushUntil { edt { view.created == 1 } }
 
         edt {
@@ -221,7 +221,7 @@ class KiloReadyConfigurableTest : BasePlatformTestCase() {
     private class FakeConfigurable(
         private val overlay: Boolean = false,
         private val scroll: Boolean = true,
-    ) : KiloReadyConfigurable() {
+    ) : AccureReadyConfigurable() {
         val field = JPanel()
         val focuses = mutableListOf<String>()
         var ready: JComponent? = null

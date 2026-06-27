@@ -1,18 +1,18 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.PromptAttachment
-import ai.kilocode.client.session.ui.attachment.AttachmentCard
-import ai.kilocode.client.session.ui.attachment.AttachmentCardItem
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.ui.prompt.PROMPT_ATTACHMENT_PASTE_HANDLER_KEY
-import ai.kilocode.client.session.ui.prompt.PromptAttachmentPasteHandler
-import ai.kilocode.client.session.ui.prompt.PromptAttachmentPasteProvider
-import ai.kilocode.client.session.ui.prompt.PromptDataKeys
-import ai.kilocode.client.session.ui.prompt.PromptPanel
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.test.CopyProviderSink
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.PromptAttachment
+import ai.accurecode.client.session.ui.attachment.AttachmentCard
+import ai.accurecode.client.session.ui.attachment.AttachmentCardItem
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.ui.prompt.PROMPT_ATTACHMENT_PASTE_HANDLER_KEY
+import ai.accurecode.client.session.ui.prompt.PromptAttachmentPasteHandler
+import ai.accurecode.client.session.ui.prompt.PromptAttachmentPasteProvider
+import ai.accurecode.client.session.ui.prompt.PromptDataKeys
+import ai.accurecode.client.session.ui.prompt.PromptPanel
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.test.CopyProviderSink
 import com.intellij.icons.AllIcons
 import com.intellij.notification.Notification
 import com.intellij.notification.Notifications
@@ -155,7 +155,7 @@ class PromptPanelTest : BasePlatformTestCase() {
         UIUtil.dispatchAllInvocationEvents()
 
         assertTrue(editor.preferredSize.height > min)
-        assertEquals(KiloBundle.message("prompt.action.enhance.description"), editor.text)
+        assertEquals(AccureBundle.message("prompt.action.enhance.description"), editor.text)
     }
 
     fun `test prompt shell height is capped by session root`() {
@@ -350,7 +350,7 @@ class PromptPanelTest : BasePlatformTestCase() {
 
         assertTrue(tip.contains("Name: a.png"))
         assertTrue(tip.contains("Type: image/png"))
-        assertTrue(tip.contains("Location: ${KiloBundle.message("prompt.attachment.embedded")}"))
+        assertTrue(tip.contains("Location: ${AccureBundle.message("prompt.attachment.embedded")}"))
         assertFalse(tip.contains("data:image/png"))
         assertFalse(tip.contains("base64"))
         assertFalse(tip.contains("aGVsbG8="))
@@ -447,7 +447,7 @@ class PromptPanelTest : BasePlatformTestCase() {
 
     fun `test prompt paste provider invokes registered handler`() {
         val editor = createEditor()
-        val item = FileListTransferable(listOf(File.createTempFile("kilo-paste", ".txt")))
+        val item = FileListTransferable(listOf(File.createTempFile("accure-paste", ".txt")))
         var seen: Transferable? = null
         editor.putUserData(PROMPT_ATTACHMENT_PASTE_HANDLER_KEY, PromptAttachmentPasteHandler { seen = it })
 
@@ -462,7 +462,7 @@ class PromptPanelTest : BasePlatformTestCase() {
 
     fun `test file list paste adds attachment`() {
         val panel = PromptPanel(project, { _, _ -> }, {}, { _, _ -> })
-        val file = File.createTempFile("kilo-paste", ".txt")
+        val file = File.createTempFile("accure-paste", ".txt")
         file.writeText("hello")
 
         PlatformTestUtil.waitForFuture(panel.processPasteForTest(FileListTransferable(listOf(file))))
@@ -472,19 +472,19 @@ class PromptPanelTest : BasePlatformTestCase() {
     }
 
     fun `test frontend file attachment defers data url encoding until send`() {
-        val file = File.createTempFile("kilo-paste", ".txt")
+        val file = File.createTempFile("accure-paste", ".txt")
         file.writeText("hello")
 
-        val item = ai.kilocode.client.session.model.PromptAttachmentExtractor.files(listOf(file)).single()
+        val item = ai.accurecode.client.session.model.PromptAttachmentExtractor.files(listOf(file)).single()
 
         assertTrue(item.url.startsWith("file://"))
         assertTrue(item.part().url.orEmpty().startsWith("data:text/plain;base64,"))
     }
 
     fun `test pasted frontend file sends data url payload`() {
-        var sent: ai.kilocode.rpc.dto.PromptPartDto? = null
+        var sent: ai.accurecode.rpc.dto.PromptPartDto? = null
         val panel = PromptPanel(project, { _, files -> sent = files.single() }, {}, { _, _ -> })
-        val file = File.createTempFile("kilo-paste", ".txt")
+        val file = File.createTempFile("accure-paste", ".txt")
         file.writeText("hello")
         panel.setReady(true)
 
@@ -511,7 +511,7 @@ class PromptPanelTest : BasePlatformTestCase() {
 
     fun `test file paste ignores companion image flavor`() {
         val panel = PromptPanel(project, { _, _ -> }, {}, { _, _ -> })
-        val file = File.createTempFile("kilo-paste", ".png")
+        val file = File.createTempFile("accure-paste", ".png")
         file.writeBytes(byteArrayOf())
         val image = BufferedImage(2, 2, BufferedImage.TYPE_INT_ARGB)
 
@@ -546,7 +546,7 @@ class PromptPanelTest : BasePlatformTestCase() {
     fun `test prompt button switches between send and stop state`() {
         val panel = PromptPanel(project = project, onSend = { _, _ -> }, onAbort = {}, onEnhance = { _, _ -> })
 
-        assertEquals(KeymapUtil.createTooltipText("Send", "Kilo.SendPrompt"), panel.buttonForTest().toolTipText)
+        assertEquals(KeymapUtil.createTooltipText("Send", "Accure.SendPrompt"), panel.buttonForTest().toolTipText)
         assertFalse(panel.isStopEnabled)
 
         panel.setBusy(true)
@@ -562,8 +562,8 @@ class PromptPanelTest : BasePlatformTestCase() {
         panel.onAutoApproveToggle = { seen = it }
 
         assertFalse(button.isSelected)
-        assertEquals(KiloBundle.message("prompt.action.autoApprove.enable"), button.accessibleContext.accessibleName)
-        assertEquals(KiloBundle.message("prompt.action.autoApprove.disabled.tooltip"), button.toolTipText)
+        assertEquals(AccureBundle.message("prompt.action.autoApprove.enable"), button.accessibleContext.accessibleName)
+        assertEquals(AccureBundle.message("prompt.action.autoApprove.disabled.tooltip"), button.toolTipText)
         val icon = button.icon
 
         button.doClick()
@@ -574,8 +574,8 @@ class PromptPanelTest : BasePlatformTestCase() {
 
         assertTrue(button.isSelected)
         assertNotSame(icon, button.icon)
-        assertEquals(KiloBundle.message("prompt.action.autoApprove.disable"), button.accessibleContext.accessibleName)
-        assertEquals(KiloBundle.message("prompt.action.autoApprove.enabled.tooltip"), button.toolTipText)
+        assertEquals(AccureBundle.message("prompt.action.autoApprove.disable"), button.accessibleContext.accessibleName)
+        assertEquals(AccureBundle.message("prompt.action.autoApprove.enabled.tooltip"), button.toolTipText)
 
         button.doClick()
 
@@ -696,7 +696,7 @@ class PromptPanelTest : BasePlatformTestCase() {
         enhanceButton(panel).doClick()
 
         assertEquals(0, requests)
-        assertEquals(KiloBundle.message("prompt.action.enhance.description"), editor.text)
+        assertEquals(AccureBundle.message("prompt.action.enhance.description"), editor.text)
     }
 
     fun `test pickers belong to rounded shell`() {
@@ -710,8 +710,8 @@ class PromptPanelTest : BasePlatformTestCase() {
     }
 
     private fun autoApproveButton(panel: PromptPanel): JButton {
-        val enable = KiloBundle.message("prompt.action.autoApprove.enable")
-        val disable = KiloBundle.message("prompt.action.autoApprove.disable")
+        val enable = AccureBundle.message("prompt.action.autoApprove.enable")
+        val disable = AccureBundle.message("prompt.action.autoApprove.disable")
         return buttons(panel).first {
             val name = it.accessibleContext.accessibleName
             name == enable || name == disable
@@ -719,7 +719,7 @@ class PromptPanelTest : BasePlatformTestCase() {
     }
 
     private fun attachmentRemoveButton(panel: PromptPanel, item: PromptAttachment): JButton {
-        val name = KiloBundle.message("prompt.attachment.remove", item.name)
+        val name = AccureBundle.message("prompt.attachment.remove", item.name)
         return buttons(panel).first { it.accessibleContext.accessibleName == name }
     }
 
@@ -738,7 +738,7 @@ class PromptPanelTest : BasePlatformTestCase() {
     }
 
     private fun enhanceButton(panel: PromptPanel): JButton {
-        val name = KiloBundle.message("prompt.action.enhance")
+        val name = AccureBundle.message("prompt.action.enhance")
         return buttons(panel).first { it.accessibleContext.accessibleName == name }
     }
 

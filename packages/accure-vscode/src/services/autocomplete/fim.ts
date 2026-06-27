@@ -1,17 +1,17 @@
 import { ResponseMetaData } from "./types"
-import type { KiloConnectionService } from "../cli-backend"
+import type { AccureConnectionService } from "../cli-backend"
 import { getAutocompleteModelById } from "../../shared/autocomplete-models"
 
 const FIM_MAX_TOKENS = 256
 
 /**
  * Generate a FIM (Fill-in-the-Middle) completion via the CLI backend.
- * Uses the SDK's kilo.fim() SSE endpoint which handles auth and streaming.
+ * Uses the SDK's accure.fim() SSE endpoint which handles auth and streaming.
  *
  * @param signal - Optional AbortSignal to cancel the SSE stream early (e.g. when the user types again)
  */
 export async function generateFim(
-  connectionService: KiloConnectionService,
+  connectionService: AccureConnectionService,
   modelId: string,
   prefix: string,
   suffix: string,
@@ -29,9 +29,9 @@ export async function generateFim(
   // ends the stream. Without this, errors never reach ErrorBackoff.
   let sseError: Error | undefined
 
-  console.info(`[FIM] request provider=${info.providerID} model=${info.requestModel} url=/kilo/fim`)
+  console.info(`[FIM] request provider=${info.providerID} model=${info.requestModel} url=/accure/fim`)
 
-  const { stream } = await client.kilo.fim(
+  const { stream } = await client.accure.fim(
     {
       prefix,
       suffix,
@@ -43,7 +43,7 @@ export async function generateFim(
     {
       signal,
       sseMaxRetryAttempts: 1,
-      onSseError: (error) => {
+      onSseError: (error: any) => {
         sseError = error instanceof Error ? error : new Error(String(error))
       },
     },
@@ -75,6 +75,6 @@ export async function generateFim(
  * Check if the CLI backend is connected. The CLI manages credentials internally,
  * so a connected state means we can issue FIM requests.
  */
-export function hasValidCredentials(connectionService: KiloConnectionService): boolean {
+export function hasValidCredentials(connectionService: AccureConnectionService): boolean {
   return connectionService.getConnectionState() === "connected"
 }

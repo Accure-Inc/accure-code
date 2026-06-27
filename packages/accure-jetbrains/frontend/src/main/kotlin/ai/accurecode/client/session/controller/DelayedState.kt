@@ -1,7 +1,7 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.util.UiTimerSource
-import ai.kilocode.client.util.UiTimers
+import ai.accurecode.client.util.UiTimerSource
+import ai.accurecode.client.util.UiTimers
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 

@@ -62,7 +62,7 @@ function init() {
       const toastOptions = decodeToastOptions(options)
       setStore("currentToast", toastOptions)
       if (timeoutHandle) clearTimeout(timeoutHandle)
-      // kilocode_change start
+      // accurecode_change start
       timeoutHandle = null
       if (toastOptions.duration && toastOptions.duration > 0) {
         timeoutHandle = setTimeout(() => {
@@ -76,7 +76,7 @@ function init() {
       timeoutHandle = null
       setStore("currentToast", null)
     },
-    // kilocode_change end
+    // accurecode_change end
     error: (err: any) => {
       if (err instanceof Error)
         return toast.show({

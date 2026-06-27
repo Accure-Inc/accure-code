@@ -1,6 +1,6 @@
 import * as path from "path"
 import * as vscode from "vscode"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 import { mergeFileSearchResults } from "./file-search-results"
 import { mergeFileSearchItems } from "./file-search-items"
 
@@ -11,7 +11,7 @@ type Message = {
 }
 
 type Input = {
-  client: KiloClient | null
+  client: AccureClient | null
   message: Message
   current?: string
   context?: string
@@ -54,6 +54,6 @@ export async function handleFileSearch(input: Input): Promise<void> {
 
 function settled(result: PromiseSettledResult<{ data: string[] }>, kind: "file" | "folder"): string[] {
   if (result.status === "fulfilled") return result.value.data
-  console.error(`[Kilo New] File search (${kind}) failed:`, result.reason)
+  console.error(`[Accure New] File search (${kind}) failed:`, result.reason)
   return []
 }

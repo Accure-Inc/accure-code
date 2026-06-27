@@ -1,6 +1,6 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { describe, expect, test } from "bun:test"
-import { TelemetryEvent } from "@kilocode/accure-telemetry"
+import { TelemetryEvent } from "@accurecode/accure-telemetry"
 
 describe("TelemetryEvent.FEEDBACK_SUBMITTED", () => {
   test("enum value is human-readable title case", () => {

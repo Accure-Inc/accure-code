@@ -1,19 +1,19 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.FileAttachment
-import ai.kilocode.client.session.model.Message
-import ai.kilocode.client.session.model.Reasoning
-import ai.kilocode.client.session.model.StepFinish
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolCallRef
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.ui.SessionView
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.session.views.base.PartView
-import ai.kilocode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.FileAttachment
+import ai.accurecode.client.session.model.Message
+import ai.accurecode.client.session.model.Reasoning
+import ai.accurecode.client.session.model.StepFinish
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolCallRef
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.ui.SessionView
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.session.views.base.PartView
+import ai.accurecode.client.session.ui.style.SessionUiStyle
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
 import com.intellij.util.concurrency.annotations.RequiresEdt
@@ -34,12 +34,12 @@ import javax.swing.SwingUtilities
  * A single message container inside a [TurnView].
  *
  * Holds an ordered map of [PartView]s keyed by part id. The layout is
- * driven by [ai.kilocode.client.session.ui.SessionLayout] so that each
+ * driven by [ai.accurecode.client.session.ui.SessionLayout] so that each
  * part view gets the full available width and height is computed correctly
  * for HTML-backed views.
  *
  * Styling: user messages render as rounded prompt bubbles. Spacing around
- * messages is owned by [ai.kilocode.client.session.ui.SessionLayout].
+ * messages is owned by [ai.accurecode.client.session.ui.SessionLayout].
  */
 class MessageView(
     val msg: Message,
@@ -51,7 +51,7 @@ class MessageView(
     private val resize: ((JComponent, () -> Unit) -> Unit)? = null,
     private val repo: String? = null,
     private val hover: ((PartView, Boolean) -> Unit)? = null,
-) : ai.kilocode.client.session.ui.SessionLayoutPanel(
+) : ai.accurecode.client.session.ui.SessionLayoutPanel(
     JBUI.scale(SessionUiStyle.SessionLayout.GAP),
 ), Disposable, SessionEditorStyleTarget, SessionView {
 

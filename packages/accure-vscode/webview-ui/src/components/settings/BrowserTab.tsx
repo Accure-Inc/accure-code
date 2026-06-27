@@ -1,6 +1,6 @@
 import { Component, createSignal, onCleanup, onMount } from "solid-js"
-import { Switch } from "@kilocode/accure-ui/switch"
-import { Card } from "@kilocode/accure-ui/card"
+import { Switch } from "@accurecode/accure-ui/switch"
+import { Card } from "@accurecode/accure-ui/card"
 import { useVSCode } from "../../context/vscode"
 import { useLanguage } from "../../context/language"
 import type { BrowserSettings } from "../../types/messages"
@@ -46,7 +46,7 @@ const BrowserTab: Component = () => {
       >
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--accure-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: 0,
             "line-height": "1.5",

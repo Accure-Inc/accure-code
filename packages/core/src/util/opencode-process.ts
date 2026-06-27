@@ -1,12 +1,12 @@
-export const KILO_RUN_ID = "KILO_RUN_ID"
-export const KILO_PROCESS_ROLE = "KILO_PROCESS_ROLE"
+export const ACCURECODE_RUN_ID = "ACCURECODE_RUN_ID"
+export const ACCURECODE_PROCESS_ROLE = "ACCURECODE_PROCESS_ROLE"
 
 export function ensureRunID() {
-  return (process.env[KILO_RUN_ID] ??= crypto.randomUUID())
+  return (process.env[ACCURECODE_RUN_ID] ??= crypto.randomUUID())
 }
 
 export function ensureProcessRole(fallback: "main" | "worker") {
-  return (process.env[KILO_PROCESS_ROLE] ??= fallback)
+  return (process.env[ACCURECODE_PROCESS_ROLE] ??= fallback)
 }
 
 export function ensureProcessMetadata(fallback: "main" | "worker") {

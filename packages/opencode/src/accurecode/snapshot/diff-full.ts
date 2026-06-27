@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 //
 // Patch generation. Runs `git diff --unified=INT_MAX` to produce
 // unified-diff text for a set of files, instead of the npm `diff` package's

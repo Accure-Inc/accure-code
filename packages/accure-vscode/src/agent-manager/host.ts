@@ -8,7 +8,7 @@
  * files listed in the architecture test allowlist.
  */
 
-import type { Session } from "@kilocode/sdk/v2/client"
+import type { Session } from "@accurecode/sdk/v2/client"
 
 // ---------------------------------------------------------------------------
 // Primitives
@@ -28,7 +28,7 @@ export interface OutputHandle {
 }
 
 // ---------------------------------------------------------------------------
-// Session provider (abstracts KiloProvider interactions)
+// Session provider (abstracts AccureProvider interactions)
 // ---------------------------------------------------------------------------
 
 export interface SessionProvider {
@@ -87,7 +87,7 @@ export interface PanelContext {
 export interface Host {
   /**
    * Create (or restore) a webview panel wired with a session provider.
-   * The host handles HTML generation, icon paths, CSP, and KiloProvider setup.
+   * The host handles HTML generation, icon paths, CSP, and AccureProvider setup.
    *
    * @param opts.onBeforeMessage — interceptor for messages from the webview
    */

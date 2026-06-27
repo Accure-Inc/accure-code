@@ -1,15 +1,15 @@
-package ai.kilocode.client.ui.md.hybrid
+package ai.accurecode.client.ui.md.hybrid
 
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.selection.SessionCopyTarget
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.md.MdCodeBlockBorder
-import ai.kilocode.client.ui.md.MdCodeBlockFactory
-import ai.kilocode.client.ui.md.MdCommon
-import ai.kilocode.client.ui.md.MdStyle
-import ai.kilocode.client.ui.md.MdView
-import ai.kilocode.log.KiloLog
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.selection.SessionCopyTarget
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.md.MdCodeBlockBorder
+import ai.accurecode.client.ui.md.MdCodeBlockFactory
+import ai.accurecode.client.ui.md.MdCommon
+import ai.accurecode.client.ui.md.MdStyle
+import ai.accurecode.client.ui.md.MdView
+import ai.accurecode.log.AccureLog
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.DataSink
@@ -57,7 +57,7 @@ internal open class MdViewHybrid(
     private val code: MdCodeBlockFactory = MdCodeBlockFactory.default(),
 ) : MdView {
     companion object {
-        private val LOG = KiloLog.create(MdViewHybrid::class.java)
+        private val LOG = AccureLog.create(MdViewHybrid::class.java)
     }
 
     private val listeners = mutableListOf<MdView.LinkListener>()

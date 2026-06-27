@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.ui.style
+package ai.accurecode.client.session.ui.style
 
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.ui.JBColor
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
@@ -166,13 +166,13 @@ object SessionUiStyle {
 
     /** Colors for timeline/activity indicators in the session header. */
     object Timeline {
-        val READ: Color = JBColor.namedColor("Kilo.Session.Timeline.Read", Color(0x37, 0x94, 0xff))
-        val WRITE: Color = JBColor.namedColor("Kilo.Session.Timeline.Write", Color(0x00, 0x7f, 0xd4))
-        val TOOL: Color = JBColor.namedColor("Kilo.Session.Timeline.Tool", Color(0x00, 0x7a, 0xcc))
+        val READ: Color = JBColor.namedColor("Accure.Session.Timeline.Read", Color(0x37, 0x94, 0xff))
+        val WRITE: Color = JBColor.namedColor("Accure.Session.Timeline.Write", Color(0x00, 0x7f, 0xd4))
+        val TOOL: Color = JBColor.namedColor("Accure.Session.Timeline.Tool", Color(0x00, 0x7a, 0xcc))
         val SUCCESS: Color = JBColor.namedColor("Label.successForeground", UIUtil.getLabelSuccessForeground())
-        val ERROR: Color = JBColor.namedColor("Kilo.Session.Timeline.Error", UIUtil.getErrorForeground())
-        val TEXT: Color = JBColor.namedColor("Kilo.Session.Timeline.Text", UIUtil.getContextHelpForeground())
-        val STEP: Color = JBColor.namedColor("Kilo.Session.Timeline.Step", JBColor.border())
+        val ERROR: Color = JBColor.namedColor("Accure.Session.Timeline.Error", UIUtil.getErrorForeground())
+        val TEXT: Color = JBColor.namedColor("Accure.Session.Timeline.Text", UIUtil.getContextHelpForeground())
+        val STEP: Color = JBColor.namedColor("Accure.Session.Timeline.Step", JBColor.border())
     }
 }
 

@@ -1,56 +1,56 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.AgentItem
-import ai.kilocode.client.session.model.ModelLimitItem
-import ai.kilocode.client.session.model.ModelItem
-import ai.kilocode.client.session.model.SessionModel
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.session.model.Permission
-import ai.kilocode.client.session.model.PermissionFileDiff
-import ai.kilocode.client.session.model.PermissionMeta
-import ai.kilocode.client.session.model.PermissionRequestState
-import ai.kilocode.client.session.model.Question
-import ai.kilocode.client.session.model.QuestionItem
-import ai.kilocode.client.session.model.QuestionOption
-import ai.kilocode.client.session.model.Reasoning
-import ai.kilocode.client.session.model.ToolCallRef
-import ai.kilocode.client.session.model.Text
-import ai.kilocode.client.plugin.KiloPluginSettings
-import ai.kilocode.client.session.SessionRef
-import ai.kilocode.client.telemetry.Telemetry
-import ai.kilocode.client.util.UiTimerSource
-import ai.kilocode.client.util.UiTimers
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.ConfigWarningDto
-import ai.kilocode.rpc.dto.ConfigUpdateDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.LoadErrorDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.ProfileStatusDto
-import ai.kilocode.rpc.dto.PermissionAlwaysRulesDto
-import ai.kilocode.rpc.dto.PermissionReplyDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.PromptDto
-import ai.kilocode.rpc.dto.PromptPartDto
-import ai.kilocode.rpc.dto.ProvidersDto
-import ai.kilocode.rpc.dto.QuestionReplyDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionStatusDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.AgentItem
+import ai.accurecode.client.session.model.ModelLimitItem
+import ai.accurecode.client.session.model.ModelItem
+import ai.accurecode.client.session.model.SessionModel
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.session.model.Permission
+import ai.accurecode.client.session.model.PermissionFileDiff
+import ai.accurecode.client.session.model.PermissionMeta
+import ai.accurecode.client.session.model.PermissionRequestState
+import ai.accurecode.client.session.model.Question
+import ai.accurecode.client.session.model.QuestionItem
+import ai.accurecode.client.session.model.QuestionOption
+import ai.accurecode.client.session.model.Reasoning
+import ai.accurecode.client.session.model.ToolCallRef
+import ai.accurecode.client.session.model.Text
+import ai.accurecode.client.plugin.AccurePluginSettings
+import ai.accurecode.client.session.SessionRef
+import ai.accurecode.client.telemetry.Telemetry
+import ai.accurecode.client.util.UiTimerSource
+import ai.accurecode.client.util.UiTimers
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.ConfigWarningDto
+import ai.accurecode.rpc.dto.ConfigUpdateDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.LoadErrorDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.ProfileStatusDto
+import ai.accurecode.rpc.dto.PermissionAlwaysRulesDto
+import ai.accurecode.rpc.dto.PermissionReplyDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.PromptDto
+import ai.accurecode.rpc.dto.PromptPartDto
+import ai.accurecode.rpc.dto.ProvidersDto
+import ai.accurecode.rpc.dto.QuestionReplyDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionStatusDto
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
-import ai.kilocode.log.ChatLogSummary
-import ai.kilocode.log.KiloLog
+import ai.accurecode.log.ChatLogSummary
+import ai.accurecode.log.AccureLog
 import com.intellij.openapi.util.Disposer
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import kotlinx.coroutines.CancellationException
@@ -77,9 +77,9 @@ import java.nio.file.Path
 class SessionController(
   parent: Disposable,
   ref: SessionRef? = null,
-  private val sessions: KiloSessionService,
+  private val sessions: AccureSessionService,
   private val workspace: Workspace,
-  private val app: KiloAppService,
+  private val app: AccureAppService,
   private val cs: CoroutineScope,
   comp: Component? = null,
   private val flushMs: Long = EVENT_FLUSH_MS,
@@ -99,7 +99,7 @@ class SessionController(
     private data class Pref(val agent: String?, val model: String?, val variants: List<String>, val variant: String?, val reset: Boolean)
 
     companion object {
-        private val LOG = KiloLog.create(SessionController::class.java)
+        private val LOG = AccureLog.create(SessionController::class.java)
         internal const val RECENT_LIMIT = 5
         internal const val DISPLAY_DELAY_MS = 1_000L
         private const val FOLLOWUP_TTL_MS = 30_000L
@@ -158,7 +158,7 @@ class SessionController(
     private data class PartKey(val messageId: String, val partId: String)
 
     val ready: Boolean get() = model.isReady()
-    val autoApprove: Boolean get() = KiloPluginSettings.getAutoApprove()
+    val autoApprove: Boolean get() = AccurePluginSettings.getAutoApprove()
     internal val blank: Boolean get() = ref == null && model.isEmpty() && !model.showSession
     internal val id: String? get() = sid
     internal val refKey: String? get() = ref?.key
@@ -275,7 +275,7 @@ class SessionController(
                 LOG.warn("${ChatLogSummary.sid(sid ?: ref?.key ?: start)} kind=prompt dir=${ChatLogSummary.dir(directory)} failed message=${e.message}", e)
                 edt {
                     if (disposed) return@edt
-                    val msg = e.message ?: KiloBundle.message("session.error.prompt")
+                    val msg = e.message ?: AccureBundle.message("session.error.prompt")
                     updateModel {
                         model.setState(SessionState.Error(msg))
                     }
@@ -303,7 +303,7 @@ class SessionController(
 
     fun setAutoApprove(value: Boolean) {
         assertEdt()
-        KiloPluginSettings.setAutoApprove(value)
+        AccurePluginSettings.setAutoApprove(value)
         capture("Auto Approve Toggled", mapOf("enabled" to value.toString()))
         if (!value) {
             drainJob?.cancel()
@@ -338,7 +338,7 @@ class SessionController(
                 LOG.warn("${ChatLogSummary.sid(id)} kind=compact dir=${ChatLogSummary.dir(directory)} failed message=${e.message}", e)
                 edt {
                     updateModel {
-                        model.setState(SessionState.Error(e.message ?: KiloBundle.message("session.error.compact")))
+                        model.setState(SessionState.Error(e.message ?: AccureBundle.message("session.error.compact")))
                     }
                 }
             }
@@ -354,7 +354,7 @@ class SessionController(
         setConnectionTargetState(SessionControllerEvent.ConnectionChanged.ShowConnecting)
         setVisibleConnectionState(SessionControllerEvent.ConnectionChanged.ShowConnecting)
         // App retry policy is backend-owned and may escalate from lightweight refresh to restart.
-        if (model.app.status != KiloAppStatusDto.READY || model.app.status == KiloAppStatusDto.ERROR) {
+        if (model.app.status != AccureAppStatusDto.READY || model.app.status == AccureAppStatusDto.ERROR) {
             app.retryAsync()
             return
         }
@@ -363,7 +363,7 @@ class SessionController(
             return
         }
         // Pure workspace failures stay scoped to workspace reload.
-        if (model.workspace.status == KiloWorkspaceStatusDto.ERROR) {
+        if (model.workspace.status == AccureWorkspaceStatusDto.ERROR) {
             workspace.reload()
         }
     }
@@ -452,7 +452,7 @@ class SessionController(
                     updatePermission(
                         requestId,
                         PermissionRequestState.ERROR,
-                        e.message ?: KiloBundle.message("session.permission.error"),
+                        e.message ?: AccureBundle.message("session.permission.error"),
                     )
                 }
             }
@@ -481,7 +481,7 @@ class SessionController(
                 }
                 edt {
                     if (disposed) return@edt
-                    model.setState(SessionState.Busy(KiloBundle.message("session.status.considering")))
+                    model.setState(SessionState.Busy(AccureBundle.message("session.status.considering")))
                 }
                 sessions.replyPermission(id, directory, PermissionReplyDto("once"))
                 capture("Permission Auto Approved", sessionProps() + mapOf("tool" to restore().name, "source" to "single"))
@@ -492,7 +492,7 @@ class SessionController(
                     if (disposed) return@edt
                     model.setState(SessionState.AwaitingPermission(restore().copy(
                         state = PermissionRequestState.ERROR,
-                        message = e.message ?: KiloBundle.message("session.permission.error"),
+                        message = e.message ?: AccureBundle.message("session.permission.error"),
                     )))
                 }
             }
@@ -514,7 +514,7 @@ class SessionController(
                     if (disposed) return@runEdt
                     val current = model.state
                     if (current is SessionState.AwaitingPermission && current.permission.sessionId in ids) {
-                        model.setState(SessionState.Busy(KiloBundle.message("session.status.considering")))
+                        model.setState(SessionState.Busy(AccureBundle.message("session.status.considering")))
                     }
                 }
             } catch (e: Exception) {
@@ -612,7 +612,7 @@ class SessionController(
         app.connect()
         cs.launch {
             app.state.collect { state ->
-                if (state.status == KiloAppStatusDto.READY) app.fetchVersionAsync()
+                if (state.status == AccureAppStatusDto.READY) app.fetchVersionAsync()
                 fire(SessionControllerEvent.AppChanged) {
                     model.app = state
                     model.version = app.version
@@ -640,7 +640,7 @@ class SessionController(
                     model.workspace = state
                     syncConnectionState()
 
-                    if (state.status != KiloWorkspaceStatusDto.READY) return@fire
+                    if (state.status != AccureWorkspaceStatusDto.READY) return@fire
 
                     model.agents = state.agents?.agents?.map {
                         AgentItem(
@@ -653,7 +653,7 @@ class SessionController(
 
                     model.models = state.providers?.let { providers ->
                         providers.providers
-                            .filter { it.id == KILO_PROVIDER || it.id in providers.connected }
+                            .filter { it.id == ACCURECODE_PROVIDER || it.id in providers.connected }
                             .flatMap { provider ->
                                 provider.models.map { (id, info) ->
                                     ModelItem(
@@ -680,7 +680,7 @@ class SessionController(
                     model.refreshHeader()
                 }
 
-                if (state.status == KiloWorkspaceStatusDto.READY) {
+                if (state.status == AccureWorkspaceStatusDto.READY) {
                     fire(SessionControllerEvent.WorkspaceReady)
                     edt {
                         if (canUseRecents()) refreshRecents()
@@ -723,7 +723,7 @@ class SessionController(
                     if (disposed) return@edt
                     if (sid != id) return@edt
                     updateModel {
-                        model.setState(SessionState.Error(e.message ?: KiloBundle.message("history.error.local")))
+                        model.setState(SessionState.Error(e.message ?: AccureBundle.message("history.error.local")))
                     }
                     showSession()
                     loaded(false)
@@ -771,7 +771,7 @@ class SessionController(
                 edt {
                     if (disposed) return@edt
                     updateModel {
-                        model.setState(SessionState.Error(e.message ?: KiloBundle.message("history.error.cloud")))
+                        model.setState(SessionState.Error(e.message ?: AccureBundle.message("history.error.cloud")))
                     }
                     showSession()
                     loaded(false)
@@ -887,7 +887,7 @@ class SessionController(
                     runEdt {
                         if (disposed) return@runEdt
                         if (sid != id) return@runEdt
-                        model.setState(SessionState.Busy(KiloBundle.message("session.status.considering")))
+                        model.setState(SessionState.Busy(AccureBundle.message("session.status.considering")))
                     }
                     return
                 }
@@ -928,7 +928,7 @@ class SessionController(
     private fun seedStatus(dto: SessionStatusDto) {
         LOG.debug { "${ChatLogSummary.sid(sid ?: ref?.key ?: "pending")} evt=session.status ${ChatLogSummary.status(dto)}" }
         val state = when (dto.type) {
-            "busy" -> SessionState.Busy(KiloBundle.message("session.status.considering"))
+            "busy" -> SessionState.Busy(AccureBundle.message("session.status.considering"))
             "retry" -> SessionState.Retry(
                 message = dto.message ?: "",
                 attempt = dto.attempt ?: 0,
@@ -985,7 +985,7 @@ class SessionController(
             is ChatEventDto.TurnOpen -> {
                 partType = null
                 tool = null
-                model.setState(SessionState.Busy(KiloBundle.message("session.status.considering")))
+                model.setState(SessionState.Busy(AccureBundle.message("session.status.considering")))
             }
 
             is ChatEventDto.TurnClose -> {
@@ -1120,10 +1120,10 @@ class SessionController(
                 "surface" to "session",
                 "reason" to "paid_model_auth",
             ))
-            model.setState(SessionState.LoginRequired(KiloBundle.message("session.login.required.description")))
+            model.setState(SessionState.LoginRequired(AccureBundle.message("session.login.required.description")))
             return
         }
-        val msg = event.error?.message ?: event.error?.type ?: KiloBundle.message("session.error.unknown")
+        val msg = event.error?.message ?: event.error?.type ?: AccureBundle.message("session.error.unknown")
         model.setState(SessionState.Error(msg, event.error?.type))
     }
 
@@ -1139,7 +1139,7 @@ class SessionController(
     private fun replied(event: ChatEventDto.PermissionReplied) {
         val current = model.state
         if (current is SessionState.AwaitingPermission && current.permission.id == event.requestID) {
-            model.setState(SessionState.Busy(KiloBundle.message("session.status.considering")))
+            model.setState(SessionState.Busy(AccureBundle.message("session.status.considering")))
         }
     }
 
@@ -1150,7 +1150,7 @@ class SessionController(
     private fun replied(event: ChatEventDto.QuestionReplied) {
         val current = model.state
         if (current is SessionState.AwaitingQuestion && current.question.id == event.requestID) {
-            model.setState(SessionState.Busy(KiloBundle.message("session.status.considering")))
+            model.setState(SessionState.Busy(AccureBundle.message("session.status.considering")))
         }
     }
 
@@ -1171,7 +1171,7 @@ class SessionController(
             "busy" -> {
                 val current = model.state
                 if (current is SessionState.Idle || current is SessionState.Error)
-                    SessionState.Busy(KiloBundle.message("session.status.considering"))
+                    SessionState.Busy(AccureBundle.message("session.status.considering"))
                 else return // already in a more specific phase
             }
             "retry" -> SessionState.Retry(
@@ -1227,7 +1227,7 @@ class SessionController(
             model.setState(SessionState.Idle)
             return
         }
-        model.setState(SessionState.Busy(KiloBundle.message("session.status.considering")))
+        model.setState(SessionState.Busy(AccureBundle.message("session.status.considering")))
         cs.launch {
             try {
                 sessions.prompt(id, directory, retry)
@@ -1236,7 +1236,7 @@ class SessionController(
                 LOG.warn("${ChatLogSummary.sid(id)} kind=login-resume dir=${ChatLogSummary.dir(directory)} failed message=${e.message}", e)
                 edt {
                     if (disposed) return@edt
-                    val msg = e.message ?: KiloBundle.message("session.error.prompt")
+                    val msg = e.message ?: AccureBundle.message("session.error.prompt")
                     model.setState(SessionState.Error(msg))
                 }
             }
@@ -1285,7 +1285,7 @@ class SessionController(
     }
 
     private fun configModel(agent: String): String? {
-        if (model.app.status != KiloAppStatusDto.READY) return null
+        if (model.app.status != AccureAppStatusDto.READY) return null
         val cfg = model.app.config
         return resolveModelSelection(
             providers = model.workspace.providers,
@@ -1410,19 +1410,19 @@ class SessionController(
     }
 
     private fun status(): String = when (partType) {
-        "reasoning" -> KiloBundle.message("session.status.thinking")
-        "text" -> KiloBundle.message("session.status.writing")
+        "reasoning" -> AccureBundle.message("session.status.thinking")
+        "text" -> AccureBundle.message("session.status.writing")
         "tool" -> when (tool) {
-            "task" -> KiloBundle.message("session.status.delegating")
-            "todowrite", "todoread" -> KiloBundle.message("session.status.planning")
-            "read" -> KiloBundle.message("session.status.gathering")
-            "glob", "grep", "list" -> KiloBundle.message("session.status.searching.codebase")
-            "webfetch", "websearch", "codesearch" -> KiloBundle.message("session.status.searching.web")
-            "edit", "write" -> KiloBundle.message("session.status.editing")
-            "bash" -> KiloBundle.message("session.status.commands")
-            else -> KiloBundle.message("session.status.considering")
+            "task" -> AccureBundle.message("session.status.delegating")
+            "todowrite", "todoread" -> AccureBundle.message("session.status.planning")
+            "read" -> AccureBundle.message("session.status.gathering")
+            "glob", "grep", "list" -> AccureBundle.message("session.status.searching.codebase")
+            "webfetch", "websearch", "codesearch" -> AccureBundle.message("session.status.searching.web")
+            "edit", "write" -> AccureBundle.message("session.status.editing")
+            "bash" -> AccureBundle.message("session.status.commands")
+            else -> AccureBundle.message("session.status.considering")
         }
-        else -> KiloBundle.message("session.status.considering")
+        else -> AccureBundle.message("session.status.considering")
     }
 
     fun selectOrganization(org: String?) {
@@ -1679,29 +1679,29 @@ class SessionController(
         val app = model.app
         val workspace = model.workspace
 
-        if (app.status == KiloAppStatusDto.ERROR) {
+        if (app.status == AccureAppStatusDto.ERROR) {
             return SessionControllerEvent.ConnectionChanged.ShowError(
-                KiloBundle.message("session.connection.error.app"),
+                AccureBundle.message("session.connection.error.app"),
                 app.errors.toErrorText() ?: app.error,
             )
         }
 
-        if (workspace.status == KiloWorkspaceStatusDto.ERROR) {
+        if (workspace.status == AccureWorkspaceStatusDto.ERROR) {
             return SessionControllerEvent.ConnectionChanged.ShowError(
-                KiloBundle.message("session.connection.error.workspace"),
+                AccureBundle.message("session.connection.error.workspace"),
                 workspace.errors.toErrorText() ?: workspace.error,
                 "workspace",
             )
         }
 
-        if (app.status == KiloAppStatusDto.READY && workspace.status == KiloWorkspaceStatusDto.READY && app.warnings.isNotEmpty()) {
+        if (app.status == AccureAppStatusDto.READY && workspace.status == AccureWorkspaceStatusDto.READY && app.warnings.isNotEmpty()) {
             return SessionControllerEvent.ConnectionChanged.ShowWarning(
                 summary(app.warnings.size),
                 app.warnings.toWarningText(),
             )
         }
 
-        if (app.status == KiloAppStatusDto.READY && workspace.status == KiloWorkspaceStatusDto.READY) {
+        if (app.status == AccureAppStatusDto.READY && workspace.status == AccureWorkspaceStatusDto.READY) {
             return SessionControllerEvent.ConnectionChanged.Hide
         }
 
@@ -1867,7 +1867,7 @@ private fun matchesSession(event: ChatEventDto, id: String): Boolean = when (eve
 }
 
 private fun summary(count: Int): String {
-    val base = KiloBundle.message("session.connection.warning.config")
+    val base = AccureBundle.message("session.connection.warning.config")
     if (count <= 1) return base
     return "$base ($count)"
 }
@@ -1878,8 +1878,8 @@ private fun title(name: String): String = name
     .joinToString(" ") { it.replaceFirstChar { c -> c.titlecase() } }
     .ifEmpty { name }
 
-private const val KILO_PROVIDER = "kilo"
-private const val KILO_AUTO_MODEL = "kilo-auto/free"
+private const val ACCURECODE_PROVIDER = "accure"
+private const val ACCURECODE_AUTO_MODEL = "accure-auto/free"
 
 private fun resolveModelSelection(
     providers: ProvidersDto?,
@@ -1887,7 +1887,7 @@ private fun resolveModelSelection(
     mode: ModelSelectionDto? = null,
     global: ModelSelectionDto? = null,
     recent: List<ModelSelectionDto> = emptyList(),
-    fallback: ModelSelectionDto? = ModelSelectionDto(KILO_PROVIDER, KILO_AUTO_MODEL),
+    fallback: ModelSelectionDto? = ModelSelectionDto(ACCURECODE_PROVIDER, ACCURECODE_AUTO_MODEL),
 ): ModelSelectionDto? {
     valid(providers, override)?.let { return it }
     valid(providers, mode)?.let { return it }
@@ -1901,7 +1901,7 @@ private fun valid(providers: ProvidersDto?, item: ModelSelectionDto?): ModelSele
     val list = providers?.providers ?: return item
     if (list.isEmpty()) return item
     val provider = list.firstOrNull { it.id == item.providerID } ?: return null
-    if (item.providerID != KILO_PROVIDER && item.providerID !in providers.connected) return null
+    if (item.providerID != ACCURECODE_PROVIDER && item.providerID !in providers.connected) return null
     if (item.modelID !in provider.models) return null
     return item
 }

@@ -1,14 +1,14 @@
 ---
 title: "Cloud Platform Architecture"
-description: "Architecture overview for Kilo Cloud services and hosted runtimes"
+description: "Architecture overview for Accure Cloud services and hosted runtimes"
 ---
 
 # Cloud Platform Architecture
 
-Kilo Cloud is hosted platform layer for authentication, model routing, billing, product configuration, automation, and scoped execution services. Cloud implementation lives in open-source [`Kilo-Org/cloud`](https://github.com/Kilo-Org/cloud) repository.
+Accure Cloud is hosted platform layer for authentication, model routing, billing, product configuration, automation, and scoped execution services. Cloud implementation lives in open-source [`Accure-Org/cloud`](https://github.com/Accure-Org/cloud) repository.
 
 {% callout type="info" title="Static source scope" %}
-This page describes Worker surfaces, bindings, routes, and code paths present in `Kilo-Org/cloud`. Static source shows deployable architecture, not live production enablement, rollout percentages, retention configuration, or vendor settings. Validate live environment before making production or compliance claims. Use [Kilo Cloud Security Architecture](/docs/contributing/architecture/cloud-security) for trust boundaries and data flows.
+This page describes Worker surfaces, bindings, routes, and code paths present in `Accure-Org/cloud`. Static source shows deployable architecture, not live production enablement, rollout percentages, retention configuration, or vendor settings. Validate live environment before making production or compliance claims. Use [Accure Cloud Security Architecture](/docs/contributing/architecture/cloud-security) for trust boundaries and data flows.
 {% /callout %}
 
 ## How to use this page
@@ -20,9 +20,9 @@ Use this page to understand hosted service topology: which product boundaries ex
 | Layer | Responsibility | Examples |
 |---|---|---|
 | Web control plane | Identity, organization authorization, billing, product configuration, and API orchestration | Next.js application in `apps/web/` |
-| Shared cloud services | Model routing, asynchronous orchestration, real-time delivery, persistence adapters, and operational services | Kilo Gateway, Workers, queues, Durable Objects, R2, KV, Hyperdrive |
-| Scoped execution | Runs code or owner-scoped runtime workloads | Cloud Agent, App Builder preview sandbox, deployment builder sandbox, KiloClaw runtime, Gas Town container |
-| External providers | Services outside Kilo Cloud trust boundary | Model providers, source-control providers, messaging providers, telemetry providers |
+| Shared cloud services | Model routing, asynchronous orchestration, real-time delivery, persistence adapters, and operational services | Accure Gateway, Workers, queues, Durable Objects, R2, KV, Hyperdrive |
+| Scoped execution | Runs code or owner-scoped runtime workloads | Cloud Agent, App Builder preview sandbox, deployment builder sandbox, AccureClaw runtime, Gas Town container |
+| External providers | Services outside Accure Cloud trust boundary | Model providers, source-control providers, messaging providers, telemetry providers |
 
 Where these pages say `owner`, they mean personal user or organization that authorizes scoped product state and credentials.
 
@@ -46,14 +46,14 @@ Where these pages say `owner`, they mean personal user or organization that auth
 flowchart LR
   clients["Browser, editor, and mobile clients"]
   web["Web control plane"]
-  gateway["Kilo Gateway"]
+  gateway["Accure Gateway"]
   automation["Automation Workers"]
   agent["Cloud Agent"]
   preview["App Builder preview"]
   deployBuilder["Deployment builder"]
   deployEdge["Deployment dispatcher"]
-  claw["KiloClaw"]
-  chat["Kilo Chat / Event Service / Notifications"]
+  claw["AccureClaw"]
+  chat["Accure Chat / Event Service / Notifications"]
   town["Gas Town"]
   wasteland["Wasteland"]
   repos["GitHub and GitLab repositories"]
@@ -94,15 +94,15 @@ Not every hosted flow launches Cloud Agent. Shared services also route model req
 | Session execution | `cloud-agent-next`{% linebreak /%}`session-ingest`{% linebreak /%}`git-token-service`{% linebreak /%}`notifications` | Hosted coding sessions, session ingestion, repository credentials, and completion push |
 | Automation | `code-review-infra`{% linebreak /%}`auto-triage-infra`{% linebreak /%}`auto-fix-infra`{% linebreak /%}`security-auto-analysis`{% linebreak /%}`security-sync`{% linebreak /%}`webhook-agent-ingest` | Queue-backed review, triage, fix, security, and configured trigger flows |
 | App generation | `app-builder`{% linebreak /%}`db-proxy`{% linebreak /%}`images-mcp`{% linebreak /%}`deploy-infra/builder`{% linebreak /%}`deploy-infra/dispatcher` | Generated-app preview, data access, image tools, build orchestration, and deployed-app ingress |
-| KiloClaw | `kiloclaw`{% linebreak /%}`kiloclaw-billing`{% linebreak /%}`gmail-push`{% linebreak /%}`kiloclaw-inbound-email` | Owner-scoped assistant runtime coordination, billing, and external ingress |
-| Real-time chat | `kilo-chat`{% linebreak /%}`event-service`{% linebreak /%}`notifications` | Conversation state, WebSocket delivery, and mobile push |
+| AccureClaw | `accureclaw`{% linebreak /%}`accureclaw-billing`{% linebreak /%}`gmail-push`{% linebreak /%}`accureclaw-inbound-email` | Owner-scoped assistant runtime coordination, billing, and external ingress |
+| Real-time chat | `accure-chat`{% linebreak /%}`event-service`{% linebreak /%}`notifications` | Conversation state, WebSocket delivery, and mobile push |
 | Multi-agent orchestration | `gastown`{% linebreak /%}`wasteland` | Town execution and collaborative commons |
-| Evaluation and operations | `o11y`{% linebreak /%}`kilo-ops`{% linebreak /%}`model-eval-ingest` | Metrics, alerts, operations, and model-evaluation ingestion |
+| Evaluation and operations | `o11y`{% linebreak /%}`accure-ops`{% linebreak /%}`model-eval-ingest` | Metrics, alerts, operations, and model-evaluation ingestion |
 | Attribution | `ai-attribution` | AI-edit attribution events |
 
-## Kilo Gateway
+## Accure Gateway
 
-Gateway consists of cloud API routes plus `packages/accure-gateway/` client integration in `Kilo-Org/kilocode`. It handles account-aware and anonymous-free model access. See [Cloud Security](/docs/contributing/architecture/cloud-security#model-request-gateway) for request branches and endpoint families.
+Gateway consists of cloud API routes plus `packages/accure-gateway/` client integration in `Accure-Inc/accure-code`. It handles account-aware and anonymous-free model access. See [Cloud Security](/docs/contributing/architecture/cloud-security#model-request-gateway) for request branches and endpoint families.
 
 | Responsibility | Description |
 |---|---|
@@ -112,7 +112,7 @@ Gateway consists of cloud API routes plus `packages/accure-gateway/` client inte
 | Catalogs | Serves model, provider, embedding-model, and transcription-model surfaces |
 | Usage and billing | Records applicable token usage, credits, entitlements, and billing metadata |
 
-Auto Model clients send stable `kilo-auto/*` tier IDs. Gateway resolves tiers server-side before provider routing so mappings can change without client releases. See [Models and Providers](/docs/gateway/models-and-providers#auto-models) for current tier behavior.
+Auto Model clients send stable `accure-auto/*` tier IDs. Gateway resolves tiers server-side before provider routing so mappings can change without client releases. See [Models and Providers](/docs/gateway/models-and-providers#auto-models) for current tier behavior.
 
 Eligible gateway requests can include normalized project label for usage attribution and grouping. Label identifies project without sending full repository URL.
 
@@ -169,12 +169,12 @@ flowchart TB
 
 | Service | Hosted execution relationship |
 |---|---|
-| Kilo Bot | Launches Cloud Agent for requested repository work |
+| Accure Bot | Launches Cloud Agent for requested repository work |
 | Code Review | Runs queued review sessions through Cloud Agent |
 | Auto Triage | Can classify issue without Cloud Agent during duplicate check; launches Cloud Agent when classification session is needed |
 | Auto Fix | Launches Cloud Agent to create issue-fix pull request |
 | Security Agent | Runs model triage in `security-auto-analysis`; launches Cloud Agent only for selected deep analysis |
-| Webhook Agent Ingest | Delivers configured prompt to Cloud Agent or Kilo Chat destination |
+| Webhook Agent Ingest | Delivers configured prompt to Cloud Agent or Accure Chat destination |
 
 ## App generation boundaries
 
@@ -213,7 +213,7 @@ flowchart TB
 
 ## Webhook Agent Ingest
 
-`services/webhook-agent-ingest/` is configured-trigger boundary. It accepts HTTP webhooks and scheduled alarms, then dispatches selected Cloud Agent or Kilo Chat destination. [Automation Services](/docs/contributing/architecture/automation-services#webhook-agent-ingest) owns activation, authentication, queue, and alarm details.
+`services/webhook-agent-ingest/` is configured-trigger boundary. It accepts HTTP webhooks and scheduled alarms, then dispatches selected Cloud Agent or Accure Chat destination. [Automation Services](/docs/contributing/architecture/automation-services#webhook-agent-ingest) owns activation, authentication, queue, and alarm details.
 
 ## Security Agent
 
@@ -254,7 +254,7 @@ sequenceDiagram
   participant Ticket as Event Service ticket API
   participant Events as Event Service
   participant Session as UserSessionDO
-  participant Chat as Kilo Chat conversation-state DOs
+  participant Chat as Accure Chat conversation-state DOs
   participant Notify as NotificationChannelDO
   participant Expo
   participant Queue as Receipt queue
@@ -278,22 +278,22 @@ sequenceDiagram
   end
 ```
 
-Kilo Chat stores conversation state in Durable Objects and fans events out through Event Service. Notifications checks Event Service presence context before selected pushes and processes Expo receipts asynchronously. See [Cloud Security](/docs/contributing/architecture/cloud-security#chat-events-and-notifications) for ticket and push-delivery trust boundaries.
+Accure Chat stores conversation state in Durable Objects and fans events out through Event Service. Notifications checks Event Service presence context before selected pushes and processes Expo receipts asynchronously. See [Cloud Security](/docs/contributing/architecture/cloud-security#chat-events-and-notifications) for ticket and push-delivery trust boundaries.
 
-## KiloClaw
+## AccureClaw
 
-KiloClaw is owner-scoped hosted OpenClaw runtime coordination. Durable Objects track instance lifecycle, routing, configuration, and reconciliation. Runtime provider support includes Fly, docker-local development, and Northflank paths; source support does not prove active provider rollout. See [Cloud Security](/docs/contributing/architecture/cloud-security#kiloclaw-ingress) for ingress controls.
+AccureClaw is owner-scoped hosted OpenClaw runtime coordination. Durable Objects track instance lifecycle, routing, configuration, and reconciliation. Runtime provider support includes Fly, docker-local development, and Northflank paths; source support does not prove active provider rollout. See [Cloud Security](/docs/contributing/architecture/cloud-security#accureclaw-ingress) for ingress controls.
 
 | Ingress path | Auth or validation | Entry boundary | Async handoff | Target |
 |---|---|---|---|---|
-| Browser request | JWT auth | KiloClaw proxy | None | Owner-scoped runtime |
+| Browser request | JWT auth | AccureClaw proxy | None | Owner-scoped runtime |
 | One-time access code | Redeemed code and auth cookie | Access gateway | None | Owner-scoped OpenClaw UI |
-| Controller machine check-in | Machine API key and derived gateway token | KiloClaw controller route | None | Owner-scoped runtime controller |
-| Kilo Chat RPC | Service binding | KiloClaw binding | None | Owner-scoped runtime |
-| Cloudflare Email Routing | Alias lookup and bounded parse | `kiloclaw-inbound-email` | Queue | KiloClaw platform service |
+| Controller machine check-in | Machine API key and derived gateway token | AccureClaw controller route | None | Owner-scoped runtime controller |
+| Accure Chat RPC | Service binding | AccureClaw binding | None | Owner-scoped runtime |
+| Cloudflare Email Routing | Alias lookup and bounded parse | `accureclaw-inbound-email` | Queue | AccureClaw platform service |
 | Gmail Pub/Sub push | Google OIDC validation | `gmail-push` | Queue | Owner-scoped runtime controller |
 
-KiloClaw resolves owner or instance scope before runtime delivery. Table compares ingress boundaries; it does not describe global shared destinations.
+AccureClaw resolves owner or instance scope before runtime delivery. Table compares ingress boundaries; it does not describe global shared destinations.
 
 ### Fly-provider topology example
 
@@ -301,19 +301,19 @@ KiloClaw resolves owner or instance scope before runtime delivery. Table compare
 flowchart TB
   subgraph worker ["Cloudflare Worker"]
     direction LR
-    auth["JWT auth<br/>tied to Kilo user"]
+    auth["JWT auth<br/>tied to Accure user"]
     instanceDO["Per-instance Durable Object"]
-    dbConnection["Kilo database connection"]
+    dbConnection["Accure database connection"]
   end
 
-  db["Kilo database<br/>Instances<br/>Short-lived access codes<br/>Image catalog<br/>Billing and user preferences"]
+  db["Accure database<br/>Instances<br/>Short-lived access codes<br/>Image catalog<br/>Billing and user preferences"]
   proxy["Fly proxy<br/>Per-user Fly app<br/>Per-user encryption<br/>Routes to pinned instance"]
 
   subgraph flyInstance ["Fly instance: owner-scoped runtime"]
     direction TB
-    subgraph container ["KiloClaw container"]
+    subgraph container ["AccureClaw container"]
       direction TB
-      controller["KiloClaw controller<br/>Supervises OpenClaw gateway<br/>Exposes control endpoints<br/>Proxies HTTP and WebSocket traffic"]
+      controller["AccureClaw controller<br/>Supervises OpenClaw gateway<br/>Exposes control endpoints<br/>Proxies HTTP and WebSocket traffic"]
       openclaw["OpenClaw<br/>Gateway and Control UI"]
       tools["Pre-installed tools and skills"]
       controller --> openclaw
@@ -374,7 +374,7 @@ flowchart LR
 
 ## Source map
 
-Paths below are relative to [`Kilo-Org/cloud`](https://github.com/Kilo-Org/cloud).
+Paths below are relative to [`Accure-Org/cloud`](https://github.com/Accure-Org/cloud).
 
 | Concern | Source paths |
 |---|---|
@@ -383,10 +383,10 @@ Paths below are relative to [`Kilo-Org/cloud`](https://github.com/Kilo-Org/cloud
 | Automation Workers | `services/code-review-infra/`{% linebreak /%}`services/auto-triage-infra/`{% linebreak /%}`services/auto-fix-infra/`{% linebreak /%}`services/webhook-agent-ingest/` |
 | Security Agent | `apps/web/src/lib/security-agent/`{% linebreak /%}`services/security-auto-analysis/`{% linebreak /%}`services/security-sync/` |
 | App generation and deployment | `services/app-builder/`{% linebreak /%}`services/db-proxy/`{% linebreak /%}`services/images-mcp/`{% linebreak /%}`services/deploy-infra/` |
-| KiloClaw | `services/kiloclaw/`{% linebreak /%}`services/kiloclaw-billing/`{% linebreak /%}`services/gmail-push/`{% linebreak /%}`services/kiloclaw-inbound-email/` |
-| Chat, events, and notifications | `services/kilo-chat/`{% linebreak /%}`services/event-service/`{% linebreak /%}`services/notifications/` |
+| AccureClaw | `services/accureclaw/`{% linebreak /%}`services/accureclaw-billing/`{% linebreak /%}`services/gmail-push/`{% linebreak /%}`services/accureclaw-inbound-email/` |
+| Chat, events, and notifications | `services/accure-chat/`{% linebreak /%}`services/event-service/`{% linebreak /%}`services/notifications/` |
 | Multi-agent orchestration | `services/gastown/`{% linebreak /%}`services/wasteland/` |
-| Observability and operations | `services/o11y/`{% linebreak /%}`services/kilo-ops/`{% linebreak /%}`services/model-eval-ingest/` |
+| Observability and operations | `services/o11y/`{% linebreak /%}`services/accure-ops/`{% linebreak /%}`services/model-eval-ingest/` |
 | Attribution | `services/ai-attribution/` |
 
 ## Related pages

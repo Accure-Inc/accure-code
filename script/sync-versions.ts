@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
-// kilocode_change - new file
-// Sync every Kilo version string across the monorepo to a single target.
+// accurecode_change - new file
+// Sync every Accure version string across the monorepo to a single target.
 //
 // Why this exists: upstream opencode stamps its own version into shared files
 // during each release (notably `packages/extensions/zed/extension.toml`). When
@@ -9,8 +9,8 @@
 // doesn't exist on our release pipeline, so the resulting download URLs 404.
 //
 // Run this in a dedicated commit after resolving an upstream merge (see
-// `.kilo/command/upstream-manual-merge.md`). It's also handy mid-merge to
-// rebase our version bumps onto any new Kilo main releases.
+// `.accurecode/command/upstream-manual-merge.md`). It's also handy mid-merge to
+// rebase our version bumps onto any new Accure main releases.
 //
 // Usage:
 //   bun run script/sync-versions.ts            # use root package.json version
@@ -21,7 +21,7 @@
 //   - every `package.json` top-level `"version": "..."` field in the repo
 //     (excluding node_modules and hidden directories)
 //   - `packages/extensions/zed/extension.toml` top-level `version = "..."`
-//   - the five Kilo-Org download URLs inside that toml
+//   - the five Accure-Org download URLs inside that toml
 //
 // Intentionally NOT touched:
 //   - `packages/accure-jetbrains/**` — the JetBrains plugin has its own release
@@ -85,8 +85,8 @@ if (await Bun.file(zed).exists()) {
   const next = text
     .replace(/^version\s*=\s*"[^"]+"/m, `version = "${target}"`)
     .replace(
-      /https:\/\/github\.com\/Kilo-Org\/kilocode\/releases\/download\/v[^/]+\//g,
-      `https://github.com/Kilo-Org/kilocode/releases/download/v${target}/`,
+      /https:\/\/github\.com\/Accure-Org\/accurecode\/releases\/download\/v[^/]+\//g,
+      `https://github.com/Accure-Inc/accure-code/releases/download/v${target}/`,
     )
   if (next !== text) {
     await Bun.write(zed, next)

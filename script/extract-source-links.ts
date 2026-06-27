@@ -34,8 +34,8 @@ const URL_RE = /https?:\/\/[^\s"'`)\]},;*\\<>]+/g
 const EXCLUDE_PATTERNS = [
   // Localhost and internal
   /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0)/,
-  /^https?:\/\/kilo\.internal/,
-  /^https?:\/\/dev\.kilo\.ai/,
+  /^https?:\/\/accure\.internal/,
+  /^https?:\/\/dev\.accurecode\.ai/,
   /^https?:\/\/tauri\.localhost/,
   // Example/placeholder URLs
   /^https?:\/\/example\.com/,
@@ -43,13 +43,13 @@ const EXCLUDE_PATTERNS = [
   /^https?:\/\/api\.myprovider\.com/,
   /^https?:\/\/synthetic\.new/,
   // API endpoints (not user-facing)
-  /^https?:\/\/api\.kilo\.ai\/api\//,
-  /^https?:\/\/supermassive-black-hole\.kiloapps\.io\/v1\/session-export\//, // kilocode_change
-  /^https?:\/\/ingest\.kilosessions\.ai/,
+  /^https?:\/\/api\.accurecode\.ai\/api\//,
+  /^https?:\/\/supermassive-black-hole\.accureapps\.io\/v1\/session-export\//, // accurecode_change
+  /^https?:\/\/ingest\.accuresessions\.ai/,
   /^https?:\/\/api\.openai\.com/,
   /^https?:\/\/api\.github\.com/,
   /^https?:\/\/api\.githubcopilot\.com/,
-  /^https?:\/\/[^/]+\.openai\.azure\.com\/openai/, // kilocode_change
+  /^https?:\/\/[^/]+\.openai\.azure\.com\/openai/, // accurecode_change
   /^https?:\/\/api\.cloudflare\.com/,
   /^https?:\/\/api\.releases\.hashicorp\.com/,
   /^https?:\/\/auth\.openai\.com/,
@@ -86,14 +86,14 @@ const SKIP_DIRS = ["node_modules", ".storybook", "stories", "test", "tests", "__
 const SKIP_PATH_SEGMENTS = ["continuedev"]
 
 // Individual files to skip (data files full of non-user-facing URLs)
-const SKIP_FILES = ["check-forbidden-strings.ts"] // kilocode_change
+const SKIP_FILES = ["check-forbidden-strings.ts"] // accurecode_change
 
 function shouldExclude(url: string): boolean {
   return EXCLUDE_PATTERNS.some((re) => re.test(url))
 }
 
 function shouldSkipFile(filepath: string): boolean {
-  if (filepath === "packages/opencode/src/cli/cmd/account.ts") return true // kilocode_change - command is not registered in Kilo
+  if (filepath === "packages/opencode/src/cli/cmd/account.ts") return true // accurecode_change - command is not registered in Accure
   const rel = path.relative(ROOT, filepath)
   const parts = rel.split(path.sep)
   if (parts.some((p) => SKIP_DIRS.includes(p))) return true
@@ -101,17 +101,17 @@ function shouldSkipFile(filepath: string): boolean {
   if (/\.test\.[jt]sx?$/.test(filepath)) return true
   if (/\.spec\.[jt]sx?$/.test(filepath)) return true
   if (/\.stories\.[jt]sx?$/.test(filepath)) return true
-  if (parts.includes("i18n") && path.basename(filepath) !== "en.ts") return true // kilocode_change
+  if (parts.includes("i18n") && path.basename(filepath) !== "en.ts") return true // accurecode_change
   const basename = path.basename(filepath)
   if (SKIP_FILES.includes(basename)) return true
   return false
 }
 
-// kilocode_change start
+// accurecode_change start
 function source(filepath: string): string {
   return path.relative(ROOT, filepath).replaceAll(path.sep, "/")
 }
-// kilocode_change end
+// accurecode_change end
 
 function clean(url: string): string {
   return url.replace(/[.),:;]+$/, "").replace(/<\/?\w+>$/, "")
@@ -124,7 +124,7 @@ async function extract(): Promise<Map<string, Set<string>>> {
     for (const ext of EXTENSIONS) {
       const glob = new Glob(`**/*.${ext}`)
       for await (const entry of glob.scan({ cwd: dir, absolute: true })) {
-        // kilocode_change start
+        // accurecode_change start
         const file = source(entry)
         if (shouldSkipFile(file)) continue
         const content = await Bun.file(entry).text()
@@ -136,7 +136,7 @@ async function extract(): Promise<Map<string, Set<string>>> {
             links.get(url)!.add(file)
           }
         }
-        // kilocode_change end
+        // accurecode_change end
       }
     }
   }

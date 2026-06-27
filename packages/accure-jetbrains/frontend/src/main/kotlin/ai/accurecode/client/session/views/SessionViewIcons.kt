@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
 import com.intellij.openapi.util.IconLoader
 import javax.swing.Icon

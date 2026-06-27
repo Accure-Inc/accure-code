@@ -1,6 +1,6 @@
-# Contributing to Kilo CLI
+# Contributing to Accure CLI
 
-See [the Documentation for details on contributing](https://kilo.ai/docs/contributing).
+See [the Documentation for details on contributing](https://accure.ai/docs/contributing).
 
 ## TL;DR
 
@@ -12,12 +12,12 @@ There are lots of ways to contribute to the project:
 - **Feature Requests:** Suggest new features or improvements
 - **Community Support:** Help other users in the community
 
-The Kilo Community is [on Discord](https://kilo.ai/discord).
+The Accure Community is [on Discord](https://accure.ai/discord).
 
 ## Prerequisites
 
 - **Bun 1.3.14+** — required for all packages.
-- **Java 21** — required by the JetBrains plugin. The root `bun turbo typecheck` and `bun turbo test:ci` commands include `@kilocode/accure-jetbrains` and will fail without Java 21.
+- **Java 21** — required by the JetBrains plugin. The root `bun turbo typecheck` and `bun turbo test:ci` commands include `@accurecode/accure-jetbrains` and will fail without Java 21.
 
   The preferred way to install Java is via [SDKMAN](https://sdkman.io/install):
 
@@ -36,10 +36,10 @@ The Kilo Community is [on Discord](https://kilo.ai/discord).
   If you don't plan to work on the JetBrains plugin, you can still run non-JetBrains checks directly:
 
   ```bash
-  bun turbo typecheck --filter=!@kilocode/accure-jetbrains
+  bun turbo typecheck --filter=!@accurecode/accure-jetbrains
   ```
 
-## Developing Kilo CLI
+## Developing Accure CLI
 
 - **Requirements:** Bun 1.3.14+, Java 21 (see [Prerequisites](#prerequisites) above)
 - Install dependencies and start the CLI from the repo root:
@@ -95,9 +95,9 @@ bun run package
 From the repo root:
 
 ```bash
-bun run --filter @kilocode/accure-docs test
-bun run --filter @kilocode/accure-docs build
-bun run --filter @kilocode/accure-docs dev
+bun run --filter @accurecode/accure-docs test
+bun run --filter @accurecode/accure-docs build
+bun run --filter @accurecode/accure-docs dev
 ```
 
 For manual docs validation, run the docs site locally, preview the affected page, and check changed links and rendered content.
@@ -107,7 +107,7 @@ For manual docs validation, run the docs site locally, preview the affected page
 - User-facing changes usually need a changeset (`bunx changeset add` or a file under `.changeset/`).
 - After changing server endpoints, regenerate the SDK with `./script/generate.ts`.
 - After adding or changing guarded URLs in `packages/accure-vscode/`, `packages/accure-vscode/webview-ui/`, or `packages/opencode/src/`, run `bun run script/extract-source-links.ts` from the repo root.
-- When editing shared `packages/opencode/` files, keep Kilo changes small and mark Kilo-only edits with `// kilocode_change` for a single line or `// kilocode_change start` / `// kilocode_change end` for a block. Do not add these markers inside `kilocode`-named paths.
+- When editing shared `packages/opencode/` files, keep Accure changes small and mark Accure-only edits with `// accurecode_change` for a single line or `// accurecode_change start` / `// accurecode_change end` for a block. Do not add these markers inside `accurecode`-named paths.
 
 ### Developing the VS Code Extension
 
@@ -132,32 +132,32 @@ Requires Java 21 (see [Prerequisites](#prerequisites)). From `packages/accure-je
 Or via the root turbo filter to run only JetBrains checks from the repo root:
 
 ```bash
-bun turbo typecheck --filter=@kilocode/accure-jetbrains
-bun turbo test:ci --filter=@kilocode/accure-jetbrains
+bun turbo typecheck --filter=@accurecode/accure-jetbrains
+bun turbo test:ci --filter=@accurecode/accure-jetbrains
 ```
 
 ### Running against a different directory
 
-By default, `bun dev` runs Kilo CLI in the `packages/opencode` directory. To run it against a different directory or repository:
+By default, `bun dev` runs Accure CLI in the `packages/opencode` directory. To run it against a different directory or repository:
 
 ```bash
 bun dev <directory>
 ```
 
-To run Kilo CLI in the root of the repo itself:
+To run Accure CLI in the root of the repo itself:
 
 ```bash
 bun dev .
 ```
 
-### Running Kilo CLI from any folder
+### Running Accure CLI from any folder
 
-`bin/kilodev` is a self-locating launcher that runs this checkout from wherever you invoke it. Running it with no arguments launches the TUI pointed at the caller's directory; any arguments are forwarded to the CLI unchanged.
+`bin/accuredev` is a self-locating launcher that runs this checkout from wherever you invoke it. Running it with no arguments launches the TUI pointed at the caller's directory; any arguments are forwarded to the CLI unchanged.
 
 One-shot install (recommended). From the repo root:
 
 ```bash
-./bin/kilodev dev-setup
+./bin/accuredev dev-setup
 ```
 
 This detects your shell, shows exactly what it will add, asks for confirmation, writes an idempotent block to your rc file, and saves a timestamped backup of the original. Re-running is safe — it only rewrites when the snippet has changed.
@@ -172,16 +172,16 @@ Useful flags:
 
 Manual alternatives (equivalent, no CLI invocation needed):
 
-- Unix: add `alias kilodev='/path/to/kilocode/bin/kilodev'` to `~/.zshrc` / `~/.bashrc`, or `fish_add_path /path/to/kilocode/bin`.
-- Windows: add `C:\path\to\kilocode\bin` to PATH (System Environment Variables), or add `function kilodev { & "C:\path\to\kilocode\bin\kilodev.cmd" @args }` to `$PROFILE`.
+- Unix: add `alias accuredev='/path/to/accurecode/bin/accuredev'` to `~/.zshrc` / `~/.bashrc`, or `fish_add_path /path/to/accurecode/bin`.
+- Windows: add `C:\path\to\accurecode\bin` to PATH (System Environment Variables), or add `function accuredev { & "C:\path\to\accurecode\bin\accuredev.cmd" @args }` to `$PROFILE`.
 
 Then from anywhere:
 
 ```bash
 cd ~/some/project
-kilodev                      # opens TUI with project = ~/some/project
-kilodev dev-setup --print    # prints the alias line (scripting)
-kilodev run --dir "$PWD" "…" # subcommands pass through; use --dir for run/serve
+accuredev                      # opens TUI with project = ~/some/project
+accuredev dev-setup --print    # prints the alias line (scripting)
+accuredev run --dir "$PWD" "…" # subcommands pass through; use --dir for run/serve
 ```
 
 ### Building a "local" binary
@@ -195,14 +195,14 @@ To compile a standalone executable:
 Then run it with:
 
 ```bash
-./packages/opencode/dist/@kilocode/cli-<platform>/bin/kilo
+./packages/opencode/dist/@accurecode/cli-<platform>/bin/accure
 ```
 
 Replace `<platform>` with your platform (e.g., `darwin-arm64`, `linux-x64`).
 
-### Understanding bun dev vs kilo
+### Understanding bun dev vs accure
 
-During development, `bun dev` is the local equivalent of the built `kilo` command. Both run the same CLI interface:
+During development, `bun dev` is the local equivalent of the built `accure` command. Both run the same CLI interface:
 
 ```bash
 # Development (from project root)
@@ -210,29 +210,29 @@ bun dev --help           # Show all available commands
 bun dev serve            # Start headless API server
 
 # Production
-kilo --help          # Show all available commands
-kilo serve           # Start headless API server
+accure --help          # Show all available commands
+accure serve           # Start headless API server
 ```
 
 ### Testing with a local backend
 
-To point the CLI at a local backend (e.g., a locally running Kilo API server on port 3000), set the `KILO_API_URL` environment variable:
+To point the CLI at a local backend (e.g., a locally running Accure API server on port 3000), set the `ACCURECODE_API_URL` environment variable:
 
 ```bash
-KILO_API_URL=http://localhost:3000 bun dev
+ACCURECODE_API_URL=http://localhost:3000 bun dev
 ```
 
-This redirects all gateway traffic (auth, model listing, provider routing, profile, etc.) to your local server. The default is `https://api.kilo.ai`.
+This redirects all gateway traffic (auth, model listing, provider routing, profile, etc.) to your local server. The default is `https://api.accurecode.ai`.
 
 There are also optional overrides for other services:
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `KILO_API_URL` | `https://api.kilo.ai` | Kilo API (gateway, auth, models, profile) |
-| `KILO_SESSION_INGEST_URL` | `https://ingest.kilosessions.ai` | Session export / cloud sync |
-| `KILO_MODELS_URL` | `https://models.dev` | Model metadata |
+| `ACCURECODE_API_URL` | `https://api.accurecode.ai` | Accure API (gateway, auth, models, profile) |
+| `ACCURECODE_SESSION_INGEST_URL` | `https://ingest.accuresessions.ai` | Session export / cloud sync |
+| `ACCURECODE_MODELS_URL` | `https://models.dev` | Model metadata |
 
-> **VS Code:** The repo includes a "VSCode - Run Extension (Local Backend)" launch config in `.vscode/launch.json` that sets `KILO_API_URL=http://localhost:3000` automatically.
+> **VS Code:** The repo includes a "VSCode - Run Extension (Local Backend)" launch config in `.vscode/launch.json` that sets `ACCURECODE_API_URL=http://localhost:3000` automatically.
 
 ## Issue Template Requirements
 
@@ -242,7 +242,7 @@ If you open an issue through `gh issue create`, the API, or another tool that by
 
 Current required fields by issue type:
 
-- **Bug report:** include a `Description`. When you can, also add Plugins, Kilo version, Steps to reproduce, Screenshot and/or share link, Operating System, and Terminal so the report matches the full bug template.
+- **Bug report:** include a `Description`. When you can, also add Plugins, Accure version, Steps to reproduce, Screenshot and/or share link, Operating System, and Terminal so the report matches the full bug template.
 - **Feature request:** use a title prefixed with `[FEATURE]:`, complete the required checkbox confirming you have searched for duplicates, and fill in `Describe the enhancement you want to request`.
 - **Question:** include the `Question` field.
 
@@ -273,7 +273,7 @@ Repeated disregard of this contribution guide, or high-volume automated or agent
 
 ### Bug Bounties
 
-Kilo has bug bounties. To be eligible, make sure your GitHub account is connected in your Kilo account.
+Accure has bug bounties. To be eligible, make sure your GitHub account is connected in your Accure account.
 
 ### Testing Evidence
 

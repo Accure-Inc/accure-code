@@ -1,4 +1,4 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
 import kotlinx.serialization.json.JsonPrimitive
 import kotlin.test.Test
@@ -193,9 +193,9 @@ customModes:
     @Test
     fun `detect - settings from global state keys`() {
         val (eng, _) = engine {
-            globalState["kilo-code.autoApprovalEnabled"] = JsonPrimitive("true")
+            globalState["accure-code.autoApprovalEnabled"] = JsonPrimitive("true")
             globalState["alwaysAllowReadOnly"] = JsonPrimitive("true")
-            globalState["kilo-code.language"] = JsonPrimitive("en")
+            globalState["accure-code.language"] = JsonPrimitive("en")
         }
         val result = eng.detect()
         assertNotNull(result.settings)

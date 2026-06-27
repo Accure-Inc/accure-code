@@ -21,7 +21,7 @@
       "outFiles": ["${workspaceFolder}/packages/accure-vscode/dist/**/*.js"],
       "preLaunchTask": "VSCode - Compile",
       "env": {
-        "KILO_API_URL": "http://localhost:3000"
+        "ACCURECODE_API_URL": "http://localhost:3000"
       }
     }
   ]

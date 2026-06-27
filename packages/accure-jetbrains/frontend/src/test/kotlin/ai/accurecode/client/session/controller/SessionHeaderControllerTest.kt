@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.ChatEventDto
 
 class SessionHeaderControllerTest : SessionControllerTestBase() {
 
@@ -13,7 +13,7 @@ class SessionHeaderControllerTest : SessionControllerTestBase() {
 
         assertEquals("Generated title", m.model.session?.title)
         assertEquals("Generated title", m.model.header.title)
-        assertTrue(modelEvents.any { it is ai.kilocode.client.session.model.SessionModelEvent.SessionUpdated })
+        assertTrue(modelEvents.any { it is ai.accurecode.client.session.model.SessionModelEvent.SessionUpdated })
     }
 
     fun `test compact calls RPC with selected model when eligible`() {
@@ -26,7 +26,7 @@ class SessionHeaderControllerTest : SessionControllerTestBase() {
         val call = rpc.compacts.single()
         assertEquals("ses_test", call.first)
         assertEquals("/test", call.second)
-        assertEquals("kilo", call.third.providerID)
+        assertEquals("accure", call.third.providerID)
         assertEquals("gpt-5", call.third.modelID)
     }
 
@@ -42,7 +42,7 @@ class SessionHeaderControllerTest : SessionControllerTestBase() {
     }
 
     fun `test compact is blocked without model`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = null))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = null))
         projectRpc.state.value = workspaceReady(providers = emptyList(), connected = emptyList())
         val m = controller()
         flush()
@@ -59,7 +59,7 @@ class SessionHeaderControllerTest : SessionControllerTestBase() {
     }
 
     fun `test opened session metadata is seeded through constructor`() {
-        rpc.history.add(ai.kilocode.rpc.dto.MessageWithPartsDto(msg("msg1", "ses_test", "assistant"), emptyList()))
+        rpc.history.add(ai.accurecode.rpc.dto.MessageWithPartsDto(msg("msg1", "ses_test", "assistant"), emptyList()))
         val c = controller(
             id = "ses_test",
             flushMs = Long.MAX_VALUE,

@@ -1,4 +1,4 @@
-import type { IndexingStatus } from "@kilocode/accure-indexing/status"
+import type { IndexingStatus } from "@accurecode/accure-indexing/status"
 
 export const INDEXING_WARNING_CODES = ["qdrant.version-incompatible", "qdrant.version-unavailable"] as const
 

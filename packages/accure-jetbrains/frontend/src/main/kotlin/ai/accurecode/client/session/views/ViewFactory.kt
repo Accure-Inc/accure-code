@@ -1,23 +1,23 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.views.base.GenericView
-import ai.kilocode.client.session.views.base.PartView
-import ai.kilocode.client.session.views.question.QuestionResultView
-import ai.kilocode.client.session.views.tool.GlobToolView
-import ai.kilocode.client.session.views.tool.ReadToolView
-import ai.kilocode.client.session.views.tool.SearchToolView
-import ai.kilocode.client.session.views.tool.ShellToolView
-import ai.kilocode.client.session.views.tool.ToolView
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.model.Compaction
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.FileAttachment
-import ai.kilocode.client.session.model.Generic
-import ai.kilocode.client.session.model.Reasoning
-import ai.kilocode.client.session.model.StepFinish
-import ai.kilocode.client.session.model.Text
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.views.todo.TodoWriteView
+import ai.accurecode.client.session.views.base.GenericView
+import ai.accurecode.client.session.views.base.PartView
+import ai.accurecode.client.session.views.question.QuestionResultView
+import ai.accurecode.client.session.views.tool.GlobToolView
+import ai.accurecode.client.session.views.tool.ReadToolView
+import ai.accurecode.client.session.views.tool.SearchToolView
+import ai.accurecode.client.session.views.tool.ShellToolView
+import ai.accurecode.client.session.views.tool.ToolView
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.model.Compaction
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.FileAttachment
+import ai.accurecode.client.session.model.Generic
+import ai.accurecode.client.session.model.Reasoning
+import ai.accurecode.client.session.model.StepFinish
+import ai.accurecode.client.session.model.Text
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.views.todo.TodoWriteView
 
 /**
  * Creates the appropriate [PartView] for a given [Content] subtype.

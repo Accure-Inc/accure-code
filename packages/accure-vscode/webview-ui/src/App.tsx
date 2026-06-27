@@ -1,15 +1,15 @@
 import { Component, createSignal, createMemo, Switch, Match, Show, onMount, onCleanup } from "solid-js"
-import { ThemeProvider } from "@kilocode/accure-ui/theme"
-import { DialogProvider } from "@kilocode/accure-ui/context/dialog"
-import { MarkedProvider } from "@kilocode/accure-ui/context/marked"
-import { CodeComponentProvider } from "@kilocode/accure-ui/context/code"
-import { DiffComponentProvider } from "@kilocode/accure-ui/context/diff"
-import { FileComponentProvider } from "@kilocode/accure-ui/context/file"
-import { Code } from "@kilocode/accure-ui/code"
-import { Diff } from "@kilocode/accure-ui/diff"
-import { File } from "@kilocode/accure-ui/file"
-import { DataProvider } from "@kilocode/accure-ui/context/data"
-import { Toast } from "@kilocode/accure-ui/toast"
+import { ThemeProvider } from "@accurecode/accure-ui/theme"
+import { DialogProvider } from "@accurecode/accure-ui/context/dialog"
+import { MarkedProvider } from "@accurecode/accure-ui/context/marked"
+import { CodeComponentProvider } from "@accurecode/accure-ui/context/code"
+import { DiffComponentProvider } from "@accurecode/accure-ui/context/diff"
+import { FileComponentProvider } from "@accurecode/accure-ui/context/file"
+import { Code } from "@accurecode/accure-ui/code"
+import { Diff } from "@accurecode/accure-ui/diff"
+import { File } from "@accurecode/accure-ui/file"
+import { DataProvider } from "@accurecode/accure-ui/context/data"
+import { Toast } from "@accurecode/accure-ui/toast"
 import Settings from "./components/settings/Settings"
 import ProfileView from "./components/profile/ProfileView"
 import { VSCodeProvider, useVSCode } from "./context/vscode"
@@ -35,8 +35,8 @@ import HistoryView from "./components/history/HistoryView"
 import { MigrationWizard } from "./components/migration" // legacy-migration
 import { NotificationsProvider } from "./context/notifications"
 import { FeedbackProvider } from "./context/feedback"
-import { KiloEmbeddingModelsProvider } from "./context/kilo-embedding-models"
-import type { Message as SDKMessage, Part as SDKPart } from "@kilocode/sdk/v2"
+import { AccureEmbeddingModelsProvider } from "./context/accure-embedding-models"
+import type { Message as SDKMessage, Part as SDKPart } from "@accurecode/sdk/v2"
 import "./styles/chat.css"
 
 type ViewType = "newTask" | "history" | "profile" | "settings" | "subAgentViewer"
@@ -185,9 +185,9 @@ export const MermaidDownloadBridge: Component = () => {
       event.preventDefault()
       vscode.postMessage({ type: "saveImage", dataUrl: detail.dataUrl, filename: detail.filename })
     }
-    window.addEventListener("kilo:save-image", save)
+    window.addEventListener("accure:save-image", save)
     onCleanup(() => {
-      window.removeEventListener("kilo:save-image", save)
+      window.removeEventListener("accure:save-image", save)
     })
   })
 
@@ -247,38 +247,38 @@ const AppContent: Component = () => {
     setCurrentView("newTask")
   }
 
-  const handleKiloModel = (message: { type?: string }) => {
-    if (message.type === "selectKiloModel") setCurrentView("newTask")
+  const handleAccureModel = (message: { type?: string }) => {
+    if (message.type === "selectAccureModel") setCurrentView("newTask")
   }
 
   onMount(() => {
     const handler = (event: MessageEvent) => {
       const message = event.data
       if (message?.type === "action" && message.action) {
-        console.log("[Kilo New] App: 🎬 action:", message.action)
+        console.log("[Accure New] App: 🎬 action:", message.action)
         handleViewAction(message.action)
       }
       if (message?.type === "navigate" && message.view && VALID_VIEWS.has(message.view)) {
-        console.log("[Kilo New] App: 🧭 navigate:", message.view, message.tab ? `tab=${message.tab}` : "")
+        console.log("[Accure New] App: 🧭 navigate:", message.view, message.tab ? `tab=${message.tab}` : "")
         if (message.tab) setSettingsTab(message.tab)
         setCurrentView(message.view as ViewType)
         vscode.postMessage({ type: "settingsTabChanged", tab: message.tab })
       }
       if (message?.type === "openCloudSession" && message.sessionId) {
-        console.log("[Kilo New] App: ☁️ openCloudSession:", message.sessionId)
+        console.log("[Accure New] App: ☁️ openCloudSession:", message.sessionId)
         session.selectCloudSession(message.sessionId)
         setCurrentView("newTask")
       }
-      handleKiloModel(message)
+      handleAccureModel(message)
       handleForked(message)
       if (message?.type === "viewSubAgentSession" && message.sessionID) {
-        console.log("[Kilo New] App: 🔍 viewSubAgentSession:", message.sessionID)
+        console.log("[Accure New] App: 🔍 viewSubAgentSession:", message.sessionID)
         session.setCurrentSessionID(message.sessionID)
         setCurrentView("subAgentViewer")
       }
       // legacy-migration: state-driven migration wizard
       if (message?.type === "migrationState") {
-        console.log("[Kilo New] App: 🔄 migrationState:", message.needed)
+        console.log("[Accure New] App: 🔄 migrationState:", message.needed)
         setMigrationSource(message.source)
         setMigrationNeeded(message.needed)
       }
@@ -381,7 +381,7 @@ const App: Component = () => {
                           <DisplayProvider>
                             <WorkStyleProvider>
                               <IndexingProvider>
-                                <KiloEmbeddingModelsProvider>
+                                <AccureEmbeddingModelsProvider>
                                   <NotificationsProvider>
                                     <SessionProvider>
                                       <FeedbackProvider>
@@ -391,7 +391,7 @@ const App: Component = () => {
                                       </FeedbackProvider>
                                     </SessionProvider>
                                   </NotificationsProvider>
-                                </KiloEmbeddingModelsProvider>
+                                </AccureEmbeddingModelsProvider>
                               </IndexingProvider>
                             </WorkStyleProvider>
                           </DisplayProvider>

@@ -1,11 +1,11 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.SessionView
-import ai.kilocode.client.session.views.base.BaseQuestionView
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.SessionView
+import ai.accurecode.client.session.views.base.BaseQuestionView
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import com.intellij.util.ui.components.BorderLayoutPanel
 import java.awt.Container
@@ -13,10 +13,10 @@ import javax.swing.JButton
 
 /**
  * Retained inline view shown at the bottom of the transcript when a session
- * enters [ai.kilocode.client.session.model.SessionState.LoginRequired].
+ * enters [ai.accurecode.client.session.model.SessionState.LoginRequired].
  *
  * Mirrors the anchored placement of [PermissionView] and [question.QuestionView]:
- * it stays as a stable child inside [ai.kilocode.client.session.ui.SessionMessageListPanel]
+ * it stays as a stable child inside [ai.accurecode.client.session.ui.SessionMessageListPanel]
  * and is toggled visible/hidden via [show]/[hideView].
  */
 class LoginRequiredView(
@@ -36,10 +36,10 @@ class LoginRequiredView(
         isOpaque = false
         isVisible = false
 
-        card.setHeader(KiloBundle.message("session.login.required.title"))
+        card.setHeader(AccureBundle.message("session.login.required.title"))
         card.setActions(listOf(
-            BaseQuestionView.Action(ID_DISMISS, KiloBundle.message("session.login.required.dismiss"), primary = false) { dismiss() },
-            BaseQuestionView.Action(ID_OPEN, KiloBundle.message("session.login.required.button"), primary = true) { openProfile() },
+            BaseQuestionView.Action(ID_DISMISS, AccureBundle.message("session.login.required.dismiss"), primary = false) { dismiss() },
+            BaseQuestionView.Action(ID_OPEN, AccureBundle.message("session.login.required.button"), primary = true) { openProfile() },
         ))
 
         addToCenter(card)
@@ -67,8 +67,8 @@ class LoginRequiredView(
     }
 
     // Test helpers — return generic JButton to keep SessionQuestionButton internal
-    internal fun openProfileButton() = button(KiloBundle.message("session.login.required.button"))
-    internal fun dismissButton() = button(KiloBundle.message("session.login.required.dismiss"))
+    internal fun openProfileButton() = button(AccureBundle.message("session.login.required.button"))
+    internal fun dismissButton() = button(AccureBundle.message("session.login.required.dismiss"))
 
     private fun button(text: String) = buttons(card).first { it.text == text }
 

@@ -1,9 +1,9 @@
-package ai.kilocode.client.session.views.todo
+package ai.accurecode.client.session.views.todo
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.rpc.dto.TodoDto
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.rpc.dto.TodoDto
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.JBUI
@@ -98,7 +98,7 @@ class TodoListPanel(
             count == 1 -> "session.part.todo.hidden.later.one"
             else -> "session.part.todo.hidden.later.many"
         }
-        return KiloBundle.message(key, count)
+        return AccureBundle.message(key, count)
     }
 
     private class Row(todo: TodoDto, style: SessionEditorStyle) {

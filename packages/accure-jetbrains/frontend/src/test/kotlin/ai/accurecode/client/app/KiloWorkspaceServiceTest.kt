@@ -1,7 +1,7 @@
-package ai.kilocode.client.app
+package ai.accurecode.client.app
 
-import ai.kilocode.client.testing.FakeWorkspaceRpcApi
-import ai.kilocode.rpc.dto.WorkspaceFileDto
+import ai.accurecode.client.testing.FakeWorkspaceRpcApi
+import ai.accurecode.rpc.dto.WorkspaceFileDto
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,16 +11,16 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 @Suppress("UnstableApiUsage")
-class KiloWorkspaceServiceTest : BasePlatformTestCase() {
+class AccureWorkspaceServiceTest : BasePlatformTestCase() {
     private lateinit var scope: CoroutineScope
     private lateinit var rpc: FakeWorkspaceRpcApi
-    private lateinit var service: KiloWorkspaceService
+    private lateinit var service: AccureWorkspaceService
 
     override fun setUp() {
         super.setUp()
         scope = CoroutineScope(SupervisorJob())
         rpc = FakeWorkspaceRpcApi()
-        service = KiloWorkspaceService(scope, rpc)
+        service = AccureWorkspaceService(scope, rpc)
     }
 
     override fun tearDown() {
@@ -33,38 +33,38 @@ class KiloWorkspaceServiceTest : BasePlatformTestCase() {
 
     fun `test openPath opens first file match`() = runBlocking {
         rpc.fileMatches = listOf(
-            WorkspaceFileDto("/test/.kilo/plans/a.md", "a.md"),
-            WorkspaceFileDto("/other/.kilo/plans/a.md", "a.md"),
+            WorkspaceFileDto("/test/.accurecode/plans/a.md", "a.md"),
+            WorkspaceFileDto("/other/.accurecode/plans/a.md", "a.md"),
         )
 
         val ok = withContext(Dispatchers.Default) {
-            service.openPath("/test", ".kilo/plans/a.md")
+            service.openPath("/test", ".accurecode/plans/a.md")
         }
 
         assertTrue(ok)
-        assertEquals(listOf("/test" to ".kilo/plans/a.md"), rpc.fileCalls)
-        assertEquals(listOf("/test/.kilo/plans/a.md"), rpc.opened)
+        assertEquals(listOf("/test" to ".accurecode/plans/a.md"), rpc.fileCalls)
+        assertEquals(listOf("/test/.accurecode/plans/a.md"), rpc.opened)
     }
 
     fun `test openPath returns false when no match exists`() = runBlocking {
         val ok = withContext(Dispatchers.Default) {
-            service.openPath("/test", ".kilo/plans/missing.md")
+            service.openPath("/test", ".accurecode/plans/missing.md")
         }
 
         assertFalse(ok)
-        assertEquals(listOf("/test" to ".kilo/plans/missing.md"), rpc.fileCalls)
+        assertEquals(listOf("/test" to ".accurecode/plans/missing.md"), rpc.fileCalls)
         assertTrue(rpc.opened.isEmpty())
     }
 
     fun `test openPath returns false when backend open fails`() = runBlocking {
-        rpc.fileMatches = listOf(WorkspaceFileDto("/test/.kilo/plans/a.md", "a.md"))
+        rpc.fileMatches = listOf(WorkspaceFileDto("/test/.accurecode/plans/a.md", "a.md"))
         rpc.openResult = false
 
         val ok = withContext(Dispatchers.Default) {
-            service.openPath("/test", ".kilo/plans/a.md")
+            service.openPath("/test", ".accurecode/plans/a.md")
         }
 
         assertFalse(ok)
-        assertEquals(listOf("/test/.kilo/plans/a.md"), rpc.opened)
+        assertEquals(listOf("/test/.accurecode/plans/a.md"), rpc.opened)
     }
 }

@@ -113,7 +113,7 @@ export const dict = {
   "dialog.model.expand": "Rozwiń",
   "dialog.model.collapse": "Zwiń",
 
-  "dialog.model.unpaid.freeModels.title": "Darmowe modele dostarczane przez Kilo",
+  "dialog.model.unpaid.freeModels.title": "Darmowe modele dostarczane przez Accure",
   "dialog.model.unpaid.addMore.title": "Dodaj więcej modeli od popularnych dostawców",
 
   "dialog.provider.viewAll": "Zobacz więcej dostawców",
@@ -126,7 +126,7 @@ export const dict = {
   "provider.connect.status.waiting": "Oczekiwanie na autoryzację...",
   "provider.connect.status.failed": "Autoryzacja nie powiodła się: {{error}}",
   "provider.connect.apiKey.description":
-    "Wprowadź swój klucz API {{provider}}, aby połączyć konto i używać modeli {{provider}} w Kilo.",
+    "Wprowadź swój klucz API {{provider}}, aby połączyć konto i używać modeli {{provider}} w Accure.",
   "provider.connect.apiKey.description.local":
     "Connect to your local {{provider}} server. Leave the API key empty if the server does not require one (default for localhost).",
   "provider.connect.atomicChat.description":
@@ -156,7 +156,7 @@ export const dict = {
   "provider.connect.oauth.code.visit.prefix": "Odwiedź ",
   "provider.connect.oauth.code.visit.link": "ten link",
   "provider.connect.oauth.code.visit.suffix":
-    ", aby odebrać kod autoryzacyjny, połączyć konto i używać modeli {{provider}} w Kilo.",
+    ", aby odebrać kod autoryzacyjny, połączyć konto i używać modeli {{provider}} w Accure.",
   "provider.connect.oauth.code.label": "Kod autoryzacyjny {{method}}",
   "provider.connect.oauth.code.placeholder": "Kod autoryzacyjny",
   "provider.connect.oauth.code.required": "Kod autoryzacyjny jest wymagany",
@@ -164,7 +164,7 @@ export const dict = {
   "provider.connect.oauth.auto.visit.prefix": "Odwiedź ",
   "provider.connect.oauth.auto.visit.link": "ten link",
   "provider.connect.oauth.auto.visit.suffix":
-    " i wprowadź poniższy kod, aby połączyć konto i używać modeli {{provider}} w Kilo.",
+    " i wprowadź poniższy kod, aby połączyć konto i używać modeli {{provider}} w Accure.",
   "provider.connect.oauth.auto.confirmationCode": "Kod potwierdzający",
   "provider.connect.toast.connected.title": "Połączono {{provider}}",
   "provider.connect.toast.connected.description": "Modele {{provider}} są teraz dostępne do użycia.",
@@ -288,12 +288,12 @@ export const dict = {
     "Przycisk 'Ulepsz podpowiedź' pomaga ulepszyć Twoją prośbę, dostarczając dodatkowy kontekst, wyjaśnienia lub przeformułowania. Spróbuj wpisać prośbę tutaj i kliknij przycisk ponownie, aby zobaczyć, jak to działa.",
   "prompt.action.indexing": "Ustawienia indeksowania",
 
-  "speechToText.tooltip.start": "Rozpocznij wprowadzanie głosowe z Kilo Gateway",
+  "speechToText.tooltip.start": "Rozpocznij wprowadzanie głosowe z Accure Gateway",
   "speechToText.tooltip.stop": "Zatrzymaj przechwytywanie dźwięku",
   "speechToText.tooltip.transcribing": "Transkrybowanie... Kliknij, aby anulować.",
   "speechToText.tooltip.error": "Wprowadzanie głosowe nie powiodło się. Kliknij, aby wyczyścić.",
   "speechToText.error.title": "Wprowadzanie głosowe nie powiodło się",
-  "speechToText.error.loginRequired": "Zaloguj się do Kilo, aby korzystać z wprowadzania głosowego.",
+  "speechToText.error.loginRequired": "Zaloguj się do Accure, aby korzystać z wprowadzania głosowego.",
   "speechToText.error.permission": "Odmówiono dostępu do mikrofonu.",
   "speechToText.error.microphone": "Nie udało się uruchomić mikrofonu.",
   "speechToText.error.recording": "Nagrywanie nie powiodło się.",
@@ -331,7 +331,7 @@ export const dict = {
   "dialog.directory.empty": "Nie znaleziono folderów",
 
   "dialog.server.title": "Serwery",
-  "dialog.server.description": "Przełącz serwer Kilo, z którym łączy się ta aplikacja.",
+  "dialog.server.description": "Przełącz serwer Accure, z którym łączy się ta aplikacja.",
   "dialog.server.search.placeholder": "Szukaj serwerów",
   "dialog.server.empty": "Brak serwerów",
   "dialog.server.add.title": "Dodaj serwer",
@@ -458,7 +458,7 @@ export const dict = {
   "toast.session.listFailed.title": "Nie udało się załadować sesji dla {{project}}",
 
   "toast.update.title": "Dostępna aktualizacja",
-  "toast.update.description": "Nowa wersja Kilo ({{version}}) jest teraz dostępna do instalacji.",
+  "toast.update.description": "Nowa wersja Accure ({{version}}) jest teraz dostępna do instalacji.",
   "toast.update.action.installRestart": "Zainstaluj i zrestartuj",
   "toast.update.action.notYet": "Jeszcze nie",
 
@@ -469,7 +469,7 @@ export const dict = {
   "error.page.action.checking": "Sprawdzanie...",
   "error.page.action.checkUpdates": "Sprawdź aktualizacje",
   "error.page.action.updateTo": "Zaktualizuj do {{version}}",
-  "error.page.report.prefix": "Proszę zgłosić ten błąd do zespołu Kilo",
+  "error.page.report.prefix": "Proszę zgłosić ten błąd do zespołu Accure",
   "error.page.report.discord": "na Discordzie",
   "error.page.version": "Wersja: {{version}}",
 
@@ -504,7 +504,7 @@ export const dict = {
   "error.chain.modelNotFound": "Model nie znaleziony: {{provider}}/{{model}}",
   "error.chain.checkConfig": "Sprawdź swoją konfigurację (opencode.json) nazwy dostawców/modeli",
   "error.chain.mcpFailed":
-    'Serwer MCP "{{name}}" nie powiódł się. Uwaga, Kilo nie obsługuje jeszcze uwierzytelniania MCP.',
+    'Serwer MCP "{{name}}" nie powiódł się. Uwaga, Accure nie obsługuje jeszcze uwierzytelniania MCP.',
   "error.chain.providerAuthFailed": "Uwierzytelnianie dostawcy nie powiodło się ({{provider}}): {{message}}",
   "error.chain.providerInitFailed":
     'Nie udało się zainicjować dostawcy "{{provider}}". Sprawdź poświadczenia i konfigurację.',
@@ -677,12 +677,12 @@ export const dict = {
   "sidebar.workspaces.enable": "Włącz przestrzenie robocze",
   "sidebar.workspaces.disable": "Wyłącz przestrzenie robocze",
   "sidebar.gettingStarted.title": "Pierwsze kroki",
-  "sidebar.gettingStarted.line1": "Kilo zawiera darmowe modele, więc możesz zacząć od razu.",
+  "sidebar.gettingStarted.line1": "Accure zawiera darmowe modele, więc możesz zacząć od razu.",
   "sidebar.gettingStarted.line2": "Połącz dowolnego dostawcę, aby używać modeli, w tym Claude, GPT, Gemini itp.",
   "sidebar.project.recentSessions": "Ostatnie sesje",
   "sidebar.project.viewAllSessions": "Zobacz wszystkie sesje",
 
-  "app.name.desktop": "Kilo Desktop",
+  "app.name.desktop": "Accure Desktop",
   "settings.section.desktop": "Pulpit",
   "settings.section.server": "Serwer",
   "settings.tab.general": "Ogólne",
@@ -694,11 +694,11 @@ export const dict = {
   "settings.general.section.sounds": "Efekty dźwiękowe",
 
   "settings.general.row.language.title": "Język",
-  "settings.general.row.language.description": "Zmień język wyświetlania dla Kilo",
+  "settings.general.row.language.description": "Zmień język wyświetlania dla Accure",
   "settings.general.row.appearance.title": "Wygląd",
-  "settings.general.row.appearance.description": "Dostosuj wygląd Kilo na swoim urządzeniu",
+  "settings.general.row.appearance.description": "Dostosuj wygląd Accure na swoim urządzeniu",
   "settings.general.row.theme.title": "Motyw",
-  "settings.general.row.theme.description": "Dostosuj motyw Kilo.",
+  "settings.general.row.theme.description": "Dostosuj motyw Accure.",
   "settings.general.row.font.title": "Czcionka",
   "settings.general.row.font.description": "Dostosuj czcionkę mono używaną w blokach kodu",
 
@@ -706,13 +706,13 @@ export const dict = {
   "settings.general.row.releaseNotes.description": 'Pokazuj wyskakujące okna "Co nowego" po aktualizacjach',
 
   "settings.updates.row.startup.title": "Sprawdzaj aktualizacje przy uruchomieniu",
-  "settings.updates.row.startup.description": "Automatycznie sprawdzaj aktualizacje podczas uruchamiania Kilo",
+  "settings.updates.row.startup.description": "Automatycznie sprawdzaj aktualizacje podczas uruchamiania Accure",
   "settings.updates.row.check.title": "Sprawdź aktualizacje",
   "settings.updates.row.check.description": "Ręcznie sprawdź aktualizacje i zainstaluj, jeśli są dostępne",
   "settings.updates.action.checkNow": "Sprawdź teraz",
   "settings.updates.action.checking": "Sprawdzanie...",
   "settings.updates.toast.latest.title": "Masz najnowszą wersję",
-  "settings.updates.toast.latest.description": "Korzystasz z najnowszej wersji Kilo.",
+  "settings.updates.toast.latest.description": "Korzystasz z najnowszej wersji Accure.",
   "font.option.ibmPlexMono": "IBM Plex Mono",
   "font.option.cascadiaCode": "Cascadia Code",
   "font.option.firaCode": "Fira Code",
@@ -808,7 +808,7 @@ export const dict = {
   "settings.providers.title": "Dostawcy",
   "settings.providers.description": "Ustawienia dostawców będą tutaj konfigurowalne.",
   "settings.providers.betaNotice":
-    "Obecnie w interfejsie ustawień można skonfigurować tylko dostawcę Kilo Gateway. Obsługa konfiguracji innych dostawców pojawi się wkrótce w fazie beta. W międzyczasie możesz konfigurować dostawców za pomocą CLI lub pliku konfiguracyjnego. Zależy nam na zachowaniu otwartości Kilo, bez lock-inu.",
+    "Obecnie w interfejsie ustawień można skonfigurować tylko dostawcę Accure Gateway. Obsługa konfiguracji innych dostawców pojawi się wkrótce w fazie beta. W międzyczasie możesz konfigurować dostawców za pomocą CLI lub pliku konfiguracyjnego. Zależy nam na zachowaniu otwartości Accure, bez lock-inu.",
   "settings.providers.section.connected": "Połączeni dostawcy",
   "settings.providers.connected.empty": "Brak połączonych dostawców",
   "settings.providers.section.popular": "Popularni dostawcy",
@@ -829,7 +829,7 @@ export const dict = {
     "Domyślny model i wysiłek wnioskowania dla podagentów task-tool. Pozostaw puste, aby odziedziczyć model agenta wywołującego.",
   "settings.models.hidePromptTraining.title": "Ukryj modele trenujące na promptach",
   "settings.models.hidePromptTraining.description":
-    "Ukryj modele Kilo Gateway, których dostawcy mogą używać Twoich promptów do trenowania.",
+    "Ukryj modele Accure Gateway, których dostawcy mogą używać Twoich promptów do trenowania.",
   "settings.providers.modeModels": "Model na tryb",
   "settings.providers.custom.note": "Dodaj niestandardowego dostawcę przez bazowy URL.",
   "settings.providers.modeModels.description":
@@ -935,21 +935,21 @@ export const dict = {
   "settings.config.status.loadedLegacy": "wczytano przestarzałą konfigurację",
   "settings.config.status.notLoaded": "nie wczytano",
   "settings.config.status.create": "nie znaleziono - utwórz ten plik",
-  "settings.config.title": "Otwórz plik konfiguracyjny Kilo ({{scope}})",
+  "settings.config.title": "Otwórz plik konfiguracyjny Accure ({{scope}})",
   "settings.config.placeholder":
     "Pliki konfiguracyjne są scalane po kolei; pliki oznaczone jako wczytane mają obecnie wpływ na ustawienia.",
-  "settings.config.noWorkspace": "Otwórz folder obszaru roboczego, aby edytować lokalny plik konfiguracyjny Kilo.",
-  "settings.config.openFailed": "Nie udało się otworzyć pliku konfiguracyjnego Kilo ({{scope}}): {{message}}",
+  "settings.config.noWorkspace": "Otwórz folder obszaru roboczego, aby edytować lokalny plik konfiguracyjny Accure.",
+  "settings.config.openFailed": "Nie udało się otworzyć pliku konfiguracyjnego Accure ({{scope}}): {{message}}",
   "settings.config.source.xdg": "Globalna konfiguracja XDG",
-  "settings.config.source.homeKilo": "Konfiguracja .kilo (Home)",
-  "settings.config.source.homeKilocode": "Konfiguracja .kilocode (Home)",
+  "settings.config.source.homeAccure": "Konfiguracja .accurecode (Home)",
+  "settings.config.source.homeAccurecode": "Konfiguracja .accurecode (Home)",
   "settings.config.source.homeOpencode": "Konfiguracja .opencode (Home)",
-  "settings.config.source.envFile": "Plik środowiskowy KILO_CONFIG",
-  "settings.config.source.envDir": "KILO_CONFIG_DIR",
+  "settings.config.source.envFile": "Plik środowiskowy ACCURECODE_CONFIG",
+  "settings.config.source.envDir": "ACCURECODE_CONFIG_DIR",
   "settings.config.source.envContent": "Wbudowana konfiguracja środowiska",
-  "settings.config.source.projectKilo": "Konfiguracja .kilo projektu",
+  "settings.config.source.projectAccure": "Konfiguracja .accurecode projektu",
   "settings.config.source.projectRoot": "Konfiguracja główna projektu",
-  "settings.config.source.projectKilocode": "Przestarzała konfiguracja .kilocode",
+  "settings.config.source.projectAccurecode": "Przestarzała konfiguracja .accurecode",
   "settings.config.source.projectOpencode": "Przestarzała konfiguracja .opencode",
   "settings.models.title": "Modele",
   "settings.models.description": "Ustawienia modeli będą tutaj konfigurowalne.",
@@ -1022,7 +1022,7 @@ export const dict = {
   "feedback.dialog.github": "Zgłoś problem na GitHubie",
   "feedback.dialog.discord": "Dołącz do naszej społeczności Discord",
   "feedback.dialog.support": "Wsparcie klienta",
-  "workStyle.onboarding.welcome": "Witamy w Kilo",
+  "workStyle.onboarding.welcome": "Witamy w Accure",
   "workStyle.onboarding.title": "Wybierz sposób pracy",
   "workStyle.onboarding.description":
     "Ustawia początkowe wartości domyślne uprawnień, bloków rozumowania, danych wyjściowych terminala i osi czasu kontekstu. Jest stosowane tylko raz i pomija ustawienia, które zostały już przez Ciebie zmienione.",
@@ -1037,7 +1037,7 @@ export const dict = {
   "workStyle.choice.visibility": "Widoczność",
   "workStyle.choice.human-in-the-loop.eyebrow": "Człowiek w pętli",
   "workStyle.choice.human-in-the-loop.title": "Najpierw przejrzyj",
-  "workStyle.choice.human-in-the-loop.description": "Kilo wstrzymuje pracę i pokazuje swój plan w trakcie działania.",
+  "workStyle.choice.human-in-the-loop.description": "Accure wstrzymuje pracę i pokazuje swój plan w trakcie działania.",
   "workStyle.choice.human-in-the-loop.permissions": "Prosi o zgodę przed edycją plików lub uruchomieniem poleceń.",
   "workStyle.choice.human-in-the-loop.bash": "Prosi o pozwolenie na każde polecenie terminala.",
   "workStyle.choice.human-in-the-loop.visibility": "Wyświetla wszystkie szczegóły rozmowy, w tym tok rozumowania.",
@@ -1049,7 +1049,7 @@ export const dict = {
   "workStyle.choice.autonomous.bash": "Może uruchamiać polecenia terminala w przestrzeni roboczej bez zatwierdzenia.",
   "workStyle.choice.autonomous.visibility": "Szczegóły pozostają zwinięte, dopóki ich nie rozwiniesz.",
   "session.cloud.import.title": "Importuj z chmury",
-  "session.cloud.import.placeholder": "ID sesji, URL lub polecenie kilo import",
+  "session.cloud.import.placeholder": "ID sesji, URL lub polecenie accure import",
   "session.cloud.import.button": "Importuj",
   "session.cloud.import.invalid": "Nieprawidłowy format ID sesji",
   "session.cloud.import.legacy": "Wygląda na to, że jest to starsza sesja, która nie jest już obsługiwana.",
@@ -1126,7 +1126,7 @@ export const dict = {
 
   "settings.experimental.title": "Eksperymentalne",
   "settings.language.title": "Język",
-  "settings.aboutKiloCode.title": "O Accure Code",
+  "settings.aboutAccureCode.title": "O Accure Code",
 
   "session.messages.empty": "Rozpocznij rozmowę, wpisując wiadomość poniżej.",
   "session.messages.welcome":
@@ -1173,42 +1173,42 @@ export const dict = {
   "time.thisMonth": "Ten miesiąc",
   "time.older": "Starsze",
 
-  "settings.aboutKiloCode.status.connected": "Połączono",
-  "settings.aboutKiloCode.status.connecting": "Łączenie...",
-  "settings.aboutKiloCode.status.disconnected": "Rozłączono",
-  "settings.aboutKiloCode.status.error": "Błąd",
-  "settings.aboutKiloCode.cliServer": "Serwer CLI",
-  "settings.aboutKiloCode.status.label": "Status:",
-  "settings.aboutKiloCode.port.label": "Port:",
-  "settings.aboutKiloCode.versionInfo": "Informacje o wersji",
-  "settings.aboutKiloCode.version.label": "Wersja:",
-  "settings.aboutKiloCode.extensionName": "Rozszerzenie Accure Code",
-  "settings.aboutKiloCode.community": "Społeczność i wsparcie",
-  "settings.aboutKiloCode.feedback.prefix": "Jeśli masz pytania lub uwagi, śmiało otwórz zgłoszenie na",
-  "settings.aboutKiloCode.feedback.or": "lub",
-  "settings.aboutKiloCode.support.prefix":
+  "settings.aboutAccureCode.status.connected": "Połączono",
+  "settings.aboutAccureCode.status.connecting": "Łączenie...",
+  "settings.aboutAccureCode.status.disconnected": "Rozłączono",
+  "settings.aboutAccureCode.status.error": "Błąd",
+  "settings.aboutAccureCode.cliServer": "Serwer CLI",
+  "settings.aboutAccureCode.status.label": "Status:",
+  "settings.aboutAccureCode.port.label": "Port:",
+  "settings.aboutAccureCode.versionInfo": "Informacje o wersji",
+  "settings.aboutAccureCode.version.label": "Wersja:",
+  "settings.aboutAccureCode.extensionName": "Rozszerzenie Accure Code",
+  "settings.aboutAccureCode.community": "Społeczność i wsparcie",
+  "settings.aboutAccureCode.feedback.prefix": "Jeśli masz pytania lub uwagi, śmiało otwórz zgłoszenie na",
+  "settings.aboutAccureCode.feedback.or": "lub",
+  "settings.aboutAccureCode.support.prefix":
     "W sprawach rozliczeń lub konta skontaktuj się z obsługą klienta pod adresem",
-  "settings.aboutKiloCode.resetSettings.title": "Resetuj ustawienia",
-  "settings.aboutKiloCode.resetSettings.description":
+  "settings.aboutAccureCode.resetSettings.title": "Resetuj ustawienia",
+  "settings.aboutAccureCode.resetSettings.description":
     "To resetuje tylko ustawienia specyficzne dla rozszerzenia VS Code do ich domyślnych wartości. Ustawienia współdzielone z CLI, takie jak tryby i reguły automatycznego zatwierdzania, są przechowywane w konfiguracji CLI i nie zostaną zresetowane.",
-  "settings.aboutKiloCode.resetSettings.button": "Resetuj wszystkie ustawienia",
-  "settings.aboutKiloCode.settingsTransfer.title": "Przenoszenie ustawień",
-  "settings.aboutKiloCode.settingsTransfer.description":
+  "settings.aboutAccureCode.resetSettings.button": "Resetuj wszystkie ustawienia",
+  "settings.aboutAccureCode.settingsTransfer.title": "Przenoszenie ustawień",
+  "settings.aboutAccureCode.settingsTransfer.description":
     "Eksportuj lub importuj ustawienia, aby przenosić je między instancjami VS Code.",
-  "settings.aboutKiloCode.exportSettings": "Eksportuj",
-  "settings.aboutKiloCode.importSettings": "Importuj",
-  "settings.aboutKiloCode.importSettings.invalidJson": "Nieprawidłowy plik JSON. Wybierz prawidłowy plik ustawień.",
-  "settings.aboutKiloCode.importSettings.invalidConfig": "Plik nie zawiera prawidłowych ustawień Kilo.",
-  "settings.aboutKiloCode.importSettings.tooLarge": "Plik jest za duży. Pliki ustawień muszą mieć mniej niż 1 MB.",
-  "settings.aboutKiloCode.importSettings.newerVersion":
-    "Ten plik został wyeksportowany z nowszej wersji Kilo. Niektóre ustawienia mogą zostać zignorowane.",
-  "settings.aboutKiloCode.importSettings.success":
+  "settings.aboutAccureCode.exportSettings": "Eksportuj",
+  "settings.aboutAccureCode.importSettings": "Importuj",
+  "settings.aboutAccureCode.importSettings.invalidJson": "Nieprawidłowy plik JSON. Wybierz prawidłowy plik ustawień.",
+  "settings.aboutAccureCode.importSettings.invalidConfig": "Plik nie zawiera prawidłowych ustawień Accure.",
+  "settings.aboutAccureCode.importSettings.tooLarge": "Plik jest za duży. Pliki ustawień muszą mieć mniej niż 1 MB.",
+  "settings.aboutAccureCode.importSettings.newerVersion":
+    "Ten plik został wyeksportowany z nowszej wersji Accure. Niektóre ustawienia mogą zostać zignorowane.",
+  "settings.aboutAccureCode.importSettings.success":
     "Ustawienia zaimportowane. Przejrzyj powyższe zmiany, a następnie kliknij Zapisz.",
 
-  "settings.aboutKiloCode.telemetry.title": "Telemetria",
-  "settings.aboutKiloCode.telemetry.description":
+  "settings.aboutAccureCode.telemetry.title": "Telemetria",
+  "settings.aboutAccureCode.telemetry.description":
     'Telemetria jest kontrolowana przez wbudowane ustawienie telemetrii VS Code. Aby ją wyłączyć, przejdź do Ustawienia > Telemetria > Poziom telemetrii i ustaw na "off". Uruchom ponownie VS Code, aby zastosować zmianę.',
-  "settings.aboutKiloCode.telemetry.openSettings": "Otwórz ustawienia telemetrii",
+  "settings.aboutAccureCode.telemetry.openSettings": "Otwórz ustawienia telemetrii",
 
   "settings.agentBehaviour.subtab.agents": "Agenci",
   "settings.agentBehaviour.subtab.mcpServers": "Serwery MCP",
@@ -1277,19 +1277,19 @@ export const dict = {
   "settings.experimental.codebaseSearch.description": "Włącz wyszukiwanie w języku naturalnym z AI w całej bazie kodu",
   "settings.experimental.speechToText.title": "Mowa na tekst",
   "settings.experimental.speechToText.description":
-    "Włącz wprowadzanie głosowe w polach promptów przy użyciu konta Kilo za pośrednictwem Kilo Gateway.",
+    "Włącz wprowadzanie głosowe w polach promptów przy użyciu konta Accure za pośrednictwem Accure Gateway.",
   "settings.models.speechToText.disabledDescription":
-    "Włącz i zaloguj się do dostawcy Kilo, aby korzystać ze Speech to Text. Speech to Text jest obecnie obsługiwane tylko z Kilo Gateway.",
+    "Włącz i zaloguj się do dostawcy Accure, aby korzystać ze Speech to Text. Speech to Text jest obecnie obsługiwane tylko z Accure Gateway.",
   "settings.models.speechToTextModel.title": "Model mowy na tekst",
   "settings.models.speechToTextModel.description":
-    "Wybierz model transkrypcji Kilo Gateway dla wprowadzania głosowego.",
+    "Wybierz model transkrypcji Accure Gateway dla wprowadzania głosowego.",
   "settings.experimental.continueOnDeny.title": "Kontynuuj przy odmowie",
   "settings.experimental.continueOnDeny.description": "Kontynuuj pętlę agenta po odmowie uprawnienia",
   "settings.experimental.mcpTimeout.title": "Limit czasu MCP (ms)",
   "settings.experimental.mcpTimeout.description": "Limit czasu żądań serwera MCP w milisekundach",
   "settings.experimental.remote.title": "Sterowanie Remote",
   "settings.experimental.remote.description":
-    "Włącz sterowanie Remote sesjami za pośrednictwem Kilo Cloud. Wpłynie to również na CLI na tej maszynie.",
+    "Włącz sterowanie Remote sesjami za pośrednictwem Accure Cloud. Wpłynie to również na CLI na tej maszynie.",
   "settings.experimental.remote.current": "Aktualny stan:",
   "settings.experimental.remote.startup": "Automatyczne włączanie przy starcie:",
   "settings.experimental.remote.active": "Aktywny",
@@ -1316,10 +1316,10 @@ export const dict = {
   "settings.indexing.model.title": "Model osadzania",
   "settings.indexing.provider.description":
     "Wybierz dostawcę używanego do generowania osadzeń dla wyszukiwania semantycznego.",
-  "settings.indexing.kiloModel.title": "Preset modelu Kilo",
-  "settings.indexing.kiloModel.description": "Wybierz obsługiwany model osadzania hostowany przez Kilo.",
-  "settings.indexing.kiloSignIn.title": "Wymagane logowanie do Kilo",
-  "settings.indexing.kiloSignIn.description": "Zaloguj się do Kilo, aby używać hostowanych osadzeń.",
+  "settings.indexing.accureModel.title": "Preset modelu Accure",
+  "settings.indexing.accureModel.description": "Wybierz obsługiwany model osadzania hostowany przez Accure.",
+  "settings.indexing.accureSignIn.title": "Wymagane logowanie do Accure",
+  "settings.indexing.accureSignIn.description": "Zaloguj się do Accure, aby używać hostowanych osadzeń.",
   "settings.indexing.provider.title": "Dostawca osadzania",
   "settings.indexing.providerField.description": "Ustawienie połączenia specyficzne dla dostawcy.",
   "settings.indexing.qdrantApiKey.description": "Opcjonalny klucz API dla instancji Qdrant.",
@@ -1439,14 +1439,14 @@ export const dict = {
   "settings.agentBehaviour.claudeCompat.heading": "Kompatybilność z Claude Code",
   "settings.agentBehaviour.claudeCompat.title": "Wczytuj pliki Claude Code",
   "settings.agentBehaviour.claudeCompat.description":
-    "Wczytuje instrukcje CLAUDE.md oraz umiejętności z katalogu konfiguracyjnego Claude Code do sesji. Włącz tę opcję, jeśli chcesz, aby Kilo korzystał z Twoich instrukcji i umiejętności Claude Code. Wymaga ponownego uruchomienia.",
+    "Wczytuje instrukcje CLAUDE.md oraz umiejętności z katalogu konfiguracyjnego Claude Code do sesji. Włącz tę opcję, jeśli chcesz, aby Accure korzystał z Twoich instrukcji i umiejętności Claude Code. Wymaga ponownego uruchomienia.",
   "settings.agentBehaviour.mcpDetail.command": "Polecenie",
   "settings.agentBehaviour.mcpDetail.args": "Argumenty",
   "settings.agentBehaviour.mcpDetail.env": "Środowisko",
   "settings.agentBehaviour.mcpDetail.disabled": "Ten serwer jest wyłączony.",
   "settings.agentBehaviour.mcpBrowseMarketplace": "Przeglądaj Marketplace",
   "settings.agentBehaviour.mcpEmpty":
-    "Brak skonfigurowanych serwerów MCP. Dodaj serwery MCP w kilo.jsonc lub poproś agenta o ich dodanie.",
+    "Brak skonfigurowanych serwerów MCP. Dodaj serwery MCP w accure.jsonc lub poproś agenta o ich dodanie.",
   "settings.agentBehaviour.workflowsPlaceholder": "Przepływy pracy zarządzane są za pomocą plików przepływów pracy.",
   "settings.agentBehaviour.workflows.description":
     "Przepływy pracy to niestandardowe komendy slash zdefiniowane w konfiguracji. Wpisz /command-name na czacie, aby je uruchomić. Komendy konfiguruje się w opencode.json w sekcji 'command'.",
@@ -1519,7 +1519,7 @@ export const dict = {
   "settings.display.username.title": "Nazwa użytkownika",
   "settings.display.username.description": "Niestandardowa nazwa użytkownika w rozmowach",
   "settings.display.fontSize.title": "Rozmiar czcionki",
-  "settings.display.fontSize.description": "Dostosuj rozmiar czcionki webview UI Kilo niezależnie od VS Code.",
+  "settings.display.fontSize.description": "Dostosuj rozmiar czcionki webview UI Accure niezależnie od VS Code.",
   "settings.display.reasoningAutoCollapse.title": "Automatycznie zwijaj rozumowanie",
   "settings.display.reasoningAutoCollapse.description":
     "Zwija bloki rozumowania po zakończeniu ich pisania przez agenta. Pozostaw wyłączone, aby rozumowanie pozostało rozwinięte, chyba że zwiniesz je ręcznie.",
@@ -1553,11 +1553,11 @@ export const dict = {
 
   // legacy-migration start
   "settings.legacyMigration.link": "Migracja ze starszej wersji",
-  "settings.aboutKiloCode.legacyMigration.title": "Migracja starszej wersji",
-  "settings.aboutKiloCode.legacyMigration.description":
+  "settings.aboutAccureCode.legacyMigration.title": "Migracja starszej wersji",
+  "settings.aboutAccureCode.legacyMigration.description":
     "Migruj ustawienia z poprzedniej instalacji Accure Code, w tym klucze API dostawców i domyślny model.",
-  "settings.aboutKiloCode.rooImport.description": "Importuj historię rozmów z instalacji Roo Code.",
-  "settings.aboutKiloCode.rooImport.button": "Importuj sesje z Roo Code",
+  "settings.aboutAccureCode.rooImport.description": "Importuj historię rozmów z instalacji Roo Code.",
+  "settings.aboutAccureCode.rooImport.button": "Importuj sesje z Roo Code",
 
   // Screen 1 — What's New
   "migration.whatsNew.title": "Co nowego w Accure Code",
@@ -1572,7 +1572,7 @@ export const dict = {
     "Zunifikowany interfejs do uruchamiania wielu agentów równolegle, każdy na własnym drzewie roboczym — monitoruj postęp, przełączaj kontekst i przeglądaj zmiany w jednym miejscu.",
   "migration.whatsNew.features.foundation.title": "Wspólny fundament",
   "migration.whatsNew.features.foundation.detail":
-    "Jedno małe, wydajne jądro we wszystkich produktach Kilo. Znajome doświadczenie niezależnie od sposobu pracy.",
+    "Jedno małe, wydajne jądro we wszystkich produktach Accure. Znajome doświadczenie niezależnie od sposobu pracy.",
   "migration.whatsNew.blogLink": "Przeczytaj pełne ogłoszenie",
   "migration.whatsNew.docsLink": "Nowości i często zadawane pytania",
   "migration.whatsNew.continue": "Kontynuuj",
@@ -1671,7 +1671,7 @@ export const dict = {
     "Pliki zmodyfikowane w drzewie roboczym, ale jeszcze nieprzygotowane, plus nieśledzone (nowe) pliki.",
   "diffViewer.source.session.label": "Sesja",
   "diffViewer.source.session.tooltip":
-    "Pliki zmienione przez Kilo w trakcie bieżącej sesji, na podstawie snapshotów na turę. Resetowane przy rozpoczęciu nowej sesji.",
+    "Pliki zmienione przez Accure w trakcie bieżącej sesji, na podstawie snapshotów na turę. Resetowane przy rozpoczęciu nowej sesji.",
   "diffViewer.group.session": "Sesja",
   "diffViewer.group.git": "Git",
   "diffViewer.notice.snapshotsDisabled":

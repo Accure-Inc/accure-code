@@ -1,24 +1,30 @@
 // ============================================================================
 // Plugin
 // ============================================================================
-export { KiloAuthPlugin, default } from "./plugin.js"
+export { AccureAuthPlugin, default } from "./plugin.js"
 
 // ============================================================================
 // Provider
 // ============================================================================
-export { createKilo } from "./provider.js"
-export { createKiloDebug } from "./provider-debug.js"
-export { kiloCustomLoader } from "./loader.js"
-export { buildKiloHeaders, getEditorNameHeader, getFeatureHeader, getDefaultHeaders, getUserAgent } from "./headers.js"
+export { createAccure } from "./provider.js"
+export { createAccureDebug } from "./provider-debug.js"
+export { accureCustomLoader } from "./loader.js"
+export {
+  buildAccureHeaders,
+  getEditorNameHeader,
+  getFeatureHeader,
+  getDefaultHeaders,
+  getUserAgent,
+} from "./headers.js"
 
 // ============================================================================
 // Auth
 // ============================================================================
 export { authenticateWithDeviceAuth } from "./auth/device-auth.js"
 export { authenticateWithDeviceAuthTUI } from "./auth/device-auth-tui.js"
-export { getKiloUrlFromToken, isValidKilocodeToken, getApiKey } from "./auth/token.js"
+export { getAccureUrlFromToken, isValidAccurecodeToken, getApiKey } from "./auth/token.js"
 export { poll, formatTimeRemaining } from "./auth/polling.js"
-export { migrateLegacyKiloAuth, LEGACY_CONFIG_PATH } from "./auth/legacy-migration.js"
+export { migrateLegacyAccureAuth, LEGACY_CONFIG_PATH } from "./auth/legacy-migration.js"
 
 // ============================================================================
 // API
@@ -28,20 +34,20 @@ export {
   fetchBalance,
   fetchProfileWithBalance,
   fetchDefaultModel,
-  getKiloProfile,
-  getKiloBalance,
-  getKiloDefaultModel,
+  getAccureProfile,
+  getAccureBalance,
+  getAccureDefaultModel,
   promptOrganizationSelection,
 } from "./api/profile.js"
-export { fetchKiloModels, type KiloModelsResult } from "./api/models.js"
+export { fetchAccureModels, type AccureModelsResult } from "./api/models.js"
 export {
-  EMPTY_KILO_EMBEDDING_MODEL_CATALOG,
-  fetchKiloEmbeddingModelCatalog,
-  type KiloEmbeddingModel,
-  type KiloEmbeddingModelCatalog,
-  type KiloEmbeddingModelCatalogIssue,
+  EMPTY_ACCURECODE_EMBEDDING_MODEL_CATALOG,
+  fetchAccureEmbeddingModelCatalog,
+  type AccureEmbeddingModel,
+  type AccureEmbeddingModelCatalog,
+  type AccureEmbeddingModelCatalogIssue,
 } from "./api/embedding-models.js"
-export { resolveKiloGatewayBaseUrl, resolveKiloOpenRouterBaseUrl } from "./api/url.js"
+export { resolveAccureGatewayBaseUrl, resolveAccureOpenRouterBaseUrl } from "./api/url.js"
 export {
   AUTOCOMPLETE_MODELS,
   DEFAULT_AUTOCOMPLETE_MODEL,
@@ -58,13 +64,13 @@ export {
   type OrganizationMode,
   type OrganizationModeConfig,
 } from "./api/modes.js"
-export { fetchKilocodeNotifications, type KilocodeNotification } from "./api/notifications.js"
+export { fetchAccurecodeNotifications, type AccurecodeNotification } from "./api/notifications.js"
 export { fetchCloudSession, fetchCloudSessionForImport, importSessionToDb } from "./cloud-sessions.js"
 
 // ============================================================================
 // Server Routes (optional - requires hono and OpenCode dependencies)
 // ============================================================================
-export { createKiloRoutes } from "./server/routes.js"
+export { createAccureRoutes } from "./server/routes.js"
 export {
   GatewayError,
   UnauthorizedError,
@@ -81,7 +87,7 @@ export {
 // ============================================================================
 // Note: TUI exports moved to separate entry point
 // ============================================================================
-// For TUI components and commands, import from "@kilocode/accure-gateway/tui"
+// For TUI components and commands, import from "@accurecode/accure-gateway/tui"
 // This avoids circular dependencies with opencode TUI infrastructure
 
 // ============================================================================
@@ -92,14 +98,14 @@ export type {
   DeviceAuthInitiateResponse,
   DeviceAuthPollResponse,
   Organization,
-  KilocodeProfile,
-  KilocodeBalance,
+  AccurecodeProfile,
+  AccurecodeBalance,
   PollOptions,
   PollResult,
   // Provider types
-  KiloProvider,
-  KiloProviderOptions,
-  KiloMetadata,
+  AccureProvider,
+  AccureProviderOptions,
+  AccureMetadata,
   CustomLoaderResult,
   ProviderInfo,
   LanguageModelV3,
@@ -109,12 +115,12 @@ export type {
 // Constants
 // ============================================================================
 export {
-  ENV_KILO_API_URL,
-  DEFAULT_KILO_API_URL,
-  KILO_API_BASE,
-  KILO_CHAT_URL,
-  KILO_EVENT_SERVICE_URL,
-  KILO_OPENROUTER_BASE,
+  ENV_ACCURECODE_API_URL,
+  DEFAULT_ACCURECODE_API_URL,
+  ACCURECODE_API_BASE,
+  ACCURECODE_CHAT_URL,
+  ACCURECODE_EVENT_SERVICE_URL,
+  ACCURECODE_OPENROUTER_BASE,
   POLL_INTERVAL_MS,
   DEFAULT_MODEL,
   DEFAULT_FREE_MODEL,

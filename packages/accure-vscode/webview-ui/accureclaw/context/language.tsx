@@ -1,6 +1,6 @@
-// KiloClaw lightweight language context
+// AccureClaw lightweight language context
 //
-// Self-contained i18n for the KiloClaw panel. Does not depend on
+// Self-contained i18n for the AccureClaw panel. Does not depend on
 // VSCodeProvider/ServerProvider — locale comes from the extension host
 // via the claw context, falling back to navigator.language then "en".
 
@@ -57,7 +57,7 @@ type LanguageCtx = {
 
 const LanguageContext = createContext<LanguageCtx>()
 
-export function KiloClawLanguageProvider(props: { locale: () => string | undefined; children: JSX.Element }) {
+export function AccureClawLanguageProvider(props: { locale: () => string | undefined; children: JSX.Element }) {
   const resolved = createMemo<Locale>(() => {
     const ext = props.locale()
     if (ext) return normalizeLocale(ext)
@@ -82,8 +82,8 @@ export function KiloClawLanguageProvider(props: { locale: () => string | undefin
   return <LanguageContext.Provider value={{ t }}>{props.children}</LanguageContext.Provider>
 }
 
-export function useKiloClawLanguage(): LanguageCtx {
+export function useAccureClawLanguage(): LanguageCtx {
   const ctx = useContext(LanguageContext)
-  if (!ctx) throw new Error("useKiloClawLanguage must be used within KiloClawLanguageProvider")
+  if (!ctx) throw new Error("useAccureClawLanguage must be used within AccureClawLanguageProvider")
   return ctx
 }

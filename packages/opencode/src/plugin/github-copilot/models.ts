@@ -1,4 +1,4 @@
-import type { Model } from "@kilocode/sdk/v2"
+import type { Model } from "@accurecode/sdk/v2"
 import { Schema } from "effect"
 
 export const schema = Schema.Struct({
@@ -126,11 +126,11 @@ function build(key: string, remote: Item, url: string, prev?: Model): Model {
         variants[effort] = {
           thinking: {
             type: "adaptive",
-            // kilocode_change start - treat opus-4.8 like opus-4.7
+            // accurecode_change start - treat opus-4.8 like opus-4.7
             ...(model.api.id.includes("opus-4.7") || model.api.id.includes("opus-4.8")
               ? { display: "summarized" }
               : {}),
-            // kilocode_change end
+            // accurecode_change end
           },
           effort,
         }

@@ -1,9 +1,9 @@
 ---
-title: "Kilo Code for JetBrains: Free Open-Source AI Coding Plugin"
-description: "Using Kilo Code in JetBrains IDEs"
+title: "Accure Code for JetBrains: Free Open-Source AI Coding Plugin"
+description: "Using Accure Code in JetBrains IDEs"
 ---
 
-# Kilo Code for JetBrains: Free AI Coding Plugin
+# Accure Code for JetBrains: Free AI Coding Plugin
 
 ## Installation
 

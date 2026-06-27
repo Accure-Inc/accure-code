@@ -1,12 +1,12 @@
-package ai.kilocode.client.migration
+package ai.accurecode.client.migration
 
-import ai.kilocode.rpc.dto.LegacyMigrationDetectionDto
-import ai.kilocode.rpc.dto.LegacyMigrationResultItemDto
-import ai.kilocode.rpc.dto.LegacyMigrationSessionProgressDto
-import ai.kilocode.rpc.dto.MigrationItemCategoryDto
-import ai.kilocode.rpc.dto.MigrationItemProgressStatusDto
-import ai.kilocode.rpc.dto.MigrationItemStatusDto
-import ai.kilocode.rpc.dto.MigrationSessionPhaseDto
+import ai.accurecode.rpc.dto.LegacyMigrationDetectionDto
+import ai.accurecode.rpc.dto.LegacyMigrationResultItemDto
+import ai.accurecode.rpc.dto.LegacyMigrationSessionProgressDto
+import ai.accurecode.rpc.dto.MigrationItemCategoryDto
+import ai.accurecode.rpc.dto.MigrationItemProgressStatusDto
+import ai.accurecode.rpc.dto.MigrationItemStatusDto
+import ai.accurecode.rpc.dto.MigrationSessionPhaseDto
 
 // ---------------------------------------------------------------------------
 // User selections for UI
@@ -73,7 +73,7 @@ enum class MigrationUiPhase {
 }
 
 // ---------------------------------------------------------------------------
-// Top-level shared state emitted by KiloMigrationService
+// Top-level shared state emitted by AccureMigrationService
 // ---------------------------------------------------------------------------
 
 sealed class MigrationUiState {

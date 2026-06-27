@@ -1,14 +1,14 @@
-package ai.kilocode.client.session
+package ai.accurecode.client.session
 
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.session.history.HistoryController
-import ai.kilocode.client.session.history.HistoryPanel
-import ai.kilocode.client.telemetry.Telemetry
-import ai.kilocode.client.util.UiTimer
-import ai.kilocode.client.util.UiTimerSource
-import ai.kilocode.client.util.UiTimers
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.session.history.HistoryController
+import ai.accurecode.client.session.history.HistoryPanel
+import ai.accurecode.client.telemetry.Telemetry
+import ai.accurecode.client.util.UiTimer
+import ai.accurecode.client.util.UiTimerSource
+import ai.accurecode.client.util.UiTimers
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.DataProvider
 import com.intellij.openapi.application.ApplicationManager
@@ -31,8 +31,8 @@ class SessionSidePanelManager(
         { project, workspace, manager, ref, timers ->
             service<SessionUiFactory>().create(project, workspace, manager, ref, timers)
         },
-    private val resolve: (String) -> Workspace = { dir -> service<KiloWorkspaceService>().workspace(dir) },
-    private val status: () -> Map<String, SessionActivityKind> = { project.service<KiloSessionService>().activity() },
+    private val resolve: (String) -> Workspace = { dir -> service<AccureWorkspaceService>().workspace(dir) },
+    private val status: () -> Map<String, SessionActivityKind> = { project.service<AccureSessionService>().activity() },
     private val history: ((Disposable, (SessionRef) -> Unit, (String) -> Unit) -> JComponent)? = null,
     private val timers: UiTimerSource = UiTimers,
 ) : SessionManager, Disposable {
@@ -144,7 +144,7 @@ class SessionSidePanelManager(
         val factory = service<SessionUiFactory>()
         val cs = factory.scope()
         val controller = HistoryController(
-            sessions = project.service<KiloSessionService>(),
+            sessions = project.service<AccureSessionService>(),
             workspace = root,
             cs = cs,
             open = this::openSession,
@@ -209,7 +209,7 @@ class SessionSidePanelManager(
 
     private fun schedule(ui: SessionUi) {
         cancel(ui)
-        val delay = Registry.intValue("kilo.session.inactive.disposeTimeoutMs").coerceAtLeast(0)
+        val delay = Registry.intValue("accure.session.inactive.disposeTimeoutMs").coerceAtLeast(0)
         val timer = timers.timer(delay, repeats = false) {
             activeTimers.remove(ui)
             if (ui === current || ui !in all) return@timer

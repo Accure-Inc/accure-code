@@ -6,7 +6,7 @@ let err: unknown
 let exit: string | number | null | undefined
 
 mock.module("@opencode-ai/core/global", () => ({
-  Global: { Path: { data: "/tmp/kilo-test" } },
+  Global: { Path: { data: "/tmp/accure-test" } },
 }))
 
 mock.module("@opencode-ai/core/installation/version", () => ({
@@ -14,7 +14,7 @@ mock.module("@opencode-ai/core/installation/version", () => ({
   InstallationVersion: "test",
 }))
 
-mock.module("@kilocode/accure-telemetry", () => ({
+mock.module("@accurecode/accure-telemetry", () => ({
   Telemetry: {
     async init() {},
     async updateIdentity() {},
@@ -30,10 +30,10 @@ mock.module("@kilocode/accure-telemetry", () => ({
   },
 }))
 
-mock.module("@kilocode/accure-gateway", () => ({
-  ENV_FEATURE: "KILO_FEATURE",
-  ENV_VERSION: "KILO_VERSION",
-  async migrateLegacyKiloAuth() {},
+mock.module("@accurecode/accure-gateway", () => ({
+  ENV_FEATURE: "ACCURECODE_FEATURE",
+  ENV_VERSION: "ACCURECODE_VERSION",
+  async migrateLegacyAccureAuth() {},
 }))
 
 mock.module("@/config/config", () => ({
@@ -52,7 +52,7 @@ mock.module("@/project/instance-runtime", () => ({
   },
 }))
 
-mock.module("@/kilocode/session-export", () => ({
+mock.module("@/accurecode/session-export", () => ({
   SessionExport: {
     async shutdown() {
       calls.push("session")
@@ -60,21 +60,21 @@ mock.module("@/kilocode/session-export", () => ({
   },
 }))
 
-mock.module("@/kilocode/help-command", () => ({
+mock.module("@/accurecode/help-command", () => ({
   createHelpCommand: () => ({ command: "help", handler() {} }),
 }))
 
 for (const path of [
-  "@/kilocode/cli/cmd/console",
-  "@/kilocode/cli/cmd/roll-call",
-  "@/kilocode/cli/cmd/profile",
-  "@/kilocode/cli/cmd/daemon",
-  "@/kilocode/cli/dev-setup",
+  "@/accurecode/cli/cmd/console",
+  "@/accurecode/cli/cmd/roll-call",
+  "@/accurecode/cli/cmd/profile",
+  "@/accurecode/cli/cmd/daemon",
+  "@/accurecode/cli/dev-setup",
   "@/cli/cmd/remote",
   "@/cli/cmd/config",
 ]) {
   mock.module(path, () => ({
-    KiloConsoleCommand: { command: "console", handler() {} },
+    AccureConsoleCommand: { command: "console", handler() {} },
     RollCallCommand: { command: "roll-call", handler() {} },
     ProfileCommand: { command: "profile", handler() {} },
     DaemonCommand: { command: "daemon", handler() {} },
@@ -85,7 +85,7 @@ for (const path of [
   }))
 }
 
-describe("KiloCli.shutdown", () => {
+describe("AccureCli.shutdown", () => {
   beforeEach(() => {
     calls.length = 0
     timeouts.length = 0
@@ -101,9 +101,9 @@ describe("KiloCli.shutdown", () => {
   test("keeps telemetry shutdown timeout best-effort and still disposes instances", async () => {
     err = "Timeout while shutting down PostHog. Some events may not have been sent."
     process.exitCode = 0
-    const { KiloCli } = await import("../../src/kilocode/cli/setup")
+    const { AccureCli } = await import("../../src/accurecode/cli/setup")
 
-    await expect(KiloCli.shutdown()).resolves.toBeUndefined()
+    await expect(AccureCli.shutdown()).resolves.toBeUndefined()
 
     expect(timeouts).toEqual([2000])
     expect(calls).toEqual(["track:0", "session", "telemetry", "dispose"])
@@ -112,9 +112,9 @@ describe("KiloCli.shutdown", () => {
 
   test("preserves failing command exit status", async () => {
     process.exitCode = 1
-    const { KiloCli } = await import("../../src/kilocode/cli/setup")
+    const { AccureCli } = await import("../../src/accurecode/cli/setup")
 
-    await KiloCli.shutdown()
+    await AccureCli.shutdown()
 
     expect(timeouts).toEqual([2000])
     expect(calls).toEqual(["track:1", "session", "telemetry", "dispose"])

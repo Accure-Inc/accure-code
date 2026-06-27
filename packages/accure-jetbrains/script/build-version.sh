@@ -118,20 +118,20 @@ if [[ "$clean" == "1" ]]; then
 fi
 
 rm -rf "${cli}/dist"
-KILO_VERSION="$version" KILO_CHANNEL=rc bun "${plugin}/script/build.ts" --production --prepare-cli
-./gradlew buildPlugin -Pproduction=true -Pkilo.version="$version" -Pkilo.channel=eap
+ACCURECODE_VERSION="$version" ACCURECODE_CHANNEL=rc bun "${plugin}/script/build.ts" --production --prepare-cli
+./gradlew buildPlugin -Pproduction=true -Paccure.version="$version" -Paccure.channel=eap
 
 if [[ "$sign" == "1" ]]; then
-  ./gradlew signPlugin -Pproduction=true -Pkilo.version="$version" -Pkilo.channel=eap
+  ./gradlew signPlugin -Pproduction=true -Paccure.version="$version" -Paccure.channel=eap
 fi
 
 if [[ "$skip_verification" == "1" ]]; then
   printf '\nSkipping JetBrains plugin verification.\n'
 else
   if [[ "$sign" == "1" ]]; then
-    ./gradlew verifyPluginSignature -Pproduction=true -Pkilo.version="$version" -Pkilo.channel=eap
+    ./gradlew verifyPluginSignature -Pproduction=true -Paccure.version="$version" -Paccure.channel=eap
   fi
-  ./gradlew verifyPlugin -Pproduction=true -Pkilo.version="$version" -Pkilo.channel=eap
+  ./gradlew verifyPlugin -Pproduction=true -Paccure.version="$version" -Paccure.channel=eap
 fi
 
 if [[ "$sign" == "1" ]]; then

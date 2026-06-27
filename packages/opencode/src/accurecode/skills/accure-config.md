@@ -1,12 +1,12 @@
-# Kilo CLI Configuration Reference
+# Accure CLI Configuration Reference
 
-All config lives in `kilo.json` (or `kilo.jsonc`). Precedence low-to-high: remote well-known, global (`~/.config/kilo/kilo.json`), env `KILO_CONFIG`, project `./kilo.json`, `.kilo/kilo.json`, `KILO_CONFIG_CONTENT`, managed (see Config File Locations). Deep-merged; later wins.
+All config lives in `accure.json` (or `accure.jsonc`). Precedence low-to-high: remote well-known, global (`~/.config/accure/accure.json`), env `ACCURECODE_CONFIG`, project `./accure.json`, `.accurecode/accure.json`, `ACCURECODE_CONFIG_CONTENT`, managed (see Config File Locations). Deep-merged; later wins.
 
-This also covers where Kilo looks for config files, commands, agents, and skills across project, global, and legacy paths such as `.kilo/`, `.kilocode/`, `.opencode/`, and `~/.config/kilo/`, plus Agent Manager setup/run scripts in the VS Code extension.
+This also covers where Accure looks for config files, commands, agents, and skills across project, global, and legacy paths such as `.accurecode/`, `.accurecode/`, `.opencode/`, and `~/.config/accure/`, plus Agent Manager setup/run scripts in the VS Code extension.
 
-## Commands (`.kilo/command/*.md`)
+## Commands (`.accurecode/command/*.md`)
 
-Markdown files with YAML frontmatter. The filename (minus `.md`) becomes the command name invoked via `/name`. Commands can live in `.kilo/`, `.kilocode/`, `.opencode/`, and global config roots, with both `command/` and `commands/` directory names supported. See Config File Locations for the full search order.
+Markdown files with YAML frontmatter. The filename (minus `.md`) becomes the command name invoked via `/name`. Commands can live in `.accurecode/`, `.accurecode/`, `.opencode/`, and global config roots, with both `command/` and `commands/` directory names supported. See Config File Locations for the full search order.
 
 ```yaml
 ---
@@ -26,12 +26,12 @@ Template variables: `$1`-`$N` (positional args), `$ARGUMENTS` (full string), `@f
 
 When asked where `/name` lives, do not search only the repo root. Search these roots explicitly, and use an explicit search `path` for each one:
 
-1. `~/.config/kilo/`
-2. `~/.kilo/`
-3. `~/.kilocode/`
+1. `~/.config/accure/`
+2. `~/.accurecode/`
+3. `~/.accurecode/`
 4. `~/.opencode/`
-5. The `KILO_CONFIG_DIR` directory (if the env var is set)
-6. project `.kilo/`, `.kilocode/`, and `.opencode/` directories from the current working directory up to the worktree root
+5. The `ACCURECODE_CONFIG_DIR` directory (if the env var is set)
+6. project `.accurecode/`, `.accurecode/`, and `.opencode/` directories from the current working directory up to the worktree root
 
 Use exact patterns first:
 
@@ -40,9 +40,9 @@ Use exact patterns first:
 
 If found, return the full path. If not found in those roots, explain that the command is not present in the loaded config paths.
 
-## Agents (`.kilo/agent/*.md`)
+## Agents (`.accurecode/agent/*.md`)
 
-Also loaded from `.kilocode/` and `.opencode/` directories (legacy), and plural `agents/` variants.
+Also loaded from `.accurecode/` and `.opencode/` directories (legacy), and plural `agents/` variants.
 
 ```yaml
 ---
@@ -65,15 +65,15 @@ System prompt for this agent.
 
 ## Workflows (legacy)
 
-Markdown files in `.kilo/workflows/` or `.kilocode/workflows/` (project-level) and `~/.kilo/workflows/` or `~/.kilocode/workflows/` (global). These are automatically converted to commands at startup. The filename (minus `.md`) becomes the command name. Project workflows override global ones with the same name.
+Markdown files in `.accurecode/workflows/` or `.accurecode/workflows/` (project-level) and `~/.accurecode/workflows/` or `~/.accurecode/workflows/` (global). These are automatically converted to commands at startup. The filename (minus `.md`) becomes the command name. Project workflows override global ones with the same name.
 
 ## Agent Manager Setup And Run Scripts
 
-For the full product guidance, use the canonical [Agent Manager reference](https://kilo.ai/docs/automate/agent-manager) and [Agent Manager Workflows guide](https://kilo.ai/docs/automate/agent-manager-workflows). Prefer these links instead of guessing documentation paths.
+For the full product guidance, use the canonical [Agent Manager reference](https://accure.ai/docs/automate/agent-manager) and [Agent Manager Workflows guide](https://accure.ai/docs/automate/agent-manager-workflows). Prefer these links instead of guessing documentation paths.
 
-Agent Manager setup/run scripts are project files in the main repository's `.kilo/` directory. They are not `kilo.json` settings and should not be configured inside generated `.kilo/worktrees/<name>/` checkouts.
+Agent Manager setup/run scripts are project files in the main repository's `.accurecode/` directory. They are not `accure.json` settings and should not be configured inside generated `.accurecode/worktrees/<name>/` checkouts.
 
-Agent Manager worktrees usually live under `.kilo/worktrees/`. Think of each worktree as a separate checkout on its own branch: it enables parallel edits, but dependencies, build output, caches, databases, and generated files can consume significant disk space across many worktrees.
+Agent Manager worktrees usually live under `.accurecode/worktrees/`. Think of each worktree as a separate checkout on its own branch: it enables parallel edits, but dependencies, build output, caches, databases, and generated files can consume significant disk space across many worktrees.
 
 ### Worktree workflow and conflicts
 
@@ -89,8 +89,8 @@ Setup scripts run once when a managed worktree is created, imported, or promoted
 
 | Platform | Filenames checked in order |
 |---|---|
-| macOS / Linux | `.kilo/setup-script`, `.kilo/setup-script.sh` |
-| Windows | `.kilo/setup-script.ps1`, `.kilo/setup-script.cmd`, `.kilo/setup-script.bat` |
+| macOS / Linux | `.accurecode/setup-script`, `.accurecode/setup-script.sh` |
+| Windows | `.accurecode/setup-script.ps1`, `.accurecode/setup-script.cmd`, `.accurecode/setup-script.bat` |
 
 Behavior: runs from the worktree directory with `WORKTREE_PATH` set to the absolute worktree path and `REPO_PATH` set to the main repository root. Agent Manager copies root-level `.env` and `.env.*` files before setup without overwriting existing files; nested env files or other project-specific local files need setup script handling. Setup has a 5 minute timeout, and failures leave the worktree available for inspection.
 
@@ -100,10 +100,10 @@ Run scripts start or stop the user's project for the selected Agent Manager cont
 
 | Platform | Filenames checked in order |
 |---|---|
-| macOS / Linux | `.kilo/run-script`, `.kilo/run-script.sh` |
-| Windows | `.kilo/run-script.ps1`, `.kilo/run-script.cmd`, `.kilo/run-script.bat` |
+| macOS / Linux | `.accurecode/run-script`, `.accurecode/run-script.sh` |
+| Windows | `.accurecode/run-script.ps1`, `.accurecode/run-script.cmd`, `.accurecode/run-script.bat` |
 
-Behavior: runs from the selected worktree directory, or the main repo root when `LOCAL` is selected. Receives `WORKTREE_PATH` as the current run directory and `REPO_PATH` as the main repository root. If no valid run script exists, Run opens or creates the default script template instead of running. Run status is in memory only and is not persisted in `.kilo/agent-manager.json`.
+Behavior: runs from the selected worktree directory, or the main repo root when `LOCAL` is selected. Receives `WORKTREE_PATH` as the current run directory and `REPO_PATH` as the main repository root. If no valid run script exists, Run opens or creates the default script template instead of running. Run status is in memory only and is not persisted in `.accurecode/agent-manager.json`.
 
 When the project supports it, avoid fixed global resources across worktrees by deriving ports, caches, Docker Compose project names, emulators, or databases from `WORKTREE_PATH` or the branch.
 
@@ -111,7 +111,7 @@ When the project supports it, avoid fixed global resources across worktrees by d
 
 - If Run opens configuration instead of running, no valid run script exists for the current platform.
 - If a script is ignored, verify the platform-specific filename from the tables above.
-- For port conflicts (`EADDRINUSE`, browser/tests hitting the wrong worktree), inspect the app's dev-server config as well as `.kilo/run-script`. If fixing it requires application changes, ask whether the user wants the app made configurable or only wants a run-script workaround.
+- For port conflicts (`EADDRINUSE`, browser/tests hitting the wrong worktree), inspect the app's dev-server config as well as `.accurecode/run-script`. If fixing it requires application changes, ask whether the user wants the app made configurable or only wants a run-script workaround.
 - If commands are missing, inspect how VS Code was launched. Run scripts load the user shell environment, but setup scripts only receive explicit `WORKTREE_PATH` and `REPO_PATH` from the task adapter, so `PATH` can differ.
 - If setup times out, keep setup under 5 minutes or move long-running work into the run script or manual setup.
 - If output is not visible in the Agent Manager chat terminal, explain that setup/run scripts write to VS Code task terminals. Ask the user for that output if it is needed for debugging.
@@ -119,7 +119,7 @@ When the project supports it, avoid fixed global resources across worktrees by d
 
 ### `agent-manager.json`
 
-Agent Manager persists UI, worktree, and session state in `.kilo/agent-manager.json`. Treat this file as diagnostic or recovery state for lost sessions, stale worktrees, missing UI state, or external worktree deletion/movement. It can be large, so inspect it selectively. It does not store script contents, run status, live tasks, or terminal mappings, and should not be edited to configure run/setup behavior.
+Agent Manager persists UI, worktree, and session state in `.accurecode/agent-manager.json`. Treat this file as diagnostic or recovery state for lost sessions, stale worktrees, missing UI state, or external worktree deletion/movement. It can be large, so inspect it selectively. It does not store script contents, run status, live tasks, or terminal mappings, and should not be edited to configure run/setup behavior.
 
 ## Permissions
 
@@ -219,16 +219,16 @@ Rules are evaluated top-to-bottom — the **last** matching rule wins. Put broad
 
 Use `disabled_providers` to prevent specific providers from loading. This is useful when you want to exclude providers that are built-in, or auto-detected via environment variables, from appearing in the model picker.
 
-For example, this configuration will hide all models from the built-in Kilo Gateway as well as any from the OpenAI provider which may be enabled automatically through environment variables.
+For example, this configuration will hide all models from the built-in Accure Gateway as well as any from the OpenAI provider which may be enabled automatically through environment variables.
 
 ```jsonc
 {
-  "$schema": "https://app.kilo.ai/config.json",
-  "disabled_providers": ["kilo", "openai"],
+  "$schema": "https://app.accurecode.ai/config.json",
+  "disabled_providers": ["accure", "openai"],
 }
 ```
 
-The provider ID is the lowercase name used in the `provider/model` format (e.g., `kilo`, `openai`, `anthropic`, `google`, `groq`).
+The provider ID is the lowercase name used in the `provider/model` format (e.g., `accure`, `openai`, `anthropic`, `google`, `groq`).
 
 **Interaction with `enabled_providers`:**
 
@@ -257,7 +257,7 @@ Additional skill directories and remote URLs:
 }
 ```
 
-Skills are markdown files at `skills/<name>/SKILL.md` (or `skill/<name>/SKILL.md`) with `name` and `description` in frontmatter. Discovered inside `.kilo/`, `.kilocode/`, and `.opencode/` directories.
+Skills are markdown files at `skills/<name>/SKILL.md` (or `skill/<name>/SKILL.md`) with `name` and `description` in frontmatter. Discovered inside `.accurecode/`, `.accurecode/`, and `.opencode/` directories.
 
 ## Other Top-Level Fields
 
@@ -285,10 +285,10 @@ Leader key default: `ctrl+x`. Keybinds below use `<leader>` prefix (e.g. `<leade
 
 | Action | Keybind | Slash | Notes |
 |---|---|---|---|
-| Switch theme | `<leader>t` | `/themes` | Pick from 35+ built-in themes (kilo, catppuccin, dracula, github, gruvbox, nord, tokyonight, etc.) |
+| Switch theme | `<leader>t` | `/themes` | Pick from 35+ built-in themes (accure, catppuccin, dracula, github, gruvbox, nord, tokyonight, etc.) |
 | Toggle appearance (dark/light) | — | — | Ctrl+P → "Toggle appearance" |
 
-Custom themes: place JSON files in `~/.config/kilo/themes/` or `.kilo/themes/`.
+Custom themes: place JSON files in `~/.config/accure/themes/` or `.accurecode/themes/`.
 
 ### Session
 
@@ -319,7 +319,7 @@ Custom themes: place JSON files in `~/.config/kilo/themes/` or `.kilo/themes/`.
 
 Toggle animations, Toggle diff wrapping, Toggle sidebar (`<leader>b`), Toggle thinking (`/thinking`), Toggle tool details, Toggle timestamps (`/timestamps`), Toggle scrollbar, Toggle header, Toggle code concealment (`<leader>h`).
 
-Notification settings are managed through `kilo console` under **Settings > CLI > Notifications**, or through `attention` in `tui.json` / `tui.jsonc`. There is no notification slash command or command-palette toggle.
+Notification settings are managed through `accure console` under **Settings > CLI > Notifications**, or through `attention` in `tui.json` / `tui.jsonc`. There is no notification slash command or command-palette toggle.
 
 ### System
 
@@ -332,23 +332,23 @@ Notification settings are managed through `kilo console` under **Settings > CLI 
 
 ## Config File Locations
 
-### Config files (kilo.json)
+### Config files (accure.json)
 
 | Scope | Path |
 |---|---|
-| Project | `./kilo.json`, `./kilo.jsonc`, `./opencode.json` (legacy), `./opencode.jsonc` (legacy) |
-| Global | `~/.config/kilo/kilo.json`, `~/.config/kilo/kilo.jsonc`, `~/.config/kilo/opencode.json` (legacy), `~/.config/kilo/opencode.jsonc` (legacy), `~/.config/kilo/config.json` (legacy) |
-| Managed | Linux: `/etc/kilo/`, macOS: `/Library/Application Support/kilo/`, Windows: `%ProgramData%\kilo\` — loads `kilo.json`, `kilo.jsonc`, `opencode.json`, `opencode.jsonc` (enterprise, highest priority) |
+| Project | `./accure.json`, `./accure.jsonc`, `./opencode.json` (legacy), `./opencode.jsonc` (legacy) |
+| Global | `~/.config/accure/accure.json`, `~/.config/accure/accure.jsonc`, `~/.config/accure/opencode.json` (legacy), `~/.config/accure/opencode.jsonc` (legacy), `~/.config/accure/config.json` (legacy) |
+| Managed | Linux: `/etc/accure/`, macOS: `/Library/Application Support/accure/`, Windows: `%ProgramData%\accure\` — loads `accure.json`, `accure.jsonc`, `opencode.json`, `opencode.jsonc` (enterprise, highest priority) |
 
-Each config directory (`.kilo/`, `.kilocode/`, `.opencode/`) can also contain `kilo.json`, `kilo.jsonc`, `opencode.json`, or `opencode.jsonc`.
+Each config directory (`.accurecode/`, `.accurecode/`, `.opencode/`) can also contain `accure.json`, `accure.jsonc`, `opencode.json`, or `opencode.jsonc`.
 
 ### Config directories
 
-Three directory names are scanned: `.kilo` (modern), `.kilocode` (legacy), `.opencode` (legacy). All three are checked at each level:
+Three directory names are scanned: `.accurecode` (modern), `.accurecode` (legacy), `.opencode` (legacy). All three are checked at each level:
 
 - **Project**: walks up from CWD to the git worktree root, checking for all three at each directory level
-- **Home**: `~/.kilo/`, `~/.kilocode/`, `~/.opencode/`
-- **XDG global**: `~/.config/kilo/` (always loaded, lowest file-based precedence)
+- **Home**: `~/.accurecode/`, `~/.accurecode/`, `~/.opencode/`
+- **XDG global**: `~/.config/accure/` (always loaded, lowest file-based precedence)
 
 ### Commands, agents, modes, plugins
 
@@ -361,7 +361,7 @@ Glob patterns run inside every discovered config directory (including legacy):
 | Mode | `{mode,modes}/*.md` |
 | Plugin | `{plugin,plugins}/*.{ts,js}` |
 
-Example: `~/.config/kilo/command/*.md` (modern global), `~/.kilocode/command/*.md` (legacy global), `.opencode/commands/*.md` (legacy project) all load commands.
+Example: `~/.config/accure/command/*.md` (modern global), `~/.accurecode/command/*.md` (legacy global), `.opencode/commands/*.md` (legacy project) all load commands.
 
 ### Skills and instructions
 
@@ -374,7 +374,7 @@ Example: `~/.config/kilo/command/*.md` (modern global), `~/.kilocode/command/*.m
 
 | Variable | Description |
 |---|---|
-| `KILO_CONFIG` | Path to an additional config file (loaded after global) |
-| `KILO_CONFIG_DIR` | Path to an additional config directory (appended to search list) |
-| `KILO_CONFIG_CONTENT` | Inline JSON config string (high precedence, after project dirs) |
-| `KILO_DISABLE_PROJECT_CONFIG` | Skip all project-level config (files and directories) |
+| `ACCURECODE_CONFIG` | Path to an additional config file (loaded after global) |
+| `ACCURECODE_CONFIG_DIR` | Path to an additional config directory (appended to search list) |
+| `ACCURECODE_CONFIG_CONTENT` | Inline JSON config string (high precedence, after project dirs) |
+| `ACCURECODE_DISABLE_PROJECT_CONFIG` | Skip all project-level config (files and directories) |

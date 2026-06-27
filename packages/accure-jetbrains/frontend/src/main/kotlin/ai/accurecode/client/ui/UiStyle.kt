@@ -1,4 +1,4 @@
-package ai.kilocode.client.ui
+package ai.accurecode.client.ui
 
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.ui.JBColor
@@ -85,22 +85,22 @@ object UiStyle {
         fun badgeFg(): Color = JBColor(Color.BLACK, UIUtil.getLabelForeground())
 
         fun runningBadgeBg(): Color = JBColor.namedColor(
-            "Kilo.History.runningBadgeBackground",
+            "Accure.History.runningBadgeBackground",
             JBColor(0xF5C542, 0x7A5A00),
         )
 
         fun runningBadgeFg(): Color = JBColor.namedColor(
-            "Kilo.History.runningBadgeForeground",
+            "Accure.History.runningBadgeForeground",
             JBColor(Color.BLACK, Color.WHITE),
         )
 
         fun activityBadgeBg(): Color = JBColor.namedColor(
-            "Kilo.History.activityBadgeBackground",
+            "Accure.History.activityBadgeBackground",
             JBUI.CurrentTheme.Link.Foreground.ENABLED,
         )
 
         fun activityBadgeFg(): Color = JBColor.namedColor(
-            "Kilo.History.activityBadgeForeground",
+            "Accure.History.activityBadgeForeground",
             Color.WHITE,
         )
 
@@ -113,7 +113,7 @@ object UiStyle {
          * a high-contrast base distinct from the standard editor/sidebar background.
          */
         fun floatingPanel(): Color = JBColor.namedColor(
-            "Kilo.FloatingPanel.background",
+            "Accure.FloatingPanel.background",
             JBColor(java.awt.Color.WHITE, java.awt.Color.BLACK),
         )
 

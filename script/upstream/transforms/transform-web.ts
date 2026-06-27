@@ -1,15 +1,15 @@
 #!/usr/bin/env bun
 /**
- * Transform web/docs files with Kilo branding
+ * Transform web/docs files with Accure branding
  *
  * This script handles documentation and web content files (.mdx, etc.)
- * by transforming OpenCode references to Kilo.
+ * by transforming OpenCode references to Accure.
  */
 
 import { $ } from "bun"
 import { info, success, warn, debug } from "../utils/logger"
 import { defaultConfig } from "../utils/config"
-import { oursHasKilocodeChanges } from "../utils/git"
+import { oursHasAccurecodeChanges } from "../utils/git"
 
 export interface WebTransformResult {
   file: string
@@ -34,68 +34,68 @@ const WEB_REPLACEMENTS: WebReplacement[] = [
   // GitHub references
   {
     pattern: /github\.com\/anomalyco\/opencode/g,
-    replacement: "github.com/Kilo-Org/kilocode",
+    replacement: "github.com/Accure-Inc/accure-code",
     description: "GitHub URL",
   },
   {
     pattern: /anomalyco\/opencode/g,
-    replacement: "Kilo-Org/kilocode",
+    replacement: "Accure-Inc/accure-code",
     description: "GitHub repo",
   },
 
   // Domains
   {
     pattern: /app\.opencode\.ai/g,
-    replacement: "app.kilo.ai",
+    replacement: "app.accurecode.ai",
     description: "App domain",
   },
   {
     pattern: /opencode\.ai(?!\/zen)/g,
-    replacement: "kilo.ai",
+    replacement: "accure.ai",
     description: "Main domain (excluding zen)",
   },
 
   // Product names
   {
     pattern: /\bOpenCode\b(?!\.json|\/| Zen)/g,
-    replacement: "Kilo",
+    replacement: "Accure",
     description: "Product name",
   },
 
   // CLI commands
   {
     pattern: /npx opencode(?!\w)/g,
-    replacement: "npx kilo",
+    replacement: "npx accure",
     description: "npx command",
   },
   {
     pattern: /bun add opencode(?!\w)/g,
-    replacement: "bun add kilo",
+    replacement: "bun add accure",
     description: "bun add command",
   },
   {
     pattern: /npm install opencode(?!\w)/g,
-    replacement: "npm install kilo",
+    replacement: "npm install accure",
     description: "npm install command",
   },
   {
     pattern: /opencode upgrade/g,
-    replacement: "kilo upgrade",
+    replacement: "accure upgrade",
     description: "upgrade command",
   },
   {
     pattern: /opencode dev/g,
-    replacement: "kilo dev",
+    replacement: "accure dev",
     description: "dev command",
   },
   {
     pattern: /opencode serve/g,
-    replacement: "kilo serve",
+    replacement: "accure serve",
     description: "serve command",
   },
   {
     pattern: /opencode auth/g,
-    replacement: "kilo auth",
+    replacement: "accure auth",
     description: "auth command",
   },
 ]
@@ -174,9 +174,9 @@ export async function transformWebFile(file: string, options: WebTransformOption
     return { file, action: "transformed", replacements: 0, dryRun: true }
   }
 
-  // If our version has kilocode_change markers, flag for manual resolution
-  if (await oursHasKilocodeChanges(file)) {
-    warn(`${file} has kilocode_change markers — skipping auto-transform, needs manual resolution`)
+  // If our version has accurecode_change markers, flag for manual resolution
+  if (await oursHasAccurecodeChanges(file)) {
+    warn(`${file} has accurecode_change markers — skipping auto-transform, needs manual resolution`)
     return { file, action: "flagged", replacements: 0, dryRun: false }
   }
 

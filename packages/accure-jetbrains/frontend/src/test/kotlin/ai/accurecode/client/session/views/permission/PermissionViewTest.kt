@@ -1,15 +1,15 @@
-package ai.kilocode.client.session.views.permission
+package ai.accurecode.client.session.views.permission
 
-import ai.kilocode.client.session.model.Permission
-import ai.kilocode.client.session.model.PermissionFileDiff
-import ai.kilocode.client.session.model.PermissionMeta
-import ai.kilocode.client.session.model.PermissionRequestState
-import ai.kilocode.client.session.views.SessionViewIcons
-import ai.kilocode.client.session.views.base.BaseQuestionView
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.rpc.dto.PermissionReplyDto
+import ai.accurecode.client.session.model.Permission
+import ai.accurecode.client.session.model.PermissionFileDiff
+import ai.accurecode.client.session.model.PermissionMeta
+import ai.accurecode.client.session.model.PermissionRequestState
+import ai.accurecode.client.session.views.SessionViewIcons
+import ai.accurecode.client.session.views.base.BaseQuestionView
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.rpc.dto.PermissionReplyDto
 import com.intellij.ide.ui.laf.darcula.ui.DarculaButtonUI
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.ui.components.JBLabel

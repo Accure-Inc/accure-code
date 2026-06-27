@@ -1,13 +1,13 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.model.toolKind
-import ai.kilocode.client.session.views.base.SecondarySessionPartView
-import ai.kilocode.client.session.views.tool.GlobToolView
-import ai.kilocode.client.session.views.tool.ReadToolView
-import ai.kilocode.client.session.views.tool.SearchToolView
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.model.toolKind
+import ai.accurecode.client.session.views.base.SecondarySessionPartView
+import ai.accurecode.client.session.views.tool.GlobToolView
+import ai.accurecode.client.session.views.tool.ReadToolView
+import ai.accurecode.client.session.views.tool.SearchToolView
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import javax.swing.ScrollPaneConstants
 
@@ -35,7 +35,7 @@ class ReadToolViewTest : BasePlatformTestCase() {
 
     fun `test read file output renders filename hyperlink`() {
         val opened = mutableListOf<String>()
-        val path = "/Users/kirillk/work/kilocode/.kilo/worktrees/agreeable-marlin/packages/accure-jetbrains/frontend/src/test/kotlin/ai/kilocode/client/session/SessionUiLayoutTest.kt"
+        val path = "/Users/kirillk/work/accurecode/.accurecode/worktrees/agreeable-marlin/packages/accure-jetbrains/frontend/src/test/kotlin/ai/accurecode/client/session/SessionUiLayoutTest.kt"
         val t = tool().also {
             it.output = """
                 <path>$path</path>
@@ -62,7 +62,7 @@ class ReadToolViewTest : BasePlatformTestCase() {
     }
 
     fun `test read directory output remains plain text`() {
-        val path = "/Users/kirillk/work/kilocode/packages/accure-jetbrains"
+        val path = "/Users/kirillk/work/accurecode/packages/accure-jetbrains"
         val t = tool().also {
             it.output = """
                 <path>$path</path>

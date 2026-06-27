@@ -1,5 +1,5 @@
-import { IconButton } from "@kilocode/accure-ui/icon-button"
-import { Tooltip } from "@kilocode/accure-ui/tooltip"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
+import { Tooltip } from "@accurecode/accure-ui/tooltip"
 import { useLanguage } from "../src/context/language"
 
 interface Props {

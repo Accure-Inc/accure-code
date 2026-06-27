@@ -3,7 +3,7 @@ import { BusEvent } from "@/bus/bus-event"
 import { InstanceState } from "@/effect/instance-state"
 import { makeRuntime } from "@/effect/run-service"
 import { Identifier } from "@/id/id"
-import { Instance, type InstanceContext } from "@/kilocode/instance"
+import { Instance, type InstanceContext } from "@/accurecode/instance"
 import { SessionID } from "@/session/schema"
 import { Shell } from "@/shell/shell"
 import { NonNegativeInt, PositiveInt, optionalOmitUndefined, withStatics } from "@opencode-ai/core/schema"
@@ -140,7 +140,7 @@ export namespace BackgroundProcess {
   }
 
   class StateService extends Context.Service<StateService, { readonly get: () => Effect.Effect<State> }>()(
-    "@kilocode/BackgroundProcess.State",
+    "@accurecode/BackgroundProcess.State",
   ) {}
 
   function clone(info: Info): Info {
@@ -168,7 +168,7 @@ export namespace BackgroundProcess {
   }
 
   function infer() {
-    return Flag.KILO_CLIENT === "cli" && process.env.KILO_BACKGROUND_PROCESS_PORTS === "true"
+    return Flag.ACCURECODE_CLIENT === "cli" && process.env.ACCURECODE_BACKGROUND_PROCESS_PORTS === "true"
   }
 
   function update(active: Active, ports?: number[]) {
@@ -363,9 +363,9 @@ export namespace BackgroundProcess {
       ...process.env,
       TERM: "dumb",
     }
-    delete result.KILO_SERVER_PASSWORD
-    delete result.KILO_SERVER_USERNAME
-    delete result.KILO_BACKGROUND_PROCESS_PORTS
+    delete result.ACCURECODE_SERVER_PASSWORD
+    delete result.ACCURECODE_SERVER_USERNAME
+    delete result.ACCURECODE_BACKGROUND_PROCESS_PORTS
     return result
   }
 

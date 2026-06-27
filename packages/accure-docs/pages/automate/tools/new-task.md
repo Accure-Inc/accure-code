@@ -1,5 +1,5 @@
 ---
-title: New Task Tool | Kilo Code Docs
+title: New Task Tool | Accure Code Docs
 description: Learn how the new_task tool creates subtasks with specialized modes to break down complex projects into manageable pieces with parent-child relationships.
 ---
 

@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 //
 // Slow-repo guard for Snapshot.track.
 //
@@ -15,7 +15,7 @@
 //          finishes eventually and undo/redo stays functional. Future turns
 //          are fast because the snapshot index is built.
 //        - "Disable for this project": interrupt the in-flight snapshot,
-//          persist `"snapshot": false` to `.kilo/kilo.json`, and skip. All
+//          persist `"snapshot": false` to `.accurecode/accure.json`, and skip. All
 //          future sessions on this project load with snapshots off.
 //        - Dismissed / no sessionID: interrupt and skip. Mark the active
 //          Snapshot.Service guard so later calls through it do not prompt again.
@@ -31,13 +31,13 @@
 //     continued snapshot successfully produces a hash.
 //   - We do NOT call `Config.update()` when the user picks "Disable" because
 //     that finalizer runs `Instance.dispose()` and tears down the live turn.
-//     Instead we write the file directly via `KilocodeConfig.updateProjectConfig`
+//     Instead we write the file directly via `AccurecodeConfig.updateProjectConfig`
 //     without touching the active Config service.
 //   - If the user picks "Continue", the fiber keeps running; we just `join` it
 //     and return its value. Any error during the in-flight snapshot is logged
 //     and swallowed so the turn can proceed.
 //
-// All of this is Kilo-specific — the upstream snapshot module remains a thin
+// All of this is Accure-specific — the upstream snapshot module remains a thin
 // shim that calls into here.
 
 import { Duration, Effect, Fiber } from "effect"
@@ -47,7 +47,7 @@ import { Question } from "@/question"
 import type { MessageID, PartID, SessionID } from "@/session/schema"
 import { PartID as PartIDSchema } from "@/session/schema"
 import type { MessageV2 } from "@/session/message-v2"
-import { KilocodeConfig } from "@/kilocode/config/config"
+import { AccurecodeConfig } from "@/accurecode/config/config"
 import { ConfigParse } from "@/config/parse"
 import * as Log from "@opencode-ai/core/util/log"
 import { iife } from "@/util/iife"
@@ -80,11 +80,11 @@ type SessionRuntime = {
   runPromise: <A>(fn: (svc: SessionPartAPI) => Effect.Effect<A>, options?: Effect.RunOptions) => Promise<A>
 }
 
-export namespace KiloSnapshotTrack {
+export namespace AccureSnapshotTrack {
   const log = Log.create({ service: "snapshot.track" })
 
   export const TIMEOUT_MS = iife(() => {
-    const raw = process.env["KILO_SNAPSHOT_TRACK_TIMEOUT_MS"]
+    const raw = process.env["ACCURECODE_SNAPSHOT_TRACK_TIMEOUT_MS"]
     if (raw) {
       const parsed = Number(raw)
       if (Number.isFinite(parsed) && parsed > 0) return parsed
@@ -530,7 +530,7 @@ export namespace KiloSnapshotTrack {
                     label: ANSWER_DISABLE,
                     labelKey: "snapshot.slowRepo.answer.disable",
                     description:
-                      "Turn off Kilo's snapshots for this project. You will lose undo/redo of Kilo file changes, but git still tracks everything.",
+                      "Turn off Accure's snapshots for this project. You will lose undo/redo of Accure file changes, but git still tracks everything.",
                     descriptionKey: "snapshot.slowRepo.answer.disable.description",
                   },
                 ],
@@ -553,7 +553,7 @@ export namespace KiloSnapshotTrack {
       const patch: Config.Info = { snapshot: false }
       await fsRt.runPromise((fs) =>
         Effect.gen(function* () {
-          yield* KilocodeConfig.updateProjectConfig({
+          yield* AccurecodeConfig.updateProjectConfig({
             fs,
             directory: directory.directory,
             worktree: directory.worktree,
@@ -603,7 +603,7 @@ export namespace KiloSnapshotTrack {
    * tests that bypass the runtime).
    */
   async function currentDirectory(): Promise<{ directory: string; worktree?: string } | undefined> {
-    const { Instance } = await import("@/kilocode/instance")
+    const { Instance } = await import("@/accurecode/instance")
     try {
       return { directory: Instance.directory, worktree: Instance.worktree }
     } catch {

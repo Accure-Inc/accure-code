@@ -1,6 +1,6 @@
-# Kilocode Migration
+# Accurecode Migration
 
-This document explains how Kilocode configurations are automatically migrated to Opencode.
+This document explains how Accurecode configurations are automatically migrated to Opencode.
 
 ## Table of Contents
 
@@ -9,17 +9,17 @@ This document explains how Kilocode configurations are automatically migrated to
 - [Rules Migration](#rules-migration)
 - [Workflows Migration](#workflows-migration)
 - [MCP Migration](#mcp-migration)
-- [Kilo Notifications](#kilo-notifications)
+- [Accure Notifications](#accure-notifications)
 
 ---
 
 # Modes Migration
 
-This section explains how Kilocode custom modes are automatically migrated to Opencode agents.
+This section explains how Accurecode custom modes are automatically migrated to Opencode agents.
 
 ## Overview
 
-Kilocode stores custom modes in YAML files. When Opencode starts, it reads these files and converts them to Opencode's agent format, injecting them via the `OPENCODE_CONFIG_CONTENT` mechanism.
+Accurecode stores custom modes in YAML files. When Opencode starts, it reads these files and converts them to Opencode's agent format, injecting them via the `OPENCODE_CONFIG_CONTENT` mechanism.
 
 ## Source Locations
 
@@ -29,21 +29,21 @@ The migrator reads custom modes from these locations (in order, later entries ov
 
 | Platform | Path |
 |---|---|
-| macOS | `~/Library/Application Support/Code/User/globalStorage/kilocode.kilo-code/settings/custom_modes.yaml` |
-| Windows | `%APPDATA%/Code/User/globalStorage/kilocode.kilo-code/settings/custom_modes.yaml` |
-| Linux | `~/.config/Code/User/globalStorage/kilocode.kilo-code/settings/custom_modes.yaml` |
+| macOS | `~/Library/Application Support/Code/User/globalStorage/accurecode.accurecode-code/settings/custom_modes.yaml` |
+| Windows | `%APPDATA%/Code/User/globalStorage/accurecode.accurecode-code/settings/custom_modes.yaml` |
+| Linux | `~/.config/Code/User/globalStorage/accurecode.accurecode-code/settings/custom_modes.yaml` |
 
 ### Project Modes
 
 | Location | Description |
 |---|---|
-| `.kilocodemodes` | Project-specific modes in the workspace root |
+| `.accurecodemodes` | Project-specific modes in the workspace root |
 
 ## Field Mapping
 
 ### Migrated Fields
 
-| Kilocode Field | Opencode Field | Notes |
+| Accurecode Field | Opencode Field | Notes |
 |---|---|---|
 | `slug` | Agent key | Used as the agent identifier |
 | `roleDefinition` | `prompt` | Combined with `customInstructions` |
@@ -55,9 +55,9 @@ The migrator reads custom modes from these locations (in order, later entries ov
 
 ### Permission Mapping
 
-Kilocode uses "groups" to define what tools a mode can access. These are converted to Opencode's permission system:
+Accurecode uses "groups" to define what tools a mode can access. These are converted to Opencode's permission system:
 
-| Kilocode Group | Opencode Permission | Notes |
+| Accurecode Group | Opencode Permission | Notes |
 |---|---|---|
 | `read` | `read: "allow"` | File reading |
 | `edit` | `edit: "allow"` | File editing |
@@ -69,7 +69,7 @@ Kilocode uses "groups" to define what tools a mode can access. These are convert
 
 ### File Restrictions
 
-Kilocode supports restricting edit access to specific file patterns:
+Accurecode supports restricting edit access to specific file patterns:
 
 ```yaml
 groups:
@@ -99,9 +99,9 @@ Note: `bash` and `mcp` are explicitly denied because they weren't in the origina
 
 ## Default Modes
 
-The following Kilocode default modes are **skipped** during migration because Opencode has native equivalents:
+The following Accurecode default modes are **skipped** during migration because Opencode has native equivalents:
 
-| Kilocode Mode | Reason |
+| Accurecode Mode | Reason |
 |---|---|
 | `code` | Maps to Opencode's `build` agent |
 | `architect` | Maps to Opencode's `plan` agent |
@@ -111,7 +111,7 @@ The following Kilocode default modes are **skipped** during migration because Op
 
 ## Example Conversion
 
-### Kilocode Mode (YAML)
+### Accurecode Mode (YAML)
 
 ```yaml
 customModes:
@@ -153,12 +153,12 @@ customModes:
 
 ## Not Migrated (Future Phases)
 
-The following Kilocode features are not yet migrated:
+The following Accurecode features are not yet migrated:
 
 | Feature | Status | Notes |
 |---|---|---|
-| Rules (`.kilocode/rules/`) | Phase 2 | Will map to `instructions` array |
-| Workflows (`.kilocode/workflows/`) | Phase 2 | Will map to custom commands |
+| Rules (`.accurecode/rules/`) | Phase 2 | Will map to `instructions` array |
+| Workflows (`.accurecode/workflows/`) | Phase 2 | Will map to custom commands |
 | MCP Servers (`mcp_settings.json`) | Phase 2 | Will map to `mcp` config |
 | Provider Settings | Phase 2 | Will map to `provider` config |
 | Mode-specific API configs | Phase 2 | Different models per mode |
@@ -188,11 +188,11 @@ The following Kilocode features are not yet migrated:
 
 # Skills Discovery
 
-Kilocode skills are automatically discovered and made available in Opencode. This is **not a migration** - skills remain in their original locations and can be managed independently by the Kilo VSCode extension.
+Accurecode skills are automatically discovered and made available in Opencode. This is **not a migration** - skills remain in their original locations and can be managed independently by the Accure VSCode extension.
 
 ## How It Works
 
-Opencode scans additional directories for skills alongside its native `.opencode/skill/` locations. The `KilocodePaths.skillDirectories()` function provides these paths.
+Opencode scans additional directories for skills alongside its native `.opencode/skill/` locations. The `AccurecodePaths.skillDirectories()` function provides these paths.
 
 ## Source Locations
 
@@ -200,17 +200,17 @@ Skills are discovered from these locations (in order, later entries override ear
 
 ### Project Skills (Walk-up Discovery)
 
-The scanner walks up from the current directory to the git worktree root, finding all `.kilocode/skills/` directories:
+The scanner walks up from the current directory to the git worktree root, finding all `.accurecode/skills/` directories:
 
 ```
 your-project/
-├── .kilocode/
+├── .accurecode/
 │   └── skills/
 │       └── project-skill/
 │           └── SKILL.md
 └── packages/
     └── my-package/           # If you run from here
-        └── .kilocode/
+        └── .accurecode/
             └── skills/
                 └── package-skill/
                     └── SKILL.md
@@ -222,15 +222,15 @@ Running from `packages/my-package/` discovers both `package-skill` and `project-
 
 | Platform | Path |
 |---|---|
-| All | `~/.kilocode/skills/` |
+| All | `~/.accurecode/skills/` |
 
 ### VSCode Extension Storage (Marketplace Skills)
 
 | Platform | Path |
 |---|---|
-| macOS | `~/Library/Application Support/Code/User/globalStorage/kilocode.kilo-code/skills/` |
-| Windows | `%APPDATA%/Code/User/globalStorage/kilocode.kilo-code/skills/` |
-| Linux | `~/.config/Code/User/globalStorage/kilocode.kilo-code/skills/` |
+| macOS | `~/Library/Application Support/Code/User/globalStorage/accurecode.accurecode-code/skills/` |
+| Windows | `%APPDATA%/Code/User/globalStorage/accurecode.accurecode-code/skills/` |
+| Linux | `~/.config/Code/User/globalStorage/accurecode.accurecode-code/skills/` |
 
 ## Skill File Format
 
@@ -252,17 +252,17 @@ Detailed instructions for the agent...
 When the same skill name exists in multiple locations, **last one wins**:
 
 1. `.claude/skills/` (lowest priority)
-2. `.kilocode/skills/` (walk-up)
-3. `~/.kilocode/skills/`
+2. `.accurecode/skills/` (walk-up)
+3. `~/.accurecode/skills/`
 4. VSCode extension storage
 5. `.opencode/skill/` (walk-up)
 6. `~/.opencode/skill/` (highest priority)
 
-This means Opencode native skills take precedence over Kilocode skills with the same name.
+This means Opencode native skills take precedence over Accurecode skills with the same name.
 
 ## Mode-Specific Skills
 
-Kilocode supports mode-specific skills in `skills-{mode}/` directories (e.g., `skills-code/`, `skills-architect/`). These are **not currently migrated** to Opencode.
+Accurecode supports mode-specific skills in `skills-{mode}/` directories (e.g., `skills-code/`, `skills-architect/`). These are **not currently migrated** to Opencode.
 
 If you need mode-specific behavior, use Opencode's agent permission system:
 
@@ -286,11 +286,11 @@ Skills can be symlinked from a shared location:
 
 ```
 .agents/skills/shared-skill/          # Actual skill
-.kilocode/skills/shared-skill -> ...  # Symlink
+.accurecode/skills/shared-skill -> ...  # Symlink
 .opencode/skill/shared-skill -> ...   # Symlink
 ```
 
-The scanner follows symlinks, so a skill installed once can be available to both Kilo VSCode and Opencode CLI.
+The scanner follows symlinks, so a skill installed once can be available to both Accure VSCode and Opencode CLI.
 
 ## Related Files
 
@@ -301,48 +301,48 @@ The scanner follows symlinks, so a skill installed once can be available to both
 
 # Rules Migration
 
-Kilocode rules are migrated to Opencode's `instructions` array. See [`rules-migrator.ts`](../rules-migrator.ts).
+Accurecode rules are migrated to Opencode's `instructions` array. See [`rules-migrator.ts`](../rules-migrator.ts).
 
 ## Source Locations
 
 | Location | Description |
 |---|---|
-| `.kilocoderules` | Legacy project rules file |
-| `.kilocode/rules/*.md` | Project rules directory |
-| `~/.kilocode/rules/*.md` | Global rules directory |
-| `.kilocoderules-{mode}` | Mode-specific legacy rules |
-| `.kilocode/rules-{mode}/*.md` | Mode-specific rules directory |
+| `.accurecoderules` | Legacy project rules file |
+| `.accurecode/rules/*.md` | Project rules directory |
+| `~/.accurecode/rules/*.md` | Global rules directory |
+| `.accurecoderules-{mode}` | Mode-specific legacy rules |
+| `.accurecode/rules-{mode}/*.md` | Mode-specific rules directory |
 
 ---
 
 # Workflows Migration
 
-Kilocode workflows are migrated to Opencode commands. See [`workflows-migrator.ts`](../workflows-migrator.ts).
+Accurecode workflows are migrated to Opencode commands. See [`workflows-migrator.ts`](../workflows-migrator.ts).
 
 ## Source Locations
 
 | Location | Description |
 |---|---|
-| `.kilocode/workflows/*.md` | Project workflows |
-| `~/.kilocode/workflows/*.md` | Global workflows |
+| `.accurecode/workflows/*.md` | Project workflows |
+| `~/.accurecode/workflows/*.md` | Global workflows |
 | VSCode extension storage | Marketplace-installed workflows |
 
 ---
 
 # MCP Migration
 
-Kilocode MCP server configurations are migrated to Opencode's `mcp` config. See [`mcp-migrator.ts`](../mcp-migrator.ts).
+Accurecode MCP server configurations are migrated to Opencode's `mcp` config. See [`mcp-migrator.ts`](../mcp-migrator.ts).
 
 ## Config file location
 
-The CLI reads global config from `~/.config/kilo/` (see [`global/index.ts`](../../global/index.ts): `Global.Path.config` = `xdgConfig` + `"kilo"`). It merges, in order, `config.json`, `opencode.json`, and `opencode.jsonc` in that directory. You can put MCP config in **`opencode.json`** or **`opencode.jsonc`**.
+The CLI reads global config from `~/.config/accure/` (see [`global/index.ts`](../../global/index.ts): `Global.Path.config` = `xdgConfig` + `"accure"`). It merges, in order, `config.json`, `opencode.json`, and `opencode.jsonc` in that directory. You can put MCP config in **`opencode.json`** or **`opencode.jsonc`**.
 
-- **macOS / Linux:** `~/.config/kilo/opencode.json` (or `opencode.jsonc`)
+- **macOS / Linux:** `~/.config/accure/opencode.json` (or `opencode.jsonc`)
 - **Windows:** Config directory depends on `xdg-basedir` (often under `%LOCALAPPDATA%` or `%USERPROFILE%`); filename is still `opencode.json` or `opencode.jsonc`.
 
 Use a top-level `"mcp"` object. Each key is the server name. For a local server, value must have `type: "local"` and `command: ["executable", "arg1", ...]`. Optional: `environment` (env vars), `enabled` (boolean), `timeout` (ms). See `Config.McpLocal` in [`config.ts`](../../config/config.ts). Restart the CLI after editing.
 
-## Source Location (migration from Kilocode)
+## Source Location (migration from Accurecode)
 
 | Location | Description |
 |---|---|
@@ -350,20 +350,20 @@ Use a top-level `"mcp"` object. Each key is the server name. For a local server,
 
 ---
 
-# Kilo Notifications
+# Accure Notifications
 
-When connected to Kilo Gateway, the CLI fetches and displays notifications from the Kilo API. This allows Kilo to communicate important announcements, feature updates, and tips to users.
+When connected to Accure Gateway, the CLI fetches and displays notifications from the Accure API. This allows Accure to communicate important announcements, feature updates, and tips to users.
 
 ## How It Works
 
-1. **On startup**, if the user is authenticated with Kilo Gateway, the CLI fetches notifications from `https://api.kilo.ai/api/users/notifications`
+1. **On startup**, if the user is authenticated with Accure Gateway, the CLI fetches notifications from `https://api.accurecode.ai/api/users/notifications`
 2. **Filtering**: Only notifications with `showIn` containing `"cli"` (or no `showIn` restriction) are displayed
 3. **Display**: The first notification is shown as a toast notification after a 2-second delay
 
 ## Notification Data Structure
 
 ```typescript
-interface KilocodeNotification {
+interface AccurecodeNotification {
   id: string // Unique identifier
   title: string // Notification title (e.g., "Agent skills now supported!")
   message: string // Description text
@@ -380,19 +380,19 @@ interface KilocodeNotification {
 ```
 Title: Agent skills now supported!
 Message: Define reusable skills and workflows for your AI agent.
-Action: Learn More -> https://docs.kilo.ai/skills
+Action: Learn More -> https://docs.accurecode.ai/skills
 ```
 
 ## Display Conditions
 
 | Condition | Notifications Shown |
 |---|---|
-| Connected to Kilo Gateway | Yes |
-| Not connected to Kilo | No |
+| Connected to Accure Gateway | Yes |
+| Not connected to Accure | No |
 | No notifications from API | No |
 
 ## Related Files
 
 - [`notifications.ts`](../../../../accure-gateway/src/api/notifications.ts) - Fetch function and types
-- [`routes.ts`](../../../../accure-gateway/src/server/routes.ts) - Server endpoint `/kilo/notifications`
+- [`routes.ts`](../../../../accure-gateway/src/server/routes.ts) - Server endpoint `/accure/notifications`
 - [`app.tsx`](../../cli/cmd/tui/app.tsx) - TUI notification display logic

@@ -2,10 +2,10 @@
 
 ## One-Time Marketplace Setup
 
-- Confirm `ai.kilocode.jetbrains` is the final permanent Marketplace plugin ID before the first upload.
+- Confirm `ai.accurecode.jetbrains` is the final permanent Marketplace plugin ID before the first upload.
 - Build a production ZIP locally or in CI for the first Marketplace version.
 - Manually upload the first plugin version in JetBrains Marketplace if the plugin has not been published before.
-- Confirm the plugin is owned by the correct Kilo vendor or organization.
+- Confirm the plugin is owned by the correct Accure vendor or organization.
 - Confirm the `eap` custom channel exists or is accepted on the first RC upload.
 - Confirm Marketplace signing requirements before publishing RC builds.
 
@@ -14,7 +14,7 @@
 - Create a JetBrains Marketplace permanent token from Marketplace `My Tokens`.
 - Add `JETBRAINS_MARKETPLACE_TOKEN` to GitHub Actions secrets or the protected environment.
 - Confirm `GITHUB_TOKEN` has `contents: write` permission for creating and updating GitHub Releases for `jetbrains/v*` tags.
-- Confirm `KILO_MAINTAINER_APP_ID` and `KILO_MAINTAINER_APP_SECRET` are available to create release PRs and immediate release tags.
+- Confirm `ACCURECODE_MAINTAINER_APP_ID` and `ACCURECODE_MAINTAINER_APP_SECRET` are available to create release PRs and immediate release tags.
 - Optionally create a protected `jetbrains-marketplace` GitHub Environment with required reviewers.
 - If using an environment, move the Marketplace and signing secrets there and set the workflow job environment.
 

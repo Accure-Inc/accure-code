@@ -1,6 +1,6 @@
-// kilocode_change - new file
+// accurecode_change - new file
 //
-// Regression tests for https://github.com/Kilo-Org/kilocode/issues/9186
+// Regression tests for https://github.com/Accure-Inc/accure-code/issues/9186
 //
 // When the user removes a model or a variant from a custom provider and saves,
 // the removed entry must disappear from the config on disk. The save path
@@ -11,7 +11,7 @@
 import { describe, expect, it } from "bun:test"
 import * as Config from "../../src/config/config"
 import { Schema } from "effect"
-import { KilocodeConfig } from "../../src/kilocode/config/config"
+import { AccurecodeConfig } from "../../src/accurecode/config/config"
 
 describe("Config.Info — null sentinels for custom provider deletes", () => {
   it("accepts a null model value inside a provider", () => {
@@ -56,7 +56,7 @@ describe("Config.Info — null sentinels for custom provider deletes", () => {
   })
 })
 
-describe("KilocodeConfig.mergeConfig — custom provider model/variant deletion", () => {
+describe("AccurecodeConfig.mergeConfig — custom provider model/variant deletion", () => {
   it("drops a model from an existing provider when the patch sets it to null", () => {
     const existing = {
       provider: {
@@ -80,7 +80,7 @@ describe("KilocodeConfig.mergeConfig — custom provider model/variant deletion"
       },
     } as unknown as Config.Info
 
-    const merged = KilocodeConfig.mergeConfig(existing, patch)
+    const merged = AccurecodeConfig.mergeConfig(existing, patch)
     const models = (merged.provider as Record<string, { models: Record<string, unknown> }>).myprovider.models
     expect(models["model-keep"]).toBeDefined()
     expect("model-gone" in models).toBe(false)
@@ -104,7 +104,7 @@ describe("KilocodeConfig.mergeConfig — custom provider model/variant deletion"
       },
     } as unknown as Config.Info
 
-    const merged = KilocodeConfig.mergeConfig(existing, patch)
+    const merged = AccurecodeConfig.mergeConfig(existing, patch)
     expect(merged.provider?.openai).toBeDefined()
     expect("myprovider" in (merged.provider ?? {})).toBe(false)
   })
@@ -141,7 +141,7 @@ describe("KilocodeConfig.mergeConfig — custom provider model/variant deletion"
       },
     } as unknown as Config.Info
 
-    const merged = KilocodeConfig.mergeConfig(existing, patch)
+    const merged = AccurecodeConfig.mergeConfig(existing, patch)
     const variants = (
       merged.provider as Record<string, { models: Record<string, { variants: Record<string, unknown> }> }>
     ).myprovider.models["model-1"].variants

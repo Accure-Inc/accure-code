@@ -1,7 +1,7 @@
-package ai.kilocode.client.session.views.question
+package ai.accurecode.client.session.views.question
 
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonArray

@@ -2,7 +2,7 @@ import { NamedError } from "@opencode-ai/core/util/error"
 import matter from "gray-matter"
 import { Schema } from "effect"
 import { Filesystem } from "@/util/filesystem"
-import { KilocodeMarkdown } from "../kilocode/config/markdown" // kilocode_change
+import { AccurecodeMarkdown } from "../accurecode/config/markdown" // accurecode_change
 
 export const FILE_REGEX = /(?<![\w`])@(\.?[^\s`,.]*(?:\.[^\s`,.]+)*)/g
 export const SHELL_REGEX = /!`([^`]+)`/g
@@ -55,9 +55,9 @@ export function fallbackSanitization(content: string): string {
     }
 
     if (value.includes(":")) {
-      // kilocode_change start - preserve unquoted colon values as exact strings
+      // accurecode_change start - preserve unquoted colon values as exact strings
       result.push(`${key}: "${value.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`)
-      // kilocode_change end
+      // accurecode_change end
       continue
     }
 
@@ -71,15 +71,15 @@ export function fallbackSanitization(content: string): string {
 export async function parse(filePath: string) {
   const template = await Filesystem.readText(filePath)
 
-  // kilocode_change start - substitute content and retry invalid frontmatter with permissive sanitization
+  // accurecode_change start - substitute content and retry invalid frontmatter with permissive sanitization
   try {
     const md = matter(template)
-    md.content = await KilocodeMarkdown.substitute(md.content, filePath) // kilocode_change
+    md.content = await AccurecodeMarkdown.substitute(md.content, filePath) // accurecode_change
     return md
   } catch {
     try {
       const md = matter(fallbackSanitization(template))
-      md.content = await KilocodeMarkdown.substitute(md.content, filePath) // kilocode_change
+      md.content = await AccurecodeMarkdown.substitute(md.content, filePath) // accurecode_change
       return md
     } catch (err) {
       throw new FrontmatterError(
@@ -91,17 +91,17 @@ export async function parse(filePath: string) {
       )
     }
   }
-  // kilocode_change end
+  // accurecode_change end
 }
 
-// kilocode_change start - export structured frontmatter parse errors
+// accurecode_change start - export structured frontmatter parse errors
 export const FrontmatterError = NamedError.create("ConfigFrontmatterError", {
   path: Schema.String,
   message: Schema.String,
 })
-// kilocode_change end
+// accurecode_change end
 
-// kilocode_change start - export helpers as namespace object
+// accurecode_change start - export helpers as namespace object
 export const ConfigMarkdown = {
   FILE_REGEX,
   SHELL_REGEX,
@@ -111,4 +111,4 @@ export const ConfigMarkdown = {
   parse,
   FrontmatterError,
 }
-// kilocode_change end
+// accurecode_change end

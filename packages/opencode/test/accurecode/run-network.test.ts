@@ -67,7 +67,7 @@ function idle(): Event {
 function args() {
   return {
     _: [],
-    $0: "kilo",
+    $0: "accure",
     message: ["hi"],
     command: undefined,
     continue: false,
@@ -116,8 +116,8 @@ function instant() {
 }
 
 async function run(sdk: Record<string, unknown>, overrides: Record<string, unknown> = {}, terminal = true) {
-  mock.module("@kilocode/sdk/v2", () => ({
-    createKiloClient: () => sdk,
+  mock.module("@accurecode/sdk/v2", () => ({
+    createAccureClient: () => sdk,
   }))
 
   Object.defineProperty(process.stdin, "isTTY", {

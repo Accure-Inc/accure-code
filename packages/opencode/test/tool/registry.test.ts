@@ -34,7 +34,7 @@ import { ProviderID, ModelID } from "@/provider/schema"
 import { ToolJsonSchema } from "@/tool/json-schema"
 import { MessageID, SessionID } from "@/session/schema"
 import { RuntimeFlags } from "@/effect/runtime-flags"
-import { Command } from "@/command" // kilocode_change
+import { Command } from "@/command" // accurecode_change
 
 const node = CrossSpawnSpawner.defaultLayer
 const configLayer = TestConfig.layer({
@@ -72,7 +72,7 @@ const registryLayer = (opts: RegistryLayerOptions = {}) =>
     )
     .pipe(
       Layer.provide(RuntimeFlags.layer(opts.flags ?? {})),
-      Layer.provide(Command.defaultLayer), // kilocode_change
+      Layer.provide(Command.defaultLayer), // accurecode_change
     )
 
 // Fake Plugin.Service that returns a single plugin whose `tool` map contains
@@ -360,7 +360,7 @@ describe("tool.registry", () => {
         const test = yield* TestInstance
         const opencode = path.join(test.directory, ".opencode")
         const customTools = path.join(opencode, "tools")
-        const plugin = path.join(opencode, "node_modules", "@kilocode", "plugin") // kilocode_change
+        const plugin = path.join(opencode, "node_modules", "@accurecode", "plugin") // accurecode_change
         yield* Effect.promise(() => fs.mkdir(path.join(plugin, "dist"), { recursive: true }))
         yield* Effect.promise(() => fs.mkdir(customTools, { recursive: true }))
         yield* Effect.promise(() =>
@@ -372,7 +372,7 @@ describe("tool.registry", () => {
         yield* Effect.promise(() =>
           Bun.write(
             path.join(plugin, "package.json"),
-            JSON.stringify({ name: "@kilocode/plugin", type: "module", exports: { ".": "./dist/index.js" } }), // kilocode_change
+            JSON.stringify({ name: "@accurecode/plugin", type: "module", exports: { ".": "./dist/index.js" } }), // accurecode_change
           ),
         )
         yield* Effect.promise(() =>
@@ -392,7 +392,7 @@ describe("tool.registry", () => {
           Bun.write(
             path.join(customTools, "addition.ts"),
             [
-              'import { tool } from "@kilocode/plugin"', // kilocode_change
+              'import { tool } from "@accurecode/plugin"', // accurecode_change
               "export default tool({",
               "  description: 'Use this tool to add two numbers and return their sum.',",
               "  args: {",
@@ -509,7 +509,7 @@ describe("tool.registry", () => {
           JSON.stringify({
             name: "custom-tools",
             dependencies: {
-              "@kilocode/plugin": "^0.0.0",
+              "@accurecode/plugin": "^0.0.0",
               cowsay: "^1.6.0",
             },
           }),
@@ -524,7 +524,7 @@ describe("tool.registry", () => {
             packages: {
               "": {
                 dependencies: {
-                  "@kilocode/plugin": "^0.0.0",
+                  "@accurecode/plugin": "^0.0.0",
                   cowsay: "^1.6.0",
                 },
               },

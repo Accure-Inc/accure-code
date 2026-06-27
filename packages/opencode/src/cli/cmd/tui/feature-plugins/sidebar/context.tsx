@@ -1,5 +1,5 @@
-import type { AssistantMessage } from "@kilocode/sdk/v2"
-import type { TuiPlugin, TuiPluginApi } from "@kilocode/plugin/tui"
+import type { AssistantMessage } from "@accurecode/sdk/v2"
+import type { TuiPlugin, TuiPluginApi } from "@accurecode/plugin/tui"
 import type { InternalTuiPlugin } from "../../plugin/internal"
 import { createMemo } from "solid-js"
 

@@ -8,7 +8,7 @@ const src = (file: string) => fs.readFileSync(path.join(ROOT, file), "utf-8")
 describe("terminal context architecture", () => {
   it("keeps VS Code terminal command capture in the terminal service", () => {
     const helper = src("src/services/terminal/context.ts")
-    const provider = src("src/KiloProvider.ts")
+    const provider = src("src/AccureProvider.ts")
     const actions = src("src/services/code-actions/register-terminal-actions.ts")
 
     expect(helper).toContain("workbench.action.terminal.selectAll")
@@ -30,7 +30,7 @@ describe("terminal context architecture", () => {
 
   it("keeps terminal output limits in the shared truncation helper", () => {
     const helper = src("src/services/terminal/truncate.ts")
-    const provider = src("src/KiloProvider.ts")
+    const provider = src("src/AccureProvider.ts")
     const prompt = src("webview-ui/src/components/chat/PromptInput.tsx")
 
     expect(helper).toContain("TERMINAL_OUTPUT_LINE_LIMIT = 500")

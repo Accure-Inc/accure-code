@@ -1,19 +1,19 @@
 /* ============================================
-   Kilo Notifications
+   Accure Notifications
    ============================================ */
 
-.kilo-notifications {
+.accurecode-notifications {
   display: flex;
   flex-direction: column;
   align-self: center;
   width: 100%;
   max-width: 720px;
   border-radius: 6px;
-  animation: kilo-notifications-slide-in 0.3s ease-out;
+  animation: accure-notifications-slide-in 0.3s ease-out;
   overflow: hidden;
 }
 
-@keyframes kilo-notifications-slide-in {
+@keyframes accure-notifications-slide-in {
   from {
     transform: translateX(20px);
     opacity: 0;
@@ -24,7 +24,7 @@
   }
 }
 
-.kilo-notifications-card {
+.accurecode-notifications-card {
   background-color: var(--vscode-editor-background);
   border: 1px solid var(--vscode-panel-border);
   border-radius: 6px;
@@ -35,28 +35,28 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.kilo-notifications-header {
+.accurecode-notifications-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
 }
 
-.kilo-notifications-title {
+.accurecode-notifications-title {
   font-weight: 600;
   color: var(--vscode-foreground);
-  font-size: var(--kilo-font-size-13);
+  font-size: var(--accure-font-size-13);
   flex: 1;
 }
 
-.kilo-notifications-message {
+.accurecode-notifications-message {
   margin: 0;
   color: var(--vscode-descriptionForeground);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   line-height: 1.5;
 }
 
-.kilo-notifications-footer {
+.accurecode-notifications-footer {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -64,13 +64,13 @@
   container-type: inline-size;
 }
 
-.kilo-notifications-nav {
+.accurecode-notifications-nav {
   display: flex;
   align-items: center;
   gap: 2px;
 }
 
-.kilo-notifications-next-group {
+.accurecode-notifications-next-group {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -79,7 +79,7 @@
   align-self: flex-start;
 }
 
-.kilo-notifications-cta-group {
+.accurecode-notifications-cta-group {
   display: flex;
   flex-wrap: nowrap;
   gap: 6px;
@@ -87,13 +87,13 @@
 }
 
 @container (max-width: 300px) {
-  .kilo-notifications-cta-group {
+  .accurecode-notifications-cta-group {
     flex-direction: column;
     align-items: flex-start;
   }
 }
 
-.kilo-notifications-action-btn {
+.accurecode-notifications-action-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -103,17 +103,17 @@
   border: 1px solid var(--vscode-focusBorder);
   border-radius: 3px;
   color: var(--vscode-focusBorder);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   font-family: var(--vscode-font-family);
   cursor: pointer;
   white-space: nowrap;
 }
 
-.kilo-notifications-action-btn:hover {
+.accurecode-notifications-action-btn:hover {
   background-color: var(--vscode-toolbar-hoverBackground);
 }
 
-.kilo-notifications-primary-btn {
+.accurecode-notifications-primary-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -123,30 +123,30 @@
   border: 1px solid transparent;
   border-radius: 3px;
   color: var(--vscode-button-foreground);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   font-family: var(--vscode-font-family);
   cursor: pointer;
   white-space: nowrap;
 }
 
-.kilo-notifications-primary-btn:hover {
+.accurecode-notifications-primary-btn:hover {
   background-color: var(--vscode-button-hoverBackground);
 }
 
-.kilo-notifications-back-link {
+.accurecode-notifications-back-link {
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
   color: var(--vscode-descriptionForeground);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
 }
 
-.kilo-notifications-back-link:hover {
+.accurecode-notifications-back-link:hover {
   color: var(--vscode-foreground);
 }
 
-.kilo-notifications-nav-btn {
+.accurecode-notifications-nav-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -156,12 +156,12 @@
   align-items: center;
 }
 
-.kilo-notifications-nav-btn:hover {
+.accurecode-notifications-nav-btn:hover {
   color: var(--vscode-foreground);
 }
 
-.kilo-notifications-nav-count {
-  font-size: var(--kilo-font-size-12);
+.accurecode-notifications-nav-count {
+  font-size: var(--accure-font-size-12);
   color: var(--vscode-descriptionForeground);
   white-space: nowrap;
   padding: 0 4px;

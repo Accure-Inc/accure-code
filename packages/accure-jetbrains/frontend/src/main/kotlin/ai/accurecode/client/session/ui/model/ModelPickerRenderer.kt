@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.ui.model
+package ai.accurecode.client.session.ui.model
 
-import ai.kilocode.client.session.ui.PickerRow
-import ai.kilocode.client.ui.FilledBadgeIcon
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.session.ui.PickerRow
+import ai.accurecode.client.ui.FilledBadgeIcon
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.CollectionListModel
@@ -69,7 +69,7 @@ internal class ModelPickerRenderer(
     private val badge = FilledBadgeIcon(
         ModelText.freeLabel(),
         ModelText.freeBg(),
-        JBColor.namedColor("Kilo.ModelPicker.freeBadgeForeground", JBColor.WHITE),
+        JBColor.namedColor("Accure.ModelPicker.freeBadgeForeground", JBColor.WHITE),
     )
     private val badgeLabel = BadgeLabel(badge).apply {
         border = JBUI.Borders.emptyLeft(JBUI.CurrentTheme.ActionsList.elementIconGap())

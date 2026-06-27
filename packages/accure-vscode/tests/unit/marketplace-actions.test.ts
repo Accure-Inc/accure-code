@@ -10,8 +10,8 @@ import type { McpMarketplaceItem } from "../../src/services/marketplace/types"
 
 const project = "/repo"
 const storage = vscode.Uri.file("/storage")
-const local = `${project}/.kilo/mcp.json`
-const legacy = `${project}/.kilocode/mcp.json`
+const local = `${project}/.accurecode/mcp.json`
+const legacy = `${project}/.accurecode/mcp.json`
 const global = `${storage.fsPath}/settings/mcp_settings.json`
 const item: McpMarketplaceItem = {
   id: "memory",

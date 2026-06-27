@@ -1,20 +1,20 @@
-package ai.kilocode.client.session.model
+package ai.accurecode.client.session.model
 
-import ai.kilocode.rpc.dto.DiffFileDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PartTimeDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionTimeDto
-import ai.kilocode.rpc.dto.TodoDto
-import ai.kilocode.rpc.dto.TodoViewDto
-import ai.kilocode.rpc.dto.TokensDto
+import ai.accurecode.rpc.dto.DiffFileDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PartTimeDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionTimeDto
+import ai.accurecode.rpc.dto.TodoDto
+import ai.accurecode.rpc.dto.TodoViewDto
+import ai.accurecode.rpc.dto.TokensDto
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.Disposer
@@ -46,8 +46,8 @@ class SessionModelTest : BasePlatformTestCase() {
     }
 
     fun `test initial app and workspace state`() {
-        assertEquals(KiloAppStatusDto.DISCONNECTED, model.app.status)
-        assertEquals(KiloWorkspaceStatusDto.PENDING, model.workspace.status)
+        assertEquals(AccureAppStatusDto.DISCONNECTED, model.app.status)
+        assertEquals(AccureWorkspaceStatusDto.PENDING, model.workspace.status)
         assertFalse(model.isReady())
         assertEquals(SessionState.Idle, model.state)
     }
@@ -62,10 +62,10 @@ class SessionModelTest : BasePlatformTestCase() {
     }
 
     fun `test isReady requires app and workspace readiness`() {
-        model.app = KiloAppStateDto(KiloAppStatusDto.READY)
+        model.app = AccureAppStateDto(AccureAppStatusDto.READY)
         assertFalse(model.isReady())
 
-        model.workspace = KiloWorkspaceStateDto(KiloWorkspaceStatusDto.READY)
+        model.workspace = AccureWorkspaceStateDto(AccureWorkspaceStatusDto.READY)
         assertTrue(model.isReady())
     }
 
@@ -736,8 +736,8 @@ class SessionModelTest : BasePlatformTestCase() {
     fun `test clear resets messages and state`() {
         model.addMessage(msg("m1", "user"))
         model.setState(SessionState.Busy("busy"))
-        model.app = KiloAppStateDto(KiloAppStatusDto.READY)
-        model.workspace = KiloWorkspaceStateDto(KiloWorkspaceStatusDto.READY)
+        model.app = AccureAppStateDto(AccureAppStatusDto.READY)
+        model.workspace = AccureWorkspaceStateDto(AccureWorkspaceStatusDto.READY)
         events.clear()
 
         model.clear()
@@ -773,7 +773,7 @@ class SessionModelTest : BasePlatformTestCase() {
     }
 
     fun `test header snapshot totals assistant cost only`() {
-        model.model = "kilo/gpt-5"
+        model.model = "accure/gpt-5"
         model.upsertMessage(msg("u1", "user", cost = 10.0))
         model.upsertMessage(msg("a1", "assistant", cost = 0.25))
         model.upsertMessage(msg("a2", "assistant", cost = 0.75))
@@ -787,14 +787,14 @@ class SessionModelTest : BasePlatformTestCase() {
         model.models = listOf(ModelItem(
             id = "gpt-5",
             display = "GPT-5",
-            provider = "kilo",
-            providerName = "Kilo",
+            provider = "accure",
+            providerName = "Accure",
             recommendedIndex = null,
             free = false,
             variants = emptyList(),
             limit = ModelLimitItem(context = 1000, input = 800, output = 200),
         ))
-        model.model = "kilo/gpt-5"
+        model.model = "accure/gpt-5"
         model.upsertMessage(msg("a1", "assistant", tokens = TokensDto(100, 50, 25, 25, 0)))
         model.upsertMessage(msg("a2", "assistant", tokens = TokensDto(200, 100, 0, 0, 0)))
 

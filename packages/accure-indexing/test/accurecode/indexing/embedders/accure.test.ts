@@ -3,15 +3,15 @@ import { mockEmbeddingsCreate, openAIMockFactory, setOpenAIConstructorHook } fro
 
 mock.module("openai", openAIMockFactory)
 
-import { KiloEmbedder, KILO_INDEXING_FEATURE } from "../../../../src/indexing/embedders/kilo"
+import { AccureEmbedder, ACCURECODE_INDEXING_FEATURE } from "../../../../src/indexing/embedders/accure"
 
-describe("KiloEmbedder", () => {
+describe("AccureEmbedder", () => {
   beforeEach(() => {
     mockEmbeddingsCreate.mockReset()
     setOpenAIConstructorHook(undefined)
   })
 
-  test("uses Kilo Gateway headers and configured embedding model", async () => {
+  test("uses Accure Gateway headers and configured embedding model", async () => {
     const seen: unknown[] = []
     setOpenAIConstructorHook((cfg) => seen.push(cfg))
     mockEmbeddingsCreate.mockResolvedValue({
@@ -19,8 +19,8 @@ describe("KiloEmbedder", () => {
       usage: { prompt_tokens: 1, total_tokens: 1 },
     })
 
-    const embedder = new KiloEmbedder({
-      apiKey: "kilo-token",
+    const embedder = new AccureEmbedder({
+      apiKey: "accure-token",
       organizationId: "org_123",
       modelId: "mistralai/mistral-embed-2312",
     })
@@ -28,11 +28,11 @@ describe("KiloEmbedder", () => {
     await embedder.createEmbeddings(["hello"])
 
     expect(seen[0]).toEqual({
-      baseURL: "https://api.kilo.ai/api/gateway/",
-      apiKey: "kilo-token",
+      baseURL: "https://api.accurecode.ai/api/gateway/",
+      apiKey: "accure-token",
       defaultHeaders: {
-        "X-KILOCODE-FEATURE": KILO_INDEXING_FEATURE,
-        "X-KILOCODE-ORGANIZATIONID": "org_123",
+        "X-ACCURECODE-FEATURE": ACCURECODE_INDEXING_FEATURE,
+        "X-ACCURECODE-ORGANIZATIONID": "org_123",
       },
     })
     expect(mockEmbeddingsCreate).toHaveBeenCalledWith({
@@ -46,8 +46,8 @@ describe("KiloEmbedder", () => {
     const seen: unknown[] = []
     setOpenAIConstructorHook((cfg) => seen.push(cfg))
 
-    new KiloEmbedder({
-      apiKey: "kilo-token",
+    new AccureEmbedder({
+      apiKey: "accure-token",
       baseUrl: "https://example.test/api/openrouter/",
       modelId: "mistralai/mistral-embed-2312",
     })

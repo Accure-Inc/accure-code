@@ -81,7 +81,7 @@ describe("findModel", () => {
 
 describe("isModelValid", () => {
   const providers = {
-    kilo: makeProvider("kilo", "Kilo Gateway", ["kilo-auto/free"]),
+    accure: makeProvider("accure", "Accure Gateway", ["accure-auto/free"]),
     openai: makeProvider("openai", "OpenAI", ["gpt-4o"]),
   }
 
@@ -89,12 +89,12 @@ describe("isModelValid", () => {
     expect(isModelValid(providers, ["openai"], { providerID: "openai", modelID: "gpt-4o" })).toBe(true)
   })
 
-  it("rejects a disconnected non-kilo provider", () => {
+  it("rejects a disconnected non-accure provider", () => {
     expect(isModelValid(providers, [], { providerID: "openai", modelID: "gpt-4o" })).toBe(false)
   })
 
-  it("accepts kilo models when present in the catalog", () => {
-    expect(isModelValid(providers, [], { providerID: "kilo", modelID: "kilo-auto/free" })).toBe(true)
+  it("accepts accure models when present in the catalog", () => {
+    expect(isModelValid(providers, [], { providerID: "accure", modelID: "accure-auto/free" })).toBe(true)
   })
 
   it("rejects unknown models", () => {

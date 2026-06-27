@@ -1,10 +1,10 @@
-package ai.kilocode.client.settings
+package ai.accurecode.client.settings
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.settings.models.ModelsConfigurable
-import ai.kilocode.client.settings.providers.ProvidersConfigurable
-import ai.kilocode.client.settings.profile.UserProfileConfigurable
-import ai.kilocode.client.ui.layout.Stack
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.settings.models.ModelsConfigurable
+import ai.accurecode.client.settings.providers.ProvidersConfigurable
+import ai.accurecode.client.settings.profile.UserProfileConfigurable
+import ai.accurecode.client.ui.layout.Stack
 import com.intellij.ide.DataManager
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.options.ex.Settings
@@ -14,10 +14,10 @@ import com.intellij.util.ui.JBUI
 import javax.swing.JComponent
 
 /**
- * Root settings entry under Settings -> Tools -> Kilo Code.
+ * Root settings entry under Settings -> Tools -> Accure Code.
  *
  * Displays a brief description and a link to the User Profile child page.
- * Child configurables are registered in XML (`kilo.jetbrains.frontend.xml`) as
+ * Child configurables are registered in XML (`accurecode.jetbrains.frontend.xml`) as
  * `applicationConfigurable` entries with the appropriate `parentId` — that is the
  * single source of truth for the settings hierarchy. This class does NOT implement
  * [com.intellij.openapi.options.SearchableConfigurable.Parent] to avoid creating a
@@ -25,21 +25,21 @@ import javax.swing.JComponent
  *
  * The link uses [UserProfileConfigurable.ID] to navigate via [Settings.find]/[Settings.select].
  */
-class KiloSettingsConfigurable : SearchableConfigurable {
+class AccureSettingsConfigurable : SearchableConfigurable {
 
     override fun getId(): String = ID
 
-    override fun getDisplayName(): String = KiloBundle.message("settings.kilo.displayName")
+    override fun getDisplayName(): String = AccureBundle.message("settings.accurecode.displayName")
 
     override fun createComponent(): JComponent {
         val panel = Stack.vertical()
         panel.border = JBUI.Borders.empty(8, 0, 0, 0)
 
-        val desc = JBLabel(KiloBundle.message("settings.kilo.description"))
+        val desc = JBLabel(AccureBundle.message("settings.accurecode.description"))
         desc.border = JBUI.Borders.emptyBottom(12)
         panel.next(desc)
 
-        val link = ActionLink(KiloBundle.message("settings.profile.displayName")) { e ->
+        val link = ActionLink(AccureBundle.message("settings.profile.displayName")) { e ->
             val src = e.source as? JComponent ?: return@ActionLink
             val settings = Settings.KEY.getData(DataManager.getInstance().getDataContext(src)) ?: return@ActionLink
             open(settings, UserProfileConfigurable.ID)
@@ -47,7 +47,7 @@ class KiloSettingsConfigurable : SearchableConfigurable {
         link.border = JBUI.Borders.emptyBottom(4)
         panel.next(link)
 
-        val models = ActionLink(KiloBundle.message("settings.models.displayName")) { e ->
+        val models = ActionLink(AccureBundle.message("settings.models.displayName")) { e ->
             val src = e.source as? JComponent ?: return@ActionLink
             val settings = Settings.KEY.getData(DataManager.getInstance().getDataContext(src)) ?: return@ActionLink
             open(settings, ModelsConfigurable.ID)
@@ -55,7 +55,7 @@ class KiloSettingsConfigurable : SearchableConfigurable {
         models.border = JBUI.Borders.emptyBottom(4)
         panel.next(models)
 
-        val providers = ActionLink(KiloBundle.message("settings.providers.displayName")) { e ->
+        val providers = ActionLink(AccureBundle.message("settings.providers.displayName")) { e ->
             val src = e.source as? JComponent ?: return@ActionLink
             val settings = Settings.KEY.getData(DataManager.getInstance().getDataContext(src)) ?: return@ActionLink
             open(settings, ProvidersConfigurable.ID)
@@ -75,6 +75,6 @@ class KiloSettingsConfigurable : SearchableConfigurable {
     }
 
     companion object {
-        const val ID = "ai.kilocode.jetbrains.settings"
+        const val ID = "ai.accurecode.jetbrains.settings"
     }
 }

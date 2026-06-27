@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.history
+package ai.accurecode.client.session.history
 
 import javax.swing.AbstractListModel
 

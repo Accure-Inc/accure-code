@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Text
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.model.Text
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.util.ui.JBUI
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
@@ -48,7 +48,7 @@ class TextViewTest : BasePlatformTestCase() {
 
     fun `test update with different content type is ignored`() {
         val view = TextView(Text("p1").also { it.content.append("keep") })
-        view.update(ai.kilocode.client.session.model.Reasoning("p1"))
+        view.update(ai.accurecode.client.session.model.Reasoning("p1"))
         assertEquals("keep", view.markdown())
     }
 
@@ -243,9 +243,9 @@ class TextViewTest : BasePlatformTestCase() {
         val urls = mutableListOf<String>()
         val view = TextView(Text("p1"), openUrl = { urls.add(it) })
 
-        view.md.simulateLink("https://kilocode.ai/docs")
+        view.md.simulateLink("https://accurecode.ai/docs")
 
-        assertEquals(listOf("https://kilocode.ai/docs"), urls)
+        assertEquals(listOf("https://accurecode.ai/docs"), urls)
     }
 
     private class TrackingRepaintManager(private val watched: JComponent) : RepaintManager() {

@@ -1,4 +1,4 @@
-/* Kilo Dialog overrides – harmonized with @vscode/webview-ui-toolkit */
+/* Accure Dialog overrides – harmonized with @vscode/webview-ui-toolkit */
 
 [data-component="dialog-overlay"] {
   background-color: rgba(0, 0, 0, 0.5);
@@ -13,7 +13,7 @@
   }
 
   [data-slot="dialog-header"] {
-    font-size: var(--kilo-font-size-14);
+    font-size: var(--accure-font-size-14);
   }
 
   [data-slot="dialog-title"] {

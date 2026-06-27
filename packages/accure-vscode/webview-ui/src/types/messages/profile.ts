@@ -1,20 +1,20 @@
-// Kilo notification types (mirrored from accure-gateway)
-export interface KilocodeNotificationAction {
+// Accure notification types (mirrored from accure-gateway)
+export interface AccurecodeNotificationAction {
   actionText: string
   actionURL: string
 }
 
-export interface KilocodeNotification {
+export interface AccurecodeNotification {
   id: string
   title: string
   message: string
-  action?: KilocodeNotificationAction
+  action?: AccurecodeNotificationAction
   showIn?: string[]
   suggestModelId?: string
 }
 
 // Profile types from accure-gateway
-export interface KilocodeBalance {
+export interface AccurecodeBalance {
   balance: number
 }
 
@@ -24,6 +24,6 @@ export interface ProfileData {
     name?: string
     organizations?: Array<{ id: string; name: string; role: string }>
   }
-  balance: KilocodeBalance | null
+  balance: AccurecodeBalance | null
   currentOrgId: string | null
 }

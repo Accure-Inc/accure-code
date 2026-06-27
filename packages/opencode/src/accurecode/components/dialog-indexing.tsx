@@ -9,23 +9,23 @@
 import { useDialog } from "@tui/ui/dialog"
 import { DialogSelect, type DialogSelectOption } from "@tui/ui/dialog-select"
 import { DialogPrompt } from "@tui/ui/dialog-prompt"
-import { DEFAULT_VECTOR_STORE } from "@kilocode/accure-indexing/config"
+import { DEFAULT_VECTOR_STORE } from "@accurecode/accure-indexing/config"
 import { useSync } from "@tui/context/sync"
 import { useToast } from "@tui/ui/toast"
 import { createEffect, createMemo, createResource, createSignal, Show } from "solid-js"
 import { reconcile } from "solid-js/store"
-import type { IndexingConfig, Config } from "@kilocode/sdk/v2"
+import type { IndexingConfig, Config } from "@accurecode/sdk/v2"
 import * as Log from "@opencode-ai/core/util/log"
-import { hasKiloIndexingAuth, resolveKiloIndexingAuth, shouldDefaultIndexingToKilo } from "../indexing-auth"
+import { hasAccureIndexingAuth, resolveAccureIndexingAuth, shouldDefaultIndexingToAccure } from "../indexing-auth"
 import {
   createIndexingDialogState,
-  currentKiloModel,
+  currentAccureModel,
   indexingInheritance,
   indexingPatch,
   indexingScopeConfig,
   inheritedDescription,
-  kiloModelOptions,
-  loadKiloEmbeddingModels,
+  accureModelOptions,
+  loadAccureEmbeddingModels,
   mergeIndexingConfig,
   type IndexingScope,
 } from "./indexing-dialog-state"
@@ -39,7 +39,7 @@ type EmbeddingProvider = NonNullable<IndexingConfig["provider"]>
 const log = Log.create({ service: "indexing-model-select" })
 
 const PROVIDER_LABELS: Record<EmbeddingProvider, string> = {
-  kilo: "Kilo",
+  accure: "Accure",
   openai: "OpenAI",
   ollama: "Ollama (local)",
   "openai-compatible": "OpenAI-Compatible",
@@ -54,7 +54,7 @@ const PROVIDER_LABELS: Record<EmbeddingProvider, string> = {
 type ProviderFieldDef = { key: string; label: string; placeholder: string; sensitive?: boolean }
 
 const PROVIDER_FIELDS: Record<EmbeddingProvider, ProviderFieldDef[]> = {
-  kilo: [],
+  accure: [],
   openai: [{ key: "apiKey", label: "API Key", placeholder: "sk-...", sensitive: true }],
   ollama: [{ key: "baseUrl", label: "Base URL", placeholder: "http://localhost:11434" }],
   "openai-compatible": [
@@ -90,10 +90,10 @@ function scopedIndexing(data: Config | undefined): IndexingConfig {
   return data?.indexing ?? {}
 }
 
-function hasKiloAuth(sync: ReturnType<typeof useSync>, scope: IndexingScope, indexing: IndexingConfig): boolean {
-  const provider = sync.data.provider_next.all.find((item) => item.id === "kilo")
+function hasAccureAuth(sync: ReturnType<typeof useSync>, scope: IndexingScope, indexing: IndexingConfig): boolean {
+  const provider = sync.data.provider_next.all.find((item) => item.id === "accure")
   const config = indexingScopeConfig(scope, sync.data.config, sync.data.globalConfig, indexing)
-  return hasKiloIndexingAuth({ config, provider })
+  return hasAccureIndexingAuth({ config, provider })
 }
 
 function defaultIndexing(
@@ -102,11 +102,11 @@ function defaultIndexing(
   indexing: IndexingConfig,
   global?: IndexingConfig,
 ): IndexingConfig {
-  const provider = sync.data.provider_next.all.find((item) => item.id === "kilo")
+  const provider = sync.data.provider_next.all.find((item) => item.id === "accure")
   const config = indexingScopeConfig(scope, sync.data.config, sync.data.globalConfig, indexing)
-  const auth = resolveKiloIndexingAuth({ config, provider })
-  if (!shouldDefaultIndexingToKilo({ ...global, ...indexing }, auth)) return indexing
-  return { ...indexing, provider: "kilo", model: null, dimension: null }
+  const auth = resolveAccureIndexingAuth({ config, provider })
+  if (!shouldDefaultIndexingToAccure({ ...global, ...indexing }, auth)) return indexing
+  return { ...indexing, provider: "accure", model: null, dimension: null }
 }
 
 async function saveScopedIndexing(
@@ -169,7 +169,9 @@ function ProviderSelect(props: SubDialogProps) {
   const options: DialogSelectOption<EmbeddingProvider>[] = (
     Object.entries(PROVIDER_LABELS) as [EmbeddingProvider, string][]
   )
-    .filter(([value]) => value !== "kilo" || hasKiloAuth(sync, props.scope, indexing) || indexing.provider === "kilo")
+    .filter(
+      ([value]) => value !== "accure" || hasAccureAuth(sync, props.scope, indexing) || indexing.provider === "accure",
+    )
     .map(([value, title]) => ({
       value,
       title,
@@ -200,14 +202,14 @@ function ProviderSelect(props: SubDialogProps) {
   )
 }
 
-function KiloModelSelect(props: SubDialogProps) {
+function AccureModelSelect(props: SubDialogProps) {
   const dialog = useDialog()
   const sync = useSync()
   const sdk = props.useSDK()
   const toast = useToast()
   const indexing = props.indexing
   const [error, setError] = createSignal<string>()
-  const [catalog] = createResource(() => loadKiloEmbeddingModels(setError))
+  const [catalog] = createResource(() => loadAccureEmbeddingModels(setError))
   const seen = { error: undefined as string | undefined, state: "" }
   createEffect(() => {
     const message = error()
@@ -225,26 +227,26 @@ function KiloModelSelect(props: SubDialogProps) {
     const state = `${catalog.state}:${cfg?.models.length ?? 0}`
     if (seen.state === state) return
     seen.state = state
-    log.info("Kilo embedding model resource changed", {
+    log.info("Accure embedding model resource changed", {
       state: catalog.state,
       models: cfg?.models.length ?? 0,
-      current: currentKiloModel(cfg, indexing.model),
+      current: currentAccureModel(cfg, indexing.model),
       defaultModel: cfg?.defaultModel || undefined,
       scope: props.scope,
     })
   })
-  const options = createMemo(() => kiloModelOptions(catalog()))
-  const current = createMemo(() => currentKiloModel(catalog(), indexing.model))
+  const options = createMemo(() => accureModelOptions(catalog()))
+  const current = createMemo(() => currentAccureModel(catalog(), indexing.model))
 
   return (
     <DialogSelect
-      title="Kilo Embedding Model"
+      title="Accure Embedding Model"
       options={options()}
       current={current()}
       renderFilter={(catalog()?.models.length ?? 0) > 0}
       onSelect={async (option) => {
         if (!option.value || !catalog()?.models.some((model) => model.id === option.value)) return
-        log.info("selected Kilo embedding model", { model: option.value, scope: props.scope })
+        log.info("selected Accure embedding model", { model: option.value, scope: props.scope })
         await saveScopedIndexing(
           sdk,
           sync,
@@ -495,7 +497,7 @@ function ScopeSelect(props: DialogIndexingProps & { scope: IndexingScope }) {
   const dialog = useDialog()
   const options: DialogSelectOption<IndexingScope>[] = [
     { value: "global", title: "Global", description: "Stored in the user config directory" },
-    { value: "project", title: "Project", description: "Stored in this repo's .kilo config" },
+    { value: "project", title: "Project", description: "Stored in this repo's .accurecode config" },
   ]
 
   return (
@@ -559,7 +561,7 @@ export function DialogIndexing(props: DialogIndexingProps) {
         title: "Embedding Model",
         category: "Embedding",
         description: mark(
-          indexing.provider === "kilo" ? (indexing.model ?? "Kilo catalog") : (indexing.model ?? "default"),
+          indexing.provider === "accure" ? (indexing.model ?? "Accure catalog") : (indexing.model ?? "default"),
           [["model"]],
         ),
       },
@@ -568,10 +570,10 @@ export function DialogIndexing(props: DialogIndexingProps) {
         title: "Vector Dimension",
         category: "Embedding",
         description:
-          indexing.provider === "kilo"
-            ? "provided by Kilo"
+          indexing.provider === "accure"
+            ? "provided by Accure"
             : mark(indexing.dimension ? String(indexing.dimension) : "auto", [["dimension"]]),
-        disabled: indexing.provider === "kilo",
+        disabled: indexing.provider === "accure",
       },
       {
         value: "vectorStore",
@@ -636,9 +638,9 @@ export function DialogIndexing(props: DialogIndexingProps) {
             }
             break
           case "model": {
-            if (indexing.provider === "kilo") {
+            if (indexing.provider === "accure") {
               dialog.replace(() => (
-                <KiloModelSelect useSDK={props.useSDK} scope={scope()} indexing={indexing} raw={raw} />
+                <AccureModelSelect useSDK={props.useSDK} scope={scope()} indexing={indexing} raw={raw} />
               ))
               break
             }
@@ -654,7 +656,7 @@ export function DialogIndexing(props: DialogIndexingProps) {
             break
           }
           case "dimension": {
-            if (indexing.provider === "kilo") break
+            if (indexing.provider === "accure") break
             const result = await DialogPrompt.show(dialog, "Vector Dimension", {
               value: indexing.dimension ? String(indexing.dimension) : "",
               placeholder: "Leave empty for auto-detection",

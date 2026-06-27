@@ -1,5 +1,5 @@
 {
-  "name": "@kilocode/accure-ui",
+  "name": "@accurecode/accure-ui",
   "version": "7.3.50",
   "type": "module",
   "license": "MIT",
@@ -114,7 +114,7 @@
     "test:visual:update": "playwright test --update-snapshots"
   },
   "dependencies": {
-    "@kilocode/sdk": "workspace:*",
+    "@accurecode/sdk": "workspace:*",
     "@kobalte/core": "0.13.11",
     "@opencode-ai/core": "workspace:*",
     "@pierre/diffs": "catalog:",

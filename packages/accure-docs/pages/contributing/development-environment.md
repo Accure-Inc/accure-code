@@ -6,7 +6,7 @@ description: "Set up your development environment for contributing"
 # Development Environment
 
 {% callout type="info" %}
-**New versions of the VS Code extension and CLI are being developed in [Kilo-Org/kilocode](https://github.com/Kilo-Org/kilocode)** (extension at `packages/accure-vscode`, CLI at `packages/opencode`). For extension and CLI development, please head over to that repository.
+**New versions of the VS Code extension and CLI are being developed in [Accure-Inc/accure-code](https://github.com/Accure-Inc/accure-code)** (extension at `packages/accure-vscode`, CLI at `packages/opencode`). For extension and CLI development, please head over to that repository.
 {% /callout %}
 
 This document will help you set up your development environment and understand how to work with the codebase. Whether you're fixing bugs, adding features, or just exploring the code, this guide will get you started.
@@ -18,7 +18,7 @@ Before you begin, make sure you have the following installed:
 1. **Git** - For version control
 2. **Bun 1.3.14+** - Required for installing dependencies and running scripts
 3. **Visual Studio Code** - Our recommended IDE for development
-4. **Java 21** - Required only when running JetBrains plugin checks or repo-level checks that include `@kilocode/accure-jetbrains`
+4. **Java 21** - Required only when running JetBrains plugin checks or repo-level checks that include `@accurecode/accure-jetbrains`
 
 ## Getting Started
 
@@ -26,12 +26,12 @@ Before you begin, make sure you have the following installed:
 
 1. **Fork and Clone the Repository**:
    - **Fork the Repository**:
-     - Visit the [Kilo Code GitHub repository](https://github.com/Kilo-Org/kilocode)
+     - Visit the [Accure Code GitHub repository](https://github.com/Accure-Inc/accure-code)
      - Click the "Fork" button in the top-right corner to create your own copy.
    - **Clone Your Fork**:
      ```bash
-     git clone https://github.com/[YOUR-USERNAME]/kilocode.git
-     cd kilocode
+     git clone https://github.com/[YOUR-USERNAME]/accurecode.git
+     cd accurecode
      ```
      Replace `[YOUR-USERNAME]` with your actual GitHub username.
 
@@ -59,13 +59,13 @@ AI and coding agents are allowed in this repo. If you use one, start it from the
 
 You remain responsible for the submitted work. Before opening a PR, personally review the diff, test the change, make sure you can explain it, and understand how it interacts with the affected package and the rest of the repo. Do not use agents to submit batches of agent-generated, untested, or weakly reviewed PRs. Keep concurrent PRs limited, generally no more than three at a time, and prioritize high-impact issues first. Do not use automation or agents to mass-create issues without human review and prioritization.
 
-Kilo has bug bounties. To be eligible, make sure your GitHub account is connected in your Kilo account.
+Accure has bug bounties. To be eligible, make sure your GitHub account is connected in your Accure account.
 
 ### Project Structure
 
 The project is organized into several key packages:
 
-- **`packages/opencode/`** - Kilo CLI, agent runtime, local HTTP server, session management, and TUI
+- **`packages/opencode/`** - Accure CLI, agent runtime, local HTTP server, session management, and TUI
 - **`packages/accure-vscode/`** - VS Code extension, webview UI, Agent Manager, and extension packaging
 - **`packages/sdk/js/`** - Generated TypeScript SDK for the local server API
 - **`packages/accure-docs/`** - Documentation site
@@ -81,11 +81,11 @@ To run the CLI from the repo root:
 bun dev
 ```
 
-`bun dev` and `bun run dev` are equivalent. Both run the local source in `packages/opencode/`; they do not use a globally installed `kilo` binary.
+`bun dev` and `bun run dev` are equivalent. Both run the local source in `packages/opencode/`; they do not use a globally installed `accure` binary.
 
 ### Backend/API Validation
 
-For backend and API validation, use the root [TESTING.md](https://github.com/Kilo-Org/kilocode/blob/main/TESTING.md) guide. It covers starting the local backend with:
+For backend and API validation, use the root [TESTING.md](https://github.com/Accure-Inc/accure-code/blob/main/TESTING.md) guide. It covers starting the local backend with:
 
 ```bash
 bun dev serve
@@ -122,7 +122,7 @@ Use `bun run compile` when you need a development build and `bun run package` wh
 
 ## Testing
 
-Kilo Code uses several types of tests to ensure quality:
+Accure Code uses several types of tests to ensure quality:
 
 ### Repo-Level Checks
 
@@ -148,7 +148,7 @@ bun test
 bun test ./path/to/file.test.ts
 ```
 
-Use the root [TESTING.md](https://github.com/Kilo-Org/kilocode/blob/main/TESTING.md) guide for backend/API checks that require `bun dev serve` and `curl`-based requests.
+Use the root [TESTING.md](https://github.com/Accure-Inc/accure-code/blob/main/TESTING.md) guide for backend/API checks that require `bun dev serve` and `curl`-based requests.
 
 ### VS Code Extension Checks
 
@@ -168,9 +168,9 @@ bun run package
 From the repo root:
 
 ```bash
-bun run --filter @kilocode/accure-docs test
-bun run --filter @kilocode/accure-docs build
-bun run --filter @kilocode/accure-docs dev
+bun run --filter @accurecode/accure-docs test
+bun run --filter @accurecode/accure-docs build
+bun run --filter @accurecode/accure-docs dev
 ```
 
 For manual documentation validation, run the docs site locally, preview the affected page, and check the changed links and rendered content.
@@ -190,7 +190,7 @@ For CLI and extension changes, useful evidence can include:
 For docs changes, useful evidence can include:
 
 - `bun run script/check-md-table-padding.ts --fix`
-- `bun run --filter @kilocode/accure-docs test`
+- `bun run --filter @accurecode/accure-docs test`
 - Previewing the changed docs page locally, as described in [Documentation Contributions](/docs/contributing#documentation-contributions)
 
 If you cannot complete a relevant command, include all of the following in the PR:
@@ -206,7 +206,7 @@ Agent limitations, local resource constraints, OOM constraints, or an agent prom
 - User-facing changes usually need a changeset. Run `bunx changeset add` or add a file under `.changeset/`.
 - After changing server endpoints, run `./script/generate.ts` from the repo root to regenerate `packages/sdk/js/`.
 - After adding or changing guarded URLs in `packages/accure-vscode/`, `packages/accure-vscode/webview-ui/`, or `packages/opencode/src/`, run `bun run script/extract-source-links.ts` from the repo root.
-- When editing shared `packages/opencode/` files, keep changes small and mark Kilo-only edits with `// kilocode_change` for a single line or `// kilocode_change start` / `// kilocode_change end` for a block. Do not add these markers inside `kilocode`-named paths.
+- When editing shared `packages/opencode/` files, keep changes small and mark Accure-only edits with `// accurecode_change` for a single line or `// accurecode_change start` / `// accurecode_change end` for a block. Do not add these markers inside `accurecode`-named paths.
 
 ## Git Hooks
 
@@ -224,5 +224,5 @@ This project uses [Husky](https://typicode.github.io/husky/) to manage Git hooks
 ### Debugging Tips
 
 - Use `console.log()` statements in your code for debugging
-- Check the Output panel in VSCode (View > Output) and select "Kilo Code" from the dropdown
+- Check the Output panel in VSCode (View > Output) and select "Accure Code" from the dropdown
 - For webview issues, use the browser developer tools in the webview (right-click > "Inspect Element")

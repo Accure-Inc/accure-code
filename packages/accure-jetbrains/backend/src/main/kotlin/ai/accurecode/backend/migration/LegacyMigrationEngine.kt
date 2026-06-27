@@ -1,4 +1,4 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -6,21 +6,21 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
-import ai.kilocode.log.KiloLog
-import ai.kilocode.backend.migration.LegacyMigrationConverters.convertAutoApproval
-import ai.kilocode.backend.migration.LegacyMigrationConverters.convertCustomMode
-import ai.kilocode.backend.migration.LegacyMigrationConverters.convertCustomModePermissions
-import ai.kilocode.backend.migration.LegacyMigrationConverters.convertDefaultModel
-import ai.kilocode.backend.migration.LegacyMigrationConverters.convertMcpServer
-import ai.kilocode.backend.migration.LegacyMigrationConverters.convertProvider
-import ai.kilocode.backend.migration.LegacyMigrationConverters.parseCustomModePrompts
-import ai.kilocode.backend.migration.LegacyMigrationConverters.parseCustomModes
-import ai.kilocode.backend.migration.LegacyMigrationConverters.parseHistoryItems
-import ai.kilocode.backend.migration.LegacyMigrationConverters.parseMcpSettings
-import ai.kilocode.backend.migration.LegacyMigrationConverters.parseProviderProfiles
-import ai.kilocode.backend.migration.LegacyMigrationConverters.parseSettings
-import ai.kilocode.backend.migration.session.LegacySessionIds
-import ai.kilocode.backend.migration.session.LegacySessionParser
+import ai.accurecode.log.AccureLog
+import ai.accurecode.backend.migration.LegacyMigrationConverters.convertAutoApproval
+import ai.accurecode.backend.migration.LegacyMigrationConverters.convertCustomMode
+import ai.accurecode.backend.migration.LegacyMigrationConverters.convertCustomModePermissions
+import ai.accurecode.backend.migration.LegacyMigrationConverters.convertDefaultModel
+import ai.accurecode.backend.migration.LegacyMigrationConverters.convertMcpServer
+import ai.accurecode.backend.migration.LegacyMigrationConverters.convertProvider
+import ai.accurecode.backend.migration.LegacyMigrationConverters.parseCustomModePrompts
+import ai.accurecode.backend.migration.LegacyMigrationConverters.parseCustomModes
+import ai.accurecode.backend.migration.LegacyMigrationConverters.parseHistoryItems
+import ai.accurecode.backend.migration.LegacyMigrationConverters.parseMcpSettings
+import ai.accurecode.backend.migration.LegacyMigrationConverters.parseProviderProfiles
+import ai.accurecode.backend.migration.LegacyMigrationConverters.parseSettings
+import ai.accurecode.backend.migration.session.LegacySessionIds
+import ai.accurecode.backend.migration.session.LegacySessionParser
 
 /**
  * Orchestrates legacy data detection, migration, and cleanup.
@@ -37,7 +37,7 @@ class LegacyMigrationEngine(
 ) {
 
     companion object {
-        private val LOG = KiloLog.create(LegacyMigrationEngine::class.java)
+        private val LOG = AccureLog.create(LegacyMigrationEngine::class.java)
     }
 
     // -----------------------------------------------------------------------

@@ -1,7 +1,7 @@
-package ai.kilocode.backend.telemetry
+package ai.accurecode.backend.telemetry
 
-import ai.kilocode.backend.dev.KiloDevMode
-import ai.kilocode.log.KiloLog
+import ai.accurecode.backend.dev.AccureDevMode
+import ai.accurecode.log.AccureLog
 import com.intellij.openapi.components.Service
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,8 +14,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.util.concurrent.TimeUnit
 
 @Service(Service.Level.APP)
-class KiloBackendTelemetry(
-    private val log: KiloLog = KiloLog.create(KiloBackendTelemetry::class.java),
+class AccureBackendTelemetry(
+    private val log: AccureLog = AccureLog.create(AccureBackendTelemetry::class.java),
 ) {
     companion object {
         private const val TIMEOUT_MS = 5_000L
@@ -23,7 +23,7 @@ class KiloBackendTelemetry(
 
     suspend fun capture(http: OkHttpClient?, port: Int, event: String, properties: Map<String, String>) {
         val body = payload(event, properties)
-        if (KiloDevMode.enabled()) {
+        if (AccureDevMode.enabled()) {
             log.info(body)
             return
         }
@@ -33,7 +33,7 @@ class KiloBackendTelemetry(
 
     suspend fun setEnabled(http: OkHttpClient?, port: Int, enabled: Boolean) {
         val body = JsonObject(mapOf("enabled" to JsonPrimitive(enabled))).toString()
-        if (KiloDevMode.enabled()) {
+        if (AccureDevMode.enabled()) {
             log.info(body)
             return
         }
@@ -70,5 +70,5 @@ class KiloBackendTelemetry(
     ).toString()
 
     private fun base(): Map<String, JsonPrimitive> =
-        KiloLog.payload(log).mapValues { JsonPrimitive(it.value) }
+        AccureLog.payload(log).mapValues { JsonPrimitive(it.value) }
 }

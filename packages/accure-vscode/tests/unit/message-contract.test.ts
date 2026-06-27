@@ -3,7 +3,7 @@
  *
  * These tests verify that:
  * 1. Every message type named in ExtensionMessage has a corresponding interface/type definition
- * 2. Every WebviewMessage type handled in KiloProvider has a corresponding member in the WebviewMessage union
+ * 2. Every WebviewMessage type handled in AccureProvider has a corresponding member in the WebviewMessage union
  * 3. The message types used by mapSSEEventToWebviewMessage exist in ExtensionMessage
  *
  * These are static analysis tests - they read source files and check consistency.
@@ -17,8 +17,8 @@ const ROOT = path.resolve(import.meta.dir, "../..")
 const MESSAGES_DIR = path.join(ROOT, "webview-ui/src/types/messages")
 const EXTENSION_MESSAGES_FILE = path.join(MESSAGES_DIR, "extension-messages.ts")
 const WEBVIEW_MESSAGES_FILE = path.join(MESSAGES_DIR, "webview-messages.ts")
-const KILO_PROVIDER_FILE = path.join(ROOT, "src/KiloProvider.ts")
-const KILO_PROVIDER_UTILS_FILE = path.join(ROOT, "src/kilo-provider-utils.ts")
+const ACCURECODE_PROVIDER_FILE = path.join(ROOT, "src/AccureProvider.ts")
+const ACCURECODE_PROVIDER_UTILS_FILE = path.join(ROOT, "src/accure-provider-utils.ts")
 // Some wire types (partUpdated, partsUpdated) live in a file shared by the
 // extension and webview; the contract checks must include it.
 const SHARED_STREAM_MESSAGES_FILE = path.join(ROOT, "src/shared/stream-messages.ts")
@@ -92,9 +92,9 @@ describe("ExtensionMessage type members", () => {
   })
 })
 
-describe("KiloProvider message handler coverage", () => {
-  it("all WebviewMessage switch cases in KiloProvider exist in WebviewMessage union", () => {
-    const providerContent = readFile(KILO_PROVIDER_FILE)
+describe("AccureProvider message handler coverage", () => {
+  it("all WebviewMessage switch cases in AccureProvider exist in WebviewMessage union", () => {
+    const providerContent = readFile(ACCURECODE_PROVIDER_FILE)
     const messagesContent = readMessageTypeSources()
 
     // Extract case labels from handleWebviewMessage switch
@@ -108,14 +108,14 @@ describe("KiloProvider message handler coverage", () => {
 
     expect(
       unrecognized,
-      `KiloProvider switch cases not found in any message type definition: ${unrecognized.join(", ")}`,
+      `AccureProvider switch cases not found in any message type definition: ${unrecognized.join(", ")}`,
     ).toEqual([])
   })
 })
 
 describe("mapSSEEventToWebviewMessage output types", () => {
   it("all output types from mapSSEEventToWebviewMessage exist in ExtensionMessage", () => {
-    const utilsContent = readFile(KILO_PROVIDER_UTILS_FILE)
+    const utilsContent = readFile(ACCURECODE_PROVIDER_UTILS_FILE)
     const messagesContent = readMessageTypeSources()
 
     // Extract type literals used in the return values of mapSSEEventToWebviewMessage

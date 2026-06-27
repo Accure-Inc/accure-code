@@ -1,34 +1,34 @@
-package ai.kilocode.client.testing
+package ai.accurecode.client.testing
 
-import ai.kilocode.rpc.KiloAppRpcApi
-import ai.kilocode.rpc.dto.AgentConfigDto
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.ConfigPatchDto
-import ai.kilocode.rpc.dto.DeviceAuthDto
-import ai.kilocode.rpc.dto.HealthDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ModelFavoriteUpdateDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.ModelSelectionUpdateDto
-import ai.kilocode.rpc.dto.ModelStateDto
-import ai.kilocode.rpc.dto.ModelVariantUpdateDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.TelemetryCaptureDto
+import ai.accurecode.rpc.AccureAppRpcApi
+import ai.accurecode.rpc.dto.AgentConfigDto
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.ConfigPatchDto
+import ai.accurecode.rpc.dto.DeviceAuthDto
+import ai.accurecode.rpc.dto.HealthDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ModelFavoriteUpdateDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.ModelSelectionUpdateDto
+import ai.accurecode.rpc.dto.ModelStateDto
+import ai.accurecode.rpc.dto.ModelVariantUpdateDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.TelemetryCaptureDto
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
- * Fake [KiloAppRpcApi] for testing.
+ * Fake [AccureAppRpcApi] for testing.
  *
  * Push state changes via [state]. Health check returns [health].
  *
  * Every `suspend` method asserts it is NOT called on the EDT.
  */
-class FakeAppRpcApi : KiloAppRpcApi {
+class FakeAppRpcApi : AccureAppRpcApi {
 
-    val state = MutableStateFlow(KiloAppStateDto(KiloAppStatusDto.DISCONNECTED))
+    val state = MutableStateFlow(AccureAppStateDto(AccureAppStatusDto.DISCONNECTED))
     var health = HealthDto(healthy = true, version = "1.0.0")
     var models = ModelStateDto()
     val selections = mutableListOf<ModelSelectionUpdateDto>()
@@ -54,7 +54,7 @@ class FakeAppRpcApi : KiloAppRpcApi {
         connected = true
     }
 
-    override suspend fun state(): Flow<KiloAppStateDto> {
+    override suspend fun state(): Flow<AccureAppStateDto> {
         assertNotEdt("state")
         return state
     }
@@ -121,7 +121,7 @@ class FakeAppRpcApi : KiloAppRpcApi {
         return models
     }
 
-    override suspend fun updateConfig(patch: ConfigPatchDto): KiloAppStateDto {
+    override suspend fun updateConfig(patch: ConfigPatchDto): AccureAppStateDto {
         assertNotEdt("updateConfig")
         configUpdateAttempts += 1
         configUpdateGate?.await()
@@ -148,7 +148,7 @@ class FakeAppRpcApi : KiloAppRpcApi {
     }
 
     var fakeProfile: ProfileDto? = null
-    var fakeDeviceAuth = DeviceAuthDto(code = "TEST-1234", verificationUrl = "https://auth.kilo.ai/device")
+    var fakeDeviceAuth = DeviceAuthDto(code = "TEST-1234", verificationUrl = "https://auth.accurecode.ai/device")
     val orgProfiles = mutableMapOf<String?, ProfileDto?>()
     val orgSelections = mutableListOf<String?>()
     val telemetry = mutableListOf<TelemetryCaptureDto>()

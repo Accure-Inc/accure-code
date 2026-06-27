@@ -1,15 +1,15 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Question
-import ai.kilocode.client.session.model.QuestionItem
-import ai.kilocode.client.session.model.QuestionOption
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.views.base.BaseQuestionView
-import ai.kilocode.client.session.views.question.QuestionView
-import ai.kilocode.client.ui.HoverIcon
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.rpc.dto.QuestionReplyDto
+import ai.accurecode.client.session.model.Question
+import ai.accurecode.client.session.model.QuestionItem
+import ai.accurecode.client.session.model.QuestionOption
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.views.base.BaseQuestionView
+import ai.accurecode.client.session.views.question.QuestionView
+import ai.accurecode.client.ui.HoverIcon
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.rpc.dto.QuestionReplyDto
 import com.intellij.ide.ui.laf.darcula.ui.DarculaButtonUI
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.ui.EditorTextField

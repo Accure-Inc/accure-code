@@ -118,7 +118,7 @@ export class MarketplaceInstaller {
     const content = `---\n${frontmatter}\n---\n\n${prompt}\n`
     await fs.writeFile(filepath, content, "utf-8")
 
-    // Migration: remove stale kilo.json agent entry with same id if present
+    // Migration: remove stale accure.json agent entry with same id if present
     const config = await this.readConfig(scope, workspace)
     if (config.agent?.[item.id]) {
       delete (config.agent as Record<string, unknown>)[item.id]
@@ -156,7 +156,7 @@ export class MarketplaceInstaller {
       }
     }
 
-    // Also clean up any stale kilo.json agent entry
+    // Also clean up any stale accure.json agent entry
     const config = await this.readConfig(scope, workspace)
     if (config.agent?.[item.id]) {
       delete (config.agent as Record<string, unknown>)[item.id]
@@ -199,7 +199,7 @@ export class MarketplaceInstaller {
     // Stage under `base` (not os.tmpdir()) so fs.rename() never crosses filesystems (EXDEV).
     await fs.mkdir(base, { recursive: true })
     const staging = await fs.mkdtemp(path.join(base, `.staging-${item.id}-`))
-    const tarball = path.join(os.tmpdir(), `kilo-skill-${item.id}-${randomUUID()}.tar.gz`)
+    const tarball = path.join(os.tmpdir(), `accure-skill-${item.id}-${randomUUID()}.tar.gz`)
 
     try {
       const response = await fetch(item.content)
@@ -353,7 +353,7 @@ function contains(dir: string, filepath: string): boolean {
 }
 
 /**
- * Normalize a marketplace MCP entry from the old Kilocode format to the CLI's expected format.
+ * Normalize a marketplace MCP entry from the old Accurecode format to the CLI's expected format.
  *
  * Old format (from marketplace API):
  *   { "command": "npx", "args": [...], "env": {...} }

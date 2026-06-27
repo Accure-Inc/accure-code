@@ -7,7 +7,7 @@ import { isRecord } from "@/util/record"
 
 const log = Log.create({ service: "model-state" })
 
-export namespace KilocodeModelState {
+export namespace AccurecodeModelState {
   export const Ref = z.object({
     providerID: z.string(),
     modelID: z.string(),

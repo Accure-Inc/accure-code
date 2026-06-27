@@ -1,4 +1,4 @@
-import type { KiloClient, SessionStatus } from "@kilocode/sdk/v2/client"
+import type { AccureClient, SessionStatus } from "@accurecode/sdk/v2/client"
 
 /**
  * Fetch all current session statuses and seed the provided map + webview.
@@ -11,7 +11,7 @@ import type { KiloClient, SessionStatus } from "@kilocode/sdk/v2/client"
  * fetch briefly returns stale data and the spinner disappears mid-stream.
  */
 export async function seedSessionStatuses(
-  client: KiloClient,
+  client: AccureClient,
   dir: string,
   map: Map<string, SessionStatus["type"]>,
   post: (msg: unknown) => void,
@@ -46,6 +46,6 @@ export async function seedSessionStatuses(
       }
     }
   } catch (error) {
-    console.error("[Kilo New] KiloProvider: Failed to seed session statuses:", error)
+    console.error("[Accure New] AccureProvider: Failed to seed session statuses:", error)
   }
 }

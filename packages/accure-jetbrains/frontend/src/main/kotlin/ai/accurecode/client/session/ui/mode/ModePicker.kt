@@ -1,7 +1,7 @@
-package ai.kilocode.client.session.ui.mode
+package ai.accurecode.client.session.ui.mode
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.ui.PickerButton
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.ui.PickerButton
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.PopupShowOptions
 import java.awt.Cursor
@@ -28,7 +28,7 @@ class ModePicker : PickerButton() {
     init {
         isEnabled = false
         text = " "
-        toolTipText = KiloBundle.message("mode.picker.tooltip")
+        toolTipText = AccureBundle.message("mode.picker.tooltip")
 
         addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {

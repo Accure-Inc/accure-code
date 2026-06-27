@@ -1,18 +1,18 @@
-package ai.kilocode.backend.cli
+package ai.accurecode.backend.cli
 
-import ai.kilocode.backend.workspace.CommandInfo
-import ai.kilocode.backend.workspace.ProviderData
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.AgentConfigPatchDto
-import ai.kilocode.rpc.dto.ConfigPatchDto
-import ai.kilocode.rpc.dto.ConfigUpdateDto
-import ai.kilocode.rpc.dto.PermissionAlwaysRulesDto
-import ai.kilocode.rpc.dto.PermissionReplyDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.ModelStateDto
-import ai.kilocode.rpc.dto.PromptDto
-import ai.kilocode.rpc.dto.PromptPartDto
-import ai.kilocode.rpc.dto.QuestionReplyDto
+import ai.accurecode.backend.workspace.CommandInfo
+import ai.accurecode.backend.workspace.ProviderData
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.AgentConfigPatchDto
+import ai.accurecode.rpc.dto.ConfigPatchDto
+import ai.accurecode.rpc.dto.ConfigUpdateDto
+import ai.accurecode.rpc.dto.PermissionAlwaysRulesDto
+import ai.accurecode.rpc.dto.PermissionReplyDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.ModelStateDto
+import ai.accurecode.rpc.dto.PromptDto
+import ai.accurecode.rpc.dto.PromptPartDto
+import ai.accurecode.rpc.dto.QuestionReplyDto
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,7 +23,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * Pure unit tests for [KiloCliDataParser].
+ * Pure unit tests for [AccureCliDataParser].
  *
  * No mocks, no services, no coroutines — just JSON in → DTO out.
  * When a new parsing bug is found, copy the raw JSON that caused
@@ -34,7 +34,7 @@ import kotlin.test.assertTrue
  *  - [HttpResponses] — HTTP response body parsing
  *  - [RequestBuilders] — outgoing JSON body builders and local model state
  */
-class KiloCliDataParserTest {
+class AccureCliDataParserTest {
 
     // ================================================================
     // Group 1 — SSE / chat event parsing
@@ -47,7 +47,7 @@ class KiloCliDataParserTest {
 
         @Test
         fun `extractEventType - parses type from JSON data`() {
-            val result = KiloCliDataParser.extractEventType(
+            val result = AccureCliDataParser.extractEventType(
                 """{"type":"global.config.updated","payload":{}}"""
             )
             assertEquals("global.config.updated", result)
@@ -55,12 +55,12 @@ class KiloCliDataParserTest {
 
         @Test
         fun `extractEventType - returns unknown for missing type`() {
-            assertEquals("unknown", KiloCliDataParser.extractEventType("""{"data":"something"}"""))
+            assertEquals("unknown", AccureCliDataParser.extractEventType("""{"data":"something"}"""))
         }
 
         @Test
         fun `extractEventType - returns unknown for empty string`() {
-            assertEquals("unknown", KiloCliDataParser.extractEventType(""))
+            assertEquals("unknown", AccureCliDataParser.extractEventType(""))
         }
 
         // ---- parseChatEvent — GlobalEvent wrapper ----
@@ -83,7 +83,7 @@ class KiloCliDataParserTest {
                 }
             }"""
 
-            val result = KiloCliDataParser.parseChatEvent("message.updated", data)
+            val result = AccureCliDataParser.parseChatEvent("message.updated", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.MessageUpdated)
             assertEquals("ses_123", result.sessionID)
@@ -106,7 +106,7 @@ class KiloCliDataParserTest {
                 }
             }"""
 
-            val result = KiloCliDataParser.parseChatEvent("message.updated", data)
+            val result = AccureCliDataParser.parseChatEvent("message.updated", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.MessageUpdated)
             assertEquals("ses_456", result.sessionID)
@@ -128,7 +128,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("message.part.delta", data)
+            val result = AccureCliDataParser.parseChatEvent("message.part.delta", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.PartDelta)
             assertEquals("ses_1", result.sessionID)
@@ -154,7 +154,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("message.part.updated", data)
+            val result = AccureCliDataParser.parseChatEvent("message.part.updated", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.PartUpdated)
             assertEquals("ses_1", result.sessionID)
@@ -181,7 +181,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("message.part.updated", data)
+            val result = AccureCliDataParser.parseChatEvent("message.part.updated", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.PartUpdated)
             assertEquals("file", result.part.type)
@@ -192,7 +192,7 @@ class KiloCliDataParserTest {
 
         @Test
         fun `ChatEventNormalizer - user part updated sanitizes text`() {
-            val norm = KiloCliDataParser.ChatEventNormalizer()
+            val norm = AccureCliDataParser.ChatEventNormalizer()
             norm.parse("message.updated", messageUpdated("m1", "user"))
 
             val events = norm.parse("message.part.updated", partUpdated(
@@ -208,7 +208,7 @@ class KiloCliDataParserTest {
 
         @Test
         fun `ChatEventNormalizer - assistant part updated preserves text`() {
-            val norm = KiloCliDataParser.ChatEventNormalizer()
+            val norm = AccureCliDataParser.ChatEventNormalizer()
             norm.parse("message.updated", messageUpdated("m1", "assistant"))
             val payload = "Called the Read tool with the following input: {\"filePath\":\"/tmp/a.kt\"}"
 
@@ -220,7 +220,7 @@ class KiloCliDataParserTest {
 
         @Test
         fun `ChatEventNormalizer - user text deltas append normally`() {
-            val norm = KiloCliDataParser.ChatEventNormalizer()
+            val norm = AccureCliDataParser.ChatEventNormalizer()
             norm.parse("message.updated", messageUpdated("m1", "user"))
 
             val first = norm.parse("message.part.delta", partDelta("m1", "p1", "hello"))
@@ -232,7 +232,7 @@ class KiloCliDataParserTest {
 
         @Test
         fun `ChatEventNormalizer - split generated payload delta is suppressed`() {
-            val norm = KiloCliDataParser.ChatEventNormalizer()
+            val norm = AccureCliDataParser.ChatEventNormalizer()
             norm.parse("message.updated", messageUpdated("m1", "user"))
 
             val first = norm.parse("message.part.delta", partDelta("m1", "p1", "hello\n"))
@@ -250,7 +250,7 @@ class KiloCliDataParserTest {
 
         @Test
         fun `ChatEventNormalizer - partial noisy line is replaced when identified`() {
-            val norm = KiloCliDataParser.ChatEventNormalizer()
+            val norm = AccureCliDataParser.ChatEventNormalizer()
             norm.parse("message.updated", messageUpdated("m1", "user"))
 
             val first = norm.parse("message.part.delta", partDelta("m1", "p1", "before\nCalled the Read"))
@@ -289,7 +289,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("message.part.updated", data)
+            val result = AccureCliDataParser.parseChatEvent("message.part.updated", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.PartUpdated)
             assertEquals("read", result.part.tool)
@@ -347,7 +347,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("message.part.updated", data) as ChatEventDto.PartUpdated
+            val result = AccureCliDataParser.parseChatEvent("message.part.updated", data) as ChatEventDto.PartUpdated
             assertEquals("Top wins", result.part.todos.single().content)
             assertEquals(true, result.part.todos.single().changed)
             assertEquals("compact", result.part.todoView?.mode)
@@ -385,7 +385,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("message.part.updated", data) as ChatEventDto.PartUpdated
+            val result = AccureCliDataParser.parseChatEvent("message.part.updated", data) as ChatEventDto.PartUpdated
 
             assertEquals(emptyList(), result.part.todos)
         }
@@ -418,7 +418,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("message.part.updated", data)
+            val result = AccureCliDataParser.parseChatEvent("message.part.updated", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.PartUpdated)
             assertEquals("bash", result.part.tool)
@@ -449,7 +449,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("message.part.updated", data) as ChatEventDto.PartUpdated
+            val result = AccureCliDataParser.parseChatEvent("message.part.updated", data) as ChatEventDto.PartUpdated
             assertEquals("call_abc", result.part.callID)
             assertEquals("bash", result.part.tool)
         }
@@ -461,7 +461,7 @@ class KiloCliDataParserTest {
                 "properties": { "sessionID": "ses_1" }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("session.turn.open", data)
+            val result = AccureCliDataParser.parseChatEvent("session.turn.open", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.TurnOpen)
             assertEquals("ses_1", result.sessionID)
@@ -474,7 +474,7 @@ class KiloCliDataParserTest {
                 "properties": { "sessionID": "ses_1", "reason": "completed" }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("session.turn.close", data)
+            val result = AccureCliDataParser.parseChatEvent("session.turn.close", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.TurnClose)
             assertEquals("ses_1", result.sessionID)
@@ -491,7 +491,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("session.error", data)
+            val result = AccureCliDataParser.parseChatEvent("session.error", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.Error)
             assertEquals("ses_1", result.sessionID)
@@ -516,7 +516,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("session.error", data)
+            val result = AccureCliDataParser.parseChatEvent("session.error", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.Error)
             assertEquals("ses_1", result.sessionID)
@@ -533,7 +533,7 @@ class KiloCliDataParserTest {
                 "properties": { "sessionID": "ses_1", "messageID": "msg_1" }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("message.removed", data)
+            val result = AccureCliDataParser.parseChatEvent("message.removed", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.MessageRemoved)
             assertEquals("ses_1", result.sessionID)
@@ -547,7 +547,7 @@ class KiloCliDataParserTest {
                 "properties": { "sessionID": "ses_1", "messageID": "msg_1", "partID": "part_1" }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("message.part.removed", data)
+            val result = AccureCliDataParser.parseChatEvent("message.part.removed", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.PartRemoved)
             assertEquals("ses_1", result.sessionID)
@@ -563,7 +563,7 @@ class KiloCliDataParserTest {
                 "type": "session.idle",
                 "properties": { "sessionID": "ses_1" }
             """)
-            val result = KiloCliDataParser.parseChatEvent("session.idle", data)
+            val result = AccureCliDataParser.parseChatEvent("session.idle", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.SessionIdle)
             assertEquals("ses_1", result.sessionID)
@@ -575,7 +575,7 @@ class KiloCliDataParserTest {
                 "type": "session.compacted",
                 "properties": { "sessionID": "ses_1" }
             """)
-            val result = KiloCliDataParser.parseChatEvent("session.compacted", data)
+            val result = AccureCliDataParser.parseChatEvent("session.compacted", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.SessionCompacted)
         }
@@ -598,7 +598,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("session.updated", data)
+            val result = AccureCliDataParser.parseChatEvent("session.updated", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.SessionUpdated)
             assertEquals("ses_1", result.sessionID)
@@ -623,7 +623,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("session.created", data)
+            val result = AccureCliDataParser.parseChatEvent("session.created", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.SessionCreated)
             assertEquals("ses_new", result.sessionID)
@@ -640,7 +640,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("session.diff", data)
+            val result = AccureCliDataParser.parseChatEvent("session.diff", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.SessionDiffChanged)
             assertEquals(1, result.diff.size)
@@ -658,7 +658,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("session.diff", data) as ChatEventDto.SessionDiffChanged
+            val result = AccureCliDataParser.parseChatEvent("session.diff", data) as ChatEventDto.SessionDiffChanged
             assertEquals(Int.MAX_VALUE, result.diff[0].additions)
             assertEquals(Int.MAX_VALUE, result.diff[0].deletions)
         }
@@ -676,7 +676,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("todo.updated", data)
+            val result = AccureCliDataParser.parseChatEvent("todo.updated", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.TodoUpdated)
             assertEquals("ses_1", result.sessionID)
@@ -696,7 +696,7 @@ class KiloCliDataParserTest {
                 "properties": { "sessionID": "ses_1", "status": {"type": "idle"} }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("session.status", data) as ChatEventDto.SessionStatusChanged
+            val result = AccureCliDataParser.parseChatEvent("session.status", data) as ChatEventDto.SessionStatusChanged
             assertEquals("idle", result.status.type)
             assertNull(result.status.attempt)
             assertNull(result.status.requestID)
@@ -712,7 +712,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("session.status", data) as ChatEventDto.SessionStatusChanged
+            val result = AccureCliDataParser.parseChatEvent("session.status", data) as ChatEventDto.SessionStatusChanged
             assertEquals("retry", result.status.type)
             assertEquals("Retrying...", result.status.message)
             assertEquals(2, result.status.attempt)
@@ -729,7 +729,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("session.status", data) as ChatEventDto.SessionStatusChanged
+            val result = AccureCliDataParser.parseChatEvent("session.status", data) as ChatEventDto.SessionStatusChanged
             assertEquals(Int.MAX_VALUE, result.status.attempt)
             assertEquals(Long.MAX_VALUE, result.status.next)
         }
@@ -744,7 +744,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("session.status", data) as ChatEventDto.SessionStatusChanged
+            val result = AccureCliDataParser.parseChatEvent("session.status", data) as ChatEventDto.SessionStatusChanged
             assertEquals("offline", result.status.type)
             assertEquals("No network", result.status.message)
             assertEquals("req_abc", result.status.requestID)
@@ -767,7 +767,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("permission.asked", data)
+            val result = AccureCliDataParser.parseChatEvent("permission.asked", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.PermissionAsked)
             assertEquals("ses_1", result.sessionID)
@@ -785,7 +785,7 @@ class KiloCliDataParserTest {
                 "properties": { "sessionID": "ses_1", "requestID": "perm_1" }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("permission.replied", data)
+            val result = AccureCliDataParser.parseChatEvent("permission.replied", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.PermissionReplied)
             assertEquals("ses_1", result.sessionID)
@@ -804,7 +804,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("question.asked", data)
+            val result = AccureCliDataParser.parseChatEvent("question.asked", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.QuestionAsked)
             assertEquals("ses_1", result.sessionID)
@@ -841,7 +841,7 @@ class KiloCliDataParserTest {
                 }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("question.asked", data)
+            val result = AccureCliDataParser.parseChatEvent("question.asked", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.QuestionAsked)
             assertEquals(true, result.request.blocking)
@@ -863,7 +863,7 @@ class KiloCliDataParserTest {
                 "properties": { "sessionID": "ses_1", "requestID": "q_1" }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("question.replied", data)
+            val result = AccureCliDataParser.parseChatEvent("question.replied", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.QuestionReplied)
             assertEquals("q_1", result.requestID)
@@ -876,7 +876,7 @@ class KiloCliDataParserTest {
                 "properties": { "sessionID": "ses_1", "requestID": "q_1" }
             """)
 
-            val result = KiloCliDataParser.parseChatEvent("question.rejected", data)
+            val result = AccureCliDataParser.parseChatEvent("question.rejected", data)
             assertNotNull(result)
             assertTrue(result is ChatEventDto.QuestionRejected)
             assertEquals("q_1", result.requestID)
@@ -890,17 +890,17 @@ class KiloCliDataParserTest {
                 "type": "some.unknown.event",
                 "properties": { "sessionID": "ses_1" }
             """)
-            assertNull(KiloCliDataParser.parseChatEvent("some.unknown.event", data))
+            assertNull(AccureCliDataParser.parseChatEvent("some.unknown.event", data))
         }
 
         @Test
         fun `parseChatEvent - malformed JSON returns null`() {
-            assertNull(KiloCliDataParser.parseChatEvent("message.updated", "not json"))
+            assertNull(AccureCliDataParser.parseChatEvent("message.updated", "not json"))
         }
 
         @Test
         fun `parseChatEvent - missing properties returns null`() {
-            assertNull(KiloCliDataParser.parseChatEvent("message.updated", """{"payload":{"type":"x"}}"""))
+            assertNull(AccureCliDataParser.parseChatEvent("message.updated", """{"payload":{"type":"x"}}"""))
         }
 
         @Test
@@ -909,7 +909,7 @@ class KiloCliDataParserTest {
                 "type": "message.updated",
                 "properties": { "info": { "id": "msg_1", "role": "user", "time": {} } }
             """)
-            assertNull(KiloCliDataParser.parseChatEvent("message.updated", data))
+            assertNull(AccureCliDataParser.parseChatEvent("message.updated", data))
         }
 
         // ---- parseSessionStatus ----
@@ -917,7 +917,7 @@ class KiloCliDataParserTest {
         @Test
         fun `parseSessionStatus - valid status event`() {
             val data = """{"sessionID":"ses_abc","status":{"type":"busy","message":"Running..."}}"""
-            val result = KiloCliDataParser.parseSessionStatus(data)
+            val result = AccureCliDataParser.parseSessionStatus(data)
             assertNotNull(result)
             assertEquals("ses_abc", result.first)
             assertEquals("busy", result.second.type)
@@ -927,13 +927,13 @@ class KiloCliDataParserTest {
         @Test
         fun `parseSessionStatus - missing sessionID returns null`() {
             val data = """{"status":{"type":"idle"}}"""
-            assertNull(KiloCliDataParser.parseSessionStatus(data))
+            assertNull(AccureCliDataParser.parseSessionStatus(data))
         }
 
         @Test
         fun `parseSessionStatus - missing status defaults to idle`() {
             val data = """{"sessionID":"ses_xyz"}"""
-            val result = KiloCliDataParser.parseSessionStatus(data)
+            val result = AccureCliDataParser.parseSessionStatus(data)
             assertNotNull(result)
             assertEquals("idle", result.second.type)
             assertNull(result.second.message)
@@ -948,7 +948,7 @@ class KiloCliDataParserTest {
                     "status": {"type": "retry", "message": "Rate limited", "attempt": 3, "next": 10000}
                 }
             """)
-            val result = KiloCliDataParser.parseSessionStatus(data)
+            val result = AccureCliDataParser.parseSessionStatus(data)
             assertNotNull(result)
             assertEquals("ses_retry", result.first)
             assertEquals("retry", result.second.type)
@@ -965,7 +965,7 @@ class KiloCliDataParserTest {
                     "status": {"type": "offline", "message": "Offline", "requestID": "req_xyz"}
                 }
             """)
-            val result = KiloCliDataParser.parseSessionStatus(data)
+            val result = AccureCliDataParser.parseSessionStatus(data)
             assertNotNull(result)
             assertEquals("req_xyz", result.second.requestID)
         }
@@ -977,7 +977,7 @@ class KiloCliDataParserTest {
             val raw = """[
                 {"id": "p1", "sessionID": "s1", "permission": "edit", "patterns": ["*.kt"], "always": [], "metadata": {}}
             ]"""
-            val result = KiloCliDataParser.parsePermissionRequests(raw)
+            val result = AccureCliDataParser.parsePermissionRequests(raw)
             assertEquals(1, result.size)
             assertEquals("p1", result[0].id)
             assertEquals("edit", result[0].permission)
@@ -985,7 +985,7 @@ class KiloCliDataParserTest {
 
         @Test
         fun `parsePermissionRequests - empty list`() {
-            assertEquals(emptyList(), KiloCliDataParser.parsePermissionRequests("[]"))
+            assertEquals(emptyList(), AccureCliDataParser.parsePermissionRequests("[]"))
         }
 
         @Test
@@ -993,7 +993,7 @@ class KiloCliDataParserTest {
             val raw = """[
                 {"id": "q1", "sessionID": "s1", "blocking": true, "questions": [{"question": "pick", "questionKey": "q.key", "header": "h", "headerKey": "h.key", "multiple": true, "custom": false, "options": [{"label": "A", "description": "B", "mode": "code"}]}]}
             ]"""
-            val result = KiloCliDataParser.parseQuestionRequests(raw)
+            val result = AccureCliDataParser.parseQuestionRequests(raw)
             assertEquals(1, result.size)
             assertEquals("q1", result[0].id)
             assertEquals(true, result[0].blocking)
@@ -1026,7 +1026,7 @@ class KiloCliDataParserTest {
                 "summary": { "additions": 10, "deletions": 5, "files": 3 }
             }"""
 
-            val result = KiloCliDataParser.parseSession(raw)
+            val result = AccureCliDataParser.parseSession(raw)
             assertEquals("ses_abc", result.id)
             assertEquals("proj_1", result.projectID)
             assertEquals("/tmp/project", result.directory)
@@ -1051,7 +1051,7 @@ class KiloCliDataParserTest {
                 "time": { "created": 0.0, "updated": 0.0 }
             }"""
 
-            val result = KiloCliDataParser.parseSession(raw)
+            val result = AccureCliDataParser.parseSession(raw)
             assertEquals("ses_min", result.id)
             assertNull(result.summary)
         }
@@ -1060,7 +1060,7 @@ class KiloCliDataParserTest {
 
         @Test
         fun `parseMessages - empty array`() {
-            assertEquals(emptyList(), KiloCliDataParser.parseMessages("[]"))
+            assertEquals(emptyList(), AccureCliDataParser.parseMessages("[]"))
         }
 
         @Test
@@ -1076,7 +1076,7 @@ class KiloCliDataParserTest {
                 }
             ]"""
 
-            val result = KiloCliDataParser.parseMessages(raw)
+            val result = AccureCliDataParser.parseMessages(raw)
             assertEquals(2, result.size)
             assertEquals("user", result[0].info.role)
             assertEquals("Hello", result[0].parts[0].text)
@@ -1101,7 +1101,7 @@ class KiloCliDataParserTest {
                 }
             ]"""
 
-            val result = KiloCliDataParser.parseMessages(raw)
+            val result = AccureCliDataParser.parseMessages(raw)
 
             assertEquals("before\nafter", result[0].parts[0].text)
             assertEquals("a.png", result[0].parts[1].filename)
@@ -1126,7 +1126,7 @@ class KiloCliDataParserTest {
                 }]
             }]"""
 
-            val result = KiloCliDataParser.parseMessages(raw)
+            val result = AccureCliDataParser.parseMessages(raw)
             assertEquals(1, result.size)
             val part = result[0].parts[0]
             assertEquals("tool", part.type)
@@ -1150,7 +1150,7 @@ class KiloCliDataParserTest {
                 }]
             }]"""
 
-            val part = KiloCliDataParser.parseMessages(raw)[0].parts[0]
+            val part = AccureCliDataParser.parseMessages(raw)[0].parts[0]
             assertEquals("step-finish", part.type)
             assertEquals("stop", part.reason)
             assertEquals(0.005, part.cost)
@@ -1173,7 +1173,7 @@ class KiloCliDataParserTest {
                 "parts": []
             }]"""
 
-            val result = KiloCliDataParser.parseMessages(raw)
+            val result = AccureCliDataParser.parseMessages(raw)
             val info = result[0].info
             assertNotNull(info.tokens)
             assertEquals(100L, info.tokens?.input)
@@ -1187,7 +1187,7 @@ class KiloCliDataParserTest {
 
         @Test
         fun `parseMessages - malformed JSON returns empty`() {
-            assertEquals(emptyList(), KiloCliDataParser.parseMessages("not json"))
+            assertEquals(emptyList(), AccureCliDataParser.parseMessages("not json"))
         }
 
         // ---- parseCloudSessions ----
@@ -1202,7 +1202,7 @@ class KiloCliDataParserTest {
                 "nextCursor": "cursor_2"
             }"""
 
-            val result = KiloCliDataParser.parseCloudSessions(raw)
+            val result = AccureCliDataParser.parseCloudSessions(raw)
 
             assertEquals(2, result.sessions.size)
             assertEquals("cloud_1", result.sessions[0].id)
@@ -1215,8 +1215,8 @@ class KiloCliDataParserTest {
 
         @Test
         fun `parseCloudSessions tolerates malformed response`() {
-            assertEquals(emptyList(), KiloCliDataParser.parseCloudSessions("not json").sessions)
-            assertNull(KiloCliDataParser.parseCloudSessions("{}").nextCursor)
+            assertEquals(emptyList(), AccureCliDataParser.parseCloudSessions("not json").sessions)
+            assertNull(AccureCliDataParser.parseCloudSessions("{}").nextCursor)
         }
 
         // ---- parseProviders ----
@@ -1229,7 +1229,7 @@ class KiloCliDataParserTest {
                 "connected": ["anthropic"]
             }"""
 
-            val result = KiloCliDataParser.parseProviders(raw)
+            val result = AccureCliDataParser.parseProviders(raw)
 
             assertEquals(1, result.providers.size)
             assertEquals("anthropic", result.providers[0].id)
@@ -1266,7 +1266,7 @@ class KiloCliDataParserTest {
                 "default": {}, "connected": []
             }"""
 
-            val provider = KiloCliDataParser.parseProviders(raw).providers[0]
+            val provider = AccureCliDataParser.parseProviders(raw).providers[0]
             val model = provider.models["claude-4"]
             assertNotNull(model)
             assertEquals("claude-4", model.id)
@@ -1300,14 +1300,14 @@ class KiloCliDataParserTest {
                 "default": {}, "connected": []
             }"""
 
-            val model = KiloCliDataParser.parseProviders(raw).providers[0].models["m"]
+            val model = AccureCliDataParser.parseProviders(raw).providers[0].models["m"]
             assertNotNull(model)
             assertEquals(listOf("low", "medium", "high"), model.variants)
         }
 
         @Test
         fun `parseProviders - missing collections default to empty`() {
-            val result = KiloCliDataParser.parseProviders("""{"all":[],"default":{},"connected":[]}""")
+            val result = AccureCliDataParser.parseProviders("""{"all":[],"default":{},"connected":[]}""")
             assertEquals(emptyList(), result.providers)
             assertEquals(emptyList(), result.connected)
             assertEquals(emptyMap(), result.defaults)
@@ -1340,7 +1340,7 @@ class KiloCliDataParserTest {
                 "connected": ["openai"]
             }"""
 
-            val result = KiloCliDataParser.parseProviderSettingsProviders(raw)
+            val result = AccureCliDataParser.parseProviderSettingsProviders(raw)
             val provider = result.first.single()
 
             assertEquals("settings.providers.note.openai", provider.metadata?.noteKey)
@@ -1360,7 +1360,7 @@ class KiloCliDataParserTest {
                 "connected": []
             }"""
 
-            val provider = KiloCliDataParser.parseProviderSettingsProviders(raw).first.single()
+            val provider = AccureCliDataParser.parseProviderSettingsProviders(raw).first.single()
 
             assertNull(provider.metadata)
         }
@@ -1375,7 +1375,7 @@ class KiloCliDataParserTest {
                 "default": {}, "connected": []
             }"""
 
-            val model = KiloCliDataParser.parseProviders(raw).providers[0].models["m"]
+            val model = AccureCliDataParser.parseProviders(raw).providers[0].models["m"]
             assertNotNull(model)
             assertEquals(false, model.attachment)
             assertEquals(false, model.reasoning)
@@ -1388,14 +1388,14 @@ class KiloCliDataParserTest {
         @Test
         fun `parseProviders - throws for malformed JSON`() {
             assertFailsWith<Exception> {
-                KiloCliDataParser.parseProviders("not json")
+                AccureCliDataParser.parseProviders("not json")
             }
         }
 
         @Test
         fun `parseProviders - throws for non-object JSON`() {
             assertFailsWith<Exception> {
-                KiloCliDataParser.parseProviders("""[1,2,3]""")
+                AccureCliDataParser.parseProviders("""[1,2,3]""")
             }
         }
 
@@ -1417,7 +1417,7 @@ class KiloCliDataParserTest {
                 }]
             }"""
 
-            val prompt = KiloCliDataParser.parseProviderAuth(raw).getValue("azure").single().prompts.single()
+            val prompt = AccureCliDataParser.parseProviderAuth(raw).getValue("azure").single().prompts.single()
 
             assertEquals("Select Azure endpoint configuration", prompt.label)
             assertEquals("Resource name", prompt.options[0].label)
@@ -1435,7 +1435,7 @@ class KiloCliDataParserTest {
                 {"name":"mcp-tool","template":"","hints":["${'$'}1","${'$'}2"],"source":"mcp"}
             ]"""
 
-            val result = KiloCliDataParser.parseCommands(raw)
+            val result = AccureCliDataParser.parseCommands(raw)
 
             assertEquals(2, result.size)
             assertEquals("init", result[0].name)
@@ -1455,7 +1455,7 @@ class KiloCliDataParserTest {
                 {"name":"local-review-uncommitted","description":"local review (uncommitted)","template":{},"hints":[]}
             ]"""
 
-            val result = KiloCliDataParser.parseCommands(raw)
+            val result = AccureCliDataParser.parseCommands(raw)
 
             assertEquals(2, result.size)
             assertEquals("local-review", result[0].name)
@@ -1468,7 +1468,7 @@ class KiloCliDataParserTest {
         @Test
         fun `parseCommands - ignores template when it is a string`() {
             val raw = """[{"name":"review","template":"do a review of ${'$'}ARGUMENTS","hints":["${'$'}ARGUMENTS"]}]"""
-            val result = KiloCliDataParser.parseCommands(raw)
+            val result = AccureCliDataParser.parseCommands(raw)
             assertEquals(1, result.size)
             assertEquals("review", result[0].name)
             assertEquals(listOf("\$ARGUMENTS"), result[0].hints)
@@ -1477,38 +1477,38 @@ class KiloCliDataParserTest {
         @Test
         fun `parseCommands - missing hints defaults to empty`() {
             val raw = """[{"name":"nohints","template":"x"}]"""
-            val result = KiloCliDataParser.parseCommands(raw)
+            val result = AccureCliDataParser.parseCommands(raw)
             assertEquals(emptyList<String>(), result[0].hints)
         }
 
         @Test
         fun `parseCommands - empty array`() {
-            assertEquals(emptyList<CommandInfo>(), KiloCliDataParser.parseCommands("[]"))
+            assertEquals(emptyList<CommandInfo>(), AccureCliDataParser.parseCommands("[]"))
         }
 
         // ---- parsePathState ----
 
         @Test
         fun `parsePathState - extracts state from valid path response`() {
-            val raw = """{"home":"/home/user","state":"/home/user/.local/state/kilo","config":"/home/user/.config/kilo","worktree":"/project","directory":"/project"}"""
-            assertEquals("/home/user/.local/state/kilo", KiloCliDataParser.parsePathState(raw))
+            val raw = """{"home":"/home/user","state":"/home/user/.local/state/accure","config":"/home/user/.config/accure","worktree":"/project","directory":"/project"}"""
+            assertEquals("/home/user/.local/state/accure", AccureCliDataParser.parsePathState(raw))
         }
 
         @Test
         fun `parsePathState - returns null for missing state field`() {
-            assertNull(KiloCliDataParser.parsePathState("""{"home":"/home/user"}"""))
+            assertNull(AccureCliDataParser.parsePathState("""{"home":"/home/user"}"""))
         }
 
         @Test
         fun `parsePathState - returns null for malformed JSON`() {
-            assertNull(KiloCliDataParser.parsePathState("not json"))
+            assertNull(AccureCliDataParser.parsePathState("not json"))
         }
 
         @Test
         fun `parsePathState - returns null for non-string state value`() {
-            assertNull(KiloCliDataParser.parsePathState("""{"state":42}"""))
-            assertNull(KiloCliDataParser.parsePathState("""{"state":null}"""))
-            assertNull(KiloCliDataParser.parsePathState("""{"state":{}}"""))
+            assertNull(AccureCliDataParser.parsePathState("""{"state":42}"""))
+            assertNull(AccureCliDataParser.parsePathState("""{"state":null}"""))
+            assertNull(AccureCliDataParser.parsePathState("""{"state":{}}"""))
         }
     }
 
@@ -1524,7 +1524,7 @@ class KiloCliDataParserTest {
         @Test
         fun `buildPromptJson - text only`() {
             val prompt = PromptDto(parts = listOf(PromptPartDto("text", "Hello")))
-            val result = KiloCliDataParser.buildPromptJson(prompt)
+            val result = AccureCliDataParser.buildPromptJson(prompt)
             assertEquals("""{"parts":[{"type":"text","text":"Hello"}]}""", result)
         }
 
@@ -1535,7 +1535,7 @@ class KiloCliDataParserTest {
                 providerID = "anthropic",
                 modelID = "claude-4",
             )
-            val result = KiloCliDataParser.buildPromptJson(prompt)
+            val result = AccureCliDataParser.buildPromptJson(prompt)
             assertTrue(result.contains(""""model":{"providerID":"anthropic","modelID":"claude-4"}"""))
         }
 
@@ -1545,7 +1545,7 @@ class KiloCliDataParserTest {
                 parts = listOf(PromptPartDto("text", "Hi")),
                 messageID = "msg_1",
             )
-            val result = KiloCliDataParser.buildPromptJson(prompt)
+            val result = AccureCliDataParser.buildPromptJson(prompt)
             assertTrue(result.contains(""""messageID":"msg_1""""))
         }
 
@@ -1555,13 +1555,13 @@ class KiloCliDataParserTest {
                 parts = listOf(PromptPartDto("text", "Hi")),
                 noReply = true,
             )
-            val result = KiloCliDataParser.buildPromptJson(prompt)
+            val result = AccureCliDataParser.buildPromptJson(prompt)
             assertEquals("""{"parts":[{"type":"text","text":"Hi"}],"noReply":true}""", result)
         }
 
         @Test
         fun `buildProviderOAuthJson - numeric method index`() {
-            val result = KiloCliDataParser.buildProviderOAuthJson("0", mapOf("deploymentType" to "github.com"))
+            val result = AccureCliDataParser.buildProviderOAuthJson("0", mapOf("deploymentType" to "github.com"))
 
             assertEquals("""{"method":0,"inputs":{"deploymentType":"github.com"}}""", result)
         }
@@ -1572,7 +1572,7 @@ class KiloCliDataParserTest {
                 parts = listOf(PromptPartDto("text", "Hi")),
                 agent = "ask",
             )
-            val result = KiloCliDataParser.buildPromptJson(prompt)
+            val result = AccureCliDataParser.buildPromptJson(prompt)
             assertTrue(result.contains(""""agent":"ask""""))
         }
 
@@ -1582,14 +1582,14 @@ class KiloCliDataParserTest {
                 parts = listOf(PromptPartDto("text", "Hi")),
                 variant = "medium",
             )
-            val result = KiloCliDataParser.buildPromptJson(prompt)
+            val result = AccureCliDataParser.buildPromptJson(prompt)
             assertTrue(result.contains(""""variant":"medium""""))
         }
 
         @Test
         fun `buildPromptJson - escapes special characters`() {
             val prompt = PromptDto(parts = listOf(PromptPartDto("text", "line1\nline2\t\"quoted\"")))
-            val result = KiloCliDataParser.buildPromptJson(prompt)
+            val result = AccureCliDataParser.buildPromptJson(prompt)
             assertTrue(result.contains("""line1\nline2\t\"quoted\""""))
         }
 
@@ -1602,7 +1602,7 @@ class KiloCliDataParserTest {
                 )
             )
 
-            val result = KiloCliDataParser.buildPromptJson(prompt)
+            val result = AccureCliDataParser.buildPromptJson(prompt)
 
             assertEquals(
                 """{"parts":[{"type":"text","text":"see this"},{"type":"file","mime":"image/png","url":"file:///tmp/a.png","filename":"a.png"}]}""",
@@ -1616,7 +1616,7 @@ class KiloCliDataParserTest {
                 parts = listOf(PromptPartDto(type = "file", mime = "application/pdf", url = "file:///tmp/a.pdf"))
             )
 
-            val result = KiloCliDataParser.buildPromptJson(prompt)
+            val result = AccureCliDataParser.buildPromptJson(prompt)
 
             assertEquals(
                 """{"parts":[{"type":"file","mime":"application/pdf","url":"file:///tmp/a.pdf"}]}""",
@@ -1630,7 +1630,7 @@ class KiloCliDataParserTest {
                 parts = listOf(PromptPartDto(type = "file", mime = "text/plain", url = "file:///tmp/a%20b.txt", filename = "a \"b\".txt"))
             )
 
-            val result = KiloCliDataParser.buildPromptJson(prompt)
+            val result = AccureCliDataParser.buildPromptJson(prompt)
 
             assertTrue(result.contains(""""filename":"a \"b\".txt""""), result)
         }
@@ -1639,7 +1639,7 @@ class KiloCliDataParserTest {
 
         @Test
         fun `buildSummarizeJson - writes provider and model`() {
-            val result = KiloCliDataParser.buildSummarizeJson(ModelSelectionDto("anthropic", "claude-4"))
+            val result = AccureCliDataParser.buildSummarizeJson(ModelSelectionDto("anthropic", "claude-4"))
             assertEquals("""{"providerID":"anthropic","modelID":"claude-4"}""", result)
         }
 
@@ -1647,13 +1647,13 @@ class KiloCliDataParserTest {
 
         @Test
         fun `buildConfigPartial - model only`() {
-            val result = KiloCliDataParser.buildConfigPartial(ConfigUpdateDto(model = "anthropic/claude-4"))
+            val result = AccureCliDataParser.buildConfigPartial(ConfigUpdateDto(model = "anthropic/claude-4"))
             assertEquals("""{"model":"anthropic/claude-4"}""", result)
         }
 
         @Test
         fun `buildConfigPartial - agent and temperature`() {
-            val result = KiloCliDataParser.buildConfigPartial(
+            val result = AccureCliDataParser.buildConfigPartial(
                 ConfigUpdateDto(agent = "code", temperature = 0.7)
             )
             assertTrue(result.contains(""""default_agent":"code""""))
@@ -1662,54 +1662,54 @@ class KiloCliDataParserTest {
 
         @Test
         fun `buildConfigPartial - empty update`() {
-            val result = KiloCliDataParser.buildConfigPartial(ConfigUpdateDto())
+            val result = AccureCliDataParser.buildConfigPartial(ConfigUpdateDto())
             assertEquals("{}", result)
         }
 
         @Test
         fun `buildConfigPatch - top-level model set`() {
             val patch = ConfigPatchDto(values = linkedMapOf("model" to "anthropic/claude"))
-            assertEquals("{\"model\":\"anthropic/claude\"}", KiloCliDataParser.buildConfigPatch(patch))
+            assertEquals("{\"model\":\"anthropic/claude\"}", AccureCliDataParser.buildConfigPatch(patch))
         }
 
         @Test
         fun `buildConfigPatch - top-level model clear emits null`() {
             val patch = ConfigPatchDto(values = linkedMapOf("model" to null))
-            assertEquals("{\"model\":null}", KiloCliDataParser.buildConfigPatch(patch))
+            assertEquals("{\"model\":null}", AccureCliDataParser.buildConfigPatch(patch))
         }
 
         @Test
         fun `buildConfigPatch - small and subagent values`() {
-            val patch = ConfigPatchDto(values = linkedMapOf("small_model" to "kilo/auto-small", "subagent_model" to null, "subagent_variant" to null))
-            assertEquals("{\"small_model\":\"kilo/auto-small\",\"subagent_model\":null,\"subagent_variant\":null}", KiloCliDataParser.buildConfigPatch(patch))
+            val patch = ConfigPatchDto(values = linkedMapOf("small_model" to "accure/auto-small", "subagent_model" to null, "subagent_variant" to null))
+            assertEquals("{\"small_model\":\"accure/auto-small\",\"subagent_model\":null,\"subagent_variant\":null}", AccureCliDataParser.buildConfigPatch(patch))
         }
 
         @Test
         fun `buildConfigPatch - per-agent model set`() {
-            val patch = ConfigPatchDto(agents = linkedMapOf("code" to AgentConfigPatchDto(model = "kilo/gpt-5")))
-            assertEquals("{\"agent\":{\"code\":{\"model\":\"kilo/gpt-5\"}}}", KiloCliDataParser.buildConfigPatch(patch))
+            val patch = ConfigPatchDto(agents = linkedMapOf("code" to AgentConfigPatchDto(model = "accure/gpt-5")))
+            assertEquals("{\"agent\":{\"code\":{\"model\":\"accure/gpt-5\"}}}", AccureCliDataParser.buildConfigPatch(patch))
         }
 
         @Test
         fun `buildConfigPatch - per-agent model clear emits null`() {
             val patch = ConfigPatchDto(agents = linkedMapOf("code" to AgentConfigPatchDto(model = null)))
-            assertEquals("{\"agent\":{\"code\":{\"model\":null}}}", KiloCliDataParser.buildConfigPatch(patch))
+            assertEquals("{\"agent\":{\"code\":{\"model\":null}}}", AccureCliDataParser.buildConfigPatch(patch))
         }
 
         @Test
         fun `buildConfigPatch - empty patch`() {
-            assertEquals("{}", KiloCliDataParser.buildConfigPatch(ConfigPatchDto()))
+            assertEquals("{}", AccureCliDataParser.buildConfigPatch(ConfigPatchDto()))
         }
 
         @Test
         fun `buildConfigPatch - escapes special characters`() {
-            val patch = ConfigPatchDto(values = linkedMapOf("model" to "kilo/a\\b\"c"))
-            assertEquals("{\"model\":\"kilo/a\\\\b\\\"c\"}", KiloCliDataParser.buildConfigPatch(patch))
+            val patch = ConfigPatchDto(values = linkedMapOf("model" to "accure/a\\b\"c"))
+            assertEquals("{\"model\":\"accure/a\\\\b\\\"c\"}", AccureCliDataParser.buildConfigPatch(patch))
         }
 
         @Test
         fun `buildConfigPartial - temperature without agent defaults to ask`() {
-            val result = KiloCliDataParser.buildConfigPartial(ConfigUpdateDto(temperature = 0.5))
+            val result = AccureCliDataParser.buildConfigPartial(ConfigUpdateDto(temperature = 0.5))
             assertTrue(result.contains(""""agent":{"ask":{"temperature":0.5}}"""))
         }
 
@@ -1717,13 +1717,13 @@ class KiloCliDataParserTest {
 
         @Test
         fun `buildPermissionReplyJson - once reply`() {
-            val result = KiloCliDataParser.buildPermissionReplyJson(PermissionReplyDto(reply = "once"))
+            val result = AccureCliDataParser.buildPermissionReplyJson(PermissionReplyDto(reply = "once"))
             assertEquals("""{"reply":"once"}""", result)
         }
 
         @Test
         fun `buildPermissionReplyJson - always reply with message`() {
-            val result = KiloCliDataParser.buildPermissionReplyJson(PermissionReplyDto(reply = "always", message = "approved"))
+            val result = AccureCliDataParser.buildPermissionReplyJson(PermissionReplyDto(reply = "always", message = "approved"))
             assertTrue(result.contains(""""reply":"always""""))
             assertTrue(result.contains(""""message":"approved""""))
         }
@@ -1732,7 +1732,7 @@ class KiloCliDataParserTest {
 
         @Test
         fun `buildPermissionAlwaysRulesJson - approved list`() {
-            val result = KiloCliDataParser.buildPermissionAlwaysRulesJson(
+            val result = AccureCliDataParser.buildPermissionAlwaysRulesJson(
                 PermissionAlwaysRulesDto(approvedAlways = listOf("src/**"), deniedAlways = emptyList())
             )
             assertTrue(result.contains(""""approvedAlways":["src/**"]"""))
@@ -1743,13 +1743,13 @@ class KiloCliDataParserTest {
 
         @Test
         fun `buildQuestionReplyJson - single question single answer`() {
-            val result = KiloCliDataParser.buildQuestionReplyJson(QuestionReplyDto(answers = listOf(listOf("A"))))
+            val result = AccureCliDataParser.buildQuestionReplyJson(QuestionReplyDto(answers = listOf(listOf("A"))))
             assertEquals("""{"answers":[["A"]]}""", result)
         }
 
         @Test
         fun `buildQuestionReplyJson - multiple questions`() {
-            val result = KiloCliDataParser.buildQuestionReplyJson(
+            val result = AccureCliDataParser.buildQuestionReplyJson(
                 QuestionReplyDto(answers = listOf(listOf("A", "B"), listOf("Yes")))
             )
             assertEquals("""{"answers":[["A","B"],["Yes"]]}""", result)
@@ -1759,15 +1759,15 @@ class KiloCliDataParserTest {
 
         @Test
         fun `parseModelState - parses favorites`() {
-            val result = KiloCliDataParser.parseModelState(
-                """{"favorite":[{"providerID":"kilo","modelID":"auto"},{"providerID":"openai","modelID":"gpt"}]}""",
+            val result = AccureCliDataParser.parseModelState(
+                """{"favorite":[{"providerID":"accure","modelID":"auto"},{"providerID":"openai","modelID":"gpt"}]}""",
             )
-            assertEquals(listOf("kilo/auto", "openai/gpt"), result.favorite.map { "${it.providerID}/${it.modelID}" })
+            assertEquals(listOf("accure/auto", "openai/gpt"), result.favorite.map { "${it.providerID}/${it.modelID}" })
         }
 
         @Test
         fun `parseModelState - parses recent selections`() {
-            val result = KiloCliDataParser.parseModelState(
+            val result = AccureCliDataParser.parseModelState(
                 """{"recent":[{"providerID":"anthropic","modelID":"claude"},{"providerID":"openai","modelID":"gpt"}]}""",
             )
             assertEquals(listOf("anthropic/claude", "openai/gpt"), result.recent.map { "${it.providerID}/${it.modelID}" })
@@ -1775,18 +1775,18 @@ class KiloCliDataParserTest {
 
         @Test
         fun `parseModelState - parses model selections and variants`() {
-            val result = KiloCliDataParser.parseModelState(
-                """{"model":{"code":{"providerID":"kilo","modelID":"auto"}},"variant":{"kilo/auto":"medium"}}""",
+            val result = AccureCliDataParser.parseModelState(
+                """{"model":{"code":{"providerID":"accure","modelID":"auto"}},"variant":{"accure/auto":"medium"}}""",
             )
-            assertEquals("kilo", result.model["code"]?.providerID)
+            assertEquals("accure", result.model["code"]?.providerID)
             assertEquals("auto", result.model["code"]?.modelID)
-            assertEquals("medium", result.variant["kilo/auto"])
+            assertEquals("medium", result.variant["accure/auto"])
         }
 
         @Test
         fun `parseModelState - drops malformed favorites`() {
-            val result = KiloCliDataParser.parseModelState(
-                """{"favorite":[{"providerID":"kilo"},false,{"providerID":"openai","modelID":"gpt"}]}""",
+            val result = AccureCliDataParser.parseModelState(
+                """{"favorite":[{"providerID":"accure"},false,{"providerID":"openai","modelID":"gpt"}]}""",
             )
             assertEquals(listOf("openai/gpt"), result.favorite.map { "${it.providerID}/${it.modelID}" })
         }
@@ -1794,14 +1794,14 @@ class KiloCliDataParserTest {
         @Test
         fun `parseModelState - malformed inputs return empty favorites`() {
             for (raw in listOf("", "not-json", "[]", "42", "null")) {
-                assertTrue(KiloCliDataParser.parseModelState(raw).favorite.isEmpty(), raw)
+                assertTrue(AccureCliDataParser.parseModelState(raw).favorite.isEmpty(), raw)
             }
         }
 
         @Test
         fun `parseModelState - drops malformed model selections and variants`() {
-            val result = KiloCliDataParser.parseModelState(
-                """{"model":{"bad":false,"ok":{"providerID":"kilo","modelID":"auto"}},"variant":{"":"low","kilo/auto":false,"openai/gpt":"high"}}""",
+            val result = AccureCliDataParser.parseModelState(
+                """{"model":{"bad":false,"ok":{"providerID":"accure","modelID":"auto"}},"variant":{"":"low","accure/auto":false,"openai/gpt":"high"}}""",
             )
             assertEquals(listOf("ok"), result.model.keys.toList())
             assertEquals(mapOf("openai/gpt" to "high"), result.variant)
@@ -1809,31 +1809,31 @@ class KiloCliDataParserTest {
 
         @Test
         fun `buildModelStateJson - preserves unrelated keys and replaces favorites`() {
-            val raw = """{"model":{"code":{"providerID":"kilo","modelID":"auto"}},"recent":[{"providerID":"old","modelID":"recent"}],"variant":{"kilo/auto":"fast"},"extra":true,"favorite":[]}"""
-            val result = KiloCliDataParser.buildModelStateJson(raw, listOf(ModelSelectionDto("anthropic", "claude")))
+            val raw = """{"model":{"code":{"providerID":"accure","modelID":"auto"}},"recent":[{"providerID":"old","modelID":"recent"}],"variant":{"accure/auto":"fast"},"extra":true,"favorite":[]}"""
+            val result = AccureCliDataParser.buildModelStateJson(raw, listOf(ModelSelectionDto("anthropic", "claude")))
 
             assertTrue(result.contains("\"model\""), result)
             assertTrue(result.contains("\"recent\""), result)
             assertTrue(result.contains("\"variant\""), result)
             assertTrue(result.contains("\"extra\""), result)
-            assertEquals(listOf("anthropic/claude"), KiloCliDataParser.parseModelState(result).favorite.map { "${it.providerID}/${it.modelID}" })
+            assertEquals(listOf("anthropic/claude"), AccureCliDataParser.parseModelState(result).favorite.map { "${it.providerID}/${it.modelID}" })
         }
 
         @Test
         fun `buildModelStateJson - writes model selections and variants`() {
             val raw = """{"recent":[],"extra":true}"""
-            val result = KiloCliDataParser.buildModelStateJson(
+            val result = AccureCliDataParser.buildModelStateJson(
                 raw,
                 ModelStateDto(
-                    model = mapOf("code" to ModelSelectionDto("kilo", "auto")),
-                    variant = mapOf("kilo/auto" to "medium"),
+                    model = mapOf("code" to ModelSelectionDto("accure", "auto")),
+                    variant = mapOf("accure/auto" to "medium"),
                     recent = listOf(ModelSelectionDto("anthropic", "claude")),
                 ),
             )
 
-            val state = KiloCliDataParser.parseModelState(result)
+            val state = AccureCliDataParser.parseModelState(result)
             assertEquals("auto", state.model["code"]?.modelID)
-            assertEquals("medium", state.variant["kilo/auto"])
+            assertEquals("medium", state.variant["accure/auto"])
             assertEquals(listOf("anthropic/claude"), state.recent.map { "${it.providerID}/${it.modelID}" })
             assertTrue(result.contains("\"extra\""), result)
         }
@@ -1857,7 +1857,7 @@ class KiloCliDataParserTest {
             }
         """)
 
-        val result = KiloCliDataParser.parseChatEvent("permission.asked", data)
+        val result = AccureCliDataParser.parseChatEvent("permission.asked", data)
         assertNotNull(result)
         val asked = result as? ChatEventDto.PermissionAsked ?: error("Expected PermissionAsked")
         assertEquals("git status --short", asked.request.command)
@@ -1878,7 +1878,7 @@ class KiloCliDataParserTest {
             }
         """)
 
-        val result = KiloCliDataParser.parseChatEvent("permission.asked", data)
+        val result = AccureCliDataParser.parseChatEvent("permission.asked", data)
         assertNotNull(result)
         val asked = result as? ChatEventDto.PermissionAsked ?: error("Expected PermissionAsked")
         assertEquals("src/App.kt", asked.request.filePath)
@@ -1908,7 +1908,7 @@ class KiloCliDataParserTest {
             }
         """)
 
-        val result = KiloCliDataParser.parseChatEvent("permission.asked", data)
+        val result = AccureCliDataParser.parseChatEvent("permission.asked", data)
         assertNotNull(result)
         val asked = result as? ChatEventDto.PermissionAsked ?: error("Expected PermissionAsked")
         assertEquals(1, asked.request.fileDiffs.size)
@@ -1937,7 +1937,7 @@ class KiloCliDataParserTest {
             }
         """)
 
-        val result = KiloCliDataParser.parseChatEvent("permission.asked", data)
+        val result = AccureCliDataParser.parseChatEvent("permission.asked", data)
         assertNotNull(result)
         val asked = result as? ChatEventDto.PermissionAsked ?: error("Expected PermissionAsked")
         assertEquals(2, asked.request.fileDiffs.size)
@@ -1961,7 +1961,7 @@ class KiloCliDataParserTest {
             }
         """)
 
-        val result = KiloCliDataParser.parseChatEvent("permission.asked", data)
+        val result = AccureCliDataParser.parseChatEvent("permission.asked", data)
         assertNotNull(result)
         val asked = result as? ChatEventDto.PermissionAsked ?: error("Expected PermissionAsked")
         assertTrue(asked.request.fileDiffs.isEmpty())
@@ -1972,7 +1972,7 @@ class KiloCliDataParserTest {
         val raw = """[
             {"id": "p1", "sessionID": "s1", "permission": "edit", "patterns": ["*.kt"], "always": [], "metadata": {}}
         ]"""
-        val result = KiloCliDataParser.parsePermissionRequests(raw)
+        val result = AccureCliDataParser.parsePermissionRequests(raw)
         assertEquals(1, result.size)
         assertNull(result[0].command)
         assertTrue(result[0].rules.isEmpty())
@@ -1985,28 +1985,28 @@ class KiloCliDataParserTest {
     fun `sanitizeUserPromptText - removes read payload lines`() {
         val text = "before\nCalled the Read tool with the following input: {\"filePath\":\"/tmp/a.kt\"}\nafter"
 
-        assertEquals("before\nafter", KiloCliDataParser.sanitizeUserPromptText(text))
+        assertEquals("before\nafter", AccureCliDataParser.sanitizeUserPromptText(text))
     }
 
     @Test
     fun `sanitizeUserPromptText - handles read case variants and path key`() {
         val text = "before\nCalled the READ tool with the following input: {\"path\":\"/tmp/a.kt\"}\nafter"
 
-        assertEquals("before\nafter", KiloCliDataParser.sanitizeUserPromptText(text))
+        assertEquals("before\nafter", AccureCliDataParser.sanitizeUserPromptText(text))
     }
 
     @Test
     fun `sanitizeUserPromptText - preserves ordinary prose without path key`() {
         val text = "Called the Read tool with the following input: please inspect the file"
 
-        assertEquals(text, KiloCliDataParser.sanitizeUserPromptText(text))
+        assertEquals(text, AccureCliDataParser.sanitizeUserPromptText(text))
     }
 
     @Test
     fun `sanitizeUserPromptText - collapses only blanks introduced by payload removal`() {
         val text = "before\n\nCalled the Read tool with the following input: {\"filePath\":\"/tmp/a.kt\"}\n\nafter\n\n\nkeep"
 
-        assertEquals("before\n\nafter\n\n\nkeep", KiloCliDataParser.sanitizeUserPromptText(text))
+        assertEquals("before\n\nafter\n\n\nkeep", AccureCliDataParser.sanitizeUserPromptText(text))
     }
 
     // ================================================================

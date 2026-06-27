@@ -1,23 +1,23 @@
-package ai.kilocode.backend.provider
+package ai.accurecode.backend.provider
 
-import ai.kilocode.backend.app.KiloBackendAppService
-import ai.kilocode.backend.app.LoadError
-import ai.kilocode.backend.cli.KiloCliDataParser
-import ai.kilocode.backend.rpc.KiloWorkspaceDtoMapper
-import ai.kilocode.log.KiloLog
-import ai.kilocode.rpc.dto.CustomModelFetchDto
-import ai.kilocode.rpc.dto.CustomModelFetchResultDto
-import ai.kilocode.rpc.dto.CustomProviderConfigDto
-import ai.kilocode.rpc.dto.CustomProviderSaveDto
-import ai.kilocode.rpc.dto.LoadErrorDto
-import ai.kilocode.rpc.dto.ProviderActionResultDto
-import ai.kilocode.rpc.dto.ProviderConnectDto
-import ai.kilocode.rpc.dto.ProviderDisconnectDto
-import ai.kilocode.rpc.dto.ProviderEnableDto
-import ai.kilocode.rpc.dto.ProviderOAuthAuthorizeDto
-import ai.kilocode.rpc.dto.ProviderOAuthCallbackDto
-import ai.kilocode.rpc.dto.ProviderOAuthReadyDto
-import ai.kilocode.rpc.dto.ProviderSettingsDto
+import ai.accurecode.backend.app.AccureBackendAppService
+import ai.accurecode.backend.app.LoadError
+import ai.accurecode.backend.cli.AccureCliDataParser
+import ai.accurecode.backend.rpc.AccureWorkspaceDtoMapper
+import ai.accurecode.log.AccureLog
+import ai.accurecode.rpc.dto.CustomModelFetchDto
+import ai.accurecode.rpc.dto.CustomModelFetchResultDto
+import ai.accurecode.rpc.dto.CustomProviderConfigDto
+import ai.accurecode.rpc.dto.CustomProviderSaveDto
+import ai.accurecode.rpc.dto.LoadErrorDto
+import ai.accurecode.rpc.dto.ProviderActionResultDto
+import ai.accurecode.rpc.dto.ProviderConnectDto
+import ai.accurecode.rpc.dto.ProviderDisconnectDto
+import ai.accurecode.rpc.dto.ProviderEnableDto
+import ai.accurecode.rpc.dto.ProviderOAuthAuthorizeDto
+import ai.accurecode.rpc.dto.ProviderOAuthCallbackDto
+import ai.accurecode.rpc.dto.ProviderOAuthReadyDto
+import ai.accurecode.rpc.dto.ProviderSettingsDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
@@ -28,11 +28,11 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
-internal class KiloBackendProviderSettingsManager(
-    private val app: KiloBackendAppService,
+internal class AccureBackendProviderSettingsManager(
+    private val app: AccureBackendAppService,
 ) {
     companion object {
-        private val LOG = KiloLog.create(KiloBackendProviderSettingsManager::class.java)
+        private val LOG = AccureLog.create(AccureBackendProviderSettingsManager::class.java)
         private val JSON = "application/json".toMediaType()
         private val FETCH = OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
@@ -49,10 +49,10 @@ internal class KiloBackendProviderSettingsManager(
         app.awaitReady()
         val errors = mutableListOf<LoadErrorDto>()
         val providers = load("providers", errors) {
-            KiloCliDataParser.parseProviderSettingsProviders(get("/provider?directory=${enc(directory)}"))
+            AccureCliDataParser.parseProviderSettingsProviders(get("/provider?directory=${enc(directory)}"))
         }
         val auth = load("provider_auth", errors) {
-            KiloCliDataParser.parseProviderAuth(get("/provider/auth?directory=${enc(directory)}"))
+            AccureCliDataParser.parseProviderAuth(get("/provider/auth?directory=${enc(directory)}"))
         } ?: emptyMap()
         val empty = ParsedConfig(emptyMap(), emptyList(), emptyList())
         val global = load("global_config", errors) {
@@ -89,21 +89,21 @@ internal class KiloBackendProviderSettingsManager(
     }
 
     suspend fun connect(input: ProviderConnectDto): ProviderActionResultDto {
-        val body = KiloCliDataParser.buildProviderAuthJson(input.key, input.metadata)
+        val body = AccureCliDataParser.buildProviderAuthJson(input.key, input.metadata)
         put("/auth/${enc(input.providerId)}", body)
         dispose()
         return ProviderActionResultDto(state(input.directory))
     }
 
     suspend fun authorize(input: ProviderOAuthAuthorizeDto): ProviderOAuthReadyDto {
-        val body = KiloCliDataParser.buildProviderOAuthJson(input.method, input.inputs)
+        val body = AccureCliDataParser.buildProviderOAuthJson(input.method, input.inputs)
         val raw = post("/provider/${enc(input.providerId)}/oauth/authorize?directory=${enc(input.directory)}", body, OAUTH_CALL_TIMEOUT_SECONDS)
-        val parsed = KiloCliDataParser.parseOAuthReady(raw)
+        val parsed = AccureCliDataParser.parseOAuthReady(raw)
         return ProviderOAuthReadyDto(parsed.first, parsed.second, parsed.third)
     }
 
     suspend fun callback(input: ProviderOAuthCallbackDto): ProviderActionResultDto {
-        val body = KiloCliDataParser.buildProviderOAuthJson(input.method, code = input.code)
+        val body = AccureCliDataParser.buildProviderOAuthJson(input.method, code = input.code)
         post("/provider/${enc(input.providerId)}/oauth/callback?directory=${enc(input.directory)}", body, OAUTH_CALL_TIMEOUT_SECONDS)
         dispose()
         return ProviderActionResultDto(state(input.directory))
@@ -113,8 +113,8 @@ internal class KiloBackendProviderSettingsManager(
         val current = state(input.directory)
         val provider = current.providers.firstOrNull { it.id == input.providerId }
         val cfg = current.config[input.providerId]
-        if (input.providerId == "kilo") {
-            return ProviderActionResultDto(current, error = "Kilo Gateway cannot be disconnected from provider settings.")
+        if (input.providerId == "accure") {
+            return ProviderActionResultDto(current, error = "Accure Gateway cannot be disconnected from provider settings.")
         }
         if (provider?.source == "env") {
             return ProviderActionResultDto(current, error = "Provider is configured by environment variables.")
@@ -124,7 +124,7 @@ internal class KiloBackendProviderSettingsManager(
             return ProviderActionResultDto(current, error = "Provider is not connected.")
         }
         if (cfg?.npm == "@ai-sdk/openai-compatible") {
-            patch(input.directory, cfg.scope, KiloCliDataParser.buildCustomProviderDeletePatch(input.providerId))
+            patch(input.directory, cfg.scope, AccureCliDataParser.buildCustomProviderDeletePatch(input.providerId))
             deleteAuth(input.providerId)
             dispose()
             return ProviderActionResultDto(state(input.directory))
@@ -132,7 +132,7 @@ internal class KiloBackendProviderSettingsManager(
         if (provider?.source == "config") {
             val scope = cfg?.scope ?: "global"
             val ids = disabledFor(current, scope) + input.providerId
-            patch(input.directory, scope, KiloCliDataParser.buildDisabledProviderPatch(ids))
+            patch(input.directory, scope, AccureCliDataParser.buildDisabledProviderPatch(ids))
             dispose()
             return ProviderActionResultDto(state(input.directory))
         }
@@ -145,7 +145,7 @@ internal class KiloBackendProviderSettingsManager(
         val current = state(input.directory)
         val scopes = current.disabledScopes[input.providerId]?.takeIf { it.isNotEmpty() } ?: listOf("global")
         scopes.distinct().forEach { scope ->
-            patch(input.directory, scope, KiloCliDataParser.buildDisabledProviderPatch(disabledFor(current, scope).filter { it != input.providerId }))
+            patch(input.directory, scope, AccureCliDataParser.buildDisabledProviderPatch(disabledFor(current, scope).filter { it != input.providerId }))
         }
         dispose()
         return ProviderActionResultDto(state(input.directory))
@@ -154,10 +154,10 @@ internal class KiloBackendProviderSettingsManager(
     suspend fun saveCustom(input: CustomProviderSaveDto): ProviderActionResultDto {
         val err = validate(input)
         if (err != null) return ProviderActionResultDto(state(input.directory), error = err)
-        patch(KiloCliDataParser.buildCustomProviderPatch(input))
+        patch(AccureCliDataParser.buildCustomProviderPatch(input))
         if (input.envVar.isNullOrBlank()) {
             val key = input.apiKey?.takeIf { it.isNotBlank() }
-            if (key != null) put("/auth/${enc(input.id)}", KiloCliDataParser.buildProviderAuthJson(key, emptyMap()))
+            if (key != null) put("/auth/${enc(input.id)}", AccureCliDataParser.buildProviderAuthJson(key, emptyMap()))
         } else {
             deleteAuth(input.id)
         }
@@ -179,7 +179,7 @@ internal class KiloBackendProviderSettingsManager(
                     body
                 }
             }
-            CustomModelFetchResultDto(KiloCliDataParser.parseModelIds(raw))
+            CustomModelFetchResultDto(AccureCliDataParser.parseModelIds(raw))
         } catch (e: Exception) {
             LOG.warn("Custom provider model fetch failed: ${e.message}", e)
             CustomModelFetchResultDto(error = e.message)
@@ -195,7 +195,7 @@ internal class KiloBackendProviderSettingsManager(
             result
         } catch (e: Exception) {
             LOG.warn("Provider settings $resource fetch failed durationMs=${System.currentTimeMillis() - start}: ${e.message}", e)
-            errors.add(KiloWorkspaceDtoMapper.error(LoadError(resource = resource, detail = e.message)))
+            errors.add(AccureWorkspaceDtoMapper.error(LoadError(resource = resource, detail = e.message)))
             null
         }
     }
@@ -210,7 +210,7 @@ internal class KiloBackendProviderSettingsManager(
     }
 
     private fun parsed(raw: String): ParsedConfig {
-        val result = KiloCliDataParser.parseProviderConfig(raw)
+        val result = AccureCliDataParser.parseProviderConfig(raw)
         return ParsedConfig(result.first, result.second.first, result.second.second)
     }
 
@@ -256,7 +256,7 @@ internal class KiloBackendProviderSettingsManager(
         val http = app.http?.newBuilder()
             ?.callTimeout(timeoutSeconds, TimeUnit.SECONDS)
             ?.readTimeout(timeoutSeconds, TimeUnit.SECONDS)
-            ?.build() ?: throw IllegalStateException("Kilo HTTP client is unavailable")
+            ?.build() ?: throw IllegalStateException("Accure HTTP client is unavailable")
         return withContext(Dispatchers.IO) {
             try {
                 http.newCall(request.newBuilder().header("Accept", "application/json").build()).execute().use { response ->

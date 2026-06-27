@@ -1,14 +1,14 @@
-package ai.kilocode.client.session.ui.model
+package ai.accurecode.client.session.ui.model
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.rpc.dto.ModelSelectionDto
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.rpc.dto.ModelSelectionDto
 
 internal fun modelPickerRows(
     items: List<ModelPicker.Item>,
     favorites: List<ModelSelectionDto>,
     query: String,
     allowEmpty: Boolean = false,
-    emptyText: String = KiloBundle.message("settings.models.notSet"),
+    emptyText: String = AccureBundle.message("settings.models.notSet"),
     includeSmall: Boolean = false,
 ): List<ModelPickerRow> {
     val q = query.trim()
@@ -32,12 +32,12 @@ internal fun modelPickerRows(
         val byKey = all.associateBy { it.key }
         val fav = favorites.map { "${it.providerID}/${it.modelID}" }.mapNotNull(byKey::get)
         if (fav.isNotEmpty()) {
-            val section = KiloBundle.message("model.picker.favorites")
+            val section = AccureBundle.message("model.picker.favorites")
             out += fav.map { ModelPickerRow(it, section, favorite = true) }
         }
     }
     if (recommended.isNotEmpty()) {
-        val section = KiloBundle.message("model.picker.recommended")
+        val section = AccureBundle.message("model.picker.recommended")
         out += recommended.map { ModelPickerRow(it, section, favorite = false) }
     }
     for ((_, list) in grouped) {

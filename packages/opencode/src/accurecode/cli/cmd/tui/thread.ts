@@ -3,9 +3,9 @@ import type { NetworkOptions } from "@/cli/network"
 import { errorMessage } from "@/util/error"
 import { TuiConfig } from "@/cli/cmd/tui/config/tui"
 import { validateSession } from "@/cli/cmd/tui/validate-session"
-import { importCloudSession } from "@/kilocode/cloud-session"
-import { DaemonClient } from "@/kilocode/daemon/client"
-import { createKiloClient } from "@kilocode/sdk/v2"
+import { importCloudSession } from "@/accurecode/cloud-session"
+import { DaemonClient } from "@/accurecode/daemon/client"
+import { createAccureClient } from "@accurecode/sdk/v2"
 
 type TuiInput = Parameters<typeof import("@/cli/cmd/tui/app").tui>[0]
 
@@ -30,7 +30,7 @@ async function session(input: Input, daemon: DaemonClient.Connection) {
   if (!input.args.cloudFork || !input.args.session) return { ok: true as const, id: input.args.session }
 
   UI.println("Importing session from cloud...")
-  const client = createKiloClient({
+  const client = createAccureClient({
     baseUrl: daemon.url,
     directory: input.cwd,
     headers: daemon.headers,
@@ -43,7 +43,7 @@ async function session(input: Input, daemon: DaemonClient.Connection) {
   return { ok: false as const }
 }
 
-export namespace KiloTuiThreadDaemon {
+export namespace AccureTuiThreadDaemon {
   export async function attach(input: Input) {
     const daemon = await DaemonClient.maybe()
     if (!daemon) return false

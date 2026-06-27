@@ -5,7 +5,7 @@ import { InstanceState } from "@/effect/instance-state"
 import { SessionID, MessageID } from "@/session/schema"
 import * as Log from "@opencode-ai/core/util/log"
 import { QuestionID } from "./schema"
-import { KiloQuestion } from "@/kilocode/question" // kilocode_change
+import { AccureQuestion } from "@/accurecode/question" // accurecode_change
 
 const log = Log.create({ service: "question" })
 
@@ -21,7 +21,7 @@ export const Option = Schema.Struct({
   description: Schema.String.annotate({
     description: "Explanation of choice",
   }),
-  // kilocode_change start - optional i18n keys so clients can translate while still
+  // accurecode_change start - optional i18n keys so clients can translate while still
   // replying with the canonical English label (backend matches on `label`).
   labelKey: Schema.optional(Schema.String).annotate({
     description: "Optional i18n key for the label; clients translate and still reply with `label`",
@@ -29,13 +29,13 @@ export const Option = Schema.Struct({
   descriptionKey: Schema.optional(Schema.String).annotate({
     description: "Optional i18n key for the description",
   }),
-  // kilocode_change end
-  // kilocode_change start - hint to UI clients to switch the active agent/mode picker
+  // accurecode_change end
+  // accurecode_change start - hint to UI clients to switch the active agent/mode picker
   // when this option is selected (before the reply is confirmed by the server).
   mode: Schema.optional(Schema.String).annotate({
     description: "Optional agent/mode name to pre-select in the UI when this option is picked",
   }),
-  // kilocode_change end
+  // accurecode_change end
 }).annotate({ identifier: "QuestionOption" })
 export type Option = Schema.Schema.Type<typeof Option>
 
@@ -52,14 +52,14 @@ const base = {
   multiple: Schema.optional(Schema.Boolean).annotate({
     description: "Allow selecting multiple choices",
   }),
-  // kilocode_change start - optional i18n keys for question text and header
+  // accurecode_change start - optional i18n keys for question text and header
   questionKey: Schema.optional(Schema.String).annotate({
     description: "Optional i18n key for the question text; clients fall back to `question` when missing",
   }),
   headerKey: Schema.optional(Schema.String).annotate({
     description: "Optional i18n key for the header; clients fall back to `header` when missing",
   }),
-  // kilocode_change end
+  // accurecode_change end
 }
 
 export const Info = Schema.Struct({
@@ -86,7 +86,7 @@ export const Request = Schema.Struct({
     description: "Questions to ask",
   }),
   blocking: Schema.optional(Schema.Boolean).annotate({
-    // kilocode_change
+    // accurecode_change
     description: "Whether this question blocks prompt input (default: true)",
   }),
   tool: Schema.optional(Tool),
@@ -145,7 +145,7 @@ export interface Interface {
   readonly ask: (input: {
     sessionID: SessionID
     questions: ReadonlyArray<Info>
-    blocking?: boolean // kilocode_change
+    blocking?: boolean // accurecode_change
     tool?: Tool
   }) => Effect.Effect<ReadonlyArray<Answer>, RejectedError>
   readonly reply: (input: {
@@ -154,7 +154,7 @@ export interface Interface {
   }) => Effect.Effect<void, NotFoundError>
   readonly reject: (requestID: QuestionID) => Effect.Effect<void, NotFoundError>
   readonly list: () => Effect.Effect<ReadonlyArray<Request>>
-  readonly dismissAll: (sessionID: SessionID) => Effect.Effect<void> // kilocode_change
+  readonly dismissAll: (sessionID: SessionID) => Effect.Effect<void> // accurecode_change
 }
 
 export class Service extends Context.Service<Service, Interface>()("@opencode/Question") {}
@@ -185,7 +185,7 @@ export const layer = Layer.effect(
     const ask = Effect.fn("Question.ask")(function* (input: {
       sessionID: SessionID
       questions: ReadonlyArray<Info>
-      blocking?: boolean // kilocode_change
+      blocking?: boolean // accurecode_change
       tool?: Tool
     }) {
       const pending = (yield* InstanceState.get(state)).pending
@@ -197,13 +197,13 @@ export const layer = Layer.effect(
         id,
         sessionID: input.sessionID,
         questions: input.questions,
-        blocking: input.blocking, // kilocode_change
+        blocking: input.blocking, // accurecode_change
         tool: input.tool,
       }
 
-      // kilocode_change start
-      yield* KiloQuestion.guardFollowup(input.sessionID, () => new RejectedError())
-      // kilocode_change end
+      // accurecode_change start
+      yield* AccureQuestion.guardFollowup(input.sessionID, () => new RejectedError())
+      // accurecode_change end
 
       pending.set(id, { info, deferred })
       yield* bus.publish(Event.Asked, info)
@@ -257,16 +257,16 @@ export const layer = Layer.effect(
       return Array.from(pending.values(), (x) => x.info)
     })
 
-    // kilocode_change start - body lives in @/kilocode/question/KiloQuestion.makeDismissAll
-    const dismissAll = KiloQuestion.makeDismissAll({
+    // accurecode_change start - body lives in @/accurecode/question/AccureQuestion.makeDismissAll
+    const dismissAll = AccureQuestion.makeDismissAll({
       state,
       publishRejected: (entry) =>
         bus.publish(Event.Rejected, { sessionID: entry.info.sessionID, requestID: entry.info.id }),
       makeError: () => new RejectedError(),
     })
-    // kilocode_change end
+    // accurecode_change end
 
-    return Service.of({ ask, reply, reject, list, dismissAll }) // kilocode_change
+    return Service.of({ ask, reply, reject, list, dismissAll }) // accurecode_change
   }),
 )
 

@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
-import type { KiloConnectionService } from "../cli-backend/connection-service"
-import { getErrorMessage } from "../../kilo-provider-utils"
+import type { AccureConnectionService } from "../cli-backend/connection-service"
+import { getErrorMessage } from "../../accure-provider-utils"
 
 let lastGeneratedMessage: string | undefined
 let lastWorkspacePath: string | undefined
@@ -30,7 +30,7 @@ function findRepository(repositories: GitRepository[], arg?: vscode.SourceContro
 
 export function registerCommitMessageService(
   context: vscode.ExtensionContext,
-  connectionService: KiloConnectionService,
+  connectionService: AccureConnectionService,
 ): vscode.Disposable[] {
   const command = vscode.commands.registerCommand(
     "accure-code.generateCommitMessage",
@@ -58,8 +58,8 @@ export function registerCommitMessageService(
       try {
         client = await connectionService.getClientAsync(path)
       } catch (err) {
-        console.error("[Kilo New] Failed to connect to Kilo backend:", err)
-        vscode.window.showErrorMessage("Failed to connect to Kilo backend. Please try again.")
+        console.error("[Accure New] Failed to connect to Accure backend:", err)
+        vscode.window.showErrorMessage("Failed to connect to Accure backend. Please try again.")
         return
       }
 
@@ -101,7 +101,7 @@ export function registerCommitMessageService(
               repository.inputBox.value = message
               lastGeneratedMessage = message
               lastWorkspacePath = path
-              console.log("[Kilo New] Commit message generated successfully")
+              console.log("[Accure New] Commit message generated successfully")
             } finally {
               clearTimeout(timer)
             }
@@ -109,16 +109,16 @@ export function registerCommitMessageService(
         )
         .then(undefined, (error: unknown) => {
           if (userCancelled) {
-            console.log("[Kilo New] Commit message generation was cancelled by user")
+            console.log("[Accure New] Commit message generation was cancelled by user")
             return
           }
           if (timedOut) {
-            console.log("[Kilo New] Commit message generation timed out")
+            console.log("[Accure New] Commit message generation timed out")
             vscode.window.showErrorMessage("Commit message generation timed out. Please try again.")
             return
           }
           const msg = getErrorMessage(error)
-          console.error("[Kilo New] Failed to generate commit message:", msg)
+          console.error("[Accure New] Failed to generate commit message:", msg)
           vscode.window.showErrorMessage(`Failed to generate commit message: ${msg}`)
         })
     },

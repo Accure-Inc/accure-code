@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.DiffFileDto
-import ai.kilocode.rpc.dto.TodoDto
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.DiffFileDto
+import ai.accurecode.rpc.dto.TodoDto
 
 /**
  * Controller-level tests for session artifact events:
@@ -33,7 +33,7 @@ class SessionArtifactsTest : SessionControllerTestBase() {
             """
             diff: src/A.kt src/B.kt
 
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -50,7 +50,7 @@ class SessionArtifactsTest : SessionControllerTestBase() {
         assertModelEvents("", modelEvents)
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -64,7 +64,7 @@ class SessionArtifactsTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -89,7 +89,7 @@ class SessionArtifactsTest : SessionControllerTestBase() {
             todo: [pending] Write tests
             todo: [in_progress] Ship it
 
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -106,7 +106,7 @@ class SessionArtifactsTest : SessionControllerTestBase() {
         assertModelEvents("", modelEvents)
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -127,7 +127,7 @@ class SessionArtifactsTest : SessionControllerTestBase() {
             """
             todo: [completed] only task
 
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -145,7 +145,7 @@ class SessionArtifactsTest : SessionControllerTestBase() {
             """
             compacted: 1
 
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -162,7 +162,7 @@ class SessionArtifactsTest : SessionControllerTestBase() {
             """
             compacted: 3
 
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -176,7 +176,7 @@ class SessionArtifactsTest : SessionControllerTestBase() {
         assertModelEvents("", modelEvents)
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )

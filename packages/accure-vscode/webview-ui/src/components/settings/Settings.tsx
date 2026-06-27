@@ -1,8 +1,8 @@
 import { Component, createSignal, createEffect, on, Show } from "solid-js"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { Tabs } from "@kilocode/accure-ui/tabs"
-import { Button } from "@kilocode/accure-ui/button"
-import { showToast } from "@kilocode/accure-ui/toast"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { Tabs } from "@accurecode/accure-ui/tabs"
+import { Button } from "@accurecode/accure-ui/button"
+import { showToast } from "@accurecode/accure-ui/toast"
 import { useVSCode } from "../../context/vscode"
 import { useLanguage } from "../../context/language"
 import { useConfig } from "../../context/config"
@@ -21,7 +21,7 @@ import ContextTab from "./ContextTab"
 import CommitMessageTab from "./CommitMessageTab"
 import ExperimentalTab from "./ExperimentalTab"
 import LanguageTab from "./LanguageTab"
-import AboutKiloCodeTab from "./AboutKiloCodeTab"
+import AboutAccureCodeTab from "./AboutAccureCodeTab"
 import IndexingTab from "./IndexingTab"
 import { useServer } from "../../context/server"
 import type { MigrationSource } from "../../types/messages"
@@ -78,15 +78,15 @@ const Settings: Component<SettingsProps> = (props) => {
         noWorkspace: language.t("settings.config.noWorkspace"),
         openFailed: language.t("settings.config.openFailed", { scope: label, message: "{{message}}" }),
         sourceXdg: language.t("settings.config.source.xdg"),
-        sourceHomeKilo: language.t("settings.config.source.homeKilo"),
-        sourceHomeKilocode: language.t("settings.config.source.homeKilocode"),
+        sourceHomeAccure: language.t("settings.config.source.homeAccure"),
+        sourceHomeAccurecode: language.t("settings.config.source.homeAccurecode"),
         sourceHomeOpencode: language.t("settings.config.source.homeOpencode"),
         sourceEnvFile: language.t("settings.config.source.envFile"),
         sourceEnvDir: language.t("settings.config.source.envDir"),
         sourceEnvContent: language.t("settings.config.source.envContent"),
-        sourceProjectKilo: language.t("settings.config.source.projectKilo"),
+        sourceProjectAccure: language.t("settings.config.source.projectAccure"),
         sourceProjectRoot: language.t("settings.config.source.projectRoot"),
-        sourceProjectKilocode: language.t("settings.config.source.projectKilocode"),
+        sourceProjectAccurecode: language.t("settings.config.source.projectAccurecode"),
         sourceProjectOpencode: language.t("settings.config.source.projectOpencode"),
       },
     })
@@ -126,7 +126,7 @@ const Settings: Component<SettingsProps> = (props) => {
           gap: "8px",
         }}
       >
-        <h2 style={{ "font-size": "var(--kilo-font-size-16)", "font-weight": "600", margin: 0, flex: 1 }}>
+        <h2 style={{ "font-size": "var(--accure-font-size-16)", "font-weight": "600", margin: 0, flex: 1 }}>
           {language.t("sidebar.settings")}
         </h2>
         <Button variant="secondary" size="small" icon="edit" onClick={() => open("local")}>
@@ -205,9 +205,9 @@ const Settings: Component<SettingsProps> = (props) => {
             <Icon name="speech-bubble" />
             <span class="label">{language.t("settings.language.title")}</span>
           </Tabs.Trigger>
-          <Tabs.Trigger value="aboutKiloCode" aria-label={language.t("settings.aboutKiloCode.title")}>
+          <Tabs.Trigger value="aboutAccureCode" aria-label={language.t("settings.aboutAccureCode.title")}>
             <Icon name="help" />
-            <span class="label">{language.t("settings.aboutKiloCode.title")}</span>
+            <span class="label">{language.t("settings.aboutAccureCode.title")}</span>
           </Tabs.Trigger>
         </Tabs.List>
 
@@ -270,9 +270,9 @@ const Settings: Component<SettingsProps> = (props) => {
           <h3>{language.t("settings.language.title")}</h3>
           <LanguageTab />
         </Tabs.Content>
-        <Tabs.Content value="aboutKiloCode">
-          <h3>{language.t("settings.aboutKiloCode.title")}</h3>
-          <AboutKiloCodeTab
+        <Tabs.Content value="aboutAccureCode">
+          <h3>{language.t("settings.aboutAccureCode.title")}</h3>
+          <AboutAccureCodeTab
             port={server.serverInfo()?.port ?? null}
             connectionState={server.connectionState()}
             extensionVersion={server.extensionVersion()}

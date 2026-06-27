@@ -15,7 +15,7 @@ internal object OpenApiSpecNormalizer {
         //         camelCase equivalents so the spec remains self-consistent.
         // Step 2: Strip operation-level tags so all routes land in DefaultApi.
         // Step 3: Deduplicate the root-level tags array.
-        // Step 4: Fix nullable fields in the /kilo/profile response that Effect's
+        // Step 4: Fix nullable fields in the /accure/profile response that Effect's
         //         OpenAPI generator incorrectly emits as non-nullable.
         val (noDotsRoot, _) = remapDotSchemas(root)
         val stripped = stripTags(noDotsRoot)
@@ -105,7 +105,7 @@ internal object OpenApiSpecNormalizer {
     }
 
     /**
-     * Fix the `/kilo/profile` GET 200 response schema: Effect's OpenAPI generator
+     * Fix the `/accure/profile` GET 200 response schema: Effect's OpenAPI generator
      * emits `balance` and `currentOrgId` as non-nullable required fields even
      * though the server schema is `Schema.NullOr(...)`.  Wrap each non-nullable
      * property in `anyOf: [<original-schema>, {"type": "null"}]` so the generated
@@ -114,7 +114,7 @@ internal object OpenApiSpecNormalizer {
      */
     private fun fixProfileNullable(root: JsonObject): JsonObject {
         val paths = root["paths"] as? JsonObject ?: return root
-        val profileItem = paths["/kilo/profile"] as? JsonObject ?: return root
+        val profileItem = paths["/accure/profile"] as? JsonObject ?: return root
         val getOp = profileItem["get"] as? JsonObject ?: return root
         val schema = getOp["responses"]
             ?.let { it as? JsonObject }?.get("200")
@@ -148,7 +148,7 @@ internal object OpenApiSpecNormalizer {
         val newResponses = JsonObject(responses + mapOf("200" to new200))
         val newGet = JsonObject(getOp + mapOf("responses" to newResponses))
         val newProfile = JsonObject(profileItem + mapOf("get" to newGet))
-        val newPaths = JsonObject(paths + mapOf("/kilo/profile" to newProfile))
+        val newPaths = JsonObject(paths + mapOf("/accure/profile" to newProfile))
         return JsonObject(root + mapOf("paths" to newPaths))
     }
 

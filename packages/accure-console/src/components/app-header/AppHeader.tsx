@@ -1,15 +1,15 @@
-import { IconButton } from "@kilocode/accure-web-ui/icon-button"
+import { IconButton } from "@accurecode/accure-web-ui/icon-button"
 import { OmniSearch } from "./OmniSearch"
 
 export function AppHeader() {
   return (
     <header class="app-header">
-      <a class="header-brand" href="/projects" aria-label="Kilo Console home">
+      <a class="header-brand" href="/projects" aria-label="Accure Console home">
         <span class="header-mark" aria-hidden="true">
           K
         </span>
         <span class="header-title">
-          <strong>Kilo</strong>
+          <strong>Accure</strong>
           <span>Console</span>
         </span>
       </a>

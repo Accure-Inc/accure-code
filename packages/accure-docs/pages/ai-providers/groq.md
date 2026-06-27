@@ -1,31 +1,31 @@
 ---
-title: "Using Groq with Kilo Code | Fast LLM Inference"
-description: "Run Llama, Mixtral, and other models at ultra-low latency by configuring Groq in Kilo Code. Setup guide for VS Code and the CLI."
+title: "Using Groq with Accure Code | Fast LLM Inference"
+description: "Run Llama, Mixtral, and other models at ultra-low latency by configuring Groq in Accure Code. Setup guide for VS Code and the CLI."
 sidebar_label: Groq
 ---
 
-# Using Groq With Kilo Code
+# Using Groq With Accure Code
 
-Groq provides ultra-fast inference for various AI models through their high-performance infrastructure. Kilo Code supports accessing models through the Groq API.
+Groq provides ultra-fast inference for various AI models through their high-performance infrastructure. Accure Code supports accessing models through the Groq API.
 
 **Website:** [https://groq.com/](https://groq.com/)
 
 ## Getting an API Key
 
-To use Groq with Kilo Code, you'll need an API key from the [GroqCloud Console](https://console.groq.com/). After signing up or logging in, navigate to the API Keys section of your dashboard to create and copy your key.
+To use Groq with Accure Code, you'll need an API key from the [GroqCloud Console](https://console.groq.com/). After signing up or logging in, navigate to the API Keys section of your dashboard to create and copy your key.
 
 ## Supported Models
 
-Kilo Code will attempt to fetch the list of available models from the Groq API.
+Accure Code will attempt to fetch the list of available models from the Groq API.
 
 **Note:** Model availability and specifications may change. Refer to the [Groq Documentation](https://console.groq.com/docs/models) for the most up-to-date list of supported models and their capabilities.
 
-## Configuration in Kilo Code
+## Configuration in Accure Code
 
 {% tabs %}
 {% tab label="VSCode (Legacy)" %}
 
-1.  **Open Kilo Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Kilo Code panel.
+1.  **Open Accure Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Accure Code panel.
 2.  **Select Provider:** Choose "Groq" from the "API Provider" dropdown.
 3.  **Enter API Key:** Paste your Groq API key into the "Groq API Key" field.
 4.  **Select Model:** Choose your desired model from the "Model" dropdown.
@@ -35,12 +35,12 @@ Kilo Code will attempt to fetch the list of available models from the Groq API.
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add Groq and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `accure.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `accure.json` config file:
 
 **Environment variable:**
 
@@ -48,7 +48,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export GROQ_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/accure/accure.json` or `./accure.json`):
 
 ```jsonc
 {
@@ -73,7 +73,7 @@ Then set your default model:
 
 ## Supported Models
 
-Kilo Code supports the following models through Groq:
+Accure Code supports the following models through Groq:
 
 | Model ID | Provider | Context Window | Notes |
 |---|---|---|---|

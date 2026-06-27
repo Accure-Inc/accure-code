@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.util.ui.JBUI

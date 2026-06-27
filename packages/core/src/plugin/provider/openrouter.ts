@@ -1,7 +1,7 @@
 import { Effect } from "effect"
 import { ModelV2 } from "../../model"
 import { PluginV2 } from "../../plugin"
-import { ProviderV2 } from "../../provider" // kilocode_change
+import { ProviderV2 } from "../../provider" // accurecode_change
 
 export const OpenRouterPlugin = PluginV2.define({
   id: PluginV2.ID.make("openrouter"),
@@ -11,10 +11,10 @@ export const OpenRouterPlugin = PluginV2.define({
         for (const item of evt.data) {
           if (item.provider.endpoint.type !== "aisdk") continue
           if (item.provider.endpoint.package !== "@openrouter/ai-sdk-provider") continue
-          if (item.provider.id !== ProviderV2.ID.openrouter) continue // kilocode_change
+          if (item.provider.id !== ProviderV2.ID.openrouter) continue // accurecode_change
           evt.provider.update(item.provider.id, (provider) => {
-            provider.options.headers["HTTP-Referer"] = "https://kilo.ai/" // kilocode_change
-            provider.options.headers["X-Title"] = "Kilo Code" // kilocode_change
+            provider.options.headers["HTTP-Referer"] = "https://accure.ai/" // accurecode_change
+            provider.options.headers["X-Title"] = "Accure Code" // accurecode_change
           })
           for (const modelID of [ModelV2.ID.make("gpt-5-chat-latest"), ModelV2.ID.make("openai/gpt-5-chat")]) {
             if (!item.models.has(modelID)) continue

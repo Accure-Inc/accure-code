@@ -1,12 +1,12 @@
-// KiloClaw active-conversation view — message list + composer.
-// Mirrors cloud/apps/web/src/app/(app)/claw/kilo-chat/components/MessageArea.tsx
+// AccureClaw active-conversation view — message list + composer.
+// Mirrors cloud/apps/web/src/app/(app)/claw/accure-chat/components/MessageArea.tsx
 
 import { For, Show, createEffect, createMemo, createSignal, on, onCleanup } from "solid-js"
-import { Button } from "@kilocode/accure-ui/button"
-import { Spinner } from "@kilocode/accure-ui/spinner"
-import { createAutoScroll } from "@kilocode/accure-ui/hooks"
+import { Button } from "@accurecode/accure-ui/button"
+import { Spinner } from "@accurecode/accure-ui/spinner"
+import { createAutoScroll } from "@accurecode/accure-ui/hooks"
 import { useClaw } from "../context/claw"
-import { useKiloClawLanguage } from "../context/language"
+import { useAccureClawLanguage } from "../context/language"
 import { MessageBubble } from "./MessageBubble"
 import { computeBotDisplay, useNowTicker } from "./botStatus"
 import type { Message } from "../lib/types"
@@ -14,7 +14,7 @@ import { isEnterKeyCommitNotIme } from "../../src/utils/ime-enter"
 
 export function MessageArea() {
   const claw = useClaw()
-  const { t } = useKiloClawLanguage()
+  const { t } = useAccureClawLanguage()
 
   let scrollEl: HTMLDivElement | undefined
   let input!: HTMLTextAreaElement
@@ -26,7 +26,7 @@ export function MessageArea() {
   // setup (refs weren't bound until the user selected a conversation, by
   // which time onMount had already returned early).
   //
-  // Uses @kilocode/accure-ui's createAutoScroll (the same one MessageList.tsx
+  // Uses @accurecode/accure-ui's createAutoScroll (the same one MessageList.tsx
   // uses) because it tracks real user-input events — wheel/pointer/key/touch —
   // via `markUser`. The older @opencode-ai/ui hook only listens to wheel
   // events, so touchpad/scrollbar/keyboard scrolls never set `userScrolled`
@@ -60,19 +60,19 @@ export function MessageArea() {
   const sendDisabledReason = createMemo(() => {
     if (canSend()) return null
     const st = botDisplay().state
-    if (st === "unknown") return t("kiloClaw.chat.waitingBotStatus")
-    return t("kiloClaw.chat.botOffline")
+    if (st === "unknown") return t("accureClaw.chat.waitingBotStatus")
+    return t("accureClaw.chat.botOffline")
   })
 
   // Render the typing banner with friendly names. Bot members come in as
-  // `bot:kiloclaw:{sandboxId}` — the bot is the only non-self member in
+  // `bot:accureclaw:{sandboxId}` — the bot is the only non-self member in
   // 1:1 chats, so we resolve bot ids to the user-configured `botName`
-  // (falls back to the default "KiloClaw" label) and render any human
+  // (falls back to the default "AccureClaw" label) and render any human
   // collaborators by their raw memberId.
   const typingNames = createMemo(() => {
     const activeId = claw.activeConversationId()
     if (!activeId) return []
-    const assistant = claw.assistantName() ?? t("kiloClaw.message.bot")
+    const assistant = claw.assistantName() ?? t("accureClaw.message.bot")
     return claw.typingMembers(activeId).map((m) => (m.memberId.startsWith("bot:") ? assistant : m.memberId))
   })
 
@@ -208,16 +208,16 @@ export function MessageArea() {
     <Show
       when={claw.activeConversationId()}
       fallback={
-        <div class="kiloclaw-empty-area">
-          <p>{t("kiloClaw.conversations.selectOne")}</p>
+        <div class="accureclaw-empty-area">
+          <p>{t("accureClaw.conversations.selectOne")}</p>
         </div>
       }
     >
-      <div class="kiloclaw-area">
+      <div class="accureclaw-area">
         {/* Messages */}
-        <div class="kiloclaw-area-messages-wrap">
+        <div class="accureclaw-area-messages-wrap">
           <div
-            class="kiloclaw-area-messages"
+            class="accureclaw-area-messages"
             ref={(el) => {
               scrollEl = el
               auto.scrollRef(el)
@@ -228,10 +228,10 @@ export function MessageArea() {
           >
             <div ref={auto.contentRef}>
               <Show when={claw.messages().length === 0}>
-                <div class="kiloclaw-empty">
+                <div class="accureclaw-empty">
                   {claw.assistantName()
-                    ? t("kiloClaw.chat.emptyWithBot").replace("{bot}", claw.assistantName()!)
-                    : t("kiloClaw.chat.empty")}
+                    ? t("accureClaw.chat.emptyWithBot").replace("{bot}", claw.assistantName()!)
+                    : t("accureClaw.chat.empty")}
                 </div>
               </Show>
               <For each={claw.messages()}>
@@ -274,7 +274,7 @@ export function MessageArea() {
           <Show when={showScrollButton()}>
             <button
               type="button"
-              class="kiloclaw-scrollbtn"
+              class="accureclaw-scrollbtn"
               onClick={scrollToBottom}
               aria-label="Scroll to latest message"
               title="Scroll to bottom"
@@ -287,12 +287,12 @@ export function MessageArea() {
         {/* Typing indicator — matches CLI: "{botName} is typing" with a
             spinner to mirror the session-route feel. */}
         <Show when={typingNames().length > 0}>
-          <div class="kiloclaw-typing">
+          <div class="accureclaw-typing">
             <Spinner />
             <span>
               {typingNames().length === 1
-                ? t("kiloClaw.typing.one").replace("{name}", typingNames()[0])
-                : t("kiloClaw.typing.many").replace("{count}", String(typingNames().length))}
+                ? t("accureClaw.typing.one").replace("{name}", typingNames()[0])
+                : t("accureClaw.typing.many").replace("{count}", String(typingNames().length))}
             </span>
           </div>
         </Show>
@@ -300,34 +300,34 @@ export function MessageArea() {
         {/* Composer */}
         <Show when={replyingTo()}>
           {(r) => (
-            <div class="kiloclaw-reply-preview">
-              <span class="kiloclaw-reply-preview-label">{t("kiloClaw.message.replyTo")}</span>
-              <span class="kiloclaw-reply-preview-text">{replyText(r())}</span>
+            <div class="accureclaw-reply-preview">
+              <span class="accureclaw-reply-preview-label">{t("accureClaw.message.replyTo")}</span>
+              <span class="accureclaw-reply-preview-text">{replyText(r())}</span>
               <button
                 type="button"
-                class="kiloclaw-iconbtn-sm"
+                class="accureclaw-iconbtn-sm"
                 onClick={() => setReplyingTo(null)}
-                aria-label={t("kiloClaw.message.cancelReply")}
+                aria-label={t("accureClaw.message.cancelReply")}
               >
                 ×
               </button>
             </div>
           )}
         </Show>
-        <div class="kiloclaw-input-wrap">
+        <div class="accureclaw-input-wrap">
           <textarea
             ref={input}
-            class="kiloclaw-input"
-            placeholder={sendDisabledReason() ?? t("kiloClaw.chat.placeholder")}
+            class="accureclaw-input"
+            placeholder={sendDisabledReason() ?? t("accureClaw.chat.placeholder")}
             disabled={!canSend()}
             value={text()}
             onInput={onInput}
             onKeyDown={onKeyDown}
             rows={1}
-            aria-label={t("kiloClaw.chat.placeholder")}
+            aria-label={t("accureClaw.chat.placeholder")}
           />
           <Button variant="primary" disabled={!canSend() || !text().trim()} onClick={submit}>
-            {t("kiloClaw.chat.send")}
+            {t("accureClaw.chat.send")}
           </Button>
         </div>
       </div>

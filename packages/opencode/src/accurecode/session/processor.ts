@@ -1,11 +1,11 @@
-// kilocode_change - new file
-import { Telemetry, type ReviewCommand } from "@kilocode/accure-telemetry"
+// accurecode_change - new file
+import { Telemetry, type ReviewCommand } from "@accurecode/accure-telemetry"
 import { SessionNetwork } from "@/session/network"
 import type { SessionID } from "@/session/schema"
 import type { SessionStatus } from "@/session/status"
 import { MessageV2 } from "@/session/message-v2"
 import { isRecord } from "@/util/record"
-import { isReviewCommand, parseReviewCommand } from "@/kilocode/review/command"
+import { isReviewCommand, parseReviewCommand } from "@/accurecode/review/command"
 import * as Log from "@opencode-ai/core/util/log"
 import { Effect } from "effect"
 import { Flag } from "@opencode-ai/core/flag/flag"
@@ -18,13 +18,15 @@ export type ReviewTelemetry = {
   tool?: "suggest"
 }
 
-export namespace KiloSessionProcessor {
-  const log = Log.create({ service: "session.processor.kilo" })
+export namespace AccureSessionProcessor {
+  const log = Log.create({ service: "session.processor.accurecode" })
   export const OUTPUT_LENGTH_WARNING = "The model hit its output limit, so this response may be incomplete."
   export const REASONING_LENGTH_WARNING =
     "The model hit its output limit while reasoning and produced no actionable output. Try disabling reasoning or increasing the output limit."
   export const PROVIDER_FINISH_ERROR_MESSAGE =
-    "The provider ended the response with an error before returning details. Start a new message to retry; Kilo will compact the oversized conversation first if needed."
+    "The provider ended the response with an error before returning details. Start a new message to retry; Accure will compact the oversized conversation first if needed."
+  export const EMPTY_RESPONSE_MESSAGE =
+    "[v1.22-fix] The model returned an empty response with no text or tool calls. This usually means the model does not support the requested configuration (e.g. prompt caching) or your AWS credentials lack access to this model. Check your provider settings and try again."
 
   export function reviewTelemetry(command: string | undefined): ReviewTelemetry | undefined {
     if (!isReviewCommand(command)) return
@@ -161,7 +163,7 @@ export namespace KiloSessionProcessor {
   }
 
   /**
-   * Returns the Kilo-specific retry policy options (limit + offline handler).
+   * Returns the Accure-specific retry policy options (limit + offline handler).
    * Designed to be spread into SessionRetry.policy() opts.
    *
    * The `abort` signal is used by the offline handler to cancel the network
@@ -173,7 +175,7 @@ export namespace KiloSessionProcessor {
     set: (sessionID: SessionID, status: SessionStatus.Info) => Effect.Effect<void>
   }) {
     return {
-      limit: Flag.KILO_SESSION_RETRY_LIMIT,
+      limit: Flag.ACCURECODE_SESSION_RETRY_LIMIT,
       offline: (info: { error: unknown; message: string }) =>
         handleOffline({
           error: info.error,
@@ -195,6 +197,23 @@ export namespace KiloSessionProcessor {
     }
   }
 
+  /**
+   * Guard: if the model finished with "stop" but produced no text and no tool parts,
+   * set an error so the UI shows a clear message instead of a blank screen.
+   */
+  export function guardEmptyResponse(msg: MessageV2.Assistant, parts: MessageV2.Part[]) {
+    if (msg.summary) return
+    if (msg.error) return
+    if (msg.finish !== "stop") return
+    const hasContent = parts.some((p) => p.type === "text" || p.type === "tool" || p.type === "reasoning")
+    if (hasContent) return
+    log.warn("empty response", { messageID: msg.id })
+    msg.error = new MessageV2.APIError({
+      message: EMPTY_RESPONSE_MESSAGE,
+      isRetryable: true,
+    }).toObject()
+  }
+
   export function lengthWarning(input: {
     msg: MessageV2.Assistant
     step: { reasoning: boolean; text: boolean; tool: boolean }
@@ -210,14 +229,15 @@ export namespace KiloSessionProcessor {
   }
 
   export function providerFinishError(msg: MessageV2.Assistant) {
-    if (msg.finish !== "error") return false
+    if (msg.finish !== "error" && msg.finish !== undefined) return false
     if (msg.error) return false
     const err = new MessageV2.APIError({
       message: PROVIDER_FINISH_ERROR_MESSAGE,
       isRetryable: true,
     }).toObject()
     msg.error = err
-    log.warn("provider finish error", { messageID: msg.id })
+    log.warn("provider finish error", { messageID: msg.id, finish: msg.finish })
     return err
   }
 }
+

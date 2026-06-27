@@ -1,6 +1,6 @@
 /** @jsxImportSource solid-js */
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
-import { Diff } from "@kilocode/accure-ui/diff"
+import { Diff } from "@accurecode/accure-ui/diff"
 
 const meta: Meta = {
   title: "Components/Diff",

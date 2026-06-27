@@ -1,4 +1,4 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
 /**
  * Port of packages/accure-vscode/src/legacy-migration/provider-mapping.ts
@@ -59,7 +59,7 @@ val PROVIDER_MAP: Map<String, ProviderMapping> = mapOf(
     "sambanova" to ProviderMapping(id = "sambanova", key = "sambaNovaApiKey", name = "SambaNova"),
     "ollama" to ProviderMapping(id = "ollama", key = "ollamaApiKey", name = "Ollama", modelField = "ollamaModelId", urlField = "ollamaBaseUrl"),
     "lmstudio" to ProviderMapping(id = "lmstudio", key = "lmStudioBaseUrl", name = "LM Studio", modelField = "lmStudioModelId", urlField = "lmStudioBaseUrl"),
-    "kilocode" to ProviderMapping(id = "kilo", key = "kilocodeToken", name = "Kilo (Gateway)", modelField = "kilocodeModel", organizationIdField = "kilocodeOrganizationId"),
+    "accurecode" to ProviderMapping(id = "accure", key = "accurecodeToken", name = "Accure (Gateway)", modelField = "accurecodeModel", organizationIdField = "accurecodeOrganizationId"),
     "litellm" to ProviderMapping(id = "litellm", key = "litellmApiKey", name = "LiteLLM", modelField = "litellmModelId", urlField = "litellmBaseUrl"),
     "deepinfra" to ProviderMapping(id = "deepinfra", key = "deepInfraApiKey", name = "DeepInfra", modelField = "deepInfraModelId", urlField = "deepInfraBaseUrl"),
     "chutes" to ProviderMapping(id = "chutes", key = "chutesApiKey", name = "Chutes"),

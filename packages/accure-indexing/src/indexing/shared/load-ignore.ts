@@ -2,7 +2,7 @@ import fs from "fs/promises"
 import ignore, { type Ignore } from "ignore"
 import path from "path"
 
-const files = [".gitignore", ".kilocodeignore"] as const
+const files = [".gitignore", ".accurecodeignore"] as const
 
 function notFound(err: unknown): boolean {
   if (!err || typeof err !== "object") {

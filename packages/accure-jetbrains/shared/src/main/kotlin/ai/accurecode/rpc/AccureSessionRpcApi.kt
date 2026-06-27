@@ -1,20 +1,20 @@
-package ai.kilocode.rpc
+package ai.accurecode.rpc
 
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.CloudSessionListDto
-import ai.kilocode.rpc.dto.ConfigUpdateDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.PermissionAlwaysRulesDto
-import ai.kilocode.rpc.dto.PermissionReplyDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PromptDto
-import ai.kilocode.rpc.dto.QuestionReplyDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionListDto
-import ai.kilocode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.CloudSessionListDto
+import ai.accurecode.rpc.dto.ConfigUpdateDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.PermissionAlwaysRulesDto
+import ai.accurecode.rpc.dto.PermissionReplyDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PromptDto
+import ai.accurecode.rpc.dto.QuestionReplyDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionListDto
+import ai.accurecode.rpc.dto.SessionStatusDto
 import com.intellij.platform.rpc.RemoteApiProviderService
 import fleet.rpc.RemoteApi
 import fleet.rpc.Rpc
@@ -30,10 +30,10 @@ import kotlinx.coroutines.flow.Flow
  * routing.
  */
 @Rpc
-interface KiloSessionRpcApi : RemoteApi<Unit> {
+interface AccureSessionRpcApi : RemoteApi<Unit> {
     companion object {
-        suspend fun getInstance(): KiloSessionRpcApi {
-            return RemoteApiProviderService.resolve(remoteApiDescriptor<KiloSessionRpcApi>())
+        suspend fun getInstance(): AccureSessionRpcApi {
+            return RemoteApiProviderService.resolve(remoteApiDescriptor<AccureSessionRpcApi>())
         }
     }
 

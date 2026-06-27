@@ -7,9 +7,9 @@ import { Global } from "@opencode-ai/core/global"
 import { Auth } from "@/auth"
 import { ConfigManaged } from "@/config/managed"
 import { Filesystem } from "@/util/filesystem"
-import { KilocodeConfig } from "./config"
+import { AccurecodeConfig } from "./config"
 
-export namespace KilocodeConfigSources {
+export namespace AccurecodeConfigSources {
   export const Scope = z.enum(["global", "project", "env", "managed", "cloud"])
   export type Scope = z.infer<typeof Scope>
 
@@ -56,12 +56,12 @@ export namespace KilocodeConfigSources {
 
   type Pending = Omit<Source, "order">
 
-  const roots = [".kilocode", ".kilo", ".opencode"] as const
-  const global = ["config.json", "kilo.json", "kilo.jsonc", "opencode.json", "opencode.jsonc"] as const
+  const roots = [".accurecode", ".accurecode", ".opencode"] as const
+  const global = ["config.json", "accure.json", "accure.jsonc", "opencode.json", "opencode.jsonc"] as const
 
   export async function list(input: Input): Promise<Result> {
-    const project = Flag.KILO_DISABLE_PROJECT_CONFIG ? [] : await projectSources(input)
-    const dirs = Flag.KILO_DISABLE_PROJECT_CONFIG ? [] : await configDirSources(input)
+    const project = Flag.ACCURECODE_DISABLE_PROJECT_CONFIG ? [] : await projectSources(input)
+    const dirs = Flag.ACCURECODE_DISABLE_PROJECT_CONFIG ? [] : await configDirSources(input)
     const sources = [
       ...wellknownSources(input.auth ?? {}),
       ...(await globalSources()),
@@ -106,23 +106,23 @@ export namespace KilocodeConfigSources {
   }
 
   async function envFileSources(): Promise<Pending[]> {
-    if (!Flag.KILO_CONFIG) return []
+    if (!Flag.ACCURECODE_CONFIG) return []
     return [
       await fileSource({
         kind: "env-file",
         scope: "env",
-        label: "KILO_CONFIG",
-        file: Flag.KILO_CONFIG,
-        reason: "Explicit config file from KILO_CONFIG.",
+        label: "ACCURECODE_CONFIG",
+        file: Flag.ACCURECODE_CONFIG,
+        reason: "Explicit config file from ACCURECODE_CONFIG.",
       }),
     ]
   }
 
   async function projectSources(input: Input): Promise<Pending[]> {
-    const kilo = await projectFiles("kilo", input)
+    const accure = await projectFiles("accure", input)
     const opencode = await projectFiles("opencode", input)
     return Promise.all(
-      [...kilo, ...opencode].map((file) =>
+      [...accure, ...opencode].map((file) =>
         fileSource({ kind: "project-file", scope: "project", label: "Project config", file }),
       ),
     )
@@ -135,9 +135,9 @@ export namespace KilocodeConfigSources {
   async function configDirSources(input: Input): Promise<Pending[]> {
     const project = await Filesystem.findUp([...roots], input.directory, input.worktree)
     const home = await Filesystem.findUp([...roots], Global.Path.home, Global.Path.home)
-    const env = Flag.KILO_CONFIG_DIR ? [Flag.KILO_CONFIG_DIR] : []
+    const env = Flag.ACCURECODE_CONFIG_DIR ? [Flag.ACCURECODE_CONFIG_DIR] : []
     const dirs = unique([Global.Path.config, ...project, ...home, ...env]).filter((dir) =>
-      KilocodeConfig.isConfigDir(dir, Flag.KILO_CONFIG_DIR),
+      AccurecodeConfig.isConfigDir(dir, Flag.ACCURECODE_CONFIG_DIR),
     )
 
     const result: Pending[] = []
@@ -153,7 +153,7 @@ export namespace KilocodeConfigSources {
         editable: scope !== "managed" && scope !== "cloud",
       })
 
-      for (const name of KilocodeConfig.ALL_CONFIG_FILES) {
+      for (const name of AccurecodeConfig.ALL_CONFIG_FILES) {
         const file = path.join(dir, name)
         result.push(await fileSource({ kind: "config-dir-file", scope, label: `Config directory ${name}`, file }))
       }
@@ -162,7 +162,7 @@ export namespace KilocodeConfigSources {
   }
 
   function dirScope(dir: string, input: { project: string[]; home: string[] }): Scope {
-    if (dir === Flag.KILO_CONFIG_DIR) return "env"
+    if (dir === Flag.ACCURECODE_CONFIG_DIR) return "env"
     if (input.project.includes(dir)) return "project"
     if (input.home.includes(dir)) return "global"
     return "global"
@@ -170,35 +170,35 @@ export namespace KilocodeConfigSources {
 
   function envContentSources(): Pending[] {
     const sources: Pending[] = []
-    if (process.env.KILO_CONFIG_CONTENT) {
+    if (process.env.ACCURECODE_CONFIG_CONTENT) {
       sources.push({
         kind: "env-content",
         scope: "env",
-        label: "KILO_CONFIG_CONTENT",
-        source: "KILO_CONFIG_CONTENT",
+        label: "ACCURECODE_CONFIG_CONTENT",
+        source: "ACCURECODE_CONFIG_CONTENT",
         exists: true,
         editable: false,
         reason: "Inline config content from the process environment; value is not exposed.",
       })
     }
-    if (Flag.KILO_CONFIG_DIR) {
+    if (Flag.ACCURECODE_CONFIG_DIR) {
       sources.push({
         kind: "runtime-env",
         scope: "env",
-        label: "KILO_CONFIG_DIR",
-        source: "KILO_CONFIG_DIR",
-        path: Flag.KILO_CONFIG_DIR,
+        label: "ACCURECODE_CONFIG_DIR",
+        source: "ACCURECODE_CONFIG_DIR",
+        path: Flag.ACCURECODE_CONFIG_DIR,
         exists: true,
         editable: false,
         reason: "Adds an extra config directory to the load chain.",
       })
     }
-    if (Flag.KILO_DISABLE_PROJECT_CONFIG) {
+    if (Flag.ACCURECODE_DISABLE_PROJECT_CONFIG) {
       sources.push({
         kind: "runtime-env",
         scope: "env",
-        label: "KILO_DISABLE_PROJECT_CONFIG",
-        source: "KILO_DISABLE_PROJECT_CONFIG",
+        label: "ACCURECODE_DISABLE_PROJECT_CONFIG",
+        source: "ACCURECODE_DISABLE_PROJECT_CONFIG",
         exists: true,
         editable: false,
         reason: "Project-level config files and directories are disabled for this process.",
@@ -213,11 +213,11 @@ export namespace KilocodeConfigSources {
       {
         kind: "cloud-org",
         scope: "cloud",
-        label: "Kilo Cloud organization config",
+        label: "Accure Cloud organization config",
         source: `${account.url}/api/config`,
         exists: true,
         editable: false,
-        reason: "Active organization config is managed by Kilo Cloud; values are not exposed here.",
+        reason: "Active organization config is managed by Accure Cloud; values are not exposed here.",
       },
     ]
   }
@@ -225,7 +225,7 @@ export namespace KilocodeConfigSources {
   async function managedSources(): Promise<Pending[]> {
     const dir = ConfigManaged.managedConfigDir()
     const files = await Promise.all(
-      KilocodeConfig.ALL_CONFIG_FILES.map((name) =>
+      AccurecodeConfig.ALL_CONFIG_FILES.map((name) =>
         fileSource({
           kind: "managed-file",
           scope: "managed",
@@ -274,9 +274,13 @@ export namespace KilocodeConfigSources {
 
   function runtimeSources(): Pending[] {
     return [
-      runtimeSource("KILO_PERMISSION", Flag.KILO_PERMISSION, "Runtime permission overlay."),
-      runtimeSource("KILO_DISABLE_AUTOCOMPACT", process.env.KILO_DISABLE_AUTOCOMPACT, "Disables automatic compaction."),
-      runtimeSource("KILO_DISABLE_PRUNE", process.env.KILO_DISABLE_PRUNE, "Disables tool-output pruning."),
+      runtimeSource("ACCURECODE_PERMISSION", Flag.ACCURECODE_PERMISSION, "Runtime permission overlay."),
+      runtimeSource(
+        "ACCURECODE_DISABLE_AUTOCOMPACT",
+        process.env.ACCURECODE_DISABLE_AUTOCOMPACT,
+        "Disables automatic compaction.",
+      ),
+      runtimeSource("ACCURECODE_DISABLE_PRUNE", process.env.ACCURECODE_DISABLE_PRUNE, "Disables tool-output pruning."),
     ].filter((item): item is Pending => item !== undefined)
   }
 

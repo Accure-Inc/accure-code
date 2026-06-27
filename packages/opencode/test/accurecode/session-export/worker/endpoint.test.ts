@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { defaultEndpoint, resolveEndpoint } from "@/kilocode/session-export/worker/endpoint"
+import { defaultEndpoint, resolveEndpoint } from "@/accurecode/session-export/worker/endpoint"
 
 describe("session export endpoint", () => {
   test("rejects plaintext custom endpoints by default", () => {
@@ -7,7 +7,7 @@ describe("session export endpoint", () => {
   })
 
   test("allows approved production endpoint", () => {
-    const endpoint = "https://supermassive-black-hole.kiloapps.io/v1/session-export/batch"
+    const endpoint = "https://supermassive-black-hole.accureapps.io/v1/session-export/batch"
     expect(resolveEndpoint({ endpoint })).toBe(endpoint)
   })
 

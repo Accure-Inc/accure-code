@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
 import { ServerManager } from "./server-manager"
-import { createKiloClient, type KiloClient } from "@kilocode/sdk/v2/client"
+import { createAccureClient, type AccureClient } from "@accurecode/sdk/v2/client"
 import { SdkSSEAdapter, type SSEPayload } from "./sdk-sse-adapter"
 import type { ServerConfig } from "./types"
 import { resolveEventSessionId as resolveEventSessionIdPure } from "./connection-utils"
@@ -35,7 +35,7 @@ function isNotFound(err: unknown) {
 const HEALTH_POLL_INTERVAL_MS = 10_000
 
 /** Reject all pending network-offline waits for a given directory. */
-async function drainNetworkWaits(client: KiloClient, dir: string) {
+async function drainNetworkWaits(client: AccureClient, dir: string) {
   const { data: waits, error: err } = await client.network.list({ directory: dir })
   if (err) throw new Error(`Failed to list network waits for ${dir}: ${String(err)}`)
   if (!waits) return
@@ -46,12 +46,12 @@ async function drainNetworkWaits(client: KiloClient, dir: string) {
 }
 
 /**
- * Shared connection service that owns the single ServerManager, KiloClient (SDK), and SdkSSEAdapter.
- * Multiple KiloProvider instances subscribe to it for SSE events and state changes.
+ * Shared connection service that owns the single ServerManager, AccureClient (SDK), and SdkSSEAdapter.
+ * Multiple AccureProvider instances subscribe to it for SSE events and state changes.
  */
-export class KiloConnectionService {
+export class AccureConnectionService {
   private readonly serverManager: ServerManager
-  private client: KiloClient | null = null
+  private client: AccureClient | null = null
   private sseClient: SdkSSEAdapter | null = null
   private info: { port: number } | null = null
   private config: ServerConfig | null = null
@@ -122,7 +122,7 @@ export class KiloConnectionService {
   /**
    * Get the shared SDK client. Throws if not connected.
    */
-  getClient(): KiloClient {
+  getClient(): AccureClient {
     if (!this.client || this.state !== "connected") {
       throw new Error("Not connected — call connect() first")
     }
@@ -135,7 +135,7 @@ export class KiloConnectionService {
    * to the first VS Code workspace folder. Throws if neither is available
    * or if the connection fails.
    */
-  async getClientAsync(dir?: string): Promise<KiloClient> {
+  async getClientAsync(dir?: string): Promise<AccureClient> {
     if (this.client && this.state === "connected") return this.client
     const root = dir ?? vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
     if (!root) throw new Error("No workspace folder open")
@@ -307,7 +307,7 @@ export class KiloConnectionService {
   }
 
   /**
-   * Subscribe to notification dismiss events broadcast from any KiloProvider. Returns unsubscribe function.
+   * Subscribe to notification dismiss events broadcast from any AccureProvider. Returns unsubscribe function.
    */
   onNotificationDismissed(listener: NotificationDismissListener): () => void {
     this.notificationDismissListeners.add(listener)
@@ -317,7 +317,7 @@ export class KiloConnectionService {
   }
 
   /**
-   * Broadcast a notification dismiss event to all subscribed KiloProvider instances.
+   * Broadcast a notification dismiss event to all subscribed AccureProvider instances.
    */
   notifyNotificationDismissed(notificationId: string): void {
     for (const listener of this.notificationDismissListeners) {
@@ -326,7 +326,7 @@ export class KiloConnectionService {
   }
 
   /**
-   * Subscribe to language change events broadcast from any KiloProvider. Returns unsubscribe function.
+   * Subscribe to language change events broadcast from any AccureProvider. Returns unsubscribe function.
    */
   onLanguageChanged(listener: LanguageChangeListener): () => void {
     this.languageChangeListeners.add(listener)
@@ -336,7 +336,7 @@ export class KiloConnectionService {
   }
 
   /**
-   * Broadcast a language change event to all subscribed KiloProvider instances.
+   * Broadcast a language change event to all subscribed AccureProvider instances.
    */
   notifyLanguageChanged(locale: string): void {
     for (const listener of this.languageChangeListeners) {
@@ -345,7 +345,7 @@ export class KiloConnectionService {
   }
 
   /**
-   * Subscribe to profile change events broadcast from any KiloProvider. Returns unsubscribe function.
+   * Subscribe to profile change events broadcast from any AccureProvider. Returns unsubscribe function.
    */
   onProfileChanged(listener: ProfileChangeListener): () => void {
     this.profileChangeListeners.add(listener)
@@ -355,7 +355,7 @@ export class KiloConnectionService {
   }
 
   /**
-   * Broadcast a profile change event to all subscribed KiloProvider instances.
+   * Broadcast a profile change event to all subscribed AccureProvider instances.
    */
   notifyProfileChanged(data: unknown): void {
     for (const listener of this.profileChangeListeners) {
@@ -364,7 +364,7 @@ export class KiloConnectionService {
   }
 
   /**
-   * Subscribe to migration-complete events broadcast from any KiloProvider. Returns unsubscribe function.
+   * Subscribe to migration-complete events broadcast from any AccureProvider. Returns unsubscribe function.
    */
   onMigrationComplete(listener: MigrationCompleteListener): () => void {
     this.migrationCompleteListeners.add(listener)
@@ -374,7 +374,7 @@ export class KiloConnectionService {
   }
 
   /**
-   * Broadcast a migration-complete event to all subscribed KiloProvider instances.
+   * Broadcast a migration-complete event to all subscribed AccureProvider instances.
    */
   notifyMigrationComplete(): void {
     for (const listener of this.migrationCompleteListeners) {
@@ -383,7 +383,7 @@ export class KiloConnectionService {
   }
 
   /**
-   * Subscribe to favorites change events broadcast from any KiloProvider. Returns unsubscribe function.
+   * Subscribe to favorites change events broadcast from any AccureProvider. Returns unsubscribe function.
    */
   onFavoritesChanged(listener: FavoritesChangeListener): () => void {
     this.favoritesChangeListeners.add(listener)
@@ -393,7 +393,7 @@ export class KiloConnectionService {
   }
 
   /**
-   * Broadcast a favorites change event to all subscribed KiloProvider instances.
+   * Broadcast a favorites change event to all subscribed AccureProvider instances.
    */
   notifyFavoritesChanged(favorites: Array<{ providerID: string; modelID: string }>): void {
     for (const listener of this.favoritesChangeListeners) {
@@ -415,7 +415,7 @@ export class KiloConnectionService {
 
   /**
    * Register a callback that returns workspace directories tracked by a
-   * KiloProvider (root + worktree dirs). Used by drainPendingPrompts() to
+   * AccureProvider (root + worktree dirs). Used by drainPendingPrompts() to
    * cover all active Instance directories across every provider.
    */
   registerDirectoryProvider(provider: DirectoryProvider): () => void {
@@ -427,7 +427,7 @@ export class KiloConnectionService {
 
   /**
    * Reject all pending permission requests and questions across every
-   * directory known to any currently-mounted KiloProvider.
+   * directory known to any currently-mounted AccureProvider.
    *
    * Must be called before operations that trigger Instance.disposeAll()
    * (e.g. config save) to prevent orphaned Promises from freezing
@@ -549,7 +549,7 @@ export class KiloConnectionService {
     this.viewedDirty = false
     void this.client.session
       .viewed({ focused: [...focus], open: [...open] })
-      .catch((err) => console.warn("[Kilo New] ConnectionService: viewed flush failed:", err))
+      .catch((err) => console.warn("[Accure New] ConnectionService: viewed flush failed:", err))
       .finally(() => {
         this.viewedSending = false
         if (this.viewedDirty) this.sendViewed()
@@ -615,7 +615,7 @@ export class KiloConnectionService {
       }
       const healthy = await this.checkHealth(baseUrl, password)
       if (!healthy && this.state === "connected") {
-        console.warn("[Kilo New] ConnectionService: ❤️‍🩹 Health check failed — forcing SSE reconnect")
+        console.warn("[Accure New] ConnectionService: ❤️‍🩹 Health check failed — forcing SSE reconnect")
         this.sseClient?.reconnect()
       }
     }, HEALTH_POLL_INTERVAL_MS)
@@ -636,7 +636,7 @@ export class KiloConnectionService {
       const controller = new AbortController()
       const timer = setTimeout(() => controller.abort(), 3000)
       const res = await fetch(`${baseUrl}/global/health`, {
-        headers: { Authorization: `Basic ${Buffer.from(`kilo:${password}`).toString("base64")}` },
+        headers: { Authorization: `Basic ${Buffer.from(`accure:${password}`).toString("base64")}` },
         signal: controller.signal,
       })
       clearTimeout(timer)
@@ -660,7 +660,7 @@ export class KiloConnectionService {
   }
 
   private handleServerExit(code: number | null): void {
-    console.warn("[Kilo New] ConnectionService: CLI background process exited:", code)
+    console.warn("[Accure New] ConnectionService: CLI background process exited:", code)
     this.resetConnection()
     this.setState(
       "error",
@@ -683,8 +683,8 @@ export class KiloConnectionService {
     this.config = config
 
     // Create SDK client with Basic Auth header
-    const authHeader = `Basic ${Buffer.from(`kilo:${server.password}`).toString("base64")}`
-    const client = createKiloClient({
+    const authHeader = `Basic ${Buffer.from(`accure:${server.password}`).toString("base64")}`
+    const client = createAccureClient({
       baseUrl: config.baseUrl,
       headers: {
         Authorization: authHeader,
@@ -778,7 +778,7 @@ export class KiloConnectionService {
   }
 }
 
-async function drainSuggestions(client: KiloClient, directory: string): Promise<void> {
+async function drainSuggestions(client: AccureClient, directory: string): Promise<void> {
   const { data, error: err } = await client.suggestion.list({ directory })
   if (err) throw new Error(`Failed to list suggestions for ${directory}: ${String(err)}`)
   if (data) {

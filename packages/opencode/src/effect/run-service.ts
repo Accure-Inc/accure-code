@@ -4,8 +4,8 @@ import { InstanceRef, WorkspaceRef } from "./instance-ref"
 import * as Observability from "@opencode-ai/core/effect/observability"
 import { WorkspaceContext } from "@/control-plane/workspace-context"
 import type { InstanceContext } from "@/project/instance-context"
-import { context as instanceContext } from "@/project/instance-context" // kilocode_change
-import { LocalContext } from "@/util/local-context" // kilocode_change
+import { context as instanceContext } from "@/project/instance-context" // accurecode_change
+import { LocalContext } from "@/util/local-context" // accurecode_change
 import { memoMap } from "@opencode-ai/core/effect/memo-map"
 
 type Refs = {
@@ -26,7 +26,7 @@ export function attachWith<A, E, R>(effect: Effect.Effect<A, E, R>, refs: Refs):
 export function attach<A, E, R>(effect: Effect.Effect<A, E, R>): Effect.Effect<A, E, R> {
   const workspace = WorkspaceContext.workspaceID
   const fiber = Fiber.getCurrent()
-  // kilocode_change start - bridge legacy AsyncLocalStorage instance context into Effect runtimes
+  // accurecode_change start - bridge legacy AsyncLocalStorage instance context into Effect runtimes
   const current = fiber ? Context.getReferenceUnsafe(fiber.context, InstanceRef) : undefined
   const instance = (() => {
     if (current) return current
@@ -38,7 +38,7 @@ export function attach<A, E, R>(effect: Effect.Effect<A, E, R>): Effect.Effect<A
   })()
   return attachWith(effect, {
     instance,
-    // kilocode_change end
+    // accurecode_change end
     workspace: workspace ?? (fiber ? Context.getReferenceUnsafe(fiber.context, WorkspaceRef) : undefined),
   })
 }

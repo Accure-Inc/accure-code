@@ -1,33 +1,33 @@
-package ai.kilocode.backend.rpc
+package ai.accurecode.backend.rpc
 
-import ai.kilocode.backend.app.LoadError
-import ai.kilocode.backend.workspace.AgentData
-import ai.kilocode.backend.workspace.AgentInfo
-import ai.kilocode.backend.workspace.CommandInfo
-import ai.kilocode.backend.workspace.KiloWorkspaceLoadProgress
-import ai.kilocode.backend.workspace.ModelInfo
-import ai.kilocode.backend.workspace.ProviderData
-import ai.kilocode.backend.workspace.ProviderInfo
-import ai.kilocode.backend.workspace.SkillInfo
-import ai.kilocode.rpc.dto.AgentDto
-import ai.kilocode.rpc.dto.AgentsDto
-import ai.kilocode.rpc.dto.CommandDto
-import ai.kilocode.rpc.dto.KiloWorkspaceLoadProgressDto
-import ai.kilocode.rpc.dto.LoadErrorDto
-import ai.kilocode.rpc.dto.ModelDto
-import ai.kilocode.rpc.dto.ModelLimitDto
-import ai.kilocode.rpc.dto.ProviderDto
-import ai.kilocode.rpc.dto.ProvidersDto
-import ai.kilocode.rpc.dto.SkillDto
+import ai.accurecode.backend.app.LoadError
+import ai.accurecode.backend.workspace.AgentData
+import ai.accurecode.backend.workspace.AgentInfo
+import ai.accurecode.backend.workspace.CommandInfo
+import ai.accurecode.backend.workspace.AccureWorkspaceLoadProgress
+import ai.accurecode.backend.workspace.ModelInfo
+import ai.accurecode.backend.workspace.ProviderData
+import ai.accurecode.backend.workspace.ProviderInfo
+import ai.accurecode.backend.workspace.SkillInfo
+import ai.accurecode.rpc.dto.AgentDto
+import ai.accurecode.rpc.dto.AgentsDto
+import ai.accurecode.rpc.dto.CommandDto
+import ai.accurecode.rpc.dto.AccureWorkspaceLoadProgressDto
+import ai.accurecode.rpc.dto.LoadErrorDto
+import ai.accurecode.rpc.dto.ModelDto
+import ai.accurecode.rpc.dto.ModelLimitDto
+import ai.accurecode.rpc.dto.ProviderDto
+import ai.accurecode.rpc.dto.ProvidersDto
+import ai.accurecode.rpc.dto.SkillDto
 
-internal object KiloWorkspaceDtoMapper {
+internal object AccureWorkspaceDtoMapper {
     fun error(e: LoadError) = LoadErrorDto(
         resource = e.resource,
         status = e.status,
         detail = e.detail,
     )
 
-    fun progress(p: KiloWorkspaceLoadProgress) = KiloWorkspaceLoadProgressDto(
+    fun progress(p: AccureWorkspaceLoadProgress) = AccureWorkspaceLoadProgressDto(
         providers = p.providers,
         agents = p.agents,
         commands = p.commands,

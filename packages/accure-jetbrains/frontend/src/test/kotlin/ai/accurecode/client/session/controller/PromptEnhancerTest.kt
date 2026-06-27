@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
 import com.intellij.openapi.application.ApplicationManager
 import kotlinx.coroutines.CancellationException

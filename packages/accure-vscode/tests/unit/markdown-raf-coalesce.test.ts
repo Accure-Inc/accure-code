@@ -24,7 +24,7 @@ import { join } from "node:path"
  */
 describe("Markdown rAF-coalesced parse — regression guard", () => {
   const path = join(__dirname, "..", "..", "..", "ui", "src", "components", "markdown.tsx")
-  const helper = join(__dirname, "..", "..", "..", "ui", "src", "kilocode", "markdown-stream-highlight.ts")
+  const helper = join(__dirname, "..", "..", "..", "ui", "src", "accurecode", "markdown-stream-highlight.ts")
 
   const stripComments = (src: string): string =>
     src
@@ -53,7 +53,7 @@ describe("Markdown rAF-coalesced parse — regression guard", () => {
     expect(src).toMatch(/\b(pendingFrame|pendingContent)\b/)
   })
 
-  it("delegates streamed Shiki refreshes to the Kilo-owned helper", () => {
+  it("delegates streamed Shiki refreshes to the Accure-owned helper", () => {
     expect(src).toContain("preserveStreamingHighlight(fromEl, toEl, local.streaming ?? false)")
     expect(body).toContain("export function preserveStreamingHighlight")
     expect(body).toMatch(/continues\(before, after\)[\s\S]*queue\(from, after, lang\)/)

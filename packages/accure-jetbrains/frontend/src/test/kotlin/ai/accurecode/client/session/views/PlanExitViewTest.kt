@@ -1,11 +1,11 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.model.toolKind
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.views.tool.ToolView
-import ai.kilocode.client.ui.md.MdView
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.model.toolKind
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.views.tool.ToolView
+import ai.accurecode.client.ui.md.MdView
 import com.intellij.openapi.editor.colors.CodeInsightColors
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.colors.EditorColorsScheme
@@ -18,12 +18,12 @@ import java.awt.Font
 class PlanExitViewTest : BasePlatformTestCase() {
     fun `test completed plan exit renders ready transcript text and path`() {
         val tool = tool(ToolExecState.COMPLETED).apply {
-            metadata = mapOf("plan" to ".kilo/plans/x.md")
+            metadata = mapOf("plan" to ".accurecode/plans/x.md")
         }
 
         val view = PlanExitView(tool) {}
 
-        assertEquals("Plan is ready [.kilo/plans/x.md](.kilo/plans/x.md)", view.markdown())
+        assertEquals("Plan is ready [.accurecode/plans/x.md](.accurecode/plans/x.md)", view.markdown())
     }
 
     fun `test view factory replaces running tool with plan exit view when completed`() {
@@ -32,7 +32,7 @@ class PlanExitViewTest : BasePlatformTestCase() {
         assertTrue(existing is ToolView)
 
         val done = tool(ToolExecState.COMPLETED).apply {
-            metadata = mapOf("plan" to ".kilo/plans/x.md")
+            metadata = mapOf("plan" to ".accurecode/plans/x.md")
         }
 
         assertTrue(ViewFactory.shouldReplace(existing, done))
@@ -42,13 +42,13 @@ class PlanExitViewTest : BasePlatformTestCase() {
     fun `test clicking plan link opens href`() {
         val opened = mutableListOf<String>()
         val tool = tool(ToolExecState.COMPLETED).apply {
-            metadata = mapOf("plan" to ".kilo/plans/my%20plan.md")
+            metadata = mapOf("plan" to ".accurecode/plans/my%20plan.md")
         }
 
         val view = PlanExitView(tool) { opened.add(it) }
-        view.simulateLink(".kilo/plans/my%20plan.md")
+        view.simulateLink(".accurecode/plans/my%20plan.md")
 
-        assertEquals(listOf(".kilo/plans/my%20plan.md"), opened)
+        assertEquals(listOf(".accurecode/plans/my%20plan.md"), opened)
     }
 
     fun `test applyStyle refreshes nested markdown role colors`() {
@@ -67,7 +67,7 @@ class PlanExitViewTest : BasePlatformTestCase() {
 
     private fun tool(state: ToolExecState) = Tool("prt_plan", "plan_exit", toolKind("plan_exit")).apply {
         this.state = state
-        output = "Plan is ready at .kilo/plans/x.md. Ending planning turn."
+        output = "Plan is ready at .accurecode/plans/x.md. Ending planning turn."
     }
 
     private fun md(view: PlanExitView): MdView {

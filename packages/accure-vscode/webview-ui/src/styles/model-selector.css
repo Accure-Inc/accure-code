@@ -52,7 +52,7 @@
   align-items: center;
   justify-content: center;
   color: var(--vscode-descriptionForeground);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   font-style: italic;
 }
 
@@ -77,7 +77,7 @@
 }
 
 .model-preview-name {
-  font-size: var(--kilo-font-size-13);
+  font-size: var(--accure-font-size-13);
   font-weight: 600;
   color: var(--vscode-editor-foreground);
   line-height: 1.3;
@@ -87,12 +87,12 @@
 }
 
 .model-preview-provider {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   color: var(--vscode-descriptionForeground);
 }
 
 .model-preview-description {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   line-height: 1.5;
   color: var(--vscode-editor-foreground);
   opacity: 0.85;
@@ -131,13 +131,13 @@
 }
 
 .model-preview-label {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   color: var(--vscode-descriptionForeground);
   white-space: nowrap;
 }
 
 .model-preview-value {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   color: var(--vscode-editor-foreground);
   font-variant-numeric: tabular-nums;
 }
@@ -149,7 +149,7 @@
 }
 
 .model-preview-group-title {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 600;
   color: var(--vscode-editor-foreground);
 }
@@ -159,7 +159,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   color: var(--vscode-inputValidation-warningForeground, var(--vscode-descriptionForeground));
 }
 
@@ -175,7 +175,7 @@
   align-items: center;
   padding: 1px 6px;
   border-radius: 3px;
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-weight: 500;
   background: var(--vscode-badge-background);
   color: var(--vscode-badge-foreground);
@@ -277,7 +277,7 @@
   color: var(--vscode-input-foreground);
   border: 1px solid var(--vscode-input-border);
   border-radius: 4px;
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   font-family: var(--vscode-font-family);
   outline: none;
   box-sizing: border-box;
@@ -302,7 +302,7 @@
 .model-selector-empty {
   padding: 12px 16px;
   color: var(--text-weak, var(--vscode-descriptionForeground));
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   text-align: center;
 }
 
@@ -373,7 +373,7 @@
   flex: 1;
   min-width: 0;
   padding: 5px 12px;
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   cursor: pointer;
   user-select: none;
 }
@@ -432,7 +432,7 @@
   flex-shrink: 0;
   background: var(--vscode-testing-iconPassed, #4caf50) !important;
   color: #fff !important;
-  font-size: var(--kilo-font-size-10) !important;
+  font-size: var(--accure-font-size-10) !important;
   padding: 1px 3px !important;
   opacity: 0.8;
 }
@@ -458,7 +458,7 @@
 
 .model-selector-item-provider-tag {
   flex-shrink: 0;
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   color: var(--vscode-descriptionForeground);
   opacity: 0.8;
 }
@@ -498,6 +498,41 @@
   color: var(--vscode-list-highlightForeground);
 }
 
+/* Configure (gear) button — revealed on row hover for credential-based providers */
+.model-selector-configure-btn {
+  all: unset;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--vscode-descriptionForeground);
+  opacity: 0;
+  transition:
+    opacity 0.1s ease,
+    color 0.1s ease;
+}
+
+.model-selector-configure-btn [data-component="icon"] {
+  color: inherit;
+}
+
+.model-selector-row > .model-selector-configure-btn {
+  margin-right: 4px;
+}
+
+.model-selector-row:hover .model-selector-configure-btn,
+.model-selector-row.selected .model-selector-configure-btn {
+  opacity: 1;
+}
+
+.model-selector-configure-btn:hover {
+  color: var(--vscode-textLink-foreground, #4e9aef);
+}
+
 .model-selector-star:hover {
   color: var(--vscode-list-highlightForeground);
   opacity: 1;
@@ -511,7 +546,7 @@
   flex-shrink: 0;
   margin-right: 12px;
   padding: 2px 10px;
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 600;
   font-family: inherit;
   border-radius: 2px;
@@ -546,7 +581,7 @@
 .thinking-selector-item {
   padding: 8px 12px;
   cursor: pointer;
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
 }
 
 .thinking-selector-item:hover {
@@ -613,7 +648,7 @@
 
 .mode-switcher-item-desc {
   display: block;
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   color: var(--text-weak, var(--vscode-descriptionForeground));
   max-width: 100%;
   overflow: hidden;
@@ -627,4 +662,72 @@
 
 .mode-switcher-item.selected .mode-switcher-item-desc {
   color: inherit;
+}
+
+/* -------------------------------------------------------------------------
+ * Accure provider tag enhancements
+ * ---------------------------------------------------------------------- */
+
+.model-selector-item-provider-tag--needs-cfg {
+  color: var(--vscode-list-warningForeground, #d4a017);
+  opacity: 0.9;
+}
+
+.model-selector-item-cfg-icon {
+  margin-left: 2px;
+  font-size: 10px;
+}
+
+/* -------------------------------------------------------------------------
+ * AccureProviderConfigDialog — inline credential form overlay
+ * ---------------------------------------------------------------------- */
+
+.accure-provider-config-overlay {
+  padding: 12px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  min-height: 160px;
+}
+
+.accure-provider-config-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.accure-provider-config-title {
+  font-size: var(--accure-font-size-13);
+  font-weight: 600;
+  color: var(--vscode-foreground);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--vscode-widget-border, rgba(128, 128, 128, 0.2));
+}
+
+.accure-provider-config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.accure-provider-config-error {
+  font-size: var(--accure-font-size-12);
+  color: var(--vscode-errorForeground);
+  padding: 4px 0;
+}
+
+/* accurecode_change */
+.accure-provider-config-hint {
+  font-size: var(--accure-font-size-11);
+  color: var(--vscode-descriptionForeground);
+  opacity: 0.8;
+  padding: 0 0 4px;
+  line-height: 1.4;
+}
+
+.accure-provider-config-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
 }

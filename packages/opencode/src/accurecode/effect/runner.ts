@@ -1,6 +1,6 @@
 import { Effect, Exit, Fiber, Latch, Scope } from "effect"
 
-export namespace KiloRunner {
+export namespace AccureRunner {
   export const start = <A, E, R>(input: {
     work: Effect.Effect<A, E>
     scope: Scope.Scope

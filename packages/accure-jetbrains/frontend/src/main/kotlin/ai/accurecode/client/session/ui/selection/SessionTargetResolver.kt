@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.ui.selection
+package ai.accurecode.client.session.ui.selection
 
 import com.intellij.openapi.actionSystem.UiDataProvider
 import com.intellij.util.concurrency.annotations.RequiresEdt

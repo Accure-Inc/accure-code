@@ -1,12 +1,12 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Compaction
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.views.base.PartView
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.session.model.Compaction
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.views.base.PartView
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.ui.components.JBLabel
 import java.awt.BorderLayout
 import java.awt.GridBagConstraints
@@ -28,7 +28,7 @@ import javax.swing.SwingConstants
 class CompactionView(@Suppress("UNUSED_PARAMETER") compaction: Compaction) : PartView() {
 
     override val contentId: String = compaction.id
-    private val text = JBLabel(KiloBundle.message("session.part.compaction")).apply {
+    private val text = JBLabel(AccureBundle.message("session.part.compaction")).apply {
         foreground = UiStyle.Colors.weak()
         horizontalAlignment = SwingConstants.CENTER
         border = JBUI.Borders.empty(0, UiStyle.Gap.lg())

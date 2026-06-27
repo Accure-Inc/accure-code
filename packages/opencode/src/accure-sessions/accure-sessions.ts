@@ -3,7 +3,7 @@ import { BusEvent } from "@/bus/bus-event"
 import { Provider } from "@/provider/provider"
 import { Session } from "@/session/session"
 import { SessionSummary } from "@/session/summary"
-import { KiloSession } from "@/kilocode/session"
+import { AccureSession } from "@/accurecode/session"
 import { SessionID } from "@/session/schema"
 import { ModelID, ProviderID } from "@/provider/schema"
 import { MessageV2 } from "@/session/message-v2"
@@ -11,37 +11,37 @@ import { Storage } from "@/storage/storage"
 import * as Log from "@opencode-ai/core/util/log"
 import { Auth } from "@/auth"
 import { makeRuntime } from "@/effect/run-service"
-import { IngestQueue } from "@/kilo-sessions/ingest-queue"
-import { clearInFlightCache, withInFlightCache } from "@/kilo-sessions/inflight-cache"
-import type * as SDK from "@kilocode/sdk/v2"
+import { IngestQueue } from "@/accure-sessions/ingest-queue"
+import { clearInFlightCache, withInFlightCache } from "@/accure-sessions/inflight-cache"
+import type * as SDK from "@accurecode/sdk/v2"
 import z from "zod"
 import { Context, Effect, Layer, Schema, Stream } from "effect"
-import { KILO_API_BASE } from "@kilocode/accure-gateway"
+import { ACCURECODE_API_BASE } from "@accurecode/accure-gateway"
 import { Config } from "@/config/config"
 import { EffectBridge } from "@/effect/bridge"
 import { InstanceState } from "@/effect/instance-state"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/accurecode/instance"
 import { Vcs } from "@/project/vcs"
 import simpleGit from "simple-git"
-import { RemoteWS } from "@/kilo-sessions/remote-ws"
-import { RemoteSender } from "@/kilo-sessions/remote-sender"
+import { RemoteWS } from "@/accure-sessions/remote-ws"
+import { RemoteSender } from "@/accure-sessions/remote-sender"
 import { SessionStatus } from "@/session/status"
-import { Telemetry } from "@kilocode/accure-telemetry"
+import { Telemetry } from "@accurecode/accure-telemetry"
 import { Question } from "@/question"
 import { Permission } from "@/permission"
 import { withTimeout } from "@/util/timeout"
 import { Snapshot } from "@/snapshot"
-import { cumulativeSessionDiff } from "@/kilocode/session-portability/cumulative-diff"
+import { cumulativeSessionDiff } from "@/accurecode/session-portability/cumulative-diff"
 
 async function provide<R>(input: { directory: string; fn: () => R }): Promise<R> {
-  const { provide } = await import("@/kilocode/instance")
+  const { provide } = await import("@/accurecode/instance")
   return provide(input)
 }
 
-export namespace KiloSessions {
+export namespace AccureSessions {
   export const Event = {
     RemoteStatusChanged: BusEvent.define(
-      "kilo-sessions.remote-status-changed",
+      "accure-sessions.remote-status-changed",
       Schema.Struct({
         enabled: Schema.Boolean,
         connected: Schema.Boolean,
@@ -53,21 +53,21 @@ export namespace KiloSessions {
     readonly init: () => Effect.Effect<void, unknown>
   }
 
-  export class Service extends Context.Service<Service, Interface>()("@kilocode/KiloSessions") {}
+  export class Service extends Context.Service<Service, Interface>()("@accurecode/AccureSessions") {}
 
-  const log = Log.create({ service: "kilo-sessions" })
+  const log = Log.create({ service: "accure-sessions" })
   const runtime = makeRuntime(Auth.Service, Auth.defaultLayer)
 
   const Uuid = z.uuid()
   type Uuid = z.infer<typeof Uuid>
 
-  const tokenValidKeyTemplate = "kilo-sessions:token-valid:"
+  const tokenValidKeyTemplate = "accure-sessions:token-valid:"
   let tokenValidKey = tokenValidKeyTemplate + "unknown"
 
-  const tokenKey = "kilo-sessions:token"
-  const orgKey = "kilo-sessions:org"
-  const clientKey = "kilo-sessions:client"
-  const gitUrlKeyPrefix = "kilo-sessions:git-url:"
+  const tokenKey = "accure-sessions:token"
+  const orgKey = "accure-sessions:org"
+  const clientKey = "accure-sessions:client"
+  const gitUrlKeyPrefix = "accure-sessions:git-url:"
 
   const ttlMs = 10_000
 
@@ -89,7 +89,7 @@ export namespace KiloSessions {
     }
 
     return withInFlightCache(tokenValidKey, 15 * 60_000, async () => {
-      const response = await fetch(`${KILO_API_BASE}/api/user`, {
+      const response = await fetch(`${ACCURECODE_API_BASE}/api/user`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -103,14 +103,14 @@ export namespace KiloSessions {
     })
   }
 
-  async function kilocodeToken() {
+  async function accurecodeToken() {
     return withInFlightCache(tokenKey, ttlMs, async () => {
-      const auth = await runtime.runPromise((svc) => svc.get("kilo"))
+      const auth = await runtime.runPromise((svc) => svc.get("accure"))
       if (auth?.type === "api" && auth.key.length > 0) return auth.key
       if (auth?.type === "oauth" && auth.access.length > 0) return auth.access
       if (auth?.type === "wellknown" && auth.token.length > 0) return auth.token
 
-      const key = process.env["KILO_API_KEY"]?.trim()
+      const key = process.env["ACCURECODE_API_KEY"]?.trim()
       if (key) return key
       return undefined
     })
@@ -151,13 +151,13 @@ export namespace KiloSessions {
 
   async function getClient(): Promise<Client | undefined> {
     return withInFlightCache(clientKey, ttlMs, async () => {
-      const token = await kilocodeToken()
+      const token = await accurecodeToken()
       if (!token) return undefined
 
       const valid = await authValid(token)
       if (!valid) return undefined
 
-      const base = process.env["KILO_SESSION_INGEST_URL"] ?? "https://ingest.kilosessions.ai"
+      const base = process.env["ACCURECODE_SESSION_INGEST_URL"] ?? "https://ingest.accuresessions.ai"
       const baseHeaders: Record<string, string> = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -179,11 +179,13 @@ export namespace KiloSessions {
     })
   }
 
-  const shareDisabled = process.env["KILO_DISABLE_SHARE"] === "true" || process.env["KILO_DISABLE_SHARE"] === "1"
+  const shareDisabled =
+    process.env["ACCURECODE_DISABLE_SHARE"] === "true" || process.env["ACCURECODE_DISABLE_SHARE"] === "1"
   const ingestDisabled =
-    process.env["KILO_DISABLE_SESSION_INGEST"] === "true" || process.env["KILO_DISABLE_SESSION_INGEST"] === "1"
+    process.env["ACCURECODE_DISABLE_SESSION_INGEST"] === "true" ||
+    process.env["ACCURECODE_DISABLE_SESSION_INGEST"] === "1"
   const debugIngest =
-    process.env["KILO_DEBUG_SESSION_INGEST"] === "true" || process.env["KILO_DEBUG_SESSION_INGEST"] === "1"
+    process.env["ACCURECODE_DEBUG_SESSION_INGEST"] === "true" || process.env["ACCURECODE_DEBUG_SESSION_INGEST"] === "1"
 
   const ingest = IngestQueue.create({
     getShare: async (sessionId) => get(sessionId).catch(() => undefined),
@@ -199,7 +201,7 @@ export namespace KiloSessions {
     },
   })
 
-  const remoteEnabled = process.env["KILO_REMOTE"] === "1"
+  const remoteEnabled = process.env["ACCURECODE_REMOTE"] === "1"
   let remote: { conn: RemoteWS.Connection; sender: RemoteSender.Sender } | undefined
   let enabling: Promise<void> | undefined
   let remoteSeq = 0
@@ -244,7 +246,7 @@ export namespace KiloSessions {
       const config = yield* Config.Service
       const sessions = yield* Session.Service
       const state = yield* InstanceState.make(
-        Effect.fn("KiloSessions.state")(function* () {
+        Effect.fn("AccureSessions.state")(function* () {
           if (ingestDisabled) return
 
           const watch = <D extends { type: string }>(
@@ -275,7 +277,7 @@ export namespace KiloSessions {
             const session = await Effect.runPromise(sessions.get(sessionID).pipe(Effect.orElseSucceed(() => null)))
             if (!session) return
             await ingest.sync(sessionID, [
-              { type: "kilo_meta", data: await meta(sessionID) },
+              { type: "accure_meta", data: await meta(sessionID) },
               { type: "session", data: transport(session) },
             ])
           })
@@ -353,7 +355,7 @@ export namespace KiloSessions {
         }),
       )
 
-      const init = Effect.fn("KiloSessions.init")(function* () {
+      const init = Effect.fn("AccureSessions.init")(function* () {
         yield* InstanceState.get(state)
       })
 
@@ -374,18 +376,18 @@ export namespace KiloSessions {
     const seq = ++remoteSeq
     void Bus.publish(Instance.current, Event.RemoteStatusChanged, { enabled: true, connected: false })
     enabling = (async () => {
-      const token = await kilocodeToken()
+      const token = await accurecodeToken()
       if (!token) {
-        throw new Error("Unable to enable remote: no Kilo credentials found. Run `kilo auth login`.")
+        throw new Error("Unable to enable remote: no Accure credentials found. Run `accure auth login`.")
       }
 
       const valid = await authValid(token)
       if (valid === false) {
-        throw new Error("Unable to enable remote: invalid or expired Kilo credentials. Run `kilo auth login`.")
+        throw new Error("Unable to enable remote: invalid or expired Accure credentials. Run `accure auth login`.")
       }
-      if (valid === undefined) throw new Error("Unable to enable remote: failed to verify Kilo credentials.")
+      if (valid === undefined) throw new Error("Unable to enable remote: failed to verify Accure credentials.")
 
-      const url = (process.env["KILO_SESSION_INGEST_URL"] ?? "https://ingest.kilosessions.ai")
+      const url = (process.env["ACCURECODE_SESSION_INGEST_URL"] ?? "https://ingest.accuresessions.ai")
         .replace(/^https:\/\//, "wss://")
         .replace(/^http:\/\//, "ws://")
 
@@ -432,7 +434,7 @@ export namespace KiloSessions {
 
       const conn = RemoteWS.connect({
         url,
-        getToken: kilocodeToken,
+        getToken: accurecodeToken,
         withContext: (fn) => provide({ directory, fn }),
         getSessions,
         log,
@@ -555,16 +557,16 @@ export namespace KiloSessions {
 
   export async function share(sessionId: string) {
     if (ingestDisabled) {
-      throw new Error("Session ingest is disabled (KILO_DISABLE_SESSION_INGEST=1)")
+      throw new Error("Session ingest is disabled (ACCURECODE_DISABLE_SESSION_INGEST=1)")
     }
 
     if (shareDisabled) {
-      throw new Error("Sharing is disabled (KILO_DISABLE_SHARE=1)")
+      throw new Error("Sharing is disabled (ACCURECODE_DISABLE_SHARE=1)")
     }
 
     const client = await getClient()
     if (!client) {
-      throw new Error("Unable to share session: no Kilo credentials found. Run `kilo auth login`.")
+      throw new Error("Unable to share session: no Accure credentials found. Run `accure auth login`.")
     }
 
     const current = (await get(sessionId).catch(() => undefined)) ?? (await create(sessionId))
@@ -588,7 +590,7 @@ export namespace KiloSessions {
       throw new Error(`Unable to share session ${sessionId}: server did not return a public id`)
     }
 
-    const url = `https://app.kilo.ai/s/${result.public_id}`
+    const url = `https://app.accurecode.ai/s/${result.public_id}`
 
     await save(sessionId, {
       ...current,
@@ -600,16 +602,16 @@ export namespace KiloSessions {
 
   export async function unshare(sessionId: string) {
     if (ingestDisabled) {
-      throw new Error("Session ingest is disabled (KILO_DISABLE_SESSION_INGEST=1)")
+      throw new Error("Session ingest is disabled (ACCURECODE_DISABLE_SESSION_INGEST=1)")
     }
 
     if (shareDisabled) {
-      throw new Error("Unshare is disabled (KILO_DISABLE_SHARE=1)")
+      throw new Error("Unshare is disabled (ACCURECODE_DISABLE_SHARE=1)")
     }
 
     const client = await getClient()
     if (!client) {
-      throw new Error("Unable to unshare session: no Kilo credentials found. Run `kilo auth login`.")
+      throw new Error("Unable to unshare session: no Accure credentials found. Run `accure auth login`.")
     }
 
     log.info("unsharing", { sessionId })
@@ -706,7 +708,7 @@ export namespace KiloSessions {
 
     await ingest.sync(sessionId, [
       {
-        type: "kilo_meta",
+        type: "accure_meta",
         data: await meta(sessionId),
       },
       {
@@ -778,8 +780,8 @@ export namespace KiloSessions {
   }
 
   async function meta(sessionId?: string) {
-    const override = sessionId ? KiloSession.resolvePlatform(sessionId) : undefined
-    const platform = override || process.env["KILO_PLATFORM"] || "cli"
+    const override = sessionId ? AccureSession.resolvePlatform(sessionId) : undefined
+    const platform = override || process.env["ACCURECODE_PLATFORM"] || "cli"
     const orgId = await getOrgId()
     const gitBranch = await branch().catch(() => undefined)
     const gitUrl = await getGitUrl().catch(() => undefined)
@@ -793,11 +795,11 @@ export namespace KiloSessions {
   }
 
   async function getOrgId(): Promise<Uuid | undefined> {
-    const env = process.env["KILO_ORG_ID"]
+    const env = process.env["ACCURECODE_ORG_ID"]
     if (isUuid(env)) return env
 
     return withInFlightCache(orgKey, ttlMs, async () => {
-      const auth = await runtime.runPromise((svc) => svc.get("kilo"))
+      const auth = await runtime.runPromise((svc) => svc.get("accure"))
       if (auth?.type === "oauth" && isUuid(auth.accountId)) return auth.accountId
       return undefined
     })

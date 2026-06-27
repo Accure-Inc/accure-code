@@ -1,14 +1,14 @@
-package ai.kilocode.client.settings.base
+package ai.accurecode.client.settings.base
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.testing.FakeAppRpcApi
-import ai.kilocode.client.testing.FakeWorkspaceRpcApi
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.ModelStateDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.testing.FakeAppRpcApi
+import ai.accurecode.client.testing.FakeWorkspaceRpcApi
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.ModelStateDto
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.util.ui.UIUtil
@@ -23,8 +23,8 @@ class BaseSettingsUiWorkspaceTest : BasePlatformTestCase() {
     private lateinit var uiScope: CoroutineScope
     private lateinit var rpc: FakeAppRpcApi
     private lateinit var workspaceRpc: FakeWorkspaceRpcApi
-    private lateinit var app: KiloAppService
-    private lateinit var workspaces: KiloWorkspaceService
+    private lateinit var app: AccureAppService
+    private lateinit var workspaces: AccureWorkspaceService
     private var panel: FakePanel? = null
 
     override fun setUp() {
@@ -33,8 +33,8 @@ class BaseSettingsUiWorkspaceTest : BasePlatformTestCase() {
         uiScope = CoroutineScope(SupervisorJob())
         rpc = FakeAppRpcApi()
         workspaceRpc = FakeWorkspaceRpcApi()
-        app = KiloAppService(appScope, rpc)
-        workspaces = KiloWorkspaceService(appScope, workspaceRpc)
+        app = AccureAppService(appScope, rpc)
+        workspaces = AccureWorkspaceService(appScope, workspaceRpc)
     }
 
     override fun tearDown() {
@@ -71,14 +71,14 @@ class BaseSettingsUiWorkspaceTest : BasePlatformTestCase() {
         flushUntil { edt { view.value() == "ready" } }
         val before = edt { view.unavailable }
 
-        rpc.state.value = KiloAppStateDto(KiloAppStatusDto.DISCONNECTED)
+        rpc.state.value = AccureAppStateDto(AccureAppStatusDto.DISCONNECTED)
         flushUntil { edt { view.unavailable > before } }
 
         edt { assertFalse(view.loading()) }
     }
 
     fun `test model state updates are delivered on edt`() {
-        rpc.models = ModelStateDto(favorite = listOf(ModelSelectionDto("kilo", "new")))
+        rpc.models = ModelStateDto(favorite = listOf(ModelSelectionDto("accure", "new")))
         rpc.state.value = state("ready")
         val view = create("/test")
 
@@ -96,8 +96,8 @@ class BaseSettingsUiWorkspaceTest : BasePlatformTestCase() {
         return view
     }
 
-    private fun state(model: String) = KiloAppStateDto(
-        KiloAppStatusDto.READY,
+    private fun state(model: String) = AccureAppStateDto(
+        AccureAppStatusDto.READY,
         config = ConfigDto(model = model),
     )
 
@@ -125,8 +125,8 @@ class BaseSettingsUiWorkspaceTest : BasePlatformTestCase() {
 
     private class FakePanel(
         cs: CoroutineScope,
-        app: KiloAppService,
-        workspaces: KiloWorkspaceService,
+        app: AccureAppService,
+        workspaces: AccureWorkspaceService,
         hint: String,
     ) : BaseSettingsUi<FakeContent, Draft, Change, Draft, String>(
         cs,
@@ -163,7 +163,7 @@ class BaseSettingsUiWorkspaceTest : BasePlatformTestCase() {
 
         override fun base(result: Draft): Draft = result
 
-        override fun draft(state: KiloAppStateDto): Draft = Draft(state.config?.model ?: "none")
+        override fun draft(state: AccureAppStateDto): Draft = Draft(state.config?.model ?: "none")
 
         override suspend fun loadWorkspace(root: String): String {
             loadOnEdt = ApplicationManager.getApplication().isDispatchThread
@@ -173,7 +173,7 @@ class BaseSettingsUiWorkspaceTest : BasePlatformTestCase() {
 
         override fun applyWorkspace(result: String) = Unit
 
-        override fun unavailable(state: KiloAppStateDto) {
+        override fun unavailable(state: AccureAppStateDto) {
             unavailable++
         }
 

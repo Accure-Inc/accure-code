@@ -1,16 +1,16 @@
-package ai.kilocode.client.session.model
+package ai.accurecode.client.session.model
 
-import ai.kilocode.rpc.dto.DiffFileDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.TodoDto
-import ai.kilocode.rpc.dto.TokensDto
+import ai.accurecode.rpc.dto.DiffFileDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.TodoDto
+import ai.accurecode.rpc.dto.TokensDto
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
 import com.intellij.util.concurrency.annotations.RequiresEdt
@@ -19,7 +19,7 @@ import kotlin.math.roundToInt
 /**
  * Pure session model — single source of truth for session content and runtime state.
  *
- * **EDT-only access** — no synchronization. [ai.kilocode.client.session.controller.SessionController] guarantees all
+ * **EDT-only access** — no synchronization. [ai.accurecode.client.session.controller.SessionController] guarantees all
  * reads and writes happen on the EDT.
  *
  * In addition to the flat message list, the model maintains a derived
@@ -42,10 +42,10 @@ class SessionModel {
     private val entries = LinkedHashMap<String, Message>()
     private val turnEntries = LinkedHashMap<String, Turn>()
 
-    var app: KiloAppStateDto = KiloAppStateDto(KiloAppStatusDto.DISCONNECTED)
+    var app: AccureAppStateDto = AccureAppStateDto(AccureAppStatusDto.DISCONNECTED)
     var version: String? = null
 
-    var workspace: KiloWorkspaceStateDto = KiloWorkspaceStateDto(KiloWorkspaceStatusDto.PENDING)
+    var workspace: AccureWorkspaceStateDto = AccureWorkspaceStateDto(AccureWorkspaceStatusDto.PENDING)
     var agents: List<AgentItem> = emptyList()
     var models: List<ModelItem> = emptyList()
     var agent: String? = null
@@ -101,7 +101,7 @@ class SessionModel {
     fun isEmpty(): Boolean = entries.isEmpty()
 
     @RequiresEdt
-    fun isReady(): Boolean = app.status == KiloAppStatusDto.READY && workspace.status == KiloWorkspaceStatusDto.READY
+    fun isReady(): Boolean = app.status == AccureAppStatusDto.READY && workspace.status == AccureWorkspaceStatusDto.READY
 
     /**
      * Add a message if it doesn't exist, or update its [MessageDto] info if it does.
@@ -663,7 +663,7 @@ private fun Content.weight(): Int = when (this) {
     is Generic -> 1
 }
 
-private fun ai.kilocode.rpc.dto.PartTimeDto.durationMs(): Long? {
+private fun ai.accurecode.rpc.dto.PartTimeDto.durationMs(): Long? {
     val start = start ?: return null
     val end = end ?: return null
     if (end < start) return null

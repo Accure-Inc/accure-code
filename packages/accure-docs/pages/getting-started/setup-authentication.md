@@ -1,18 +1,18 @@
 ---
 title: "Setup & Authentication"
-description: "Configure Kilo Code and connect to your AI providers"
+description: "Configure Accure Code and connect to your AI providers"
 ---
 
 # Setup & Authentication
 
-When you install Kilo Code, you'll be prompted to sign in or create a free account. This automatically configures everything you need to get started.
+When you install Accure Code, you'll be prompted to sign in or create a free account. This automatically configures everything you need to get started.
 
-## Quick Start with Kilo Account
+## Quick Start with Accure Account
 
 {% tabs %}
 {% tab label="VSCode" %}
 
-The extension prompts you to sign in when you first open Kilo Code in VS Code. Click **Sign In** and complete the browser-based flow. Sign-in applies across extension surfaces, including the sidebar and Agent Manager.
+The extension prompts you to sign in when you first open Accure Code in VS Code. Click **Sign In** and complete the browser-based flow. Sign-in applies across extension surfaces, including the sidebar and Agent Manager.
 
 {% /tab %}
 {% tab label="CLI" %}
@@ -20,7 +20,7 @@ The extension prompts you to sign in when you first open Kilo Code in VS Code. C
 Run the auth command and follow the browser-based sign-in flow:
 
 ```bash
-kilo auth login
+accure auth login
 ```
 
 This may open your browser to complete authentication. Once signed in, your credentials are stored locally and used for all future sessions.
@@ -28,17 +28,17 @@ This may open your browser to complete authentication. Once signed in, your cred
 To verify your auth status:
 
 ```bash
-kilo auth list
+accure auth list
 ```
 
 {% /tab %}
 {% tab label="VSCode (Legacy)" %}
 
-1. Click **"Try Kilo Code for Free"** in the extension
+1. Click **"Try Accure Code for Free"** in the extension
 2. Sign in with your Google account
 3. Allow VS Code to open the authorization URL
 
-{% image src="/docs/img/signupflow.gif" alt="Sign up and registration flow with Kilo Code" /%}
+{% image src="/docs/img/signupflow.gif" alt="Sign up and registration flow with Accure Code" /%}
 
 That's it! You're ready to [start your first task](/docs/getting-started/quickstart).
 
@@ -46,21 +46,21 @@ That's it! You're ready to [start your first task](/docs/getting-started/quickst
 {% /tabs %}
 
 {% callout type="tip" title="Add Credits" %}
-[Add credits to your account](https://app.kilo.ai/profile), or sign up for [Kilo Pass](https://kilo.ai/pricing/kilo-pass).
+[Add credits to your account](https://app.accurecode.ai/profile), or sign up for [Accure Pass](https://accure.ai/pricing/accure-pass).
 {% /callout %}
 
-## Kilo Gateway API Key
+## Accure Gateway API Key
 
-If you're using the [Kilo AI Gateway](/docs/gateway/) outside of the Kilo Code extension (for example, with the Vercel AI SDK or OpenAI SDK), you'll need an API key:
+If you're using the [Accure AI Gateway](/docs/gateway/) outside of the Accure Code extension (for example, with the Vercel AI SDK or OpenAI SDK), you'll need an API key:
 
-1. Go to [app.kilo.ai](https://app.kilo.ai)
+1. Go to [app.accurecode.ai](https://app.accurecode.ai)
 2. Go to **Your Profile** on your **personal account** (not in an organization)
 3. Scroll to the bottom of the page
 4. Copy your API key
 
 ## Using Another API Provider
 
-If you prefer to use your own API key or existing subscription, Kilo Code supports **over 30 providers**. Here are some popular options to get started:
+If you prefer to use your own API key or existing subscription, Accure Code supports **over 30 providers**. Here are some popular options to get started:
 
 | Provider | Best For | API Key Required |
 |---|---|---|
@@ -70,12 +70,12 @@ If you prefer to use your own API key or existing subscription, Kilo Code suppor
 | [OpenAI](/docs/ai-providers/openai) | Access to GPT models | Yes |
 
 {% callout type="info" title="Many More Providers Available" %}
-These are just a few examples! Kilo Code supports many more providers including Google Gemini, DeepSeek, Mistral, Ollama (for local models), AWS Bedrock, Google Vertex, and more. See the complete list at [AI Providers](/docs/ai-providers/).
+These are just a few examples! Accure Code supports many more providers including Google Gemini, DeepSeek, Mistral, Ollama (for local models), AWS Bedrock, Google Vertex, and more. See the complete list at [AI Providers](/docs/ai-providers/).
 {% /callout %}
 
 ### ChatGPT Plus/Pro Subscription
 
-Already have a ChatGPT subscription? You can use it with Kilo Code through the [OpenAI ChatGPT provider](/docs/ai-providers/openai-chatgpt-plus-pro)—no API key needed.
+Already have a ChatGPT subscription? You can use it with Accure Code through the [OpenAI ChatGPT provider](/docs/ai-providers/openai-chatgpt-plus-pro)—no API key needed.
 
 ### OpenRouter
 
@@ -106,13 +106,13 @@ Already have a ChatGPT subscription? You can use it with Kilo Code through the [
 {% tabs %}
 {% tab label="VSCode" %}
 
-1. Open Kilo Code in VS Code
+1. Open Accure Code in VS Code
 2. Click the gear icon ({% codicon name="gear" /%}) in the extension UI to open **Settings**
 3. Go to the **Providers** tab
 4. Select your provider and enter your API key
 5. Choose your model
 
-These settings apply across the extension, including the sidebar and Agent Manager. Agent Manager does not need separate provider or Kilo CLI authentication setup.
+These settings apply across the extension, including the sidebar and Agent Manager. Agent Manager does not need separate provider or Accure CLI authentication setup.
 
 {% /tab %}
 {% tab label="CLI" %}
@@ -123,7 +123,7 @@ Set the API key as an environment variable:
 export ANTHROPIC_API_KEY="sk-ant-..."
 ```
 
-Or use `kilo auth login` for providers that support OAuth, such as GitHub Copilot or ChatGPT Plus/Pro.
+Or use `accure auth login` for providers that support OAuth, such as GitHub Copilot or ChatGPT Plus/Pro.
 
 To set a default model:
 
@@ -136,7 +136,7 @@ To set a default model:
 {% /tab %}
 {% tab label="VSCode (Legacy)" %}
 
-1. Click the {% kilo-code-icon /%} icon in the VS Code sidebar
+1. Click the {% accure-code-icon /%} icon in the VS Code sidebar
 2. Select your API provider from the dropdown
 3. Paste your API key
 4. Choose your model
@@ -146,5 +146,5 @@ To set a default model:
 {% /tabs %}
 
 {% callout type="info" title="Need Help?" %}
-Reach out to our [support team](mailto:hi@kilo.ai) or join our [Discord community](https://kilo.ai/discord).
+Reach out to our [support team](mailto:hi@accure.ai) or join our [Discord community](https://accure.ai/discord).
 {% /callout %}

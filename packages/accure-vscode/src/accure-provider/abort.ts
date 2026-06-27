@@ -1,5 +1,5 @@
-import type { KiloClient, SessionStatus } from "@kilocode/sdk/v2/client"
-import { sameDirectory } from "../kilo-provider-utils"
+import type { AccureClient, SessionStatus } from "@accurecode/sdk/v2/client"
+import { sameDirectory } from "../accure-provider-utils"
 
 export class SessionAbort {
   private active = new Map<string, Set<string>>()
@@ -27,7 +27,7 @@ export class SessionAbort {
     this.observe(sessionID, status, dir)
   }
 
-  async stop(client: KiloClient, sessionID: string, fallback: string) {
+  async stop(client: AccureClient, sessionID: string, fallback: string) {
     const known = this.active.has(sessionID)
     const dirs = [...(this.active.get(sessionID) ?? [])]
     if (!dirs.some((dir) => sameDirectory(dir, fallback))) dirs.push(fallback)
@@ -36,7 +36,7 @@ export class SessionAbort {
       result.status === "rejected" ? [{ dir: dirs[index], error: result.reason }] : [],
     )
     if (failures.length > 0) {
-      console.error("[Kilo New] KiloProvider: Failed to abort session in one or more directories:", failures)
+      console.error("[Accure New] AccureProvider: Failed to abort session in one or more directories:", failures)
       return false
     }
     if (known) this.active.delete(sessionID)
@@ -65,6 +65,6 @@ export class SessionAbort {
   }
 }
 
-export async function abortSession(input: { client: KiloClient; sessionID: string; dir: string }) {
+export async function abortSession(input: { client: AccureClient; sessionID: string; dir: string }) {
   await input.client.session.abort({ sessionID: input.sessionID, directory: input.dir }, { throwOnError: true })
 }

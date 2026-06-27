@@ -1,7 +1,7 @@
 # Chat Input Overflows on Narrow Sidebar
 
 **Priority:** P2
-**Issue:** [#6273](https://github.com/Kilo-Org/kilocode/issues/6273)
+**Issue:** [#6273](https://github.com/Accure-Inc/accure-code/issues/6273)
 
 ## Remaining Work
 

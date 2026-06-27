@@ -7,8 +7,8 @@ import { ensureFfmpegForTarget } from "./ffmpeg-helper"
 
 const packageJsonPath = join(import.meta.dir, "..", "package.json")
 const packageJson = await Bun.file(packageJsonPath).json()
-const version = process.env.KILO_VERSION ? process.env.KILO_VERSION : packageJson.version
-const prerelease = process.env.KILO_PRE_RELEASE === "true"
+const version = process.env.ACCURECODE_VERSION ? process.env.ACCURECODE_VERSION : packageJson.version
+const prerelease = process.env.ACCURECODE_PRE_RELEASE === "true"
 
 console.log(`Building VSCode extension version: ${version}${prerelease ? " (pre-release)" : ""}`)
 
@@ -26,14 +26,14 @@ if (!existsSync(cliDistDir)) {
 }
 
 const targets = [
-  { target: "linux-x64", cliDir: "@kilocode/cli-linux-x64", binary: "kilo" },
-  { target: "linux-arm64", cliDir: "@kilocode/cli-linux-arm64", binary: "kilo" },
-  { target: "alpine-x64", cliDir: "@kilocode/cli-linux-x64-musl", binary: "kilo" },
-  { target: "alpine-arm64", cliDir: "@kilocode/cli-linux-arm64-musl", binary: "kilo" },
-  { target: "darwin-x64", cliDir: "@kilocode/cli-darwin-x64", binary: "kilo" },
-  { target: "darwin-arm64", cliDir: "@kilocode/cli-darwin-arm64", binary: "kilo" },
-  { target: "win32-x64", cliDir: "@kilocode/cli-windows-x64", binary: "kilo.exe" },
-  { target: "win32-arm64", cliDir: "@kilocode/cli-windows-arm64", binary: "kilo.exe" },
+  { target: "linux-x64", cliDir: "@accurecode/cli-linux-x64", binary: "accure" },
+  { target: "linux-arm64", cliDir: "@accurecode/cli-linux-arm64", binary: "accure" },
+  { target: "alpine-x64", cliDir: "@accurecode/cli-linux-x64-musl", binary: "accure" },
+  { target: "alpine-arm64", cliDir: "@accurecode/cli-linux-arm64-musl", binary: "accure" },
+  { target: "darwin-x64", cliDir: "@accurecode/cli-darwin-x64", binary: "accure" },
+  { target: "darwin-arm64", cliDir: "@accurecode/cli-darwin-arm64", binary: "accure" },
+  { target: "win32-x64", cliDir: "@accurecode/cli-windows-x64", binary: "accure.exe" },
+  { target: "win32-arm64", cliDir: "@accurecode/cli-windows-arm64", binary: "accure.exe" },
 ]
 
 const binDir = join(import.meta.dir, "..", "bin")
@@ -78,7 +78,7 @@ for (const config of targets) {
   await $`cp ${sourceBinary} ${targetBinary}`
   await copyTreeSitterResources(sourceBinary, targetBinary)
 
-  if (config.binary !== "kilo.exe") {
+  if (config.binary !== "accure.exe") {
     chmodSync(targetBinary, 0o755)
   }
 

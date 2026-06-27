@@ -1,4 +1,4 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -35,12 +35,12 @@ class LegacyMigrationConversionTest {
     }
 
     @Test
-    fun `convertProvider - kilo provider builds OAuth auth with 1-year expiry`() {
+    fun `convertProvider - accure provider builds OAuth auth with 1-year expiry`() {
         val settings = buildJsonObject {
-            put("apiProvider", "kilocode")
-            put("kilocodeToken", "tok-123")
+            put("apiProvider", "accurecode")
+            put("accurecodeToken", "tok-123")
         }
-        val result = LegacyMigrationConverters.convertProvider("kilo-profile", settings) { null }
+        val result = LegacyMigrationConverters.convertProvider("accure-profile", settings) { null }
         assertEquals(MigrationItemStatus.success, result.status)
         val auth = result.auth!!
         assertEquals("oauth", auth["type"]?.jsonPrimitive?.content)

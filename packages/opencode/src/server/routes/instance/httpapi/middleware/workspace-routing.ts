@@ -63,7 +63,7 @@ function requestURL(request: HttpServerRequest.HttpServerRequest): URL {
 }
 
 function configuredWorkspaceID(): WorkspaceID | undefined {
-  return Flag.KILO_WORKSPACE_ID ? WorkspaceID.make(Flag.KILO_WORKSPACE_ID) : undefined
+  return Flag.ACCURECODE_WORKSPACE_ID ? WorkspaceID.make(Flag.ACCURECODE_WORKSPACE_ID) : undefined
 }
 
 function selectedWorkspaceID(url: URL, sessionWorkspaceID?: WorkspaceID): WorkspaceID | undefined {
@@ -84,7 +84,7 @@ function selectedV2WorkspaceID(
 }
 
 function defaultDirectory(request: HttpServerRequest.HttpServerRequest, url: URL): string {
-  return url.searchParams.get("directory") || request.headers["x-kilo-directory"] || process.cwd()
+  return url.searchParams.get("directory") || request.headers["x-accure-directory"] || process.cwd()
 }
 
 function shouldStayOnControlPlane(request: HttpServerRequest.HttpServerRequest, url: URL): boolean {

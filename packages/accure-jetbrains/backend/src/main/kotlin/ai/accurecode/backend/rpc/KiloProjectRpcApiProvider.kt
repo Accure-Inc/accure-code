@@ -1,15 +1,15 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.backend.rpc
+package ai.accurecode.backend.rpc
 
-import ai.kilocode.rpc.KiloWorkspaceRpcApi
+import ai.accurecode.rpc.AccureWorkspaceRpcApi
 import com.intellij.platform.rpc.backend.RemoteApiProvider
 import fleet.rpc.remoteApiDescriptor
 
-internal class KiloProjectRpcApiProvider : RemoteApiProvider {
+internal class AccureProjectRpcApiProvider : RemoteApiProvider {
     override fun RemoteApiProvider.Sink.remoteApis() {
-        remoteApi(remoteApiDescriptor<KiloWorkspaceRpcApi>()) {
-            KiloWorkspaceRpcApiImpl()
+        remoteApi(remoteApiDescriptor<AccureWorkspaceRpcApi>()) {
+            AccureWorkspaceRpcApiImpl()
         }
     }
 }

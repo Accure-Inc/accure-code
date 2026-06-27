@@ -1,10 +1,10 @@
 import { z } from "zod"
-import { KILO_API_BASE } from "./constants.js"
+import { ACCURECODE_API_BASE } from "./constants.js"
 
 /**
- * Kilo notification schema
+ * Accure notification schema
  */
-export const KilocodeNotificationSchema = z.object({
+export const AccurecodeNotificationSchema = z.object({
   id: z.string(),
   title: z.string(),
   message: z.string(),
@@ -18,28 +18,28 @@ export const KilocodeNotificationSchema = z.object({
   suggestModelId: z.string().optional(),
 })
 
-export type KilocodeNotification = z.infer<typeof KilocodeNotificationSchema>
+export type AccurecodeNotification = z.infer<typeof AccurecodeNotificationSchema>
 
 const NotificationsResponseSchema = z.object({
-  notifications: z.array(KilocodeNotificationSchema),
+  notifications: z.array(AccurecodeNotificationSchema),
 })
 
 const NOTIFICATIONS_TIMEOUT_MS = 5000
 
 /**
- * Fetch notifications from Kilo API
+ * Fetch notifications from Accure API
  *
  * @param options - Configuration with token and optional organization ID
- * @returns Array of notifications from the Kilo API (clients filter by showIn)
+ * @returns Array of notifications from the Accure API (clients filter by showIn)
  */
-export async function fetchKilocodeNotifications(options: {
-  kilocodeToken?: string
-  kilocodeOrganizationId?: string
-}): Promise<KilocodeNotification[]> {
-  const token = options.kilocodeToken
+export async function fetchAccurecodeNotifications(options: {
+  accurecodeToken?: string
+  accurecodeOrganizationId?: string
+}): Promise<AccurecodeNotification[]> {
+  const token = options.accurecodeToken
   if (!token) return []
 
-  const url = `${KILO_API_BASE}/api/users/notifications`
+  const url = `${ACCURECODE_API_BASE}/api/users/notifications`
 
   try {
     const response = await fetch(url, {

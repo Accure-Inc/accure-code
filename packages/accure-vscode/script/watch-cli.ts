@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 /**
  * Watches packages/opencode/src/ for changes and rebuilds the CLI binary,
- * then copies it into packages/accure-vscode/bin/kilo.
+ * then copies it into packages/accure-vscode/bin/accure.
  *
  * Used during development so the VS Code extension always has an up-to-date
  * CLI backend without manual rebuild steps.
@@ -11,12 +11,12 @@ import { join, relative } from "node:path"
 import { $ } from "bun"
 import { copyTreeSitterResources } from "../src/services/cli-backend/cli-resources"
 
-const kiloVscodeDir = join(import.meta.dir, "..")
-const packagesDir = join(kiloVscodeDir, "..")
+const accureVscodeDir = join(import.meta.dir, "..")
+const packagesDir = join(accureVscodeDir, "..")
 const opencodeDir = join(packagesDir, "opencode")
 const opencodeSrcDir = join(opencodeDir, "src")
-const targetBinDir = join(kiloVscodeDir, "bin")
-const targetBinPath = join(targetBinDir, "kilo")
+const targetBinDir = join(accureVscodeDir, "bin")
+const targetBinPath = join(targetBinDir, "accure")
 
 let building = false
 let pending = false
@@ -27,7 +27,7 @@ function log(msg: string) {
 }
 
 function sourceBinaryPath(): string {
-  return join(opencodeDir, "dist", `@kilocode/cli-${process.platform}-${process.arch}`, "bin", "kilo")
+  return join(opencodeDir, "dist", `@accurecode/cli-${process.platform}-${process.arch}`, "bin", "accure")
 }
 
 async function rebuild() {
@@ -62,7 +62,7 @@ async function rebuild() {
     chmodSync(targetBinPath, 0o755)
 
     const elapsed = ((performance.now() - start) / 1000).toFixed(1)
-    log(`Binary updated (${elapsed}s): ${relative(packagesDir, source)} -> bin/kilo`)
+    log(`Binary updated (${elapsed}s): ${relative(packagesDir, source)} -> bin/accure`)
   } catch (err) {
     log(`ERROR: ${err instanceof Error ? err.message : String(err)}`)
   } finally {
@@ -75,7 +75,7 @@ async function rebuild() {
 await rebuild()
 
 // Watch for changes
-log(`Watching ${relative(kiloVscodeDir, opencodeSrcDir)}/ for changes...`)
+log(`Watching ${relative(accureVscodeDir, opencodeSrcDir)}/ for changes...`)
 
 const debounce = 500
 let timer: ReturnType<typeof setTimeout> | null = null

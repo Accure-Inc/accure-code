@@ -1,14 +1,14 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.model.toolKind
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.base.SecondarySessionPartView
-import ai.kilocode.client.session.views.tool.ToolView
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.model.toolKind
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.base.SecondarySessionPartView
+import ai.accurecode.client.session.views.tool.ToolView
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.openapi.util.Disposer
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import java.awt.BorderLayout
@@ -353,7 +353,7 @@ class ToolViewTest : BasePlatformTestCase() {
     fun `test update with non-Tool content is ignored`() {
         val view = ToolView(tool("p1", "bash", ToolExecState.RUNNING))
         val before = view.labelText()
-        view.update(ai.kilocode.client.session.model.Text("p1"))
+        view.update(ai.accurecode.client.session.model.Text("p1"))
         assertEquals(before, view.labelText())
     }
 

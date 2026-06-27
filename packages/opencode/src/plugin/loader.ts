@@ -10,8 +10,8 @@ import {
 } from "./shared"
 import { ConfigPlugin } from "@/config/plugin"
 import { InstallationVersion } from "@opencode-ai/core/installation/version"
-import { isIndexingPlugin } from "@kilocode/accure-indexing/detect" // kilocode_change
-import { isAtomicChatPlugin } from "@/kilocode/atomic-chat-feature" // kilocode_change
+import { isIndexingPlugin } from "@accurecode/accure-indexing/detect" // accurecode_change
+import { isAtomicChatPlugin } from "@/accurecode/atomic-chat-feature" // accurecode_change
 
 export namespace PluginLoader {
   // A normalized plugin declaration derived from config before any filesystem or npm work happens.
@@ -160,8 +160,8 @@ export namespace PluginLoader {
 
     // Deprecated plugin packages are silently ignored because they are now built in.
     if (plan.deprecated) return { retry: false }
-    if (isIndexingPlugin(candidate.plan.spec)) return { retry: false } // kilocode_change
-    if (isAtomicChatPlugin(candidate.plan.spec)) return { retry: false } // kilocode_change
+    if (isIndexingPlugin(candidate.plan.spec)) return { retry: false } // accurecode_change
+    if (isAtomicChatPlugin(candidate.plan.spec)) return { retry: false } // accurecode_change
     report?.start?.(candidate, retry)
 
     const resolved = await resolve(plan, kind)

@@ -2,33 +2,33 @@ import type { Argv } from "yargs"
 import * as Log from "@opencode-ai/core/util/log"
 import { Global } from "@opencode-ai/core/global"
 import { InstallationBuildKind, InstallationVersion } from "@opencode-ai/core/installation/version"
-import { Telemetry } from "@kilocode/accure-telemetry"
-import { migrateLegacyKiloAuth, ENV_FEATURE, ENV_VERSION } from "@kilocode/accure-gateway"
+import { Telemetry } from "@accurecode/accure-telemetry"
+import { migrateLegacyAccureAuth, ENV_FEATURE, ENV_VERSION } from "@accurecode/accure-gateway"
 import { AppRuntime } from "@/effect/app-runtime"
 import { Config } from "@/config/config"
 import { Auth } from "@/auth"
 import { InstanceRuntime } from "@/project/instance-runtime"
-import { SessionExport } from "@/kilocode/session-export"
-import { createHelpCommand } from "@/kilocode/help-command"
-import { KiloConsoleCommand } from "@/kilocode/cli/cmd/console"
-import { RollCallCommand } from "@/kilocode/cli/cmd/roll-call"
-import { ProfileCommand } from "@/kilocode/cli/cmd/profile"
-import { DaemonCommand } from "@/kilocode/cli/cmd/daemon"
-import { DevSetupCommand, DevAliasCommand } from "@/kilocode/cli/dev-setup"
+import { SessionExport } from "@/accurecode/session-export"
+import { createHelpCommand } from "@/accurecode/help-command"
+import { AccureConsoleCommand } from "@/accurecode/cli/cmd/console"
+import { RollCallCommand } from "@/accurecode/cli/cmd/roll-call"
+import { ProfileCommand } from "@/accurecode/cli/cmd/profile"
+import { DaemonCommand } from "@/accurecode/cli/cmd/daemon"
+import { DevSetupCommand, DevAliasCommand } from "@/accurecode/cli/dev-setup"
 import { RemoteCommand } from "@/cli/cmd/remote"
 import { ConfigCommand as ConfigCLICommand } from "@/cli/cmd/config"
 
-const log = Log.create({ service: "kilocode.cli" })
+const log = Log.create({ service: "accurecode.cli" })
 
-// All Kilo-specific CLI customization lives here so the shared upstream entrypoint
-// (src/index.ts) only needs a handful of thin call-sites behind kilocode_change markers.
+// All Accure-specific CLI customization lives here so the shared upstream entrypoint
+// (src/index.ts) only needs a handful of thin call-sites behind accurecode_change markers.
 // This keeps index.ts close to upstream and reduces merge conflicts on every sync.
-export namespace KiloCli {
-  // Register only the Kilo-specific commands. Upstream commands stay in index.ts's chain so
+export namespace AccureCli {
+  // Register only the Accure-specific commands. Upstream commands stay in index.ts's chain so
   // upstream merges that add or remove commands keep working without touching this file.
   export function register<T>(cli: Argv<T>): Argv<T> {
     cli
-      .command(KiloConsoleCommand)
+      .command(AccureConsoleCommand)
       .command(RollCallCommand)
       .command(ProfileCommand)
       .command(RemoteCommand)
@@ -47,7 +47,7 @@ export namespace KiloCli {
   export async function bootstrap(): Promise<void> {
     if (!process.env[ENV_FEATURE]) process.env[ENV_FEATURE] = process.argv.includes("serve") ? "unknown" : "cli"
     if (!process.env[ENV_VERSION]) process.env[ENV_VERSION] = InstallationVersion
-    process.env.KILO = "1"
+    process.env.ACCURE = "1"
 
     const cfg = await AppRuntime.runPromise(Config.Service.use((c) => c.getGlobal()))
     await Telemetry.init({
@@ -56,13 +56,13 @@ export namespace KiloCli {
       enabled: cfg.experimental?.openTelemetry !== false,
     })
 
-    // Migrate legacy Kilo CLI auth (~/.kilocode/cli/config.json) into auth.json if present.
-    await migrateLegacyKiloAuth(
-      async () => (await AppRuntime.runPromise(Auth.Service.use((s) => s.get("kilo")))) !== undefined,
-      async (auth) => AppRuntime.runPromise(Auth.Service.use((s) => s.set("kilo", auth))),
+    // Migrate legacy Accure CLI auth (~/.accurecode/cli/config.json) into auth.json if present.
+    await migrateLegacyAccureAuth(
+      async () => (await AppRuntime.runPromise(Auth.Service.use((s) => s.get("accure")))) !== undefined,
+      async (auth) => AppRuntime.runPromise(Auth.Service.use((s) => s.set("accure", auth))),
     )
 
-    const auth = await AppRuntime.runPromise(Auth.Service.use((s) => s.get("kilo")))
+    const auth = await AppRuntime.runPromise(Auth.Service.use((s) => s.get("accure")))
     if (auth) {
       const token = auth.type === "oauth" ? auth.access : auth.key
       const account = auth.type === "oauth" ? auth.accountId : undefined
@@ -80,7 +80,7 @@ export namespace KiloCli {
       await SessionExport.shutdown()
       // Bound telemetry shutdown so an unreachable endpoint (offline, firewall,
       // DNS adblock resolving the host to 0.0.0.0) cannot block process exit on
-      // short-lived commands like `kilo --help` / `kilo --version` (#9788).
+      // short-lived commands like `accure --help` / `accure --version` (#9788).
       try {
         await Telemetry.shutdown(2000)
       } catch (err) {

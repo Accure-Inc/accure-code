@@ -1,18 +1,18 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.prompt.PromptDataKeys
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.prompt.PromptDataKeys
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
 
 class StopSessionAction : DumbAwareAction(
-    KiloBundle.message("action.Kilo.StopSession.text"),
-    KiloBundle.message("action.Kilo.StopSession.description"),
+    AccureBundle.message("action.Accure.StopSession.text"),
+    AccureBundle.message("action.Accure.StopSession.description"),
     null,
 ) {
     companion object {
-        const val ID = "Kilo.StopSession"
+        const val ID = "Accure.StopSession"
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.EDT

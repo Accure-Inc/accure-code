@@ -137,12 +137,12 @@ export const PROVIDER_MAP: Record<string, ProviderMapping> = {
     modelField: "lmStudioModelId",
     urlField: "lmStudioBaseUrl",
   },
-  kilocode: {
-    id: "kilo",
-    key: "kilocodeToken",
-    name: "Kilo (Gateway)",
-    modelField: "kilocodeModel",
-    organizationIdField: "kilocodeOrganizationId",
+  accurecode: {
+    id: "accure",
+    key: "accurecodeToken",
+    name: "Accure (Gateway)",
+    modelField: "accurecodeModel",
+    organizationIdField: "accurecodeOrganizationId",
   },
   litellm: {
     id: "litellm",

@@ -1,12 +1,12 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.backend.cli.CliServer
-import ai.kilocode.backend.app.ConnectionState
-import ai.kilocode.backend.app.KiloConnectionService
-import ai.kilocode.backend.testing.FakeCliServer
-import ai.kilocode.backend.testing.MockCliServer
-import ai.kilocode.backend.testing.TestLog
-import ai.kilocode.log.KiloLog
+import ai.accurecode.backend.cli.CliServer
+import ai.accurecode.backend.app.ConnectionState
+import ai.accurecode.backend.app.AccureConnectionService
+import ai.accurecode.backend.testing.FakeCliServer
+import ai.accurecode.backend.testing.MockCliServer
+import ai.accurecode.backend.testing.TestLog
+import ai.accurecode.log.AccureLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +32,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
-class KiloConnectionServiceTest {
+class AccureConnectionServiceTest {
 
     private val mock = MockCliServer()
     private val fake = FakeCliServer(mock)
@@ -48,7 +48,7 @@ class KiloConnectionServiceTest {
     @Test
     fun `connect transitions to Connected`() = runBlocking {
         val reconnects = AtomicInteger(0)
-        val svc = KiloConnectionService(
+        val svc = AccureConnectionService(
           scope,
           fake,
           { reconnects.incrementAndGet() },
@@ -68,7 +68,7 @@ class KiloConnectionServiceTest {
 
     @Test
     fun `connect provides API client`() = runBlocking {
-        val svc = KiloConnectionService(scope, fake, {}, log)
+        val svc = AccureConnectionService(scope, fake, {}, log)
         svc.connect()
         mock.awaitSseConnection()
 
@@ -80,7 +80,7 @@ class KiloConnectionServiceTest {
 
     @Test
     fun `SSE events are emitted`() = runBlocking {
-        val svc = KiloConnectionService(scope, fake, {}, log)
+        val svc = AccureConnectionService(scope, fake, {}, log)
         svc.connect()
         mock.awaitSseConnection()
 
@@ -103,7 +103,7 @@ class KiloConnectionServiceTest {
 
     @Test
     fun `SSE events preserve callback order`() = runBlocking {
-        val svc = KiloConnectionService(scope, fake, {}, log)
+        val svc = AccureConnectionService(scope, fake, {}, log)
         svc.connect()
         mock.awaitSseConnection()
 
@@ -128,15 +128,15 @@ class KiloConnectionServiceTest {
     @Test
     fun `SSE concurrent callbacks preserve callback order`() = runBlocking {
         val blocked = BlockingLog()
-        val svc = KiloConnectionService(scope, fake, {}, blocked)
-        val field = KiloConnectionService::class.java.getDeclaredField("listener")
+        val svc = AccureConnectionService(scope, fake, {}, blocked)
+        val field = AccureConnectionService::class.java.getDeclaredField("listener")
         field.isAccessible = true
         val listener = field.get(svc) as EventSourceListener
         val source = object : EventSource {
             override fun request(): Request = Request.Builder().url("http://127.0.0.1/global/event").build()
             override fun cancel() {}
         }
-        val sourceField = KiloConnectionService::class.java.getDeclaredField("source")
+        val sourceField = AccureConnectionService::class.java.getDeclaredField("source")
         sourceField.isAccessible = true
         @Suppress("UNCHECKED_CAST")
         val ref = sourceField.get(svc) as AtomicReference<EventSource?>
@@ -167,7 +167,7 @@ class KiloConnectionServiceTest {
 
     @Test
     fun `SSE close triggers error state`() = runBlocking {
-        val svc = KiloConnectionService(scope, fake, {}, log)
+        val svc = AccureConnectionService(scope, fake, {}, log)
         svc.connect()
         mock.awaitSseConnection()
 
@@ -195,7 +195,7 @@ class KiloConnectionServiceTest {
             override fun dispose() {}
         }
 
-        val svc = KiloConnectionService(scope, failing, {}, log)
+        val svc = AccureConnectionService(scope, failing, {}, log)
         svc.connect()
 
         withTimeout(5_000) {
@@ -208,7 +208,7 @@ class KiloConnectionServiceTest {
 
     @Test
     fun `reinstall sets forceExtract on server`() = runBlocking {
-        val svc = KiloConnectionService(scope, fake, {}, log)
+        val svc = AccureConnectionService(scope, fake, {}, log)
         svc.connect()
         mock.awaitSseConnection()
 
@@ -220,11 +220,11 @@ class KiloConnectionServiceTest {
         assertTrue(fake.forceExtract)
     }
 
-    // extractType tests moved to KiloCliDataParserTest
+    // extractType tests moved to AccureCliDataParserTest
 
     @Test
     fun `dispose transitions to Disconnected`() = runBlocking {
-        val svc = KiloConnectionService(scope, fake, {}, log)
+        val svc = AccureConnectionService(scope, fake, {}, log)
         svc.connect()
         mock.awaitSseConnection()
 
@@ -240,7 +240,7 @@ class KiloConnectionServiceTest {
 
     @Test
     fun `restart tears down and reconnects`() = runBlocking {
-        val svc = KiloConnectionService(scope, fake, {}, log)
+        val svc = AccureConnectionService(scope, fake, {}, log)
         svc.connect()
         mock.awaitSseConnection()
 
@@ -264,7 +264,7 @@ class KiloConnectionServiceTest {
     @Test
     fun `health check failure triggers reconnect`() = runBlocking {
         // Start healthy then switch to failing health
-        val svc = KiloConnectionService(scope, fake, {}, log)
+        val svc = AccureConnectionService(scope, fake, {}, log)
         svc.connect()
         mock.awaitSseConnection()
 
@@ -283,7 +283,7 @@ class KiloConnectionServiceTest {
         }
     }
 
-    private class BlockingLog : KiloLog {
+    private class BlockingLog : AccureLog {
         val started = CountDownLatch(1)
         val release = CountDownLatch(1)
         override var isDebugEnabled: Boolean = true

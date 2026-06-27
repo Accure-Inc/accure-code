@@ -1,11 +1,11 @@
-package ai.kilocode.client.settings.models
+package ai.accurecode.client.settings.models
 
-import ai.kilocode.rpc.dto.AgentConfigPatchDto
-import ai.kilocode.rpc.dto.AgentDto
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.ConfigPatchDto
-import ai.kilocode.rpc.dto.LoadErrorDto
-import ai.kilocode.rpc.dto.ProvidersDto
+import ai.accurecode.rpc.dto.AgentConfigPatchDto
+import ai.accurecode.rpc.dto.AgentDto
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.ConfigPatchDto
+import ai.accurecode.rpc.dto.LoadErrorDto
+import ai.accurecode.rpc.dto.ProvidersDto
 
 internal data class ModelsDraft(
     val model: String? = null,

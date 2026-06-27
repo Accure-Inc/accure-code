@@ -6,7 +6,7 @@ import { fileURLToPath } from "url"
 
 console.log("=== publishing ===\n")
 
-// kilocode_change start - consume changesets on the publish runner so changelog
+// accurecode_change start - consume changesets on the publish runner so changelog
 // changes are included in the release commit. Previously this ran in the
 // version job on a separate runner whose workspace was discarded.
 {
@@ -33,7 +33,7 @@ console.log("=== publishing ===\n")
     }
   }
 }
-// kilocode_change end
+// accurecode_change end
 
 const pkgjsons = await Array.fromAsync(
   new Bun.Glob("**/package.json").scan({
@@ -59,7 +59,7 @@ await $`bun install`
 await import(`../packages/sdk/js/script/build.ts`)
 
 if (Script.release) {
-  // kilocode_change start - commit, tag, and push with rebase + retry to handle
+  // accurecode_change start - commit, tag, and push with rebase + retry to handle
   // concurrent merges to main. Rebase (instead of cherry-pick) handles
   // overlapping file changes cleanly, and the retry loop covers the narrow
   // window between fetch and push where another commit could land.
@@ -86,17 +86,17 @@ if (Script.release) {
     if (i === retries) throw new Error("failed to push release commit after " + retries + " attempts")
     await new Promise((r) => setTimeout(r, 3_000))
   }
-  // kilocode_change end
+  // accurecode_change end
 
-  // kilocode_change start - publish channel-aware GitHub release notes
-  const { publishNotes } = await import("./kilocode/release-notes")
+  // accurecode_change start - publish channel-aware GitHub release notes
+  const { publishNotes } = await import("./accurecode/release-notes")
   await publishNotes({
     version: Script.version,
     prerelease: Script.preview,
     repo: process.env.GH_REPO,
     temp: process.env.RUNNER_TEMP,
   })
-  // kilocode_change end
+  // accurecode_change end
 }
 
 console.log("\n=== cli ===\n")
@@ -108,17 +108,17 @@ await import(`../packages/sdk/js/script/publish.ts`)
 console.log("\n=== plugin ===\n")
 await import(`../packages/plugin/script/publish.ts`)
 
-// kilocode_change start
+// accurecode_change start
 console.log("\n=== vscode ===\n")
 await import(`../packages/accure-vscode/script/publish.ts`)
-// kilocode_change end
+// accurecode_change end
 
-// kilocode_change start - Kilo does not ship the opencode desktop app
+// accurecode_change start - Accure does not ship the opencode desktop app
 // if (Script.release) {
 //   await $`bun ./packages/desktop/scripts/finalize-latest-json.ts`
 //   await $`bun ./packages/desktop/scripts/finalize-latest-yml.ts`
 // }
-// kilocode_change end
+// accurecode_change end
 
 const dir = fileURLToPath(new URL("..", import.meta.url))
 process.chdir(dir)

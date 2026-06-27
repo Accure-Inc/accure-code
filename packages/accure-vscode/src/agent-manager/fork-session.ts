@@ -1,12 +1,12 @@
-import type { KiloClient, Session } from "@kilocode/sdk/v2/client"
-import { getErrorMessage } from "../kilo-provider-utils"
+import type { AccureClient, Session } from "@accurecode/sdk/v2/client"
+import { getErrorMessage } from "../accure-provider-utils"
 import { TelemetryProxy, TelemetryEventName } from "../services/telemetry"
 import type { WorktreeStateManager } from "./WorktreeStateManager"
 import { PLATFORM } from "./constants"
 import { recordForkHandoff } from "./fork-handoff"
 
 export interface ForkContext {
-  getClient: () => KiloClient
+  getClient: () => AccureClient
   state: WorktreeStateManager | undefined
   directory: string | undefined
   postError: (message: string) => void
@@ -29,7 +29,7 @@ export async function forkSession(
   worktreeId?: string,
   messageId?: string,
 ): Promise<null> {
-  let client: KiloClient
+  let client: AccureClient
   try {
     client = ctx.getClient()
   } catch (err) {

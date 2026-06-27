@@ -1,14 +1,14 @@
 import * as vscode from "vscode"
-import { KiloProvider } from "./KiloProvider"
+import { AccureProvider } from "./AccureProvider"
 import { resolvePanelProjectDirectory } from "./project-directory"
-import type { KiloConnectionService } from "./services/cli-backend"
+import type { AccureConnectionService } from "./services/cli-backend"
 import type { RemoteStatusService } from "./services/RemoteStatusService"
 
 type PanelView = "settings" | "profile" | "indexing"
 
 const PANEL_TITLES: Record<PanelView, string> = {
-  settings: "Kilo Settings",
-  profile: "Kilo Profile",
+  settings: "Accure Settings",
+  profile: "Accure Profile",
   indexing: "Codebase Indexing",
 }
 
@@ -19,19 +19,19 @@ const PANEL_TITLES: Record<PanelView, string> = {
  * Each view type is a singleton panel — calling openPanel() again
  * reveals the existing panel instead of creating a duplicate.
  *
- * Uses a full KiloProvider under the hood so each panel has
+ * Uses a full AccureProvider under the hood so each panel has
  * the same backend connectivity (config, providers, profile, auth)
  * as the sidebar.
  */
 export class SettingsEditorProvider implements vscode.Disposable {
   private panels = new Map<PanelView, vscode.WebviewPanel>()
-  private providers = new Map<PanelView, KiloProvider>()
+  private providers = new Map<PanelView, AccureProvider>()
   private tabs = new Map<PanelView, string>()
   private remoteService: RemoteStatusService | null = null
 
   constructor(
     private readonly extensionUri: vscode.Uri,
-    private readonly connectionService: KiloConnectionService,
+    private readonly connectionService: AccureConnectionService,
     private readonly context: vscode.ExtensionContext,
   ) {}
 
@@ -95,13 +95,13 @@ export class SettingsEditorProvider implements vscode.Disposable {
 
   private wirePanel(panel: vscode.WebviewPanel, view: PanelView, projectDirectory: string | null): void {
     panel.iconPath = {
-      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-light.svg"),
-      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-dark.svg"),
+      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "accure-light.svg"),
+      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "accure-dark.svg"),
     }
 
-    // Create a dedicated KiloProvider for this panel so it has full
+    // Create a dedicated AccureProvider for this panel so it has full
     // backend connectivity (config, providers, agents, profile, auth).
-    const provider = new KiloProvider(this.extensionUri, this.connectionService, this.context, {
+    const provider = new AccureProvider(this.extensionUri, this.connectionService, this.context, {
       projectDirectory,
     })
     if (this.remoteService) {
@@ -120,7 +120,7 @@ export class SettingsEditorProvider implements vscode.Disposable {
     // "Developer: Reload Webviews" which re-creates the JS context).
     const readyDisposable = panel.webview.onDidReceiveMessage((msg) => {
       if (msg.type === "webviewReady") {
-        // Small delay to let KiloProvider's own webviewReady handler finish first
+        // Small delay to let AccureProvider's own webviewReady handler finish first
         setTimeout(() => {
           provider.postMessage({ type: "navigate", view, tab: this.tabs.get(view) })
         }, 50)
@@ -139,7 +139,7 @@ export class SettingsEditorProvider implements vscode.Disposable {
 
     const title = PANEL_TITLES[view]
     panel.onDidDispose(() => {
-      console.log(`[Kilo New] ${title} panel disposed`)
+      console.log(`[Accure New] ${title} panel disposed`)
       closePanelDisposable.dispose()
       readyDisposable.dispose()
       tabDisposable.dispose()

@@ -1,17 +1,17 @@
 @file:Suppress("TooManyFunctions")
 
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.Reasoning
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.base.SecondarySessionPartView
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.md.MdView
-import ai.kilocode.client.ui.md.MdViewFactory
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.Reasoning
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.base.SecondarySessionPartView
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.md.MdView
+import ai.accurecode.client.ui.md.MdViewFactory
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
@@ -316,7 +316,7 @@ class ReasoningBody(
 )
 
 private fun reasoningParts(selection: SessionSelection? = null): ReasoningParts {
-    val title = JBLabel(KiloBundle.message("session.part.reasoning")).apply { foreground = UiStyle.Colors.weak() }
+    val title = JBLabel(AccureBundle.message("session.part.reasoning")).apply { foreground = UiStyle.Colors.weak() }
     val icon = JBLabel(SessionViewIcons.brain).apply { foreground = UiStyle.Colors.weak() }
     val header = JPanel(BorderLayout(JBUI.scale(SessionUiStyle.View.Layout.GAP), 0)).apply {
         isOpaque = false

@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.history
+package ai.accurecode.client.session.history
 
-import ai.kilocode.client.plugin.KiloBundle
+import ai.accurecode.client.plugin.AccureBundle
 import java.time.Instant
 import java.time.LocalDate
 import java.time.OffsetDateTime
@@ -41,26 +41,26 @@ internal object HistoryTime {
     }
 
     fun title(section: HistorySection): String = when (section) {
-        HistorySection.TODAY -> KiloBundle.message("history.group.today")
-        HistorySection.YESTERDAY -> KiloBundle.message("history.group.yesterday")
-        HistorySection.WEEK -> KiloBundle.message("history.group.week")
-        HistorySection.MONTH -> KiloBundle.message("history.group.month")
-        HistorySection.OLDER -> KiloBundle.message("history.group.older")
+        HistorySection.TODAY -> AccureBundle.message("history.group.today")
+        HistorySection.YESTERDAY -> AccureBundle.message("history.group.yesterday")
+        HistorySection.WEEK -> AccureBundle.message("history.group.week")
+        HistorySection.MONTH -> AccureBundle.message("history.group.month")
+        HistorySection.OLDER -> AccureBundle.message("history.group.older")
     }
 
     fun relative(item: HistoryItem, now: Long = System.currentTimeMillis()): String {
         val ms = millis(item) ?: return item.updatedAt
         val diff = (now - ms).coerceAtLeast(0)
-        if (diff < MINUTE) return KiloBundle.message("history.time.moments")
-        if (diff < HOUR) return KiloBundle.message("history.time.minutes", (diff / MINUTE).coerceAtLeast(1))
-        if (diff < DAY) return KiloBundle.message("history.time.hours", (diff / HOUR).coerceAtLeast(1))
-        if (diff < 7 * DAY) return KiloBundle.message("history.time.days", (diff / DAY).coerceAtLeast(1))
+        if (diff < MINUTE) return AccureBundle.message("history.time.moments")
+        if (diff < HOUR) return AccureBundle.message("history.time.minutes", (diff / MINUTE).coerceAtLeast(1))
+        if (diff < DAY) return AccureBundle.message("history.time.hours", (diff / HOUR).coerceAtLeast(1))
+        if (diff < 7 * DAY) return AccureBundle.message("history.time.days", (diff / DAY).coerceAtLeast(1))
         val date = LocalDate.ofInstant(Instant.ofEpochMilli(ms), ZoneId.systemDefault())
         val today = LocalDate.ofInstant(Instant.ofEpochMilli(now), ZoneId.systemDefault())
         val months = ChronoUnit.MONTHS.between(date.withDayOfMonth(1), today.withDayOfMonth(1))
-        if (months < 1) return KiloBundle.message("history.time.days", (diff / DAY).coerceAtLeast(1))
-        if (months < 12) return KiloBundle.message("history.time.months", months)
-        return KiloBundle.message("history.time.years", months / 12)
+        if (months < 1) return AccureBundle.message("history.time.days", (diff / DAY).coerceAtLeast(1))
+        if (months < 12) return AccureBundle.message("history.time.months", months)
+        return AccureBundle.message("history.time.years", months / 12)
     }
 
     fun <T : HistoryItem> sorted(items: List<T>): List<T> = items.sortedWith(

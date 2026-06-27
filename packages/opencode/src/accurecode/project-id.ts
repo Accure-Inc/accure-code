@@ -1,5 +1,5 @@
 import { Context, Effect, Layer } from "effect"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/accurecode/instance"
 import { InstanceState } from "@/effect/instance-state"
 import { makeRuntime } from "@/effect/run-service"
 import path from "path"
@@ -38,13 +38,13 @@ function normalizeProjectId(input: string): string {
 }
 
 /**
- * Read project ID from .kilo/config.json, falling back to .kilocode/config.json
+ * Read project ID from .accurecode/config.json, falling back to .accurecode/config.json
  * @param directory - Project directory
  * @returns Normalized project ID or undefined
  */
 async function getProjectIdFromConfig(directory: string): Promise<string | undefined> {
-  // Check .kilo first, then legacy .kilocode
-  for (const dir of [".kilo", ".kilocode"]) {
+  // Check .accurecode first, then legacy .accurecode
+  for (const dir of [".accurecode", ".accurecode"]) {
     const file = Bun.file(path.join(directory, dir, "config.json"))
     const text = await file.text().catch(() => undefined)
     if (!text) continue
@@ -80,13 +80,13 @@ async function getProjectIdFromGit(directory: string): Promise<string | undefine
 }
 
 /**
- * Resolve project ID with priority: .kilo/config.json -> .kilocode/config.json -> git origin URL
+ * Resolve project ID with priority: .accurecode/config.json -> .accurecode/config.json -> git origin URL
  * @returns Normalized project ID or undefined
  */
 async function resolveProjectId(): Promise<string | undefined> {
   const dir = Instance.directory
 
-  // Priority 1: .kilo/config.json (falls back to .kilocode/config.json)
+  // Priority 1: .accurecode/config.json (falls back to .accurecode/config.json)
   const id = await getProjectIdFromConfig(dir)
   if (id) return id
 
@@ -94,18 +94,18 @@ async function resolveProjectId(): Promise<string | undefined> {
   return getProjectIdFromGit(dir)
 }
 
-export namespace KiloProjectID {
+export namespace AccureProjectID {
   export interface Interface {
     readonly get: () => Effect.Effect<string | undefined>
   }
 
-  export class Service extends Context.Service<Service, Interface>()("@kilocode/KiloProjectID") {}
+  export class Service extends Context.Service<Service, Interface>()("@accurecode/AccureProjectID") {}
 
   export const layer = Layer.effect(
     Service,
     Effect.gen(function* () {
       const state = yield* InstanceState.make(
-        Effect.fn("KiloProjectID.state")(function* () {
+        Effect.fn("AccureProjectID.state")(function* () {
           return { id: yield* Effect.promise(() => resolveProjectId()) }
         }),
       )
@@ -118,12 +118,12 @@ export namespace KiloProjectID {
   export const defaultLayer = layer
 }
 
-const { runPromise } = makeRuntime(KiloProjectID.Service, KiloProjectID.defaultLayer)
+const { runPromise } = makeRuntime(AccureProjectID.Service, AccureProjectID.defaultLayer)
 
 /**
  * Get the project ID for the current Instance context (cached per-project)
  * @returns Normalized project ID or undefined
  */
-export async function getKiloProjectId(): Promise<string | undefined> {
+export async function getAccureProjectId(): Promise<string | undefined> {
   return runPromise((svc) => svc.get())
 }

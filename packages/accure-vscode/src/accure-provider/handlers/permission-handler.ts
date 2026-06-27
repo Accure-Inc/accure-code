@@ -1,16 +1,16 @@
 /**
- * Permission handlers — extracted from KiloProvider.
+ * Permission handlers — extracted from AccureProvider.
  *
  * Manages permission responses (once/always/reject) and recovery of
  * pending permissions after SSE reconnections. No vscode dependency.
  */
 
-import type { KiloClient, PermissionRequest } from "@kilocode/sdk/v2/client"
+import type { AccureClient, PermissionRequest } from "@accurecode/sdk/v2/client"
 
 export type RecoverablePermission = PermissionRequest
 
 export interface PermissionContext {
-  readonly client: KiloClient | null
+  readonly client: AccureClient | null
   readonly currentSessionId: string | undefined
   readonly trackedSessionIds: Set<string>
   readonly sessionDirectories: ReadonlyMap<string, string>
@@ -67,7 +67,7 @@ export async function handlePermissionResponse(
 
   const target = sessionID || ctx.currentSessionId
   if (!target) {
-    console.error("[Kilo New] KiloProvider: No sessionID for permission response")
+    console.error("[Accure New] AccureProvider: No sessionID for permission response")
     ctx.postMessage({ type: "permissionError", permissionID: permissionId })
     return
   }
@@ -94,7 +94,7 @@ export async function handlePermissionResponse(
       .then(() => "ok" as const)
       .catch((error: unknown) => {
         if (isNotFoundError(error)) return "stale" as const
-        console.error("[Kilo New] KiloProvider: Failed to save always-rules:", error)
+        console.error("[Accure New] AccureProvider: Failed to save always-rules:", error)
         ctx.postMessage({ type: "permissionError", permissionID: permissionId })
         return "error" as const
       })
@@ -110,7 +110,7 @@ export async function handlePermissionResponse(
     .then(() => "ok" as const)
     .catch((error: unknown) => {
       if (isNotFoundError(error)) return "stale" as const
-      console.error("[Kilo New] KiloProvider: Failed to respond to permission:", error)
+      console.error("[Accure New] AccureProvider: Failed to respond to permission:", error)
       ctx.postMessage({ type: "permissionError", permissionID: permissionId })
       return "error" as const
     })
@@ -135,7 +135,7 @@ export async function fetchAndSendPendingPermissions(ctx: PermissionContext): Pr
     for (const dir of dirs) {
       const { data, error } = await ctx.client.permission.list({ directory: dir })
       if (error) {
-        console.error(`[Kilo New] KiloProvider: Failed to fetch pending permissions for ${dir}:`, error)
+        console.error(`[Accure New] AccureProvider: Failed to fetch pending permissions for ${dir}:`, error)
         continue
       }
       valid.add(dir)
@@ -159,6 +159,6 @@ export async function fetchAndSendPendingPermissions(ctx: PermissionContext): Pr
     }
     ctx.prunePermissionDirectories(seen, valid)
   } catch (error) {
-    console.error("[Kilo New] KiloProvider: Failed to fetch pending permissions:", error)
+    console.error("[Accure New] AccureProvider: Failed to fetch pending permissions:", error)
   }
 }

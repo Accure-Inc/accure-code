@@ -1,4 +1,4 @@
-package ai.kilocode.client
+package ai.accurecode.client
 
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationGroupManager
@@ -6,8 +6,8 @@ import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 
-object KiloNotifications {
-    private const val GROUP = "Kilo Code"
+object AccureNotifications {
+    private const val GROUP = "Accure Code"
 
     fun error(title: String, content: String? = null) {
         val project = ProjectManager.getInstance().openProjects.firstOrNull { !it.isDefault }

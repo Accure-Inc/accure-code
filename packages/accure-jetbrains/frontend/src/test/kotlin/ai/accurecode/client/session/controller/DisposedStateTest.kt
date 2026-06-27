@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.rpc.dto.MessageWithPartsDto
 import com.intellij.openapi.util.Disposer
 import kotlinx.coroutines.CompletableDeferred
 

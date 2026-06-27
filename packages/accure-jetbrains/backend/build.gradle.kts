@@ -42,9 +42,9 @@ openApiGenerate {
     library.set("jvm-okhttp4")
     inputSpec.set(generatedSpec.map { it.asFile.absolutePath })
     outputDir.set(layout.buildDirectory.dir("generated/openapi").get().asFile.absolutePath)
-    packageName.set("ai.kilocode.jetbrains.api")
-    apiPackage.set("ai.kilocode.jetbrains.api.client")
-    modelPackage.set("ai.kilocode.jetbrains.api.model")
+    packageName.set("ai.accurecode.jetbrains.api")
+    apiPackage.set("ai.accurecode.jetbrains.api.client")
+    modelPackage.set("ai.accurecode.jetbrains.api.model")
     configOptions.set(mapOf(
         "serializationLibrary" to "kotlinx_serialization",
         "omitGradleWrapper" to "true",
@@ -100,7 +100,7 @@ val prepareLocalCli by tasks.registering(PrepareLocalCliTask::class) {
     root.set(rootProject.layout.projectDirectory)
     dir.set(cliDir)
     bunPath.convention(
-        providers.gradleProperty("kilo.bun.path")
+        providers.gradleProperty("accure.bun.path")
             .orElse(providers.environmentVariable("BUN_EXE"))
     )
 }

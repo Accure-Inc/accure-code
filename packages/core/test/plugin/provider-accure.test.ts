@@ -3,65 +3,73 @@ import { Effect } from "effect"
 import { Catalog } from "@opencode-ai/core/catalog"
 import { PluginV2 } from "@opencode-ai/core/plugin"
 import { ProviderPlugins } from "@opencode-ai/core/plugin/provider"
-import { KiloPlugin } from "@opencode-ai/core/plugin/provider/kilo"
+import { AccurePlugin } from "@opencode-ai/core/plugin/provider/accure"
 import { ProviderV2 } from "@opencode-ai/core/provider"
-import { expectPluginRegistered, it, model, provider, withEnv } from "./provider-helper" // kilocode_change
+import { expectPluginRegistered, it, model, provider, withEnv } from "./provider-helper" // accurecode_change
 
-describe("KiloPlugin", () => {
+describe("AccurePlugin", () => {
   it.effect("is registered so legacy referer headers can be applied", () =>
     Effect.sync(() =>
       expectPluginRegistered(
         ProviderPlugins.map((item) => item.id),
-        "kilo",
+        "accure",
       ),
     ),
   )
 
-  it.effect("applies legacy referer headers only to kilo", () =>
+  it.effect("applies legacy referer headers only to accure", () =>
     Effect.gen(function* () {
       const plugin = yield* PluginV2.Service
       const catalog = yield* Catalog.Service
-      yield* plugin.add(KiloPlugin)
+      yield* plugin.add(AccurePlugin)
       const load = yield* catalog.loader()
       yield* load((catalog) => {
-        const kilo = provider("kilo", {
-          endpoint: { type: "aisdk", package: "@ai-sdk/openai-compatible", url: "https://api.kilo.ai/api/gateway" },
+        const accure = provider("accure", {
+          endpoint: {
+            type: "aisdk",
+            package: "@ai-sdk/openai-compatible",
+            url: "https://api.accurecode.ai/api/gateway",
+          },
           options: { headers: { Existing: "value" }, body: {}, aisdk: { provider: {}, request: {} } },
         })
-        catalog.provider.update(kilo.id, (draft) => {
-          draft.endpoint = kilo.endpoint
-          draft.options = kilo.options
+        catalog.provider.update(accure.id, (draft) => {
+          draft.endpoint = accure.endpoint
+          draft.options = accure.options
         })
         catalog.provider.update(provider("openrouter").id, () => {})
       })
-      expect((yield* catalog.provider.get(ProviderV2.ID.make("kilo"))).options.headers).toEqual({
+      expect((yield* catalog.provider.get(ProviderV2.ID.make("accure"))).options.headers).toEqual({
         Existing: "value",
-        "HTTP-Referer": "https://kilo.ai/",
-        "X-Title": "Kilo Code", // kilocode_change
+        "HTTP-Referer": "https://accure.ai/",
+        "X-Title": "Accure Code", // accurecode_change
       })
       expect((yield* catalog.provider.get(ProviderV2.ID.openrouter)).options.headers).toEqual({})
     }),
   )
 
-  it.effect("uses the exact legacy Kilo header casing and set", () =>
+  it.effect("uses the exact legacy Accure header casing and set", () =>
     Effect.gen(function* () {
       const plugin = yield* PluginV2.Service
       const catalog = yield* Catalog.Service
-      yield* plugin.add(KiloPlugin)
+      yield* plugin.add(AccurePlugin)
       const load = yield* catalog.loader()
       yield* load((catalog) => {
-        const item = provider("kilo", {
-          endpoint: { type: "aisdk", package: "@ai-sdk/openai-compatible", url: "https://api.kilo.ai/api/gateway" },
+        const item = provider("accure", {
+          endpoint: {
+            type: "aisdk",
+            package: "@ai-sdk/openai-compatible",
+            url: "https://api.accurecode.ai/api/gateway",
+          },
         })
         catalog.provider.update(item.id, (draft) => {
           draft.endpoint = item.endpoint
         })
       })
 
-      const result = yield* catalog.provider.get(ProviderV2.ID.make("kilo"))
+      const result = yield* catalog.provider.get(ProviderV2.ID.make("accure"))
       expect(result.options.headers).toEqual({
-        "HTTP-Referer": "https://kilo.ai/",
-        "X-Title": "Kilo Code", // kilocode_change
+        "HTTP-Referer": "https://accure.ai/",
+        "X-Title": "Accure Code", // accurecode_change
       })
       expect(result.options.headers).not.toHaveProperty("http-referer")
       expect(result.options.headers).not.toHaveProperty("x-title")
@@ -73,42 +81,50 @@ describe("KiloPlugin", () => {
     Effect.gen(function* () {
       const plugin = yield* PluginV2.Service
       const catalog = yield* Catalog.Service
-      yield* plugin.add(KiloPlugin)
+      yield* plugin.add(AccurePlugin)
       const load = yield* catalog.loader()
       yield* load((catalog) => {
-        const kilo = provider("kilo", {
-          endpoint: { type: "aisdk", package: "@ai-sdk/openai-compatible", url: "https://api.kilo.ai/api/gateway" },
+        const accure = provider("accure", {
+          endpoint: {
+            type: "aisdk",
+            package: "@ai-sdk/openai-compatible",
+            url: "https://api.accurecode.ai/api/gateway",
+          },
         })
-        catalog.provider.update(kilo.id, (draft) => {
-          draft.endpoint = kilo.endpoint
+        catalog.provider.update(accure.id, (draft) => {
+          draft.endpoint = accure.endpoint
         })
-        const custom = provider("custom-kilo", {
-          endpoint: { type: "aisdk", package: "kilo" },
+        const custom = provider("custom-accure", {
+          endpoint: { type: "aisdk", package: "accure" },
         })
         catalog.provider.update(custom.id, (draft) => {
           draft.endpoint = custom.endpoint
         })
       })
 
-      expect((yield* catalog.provider.get(ProviderV2.ID.make("kilo"))).options.headers).toEqual({
-        "HTTP-Referer": "https://kilo.ai/",
-        "X-Title": "Kilo Code", // kilocode_change
+      expect((yield* catalog.provider.get(ProviderV2.ID.make("accure"))).options.headers).toEqual({
+        "HTTP-Referer": "https://accure.ai/",
+        "X-Title": "Accure Code", // accurecode_change
       })
-      expect((yield* catalog.provider.get(ProviderV2.ID.make("custom-kilo"))).options.headers).toEqual({})
+      expect((yield* catalog.provider.get(ProviderV2.ID.make("custom-accure"))).options.headers).toEqual({})
     }),
   )
 
-  // kilocode_change start
-  it.effect("routes the Kilo catalog through the Kilo Gateway SDK", () =>
-    withEnv({ KILO_API_KEY: undefined, KILO_ORG_ID: undefined }, () =>
+  // accurecode_change start
+  it.effect("routes the Accure catalog through the Accure Gateway SDK", () =>
+    withEnv({ ACCURECODE_API_KEY: undefined, ACCURECODE_ORG_ID: undefined }, () =>
       Effect.gen(function* () {
         const plugin = yield* PluginV2.Service
         const catalog = yield* Catalog.Service
-        yield* plugin.add(KiloPlugin)
+        yield* plugin.add(AccurePlugin)
         const load = yield* catalog.loader()
         yield* load((catalog) => {
-          const item = provider("kilo", {
-            endpoint: { type: "aisdk", package: "@ai-sdk/openai-compatible", url: "https://api.kilo.ai/api/gateway" },
+          const item = provider("accure", {
+            endpoint: {
+              type: "aisdk",
+              package: "@ai-sdk/openai-compatible",
+              url: "https://api.accurecode.ai/api/gateway",
+            },
             options: {
               headers: {},
               body: {},
@@ -120,20 +136,20 @@ describe("KiloPlugin", () => {
             draft.options = item.options
           })
         })
-        const updated = yield* catalog.provider.get(ProviderV2.ID.make("kilo"))
+        const updated = yield* catalog.provider.get(ProviderV2.ID.make("accure"))
 
         expect(updated.endpoint).toEqual({
           type: "aisdk",
-          package: "@kilocode/accure-gateway",
-          url: "https://api.kilo.ai/api/openrouter",
+          package: "@accurecode/accure-gateway",
+          url: "https://api.accurecode.ai/api/openrouter",
         })
-        expect(updated.options.aisdk.provider.kilocodeToken).toBe("stored-token")
+        expect(updated.options.aisdk.provider.accurecodeToken).toBe("stored-token")
 
         const result = yield* plugin.trigger(
           "aisdk.sdk",
           {
-            model: model("kilo", "kilo-auto/free"),
-            package: "@kilocode/accure-gateway",
+            model: model("accure", "accure-auto/free"),
+            package: "@accurecode/accure-gateway",
             options: updated.options.aisdk.provider,
           },
           {},
@@ -146,20 +162,20 @@ describe("KiloPlugin", () => {
   )
 
   it.effect("keeps authenticated credentials ahead of inherited environment keys", () =>
-    withEnv({ KILO_API_KEY: "environment-token", KILO_ORG_ID: "environment-org" }, () =>
+    withEnv({ ACCURECODE_API_KEY: "environment-token", ACCURECODE_ORG_ID: "environment-org" }, () =>
       Effect.gen(function* () {
         const plugin = yield* PluginV2.Service
         const catalog = yield* Catalog.Service
-        yield* plugin.add(KiloPlugin)
+        yield* plugin.add(AccurePlugin)
         const load = yield* catalog.loader()
         yield* load((catalog) => {
-          const item = provider("kilo", {
-            enabled: { via: "account", service: "kilo" },
+          const item = provider("accure", {
+            enabled: { via: "account", service: "accure" },
             options: {
               headers: {},
               body: {},
               aisdk: {
-                provider: { apiKey: "authenticated-token", kilocodeOrganizationId: "authenticated-org" },
+                provider: { apiKey: "authenticated-token", accurecodeOrganizationId: "authenticated-org" },
                 request: {},
               },
             },
@@ -169,29 +185,29 @@ describe("KiloPlugin", () => {
             draft.options = item.options
           })
         })
-        const result = yield* catalog.provider.get(ProviderV2.ID.make("kilo"))
+        const result = yield* catalog.provider.get(ProviderV2.ID.make("accure"))
 
-        expect(result.enabled).toEqual({ via: "account", service: "kilo" })
-        expect(result.options.aisdk.provider.kilocodeToken).toBe("authenticated-token")
-        expect(result.options.aisdk.provider.kilocodeOrganizationId).toBe("environment-org")
+        expect(result.enabled).toEqual({ via: "account", service: "accure" })
+        expect(result.options.aisdk.provider.accurecodeToken).toBe("authenticated-token")
+        expect(result.options.aisdk.provider.accurecodeOrganizationId).toBe("environment-org")
       }),
     ),
   )
 
-  it.effect("keeps anonymous Kilo models available without credentials", () =>
-    withEnv({ KILO_API_KEY: undefined, KILO_ORG_ID: undefined }, () =>
+  it.effect("keeps anonymous Accure models available without credentials", () =>
+    withEnv({ ACCURECODE_API_KEY: undefined, ACCURECODE_ORG_ID: undefined }, () =>
       Effect.gen(function* () {
         const plugin = yield* PluginV2.Service
         const catalog = yield* Catalog.Service
-        yield* plugin.add(KiloPlugin)
+        yield* plugin.add(AccurePlugin)
         const load = yield* catalog.loader()
-        yield* load((catalog) => catalog.provider.update(ProviderV2.ID.make("kilo"), () => {}))
-        const result = yield* catalog.provider.get(ProviderV2.ID.make("kilo"))
+        yield* load((catalog) => catalog.provider.update(ProviderV2.ID.make("accure"), () => {}))
+        const result = yield* catalog.provider.get(ProviderV2.ID.make("accure"))
 
         expect(result.enabled).toEqual({ via: "custom", data: { anonymous: true } })
-        expect(result.options.aisdk.provider.kilocodeToken).toBe("anonymous")
+        expect(result.options.aisdk.provider.accurecodeToken).toBe("anonymous")
       }),
     ),
   )
-  // kilocode_change end
+  // accurecode_change end
 })

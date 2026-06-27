@@ -2,9 +2,9 @@
 
 ## Overview
 
-This extension is a **ground-up rebuild** of the [old Accure Code extension](https://github.com/Kilo-Org/kilocode-legacy) using Kilo CLI as the backend. Rather than migrating the old extension's codebase, we started fresh with a Solid.js webview, a CLI server manager, and a message-based protocol between extension host and webview. This new extension lives in the [kilocode monorepo](https://github.com/Kilo-Org/kilocode/tree/main/packages/accure-vscode).
+This extension is a **ground-up rebuild** of the [old Accure Code extension](https://github.com/Accure-Inc/accure-code-legacy) using Accure CLI as the backend. Rather than migrating the old extension's codebase, we started fresh with a Solid.js webview, a CLI server manager, and a message-based protocol between extension host and webview. This new extension lives in the [accurecode monorepo](https://github.com/Accure-Inc/accure-code/tree/main/packages/accure-vscode).
 
-This document tracks remaining work needed for feature parity with the old extension. Each feature links to its detailed parity requirement doc. Features sourced from the [GitHub project board](https://github.com/orgs/Kilo-Org/projects/25/views/1) include issue links.
+This document tracks remaining work needed for feature parity with the old extension. Each feature links to its detailed parity requirement doc. Features sourced from the [GitHub project board](https://github.com/orgs/Accure-Org/projects/25/views/1) include issue links.
 
 ---
 
@@ -26,7 +26,7 @@ This document tracks remaining work needed for feature parity with the old exten
 |---|---|---|---|
 | [Authentication & Enterprise](non-agent-features/authentication-organization-enterprise-enforcement.md) | Org feature flags, MDM policy enforcement | CLI handles its auth; extension handles org/MDM | P1 |
 | [Auto-Purge](non-agent-features/auto-purge.md) | Scheduled cleanup of old session/task storage | Extension-side (storage ownership TBD) | P3 |
-| [Cloud Task Support](non-agent-features/cloud-task-support.md) | Upload local sessions to cloud, real-time sync, conflict resolution | Kilo cloud API + CLI; extension provides UI | P2 |
+| [Cloud Task Support](non-agent-features/cloud-task-support.md) | Upload local sessions to cloud, real-time sync, conflict resolution | Accure cloud API + CLI; extension provides UI | P2 |
 | [Code Reviews](non-agent-features/code-reviews.md) | Local review mode, automated AI review of uncommitted/branch changes | CLI (partial); extension for VS Code review UX | P2 |
 | [Codebase Indexing & Semantic Search](non-agent-features/codebase-indexing-semantic-search.md) | Vector indexing, semantic search, embeddings infrastructure | CLI has grep/glob endpoints; semantic indexing is extension or cloud | P2 |
 | [Contribution Tracking](non-agent-features/contribution-tracking.md) | AI attribution tracking, line fingerprinting, reporting | Extension-side | P3 |
@@ -57,7 +57,7 @@ The "Agent Behaviour" settings tab contains 5 sub-tabs in both the legacy and ne
 
 ## Project Board Issues
 
-Open issues from the [GitHub project board](https://github.com/orgs/Kilo-Org/projects/25/views/1) not covered by the feature docs above. Each item has its own detailed doc.
+Open issues from the [GitHub project board](https://github.com/orgs/Accure-Org/projects/25/views/1) not covered by the feature docs above. Each item has its own detailed doc.
 
 ### UI Polish & Bugs
 
@@ -114,13 +114,13 @@ Before publishing this extension to the VS Code Marketplace or deploying to user
 
 ### Security
 
-- [ ] **Review and tighten CSP** — The current policy in [`KiloProvider._getHtmlForWebview()`](../src/KiloProvider.ts:829) has several areas to audit:
+- [ ] **Review and tighten CSP** — The current policy in [`AccureProvider._getHtmlForWebview()`](../src/AccureProvider.ts:829) has several areas to audit:
   - `style-src 'unsafe-inline'` is broadly permissive — investigate whether nonce-based style loading is feasible now that accure-ui styles are bundled
   - `connect-src http://127.0.0.1:* http://localhost:*` allows connections to _any_ localhost port — tighten to the actual CLI server port once known at runtime
   - `img-src … https:` allows images from any HTTPS origin — scope to `${webview.cspSource} data:` unless external images are explicitly needed
   - `'wasm-unsafe-eval'` in `script-src` was added for shiki — confirm it is still required and document the reason
   - `ws://` connections to any localhost port — same concern as `connect-src`
-- [ ] **Validate `openExternal` URLs** — The [`openExternal` handler](../src/KiloProvider.ts:186) passes any URL from the webview directly to `vscode.env.openExternal()` with no allowlist or scheme check. Restrict to `https:` (and possibly `vscode:`) schemes, or allowlist specific hosts
+- [ ] **Validate `openExternal` URLs** — The [`openExternal` handler](../src/AccureProvider.ts:186) passes any URL from the webview directly to `vscode.env.openExternal()` with no allowlist or scheme check. Restrict to `https:` (and possibly `vscode:`) schemes, or allowlist specific hosts
 - [ ] **Audit credential storage** — CLI stores credentials as plaintext JSON with `chmod 0600`. Evaluate whether VS Code's `SecretStorage` API should be used for extension-side secrets, and document the threat model for CLI-managed credentials
 - [ ] **Audit workspace path containment** — CLI's path traversal checks are lexical only; symlinks and Windows cross-drive paths can escape the workspace boundary. Determine if additional hardening (realpath canonicalization) is needed before production
 
@@ -146,7 +146,7 @@ Before publishing this extension to the VS Code Marketplace or deploying to user
 ### Logging & Observability
 
 - [ ] **Dedicated output channel** — All logging currently goes to `console.log` mixed with other extensions ([details](infrastructure/dedicated-output-channel.md)). Create a dedicated "Accure Code" output channel before production
-- [ ] **Remove or guard verbose logging** — Many `console.log` calls with emojis and debug detail exist in [`KiloProvider.ts`](../src/KiloProvider.ts). Gate behind a debug flag or move to the output channel at appropriate log levels
+- [ ] **Remove or guard verbose logging** — Many `console.log` calls with emojis and debug detail exist in [`AccureProvider.ts`](../src/AccureProvider.ts). Gate behind a debug flag or move to the output channel at appropriate log levels
 
 ---
 
@@ -162,7 +162,7 @@ Before publishing this extension to the VS Code Marketplace or deploying to user
 
 ### accure-ui Shared Library
 
-- **accure-ui shared library**: The webview now heavily uses `@kilocode/accure-ui` for UI components. A `DataBridge` component in App.tsx adapts the session store to accure-ui's `DataProvider` expected shape, enabling shared components like `<KiloMessage>` to work with the extension's data model.
+- **accure-ui shared library**: The webview now heavily uses `@accurecode/accure-ui` for UI components. A `DataBridge` component in App.tsx adapts the session store to accure-ui's `DataProvider` expected shape, enabling shared components like `<AccureMessage>` to work with the extension's data model.
 
 ### Key Differences from Old Extension
 

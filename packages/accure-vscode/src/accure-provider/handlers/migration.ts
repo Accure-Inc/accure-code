@@ -1,11 +1,11 @@
 /**
- * Legacy migration handlers — extracted from KiloProvider.
+ * Legacy migration handlers — extracted from AccureProvider.
  *
  * Manages the migration wizard for users upgrading from Accure Code v5.x.
  * VS Code access is limited to migration service helpers and injected context.
  */
 
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 import type {
   LegacyMigrationData,
   MigrationSelections,
@@ -55,7 +55,7 @@ export function getMigrationCache(cache: MigrationCache, source: MigrationSource
 }
 
 export interface MigrationContext {
-  readonly client: KiloClient | null
+  readonly client: AccureClient | null
   readonly extensionContext: MigrationExtensionContext | undefined
   postMessage(msg: unknown): void
   refreshSessions(): void
@@ -118,7 +118,7 @@ export async function checkAndShowMigrationWizard(ctx: MigrationContext): Promis
 
   if (!data.hasData) return
 
-  console.log("[Kilo New] KiloProvider: 🔄 Legacy data detected, showing migration wizard")
+  console.log("[Accure New] AccureProvider: 🔄 Legacy data detected, showing migration wizard")
   // The wizard re-requests the data via requestMigrationData on mount, so only the flag is sent here.
   ctx.postMessage({
     type: "migrationState",
@@ -196,7 +196,7 @@ async function startRooMigration(
       migrateSession(
         selection,
         ctx.extensionContext as Parameters<typeof migrateSession>[1],
-        ctx.client as KiloClient,
+        ctx.client as AccureClient,
         progress,
         resolved,
       ),
@@ -237,7 +237,7 @@ async function startLegacyMigration(
     ctx.postMessage({ type: "migrationComplete", source: "legacy", operationId, results })
   } catch (error) {
     ctx.lastMigrationHadErrors = true
-    console.error("[Kilo New] KiloProvider: ❌ Migration failed", error)
+    console.error("[Accure New] AccureProvider: ❌ Migration failed", error)
     ctx.postMessage({
       type: "migrationComplete",
       source: "legacy",

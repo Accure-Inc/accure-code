@@ -1,17 +1,17 @@
 /**
- * Suggestion handlers — extracted from KiloProvider.
+ * Suggestion handlers — extracted from AccureProvider.
  *
  * Manages suggestion accept and dismiss flows plus recovery after SSE reconnects.
  * No vscode dependency.
  */
 
-import type { KiloClient, SuggestionRequest } from "@kilocode/sdk/v2/client"
+import type { AccureClient, SuggestionRequest } from "@accurecode/sdk/v2/client"
 import { recoveryDirs } from "./permission-handler"
 
 export type RecoverableSuggestion = SuggestionRequest
 
 export interface SuggestionContext {
-  readonly client: KiloClient | null
+  readonly client: AccureClient | null
   readonly currentSessionId: string | undefined
   readonly trackedSessionIds: Set<string>
   readonly sessionDirectories: ReadonlyMap<string, string>
@@ -62,7 +62,7 @@ export async function handleSuggestionAccept(
       { throwOnError: true },
     )
   } catch (error) {
-    console.error("[Kilo New] KiloProvider: Failed to accept suggestion:", error)
+    console.error("[Accure New] AccureProvider: Failed to accept suggestion:", error)
     ctx.postMessage({ type: "suggestionError", requestID })
   }
 }
@@ -83,7 +83,7 @@ export async function handleSuggestionDismiss(
       { throwOnError: true },
     )
   } catch (error) {
-    console.error("[Kilo New] KiloProvider: Failed to dismiss suggestion:", error)
+    console.error("[Accure New] AccureProvider: Failed to dismiss suggestion:", error)
     ctx.postMessage({ type: "suggestionError", requestID })
   }
 }
@@ -105,6 +105,6 @@ export async function fetchAndSendPendingSuggestions(ctx: SuggestionContext): Pr
       }
     }
   } catch (error) {
-    console.error("[Kilo New] KiloProvider: Failed to fetch pending suggestions:", error)
+    console.error("[Accure New] AccureProvider: Failed to fetch pending suggestions:", error)
   }
 }

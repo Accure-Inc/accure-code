@@ -1,11 +1,11 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.FileAttachment
-import ai.kilocode.client.session.ui.attachment.AttachmentCard
-import ai.kilocode.client.session.ui.attachment.AttachmentCardItem
-import ai.kilocode.client.session.views.base.PartView
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.FileAttachment
+import ai.accurecode.client.session.ui.attachment.AttachmentCard
+import ai.accurecode.client.session.ui.attachment.AttachmentCardItem
+import ai.accurecode.client.session.views.base.PartView
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.util.ui.JBUI
 import java.awt.FlowLayout
 import java.net.URI

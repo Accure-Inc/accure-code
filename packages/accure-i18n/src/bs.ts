@@ -1,19 +1,19 @@
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1":
-    "Kilo Gateway omogućava pristup pažljivo odabranom skupu pouzdanih modela optimizovanih za rad sa agentima za kodiranje.",
-  "provider.connect.kiloGateway.line2":
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1":
+    "Accure Gateway omogućava pristup pažljivo odabranom skupu pouzdanih modela optimizovanih za rad sa agentima za kodiranje.",
+  "provider.connect.accureGateway.line2":
     "Sa jednim API ključem dobijate pristup modelima kao što su Claude, GPT, Gemini, GLM i drugi.",
-  "provider.connect.kiloGateway.visit.prefix": "Posjetite ",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": " da preuzmete svoj API ključ.",
-  "provider.connect.kiloGateway.byok.prefix": "Za više statistika korištenja, koristite ",
-  "provider.connect.kiloGateway.byok.link": "BYOK putem Kilo's Gateway",
-  "provider.connect.kiloGateway.byok.suffix": ".",
+  "provider.connect.accureGateway.visit.prefix": "Posjetite ",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": " da preuzmete svoj API ključ.",
+  "provider.connect.accureGateway.byok.prefix": "Za više statistika korištenja, koristite ",
+  "provider.connect.accureGateway.byok.link": "BYOK putem Accure's Gateway",
+  "provider.connect.accureGateway.byok.suffix": ".",
 
   // Provider settings translations
   "settings.providers.group.recommended": "Preporučeno",
-  "settings.providers.note.kilo": "Pristup za 500+ AI modela",
+  "settings.providers.note.accurecode": "Pristup za 500+ AI modela",
   "settings.providers.note.opencode": "Odabrani modeli uključujući Claude, GPT, Gemini i još mnogo toga",
   "settings.providers.note.anthropic": "Direktan pristup Claude modelima, uključujući Pro i Max",
   "settings.providers.note.deepseek": "DeepSeek modeli za zadatke rezonovanja i programiranja",
@@ -26,7 +26,8 @@ export const dict = {
   // Desktop translations
   "desktop.menu.reloadWebview": "Ponovno učitavanje webview-a",
   "desktop.updater.installFailed.message": "Neuspjelo instaliranje ažuriranja",
-  "desktop.cli.installed.message": "CLI je instaliran u {{path}}\n\nRestartuj terminal da bi koristio komandu 'kilo'.",
+  "desktop.cli.installed.message":
+    "CLI je instaliran u {{path}}\n\nRestartuj terminal da bi koristio komandu 'accure'.",
 
   // Reasoning block label
   "ui.permission.run": "Pokreni",
@@ -107,7 +108,7 @@ export const dict = {
     "Sačekaj da se snapshot završi. Naredni potezi su brzi kada se početni snapshot jednom napravi.",
   "snapshot.slowRepo.answer.disable": "Onemogući za ovaj projekat",
   "snapshot.slowRepo.answer.disable.description":
-    "Isključi Kilo snapshotove za ovaj projekat. Izgubićete poništi/vrati za izmjene koje napravi Kilo, ali git i dalje prati sve.",
+    "Isključi Accure snapshotove za ovaj projekat. Izgubićete poništi/vrati za izmjene koje napravi Accure, ali git i dalje prati sve.",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "Otvori u pregledniku razlika",

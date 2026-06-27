@@ -5,7 +5,7 @@ description: "Save and restore code states with checkpoints"
 
 # Checkpoints
 
-Checkpoints automatically version your workspace files during Kilo Code tasks, enabling non-destructive exploration of AI suggestions and easy recovery from unwanted changes.
+Checkpoints automatically version your workspace files during Accure Code tasks, enabling non-destructive exploration of AI suggestions and easy recovery from unwanted changes.
 
 Checkpoints let you:
 
@@ -19,7 +19,7 @@ Checkpoints let you:
 {% tabs %}
 {% tab label="VSCode" %}
 
-Checkpoints (called **snapshots** in the new extension) are enabled by default. They are configured via the `snapshot` key in your config file (`kilo.jsonc` or `~/.config/kilo/kilo.jsonc`):
+Checkpoints (called **snapshots** in the new extension) are enabled by default. They are configured via the `snapshot` key in your config file (`accure.jsonc` or `~/.config/accure/accure.jsonc`):
 
 ```json
 {
@@ -40,7 +40,7 @@ Unlike the legacy extension which used a separate shadow Git repository, the new
 {% /tab %}
 {% tab label="CLI" %}
 
-Checkpoints are controlled by the `snapshot` boolean in your `kilo.jsonc` configuration file:
+Checkpoints are controlled by the `snapshot` boolean in your `accure.jsonc` configuration file:
 
 ```json
 {
@@ -53,12 +53,12 @@ When enabled, the system automatically captures snapshots at each step of a task
 {% /tab %}
 {% tab label="VSCode (Legacy)" %}
 
-Access checkpoint settings in Kilo Code settings under the "Checkpoints" section:
+Access checkpoint settings in Accure Code settings under the "Checkpoints" section:
 
 1. Open Settings by clicking the gear icon {% codicon name="gear" /%} → Checkpoints
 2. Check or uncheck the "Enable automatic checkpoints" checkbox
 
-   {% image src="/docs/img/checkpoints/checkpoints.png" alt="Checkpoint settings in Kilo Code configuration" width="500" /%}
+   {% image src="/docs/img/checkpoints/checkpoints.png" alt="Checkpoint settings in Accure Code configuration" width="500" /%}
 
 {% /tab %}
 {% /tabs %}
@@ -101,7 +101,7 @@ Snapshots respect your `.gitignore` rules. Files ignored by Git (such as `node_m
 
 {% /callout %}
 
-Kilo Code captures snapshots of your project's state using a shadow Git repository, separate from your main version control system. These snapshots, called checkpoints, automatically record changes throughout your AI-assisted workflow—whenever tasks begin, files change, or commands run.
+Accure Code captures snapshots of your project's state using a shadow Git repository, separate from your main version control system. These snapshots, called checkpoints, automatically record changes throughout your AI-assisted workflow—whenever tasks begin, files change, or commands run.
 
 Checkpoints are stored as Git commits in the shadow repository, capturing:
 
@@ -228,7 +228,7 @@ To restore a project to a previous checkpoint state:
 
 ### Limitations and Considerations
 
-- **Scope**: Checkpoints only capture changes made during active Kilo Code tasks
+- **Scope**: Checkpoints only capture changes made during active Accure Code tasks
 - **External changes**: Modifications made outside of tasks (manual edits, other tools) aren't included
 - **Large files**: Very large binary files may impact performance
 - **Unsaved work**: Restoration will overwrite any unsaved changes in your workspace
@@ -242,7 +242,7 @@ To restore a project to a previous checkpoint state:
 
 The snapshot system consists of:
 
-1. **Snapshot Git Repository**: A dedicated Git repository created outside your project at `~/.local/share/kilo/snapshot/<project-id>/<worktree-hash>/`. This stores all snapshot tree objects without affecting your project's Git history. Each worktree gets its own snapshot repository, identified by a hash of the worktree path.
+1. **Snapshot Git Repository**: A dedicated Git repository created outside your project at `~/.local/share/accure/snapshot/<project-id>/<worktree-hash>/`. This stores all snapshot tree objects without affecting your project's Git history. Each worktree gets its own snapshot repository, identified by a hash of the worktree path.
 
 2. **Step-level Snapshots**: The agent runtime automatically runs `git write-tree` against your workspace before and after each agent step. The resulting tree hashes are stored alongside the conversation messages.
 
@@ -290,7 +290,7 @@ The checkpoint system consists of:
 
 ### Restoration Process
 
-When restoration executes, Kilo Code:
+When restoration executes, Accure Code:
 
 - Performs a hard reset to the specified checkpoint commit
 - Copies all files from the shadow repository to your workspace
@@ -334,14 +334,14 @@ The checkpoint system respects `.gitignore` patterns in your workspace:
 - Excluded files won't appear in checkpoint diffs
 - Standard Git ignore rules apply when staging file changes
 
-#### .kilocodeignore Behavior
+#### .accurecodeignore Behavior
 
-The `.kilocodeignore` file (which controls AI access to files) is separate from checkpoint tracking:
+The `.accurecodeignore` file (which controls AI access to files) is separate from checkpoint tracking:
 
-- Files excluded by `.kilocodeignore` but not by `.gitignore` will still be checkpointed
+- Files excluded by `.accurecodeignore` but not by `.gitignore` will still be checkpointed
 - Changes to AI-inaccessible files can still be restored through checkpoints
 
-This separation is intentional, as `.kilocodeignore` limits which files the AI can access, not which files should be tracked for version history.
+This separation is intentional, as `.accurecodeignore` limits which files the AI can access, not which files should be tracked for version history.
 
 #### Nested Git Repositories
 
@@ -360,7 +360,7 @@ Operations are queued to prevent concurrent Git operations that might corrupt re
 
 ## Git Installation
 
-Checkpoints require Git to be installed on your system. If Git is unavailable or the workspace is not a Git repository, Kilo skips checkpoints automatically; you do not need to disable them manually.
+Checkpoints require Git to be installed on your system. If Git is unavailable or the workspace is not a Git repository, Accure skips checkpoints automatically; you do not need to disable them manually.
 
 ### macOS
 

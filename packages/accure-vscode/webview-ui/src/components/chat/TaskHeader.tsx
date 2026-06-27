@@ -9,10 +9,10 @@
  */
 
 import { Component, For, Show, createMemo, createSignal, createEffect, onMount, onCleanup } from "solid-js"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
-import { Tooltip } from "@kilocode/accure-ui/tooltip"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { Checkbox } from "@kilocode/accure-ui/checkbox"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
+import { Tooltip } from "@accurecode/accure-ui/tooltip"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { Checkbox } from "@accurecode/accure-ui/checkbox"
 import { useSession } from "../../context/session"
 import { calcTokenUsage, collapseCostBreakdown } from "../../context/session-utils"
 import { useLanguage } from "../../context/language"

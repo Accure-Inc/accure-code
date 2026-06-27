@@ -10,8 +10,8 @@ if (IS_DARWIN) {
 
 const GLOBALS = "colorScheme:dark;theme:accure-vscode;vscodeTheme:dark-modern"
 const STORY_ID = "settings--indexing-provider-blur-race"
-const KILO_STORY_ID = "settings--indexing-kilo-model-preset"
-const KILO_LOADING_STORY_ID = "settings--indexing-kilo-catalog-loading"
+const ACCURECODE_STORY_ID = "settings--indexing-accure-model-preset"
+const ACCURECODE_LOADING_STORY_ID = "settings--indexing-accure-catalog-loading"
 const SCOPE_STORY_ID = "settings--indexing-scope-switch"
 
 type Saved = {
@@ -113,13 +113,13 @@ test("scope switching preserves raw overrides and commits blur to the original s
   await expect(tuningRow.locator('[data-component="tag"]')).toHaveText("Default")
 })
 
-test("Kilo exposes only supported embedding model presets", async ({ page }) => {
+test("Accure exposes only supported embedding model presets", async ({ page }) => {
   await page.setViewportSize({ width: 420, height: 720 })
-  await page.goto(storyUrl(KILO_STORY_ID), { waitUntil: "load" })
+  await page.goto(storyUrl(ACCURECODE_STORY_ID), { waitUntil: "load" })
   await disableAnimations(page)
   await page.waitForSelector("#storybook-root *", { state: "attached" })
 
-  await expect(page.getByText("Kilo model preset", { exact: true })).toBeVisible()
+  await expect(page.getByText("Accure model preset", { exact: true })).toBeVisible()
   await expect(page.getByText("Embedding model", { exact: true })).toHaveCount(0)
   await expect(page.getByText("Vector dimension", { exact: true })).toBeVisible()
 
@@ -134,17 +134,17 @@ test("Kilo exposes only supported embedding model presets", async ({ page }) => 
   await expect(preset).toContainText("Provider Compact")
 })
 
-test("enabling Kilo before its catalog loads does not store an empty model", async ({ page }) => {
-  const saved = page.getByTestId("indexing-kilo-loading-save")
+test("enabling Accure before its catalog loads does not store an empty model", async ({ page }) => {
+  const saved = page.getByTestId("indexing-accure-loading-save")
   const cfg = async () => JSON.parse(((await saved.textContent()) ?? "{}").trim()) as Saved
   const verify = async () => {
-    await expect.poll(async () => (await cfg()).provider).toBe("kilo")
+    await expect.poll(async () => (await cfg()).provider).toBe("accure")
     expect((await cfg()).model).toBeNull()
     expect((await cfg()).dimension).toBeNull()
   }
 
   await page.setViewportSize({ width: 420, height: 720 })
-  await page.goto(storyUrl(KILO_LOADING_STORY_ID), { waitUntil: "load" })
+  await page.goto(storyUrl(ACCURECODE_LOADING_STORY_ID), { waitUntil: "load" })
   await disableAnimations(page)
   await page.waitForSelector("#storybook-root *", { state: "attached" })
   await page.getByRole("button", { name: "Local", exact: true }).click()
@@ -154,7 +154,7 @@ test("enabling Kilo before its catalog loads does not store an empty model", asy
     .click()
   await verify()
 
-  await page.goto(storyUrl(KILO_LOADING_STORY_ID), { waitUntil: "load" })
+  await page.goto(storyUrl(ACCURECODE_LOADING_STORY_ID), { waitUntil: "load" })
   await page.waitForSelector("#storybook-root *", { state: "attached" })
   await page
     .locator('[data-slot="settings-row"]', { hasText: "Enable globally" })

@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test"
-import { KiloRun } from "../../../../src/kilocode/cli/cmd/run"
-import { buildRunMessage } from "../../../../src/kilocode/cli/cmd/run-message"
+import { AccureRun } from "../../../../src/accurecode/cli/cmd/run"
+import { buildRunMessage } from "../../../../src/accurecode/cli/cmd/run-message"
 
-describe("KiloRun", () => {
+describe("AccureRun", () => {
   test("prefers a configured command over an endpoint-backed built-in", async () => {
     const sdk = {
       command: {
@@ -10,7 +10,7 @@ describe("KiloRun", () => {
       },
     }
 
-    expect(await KiloRun.resolveBuiltin(sdk as never, "compact", "/tmp/project")).toBeUndefined()
+    expect(await AccureRun.resolveBuiltin(sdk as never, "compact", "/tmp/project")).toBeUndefined()
   })
 
   test("resolves an endpoint-backed built-in when no configured command matches", async () => {
@@ -20,7 +20,7 @@ describe("KiloRun", () => {
       },
     }
 
-    expect(await KiloRun.resolveBuiltin(sdk as never, "compact", "/tmp/project")).toBe("compact")
+    expect(await AccureRun.resolveBuiltin(sdk as never, "compact", "/tmp/project")).toBe("compact")
   })
 
   test("uses the resumed session model for compaction", async () => {
@@ -34,7 +34,7 @@ describe("KiloRun", () => {
       },
     }
 
-    await KiloRun.runBuiltin(
+    await AccureRun.runBuiltin(
       sdk as never,
       "ses_test",
       "compact",
@@ -68,7 +68,7 @@ describe("buildRunMessage", () => {
   })
 
   test("passes args['--'] through verbatim without wrap-quote (#9622)", () => {
-    // `kilo run -- "- Who are you?"` - yargs+populate-- captures the leading-dash
+    // `accure run -- "- Who are you?"` - yargs+populate-- captures the leading-dash
     // phrase as a single atom in args["--"]. The assembler must NOT wrap it,
     // because the user typed `--` precisely to opt out of further parsing.
     expect(buildRunMessage([], ["- Who are you?"])).toBe("- Who are you?")

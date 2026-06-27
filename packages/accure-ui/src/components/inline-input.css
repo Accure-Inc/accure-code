@@ -1,5 +1,5 @@
-/* Kilo Inline Input overrides */
+/* Accure Inline Input overrides */
 
 [data-component="inline-input"] {
-  font-size: var(--kilo-font-size-13);
+  font-size: var(--accure-font-size-13);
 }

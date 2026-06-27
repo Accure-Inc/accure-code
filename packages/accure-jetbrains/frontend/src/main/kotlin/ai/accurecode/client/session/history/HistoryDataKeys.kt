@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.history
+package ai.accurecode.client.session.history
 
 import com.intellij.openapi.actionSystem.DataKey
 
@@ -11,6 +11,6 @@ data class HistorySelection(
 }
 
 object HistoryDataKeys {
-    val SELECTION: DataKey<HistorySelection> = DataKey.create("ai.kilocode.client.session.history.HistorySelection")
-    val CONTROLLER: DataKey<HistoryController> = DataKey.create("ai.kilocode.client.session.history.HistoryController")
+    val SELECTION: DataKey<HistorySelection> = DataKey.create("ai.accurecode.client.session.history.HistorySelection")
+    val CONTROLLER: DataKey<HistoryController> = DataKey.create("ai.accurecode.client.session.history.HistoryController")
 }

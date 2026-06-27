@@ -31,14 +31,14 @@
   }
 
   [data-slot="permission-header-title"] {
-    font-size: var(--kilo-font-size-13);
+    font-size: var(--accure-font-size-13);
     display: flex;
     align-items: baseline;
     gap: 8px;
   }
 
   [data-slot="permission-header-subtitle"] {
-    font-size: var(--kilo-font-size-11);
+    font-size: var(--accure-font-size-11);
     font-weight: var(--font-weight-regular, 400);
     color: var(--text-weak, var(--vscode-descriptionForeground));
   }
@@ -65,7 +65,7 @@
     }
 
     code {
-      font-size: var(--kilo-font-size-12);
+      font-size: var(--accure-font-size-12);
       font-family: var(--vscode-editor-font-family, monospace);
       color: var(--vscode-editor-foreground, var(--vscode-foreground));
       white-space: pre-wrap;
@@ -108,7 +108,7 @@
   }
 
   [data-slot="permission-hint"] {
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
   }
 
   [data-slot="permission-patterns"] {
@@ -119,12 +119,12 @@
   }
 
   [data-slot="permission-patterns-title"] {
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     color: var(--text-weak, var(--vscode-descriptionForeground));
   }
 
   [data-slot="permission-pattern"] {
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     font-family: var(--vscode-editor-font-family, monospace);
     color: var(--text-weak, var(--vscode-descriptionForeground));
     word-break: break-all;
@@ -176,7 +176,7 @@
   [data-slot="permission-diff-filename"] {
     display: flex;
     align-items: center;
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     font-family: var(--vscode-editor-font-family, monospace);
     color: var(--text-base, var(--vscode-foreground));
     min-width: 0;
@@ -214,7 +214,7 @@
 
   [data-slot="permission-diff-empty"] {
     padding: 12px;
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     color: var(--text-weak, var(--vscode-descriptionForeground));
     background: var(--vscode-editor-background, #1e1e1e);
   }
@@ -226,7 +226,7 @@
     gap: 2px;
 
     code {
-      font-size: var(--kilo-font-size-12);
+      font-size: var(--accure-font-size-12);
       font-family: var(--vscode-editor-font-family, monospace);
       color: var(--vscode-foreground);
       word-break: break-all;
@@ -256,7 +256,7 @@
   }
 
   [data-slot="permission-rules-header-title"] {
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     font-weight: 500;
     line-height: 1.4;
   }
@@ -301,14 +301,14 @@
   }
 
   [data-slot="permission-rule-type"] {
-    font-size: var(--kilo-font-size-11);
+    font-size: var(--accure-font-size-11);
     font-weight: 600;
     color: var(--text-base, var(--vscode-foreground));
     flex-shrink: 0;
   }
 
   [data-slot="permission-rule"] {
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     font-family: var(--vscode-editor-font-family, monospace);
     color: var(--text-weak, var(--vscode-descriptionForeground));
     overflow: hidden;

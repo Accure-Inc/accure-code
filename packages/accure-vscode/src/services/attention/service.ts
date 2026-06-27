@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
-import type { TuiAttentionSoundName } from "@kilocode/plugin/tui"
+import type { TuiAttentionSoundName } from "@accurecode/plugin/tui"
 import type { SSEPayload } from "../cli-backend/sdk-sse-adapter"
-import type { KiloConnectionService } from "../cli-backend/connection-service"
+import type { AccureConnectionService } from "../cli-backend/connection-service"
 import { playSound, resolveSoundID } from "./sound"
 
 type Sync = Extract<SSEPayload, { type: "sync" }>
@@ -23,7 +23,7 @@ export class AttentionService implements vscode.Disposable {
   private readonly unsubscribeEvent: () => void
   private readonly unsubscribeState: () => void
 
-  constructor(connection: KiloConnectionService) {
+  constructor(connection: AccureConnectionService) {
     this.unsubscribeEvent = connection.onEvent((event) => this.handle(event))
     this.unsubscribeState = connection.onStateChange((state) => {
       if (state === "error" || state === "disconnected") this.reset()

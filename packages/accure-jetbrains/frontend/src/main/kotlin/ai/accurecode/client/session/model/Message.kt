@@ -1,10 +1,10 @@
-package ai.kilocode.client.session.model
+package ai.accurecode.client.session.model
 
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.PartTimeDto
-import ai.kilocode.rpc.dto.TodoDto
-import ai.kilocode.rpc.dto.TodoViewDto
-import ai.kilocode.rpc.dto.TokensDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.PartTimeDto
+import ai.accurecode.rpc.dto.TodoDto
+import ai.accurecode.rpc.dto.TodoViewDto
+import ai.accurecode.rpc.dto.TokensDto
 
 data class SessionHeaderSnapshot(
     val visible: Boolean,

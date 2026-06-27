@@ -1,21 +1,21 @@
 import { Component, createSignal, onCleanup } from "solid-js"
-import { Button } from "@kilocode/accure-ui/button"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { showToast } from "@kilocode/accure-ui/toast"
+import { Button } from "@accurecode/accure-ui/button"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { showToast } from "@accurecode/accure-ui/toast"
 import { useLanguage } from "../../context/language"
 import { useVSCode } from "../../context/vscode"
 import { useConfig } from "../../context/config"
 import type { Config, ConnectionState, ExtensionMessage, MigrationSource } from "../../types/messages"
 import { buildExport, parseImport, MAX_IMPORT_SIZE } from "./settings-io"
 
-export interface AboutKiloCodeTabProps {
+export interface AboutAccureCodeTabProps {
   port: number | null
   connectionState: ConnectionState
   extensionVersion?: string
   onMigrationClick?: (source: MigrationSource) => void // legacy-migration
 }
 
-const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
+const AboutAccureCodeTab: Component<AboutAccureCodeTabProps> = (props) => {
   const language = useLanguage()
   const vscode = useVSCode()
   const { updateConfig, updateGlobalConfig } = useConfig()
@@ -56,7 +56,7 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = "kilo-settings.json"
+    a.download = "accure-settings.json"
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -85,7 +85,7 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
       const file = input.files?.[0]
       if (!file) return
       if (file.size > MAX_IMPORT_SIZE) {
-        showToast({ variant: "error", title: language.t("settings.aboutKiloCode.importSettings.tooLarge") })
+        showToast({ variant: "error", title: language.t("settings.aboutAccureCode.importSettings.tooLarge") })
         return
       }
       setImporting(true)
@@ -97,26 +97,26 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
         if (!result.ok) {
           const key =
             result.error === "invalidJson"
-              ? "settings.aboutKiloCode.importSettings.invalidJson"
-              : "settings.aboutKiloCode.importSettings.invalidConfig"
+              ? "settings.aboutAccureCode.importSettings.invalidJson"
+              : "settings.aboutAccureCode.importSettings.invalidConfig"
           showToast({ variant: "error", title: language.t(key) })
           return
         }
         if (result.warning === "newerVersion") {
           showToast({
             variant: "default",
-            title: language.t("settings.aboutKiloCode.importSettings.newerVersion"),
+            title: language.t("settings.aboutAccureCode.importSettings.newerVersion"),
           })
         }
         importConfig(result.config)
         showToast({
           variant: "success",
-          title: language.t("settings.aboutKiloCode.importSettings.success"),
+          title: language.t("settings.aboutAccureCode.importSettings.success"),
         })
       }
       reader.onerror = () => {
         setImporting(false)
-        showToast({ variant: "error", title: language.t("settings.aboutKiloCode.importSettings.invalidJson") })
+        showToast({ variant: "error", title: language.t("settings.aboutAccureCode.importSettings.invalidJson") })
       }
       reader.readAsText(file)
     })
@@ -141,13 +141,13 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
   const getStatusText = () => {
     switch (props.connectionState) {
       case "connected":
-        return language.t("settings.aboutKiloCode.status.connected")
+        return language.t("settings.aboutAccureCode.status.connected")
       case "connecting":
-        return language.t("settings.aboutKiloCode.status.connecting")
+        return language.t("settings.aboutAccureCode.status.connecting")
       case "disconnected":
-        return language.t("settings.aboutKiloCode.status.disconnected")
+        return language.t("settings.aboutAccureCode.status.disconnected")
       case "error":
-        return language.t("settings.aboutKiloCode.status.error")
+        return language.t("settings.aboutAccureCode.status.error")
     }
   }
 
@@ -166,7 +166,7 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
   } as const
 
   const headingStyle = {
-    "font-size": "var(--kilo-font-size-13)",
+    "font-size": "var(--accure-font-size-13)",
     "font-weight": "600",
     "margin-bottom": "12px",
     "margin-top": "0",
@@ -174,13 +174,13 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
   } as const
 
   const labelStyle = {
-    "font-size": "var(--kilo-font-size-12)",
+    "font-size": "var(--accure-font-size-12)",
     color: "var(--vscode-descriptionForeground)",
     width: "100px",
   } as const
 
   const valueStyle = {
-    "font-size": "var(--kilo-font-size-12)",
+    "font-size": "var(--accure-font-size-12)",
     color: "var(--vscode-foreground)",
     "font-family": "var(--vscode-editor-font-family, monospace)",
   } as const
@@ -189,49 +189,45 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
     <div>
       {/* Version Information */}
       <div style={sectionStyle}>
-        <h4 style={headingStyle}>{language.t("settings.aboutKiloCode.versionInfo")}</h4>
+        <h4 style={headingStyle}>{language.t("settings.aboutAccureCode.versionInfo")}</h4>
         <div style={{ display: "flex", "align-items": "center" }}>
-          <span style={labelStyle}>{language.t("settings.aboutKiloCode.version.label")}</span>
+          <span style={labelStyle}>{language.t("settings.aboutAccureCode.version.label")}</span>
           <span style={valueStyle}>{props.extensionVersion ?? "—"}</span>
         </div>
       </div>
 
       {/* Community & Support */}
       <div style={sectionStyle}>
-        <h4 style={headingStyle}>{language.t("settings.aboutKiloCode.community")}</h4>
+        <h4 style={headingStyle}>{language.t("settings.aboutAccureCode.community")}</h4>
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--accure-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: "0 0 12px 0",
             "line-height": "1.5",
           }}
         >
-          {language.t("settings.aboutKiloCode.feedback.prefix")}{" "}
-          <span style={linkStyle} onClick={() => open("https://github.com/Kilo-Org/kilocode")}>
+          {language.t("settings.aboutAccureCode.feedback.prefix")}{" "}
+          <span style={linkStyle} onClick={() => open("https://github.com/Accure-Inc/accure-code")}>
             GitHub
-          </span>
-          ,{" "}
-          <span style={linkStyle} onClick={() => open("https://reddit.com/r/kilocode")}>
-            Reddit
-          </span>
-          , {language.t("settings.aboutKiloCode.feedback.or")}{" "}
-          <span style={linkStyle} onClick={() => open("https://kilo.ai/discord")}>
-            Discord
+          </span>{" "}
+          {language.t("settings.aboutAccureCode.feedback.or")}{" "}
+          <span style={linkStyle} onClick={() => open("https://github.com/Accure-Inc/accure-code/discussions")}>
+            Discussions
           </span>
           .
         </p>
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--accure-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: 0,
             "line-height": "1.5",
           }}
         >
-          {language.t("settings.aboutKiloCode.support.prefix")}{" "}
-          <span style={linkStyle} onClick={() => open("https://kilo.ai/support")}>
-            kilo.ai/support
+          {language.t("settings.aboutAccureCode.support.prefix")}{" "}
+          <span style={linkStyle} onClick={() => open("https://accure.ai/support")}>
+            accure.ai/support
           </span>
           .
         </p>
@@ -239,16 +235,16 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
 
       {/* Telemetry */}
       <div style={sectionStyle}>
-        <h4 style={headingStyle}>{language.t("settings.aboutKiloCode.telemetry.title")}</h4>
+        <h4 style={headingStyle}>{language.t("settings.aboutAccureCode.telemetry.title")}</h4>
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--accure-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: "0 0 12px 0",
             "line-height": "1.5",
           }}
         >
-          {language.t("settings.aboutKiloCode.telemetry.description")}
+          {language.t("settings.aboutAccureCode.telemetry.description")}
         </p>
         <Button
           variant="secondary"
@@ -256,17 +252,17 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
           onClick={() => vscode.postMessage({ type: "openVSCodeSettings", query: "telemetry.telemetryLevel" })}
         >
           <Icon name="settings-gear" />
-          {language.t("settings.aboutKiloCode.telemetry.openSettings")}
+          {language.t("settings.aboutAccureCode.telemetry.openSettings")}
         </Button>
       </div>
 
       {/* CLI Server */}
       <div style={sectionStyle}>
-        <h4 style={headingStyle}>{language.t("settings.aboutKiloCode.cliServer")}</h4>
+        <h4 style={headingStyle}>{language.t("settings.aboutAccureCode.cliServer")}</h4>
 
         {/* Connection Status */}
         <div style={{ display: "flex", "align-items": "center", "margin-bottom": "12px" }}>
-          <span style={labelStyle}>{language.t("settings.aboutKiloCode.status.label")}</span>
+          <span style={labelStyle}>{language.t("settings.aboutAccureCode.status.label")}</span>
           <div style={{ display: "flex", "align-items": "center", gap: "8px" }}>
             <span
               style={{
@@ -277,7 +273,7 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
                 display: "inline-block",
               }}
             />
-            <span style={{ "font-size": "var(--kilo-font-size-12)", color: "var(--vscode-foreground)" }}>
+            <span style={{ "font-size": "var(--accure-font-size-12)", color: "var(--vscode-foreground)" }}>
               {getStatusText()}
             </span>
           </div>
@@ -285,48 +281,48 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
 
         {/* Port Number */}
         <div style={{ display: "flex", "align-items": "center" }}>
-          <span style={labelStyle}>{language.t("settings.aboutKiloCode.port.label")}</span>
+          <span style={labelStyle}>{language.t("settings.aboutAccureCode.port.label")}</span>
           <span style={valueStyle}>{props.port !== null ? props.port : "—"}</span>
         </div>
       </div>
 
       {/* Settings Transfer */}
       <div style={sectionStyle}>
-        <h4 style={headingStyle}>{language.t("settings.aboutKiloCode.settingsTransfer.title")}</h4>
+        <h4 style={headingStyle}>{language.t("settings.aboutAccureCode.settingsTransfer.title")}</h4>
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--accure-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: "0 0 12px 0",
             "line-height": "1.5",
           }}
         >
-          {language.t("settings.aboutKiloCode.settingsTransfer.description")}
+          {language.t("settings.aboutAccureCode.settingsTransfer.description")}
         </p>
         <div style={{ display: "flex", gap: "8px" }}>
           <Button variant="secondary" size="small" onClick={handleExport}>
             <Icon name="cloud-upload" />
-            {language.t("settings.aboutKiloCode.exportSettings")}
+            {language.t("settings.aboutAccureCode.exportSettings")}
           </Button>
           <Button variant="secondary" size="small" onClick={handleImport} disabled={importing()}>
             <Icon name="download" />
-            {language.t("settings.aboutKiloCode.importSettings")}
+            {language.t("settings.aboutAccureCode.importSettings")}
           </Button>
         </div>
       </div>
 
       {/* legacy-migration start */}
       <div style={{ ...sectionStyle, "margin-bottom": "0" }}>
-        <h4 style={headingStyle}>{language.t("settings.aboutKiloCode.legacyMigration.title")}</h4>
+        <h4 style={headingStyle}>{language.t("settings.aboutAccureCode.legacyMigration.title")}</h4>
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--accure-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: "0 0 12px 0",
             "line-height": "1.5",
           }}
         >
-          {language.t("settings.aboutKiloCode.legacyMigration.description")}
+          {language.t("settings.aboutAccureCode.legacyMigration.description")}
         </p>
         <div style={{ display: "flex", gap: "8px", "flex-wrap": "wrap" }}>
           <Button variant="secondary" size="small" onClick={() => props.onMigrationClick?.("legacy")}>
@@ -336,9 +332,9 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
             variant="secondary"
             size="small"
             onClick={() => props.onMigrationClick?.("roo")}
-            title={language.t("settings.aboutKiloCode.rooImport.description")}
+            title={language.t("settings.aboutAccureCode.rooImport.description")}
           >
-            {language.t("settings.aboutKiloCode.rooImport.button")}
+            {language.t("settings.aboutAccureCode.rooImport.button")}
           </Button>
         </div>
       </div>
@@ -346,16 +342,16 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
 
       {/* Reset Settings */}
       <div style={sectionStyle}>
-        <h4 style={headingStyle}>{language.t("settings.aboutKiloCode.resetSettings.title")}</h4>
+        <h4 style={headingStyle}>{language.t("settings.aboutAccureCode.resetSettings.title")}</h4>
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--accure-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: "0 0 12px 0",
             "line-height": "1.5",
           }}
         >
-          {language.t("settings.aboutKiloCode.resetSettings.description")}
+          {language.t("settings.aboutAccureCode.resetSettings.description")}
         </p>
         <button
           type="button"
@@ -367,14 +363,14 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
             padding: "6px 14px",
             "border-radius": "2px",
             cursor: "pointer",
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--accure-font-size-12)",
           }}
         >
-          {language.t("settings.aboutKiloCode.resetSettings.button")}
+          {language.t("settings.aboutAccureCode.resetSettings.button")}
         </button>
       </div>
     </div>
   )
 }
 
-export default AboutKiloCodeTab
+export default AboutAccureCodeTab

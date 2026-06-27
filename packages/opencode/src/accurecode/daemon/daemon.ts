@@ -9,11 +9,11 @@ import { Flock } from "@opencode-ai/core/util/flock"
 import { InstallationVersion } from "@opencode-ai/core/installation/version"
 import { Filesystem } from "@/util/filesystem"
 import { Process } from "@/util/process"
-import { serverUrls } from "@/kilocode/cli/server-urls"
+import { serverUrls } from "@/accurecode/cli/server-urls"
 
 export namespace Daemon {
-  const username = "kilo"
-  const lock = "kilocode-daemon"
+  const username = "accure"
+  const lock = "accurecode-daemon"
   export const PortRange = { start: 4097, end: 4116 } as const
 
   export const Network = z.object({
@@ -86,11 +86,11 @@ export namespace Daemon {
   export type Identity = Pick<State, "pid" | "startedAt">
 
   function root() {
-    return process.env.KILO_TEST_DAEMON_STATE_DIR ?? Global.Path.state
+    return process.env.ACCURECODE_TEST_DAEMON_STATE_DIR ?? Global.Path.state
   }
 
   function logs() {
-    return process.env.KILO_TEST_DAEMON_LOG_DIR ?? Global.Path.log
+    return process.env.ACCURECODE_TEST_DAEMON_LOG_DIR ?? Global.Path.log
   }
 
   export function file() {
@@ -204,7 +204,7 @@ export namespace Daemon {
           if (alive(current.state.pid)) await terminate(current.state.pid, true)
         }
         await clear()
-        const password = "kilo"
+        const password = "accure"
         const token = auth(password)
         const out = log()
         await mkdir(path.dirname(out), { recursive: true })
@@ -321,7 +321,7 @@ export namespace Daemon {
 
   async function port(input: Options) {
     if (input.port !== 0) return input.port
-    if (input.env?.KILO_TEST_DAEMON_EPHEMERAL_PORT) return 0
+    if (input.env?.ACCURECODE_TEST_DAEMON_EPHEMERAL_PORT) return 0
     const ports = Array.from({ length: PortRange.end - PortRange.start + 1 }, (_, index) => PortRange.start + index)
     const free = await Promise.any(
       ports.map((item) =>
@@ -354,9 +354,9 @@ export namespace Daemon {
         env: {
           ...process.env,
           ...input.env,
-          KILO_SERVER_USERNAME: username,
-          KILO_SERVER_PASSWORD: password,
-          KILOCODE_FEATURE: "daemon",
+          ACCURECODE_SERVER_USERNAME: username,
+          ACCURECODE_SERVER_PASSWORD: password,
+          ACCURECODE_FEATURE: "daemon",
         },
         stdio: ["ignore", stdout.fd, stderr.fd],
         windowsHide: process.platform === "win32",
@@ -402,7 +402,7 @@ export namespace Daemon {
       if (code(err) === "ENOENT") return ""
       throw err
     })
-    const match = text.match(/kilo server listening on http:\/\/([^:\s]+):(\d+)/)
+    const match = text.match(/accure server listening on http:\/\/([^:\s]+):(\d+)/)
     if (!match) return undefined
     return { hostname: match[1], port: Number(match[2]) }
   }

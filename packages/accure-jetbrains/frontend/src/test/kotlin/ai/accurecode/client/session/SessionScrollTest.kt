@@ -1,21 +1,21 @@
-package ai.kilocode.client.session
+package ai.accurecode.client.session
 
-import ai.kilocode.client.session.ui.SessionMessageListPanel
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.MessageErrorDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.QuestionInfoDto
-import ai.kilocode.rpc.dto.QuestionOptionDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionStatusDto
-import ai.kilocode.rpc.dto.ToolRefDto
-import ai.kilocode.client.session.ui.prompt.PromptPanel
-import ai.kilocode.client.session.views.tool.ShellToolView
-import ai.kilocode.client.session.views.tool.ToolView
-import ai.kilocode.client.plugin.KiloBundle
+import ai.accurecode.client.session.ui.SessionMessageListPanel
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.MessageErrorDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.QuestionInfoDto
+import ai.accurecode.rpc.dto.QuestionOptionDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.ToolRefDto
+import ai.accurecode.client.session.ui.prompt.PromptPanel
+import ai.accurecode.client.session.views.tool.ShellToolView
+import ai.accurecode.client.session.views.tool.ToolView
+import ai.accurecode.client.plugin.AccureBundle
 import com.intellij.ui.EditorTextField
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.JBRadioButton
@@ -741,7 +741,7 @@ class SessionScrollTest : SessionUiTestBase() {
 
         assertTrue(button.isVisible)
         assertNotSame(icon, button.icon)
-        assertEquals(KiloBundle.message("session.scroll.question"), button.toolTipText)
+        assertEquals(AccureBundle.message("session.scroll.question"), button.toolTipText)
 
         click(button)
         drainScroll()
@@ -768,7 +768,7 @@ class SessionScrollTest : SessionUiTestBase() {
         assertEquals(value, bar.value)
         assertTrue(button.isVisible)
         assertNotSame(icon, button.icon)
-        assertEquals(KiloBundle.message("session.scroll.bottom"), button.toolTipText)
+        assertEquals(AccureBundle.message("session.scroll.bottom"), button.toolTipText)
     }
 
     fun `test plan followup question keeps scroll icon`() {
@@ -841,7 +841,7 @@ class SessionScrollTest : SessionUiTestBase() {
         setValue(bar, bottom(bar) / 2)
 
         option<JBRadioButton>("Minimal").doClick()
-        icon(KiloBundle.message("session.question.next")).doClick()
+        icon(AccureBundle.message("session.question.next")).doClick()
 
         assertBottom(bar)
         assertFalse(jumpButton().isVisible)
@@ -894,7 +894,7 @@ class SessionScrollTest : SessionUiTestBase() {
         setValue(bar, bottom(bar) / 2)
 
         option<JBRadioButton>("Minimal").doClick()
-        icon(KiloBundle.message("session.question.next")).doClick()
+        icon(AccureBundle.message("session.question.next")).doClick()
         emit(ChatEventDto.MessageUpdated("ses_test", message("q_nav_resume_tail")), flush = false)
         emit(ChatEventDto.PartUpdated("ses_test", part("q_nav_resume_part", "q_nav_resume_tail", "text", "tail line\n".repeat(80))), flush = false)
         forceFlush()
@@ -916,7 +916,7 @@ class SessionScrollTest : SessionUiTestBase() {
         button("Next").doClick()
         drainScroll()
         setValue(bar, bottom(bar) / 2)
-        icon(KiloBundle.message("session.question.back")).doClick()
+        icon(AccureBundle.message("session.question.back")).doClick()
 
         assertBottom(bar)
         assertFalse(jumpButton().isVisible)

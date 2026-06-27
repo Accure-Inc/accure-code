@@ -2,29 +2,29 @@ import { Flag } from "@opencode-ai/core/flag/flag"
 import { Effect } from "effect"
 import path from "path"
 
-const preserveExerciseGlobalRoot = !!process.env.KILO_HTTPAPI_EXERCISE_GLOBAL
+const preserveExerciseGlobalRoot = !!process.env.ACCURECODE_HTTPAPI_EXERCISE_GLOBAL
 export const exerciseGlobalRoot =
-  process.env.KILO_HTTPAPI_EXERCISE_GLOBAL ??
+  process.env.ACCURECODE_HTTPAPI_EXERCISE_GLOBAL ??
   path.join(process.env.TMPDIR ?? "/tmp", `opencode-httpapi-global-${process.pid}`)
 process.env.XDG_DATA_HOME = path.join(exerciseGlobalRoot, "data")
 process.env.XDG_CONFIG_HOME = path.join(exerciseGlobalRoot, "config")
 process.env.XDG_STATE_HOME = path.join(exerciseGlobalRoot, "state")
 process.env.XDG_CACHE_HOME = path.join(exerciseGlobalRoot, "cache")
-process.env.KILO_DISABLE_SHARE = "true"
-process.env.KILO_DISABLE_SESSION_INGEST = "true" // kilocode_change - isolate the exerciser from async Kilo session sync
+process.env.ACCURECODE_DISABLE_SHARE = "true"
+process.env.ACCURECODE_DISABLE_SESSION_INGEST = "true" // accurecode_change - isolate the exerciser from async Accure session sync
 export const exerciseConfigDirectory = path.join(exerciseGlobalRoot, "config", "opencode")
-export const exerciseDataDirectory = path.join(exerciseGlobalRoot, "data", "kilo") // kilocode_change
+export const exerciseDataDirectory = path.join(exerciseGlobalRoot, "data", "accure") // accurecode_change
 
-const preserveExerciseDatabase = !!process.env.KILO_HTTPAPI_EXERCISE_DB
+const preserveExerciseDatabase = !!process.env.ACCURECODE_HTTPAPI_EXERCISE_DB
 export const exerciseDatabasePath =
-  process.env.KILO_HTTPAPI_EXERCISE_DB ??
+  process.env.ACCURECODE_HTTPAPI_EXERCISE_DB ??
   path.join(process.env.TMPDIR ?? "/tmp", `opencode-httpapi-exercise-${process.pid}.db`)
-process.env.KILO_DB = exerciseDatabasePath
-Flag.KILO_DB = exerciseDatabasePath
+process.env.ACCURECODE_DB = exerciseDatabasePath
+Flag.ACCURECODE_DB = exerciseDatabasePath
 
 export const original = {
-  KILO_SERVER_PASSWORD: Flag.KILO_SERVER_PASSWORD,
-  KILO_SERVER_USERNAME: Flag.KILO_SERVER_USERNAME,
+  ACCURECODE_SERVER_PASSWORD: Flag.ACCURECODE_SERVER_PASSWORD,
+  ACCURECODE_SERVER_USERNAME: Flag.ACCURECODE_SERVER_USERNAME,
 }
 
 export const cleanupExercisePaths = Effect.promise(async () => {

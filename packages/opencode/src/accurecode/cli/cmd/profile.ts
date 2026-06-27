@@ -3,7 +3,7 @@ import { cmd } from "../../../cli/cmd/cmd"
 import { UI } from "../../../cli/ui"
 import { Auth, type Info as AuthInfo } from "../../../auth"
 import { makeRuntime } from "../../../effect/run-service"
-import { fetchBalance, fetchProfile, type KilocodeBalance, type KilocodeProfile } from "@kilocode/accure-gateway"
+import { fetchBalance, fetchProfile, type AccurecodeBalance, type AccurecodeProfile } from "@accurecode/accure-gateway"
 
 const runtime = makeRuntime(Auth.Service, Auth.defaultLayer)
 
@@ -16,8 +16,8 @@ interface Info {
 }
 
 export function payload(input: {
-  profile: KilocodeProfile
-  balance: KilocodeBalance | null
+  profile: AccurecodeProfile
+  balance: AccurecodeBalance | null
   organizationId?: string | null
 }): Info {
   const org = input.profile.organizations?.find((item) => item.id === input.organizationId)
@@ -43,15 +43,15 @@ export function format(info: Info): string {
 interface Args {
   json: boolean
   getAuth?: (providerID: string) => Promise<AuthInfo | undefined>
-  getProfile?: (token: string) => Promise<KilocodeProfile>
-  getBalance?: (token: string, organizationId?: string) => Promise<KilocodeBalance | null>
+  getProfile?: (token: string) => Promise<AccurecodeProfile>
+  getBalance?: (token: string, organizationId?: string) => Promise<AccurecodeBalance | null>
   error?: (msg: string) => void
   exit?: (code: number) => void
 }
 
 export const ProfileCommand = cmd({
   command: "profile",
-  describe: "show Kilo account profile",
+  describe: "show Accure account profile",
   builder: (yargs: Argv) =>
     yargs.option("json", {
       describe: "output profile as JSON",
@@ -65,12 +65,12 @@ export const ProfileCommand = cmd({
 
 export async function handle(args: Args) {
   const get = args.getAuth ?? ((id: string) => runtime.runPromise((svc) => svc.get(id)))
-  const auth = await get("kilo")
+  const auth = await get("accure")
   const error = args.error ?? UI.error
   const exit = args.exit ?? ((code: number) => (process.exitCode = code))
 
   if (!auth || auth.type !== "oauth") {
-    error("Not authenticated with Kilo Gateway")
+    error("Not authenticated with Accure Gateway")
     exit(1)
     return
   }

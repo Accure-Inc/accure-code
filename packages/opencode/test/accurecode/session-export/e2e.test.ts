@@ -3,9 +3,9 @@ import { $ } from "bun"
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import type { ExportEvent } from "@/kilocode/session-export/events"
-import { Capture } from "@/kilocode/session-export/capture"
-import { createWorkspaceProvider } from "@/kilocode/session-export/workspace-provider"
+import type { ExportEvent } from "@/accurecode/session-export/events"
+import { Capture } from "@/accurecode/session-export/capture"
+import { createWorkspaceProvider } from "@/accurecode/session-export/workspace-provider"
 
 describe("session export worker e2e", () => {
   const dirs: string[] = []
@@ -86,7 +86,7 @@ function envelope(posted: unknown[], type: ExportEvent["type"]): ExportEvent | u
 
 function request(sessionId: string): Parameters<Capture["beforeRequest"]>[0] {
   return {
-    input: { model: { api: { npm: "@kilocode/accure-gateway" }, isFree: true }, org: { type: "personal" } },
+    input: { model: { api: { npm: "@accurecode/accure-gateway" }, isFree: true }, org: { type: "personal" } },
     requestMeta: {
       sessionId,
       rootSessionId: sessionId,

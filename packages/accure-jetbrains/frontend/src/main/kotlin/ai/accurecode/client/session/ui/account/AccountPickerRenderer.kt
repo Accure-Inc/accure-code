@@ -1,7 +1,7 @@
-package ai.kilocode.client.session.ui.account
+package ai.accurecode.client.session.ui.account
 
-import ai.kilocode.client.session.ui.PickerRow
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.session.ui.PickerRow
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.icons.AllIcons
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.EmptyIcon

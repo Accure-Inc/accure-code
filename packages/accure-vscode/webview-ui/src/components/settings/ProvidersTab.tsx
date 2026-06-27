@@ -1,10 +1,10 @@
-import { Button } from "@kilocode/accure-ui/button"
-import { Card } from "@kilocode/accure-ui/card"
-import { useDialog } from "@kilocode/accure-ui/context/dialog"
-import { ProviderIcon } from "@kilocode/accure-ui/provider-icon"
-import { Select } from "@kilocode/accure-ui/select"
-import { Tag } from "@kilocode/accure-ui/tag"
-import { showToast } from "@kilocode/accure-ui/toast"
+import { Button } from "@accurecode/accure-ui/button"
+import { Card } from "@accurecode/accure-ui/card"
+import { useDialog } from "@accurecode/accure-ui/context/dialog"
+import { ProviderIcon } from "@accurecode/accure-ui/provider-icon"
+import { Select } from "@accurecode/accure-ui/select"
+import { Tag } from "@accurecode/accure-ui/tag"
+import { showToast } from "@accurecode/accure-ui/toast"
 import { Component, For, Show, createMemo, createSignal, onCleanup } from "solid-js"
 import { useConfig } from "../../context/config"
 import { useLanguage } from "../../context/language"
@@ -16,8 +16,8 @@ import CustomProviderDialog from "./CustomProviderDialog"
 import ProviderConnectDialog from "./ProviderConnectDialog"
 import ProviderSelectDialog from "./ProviderSelectDialog"
 import { CUSTOM_PROVIDER_ID, isPopularProvider, providerIcon, providerNoteKey, sortProviders } from "./provider-catalog"
-import { disabledProviderOptions, providersWithKiloFallback, visibleConnectedIds } from "./provider-visibility"
-import { isCustomProviderPackage, KILO_PROVIDER_ID } from "../../../../src/shared/provider-model"
+import { disabledProviderOptions, providersWithAccureFallback, visibleConnectedIds } from "./provider-visibility"
+import { isCustomProviderPackage, ACCURECODE_PROVIDER_ID } from "../../../../src/shared/provider-model"
 import { createProviderAction } from "../../utils/provider-action"
 
 type ProviderSource = "env" | "api" | "config" | "custom"
@@ -35,13 +35,13 @@ const ProvidersTab: Component = () => {
 
   onCleanup(action.dispose)
 
-  const kiloLoggedIn = createMemo(() => !!provider.authStates()[KILO_PROVIDER_ID])
+  const accureLoggedIn = createMemo(() => !!provider.authStates()[ACCURECODE_PROVIDER_ID])
 
   const connectedProviders = createMemo(() => {
     const ids = visibleConnectedIds(provider.connected(), provider.authStates())
     const all = provider.providers()
     return ids
-      .filter((id) => id !== KILO_PROVIDER_ID)
+      .filter((id) => id !== ACCURECODE_PROVIDER_ID)
       .map((id) => all[id])
       .filter((item): item is Provider => !!item)
   })
@@ -53,14 +53,17 @@ const ProvidersTab: Component = () => {
     return sortProviders(
       all.filter(
         (item) =>
-          item.id !== KILO_PROVIDER_ID && isPopularProvider(item) && !connected.has(item.id) && !disabled.has(item.id),
+          item.id !== ACCURECODE_PROVIDER_ID &&
+          isPopularProvider(item) &&
+          !connected.has(item.id) &&
+          !disabled.has(item.id),
       ),
     )
   })
 
   const disabledProviders = createMemo(() => config().disabled_providers ?? [])
   const disabledIds = createMemo(() => new Set(disabledProviders()))
-  const providers = createMemo(() => providersWithKiloFallback(provider.providers()))
+  const providers = createMemo(() => providersWithAccureFallback(provider.providers()))
   const disabledOptions = createMemo(() => disabledProviderOptions(providers(), disabledProviders()))
 
   function source(item: Provider): ProviderSource | undefined {
@@ -136,8 +139,8 @@ const ProvidersTab: Component = () => {
   }
 
   function connectProvider(item: Provider) {
-    if (item.id === KILO_PROVIDER_ID) {
-      // Route Kilo Gateway sign-in through the Profile view so the user sees
+    if (item.id === ACCURECODE_PROVIDER_ID) {
+      // Route Accure Gateway sign-in through the Profile view so the user sees
       // the full device-auth UI (URL, QR, code, timer, cancel). Triggering
       // `startLogin()` from here alone would run the flow silently with no
       // way to recover if the browser is dismissed.
@@ -160,7 +163,7 @@ const ProvidersTab: Component = () => {
   return (
     <div>
       <Show when={false}>
-        {/* Kilo Gateway — always at the top, not editable */}
+        {/* Accure Gateway — always at the top, not editable */}
         <Card>
           <div
             style={{
@@ -171,18 +174,18 @@ const ProvidersTab: Component = () => {
               padding: "12px 0",
             }}
           >
-            <ProviderIcon id={providerIcon(KILO_PROVIDER_ID)} width={20} height={20} />
+            <ProviderIcon id={providerIcon(ACCURECODE_PROVIDER_ID)} width={20} height={20} />
             <span
               style={{
-                "font-size": "var(--kilo-font-size-14)",
+                "font-size": "var(--accure-font-size-14)",
                 "font-weight": "500",
                 color: "var(--vscode-foreground)",
               }}
             >
-              Kilo Gateway
+              Accure Gateway
             </span>
             <Show
-              when={kiloLoggedIn()}
+              when={accureLoggedIn()}
               fallback={
                 <Button size="small" variant="secondary" onClick={() => server.goToLogin()}>
                   {language.t("common.signIn")}
@@ -195,7 +198,7 @@ const ProvidersTab: Component = () => {
         </Card>
       </Show>
 
-      {/* Connected providers (excluding Kilo) */}
+      {/* Connected providers (excluding Accure) */}
       <h4 style={{ "margin-top": "16px", "margin-bottom": "8px" }}>
         {language.t("settings.providers.section.connected")}
       </h4>
@@ -206,7 +209,7 @@ const ProvidersTab: Component = () => {
             <div
               style={{
                 padding: "16px 0",
-                "font-size": "var(--kilo-font-size-14)",
+                "font-size": "var(--accure-font-size-14)",
                 color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
               }}
             >
@@ -232,7 +235,7 @@ const ProvidersTab: Component = () => {
                   <ProviderIcon id={providerIcon(item)} width={20} height={20} />
                   <span
                     style={{
-                      "font-size": "var(--kilo-font-size-14)",
+                      "font-size": "var(--accure-font-size-14)",
                       "font-weight": "500",
                       color: "var(--vscode-foreground)",
                       overflow: "hidden",
@@ -248,7 +251,7 @@ const ProvidersTab: Component = () => {
                   <Show when={!canDisconnect(item)}>
                     <span
                       style={{
-                        "font-size": "var(--kilo-font-size-14)",
+                        "font-size": "var(--accure-font-size-14)",
                         color: "var(--text-base, var(--vscode-descriptionForeground))",
                         "padding-right": "12px",
                       }}
@@ -304,7 +307,7 @@ const ProvidersTab: Component = () => {
                     <ProviderIcon id={providerIcon(item)} width={20} height={20} />
                     <span
                       style={{
-                        "font-size": "var(--kilo-font-size-14)",
+                        "font-size": "var(--accure-font-size-14)",
                         "font-weight": "500",
                         color: "var(--vscode-foreground)",
                       }}
@@ -316,7 +319,7 @@ const ProvidersTab: Component = () => {
                     {(key) => (
                       <span
                         style={{
-                          "font-size": "var(--kilo-font-size-12)",
+                          "font-size": "var(--accure-font-size-12)",
                           color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
                           "padding-left": "32px",
                         }}
@@ -351,7 +354,7 @@ const ProvidersTab: Component = () => {
               <ProviderIcon id="synthetic" width={20} height={20} />
               <span
                 style={{
-                  "font-size": "var(--kilo-font-size-14)",
+                  "font-size": "var(--accure-font-size-14)",
                   "font-weight": "500",
                   color: "var(--vscode-foreground)",
                 }}
@@ -362,7 +365,7 @@ const ProvidersTab: Component = () => {
             </div>
             <span
               style={{
-                "font-size": "var(--kilo-font-size-12)",
+                "font-size": "var(--accure-font-size-12)",
                 color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
                 "padding-left": "32px",
               }}
@@ -393,7 +396,7 @@ const ProvidersTab: Component = () => {
       <Card>
         <div
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--accure-font-size-12)",
             color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
             "padding-bottom": "8px",
             "border-bottom": "1px solid var(--border-weak-base)",
@@ -454,7 +457,7 @@ const ProvidersTab: Component = () => {
                 <ProviderIcon id={providerIcon(id)} width={20} height={20} />
                 <span
                   style={{
-                    "font-size": "var(--kilo-font-size-14)",
+                    "font-size": "var(--accure-font-size-14)",
                     "font-weight": "500",
                     color: "var(--vscode-foreground)",
                     overflow: "hidden",

@@ -95,10 +95,10 @@ export interface LegacyProviderSettings {
   lmStudioBaseUrl?: string
   lmStudioModelId?: string
 
-  // Kilocode
-  kilocodeToken?: string
-  kilocodeModel?: string
-  kilocodeOrganizationId?: string
+  // Accurecode
+  accurecodeToken?: string
+  accurecodeModel?: string
+  accurecodeOrganizationId?: string
 
   // LiteLLM
   litellmApiKey?: string

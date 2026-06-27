@@ -41,7 +41,7 @@ function previewImage(dir: vscode.Uri | undefined, dataUrl: string, filename: st
             Promise.resolve(vscode.workspace.fs.delete(vscode.Uri.joinPath(root, name), { recursive: true })).then(
               undefined,
               (err: unknown) => {
-                console.warn("[Kilo New] KiloProvider: Failed to delete stale preview:", err)
+                console.warn("[Accure New] AccureProvider: Failed to delete stale preview:", err)
               },
             ),
           ),
@@ -58,7 +58,7 @@ function previewImage(dir: vscode.Uri | undefined, dataUrl: string, filename: st
     .createDirectory(root)
     .then(() => vscode.workspace.fs.writeFile(uri, img.data))
     .then(() => clean())
-    .then(open, (err) => console.error("[Kilo New] KiloProvider: Failed to preview image:", err))
+    .then(open, (err) => console.error("[Accure New] AccureProvider: Failed to preview image:", err))
 }
 
 export function handleEditorAction(
@@ -101,7 +101,7 @@ export function handleEditorAction(
 function openContent(content: string, language?: string): void {
   vscode.workspace.openTextDocument({ content, language: language || "log" }).then(
     (doc) => vscode.window.showTextDocument(doc, { preview: true }),
-    (err) => console.error("[Kilo New] KiloProvider: Failed to open content:", err),
+    (err) => console.error("[Accure New] AccureProvider: Failed to open content:", err),
   )
 }
 
@@ -123,9 +123,9 @@ function openFile(dir: string, filePath: string, line?: number, column?: number)
           }
           vscode.window.showTextDocument(doc, options)
         },
-        (err) => console.error("[Kilo New] KiloProvider: Failed to open file:", uri.fsPath, err),
+        (err) => console.error("[Accure New] AccureProvider: Failed to open file:", uri.fsPath, err),
       )
     },
-    (err) => console.error("[Kilo New] KiloProvider: Path does not exist:", uri.fsPath, err),
+    (err) => console.error("[Accure New] AccureProvider: Path does not exist:", uri.fsPath, err),
   )
 }

@@ -59,7 +59,7 @@ describe("Session.Info", () => {
         additions: 10,
         deletions: 5,
         files: 2,
-        diffs: [{ additions: 1, deletions: 0, file: "a.ts" }], // kilocode_change
+        diffs: [{ additions: 1, deletions: 0, file: "a.ts" }], // accurecode_change
       },
       share: { url: "https://share.example.com/s/1" },
       title: "Full session",
@@ -236,9 +236,9 @@ describe("SessionStatus.Info", () => {
         reason: "free_tier_limit",
         provider: "opencode",
         title: "Free limit reached",
-        message: "Subscribe to OpenCode Go.", // kilocode_change
+        message: "Subscribe to OpenCode Go.", // accurecode_change
         label: "subscribe",
-        link: "https://opencode.ai/go", // kilocode_change
+        link: "https://opencode.ai/go", // accurecode_change
       },
       next: 500,
     }

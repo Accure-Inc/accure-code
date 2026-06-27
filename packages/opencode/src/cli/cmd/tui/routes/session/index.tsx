@@ -3,7 +3,7 @@ import {
   createContext,
   createEffect,
   createMemo,
-  onCleanup, // kilocode_change
+  onCleanup, // accurecode_change
   createSignal,
   For,
   Match,
@@ -24,15 +24,23 @@ import { SplitBorder } from "@tui/component/border"
 import { Spinner } from "@tui/component/spinner"
 import { generateSubtleSyntax, selectedForeground, useTheme } from "@tui/context/theme"
 import { BoxRenderable, ScrollBoxRenderable, addDefaultParsers, TextAttributes, RGBA } from "@opentui/core"
-// kilocode_change start
+// accurecode_change start
 import type { KeyEvent } from "@opentui/core"
 import type { CommandContext } from "@opentui/keymap"
-// kilocode_change end
+// accurecode_change end
 import { Prompt, type PromptRef } from "@tui/component/prompt"
-// kilocode_change start
-import type { AssistantMessage, Part, Provider, ToolPart, UserMessage, TextPart, ReasoningPart } from "@kilocode/sdk/v2"
+// accurecode_change start
+import type {
+  AssistantMessage,
+  Part,
+  Provider,
+  ToolPart,
+  UserMessage,
+  TextPart,
+  ReasoningPart,
+} from "@accurecode/sdk/v2"
 import * as Log from "@opencode-ai/core/util/log"
-// kilocode_change end
+// accurecode_change end
 import { useLocal } from "@tui/context/local"
 import { Locale } from "@/util/locale"
 import type { Tool } from "@/tool/tool"
@@ -50,10 +58,10 @@ import { webSearchProviderLabel, type WebSearchTool } from "@/tool/websearch"
 import type { TaskTool } from "@/tool/task"
 import type { QuestionTool } from "@/tool/question"
 import type { SkillTool } from "@/tool/skill"
-// kilocode_change start
-import type { BackgroundProcessTool } from "@/kilocode/tool/background-process"
-import type { SemanticSearchTool } from "@/kilocode/tool/semantic-search"
-// kilocode_change end
+// accurecode_change start
+import type { BackgroundProcessTool } from "@/accurecode/tool/background-process"
+import type { SemanticSearchTool } from "@/accurecode/tool/semantic-search"
+// accurecode_change end
 import { useRenderer, useTerminalDimensions, type JSX } from "@opentui/solid"
 import { useSDK } from "@tui/context/sdk"
 import { useEditorContext } from "@tui/context/editor"
@@ -62,7 +70,7 @@ import { TodoItem } from "../../component/todo-item"
 import { DialogMessage } from "./dialog-message"
 import type { PromptInfo } from "../../component/prompt/history"
 import { DialogConfirm } from "@tui/ui/dialog-confirm"
-import { KiloErrorBlock } from "@/kilocode/components/kilo-error-display" // kilocode_change
+import { AccureErrorBlock } from "@/accurecode/components/accure-error-display" // accurecode_change
 import { DialogTimeline } from "./dialog-timeline"
 import { DialogForkFromTimeline } from "./dialog-fork-from-timeline"
 import { DialogSessionRename } from "../../component/dialog-session-rename"
@@ -81,23 +89,23 @@ import { useExit } from "../../context/exit"
 import { Filesystem } from "@/util/filesystem"
 import { PermissionPrompt } from "./permission"
 import { QuestionPrompt } from "./question"
-// kilocode_change start
-import { Suggest } from "@/kilocode/suggestion/tui/render"
-import { SuggestPrompt } from "@/kilocode/suggestion/tui/prompt"
+// accurecode_change start
+import { Suggest } from "@/accurecode/suggestion/tui/render"
+import { SuggestPrompt } from "@/accurecode/suggestion/tui/prompt"
 import { NetworkPrompt } from "./network"
-// kilocode_change end
+// accurecode_change end
 import { DialogExportOptions } from "../../ui/dialog-export-options"
 import * as Model from "../../util/model"
 import { formatTranscript } from "../../util/transcript"
 import { UI } from "@/cli/ui.ts"
 import { useTuiConfig } from "../../context/tui-config"
-// kilocode_change start
-import { splitDiffHunks } from "@/kilocode/tui/diff"
-import { session as banner } from "@/kilocode/cli/logo"
+// accurecode_change start
+import { splitDiffHunks } from "@/accurecode/tui/diff"
+import { session as banner } from "@/accurecode/cli/logo"
 
 import { formatMarkdownTables } from "../../util/markdown"
-import { submitFeedback } from "@/kilocode/cli/cmd/tui/feedback"
-// kilocode_change end
+import { submitFeedback } from "@/accurecode/cli/cmd/tui/feedback"
+// accurecode_change end
 import { nextThinkingMode, reasoningTitle, useThinkingMode, type ThinkingMode } from "../../context/thinking"
 import { getScrollAcceleration } from "../../util/scroll"
 import { collapseToolOutput } from "../../util/collapse-tool-output"
@@ -105,7 +113,7 @@ import { TuiPluginRuntime } from "@/cli/cmd/tui/plugin/runtime"
 import { DialogRetryAction } from "../../component/dialog-retry-action"
 import { SessionRetry } from "@/session/retry"
 import { getRevertDiffFiles } from "../../util/revert-diff"
-import { KILO_BASE_MODE, useBindings, useCommandShortcut, useOpencodeKeymap } from "../../keymap"
+import { ACCURECODE_BASE_MODE, useBindings, useCommandShortcut, useOpencodeKeymap } from "../../keymap"
 import { PathFormatterProvider, usePathFormatter } from "../../context/path-format"
 
 addDefaultParsers(parsers.parsers)
@@ -162,10 +170,10 @@ const sessionBindingCommands = [
   "session.message.next",
   "session.message.previous",
   "messages.copy",
-  // kilocode_change start - message feedback
+  // accurecode_change start - message feedback
   "messages.feedback.up",
   "messages.feedback.down",
-  // kilocode_change end
+  // accurecode_change end
   "session.copy",
   "session.export",
   "session.child.first",
@@ -221,7 +229,7 @@ export function Session() {
     if (session()?.parentID) return []
     return children().flatMap((x) => sync.data.question[x.id] ?? [])
   })
-  // kilocode_change start
+  // accurecode_change start
   const suggestions = createMemo(() => {
     if (session()?.parentID) return []
     return children().flatMap((x) => sync.data.suggestion[x.id] ?? [])
@@ -258,7 +266,7 @@ export function Session() {
       blockingSuggestions().length > 0 ||
       network().length > 0,
   )
-  // kilocode_change end
+  // accurecode_change end
 
   const pending = createMemo(() => {
     return messages().findLast((x) => x.role === "assistant" && !x.time.completed)?.id
@@ -299,7 +307,7 @@ export function Session() {
   const sdk = useSDK()
   const editor = useEditorContext()
 
-  // kilocode_change start - background processes are scoped to the visible session
+  // accurecode_change start - background processes are scoped to the visible session
   function processGroup(sessionID: string) {
     const info = sync.session.get(sessionID)
     return info?.parentID ?? info?.id ?? sessionID
@@ -335,7 +343,7 @@ export function Session() {
   onCleanup(() => {
     stopProcesses(processSessionID)
   })
-  // kilocode_change end
+  // accurecode_change end
 
   createEffect(() => {
     const sessionID = route.sessionID
@@ -386,7 +394,7 @@ export function Session() {
     if (part.id === lastSwitch) return
 
     if (part.tool === "plan_enter") {
-      // kilocode_change
+      // accurecode_change
       local.agent.set("plan")
       lastSwitch = part.id
     }
@@ -428,7 +436,7 @@ export function Session() {
 
   const exit = useExit()
 
-  // kilocode_change start
+  // accurecode_change start
   createEffect(() => {
     const title = Locale.truncate(session()?.title ?? "", 50)
     return exit.message.set(banner(title, session()?.id, UI.Style.TEXT_DIM, UI.Style.TEXT_NORMAL))
@@ -452,7 +460,7 @@ export function Session() {
       },
     ],
   }))
-  // kilocode_change end
+  // accurecode_change end
 
   // Helper: Find next visible message boundary in direction
   const findNextVisibleMessage = (direction: "next" | "prev"): string | null => {
@@ -958,11 +966,11 @@ export function Session() {
       title: "Copy last assistant message",
       value: "messages.copy",
       category: "Session",
-      // kilocode_change start - /copy copies the latest assistant response
+      // accurecode_change start - /copy copies the latest assistant response
       slash: {
         name: "copy",
       },
-      // kilocode_change end
+      // accurecode_change end
       run: () => {
         const revertID = session()?.revert?.messageID
         const lastAssistantMessage = messages().findLast(
@@ -1001,7 +1009,7 @@ export function Session() {
         dialog.clear()
       },
     },
-    // kilocode_change start - message feedback
+    // accurecode_change start - message feedback
     {
       title: "Rate last assistant message helpful",
       value: "messages.feedback.up",
@@ -1014,28 +1022,28 @@ export function Session() {
       category: "Session",
       run: () => submitFeedback("down", dialog, { toast, session, messages }),
     },
-    // kilocode_change end
+    // accurecode_change end
     {
       title: "Copy session transcript",
       value: "session.copy",
       category: "Session",
       slash: {
-        name: "copy-session", // kilocode_change - transcript copy moved off /copy
+        name: "copy-session", // accurecode_change - transcript copy moved off /copy
       },
       run: async () => {
         try {
           const sessionData = session()
           if (!sessionData) return
-          // kilocode_change start - fetch all messages from server instead of truncated sync store
+          // accurecode_change start - fetch all messages from server instead of truncated sync store
           const allMessages = await sdk.client.session.messages({ sessionID: sessionData.id }, { throwOnError: true })
           const sessionMessages = allMessages.data.map((msg) => ({
             info: msg.info,
             parts: msg.parts,
           }))
-          // kilocode_change end
+          // accurecode_change end
           const transcript = formatTranscript(
             sessionData,
-            sessionMessages, // kilocode_change
+            sessionMessages, // accurecode_change
             {
               thinking: showThinking(),
               toolDetails: showDetails(),
@@ -1076,17 +1084,17 @@ export function Session() {
 
           if (options === null) return
 
-          // kilocode_change start - fetch all messages from server instead of truncated sync store
+          // accurecode_change start - fetch all messages from server instead of truncated sync store
           const allMessages = await sdk.client.session.messages({ sessionID: sessionData.id }, { throwOnError: true })
           const sessionMessages = allMessages.data.map((msg) => ({
             info: msg.info,
             parts: msg.parts,
           }))
-          // kilocode_change end
+          // accurecode_change end
 
           const transcript = formatTranscript(
             sessionData,
-            sessionMessages, // kilocode_change
+            sessionMessages, // accurecode_change
             {
               thinking: options.thinking,
               toolDetails: options.toolDetails,
@@ -1186,7 +1194,7 @@ export function Session() {
   }))
 
   useBindings(() => ({
-    mode: KILO_BASE_MODE,
+    mode: ACCURECODE_BASE_MODE,
     bindings: tuiConfig.keybinds.gather("session", sessionBindingCommands),
   }))
 
@@ -1258,13 +1266,13 @@ export function Session() {
                 scrollAcceleration={scrollAcceleration()}
               >
                 <box height={1} />
-                {/* kilocode_change start */}
+                {/* accurecode_change start */}
                 <Show when={session()?.parentID && messages().length === 0}>
                   <box paddingLeft={3}>
                     <text fg={theme.textMuted}>↳ Initializing...</text>
                   </box>
                 </Show>
-                {/* kilocode_change end */}
+                {/* accurecode_change end */}
                 <For each={messages()}>
                   {(message, index) => (
                     <Switch>
@@ -1364,7 +1372,7 @@ export function Session() {
                 <Show when={permissions().length > 0}>
                   <PermissionPrompt request={permissions()[0]} />
                 </Show>
-                {/* kilocode_change start */}
+                {/* accurecode_change start */}
                 <Show when={permissions().length === 0 && question()} keyed>
                   {(request) => (
                     <QuestionPrompt
@@ -1407,7 +1415,7 @@ export function Session() {
                     />
                   </TuiPluginRuntime.Slot>
                 </Show>
-                {/* kilocode_change end */}
+                {/* accurecode_change end */}
               </box>
             </Show>
             <Toast />
@@ -1602,8 +1610,8 @@ function AssistantMessage(props: { message: AssistantMessage; parts: Part[]; las
         </box>
       </Show>
       <Show when={props.message.error && props.message.error.name !== "MessageAbortedError"}>
-        {/* kilocode_change start - Kilo-specific error display */}
-        <KiloErrorBlock
+        {/* accurecode_change start - Accure-specific error display */}
+        <AccureErrorBlock
           error={props.message.error!}
           fallback={
             <box
@@ -1620,7 +1628,7 @@ function AssistantMessage(props: { message: AssistantMessage; parts: Part[]; las
             </box>
           }
         />
-        {/* kilocode_change end */}
+        {/* accurecode_change end */}
       </Show>
       <Switch>
         <Match when={props.last || final() || props.message.error?.name === "MessageAbortedError"}>
@@ -1739,9 +1747,9 @@ function CollapsedReasoningText(props: { title: string | null; duration: number 
 function TextPart(props: { last: boolean; part: TextPart; message: AssistantMessage }) {
   const ctx = use()
   const { theme, syntax } = useTheme()
-  // kilocode_change start - format markdown tables with fixed-width columns
+  // accurecode_change start - format markdown tables with fixed-width columns
   const content = createMemo(() => formatMarkdownTables(props.part.text.trim()))
-  // kilocode_change end
+  // accurecode_change end
   return (
     <Show when={props.part.text.trim()}>
       <box id={"text-" + props.part.id} paddingLeft={3} marginTop={1} flexShrink={0}>
@@ -1811,14 +1819,14 @@ function ToolPart(props: { last: boolean; part: ToolPart; message: AssistantMess
         <Match when={props.part.tool === "grep"}>
           <Grep {...toolprops} />
         </Match>
-        {/* kilocode_change start */}
+        {/* accurecode_change start */}
         <Match when={props.part.tool === "background_process"}>
           <BackgroundProcess {...toolprops} />
         </Match>
         <Match when={props.part.tool === "semantic_search"}>
           <SemanticSearch {...toolprops} />
         </Match>
-        {/* kilocode_change end */}
+        {/* accurecode_change end */}
         <Match when={props.part.tool === "webfetch"}>
           <WebFetch {...toolprops} />
         </Match>
@@ -1843,7 +1851,7 @@ function ToolPart(props: { last: boolean; part: ToolPart; message: AssistantMess
         <Match when={props.part.tool === "question"}>
           <Question {...toolprops} />
         </Match>
-        {/* kilocode_change start */}
+        {/* accurecode_change start */}
         <Match when={props.part.tool === "suggest"}>
           {(() => {
             const pending = createMemo(() => {
@@ -1858,7 +1866,7 @@ function ToolPart(props: { last: boolean; part: ToolPart; message: AssistantMess
             return <Suggest {...toolprops} InlineTool={InlineTool} BlockTool={BlockTool} pendingRequest={pending()} />
           })()}
         </Match>
-        {/* kilocode_change end */}
+        {/* accurecode_change end */}
         <Match when={props.part.tool === "skill"}>
           <Skill {...toolprops} />
         </Match>
@@ -2223,7 +2231,7 @@ function WebSearch(props: ToolProps<typeof WebSearchTool>) {
   )
 }
 
-// kilocode_change start
+// accurecode_change start
 function BackgroundProcess(props: ToolProps<typeof BackgroundProcessTool>) {
   const sync = useSync()
   const pathFormatter = usePathFormatter()
@@ -2285,7 +2293,7 @@ function SemanticSearch(props: ToolProps<typeof SemanticSearchTool>) {
     </InlineTool>
   )
 }
-// kilocode_change end
+// accurecode_change end
 
 function Task(props: ToolProps<typeof TaskTool>) {
   const { navigate } = useRoute()
@@ -2325,7 +2333,7 @@ function Task(props: ToolProps<typeof TaskTool>) {
       props.metadata.background === true ? `${props.input.description} (background)` : props.input.description
     let content = [`${Locale.titlecase(props.input.subagent_type ?? "General")} Task — ${description}`]
 
-    // kilocode_change start
+    // accurecode_change start
     if (isRunning()) {
       if (tools().length === 0) {
         content.push(`↳ Starting...`)
@@ -2337,7 +2345,7 @@ function Task(props: ToolProps<typeof TaskTool>) {
         content.push(`↳ ${tools().length} toolcalls`)
       }
     }
-    // kilocode_change end
+    // accurecode_change end
 
     if (props.part.state.status === "completed") {
       content.push(
@@ -2383,13 +2391,13 @@ function Edit(props: ToolProps<typeof EditTool>) {
   const ft = createMemo(() => filetype(props.input.filePath))
 
   const diffContent = createMemo(() => props.metadata.diff)
-  const hunks = createMemo(() => splitDiffHunks(diffContent() ?? "")) // kilocode_change
+  const hunks = createMemo(() => splitDiffHunks(diffContent() ?? "")) // accurecode_change
 
   return (
     <Switch>
       <Match when={props.metadata.diff !== undefined}>
         <BlockTool title={"← Edit " + pathFormatter.format(props.input.filePath)} part={props.part}>
-          {/* kilocode_change start */}
+          {/* accurecode_change start */}
           <box paddingLeft={1} flexDirection="column">
             <For each={hunks()}>
               {(hunk, i) => (
@@ -2422,7 +2430,7 @@ function Edit(props: ToolProps<typeof EditTool>) {
               )}
             </For>
           </box>
-          {/* kilocode_change end */}
+          {/* accurecode_change end */}
           <Diagnostics diagnostics={props.metadata.diagnostics} filePath={props.input.filePath ?? ""} />
         </BlockTool>
       </Match>
@@ -2449,7 +2457,7 @@ function ApplyPatch(props: ToolProps<typeof ApplyPatchTool>) {
   })
 
   function Diff(p: { diff: string; filePath: string }) {
-    // kilocode_change start
+    // accurecode_change start
     const hunks = createMemo(() => splitDiffHunks(p.diff))
     return (
       <box paddingLeft={1} flexDirection="column">
@@ -2485,7 +2493,7 @@ function ApplyPatch(props: ToolProps<typeof ApplyPatchTool>) {
         </For>
       </box>
     )
-    // kilocode_change end
+    // accurecode_change end
   }
 
   function title(file: { type: string; relativePath: string; filePath: string; deletions: number }) {

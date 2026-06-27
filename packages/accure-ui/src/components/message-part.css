@@ -1,4 +1,4 @@
-/* Kilo Message Part overrides */
+/* Accure Message Part overrides */
 
 [data-component="text-part"] {
   margin-top: 8px;
@@ -266,7 +266,7 @@ html[data-theme="accure-vscode"] [data-component="bash-output"] {
   color: var(--text-weak, var(--vscode-descriptionForeground));
   font-family: var(--font-family-mono);
   font-feature-settings: var(--font-family-mono--font-feature-settings);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   line-height: var(--line-height-large);
   user-select: none;
 }
@@ -318,7 +318,7 @@ html[data-theme="accure-vscode"] [data-component="bash-output"] {
 [data-component="shell-expanded-output"] .shiki code {
   font-family: var(--font-family-mono);
   font-feature-settings: var(--font-family-mono--font-feature-settings);
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   line-height: var(--line-height-large);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -437,14 +437,14 @@ html[data-theme="accure-vscode"] [data-component="todos"] {
 
   [data-slot="checkbox-checkbox-label"] {
     color: var(--text-weak);
-    font-size: var(--kilo-font-size-12);
-    line-height: var(--kilo-font-size-16);
+    font-size: var(--accure-font-size-12);
+    line-height: var(--accure-font-size-16);
   }
 
   [data-slot="message-part-todo-hidden"] {
     color: var(--text-weaker);
-    font-size: var(--kilo-font-size-12);
-    line-height: var(--kilo-font-size-16);
+    font-size: var(--accure-font-size-12);
+    line-height: var(--accure-font-size-16);
   }
 
   [data-slot="message-part-todo-content"][data-changed="changed"] {
@@ -628,9 +628,9 @@ html[data-theme="accure-vscode"] [data-component="reasoning-part"] {
   [data-slot="reasoning-header"] {
     gap: 6px;
     color: var(--text-weak);
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     font-weight: var(--font-weight-regular);
-    line-height: var(--kilo-font-size-16);
+    line-height: var(--accure-font-size-16);
 
     [data-component="icon"] {
       color: var(--text-weak);
@@ -641,7 +641,7 @@ html[data-theme="accure-vscode"] [data-component="reasoning-part"] {
   [data-slot="reasoning-title"] {
     color: var(--text-weak);
     font-weight: var(--font-weight-regular);
-    line-height: var(--kilo-font-size-16);
+    line-height: var(--accure-font-size-16);
   }
 
   [data-slot="reasoning-label"] + [data-slot="reasoning-title"]::before {
@@ -674,7 +674,7 @@ html[data-theme="accure-vscode"] [data-component="reasoning-part"] {
     background: var(--surface-tool-output-base);
 
     [data-component="markdown"] {
-      font-size: var(--kilo-font-size-12);
+      font-size: var(--accure-font-size-12);
       line-height: 160%;
     }
   }

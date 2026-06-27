@@ -1,2 +1,2 @@
-// kilocode_change - new file
-export { Suggestion } from "../kilocode/suggestion/index"
+// accurecode_change - new file
+export { Suggestion } from "../accurecode/suggestion/index"

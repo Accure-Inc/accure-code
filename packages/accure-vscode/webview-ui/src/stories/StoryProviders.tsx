@@ -18,30 +18,30 @@ import { ProviderContext } from "../context/provider"
 import { flattenModels, findModel as _findModel } from "../context/provider-utils"
 import { ConfigProvider, ConfigContext } from "../context/config"
 import { DisplayProvider } from "../context/display"
-import { DataProvider, type OpenDiffFn, type OpenFileFn } from "@kilocode/accure-ui/context/data"
-import { DiffComponentProvider } from "@kilocode/accure-ui/context/diff"
-import { CodeComponentProvider } from "@kilocode/accure-ui/context/code"
-import { FileComponentProvider } from "@kilocode/accure-ui/context/file"
-import { DialogProvider } from "@kilocode/accure-ui/context/dialog"
-import { MarkedProvider } from "@kilocode/accure-ui/context/marked"
-import { I18nProvider } from "@kilocode/accure-ui/context"
-import { Diff } from "@kilocode/accure-ui/diff"
-import { Code } from "@kilocode/accure-ui/code"
-import { File } from "@kilocode/accure-ui/file"
+import { DataProvider, type OpenDiffFn, type OpenFileFn } from "@accurecode/accure-ui/context/data"
+import { DiffComponentProvider } from "@accurecode/accure-ui/context/diff"
+import { CodeComponentProvider } from "@accurecode/accure-ui/context/code"
+import { FileComponentProvider } from "@accurecode/accure-ui/context/file"
+import { DialogProvider } from "@accurecode/accure-ui/context/dialog"
+import { MarkedProvider } from "@accurecode/accure-ui/context/marked"
+import { I18nProvider } from "@accurecode/accure-ui/context"
+import { Diff } from "@accurecode/accure-ui/diff"
+import { Code } from "@accurecode/accure-ui/code"
+import { File } from "@accurecode/accure-ui/file"
 import { SessionContext } from "../context/session"
 import { NotificationsContext } from "../context/notifications"
 import { LanguageContext } from "../context/language"
 import { IndexingProvider } from "../context/indexing"
-import { KiloEmbeddingModelsProvider } from "../context/kilo-embedding-models"
-import { dict as uiEn } from "@kilocode/accure-ui/i18n/en"
+import { AccureEmbeddingModelsProvider } from "../context/accure-embedding-models"
+import { dict as uiEn } from "@accurecode/accure-ui/i18n/en"
 import { dict as appEn } from "../i18n/en"
 import { dict as amEn } from "../../agent-manager/i18n/en"
-import { dict as kiloEn } from "@kilocode/accure-i18n/en"
-import { hasIndexingPlugin } from "@kilocode/accure-indexing/detect"
+import { dict as accureEn } from "@accurecode/accure-i18n/en"
+import { hasIndexingPlugin } from "@accurecode/accure-indexing/detect"
 import { resolveTemplate } from "../context/language-utils"
 import type {
   Config,
-  KilocodeNotification,
+  AccurecodeNotification,
   PermissionRequest,
   ProviderAuthState,
   SessionCloseReason,
@@ -52,7 +52,7 @@ import type {
 type PluginSpec = string | [string, Record<string, unknown>]
 
 // Merged English dictionary (same merge order as the real LanguageProvider)
-const dict: Record<string, string> = { ...appEn, ...amEn, ...uiEn, ...kiloEn }
+const dict: Record<string, string> = { ...appEn, ...amEn, ...uiEn, ...accureEn }
 
 function t(key: string, params?: Record<string, string | number | boolean | undefined>) {
   return resolveTemplate(dict[key] ?? key, params)
@@ -63,13 +63,13 @@ function t(key: string, params?: Record<string, string | number | boolean | unde
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
-// Mock providers — pre-loaded Kilo Gateway model for stories
+// Mock providers — pre-loaded Accure Gateway model for stories
 // ---------------------------------------------------------------------------
 
 const MOCK_PROVIDERS = {
-  kilo: {
-    id: "kilo",
-    name: "Kilo",
+  accure: {
+    id: "accure",
+    name: "Accure",
     env: [] as string[],
     models: {
       "anthropic/claude-sonnet-4-6": {
@@ -91,16 +91,16 @@ const MOCK_PROVIDERS = {
 const MOCK_MODELS = flattenModels(MOCK_PROVIDERS as any)
 
 /** A synchronous mock ProviderContext — provides models without waiting for a postMessage round-trip. */
-const MockProviderProvider: ParentComponent<{ kiloAuth?: boolean }> = (props) => {
+const MockProviderProvider: ParentComponent<{ accureAuth?: boolean }> = (props) => {
   const value = {
     providers: () => MOCK_PROVIDERS as any,
-    connected: () => ["kilo"],
+    connected: () => ["accure"],
     defaults: () => ({}),
-    defaultSelection: () => ({ providerID: "kilo", modelID: "anthropic/claude-sonnet-4-6" }),
+    defaultSelection: () => ({ providerID: "accure", modelID: "anthropic/claude-sonnet-4-6" }),
     models: () => MOCK_MODELS,
     findModel: (sel: any) => _findModel(MOCK_MODELS, sel),
     authMethods: () => ({}),
-    authStates: () => (props.kiloAuth ? { kilo: "oauth" } : {}) as Record<string, ProviderAuthState>,
+    authStates: () => (props.accureAuth ? { accure: "oauth" } : {}) as Record<string, ProviderAuthState>,
     isModelValid: () => true,
   }
   return <ProviderContext.Provider value={value}>{props.children}</ProviderContext.Provider>
@@ -126,7 +126,7 @@ export const defaultMockData = {
 
 function noop() {}
 
-function mockNotificationsValue(items: KilocodeNotification[] = []) {
+function mockNotificationsValue(items: AccurecodeNotification[] = []) {
   return {
     notifications: () => items,
     filteredNotifications: () => items,
@@ -213,7 +213,7 @@ export function mockSessionValue(overrides?: {
     scopedPermissions: (sid?: string) => (sid ? permissions.filter((p) => p.sessionID === sid) : permissions),
     scopedQuestions: (sid?: string) => (sid ? qs.filter((q) => q.sessionID === sid) : qs),
     scopedSuggestions: (sid?: string) => (sid ? suggestions.filter((item) => item.sessionID === sid) : suggestions),
-    selected: () => ({ providerID: "kilo", modelID: "anthropic/claude-sonnet-4-6" }),
+    selected: () => ({ providerID: "accure", modelID: "anthropic/claude-sonnet-4-6" }),
     selectModel: noop,
     hasModelOverride: () => false,
     clearModelOverride: noop,
@@ -228,7 +228,7 @@ export function mockSessionValue(overrides?: {
     selectedAgent: () => "code",
     selectAgent: noop,
     getSessionAgent: () => "code",
-    getSessionModel: () => ({ providerID: "kilo", modelID: "anthropic/claude-sonnet-4-6" }),
+    getSessionModel: () => ({ providerID: "accure", modelID: "anthropic/claude-sonnet-4-6" }),
     setSessionModel: noop,
     setSessionAgent: noop,
     setSessionVariant: noop,
@@ -275,7 +275,7 @@ interface StoryProvidersProps {
   permissions?: PermissionRequest[]
   questions?: QuestionRequest[]
   suggestions?: SuggestionRequest[]
-  notifications?: KilocodeNotification[]
+  notifications?: AccurecodeNotification[]
   status?: string
   sessionID?: string
   /** When provided, injects a mock ConfigContext with this config instead of the real ConfigProvider. */
@@ -287,7 +287,7 @@ interface StoryProvidersProps {
   onProjectConfigChange?: (config: Config) => void
   onOpenDiff?: OpenDiffFn
   onOpenFile?: OpenFileFn
-  kiloAuth?: boolean
+  accureAuth?: boolean
   /** When true, renders children without the default 12px padding wrapper */
   noPadding?: boolean
 }
@@ -395,7 +395,7 @@ export const StoryProviders: ParentComponent<StoryProvidersProps> = (props) => {
             onProjectConfigChange={props.onProjectConfigChange}
           >
             <DisplayProvider>
-              <MockProviderProvider kiloAuth={props.kiloAuth}>
+              <MockProviderProvider accureAuth={props.accureAuth}>
                 <DialogProvider>
                   <LanguageContext.Provider
                     value={{
@@ -409,7 +409,7 @@ export const StoryProviders: ParentComponent<StoryProvidersProps> = (props) => {
                       <NotificationsContext.Provider value={notifications}>
                         <SessionContext.Provider value={session as any}>
                           <IndexingProvider>
-                            <KiloEmbeddingModelsProvider>
+                            <AccureEmbeddingModelsProvider>
                               <DataProvider
                                 data={data()}
                                 directory="/project/"
@@ -430,7 +430,7 @@ export const StoryProviders: ParentComponent<StoryProvidersProps> = (props) => {
                                   </CodeComponentProvider>
                                 </DiffComponentProvider>
                               </DataProvider>
-                            </KiloEmbeddingModelsProvider>
+                            </AccureEmbeddingModelsProvider>
                           </IndexingProvider>
                         </SessionContext.Provider>
                       </NotificationsContext.Provider>

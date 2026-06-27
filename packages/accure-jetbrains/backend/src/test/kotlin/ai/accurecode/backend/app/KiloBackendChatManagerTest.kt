@@ -1,8 +1,8 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.backend.testing.MockCliServer
-import ai.kilocode.backend.testing.TestLog
-import ai.kilocode.rpc.dto.ModelSelectionDto
+import ai.accurecode.backend.testing.MockCliServer
+import ai.accurecode.backend.testing.TestLog
+import ai.accurecode.rpc.dto.ModelSelectionDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,7 +20,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class KiloBackendChatManagerTest {
+class AccureBackendChatManagerTest {
 
     private val mock = MockCliServer()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -34,7 +34,7 @@ class KiloBackendChatManagerTest {
     @Test
     fun `compact posts summarize request with selected model`() {
         val port = mock.start()
-        val chat = KiloBackendChatManager(scope, TestLog())
+        val chat = AccureBackendChatManager(scope, TestLog())
         chat.start(OkHttpClient(), port, MutableSharedFlow())
 
         chat.compact("ses_abc", "/test/project", ModelSelectionDto("anthropic", "claude-4"))
@@ -48,7 +48,7 @@ class KiloBackendChatManagerTest {
     @Test
     fun `enhance prompt posts scoped request and returns rewritten text`() = runBlocking {
         val port = mock.start()
-        val chat = KiloBackendChatManager(scope, TestLog())
+        val chat = AccureBackendChatManager(scope, TestLog())
         chat.start(OkHttpClient(), port, MutableSharedFlow())
         mock.enhanced = """{"text":"Use a focused implementation plan"}"""
 
@@ -63,7 +63,7 @@ class KiloBackendChatManagerTest {
     @Test
     fun `enhance prompt hides provider response details`() = runBlocking {
         val port = mock.start()
-        val chat = KiloBackendChatManager(scope, TestLog())
+        val chat = AccureBackendChatManager(scope, TestLog())
         chat.start(OkHttpClient(), port, MutableSharedFlow())
         mock.enhanceStatus = 500
         mock.enhanced = """{"error":"provider unavailable"}"""
@@ -78,7 +78,7 @@ class KiloBackendChatManagerTest {
     @Test
     fun `enhance prompt cancels the HTTP request with its coroutine`() = runBlocking {
         val port = mock.start()
-        val chat = KiloBackendChatManager(scope, TestLog())
+        val chat = AccureBackendChatManager(scope, TestLog())
         chat.start(OkHttpClient(), port, MutableSharedFlow())
         val gate = CountDownLatch(1)
         mock.responseGate = gate

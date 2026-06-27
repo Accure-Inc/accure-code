@@ -1,11 +1,11 @@
-package ai.kilocode.client.plugin
+package ai.accurecode.client.plugin
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.PropertyKey
 
-private const val BUNDLE = "messages.KiloBundle"
+private const val BUNDLE = "messages.AccureBundle"
 
-object KiloBundle : DynamicBundle(BUNDLE) {
+object AccureBundle : DynamicBundle(BUNDLE) {
     fun message(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any): String {
         return getMessage(key, *params)
     }

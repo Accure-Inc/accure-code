@@ -1,21 +1,21 @@
-// Kilo-specific translations and overrides
+// Accure-specific translations and overrides
 // Keys here will override any matching keys from upstream translations
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1":
-    "Kilo Gateway geeft je toegang tot een gecureerde set van betrouwbare, geoptimaliseerde modellen voor coding agents.",
-  "provider.connect.kiloGateway.line2":
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1":
+    "Accure Gateway geeft je toegang tot een gecureerde set van betrouwbare, geoptimaliseerde modellen voor coding agents.",
+  "provider.connect.accureGateway.line2":
     "Met één enkele API key krijg je toegang tot modellen zoals Claude, GPT, Gemini, GLM en meer.",
-  "provider.connect.kiloGateway.visit.prefix": "Bezoek ",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": " om je API key op te halen.",
-  "provider.connect.kiloGateway.byok.prefix": "Voor meer gebruiksstatistieken, gebruik ",
-  "provider.connect.kiloGateway.byok.link": "BYOK via Kilo's Gateway",
-  "provider.connect.kiloGateway.byok.suffix": ".",
+  "provider.connect.accureGateway.visit.prefix": "Bezoek ",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": " om je API key op te halen.",
+  "provider.connect.accureGateway.byok.prefix": "Voor meer gebruiksstatistieken, gebruik ",
+  "provider.connect.accureGateway.byok.link": "BYOK via Accure's Gateway",
+  "provider.connect.accureGateway.byok.suffix": ".",
 
   // Provider settings translations
   "settings.providers.group.recommended": "Aanbevolen",
-  "settings.providers.note.kilo": "Toegang tot 500+ AI modellen",
+  "settings.providers.note.accurecode": "Toegang tot 500+ AI modellen",
   "settings.providers.note.opencode": "Geselecteerde modellen, waaronder Claude, GPT, Gemini en meer",
   "settings.providers.note.anthropic": "Directe toegang tot Claude-modellen, inclusief Pro en Max",
   "settings.providers.note.deepseek": "DeepSeek-modellen voor redeneer- en codeertaken",
@@ -104,7 +104,7 @@ export const dict = {
     "Wacht tot de snapshot klaar is. Volgende beurten zijn snel zodra de eerste snapshot is gemaakt.",
   "snapshot.slowRepo.answer.disable": "Uitschakelen voor dit project",
   "snapshot.slowRepo.answer.disable.description":
-    "Zet Kilo-snapshots uit voor dit project. Je verliest ongedaan maken/opnieuw doen van Kilo-wijzigingen, maar git blijft alles volgen.",
+    "Zet Accure-snapshots uit voor dit project. Je verliest ongedaan maken/opnieuw doen van Accure-wijzigingen, maar git blijft alles volgen.",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "Openen in Diff-weergave",

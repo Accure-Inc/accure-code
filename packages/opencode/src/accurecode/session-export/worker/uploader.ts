@@ -214,24 +214,24 @@ async function headers(args: HeaderArgs): Promise<Headers> {
   const first = args.rows[0]
   const out = new Headers({
     "content-type": "application/json",
-    "x-kilo-export-api-version": "1",
-    "x-kilo-export-schema-version": "1",
-    "x-kilo-export-agent-version": args.agentVersion,
-    "x-kilo-export-surface": args.surface,
-    "x-kilo-export-root-session-id": first.rootSessionId,
-    "x-kilo-export-session-id": first.sessionId,
-    "x-kilo-export-batch-id": args.batchId,
-    "x-kilo-export-seq-start": String(Math.min(...seqs)),
-    "x-kilo-export-seq-end": String(Math.max(...seqs)),
-    "x-kilo-export-event-count": String(args.rows.length),
-    "x-kilo-export-payload-sha256": await sha256Hex(args.body),
-    "x-kilo-export-client-sent-at": new Date().toISOString(),
-    "x-kilo-export-content-encoding": "identity",
+    "x-accure-export-api-version": "1",
+    "x-accure-export-schema-version": "1",
+    "x-accure-export-agent-version": args.agentVersion,
+    "x-accure-export-surface": args.surface,
+    "x-accure-export-root-session-id": first.rootSessionId,
+    "x-accure-export-session-id": first.sessionId,
+    "x-accure-export-batch-id": args.batchId,
+    "x-accure-export-seq-start": String(Math.min(...seqs)),
+    "x-accure-export-seq-end": String(Math.max(...seqs)),
+    "x-accure-export-event-count": String(args.rows.length),
+    "x-accure-export-payload-sha256": await sha256Hex(args.body),
+    "x-accure-export-client-sent-at": new Date().toISOString(),
+    "x-accure-export-content-encoding": "identity",
   })
-  const token = process.env.KILO_SESSION_EXPORT_AUTH_TOKEN
+  const token = process.env.ACCURECODE_SESSION_EXPORT_AUTH_TOKEN
   if (token) out.set("authorization", `Bearer ${token}`)
   const anon = args.anonId ?? (await anonId(args.anonIdPath))
-  if (!token && anon) out.set("x-kilo-anon-id", anon)
+  if (!token && anon) out.set("x-accure-anon-id", anon)
   return out
 }
 

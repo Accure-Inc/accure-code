@@ -1,4 +1,4 @@
-import { KiloTitleIcon } from "./title-icon"
+import { AccureTitleIcon } from "./title-icon"
 
 type Session = {
   id: string
@@ -25,7 +25,7 @@ type Part = {
 
 type Queue = Record<string, readonly unknown[] | undefined>
 
-export namespace KiloTerminalTitle {
+export namespace AccureTerminalTitle {
   export type Indicator = "none" | "working" | "attention" | "finished"
 
   export type Data = {
@@ -65,11 +65,11 @@ export namespace KiloTerminalTitle {
       attention: "🔶",
       finished: "✅",
     },
-  } satisfies Record<KiloTitleIcon.Value, Record<Indicator, string>>
+  } satisfies Record<AccureTitleIcon.Value, Record<Indicator, string>>
 
-  export function format(input: { base: string; title?: string; indicator: Indicator; icon?: KiloTitleIcon.Value }) {
+  export function format(input: { base: string; title?: string; indicator: Indicator; icon?: AccureTitleIcon.Value }) {
     const text = input.title ? `${input.base} | ${truncate(input.title)}` : input.base
-    const prefix = icons[input.icon ?? KiloTitleIcon.Default][input.indicator]
+    const prefix = icons[input.icon ?? AccureTitleIcon.Default][input.indicator]
     if (!prefix) return text
     return `${prefix} ${text}`
   }
@@ -79,7 +79,7 @@ export namespace KiloTerminalTitle {
     id: string
     data: Data
     done: Record<string, true>
-    icon?: KiloTitleIcon.Value
+    icon?: AccureTitleIcon.Value
   }): Result {
     const info = input.data.session.find((item) => item.id === input.id)
     const id = root(input.data.session, input.id)

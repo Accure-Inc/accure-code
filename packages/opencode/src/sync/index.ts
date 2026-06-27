@@ -16,7 +16,7 @@ import { serviceUse } from "@/effect/service-use"
 import { InstanceState } from "@/effect/instance-state"
 import { RuntimeFlags } from "@/effect/runtime-flags"
 import { EffectBridge } from "@/effect/bridge"
-import * as EventWire from "@/kilocode/event-wire" // kilocode_change
+import * as EventWire from "@/accurecode/event-wire" // accurecode_change
 
 // Keep `Event["data"]` mutable because projectors mutate the persisted shape
 // when writing to the database. Bus payloads (`Properties`) stay readonly —
@@ -35,7 +35,7 @@ export type Definition<
   // passed at definition time (see `session.updated`, whose projector
   // expands the persisted data to a `{ sessionID, info }` bus payload).
   properties: BusSchema
-  wire?: boolean // kilocode_change - EventV2 rows cross persistence and bus boundaries as encoded data
+  wire?: boolean // accurecode_change - EventV2 rows cross persistence and bus boundaries as encoded data
 }
 
 export type Event<Def extends Definition = Definition> = {
@@ -47,12 +47,12 @@ export type Event<Def extends Definition = Definition> = {
 
 export type Properties<Def extends Definition = Definition> = EffectSchema.Schema.Type<Def["properties"]>
 
-// kilocode_change start - serialized rows carry the schema's encoded representation
+// accurecode_change start - serialized rows carry the schema's encoded representation
 export type SerializedEvent<Def extends Definition = Definition> = Omit<Event<Def>, "data"> & {
   type: string
   data: DeepMutable<Def["schema"]["Encoded"]>
 }
-// kilocode_change end
+// accurecode_change end
 
 type ProjectorFunc = (db: Database.TxOrDb, data: unknown, event: Event) => void
 type ConvertEvent = (type: string, data: Event["data"]) => unknown | Promise<unknown>
@@ -112,7 +112,7 @@ export const layer = Layer.effect(Service)(
       // full Effect context, so the forked publish + GlobalBus emit run with
       // the right state without a per-call attachWith.
       const bridge = yield* EffectBridge.make()
-      // kilocode_change start - decode only EventV2 rows
+      // accurecode_change start - decode only EventV2 rows
       const data = def.wire ? EventWire.decode(def.schema, event.data) : event.data
       process(
         def,
@@ -125,7 +125,7 @@ export const layer = Layer.effect(Service)(
           experimentalWorkspaces: flags.experimentalWorkspaces,
         },
       )
-      // kilocode_change end
+      // accurecode_change end
     })
 
     const replayAll: Interface["replayAll"] = Effect.fn("SyncEvent.replayAll")(function* (events, options) {
@@ -239,7 +239,7 @@ export function init(input: { projectors: Array<[Definition, ProjectorFunc]>; co
       aggregate: entry.aggregate,
       properties: entry.data,
       schema: entry.data,
-      wire: true, // kilocode_change
+      wire: true, // accurecode_change
     })
   }
 
@@ -328,7 +328,7 @@ function process<Def extends Definition>(
 
   Database.transaction((tx) => {
     projector(tx, event.data, event)
-    const data = def.wire ? EventWire.encode(def.schema, event.data) : event.data // kilocode_change
+    const data = def.wire ? EventWire.encode(def.schema, event.data) : event.data // accurecode_change
 
     if (options.experimentalWorkspaces) {
       tx.insert(EventSequenceTable)
@@ -348,7 +348,7 @@ function process<Def extends Definition>(
           seq: event.seq,
           aggregate_id: event.aggregateID,
           type: versionedType(def.type, def.version),
-          data: data as Record<string, unknown>, // kilocode_change
+          data: data as Record<string, unknown>, // accurecode_change
         })
         .run()
     }
@@ -360,12 +360,12 @@ function process<Def extends Definition>(
       // InstanceRef/WorkspaceRef and the full Effect context. Both the bus
       // publish and the GlobalBus emit run inside the forked Effect so they
       // share the same instance/workspace lookup.
-      // kilocode_change start
+      // accurecode_change start
       const publish = (value: unknown) =>
-        // kilocode_change end
+        // accurecode_change end
         options.bridge.fork(
           Effect.gen(function* () {
-            // kilocode_change start - encode EventV2 properties before crossing the legacy boundary
+            // accurecode_change start - encode EventV2 properties before crossing the legacy boundary
             if (def.wire) {
               yield* options.bus.publish(
                 { type: def.type, properties: EffectSchema.toEncoded(def.properties) },
@@ -375,7 +375,7 @@ function process<Def extends Definition>(
             } else {
               yield* options.bus.publish(def, value as Properties<Def>, { id: event.id })
             }
-            // kilocode_change end
+            // accurecode_change end
             const instance = yield* InstanceState.context
             const workspace = yield* InstanceState.workspaceID
             GlobalBus.emit("event", {
@@ -387,7 +387,7 @@ function process<Def extends Definition>(
                 syncEvent: {
                   type: versionedType(def.type, def.version),
                   ...event,
-                  data, // kilocode_change
+                  data, // accurecode_change
                 },
               },
             })

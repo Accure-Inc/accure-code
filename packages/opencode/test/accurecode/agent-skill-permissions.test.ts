@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { expect } from "bun:test"
 import { Effect } from "effect"
 import { testEffect } from "../lib/effect"

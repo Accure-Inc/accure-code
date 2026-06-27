@@ -1,4 +1,4 @@
-package ai.kilocode.client.migration
+package ai.accurecode.client.migration
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -1,12 +1,12 @@
-import { Button } from "@kilocode/accure-ui/button"
-import { useDialog } from "@kilocode/accure-ui/context/dialog"
-import { Dialog } from "@kilocode/accure-ui/dialog"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
-import { ProviderIcon } from "@kilocode/accure-ui/provider-icon"
-import { Select } from "@kilocode/accure-ui/select"
-import { Spinner } from "@kilocode/accure-ui/spinner"
-import { TextField } from "@kilocode/accure-ui/text-field"
-import { showToast } from "@kilocode/accure-ui/toast"
+import { Button } from "@accurecode/accure-ui/button"
+import { useDialog } from "@accurecode/accure-ui/context/dialog"
+import { Dialog } from "@accurecode/accure-ui/dialog"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
+import { ProviderIcon } from "@accurecode/accure-ui/provider-icon"
+import { Select } from "@accurecode/accure-ui/select"
+import { Spinner } from "@accurecode/accure-ui/spinner"
+import { TextField } from "@accurecode/accure-ui/text-field"
+import { showToast } from "@accurecode/accure-ui/toast"
 import { For, Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
 import { createStore, reconcile } from "solid-js/store"
 import { useConfig } from "../../context/config"
@@ -40,6 +40,7 @@ const PACKAGE_OPTIONS: Array<{ value: CustomProviderPackage; label: string }> = 
   { value: "@ai-sdk/openai-compatible", label: "OpenAI Compatible" },
   { value: "@ai-sdk/openai", label: "OpenAI Responses" },
   { value: "@ai-sdk/anthropic", label: "Anthropic Messages" },
+  { value: "@ai-sdk/amazon-bedrock", label: "Amazon Bedrock" },
 ]
 
 /** Subsequence fuzzy match — "gpt4o" matches "gpt-4o-mini". */
@@ -111,16 +112,35 @@ function resolveAuth(existing: ExistingProvider | undefined, states: Record<stri
 }
 
 function initForm(existing: ExistingProvider | undefined, auth: ProviderAuthState | undefined): FormState {
-  const npm = existing?.config?.npm
+  if (!existing) {
+    return {
+      providerID: "",
+      name: "",
+      npm: CUSTOM_PROVIDER_PACKAGE,
+      baseURL: "",
+      apiKey: "",
+      models: initModels(undefined),
+      headers: initHeaders(undefined),
+      saving: false,
+      accessKeyId: "",
+      secretAccessKey: "",
+      region: "us-east-1",
+    }
+  }
+  const cfg = existing.config
+  const opts = cfg?.options as Record<string, any> | undefined
   return {
-    providerID: existing?.providerID ?? "",
-    name: existing?.name ?? "",
-    npm: isCustomProviderPackage(npm) ? npm : CUSTOM_PROVIDER_PACKAGE,
-    baseURL: (existing?.config?.options as { baseURL?: string } | undefined)?.baseURL ?? "",
-    apiKey: resolveCustomProviderKey(auth),
-    models: initModels(existing?.config),
-    headers: initHeaders(existing?.config),
+    providerID: existing.providerID || "",
+    name: existing.name || "",
+    npm: isCustomProviderPackage(cfg?.npm) ? cfg.npm : CUSTOM_PROVIDER_PACKAGE,
+    baseURL: opts?.baseURL || "",
+    apiKey: resolveCustomProviderKey(auth) || "",
+    models: initModels(cfg),
+    headers: initHeaders(cfg),
     saving: false,
+    accessKeyId: opts?.accessKeyId || "",
+    secretAccessKey: opts?.secretAccessKey || "",
+    region: opts?.region || "us-east-1",
   }
 }
 
@@ -150,6 +170,9 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
     baseURL: undefined,
     models: form.models.map((m) => ({ variants: m.variants.map(() => ({})) })),
     headers: form.headers.map(() => ({})),
+    accessKeyId: undefined,
+    secretAccessKey: undefined,
+    region: undefined,
   })
   const [apiTouched, setApiTouched] = createSignal(false)
 
@@ -483,7 +506,11 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
         <div style={{ padding: "0 10px", display: "flex", gap: "16px", "align-items": "center" }}>
           <ProviderIcon id="synthetic" width={20} height={20} />
           <div
-            style={{ "font-size": "var(--kilo-font-size-16)", "font-weight": "500", color: "var(--vscode-foreground)" }}
+            style={{
+              "font-size": "var(--accure-font-size-16)",
+              "font-weight": "500",
+              color: "var(--vscode-foreground)",
+            }}
           >
             {editing() ? language.t("provider.custom.edit.title") : language.t("provider.custom.title")}
           </div>
@@ -493,15 +520,15 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
           onSubmit={save}
           style={{ padding: "0 10px 24px 10px", display: "flex", "flex-direction": "column", gap: "24px" }}
         >
-          <div style={{ "font-size": "var(--kilo-font-size-14)", color: "var(--text-base)" }}>
+          <div style={{ "font-size": "var(--accure-font-size-14)", color: "var(--text-base)" }}>
             {language.t("provider.custom.description.prefix")}
             <a
-              href="https://kilo.ai/docs/ai-providers#custom-provider"
+              href="https://accure.ai/docs/ai-providers#custom-provider"
               onClick={(e) => {
                 e.preventDefault()
                 vscode.postMessage({
                   type: "openExternal",
-                  url: "https://kilo.ai/docs/ai-providers#custom-provider",
+                  url: "https://accure.ai/docs/ai-providers#custom-provider",
                 })
               }}
             >
@@ -533,7 +560,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
             <div style={{ display: "flex", "flex-direction": "column", gap: "4px" }}>
               <label
                 style={{
-                  "font-size": "var(--kilo-font-size-12)",
+                  "font-size": "var(--accure-font-size-12)",
                   "font-weight": "500",
                   color: "var(--text-weak-base)",
                 }}
@@ -554,30 +581,65 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
                 triggerVariant="settings"
               />
             </div>
-            <TextField
-              label={language.t("provider.custom.field.baseURL.label")}
-              placeholder={language.t("provider.custom.field.baseURL.placeholder")}
-              value={form.baseURL}
-              onChange={(v) => {
-                setForm("baseURL", v)
-                setFetchURL(v)
-              }}
-              validationState={errors.baseURL ? "invalid" : undefined}
-              error={errors.baseURL}
-            />
-            <TextField
-              type="password"
-              label={language.t("provider.custom.field.apiKey.label")}
-              placeholder={language.t("provider.custom.field.apiKey.placeholder")}
-              description={language.t("provider.custom.field.apiKey.description")}
-              value={form.apiKey}
-              onChange={(v) => {
-                const key = !apiTouched() && form.apiKey === MASKED_CUSTOM_PROVIDER_KEY ? v.replace(/^\*+/, "") : v
-                setApiTouched(true)
-                setForm("apiKey", key)
-                setFetchKey(key)
-              }}
-            />
+            <Show
+              when={form.npm === "@ai-sdk/amazon-bedrock"}
+              fallback={
+                <>
+                  <TextField
+                    label={language.t("provider.custom.field.baseURL.label")}
+                    placeholder={language.t("provider.custom.field.baseURL.placeholder")}
+                    value={form.baseURL}
+                    onChange={(v) => {
+                      setForm("baseURL", v)
+                      setFetchURL(v)
+                    }}
+                    validationState={errors.baseURL ? "invalid" : undefined}
+                    error={errors.baseURL}
+                  />
+                  <TextField
+                    type="password"
+                    label={language.t("provider.custom.field.apiKey.label")}
+                    placeholder={language.t("provider.custom.field.apiKey.placeholder")}
+                    description={language.t("provider.custom.field.apiKey.description")}
+                    value={form.apiKey}
+                    onChange={(v) => {
+                      const key = !apiTouched() && form.apiKey === MASKED_CUSTOM_PROVIDER_KEY ? v.replace(/^\*+/, "") : v
+                      setApiTouched(true)
+                      setForm("apiKey", key)
+                      setFetchKey(key)
+                    }}
+                  />
+                </>
+              }
+            >
+              <TextField
+                type="password"
+                label="AWS Access Key ID"
+                placeholder="AKIA..."
+                value={form.accessKeyId ?? ""}
+                onChange={(v) => setForm("accessKeyId", v)}
+                validationState={errors.accessKeyId ? "invalid" : undefined}
+                error={errors.accessKeyId}
+              />
+              <TextField
+                type="password"
+                label="AWS Secret Access Key"
+                placeholder="Your secret access key"
+                value={form.secretAccessKey ?? ""}
+                onChange={(v) => setForm("secretAccessKey", v)}
+                validationState={errors.secretAccessKey ? "invalid" : undefined}
+                error={errors.secretAccessKey}
+              />
+              <TextField
+                type="text"
+                label="Region"
+                placeholder="us-east-1"
+                value={form.region ?? "us-east-1"}
+                onChange={(v) => setForm("region", v)}
+                validationState={errors.region ? "invalid" : undefined}
+                error={errors.region}
+              />
+            </Show>
           </div>
 
           {/* Models */}
@@ -585,7 +647,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
             <div style={{ display: "flex", "align-items": "center", gap: "8px" }}>
               <label
                 style={{
-                  "font-size": "var(--kilo-font-size-12)",
+                  "font-size": "var(--accure-font-size-12)",
                   "font-weight": "500",
                   color: "var(--text-weak-base)",
                 }}
@@ -636,7 +698,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
             <Show when={fetchError()}>
               {(err) => (
                 <span
-                  style={{ "font-size": "var(--kilo-font-size-12)", color: "var(--vscode-errorForeground, #f14c4c)" }}
+                  style={{ "font-size": "var(--accure-font-size-12)", color: "var(--vscode-errorForeground, #f14c4c)" }}
                 >
                   {err()}
                 </span>
@@ -648,7 +710,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
               {(status) => (
                 <span
                   style={{
-                    "font-size": "var(--kilo-font-size-12)",
+                    "font-size": "var(--accure-font-size-12)",
                     color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
                   }}
                 >
@@ -680,7 +742,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
                   >
                     <span
                       style={{
-                        "font-size": "var(--kilo-font-size-12)",
+                        "font-size": "var(--accure-font-size-12)",
                         "font-weight": "500",
                         color: "var(--text-weak-base)",
                       }}
@@ -737,7 +799,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
                             gap: "8px",
                             padding: "4px 2px",
                             cursor: "pointer",
-                            "font-size": "var(--kilo-font-size-13)",
+                            "font-size": "var(--accure-font-size-13)",
                             color: "var(--text-base, var(--vscode-foreground))",
                           }}
                         >
@@ -770,7 +832,11 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
           {/* Headers */}
           <div style={{ display: "flex", "flex-direction": "column", gap: "12px" }}>
             <label
-              style={{ "font-size": "var(--kilo-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
+              style={{
+                "font-size": "var(--accure-font-size-12)",
+                "font-weight": "500",
+                color: "var(--text-weak-base)",
+              }}
             >
               {language.t("provider.custom.headers.label")}
             </label>

@@ -27,7 +27,7 @@
 }
 
 @media (max-width: 760px) {
-  html[data-theme="kilo"],
+  html[data-theme="accure"],
   html[data-theme="accure-console"],
   .accure-console {
     --app-header-height: auto;

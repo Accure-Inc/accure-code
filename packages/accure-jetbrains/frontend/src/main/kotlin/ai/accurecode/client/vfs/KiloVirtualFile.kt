@@ -1,6 +1,6 @@
 @file:Suppress("LeakingThis")
 
-package ai.kilocode.client.vfs
+package ai.accurecode.client.vfs
 
 import com.intellij.openapi.components.service
 import com.intellij.openapi.fileEditor.FileEditorManagerKeys
@@ -12,8 +12,8 @@ import com.intellij.openapi.vfs.VirtualFileWithoutContent
 import java.io.InputStream
 import java.io.OutputStream
 
-class KiloVirtualFile(
-    val path: KiloPath,
+class AccureVirtualFile(
+    val path: AccurePath,
 ) : VirtualFile(),
     VirtualFileWithoutContent,
     VirtualFilePathWrapper {
@@ -21,7 +21,7 @@ class KiloVirtualFile(
         putUserData(FileEditorManagerKeys.FORBID_TAB_SPLIT, true)
     }
 
-    override fun getFileSystem(): KiloVirtualFileSystem = KiloVirtualFileSystem.getInstance()
+    override fun getFileSystem(): AccureVirtualFileSystem = AccureVirtualFileSystem.getInstance()
     override fun getFileType(): FileType = FileTypes.UNKNOWN
     override fun getPath(): String = fileSystem.getPath(path)
     override fun getUrl(): String = "${fileSystem.protocol}://$path"
@@ -48,11 +48,11 @@ class KiloVirtualFile(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is KiloVirtualFile) return false
+        if (other !is AccureVirtualFile) return false
         return path == other.path
     }
 
     override fun hashCode(): Int = path.hashCode()
 
-    private fun kind(): KiloVirtualFileKind? = service<KiloVirtualFileKindRegistry>().get(path.kind)
+    private fun kind(): AccureVirtualFileKind? = service<AccureVirtualFileKindRegistry>().get(path.kind)
 }

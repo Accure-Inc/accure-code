@@ -1,18 +1,18 @@
-package ai.kilocode.client.settings.models
+package ai.accurecode.client.settings.models
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.session.ui.model.ModelPicker
-import ai.kilocode.client.testing.FakeAppRpcApi
-import ai.kilocode.client.testing.FakeWorkspaceRpcApi
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ModelDto
-import ai.kilocode.rpc.dto.ModelsWorkspaceDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.ProviderDto
-import ai.kilocode.rpc.dto.ProvidersDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.session.ui.model.ModelPicker
+import ai.accurecode.client.testing.FakeAppRpcApi
+import ai.accurecode.client.testing.FakeWorkspaceRpcApi
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ModelDto
+import ai.accurecode.rpc.dto.ModelsWorkspaceDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.ProviderDto
+import ai.accurecode.rpc.dto.ProvidersDto
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.notification.Notifications
@@ -37,8 +37,8 @@ class ModelsSettingsUiTest : BasePlatformTestCase() {
     private lateinit var uiScope: CoroutineScope
     private lateinit var rpc: FakeAppRpcApi
     private lateinit var workspaceRpc: FakeWorkspaceRpcApi
-    private lateinit var app: KiloAppService
-    private lateinit var workspaces: KiloWorkspaceService
+    private lateinit var app: AccureAppService
+    private lateinit var workspaces: AccureWorkspaceService
     private var ui: ModelsSettingsUi? = null
 
     override fun setUp() {
@@ -47,11 +47,11 @@ class ModelsSettingsUiTest : BasePlatformTestCase() {
         uiScope = CoroutineScope(SupervisorJob())
         rpc = FakeAppRpcApi()
         workspaceRpc = FakeWorkspaceRpcApi()
-        app = KiloAppService(appScope, rpc)
-        workspaces = KiloWorkspaceService(appScope, workspaceRpc)
-        val state = KiloAppStateDto(
-            KiloAppStatusDto.READY,
-            config = ConfigDto(model = "kilo/old"),
+        app = AccureAppService(appScope, rpc)
+        workspaces = AccureWorkspaceService(appScope, workspaceRpc)
+        val state = AccureAppStateDto(
+            AccureAppStatusDto.READY,
+            config = ConfigDto(model = "accure/old"),
             profile = ProfileDto(email = "alice@test.com"),
         )
         rpc.state.value = state
@@ -113,12 +113,12 @@ class ModelsSettingsUiTest : BasePlatformTestCase() {
             panel.resetDraft()
             assertTrue(text(panel.progress).contains("Saving model settings"))
             assertFalse(panel.modified())
-            assertSelected(panel, "kilo/new")
+            assertSelected(panel, "accure/new")
         }
 
         rpc.configUpdateGate?.complete(Unit)
         flushUntil { rpc.configPatches.isNotEmpty() }
-        edt { assertSelected(panel, "kilo/new") }
+        edt { assertSelected(panel, "accure/new") }
     }
 
     fun `test pickers are disabled during pending save`() {
@@ -144,17 +144,17 @@ class ModelsSettingsUiTest : BasePlatformTestCase() {
             select(panel, "new")
             panel.applyDraft()
         }
-        rpc.state.value = state("kilo/new")
+        rpc.state.value = state("accure/new")
         flushUntil { edt { !panel.modified() && pickers(panel).all { !it.isEnabled } } }
         edt {
             panel.resetDraft()
-            assertSelected(panel, "kilo/new")
+            assertSelected(panel, "accure/new")
             assertTrue(text(panel.progress).contains("Saving model settings"))
         }
 
         rpc.configUpdateGate?.complete(Unit)
         flushUntil { rpc.configPatches.isNotEmpty() }
-        edt { assertSelected(panel, "kilo/new") }
+        edt { assertSelected(panel, "accure/new") }
     }
 
     fun `test matching app state after save callback preserves dirty draft`() {
@@ -168,11 +168,11 @@ class ModelsSettingsUiTest : BasePlatformTestCase() {
         }
         rpc.configUpdateGate?.complete(Unit)
         flushUntil { rpc.configPatches.isNotEmpty() }
-        rpc.state.value = state("kilo/new")
+        rpc.state.value = state("accure/new")
         flushUntil { edt { panel.modified() } }
 
         edt {
-            assertSelected(panel, "kilo/old")
+            assertSelected(panel, "accure/old")
             assertTrue(panel.modified())
         }
     }
@@ -185,11 +185,11 @@ class ModelsSettingsUiTest : BasePlatformTestCase() {
             select(panel, "new")
             panel.applyDraft()
         }
-        rpc.state.value = state("kilo/old")
+        rpc.state.value = state("accure/old")
         flushUntil { edt { text(panel.progress).contains("Saving model settings") } }
 
         edt {
-            assertSelected(panel, "kilo/new")
+            assertSelected(panel, "accure/new")
             assertFalse(panel.modified())
         }
 
@@ -227,13 +227,13 @@ class ModelsSettingsUiTest : BasePlatformTestCase() {
             select(panel, "new")
             panel.applyDraft()
             select(panel, "old")
-            assertSelected(panel, "kilo/old")
+            assertSelected(panel, "accure/old")
         }
 
         rpc.configUpdateGate?.complete(Unit)
         flushUntil { rpc.configPatches.isNotEmpty() }
         edt {
-            assertSelected(panel, "kilo/old")
+            assertSelected(panel, "accure/old")
             assertTrue(panel.modified())
         }
     }
@@ -269,7 +269,7 @@ class ModelsSettingsUiTest : BasePlatformTestCase() {
         rpc.configUpdateGate?.complete(Unit)
 
         flushUntil {
-            notes.any { it.groupId == "Kilo Code" && it.type == NotificationType.ERROR }
+            notes.any { it.groupId == "Accure Code" && it.type == NotificationType.ERROR }
         }
         assertEquals(1, rpc.configUpdateAttempts)
         assertTrue(notes.any { it.title == "Failed to save model settings" })
@@ -281,9 +281,9 @@ class ModelsSettingsUiTest : BasePlatformTestCase() {
             ui = null
         }
         uiScope = CoroutineScope(SupervisorJob())
-        val state = KiloAppStateDto(
-            KiloAppStatusDto.READY,
-            config = ConfigDto(model = "kilo/old"),
+        val state = AccureAppStateDto(
+            AccureAppStatusDto.READY,
+            config = ConfigDto(model = "accure/old"),
             profile = null,
         )
         rpc.state.value = state
@@ -291,21 +291,21 @@ class ModelsSettingsUiTest : BasePlatformTestCase() {
         workspaceRpc.models = ModelsWorkspaceDto(providers = providers())
         edt { ui = ModelsSettingsUi(uiScope, app, workspaces, directory = "/test") }
         val panel = requireUi()
-        flushUntil { text(panel).contains("Old") && text(panel).contains("Sign in to Kilo Code") }
+        flushUntil { text(panel).contains("Old") && text(panel).contains("Sign in to Accure Code") }
         val banner = edt { components(panel.top).filterIsInstance<InlineBanner>().single() }
         rpc.configUpdateGate = CompletableDeferred()
 
         edt {
             select(panel, "new")
             panel.applyDraft()
-            assertTrue(text(panel).contains("Sign in to Kilo Code"))
+            assertTrue(text(panel).contains("Sign in to Accure Code"))
             assertSame(banner, components(panel.top).filterIsInstance<InlineBanner>().single())
         }
 
         rpc.configUpdateGate?.complete(Unit)
         flushUntil { rpc.configPatches.isNotEmpty() }
         edt {
-            assertTrue(text(panel).contains("Sign in to Kilo Code"))
+            assertTrue(text(panel).contains("Sign in to Accure Code"))
             assertSame(banner, components(panel.top).filterIsInstance<InlineBanner>().single())
         }
     }
@@ -313,8 +313,8 @@ class ModelsSettingsUiTest : BasePlatformTestCase() {
     private fun providers(): ProvidersDto = ProvidersDto(
         providers = listOf(
             ProviderDto(
-                id = "kilo",
-                name = "Kilo",
+                id = "accure",
+                name = "Accure",
                 models = mapOf(
                     "old" to ModelDto(id = "old", name = "Old"),
                     "new" to ModelDto(id = "new", name = "New"),
@@ -325,15 +325,15 @@ class ModelsSettingsUiTest : BasePlatformTestCase() {
         defaults = emptyMap(),
     )
 
-    private fun state(model: String): KiloAppStateDto = KiloAppStateDto(
-        KiloAppStatusDto.READY,
+    private fun state(model: String): AccureAppStateDto = AccureAppStateDto(
+        AccureAppStatusDto.READY,
         config = ConfigDto(model = model),
         profile = ProfileDto(email = "alice@test.com"),
     )
 
     private fun select(panel: ModelsSettingsUi, id: String) {
         val picker = pickers(panel).first()
-        picker.onSelect(ModelPicker.Item(id, id.replaceFirstChar { it.titlecase() }, "kilo", "Kilo"))
+        picker.onSelect(ModelPicker.Item(id, id.replaceFirstChar { it.titlecase() }, "accure", "Accure"))
     }
 
     private fun assertSelected(panel: ModelsSettingsUi, key: String) {

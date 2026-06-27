@@ -1,12 +1,12 @@
 module.exports = [
   {
-    source: "/docs/kiloclaw/tools",
-    destination: "/docs/kiloclaw/development-tools",
+    source: "/docs/accureclaw/tools",
+    destination: "/docs/accureclaw/development-tools",
     basePath: false,
     permanent: true,
   },
   {
-    source: "/docs/contributing/cline-to-kilo-migration",
+    source: "/docs/contributing/cline-to-accure-migration",
     destination: "/docs/contributing",
     basePath: false,
     permanent: true,
@@ -401,7 +401,7 @@ module.exports = [
   },
 
   // ============================================
-  // COLLABORATE - Kilo for Teams
+  // COLLABORATE - Accure for Teams
   // ============================================
   {
     source: "/docs/plans/about",
@@ -547,7 +547,7 @@ module.exports = [
   },
 
   // ============================================
-  // AUTOMATE - Extending Kilo
+  // AUTOMATE - Extending Accure
   // ============================================
   {
     source: "/docs/advanced-usage/local-models",
@@ -572,8 +572,8 @@ module.exports = [
     permanent: true,
   },
   {
-    source: "/docs/features/mcp/using-mcp-in-kilo-code",
-    destination: "/docs/automate/mcp/using-in-kilo-code",
+    source: "/docs/features/mcp/using-mcp-in-accure-code",
+    destination: "/docs/automate/mcp/using-in-accure-code",
     basePath: false,
     permanent: true,
   },
@@ -781,13 +781,13 @@ module.exports = [
   },
   {
     source: "/docs/advanced-usage/free-and-budget-models",
-    destination: "/docs/getting-started/using-kilo-for-free",
+    destination: "/docs/getting-started/using-accure-for-free",
     basePath: false,
     permanent: true,
   },
   {
     source: "/docs/code-with-ai/agents/free-and-budget-models",
-    destination: "/docs/getting-started/using-kilo-for-free",
+    destination: "/docs/getting-started/using-accure-for-free",
     basePath: false,
     permanent: true,
   },
@@ -904,8 +904,8 @@ module.exports = [
     permanent: true,
   },
   {
-    source: "/docs/automate/kiloclaw/:path*",
-    destination: "/docs/kiloclaw/:path*",
+    source: "/docs/automate/accureclaw/:path*",
+    destination: "/docs/accureclaw/:path*",
     basePath: false,
     permanent: true,
   },
@@ -923,35 +923,35 @@ module.exports = [
   },
 
   // ============================================
-  // KILOCLAW
+  // ACCURECLAW
   // ============================================
   {
-    source: "/docs/kiloclaw/suggested-configuration",
-    destination: "/docs/kiloclaw/end-to-end",
+    source: "/docs/accureclaw/suggested-configuration",
+    destination: "/docs/accureclaw/end-to-end",
     basePath: false,
     permanent: true,
   },
   {
-    source: "/docs/kiloclaw/control-ui",
-    destination: "/docs/kiloclaw/control-ui/overview",
+    source: "/docs/accureclaw/control-ui",
+    destination: "/docs/accureclaw/control-ui/overview",
     basePath: false,
     permanent: true,
   },
   {
-    source: "/docs/kiloclaw/pricing",
-    destination: "/docs/kiloclaw/faq/pricing",
+    source: "/docs/accureclaw/pricing",
+    destination: "/docs/accureclaw/faq/pricing",
     basePath: false,
     permanent: true,
   },
   {
-    source: "/docs/kiloclaw/troubleshooting",
-    destination: "/docs/kiloclaw/troubleshooting/common-questions",
+    source: "/docs/accureclaw/troubleshooting",
+    destination: "/docs/accureclaw/troubleshooting/common-questions",
     basePath: false,
     permanent: true,
   },
   {
-    source: "/docs/kiloclaw/version-pinning",
-    destination: "/docs/kiloclaw/control-ui/version-pinning",
+    source: "/docs/accureclaw/version-pinning",
+    destination: "/docs/accureclaw/control-ui/version-pinning",
     basePath: false,
     permanent: true,
   },
@@ -963,7 +963,7 @@ module.exports = [
   },
   {
     source: "/auto-top-ups",
-    destination: "https://kilo.ai/features/auto-top-ups",
+    destination: "https://accure.ai/features/auto-top-ups",
     basePath: false,
     permanent: true,
   },

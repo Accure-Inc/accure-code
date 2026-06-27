@@ -1,30 +1,30 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.session.model.Permission
-import ai.kilocode.client.session.model.PermissionMeta
-import ai.kilocode.client.session.model.Question
-import ai.kilocode.client.session.model.QuestionItem
-import ai.kilocode.client.session.model.QuestionOption
-import ai.kilocode.client.session.model.SessionModel
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.session.model.ToolCallRef
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.LoginRequiredView
-import ai.kilocode.client.session.views.PlanExitView
-import ai.kilocode.client.session.views.permission.PermissionView
-import ai.kilocode.client.session.views.question.QuestionResultView
-import ai.kilocode.client.session.views.question.QuestionView
-import ai.kilocode.client.session.views.MessageToolbar
-import ai.kilocode.client.session.views.MessageView
-import ai.kilocode.client.session.views.TextView
-import ai.kilocode.client.session.views.tool.ToolView
-import ai.kilocode.client.session.views.todo.TodoWriteView
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.TodoDto
+import ai.accurecode.client.session.model.Permission
+import ai.accurecode.client.session.model.PermissionMeta
+import ai.accurecode.client.session.model.Question
+import ai.accurecode.client.session.model.QuestionItem
+import ai.accurecode.client.session.model.QuestionOption
+import ai.accurecode.client.session.model.SessionModel
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.session.model.ToolCallRef
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.LoginRequiredView
+import ai.accurecode.client.session.views.PlanExitView
+import ai.accurecode.client.session.views.permission.PermissionView
+import ai.accurecode.client.session.views.question.QuestionResultView
+import ai.accurecode.client.session.views.question.QuestionView
+import ai.accurecode.client.session.views.MessageToolbar
+import ai.accurecode.client.session.views.MessageView
+import ai.accurecode.client.session.views.TextView
+import ai.accurecode.client.session.views.tool.ToolView
+import ai.accurecode.client.session.views.todo.TodoWriteView
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.TodoDto
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
@@ -240,12 +240,12 @@ class SessionMessageListPanelTest : BasePlatformTestCase() {
         val urls = mutableListOf<String>()
         val item = SessionMessageListPanel(model, parent, openFile = openFile, openUrl = { urls.add(it) })
         model.upsertMessage(msg("a1", "assistant"))
-        model.updateContent("a1", part("p1", "a1", "text", text = "[docs](https://kilocode.ai/docs)"))
+        model.updateContent("a1", part("p1", "a1", "text", text = "[docs](https://accurecode.ai/docs)"))
 
         val view = item.findMessage("a1")!!.part("p1") as TextView
-        view.md.simulateLink("https://kilocode.ai/docs")
+        view.md.simulateLink("https://accurecode.ai/docs")
 
-        assertEquals(listOf("https://kilocode.ai/docs"), urls)
+        assertEquals(listOf("https://accurecode.ai/docs"), urls)
     }
 
     fun `test ContentDelta appends text to TextView`() {
@@ -657,14 +657,14 @@ class SessionMessageListPanelTest : BasePlatformTestCase() {
             "a1",
             toolPart(
                 "tp1", "a1", "plan_exit", "call1", state = "completed",
-                metadata = mapOf("plan" to ".kilo/plans/x.md"),
+                metadata = mapOf("plan" to ".accurecode/plans/x.md"),
             ),
         )
 
         val view = mv.part("tp1") as PlanExitView
-        view.simulateLink(".kilo/plans/x.md")
+        view.simulateLink(".accurecode/plans/x.md")
 
-        assertEquals(listOf(".kilo/plans/x.md"), opened)
+        assertEquals(listOf(".accurecode/plans/x.md"), opened)
     }
 
     fun `test entering a second hoverable part clears stale first hover`() {

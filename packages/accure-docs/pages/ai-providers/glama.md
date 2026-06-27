@@ -1,10 +1,10 @@
 ---
-title: "Using Glama with Kilo Code"
-description: "Connect Glama's unified AI gateway to Kilo Code to access Claude, GPT, and other leading models through a single API key."
+title: "Using Glama with Accure Code"
+description: "Connect Glama's unified AI gateway to Accure Code to access Claude, GPT, and other leading models through a single API key."
 sidebar_label: Glama
 ---
 
-# Using Glama With Kilo Code
+# Using Glama With Accure Code
 
 Glama provides access to a variety of language models through a unified API, including models from Anthropic, OpenAI, and others. It offers features like prompt caching and cost tracking.
 
@@ -18,20 +18,20 @@ Glama provides access to a variety of language models through a unified API, inc
 
 ## Supported Models
 
-Kilo Code will automatically try to fetch a list of available models from the Glama API. Some models that are commonly available through Glama include:
+Accure Code will automatically try to fetch a list of available models from the Glama API. Some models that are commonly available through Glama include:
 
-- **Anthropic Claude models:** (e.g., `anthropic/claude-3-5-sonnet`) These are generally recommended for best performance with Kilo Code.
+- **Anthropic Claude models:** (e.g., `anthropic/claude-3-5-sonnet`) These are generally recommended for best performance with Accure Code.
 - **OpenAI models:** (e.g., `openai/o3-mini-high`)
 - **Other providers and open-source models**
 
 Refer to the [Glama documentation](https://glama.ai/models) for the most up-to-date list of supported models.
 
-## Configuration in Kilo Code
+## Configuration in Accure Code
 
 {% tabs %}
 {% tab label="VSCode (Legacy)" %}
 
-1.  **Open Kilo Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Kilo Code panel.
+1.  **Open Accure Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Accure Code panel.
 2.  **Select Provider:** Choose "Glama" from the "API Provider" dropdown.
 3.  **Enter API Key:** Paste your Glama API key into the "Glama API Key" field.
 4.  **Select Model:** Choose your desired model from the "Model" dropdown.
@@ -41,13 +41,13 @@ Refer to the [Glama documentation](https://glama.ai/models) for the most up-to-d
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add Glama and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `accure.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
 {% callout type="warning" %}
-Glama is not yet available as a CLI provider. Check the [Kilo Code releases](https://github.com/Kilo-Org/kilocode/releases) for updates on provider support.
+Glama is not yet available as a CLI provider. Check the [Accure Code releases](https://github.com/Accure-Inc/accure-code/releases) for updates on provider support.
 {% /callout %}
 
 {% /tab %}

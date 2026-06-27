@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.history
+package ai.accurecode.client.session.history
 
 import java.io.File
 import java.util.concurrent.CompletableFuture

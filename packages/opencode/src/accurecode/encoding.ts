@@ -26,7 +26,7 @@ import iconv from "iconv-lite"
  * so UTF BOMs are handled explicitly in {@link encode} to round-trip cleanly.
  *
  * Consumers should import this module as a namespace:
- *   import * as Encoding from "../kilocode/encoding"
+ *   import * as Encoding from "../accurecode/encoding"
  */
 
 export const DEFAULT = "utf-8"
@@ -123,8 +123,8 @@ function isUtf8(bytes: Buffer): boolean {
 // paths, libuv can still throw EEXIST. This wrapper catches that specific
 // error so callers get the promised 'directory exists' semantics.
 //
-//   https://github.com/Kilo-Org/kilocode/issues/9618
-//   https://github.com/Kilo-Org/kilocode/issues/9755
+//   https://github.com/Accure-Inc/accure-code/issues/9618
+//   https://github.com/Accure-Inc/accure-code/issues/9755
 function isEexist(err: unknown): boolean {
   return typeof err === "object" && err !== null && "code" in err && (err as NodeJS.ErrnoException).code === "EEXIST"
 }

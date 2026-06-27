@@ -3,7 +3,7 @@ import { hideBin } from "yargs/helpers"
 import { RunCommand } from "./cli/cmd/run"
 import { GenerateCommand } from "./cli/cmd/generate"
 import * as Log from "@opencode-ai/core/util/log"
-// import { ConsoleCommand } from "./cli/cmd/account" // kilocode_change - reserve `kilo console` for local settings
+// import { ConsoleCommand } from "./cli/cmd/account" // accurecode_change - reserve `accure console` for local settings
 import { ProvidersCommand } from "./cli/cmd/providers"
 import { AgentCommand } from "./cli/cmd/agent"
 import { UpgradeCommand } from "./cli/cmd/upgrade"
@@ -40,7 +40,7 @@ import { Heap } from "./cli/heap"
 import { drizzle } from "drizzle-orm/bun-sqlite"
 import { ensureProcessMetadata } from "@opencode-ai/core/util/opencode-process"
 import { isRecord } from "@/util/record"
-import { KiloCli } from "@/kilocode/cli/setup" // kilocode_change
+import { AccureCli } from "@/accurecode/cli/setup" // accurecode_change
 
 const processMetadata = ensureProcessMetadata("main")
 
@@ -68,9 +68,9 @@ function show(out: string) {
   process.stderr.write(out)
 }
 
-let cli = yargs(args) // kilocode_change
+let cli = yargs(args) // accurecode_change
   .parserConfiguration({ "populate--": true })
-  .scriptName("kilo") // kilocode_change
+  .scriptName("accure") // accurecode_change
   .wrap(100)
   .help("help", "show help")
   .alias("help", "h")
@@ -91,7 +91,7 @@ let cli = yargs(args) // kilocode_change
   })
   .middleware(async (opts) => {
     if (opts.pure) {
-      process.env.KILO_PURE = "1"
+      process.env.ACCURECODE_PURE = "1"
     }
 
     await Log.init({
@@ -108,7 +108,7 @@ let cli = yargs(args) // kilocode_change
 
     process.env.AGENT = "1"
     process.env.OPENCODE = "1"
-    process.env.KILO_PID = String(process.pid)
+    process.env.ACCURECODE_PID = String(process.pid)
 
     Log.Default.info("opencode", {
       version: InstallationVersion,
@@ -117,9 +117,9 @@ let cli = yargs(args) // kilocode_change
       run_id: processMetadata.runID,
     })
 
-    await KiloCli.bootstrap() // kilocode_change - env tagging, telemetry init, legacy auth migration
+    await AccureCli.bootstrap() // accurecode_change - env tagging, telemetry init, legacy auth migration
 
-    const marker = path.join(Global.Path.data, "kilo.db")
+    const marker = path.join(Global.Path.data, "accure.db")
     if (!(await Filesystem.exists(marker))) {
       const tty = process.stderr.isTTY
       process.stderr.write("Performing one time database migration, may take a few minutes..." + EOL)
@@ -165,7 +165,7 @@ let cli = yargs(args) // kilocode_change
   .command(RunCommand)
   .command(GenerateCommand)
   .command(DebugCommand)
-  // kilocode_change - upstream account console intentionally not registered; KiloConsole is added by KiloCli.register
+  // accurecode_change - upstream account console intentionally not registered; AccureConsole is added by AccureCli.register
   .command(ProvidersCommand)
   .command(AgentCommand)
   .command(UpgradeCommand)
@@ -182,10 +182,10 @@ let cli = yargs(args) // kilocode_change
   .command(PluginCommand)
   .command(DbCommand)
 
-// kilocode_change start - register Kilo-specific commands after the upstream chain
-cli = KiloCli.register(cli)
+// accurecode_change start - register Accure-specific commands after the upstream chain
+cli = AccureCli.register(cli)
 cli = cli
-  // kilocode_change end
+  // accurecode_change end
   .fail((msg, err) => {
     if (
       msg?.startsWith("Unknown argument") ||
@@ -251,7 +251,7 @@ try {
   }
   process.exitCode = 1
 } finally {
-  await KiloCli.shutdown() // kilocode_change - telemetry/session-export shutdown + instance disposal
+  await AccureCli.shutdown() // accurecode_change - telemetry/session-export shutdown + instance disposal
 
   // Some subprocesses don't react properly to SIGTERM and similar signals.
   // Most notably, some docker-container-based MCP servers don't handle such signals unless

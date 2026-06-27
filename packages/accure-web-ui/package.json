@@ -1,5 +1,5 @@
 {
-  "name": "@kilocode/accure-web-ui",
+  "name": "@accurecode/accure-web-ui",
   "version": "7.3.50",
   "type": "module",
   "license": "MIT",
@@ -136,7 +136,7 @@
   },
   "dependencies": {
     "@kobalte/core": "catalog:",
-    "@kilocode/accure-ui": "workspace:*",
+    "@accurecode/accure-ui": "workspace:*",
     "@opencode-ai/ui": "workspace:*",
     "@pierre/diffs": "catalog:",
     "solid-js": "catalog:"

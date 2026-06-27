@@ -1,7 +1,7 @@
 import { Effect, Option, Schema, Scope } from "effect"
 import { NonNegativeInt } from "@opencode-ai/core/schema"
 import * as path from "path"
-import { Readable } from "stream" // kilocode_change
+import { Readable } from "stream" // accurecode_change
 import { createInterface } from "readline"
 import * as Tool from "./tool"
 import { AppFileSystem } from "@opencode-ai/core/filesystem"
@@ -12,10 +12,10 @@ import { assertExternalDirectoryEffect } from "./external-directory"
 import { Instruction } from "../session/instruction"
 import { isPdfAttachment, sniffAttachmentMime } from "@/util/media"
 import { Reference } from "@/reference/reference"
-// kilocode_change start
-import * as Encoding from "../kilocode/encoding"
-import * as Extract from "../kilocode/tool/read-extract"
-// kilocode_change end
+// accurecode_change start
+import * as Encoding from "../accurecode/encoding"
+import * as Extract from "../accurecode/tool/read-extract"
+// accurecode_change end
 
 const DEFAULT_READ_LIMIT = 2000
 const MAX_LINE_LENGTH = 2000
@@ -23,7 +23,7 @@ const MAX_LINE_SUFFIX = `... (line truncated to ${MAX_LINE_LENGTH} chars)`
 const MAX_BYTES = 50 * 1024
 const MAX_BYTES_LABEL = `${MAX_BYTES / 1024} KB`
 const SAMPLE_BYTES = 4096
-const DIRECTORY_CONCURRENCY = 8 // kilocode_change
+const DIRECTORY_CONCURRENCY = 8 // accurecode_change
 const SUPPORTED_IMAGE_MIMES = new Set(["image/jpeg", "image/png", "image/gif", "image/webp"])
 
 // `offset` and `limit` were originally `z.coerce.number()` — the runtime
@@ -111,7 +111,7 @@ export const ReadTool = Tool.define(
     })
 
     const lines = Effect.fn("ReadTool.lines")((filepath: string, opts: { limit: number; offset: number }) =>
-      // kilocode_change - extracted formats still need their native readers; ordinary text stays on AppFileSystem
+      // accurecode_change - extracted formats still need their native readers; ordinary text stays on AppFileSystem
       Effect.tryPromise({
         try: () => Extract.open(filepath),
         catch: (err) => (err instanceof Error ? err : new Error(String(err))),
@@ -171,10 +171,10 @@ export const ReadTool = Tool.define(
 
       if (bytes.length === 0) return false
 
-      // kilocode_change start - UTF-16/32 BOM: NUL bytes are legitimate, skip the NUL/control-char heuristic
+      // accurecode_change start - UTF-16/32 BOM: NUL bytes are legitimate, skip the NUL/control-char heuristic
       const buf = Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength)
       if (Encoding.hasUtf16Bom(buf, bytes.length) || Encoding.hasUtf32Bom(buf, bytes.length)) return false
-      // kilocode_change end
+      // accurecode_change end
 
       let nonPrintableCount = 0
       for (let i = 0; i < bytes.length; i++) {
@@ -187,7 +187,7 @@ export const ReadTool = Tool.define(
       return nonPrintableCount / bytes.length > 0.3
     }
 
-    // kilocode_change start
+    // accurecode_change start
     type DirectoryFile = {
       filepath: string
       content: string
@@ -224,7 +224,7 @@ export const ReadTool = Tool.define(
       )
       return files.filter((item): item is DirectoryFile => item !== undefined)
     })
-    // kilocode_change end
+    // accurecode_change end
 
     const run = Effect.fn("ReadTool.execute")(function* (
       params: Schema.Schema.Type<typeof Parameters>,
@@ -269,11 +269,11 @@ export const ReadTool = Tool.define(
         const start = offset - 1
         const sliced = items.slice(start, start + limit)
         const truncated = start + sliced.length < items.length
-        // kilocode_change start
+        // accurecode_change start
         const expand = Boolean(ctx.extra?.["includeDirectoryFiles"])
         const loaded = expand ? yield* readDirectoryFiles(filepath, sliced, instance.directory) : []
         const content = loaded.map((item) => item.content).join("\n\n")
-        // kilocode_change end
+        // accurecode_change end
 
         return {
           title,
@@ -286,16 +286,16 @@ export const ReadTool = Tool.define(
               ? `\n(Showing ${sliced.length} of ${items.length} entries. Use 'offset' parameter to read beyond entry ${offset + sliced.length})`
               : `\n(${items.length} entries)`,
             `</entries>`,
-            // kilocode_change start
+            // accurecode_change start
             ...(content ? [`\n${content}`] : []),
-            // kilocode_change end
+            // accurecode_change end
           ].join("\n"),
           metadata: {
             preview: sliced.slice(0, 20).join("\n"),
             truncated,
-            // kilocode_change start
+            // accurecode_change start
             loaded: loaded.map((item) => item.filepath),
-            // kilocode_change end
+            // accurecode_change end
           },
         }
       }
@@ -327,7 +327,7 @@ export const ReadTool = Tool.define(
         }
       }
 
-      // kilocode_change start - route extractable binary documents through lines()
+      // accurecode_change start - route extractable binary documents through lines()
       if (!Extract.binary(filepath) && isBinaryFile(filepath, sample)) {
         return yield* Effect.fail(new Error(`Cannot read binary file: ${filepath}`))
       }
@@ -338,7 +338,7 @@ export const ReadTool = Tool.define(
           new Error(`Offset ${file.offset} is out of range for this file (${file.count} lines)`),
         )
       }
-      // kilocode_change end
+      // accurecode_change end
 
       let output = [`<path>${filepath}</path>`, `<type>file</type>`, "<content>\n"].join("\n")
       output += file.raw.map((line, i) => `${i + file.offset}: ${line}`).join("\n")
@@ -381,9 +381,9 @@ export const ReadTool = Tool.define(
   }),
 )
 
-// kilocode_change start - extracted formats use native readers; ordinary text is supplied by AppFileSystem above
+// accurecode_change start - extracted formats use native readers; ordinary text is supplied by AppFileSystem above
 async function collect(stream: Readable, opts: { limit: number; offset: number }) {
-  // kilocode_change end
+  // accurecode_change end
   const rl = createInterface({ input: stream, crlfDelay: Infinity })
   const start = opts.offset - 1
   const raw: string[] = []

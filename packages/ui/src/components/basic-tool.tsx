@@ -3,7 +3,7 @@ import { animate, type AnimationPlaybackControls } from "motion"
 import { useI18n } from "../context/i18n"
 import { createStore } from "solid-js/store"
 import { Collapsible } from "./collapsible"
-import { Icon, type IconProps } from "./icon" // kilocode_change: added Icon
+import { Icon, type IconProps } from "./icon" // accurecode_change: added Icon
 import { TextShimmer } from "./text-shimmer"
 
 export type TriggerTitle = {
@@ -31,12 +31,12 @@ export interface BasicToolProps {
   defaultOpen?: boolean
   forceOpen?: boolean
   defer?: boolean
-  hasDetails?: boolean // kilocode_change
+  hasDetails?: boolean // accurecode_change
   locked?: boolean
   animated?: boolean
-  allowPendingToggle?: boolean // kilocode_change
+  allowPendingToggle?: boolean // accurecode_change
   onSubtitleClick?: () => void
-  onOpenChange?: (open: boolean) => void // kilocode_change
+  onOpenChange?: (open: boolean) => void // accurecode_change
   onTriggerClick?: JSX.EventHandlerUnion<HTMLElement, MouseEvent>
   triggerHref?: string
   clickable?: boolean
@@ -90,7 +90,7 @@ export function BasicTool(props: BasicToolProps) {
   const ready = () => state.ready
   const pending = () => props.status === "pending" || props.status === "running"
   const hasChildren = () => (props.defer ? "children" in props : props.children)
-  const hasDetails = () => props.hasDetails ?? !!hasChildren() // kilocode_change
+  const hasDetails = () => props.hasDetails ?? !!hasChildren() // accurecode_change
 
   let cancelReady: (() => void) | undefined
 
@@ -168,11 +168,11 @@ export function BasicTool(props: BasicToolProps) {
   })
 
   const handleOpenChange = (value: boolean) => {
-    if (pending() && !props.allowPendingToggle) return // kilocode_change
-    if (props.hideDetails) return // kilocode_change
+    if (pending() && !props.allowPendingToggle) return // accurecode_change
+    if (props.hideDetails) return // accurecode_change
     if (props.locked && !value) return
     setState("open", value)
-    props.onOpenChange?.(value) // kilocode_change
+    props.onOpenChange?.(value) // accurecode_change
   }
 
   const trigger = () => (
@@ -182,11 +182,11 @@ export function BasicTool(props: BasicToolProps) {
       data-hide-details={props.hideDetails ? "true" : undefined}
     >
       <div data-slot="basic-tool-tool-trigger-content">
-        {/* kilocode_change start */}
+        {/* accurecode_change start */}
         <span data-slot="basic-tool-icon">
           <Icon name={props.icon} size="small" />
         </span>
-        {/* kilocode_change end */}
+        {/* accurecode_change end */}
         <div data-slot="basic-tool-tool-info">
           <Switch>
             <Match when={isTriggerTitle(props.trigger) && props.trigger}>
@@ -245,7 +245,7 @@ export function BasicTool(props: BasicToolProps) {
           </Switch>
         </div>
       </div>
-      {/* kilocode_change start */}
+      {/* accurecode_change start */}
       <Show
         when={
           (hasChildren() || hasDetails()) &&
@@ -256,7 +256,7 @@ export function BasicTool(props: BasicToolProps) {
       >
         <Collapsible.Arrow />
       </Show>
-      {/* kilocode_change end */}
+      {/* accurecode_change end */}
     </div>
   )
 
@@ -297,13 +297,13 @@ export function BasicTool(props: BasicToolProps) {
           <Show when={!props.defer || ready()}>{props.children}</Show>
         </div>
       </Show>
-      {/* kilocode_change start */}
+      {/* accurecode_change start */}
       <Show when={!props.animated && (hasChildren() || hasDetails()) && !props.hideDetails}>
         <Collapsible.Content>
           <Show when={!props.defer || ready()}>{props.children}</Show>
         </Collapsible.Content>
       </Show>
-      {/* kilocode_change end */}
+      {/* accurecode_change end */}
     </Collapsible>
   )
 }

@@ -1,17 +1,17 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.backend.cli.KiloCliDataParser
-import ai.kilocode.log.ChatLogSummary
-import ai.kilocode.log.KiloLog
-import ai.kilocode.jetbrains.api.client.DefaultApi
-import ai.kilocode.jetbrains.api.model.GlobalSession
-import ai.kilocode.jetbrains.api.model.SessionStatus
-import ai.kilocode.rpc.dto.CloudSessionListDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionListDto
-import ai.kilocode.rpc.dto.SessionStatusDto
-import ai.kilocode.rpc.dto.SessionSummaryDto
-import ai.kilocode.rpc.dto.SessionTimeDto
+import ai.accurecode.backend.cli.AccureCliDataParser
+import ai.accurecode.log.ChatLogSummary
+import ai.accurecode.log.AccureLog
+import ai.accurecode.jetbrains.api.client.DefaultApi
+import ai.accurecode.jetbrains.api.model.GlobalSession
+import ai.accurecode.jetbrains.api.model.SessionStatus
+import ai.accurecode.rpc.dto.CloudSessionListDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionListDto
+import ai.accurecode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.SessionSummaryDto
+import ai.accurecode.rpc.dto.SessionTimeDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,19 +32,19 @@ import java.util.concurrent.ConcurrentHashMap
  * Session gateway that handles session CRUD and live status tracking
  * across all directories (workspace roots and worktrees).
  *
- * **Not an IntelliJ service** — owned by [KiloBackendAppService] which
- * calls [start] after the CLI server reaches [KiloAppState.Ready] and
+ * **Not an IntelliJ service** — owned by [AccureBackendAppService] which
+ * calls [start] after the CLI server reaches [AccureAppState.Ready] and
  * [stop] on disconnect. The API client is guaranteed non-null between
  * start/stop — no defensive null checks in CRUD methods.
  *
  * SSE `session.status` events are consumed directly from the events
  * flow passed to [start], keeping the live [statuses] map current.
  *
- * All raw JSON parsing is delegated to [KiloCliDataParser].
+ * All raw JSON parsing is delegated to [AccureCliDataParser].
  */
-class KiloBackendSessionManager(
+class AccureBackendSessionManager(
     private val cs: CoroutineScope,
-    private val log: KiloLog,
+    private val log: AccureLog,
 ) {
     /** Per-session directory overrides (sessionId → worktree path). */
     private val directories = ConcurrentHashMap<String, String>()
@@ -65,7 +65,7 @@ class KiloBackendSessionManager(
         watcher = cs.launch {
             events.collect { event ->
                 if (event.type == "session.status") {
-                    val pair = KiloCliDataParser.parseSessionStatus(event.data)
+                    val pair = AccureCliDataParser.parseSessionStatus(event.data)
                     if (pair != null) {
                         val prev = _statuses.value[pair.first]
                         _statuses.update { it + pair }
@@ -146,7 +146,7 @@ class KiloBackendSessionManager(
                 log.warn("Session create failed: HTTP ${response.code}, body=$raw")
                 throw RuntimeException("Session create failed: HTTP ${response.code} — $raw")
             }
-            val dto = KiloCliDataParser.parseSession(raw!!)
+            val dto = AccureCliDataParser.parseSession(raw!!)
             val meta = if (log.isDebugEnabled) ChatLogSummary.dir(dir) else "kind=session"
             log.info("${ChatLogSummary.sid(dto.id)} kind=session $meta created=true code=${response.code}")
             return dto
@@ -191,7 +191,7 @@ class KiloBackendSessionManager(
                 log.warn("Session rename failed: HTTP ${response.code}, body=$raw")
                 throw RuntimeException("Session rename failed: HTTP ${response.code} — $raw")
             }
-            return KiloCliDataParser.parseSession(raw!!)
+            return AccureCliDataParser.parseSession(raw!!)
         }
     }
 
@@ -204,7 +204,7 @@ class KiloBackendSessionManager(
             "limit=$limit",
             gitUrl?.let { "gitUrl=${encode(it)}" },
         ).joinToString("&")
-        val path = "$url/kilo/cloud-sessions?$params"
+        val path = "$url/accure/cloud-sessions?$params"
 
         val request = Request.Builder()
             .url(path)
@@ -217,7 +217,7 @@ class KiloBackendSessionManager(
                 log.warn("Cloud sessions failed: HTTP ${response.code}, body=$raw")
                 throw RuntimeException("Cloud sessions failed: HTTP ${response.code} — $raw")
             }
-            return KiloCliDataParser.parseCloudSessions(raw)
+            return AccureCliDataParser.parseCloudSessions(raw)
         }
     }
 
@@ -226,7 +226,7 @@ class KiloBackendSessionManager(
         val url = base ?: throw IllegalStateException("Session manager not started")
         val json = """{"sessionId":"${escape(id)}"}"""
         val request = Request.Builder()
-            .url("$url/kilo/cloud/session/import?directory=${encode(dir)}")
+            .url("$url/accure/cloud/session/import?directory=${encode(dir)}")
             .post(json.toRequestBody("application/json".toMediaType()))
             .build()
 
@@ -236,7 +236,7 @@ class KiloBackendSessionManager(
                 log.warn("Cloud session import failed: HTTP ${response.code}, body=$raw")
                 throw RuntimeException("Cloud session import failed: HTTP ${response.code} — $raw")
             }
-            return KiloCliDataParser.parseSession(raw)
+            return AccureCliDataParser.parseSession(raw)
         }
     }
 
@@ -263,7 +263,7 @@ class KiloBackendSessionManager(
 
     // ------ mapping (generated API model → DTO) ------
 
-    private fun dto(s: ai.kilocode.jetbrains.api.model.Session) = SessionDto(
+    private fun dto(s: ai.accurecode.jetbrains.api.model.Session) = SessionDto(
         id = s.id,
         projectID = s.projectID,
         directory = s.directory,

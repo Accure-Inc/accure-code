@@ -52,14 +52,14 @@ export const TelemetryApi = HttpApi.make("telemetry")
             identifier: "telemetry.setEnabled",
             summary: "Set PostHog telemetry enabled state",
             description:
-              "Update the PostHog client's opt-in/out state at runtime. The CLI reads KILO_TELEMETRY_LEVEL once at spawn — this route lets clients (e.g. the VS Code extension) propagate runtime telemetry consent changes.",
+              "Update the PostHog client's opt-in/out state at runtime. The CLI reads ACCURECODE_TELEMETRY_LEVEL once at spawn — this route lets clients (e.g. the VS Code extension) propagate runtime telemetry consent changes.",
           }),
         ),
       )
       .annotateMerge(
         OpenApi.annotations({
           title: "telemetry",
-          description: "Kilo telemetry routes.",
+          description: "Accure telemetry routes.",
         }),
       )
       .middleware(InstanceContextMiddleware)
@@ -68,8 +68,8 @@ export const TelemetryApi = HttpApi.make("telemetry")
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "accure HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Accure HttpApi surface.",
     }),
   )

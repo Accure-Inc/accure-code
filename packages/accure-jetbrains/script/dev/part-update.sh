@@ -3,7 +3,7 @@ set -eu
 
 usage() {
   printf 'Usage: %s <client|backend> <session-id>\n' "$0" >&2
-  printf '       %s <kilo-log> <session-id>\n' "$0" >&2
+  printf '       %s <accure-log> <session-id>\n' "$0" >&2
 }
 
 if [ "$#" -ne 2 ]; then
@@ -22,7 +22,7 @@ resolve() {
   case "$target" in
     client|frontend)
       for file in \
-        "$plugin/.intellijPlatform/sandbox/kilo.jetbrains/kilo-frontend/kilo-dev.log" \
+        "$plugin/.intellijPlatform/sandbox/accurecode.jetbrains/accure-frontend/accure-dev.log" \
         "$plugin/build/idea-sandbox/system/log/idea.log" \
         "$plugin/build/idea-sandbox/client/system/log/idea.log" \
         "$plugin/build/idea-sandbox/frontend/system/log/idea.log"
@@ -35,7 +35,7 @@ resolve() {
       ;;
     backend)
       for file in \
-        "$plugin/.intellijPlatform/sandbox/kilo.jetbrains/kilo-backend/kilo-dev.log" \
+        "$plugin/.intellijPlatform/sandbox/accurecode.jetbrains/accure-backend/accure-dev.log" \
         "$plugin/build/idea-sandbox/backend/system/log/idea.log" \
         "$plugin/build/idea-sandbox-backend/system/log/idea.log" \
         "$plugin/build/idea-sandbox/system/log/idea.log"
@@ -122,8 +122,8 @@ function emit(msg, pid, text) {
 {
   sub(/\r$/, "")
   cls = logger($0)
-  if ((mode == "client" || mode == "frontend") && cls !~ /KiloSessionService$/) next
-  if (mode == "backend" && cls !~ /KiloBackendChatManager$/) next
+  if ((mode == "client" || mode == "frontend") && cls !~ /AccureSessionService$/) next
+  if (mode == "backend" && cls !~ /AccureBackendChatManager$/) next
 
   msg = trim(message($0))
   if (msg == "") next

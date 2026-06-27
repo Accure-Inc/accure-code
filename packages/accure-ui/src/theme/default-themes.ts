@@ -1,7 +1,7 @@
 import type { DesktopTheme } from "@opencode-ai/ui/theme/types"
 import { DEFAULT_THEMES as UPSTREAM_THEMES } from "@opencode-ai/ui/theme/default-themes"
-import kiloJson from "./themes/kilo.json"
-import kiloVscodeJson from "./themes/accure-vscode.json"
+import accureJson from "./themes/accure.json"
+import accureVscodeJson from "./themes/accure-vscode.json"
 
 // Re-export all upstream theme constants
 export {
@@ -22,16 +22,16 @@ export {
   auraTheme,
 } from "@opencode-ai/ui/theme/default-themes"
 
-export const kiloTheme = kiloJson as DesktopTheme
-export const kiloVscodeTheme = kiloVscodeJson as DesktopTheme
+export const accureTheme = accureJson as DesktopTheme
+export const accureVscodeTheme = accureVscodeJson as DesktopTheme
 
-export const KILO_THEMES: Record<string, DesktopTheme> = {
-  kilo: kiloTheme,
-  "accure-vscode": kiloVscodeTheme,
+export const ACCURECODE_THEMES: Record<string, DesktopTheme> = {
+  accure: accureTheme,
+  "accure-vscode": accureVscodeTheme,
 }
 
-// Override DEFAULT_THEMES: Kilo themes first, then upstream
+// Override DEFAULT_THEMES: Accure themes first, then upstream
 export const DEFAULT_THEMES: Record<string, DesktopTheme> = {
-  ...KILO_THEMES,
+  ...ACCURECODE_THEMES,
   ...UPSTREAM_THEMES,
 }

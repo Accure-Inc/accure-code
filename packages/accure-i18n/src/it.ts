@@ -1,21 +1,21 @@
-// Kilo-specific translations and overrides
+// Accure-specific translations and overrides
 // Keys here will override any matching keys from upstream translations
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1":
-    "Kilo Gateway ti offre una selezione curata di modelli affidabili e ottimizzati per agenti di coding.",
-  "provider.connect.kiloGateway.line2":
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1":
+    "Accure Gateway ti offre una selezione curata di modelli affidabili e ottimizzati per agenti di coding.",
+  "provider.connect.accureGateway.line2":
     "Con una sola API key puoi accedere a modelli come Claude, GPT, Gemini, GLM e altri.",
-  "provider.connect.kiloGateway.visit.prefix": "Visita ",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": " per ottenere la tua API key.",
-  "provider.connect.kiloGateway.byok.prefix": "Per ulteriori statistiche sull'utilizzo, utilizza ",
-  "provider.connect.kiloGateway.byok.link": "BYOK tramite Kilo's Gateway",
-  "provider.connect.kiloGateway.byok.suffix": ".",
+  "provider.connect.accureGateway.visit.prefix": "Visita ",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": " per ottenere la tua API key.",
+  "provider.connect.accureGateway.byok.prefix": "Per ulteriori statistiche sull'utilizzo, utilizza ",
+  "provider.connect.accureGateway.byok.link": "BYOK tramite Accure's Gateway",
+  "provider.connect.accureGateway.byok.suffix": ".",
 
   // Provider settings translations
   "settings.providers.group.recommended": "Consigliati",
-  "settings.providers.note.kilo": "Accesso a oltre 500 modelli AI",
+  "settings.providers.note.accurecode": "Accesso a oltre 500 modelli AI",
   "settings.providers.note.opencode": "Modelli selezionati, inclusi Claude, GPT, Gemini e altri",
   "settings.providers.note.anthropic": "Accesso diretto ai modelli Claude, inclusi Pro e Max",
   "settings.providers.note.deepseek": "Modelli DeepSeek per attività di ragionamento e programmazione",
@@ -102,7 +102,7 @@ export const dict = {
     "Continua ad attendere il completamento dello snapshot. Le iterazioni successive saranno rapide dopo la creazione dello snapshot iniziale.",
   "snapshot.slowRepo.answer.disable": "Disabilita per questo progetto",
   "snapshot.slowRepo.answer.disable.description":
-    "Disattiva gli snapshot di Kilo per questo progetto. Perderai annulla/ripeti sulle modifiche ai file fatte da Kilo, ma git continuerà a tracciare tutto.",
+    "Disattiva gli snapshot di Accure per questo progetto. Perderai annulla/ripeti sulle modifiche ai file fatte da Accure, ma git continuerà a tracciare tutto.",
 
   "ui.messagePart.openInDiffViewer": "Apri nel visualizzatore diff",
   "ui.messagePart.shell.command": "Comando",

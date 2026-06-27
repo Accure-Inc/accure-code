@@ -1,19 +1,19 @@
-package ai.kilocode.client.migration
+package ai.accurecode.client.migration
 
-import ai.kilocode.client.testing.FakeMigrationRpcApi
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.LegacyAutocompleteSettingsDto
-import ai.kilocode.rpc.dto.LegacyMigrationDetectionDto
-import ai.kilocode.rpc.dto.LegacyMigrationEventDto
-import ai.kilocode.rpc.dto.LegacyMigrationResultItemDto
-import ai.kilocode.rpc.dto.LegacyMigrationStatusDto
-import ai.kilocode.rpc.dto.LegacySettingsDto
-import ai.kilocode.rpc.dto.MigrationItemCategoryDto
-import ai.kilocode.rpc.dto.MigrationItemProgressStatusDto
-import ai.kilocode.rpc.dto.MigrationItemStatusDto
-import ai.kilocode.rpc.dto.MigrationProviderInfoDto
-import ai.kilocode.rpc.dto.MigrationSessionInfoDto
+import ai.accurecode.client.testing.FakeMigrationRpcApi
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.LegacyAutocompleteSettingsDto
+import ai.accurecode.rpc.dto.LegacyMigrationDetectionDto
+import ai.accurecode.rpc.dto.LegacyMigrationEventDto
+import ai.accurecode.rpc.dto.LegacyMigrationResultItemDto
+import ai.accurecode.rpc.dto.LegacyMigrationStatusDto
+import ai.accurecode.rpc.dto.LegacySettingsDto
+import ai.accurecode.rpc.dto.MigrationItemCategoryDto
+import ai.accurecode.rpc.dto.MigrationItemProgressStatusDto
+import ai.accurecode.rpc.dto.MigrationItemStatusDto
+import ai.accurecode.rpc.dto.MigrationProviderInfoDto
+import ai.accurecode.rpc.dto.MigrationSessionInfoDto
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.util.ui.UIUtil
 import kotlinx.coroutines.CoroutineScope
@@ -24,21 +24,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 
 @Suppress("UnstableApiUsage")
-class KiloMigrationServiceTest : BasePlatformTestCase() {
+class AccureMigrationServiceTest : BasePlatformTestCase() {
 
     private lateinit var scope: CoroutineScope
     private lateinit var rpc: FakeMigrationRpcApi
-    private lateinit var service: KiloMigrationService
-    private lateinit var app: MutableStateFlow<KiloAppStateDto>
+    private lateinit var service: AccureMigrationService
+    private lateinit var app: MutableStateFlow<AccureAppStateDto>
     private val autocomplete = mutableListOf<LegacyAutocompleteSettingsDto>()
 
     override fun setUp() {
         super.setUp()
         scope = CoroutineScope(SupervisorJob())
         rpc = FakeMigrationRpcApi()
-        app = MutableStateFlow(KiloAppStateDto(KiloAppStatusDto.DISCONNECTED))
+        app = MutableStateFlow(AccureAppStateDto(AccureAppStatusDto.DISCONNECTED))
         autocomplete.clear()
-        service = KiloMigrationService(scope, rpc, app) { autocomplete.add(it) }
+        service = AccureMigrationService(scope, rpc, app) { autocomplete.add(it) }
     }
 
     override fun tearDown() {
@@ -57,7 +57,7 @@ class KiloMigrationServiceTest : BasePlatformTestCase() {
     }
 
     fun `test migration required app state shows needed without polling`() {
-        app.value = KiloAppStateDto(KiloAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
+        app.value = AccureAppStateDto(AccureAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
         settle()
         assertEquals(0, rpc.statusCalls.size)
         assertEquals(0, rpc.detectCalls.size)
@@ -65,27 +65,27 @@ class KiloMigrationServiceTest : BasePlatformTestCase() {
     }
 
     fun `test ready app state hides migration`() {
-        app.value = KiloAppStateDto(KiloAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
+        app.value = AccureAppStateDto(AccureAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
         settle()
-        app.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        app.value = AccureAppStateDto(AccureAppStatusDto.READY)
         settle()
         assertEquals(MigrationUiState.Hidden, service.state.value)
     }
 
     fun `test duplicate migration required does not reset running migration`() {
         val detection = sampleDetection()
-        app.value = KiloAppStateDto(KiloAppStatusDto.MIGRATION_REQUIRED, migration = detection)
+        app.value = AccureAppStateDto(AccureAppStatusDto.MIGRATION_REQUIRED, migration = detection)
         settle()
         service.start(MigrationUiSelections(providers = listOf("profile1")))
         settle()
-        app.value = KiloAppStateDto(KiloAppStatusDto.MIGRATION_REQUIRED, migration = detection)
+        app.value = AccureAppStateDto(AccureAppStatusDto.MIGRATION_REQUIRED, migration = detection)
         settle()
         val state = service.state.value as MigrationUiState.Needed
         assertEquals(MigrationUiPhase.migrating, state.phase)
     }
 
     fun `test skip marks status and hides`() {
-        app.value = KiloAppStateDto(KiloAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
+        app.value = AccureAppStateDto(AccureAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
         settle()
         service.skip()
         settle()
@@ -94,7 +94,7 @@ class KiloMigrationServiceTest : BasePlatformTestCase() {
     }
 
     fun `test finish calls finalize and hides`() {
-        app.value = KiloAppStateDto(KiloAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
+        app.value = AccureAppStateDto(AccureAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
         settle()
         service.finish()
         settle()
@@ -105,7 +105,7 @@ class KiloMigrationServiceTest : BasePlatformTestCase() {
     }
 
     fun `test finish after unchecked keep file cleans up legacy settings file`() {
-        app.value = KiloAppStateDto(KiloAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
+        app.value = AccureAppStateDto(AccureAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
         settle()
         service.start(MigrationUiSelections(providers = listOf("profile1"), keepLegacySettingsFile = false))
         settle()
@@ -125,7 +125,7 @@ class KiloMigrationServiceTest : BasePlatformTestCase() {
     }
 
     fun `test start emits migrating state and initial pending progress`() = runBlocking {
-        app.value = KiloAppStateDto(KiloAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
+        app.value = AccureAppStateDto(AccureAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
         delay(100)
         UIUtil.dispatchAllInvocationEvents()
 
@@ -143,7 +143,7 @@ class KiloMigrationServiceTest : BasePlatformTestCase() {
     }
 
     fun `test complete event without errors sets done phase`() = runBlocking {
-        app.value = KiloAppStateDto(KiloAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
+        app.value = AccureAppStateDto(AccureAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
         delay(100)
         UIUtil.dispatchAllInvocationEvents()
 
@@ -164,7 +164,7 @@ class KiloMigrationServiceTest : BasePlatformTestCase() {
     }
 
     fun `test complete event with errors sets error phase`() = runBlocking {
-        app.value = KiloAppStateDto(KiloAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
+        app.value = AccureAppStateDto(AccureAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection())
         delay(100)
         UIUtil.dispatchAllInvocationEvents()
 
@@ -184,7 +184,7 @@ class KiloMigrationServiceTest : BasePlatformTestCase() {
     }
 
     fun `test complete event without items finalizes pending session progress`() = runBlocking {
-        app.value = KiloAppStateDto(KiloAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection().copy(
+        app.value = AccureAppStateDto(AccureAppStatusDto.MIGRATION_REQUIRED, migration = sampleDetection().copy(
             sessions = listOf(MigrationSessionInfoDto("ses_1", "Session", "/tmp", 1L)),
         ))
         delay(100)
@@ -225,7 +225,7 @@ class KiloMigrationServiceTest : BasePlatformTestCase() {
                 ),
             )
         )
-        app.value = KiloAppStateDto(KiloAppStatusDto.MIGRATION_REQUIRED, migration = detection)
+        app.value = AccureAppStateDto(AccureAppStatusDto.MIGRATION_REQUIRED, migration = detection)
         settle()
 
         service.start(MigrationUiSelections(settings = MigrationSettingsUiSelections(autocomplete = true)))

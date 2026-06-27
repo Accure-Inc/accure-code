@@ -1,11 +1,11 @@
-package ai.kilocode.client.settings.base
+package ai.accurecode.client.settings.base
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.EDT
 import com.intellij.openapi.application.ModalityState
@@ -26,7 +26,7 @@ import kotlinx.coroutines.withContext
 import java.awt.BorderLayout
 import javax.swing.JComponent
 
-abstract class KiloReadyConfigurable : SearchableConfigurable, Configurable.NoScroll {
+abstract class AccureReadyConfigurable : SearchableConfigurable, Configurable.NoScroll {
     private var shell: SettingsOverlayPanel? = null
     private var scope: CoroutineScope? = null
     private var ready: JComponent? = null
@@ -39,9 +39,9 @@ abstract class KiloReadyConfigurable : SearchableConfigurable, Configurable.NoSc
         shell = root
         scope = cs
         setContent(root, unavailable())
-        cs.launch { service<KiloAppService>().connect() }
+        cs.launch { service<AccureAppService>().connect() }
         cs.launch {
-            service<KiloAppService>().state.collect { state ->
+            service<AccureAppService>().state.collect { state ->
                 withContext(edt) { update(state) }
             }
         }
@@ -90,9 +90,9 @@ abstract class KiloReadyConfigurable : SearchableConfigurable, Configurable.NoSc
     }
 
     @RequiresEdt
-    private fun update(state: KiloAppStateDto) {
+    private fun update(state: AccureAppStateDto) {
         checkEdt()
-        if (state.status != KiloAppStatusDto.READY || ready != null) return
+        if (state.status != AccureAppStatusDto.READY || ready != null) return
         val cs = scope ?: return
         val panel = createReadyComponent(cs)
         ready = panel
@@ -114,9 +114,9 @@ abstract class KiloReadyConfigurable : SearchableConfigurable, Configurable.NoSc
     }
 
     private fun unavailable(): JComponent {
-        val title = JBLabel(KiloBundle.message("settings.cli.unavailable.title"))
+        val title = JBLabel(AccureBundle.message("settings.cli.unavailable.title"))
         title.font = JBFont.h3().asBold()
-        val message = JBLabel(KiloBundle.message("settings.cli.unavailable.message"))
+        val message = JBLabel(AccureBundle.message("settings.cli.unavailable.message"))
         message.setAllowAutoWrapping(true)
         return Stack.vertical(UiStyle.Gap.sm()).apply {
             border = JBUI.Borders.empty(UiStyle.Gap.pad())

@@ -17,7 +17,7 @@ export function isEligible(input: EligibilityInput): boolean {
   if (kill) return false
   if (input.org?.type !== "personal") return false
   if (input.model.isFree !== true) return false
-  if (input.model.api.npm !== "@kilocode/accure-gateway") return false
+  if (input.model.api.npm !== "@accurecode/accure-gateway") return false
   return true
 }
 
@@ -36,7 +36,7 @@ export function resetEligibility(): void {
 }
 
 export async function getActiveOrg(): Promise<OrgState> {
-  const env = process.env.KILO_ORG_ID?.trim()
+  const env = process.env.ACCURECODE_ORG_ID?.trim()
   if (env) return { type: "org", id: env }
   try {
     return await source()

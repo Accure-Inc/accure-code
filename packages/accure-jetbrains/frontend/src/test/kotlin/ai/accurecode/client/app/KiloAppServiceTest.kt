@@ -1,11 +1,11 @@
-package ai.kilocode.client.app
+package ai.accurecode.client.app
 
-import ai.kilocode.client.testing.FakeAppRpcApi
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ProfileBalanceDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.ProfileOrganizationDto
+import ai.accurecode.client.testing.FakeAppRpcApi
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ProfileBalanceDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.ProfileOrganizationDto
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,23 +14,23 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
 
 /**
- * Service-level tests for [KiloAppService] profile/login/logout/org operations.
+ * Service-level tests for [AccureAppService] profile/login/logout/org operations.
  *
  * Uses [FakeAppRpcApi] to avoid RPC/backend involvement.
  */
 @Suppress("UnstableApiUsage")
-class KiloAppServiceTest : BasePlatformTestCase() {
+class AccureAppServiceTest : BasePlatformTestCase() {
 
     private lateinit var scope: CoroutineScope
     private lateinit var rpc: FakeAppRpcApi
-    private lateinit var app: KiloAppService
+    private lateinit var app: AccureAppService
 
     override fun setUp() {
         super.setUp()
         scope = CoroutineScope(SupervisorJob())
         rpc = FakeAppRpcApi()
-        app = KiloAppService(scope, rpc)
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        app = AccureAppService(scope, rpc)
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY)
     }
 
     override fun tearDown() {
@@ -61,7 +61,7 @@ class KiloAppServiceTest : BasePlatformTestCase() {
 
     fun `test refreshProfile returns null and leaves existing state on exception`() = runBlocking(Dispatchers.Default) {
         val existing = profile(email = "existing@test.com")
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = existing)
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = existing)
         rpc.refreshError = RuntimeException("refresh failed")
         val result = app.refreshProfile()
         assertNull(result)
@@ -81,7 +81,7 @@ class KiloAppServiceTest : BasePlatformTestCase() {
 
     fun `test completeLogin returns null on exception without clearing previous profile`() = runBlocking(Dispatchers.Default) {
         val existing = profile(email = "existing@test.com")
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = existing)
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = existing)
         rpc.completeError = RuntimeException("complete failed")
         val result = app.completeLogin("/dir")
         assertNull(result)
@@ -92,7 +92,7 @@ class KiloAppServiceTest : BasePlatformTestCase() {
 
     fun `test logout clears profile when rpc returns true`() = runBlocking(Dispatchers.Default) {
         val prof = profile()
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = prof)
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = prof)
         rpc.fakeProfile = prof
         rpc.logoutResult = true
         val ok = app.logout()
@@ -102,7 +102,7 @@ class KiloAppServiceTest : BasePlatformTestCase() {
 
     fun `test logout does not clear profile when rpc returns false`() = runBlocking(Dispatchers.Default) {
         val prof = profile()
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = prof)
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = prof)
         rpc.logoutResult = false
         val ok = app.logout()
         assertFalse(ok)
@@ -111,7 +111,7 @@ class KiloAppServiceTest : BasePlatformTestCase() {
 
     fun `test logout returns false on exception`() = runBlocking(Dispatchers.Default) {
         val prof = profile()
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = prof)
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = prof)
         rpc.logoutError = RuntimeException("logout failed")
         val ok = app.logout()
         assertFalse(ok)
@@ -140,7 +140,7 @@ class KiloAppServiceTest : BasePlatformTestCase() {
         rpc.fakeProfile = org
         val personal = profile(orgs = orgs, currentOrgId = null)
         rpc.orgProfiles[null] = personal
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = org)
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = org)
         val result = app.setOrganization(null)
         assertNotNull(result)
         assertNull(result!!.currentOrgId)
@@ -149,7 +149,7 @@ class KiloAppServiceTest : BasePlatformTestCase() {
 
     fun `test setOrganization returns null on exception without changing profile`() = runBlocking(Dispatchers.Default) {
         val existing = profile(email = "alice@test.com")
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = existing)
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = existing)
         rpc.organizationError = RuntimeException("org failed")
         val result = app.setOrganization("org_1")
         assertNull(result)

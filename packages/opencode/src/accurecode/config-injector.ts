@@ -5,7 +5,7 @@ import { RulesMigrator } from "./rules-migrator"
 import { WorkflowsMigrator } from "./workflows-migrator"
 import { IgnoreMigrator } from "./ignore-migrator"
 
-export namespace KilocodeConfigInjector {
+export namespace AccurecodeConfigInjector {
   export interface InjectionResult {
     configJson: string
     warnings: string[]
@@ -82,7 +82,7 @@ export namespace KilocodeConfigInjector {
 
   /**
    * Merge permission configs, preserving order and handling duplicates.
-   * Incoming rules take precedence (kilocode patterns override).
+   * Incoming rules take precedence (accurecode patterns override).
    */
   function mergePermissions(
     existing: ConfigPermission.Info | undefined,
@@ -110,7 +110,7 @@ export namespace KilocodeConfigInjector {
       return {}
     }
     return {
-      KILO_CONFIG_CONTENT: configJson,
+      ACCURECODE_CONFIG_CONTENT: configJson,
     }
   }
 }

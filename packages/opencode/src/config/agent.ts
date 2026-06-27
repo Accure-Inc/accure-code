@@ -11,13 +11,13 @@ import * as ConfigMarkdown from "./markdown"
 import { ConfigModelID } from "./model-id"
 import { ConfigParse } from "./parse"
 import { ConfigPermission } from "./permission"
-import { ConfigVariable } from "./variable" // kilocode_change
-// kilocode_change start
+import { ConfigVariable } from "./variable" // accurecode_change
+// accurecode_change start
 import { Bus } from "@/bus"
 import { NamedError } from "@opencode-ai/core/util/error"
-import { KilocodeConfig } from "@/kilocode/config/config"
+import { AccurecodeConfig } from "@/accurecode/config/config"
 import type { Warning } from "./config"
-// kilocode_change end
+// accurecode_change end
 
 const log = Log.create({ service: "config" })
 
@@ -28,24 +28,24 @@ const Color = Schema.Union([
 
 const AgentSchema = Schema.StructWithRest(
   Schema.Struct({
-    model: Schema.optional(Schema.NullOr(ConfigModelID)), // kilocode_change - nullable for delete sentinel
-    // kilocode_change start - nullable for delete sentinel
+    model: Schema.optional(Schema.NullOr(ConfigModelID)), // accurecode_change - nullable for delete sentinel
+    // accurecode_change start - nullable for delete sentinel
     variant: Schema.optional(Schema.NullOr(Schema.String)).annotate({
       description: "Default model variant for this agent (applies only when using the agent's configured model).",
     }),
-    // kilocode_change end
-    temperature: Schema.optional(Schema.NullOr(Schema.Finite)), // kilocode_change - nullable for delete sentinel
-    top_p: Schema.optional(Schema.NullOr(Schema.Finite)), // kilocode_change - nullable for delete sentinel
-    prompt: Schema.optional(Schema.NullOr(Schema.String)), // kilocode_change - nullable for delete sentinel
+    // accurecode_change end
+    temperature: Schema.optional(Schema.NullOr(Schema.Finite)), // accurecode_change - nullable for delete sentinel
+    top_p: Schema.optional(Schema.NullOr(Schema.Finite)), // accurecode_change - nullable for delete sentinel
+    prompt: Schema.optional(Schema.NullOr(Schema.String)), // accurecode_change - nullable for delete sentinel
     tools: Schema.optional(Schema.Record(Schema.String, Schema.Boolean)).annotate({
       description: "@deprecated Use 'permission' field instead",
     }),
     disable: Schema.optional(Schema.Boolean),
-    // kilocode_change start - nullable for delete sentinel
+    // accurecode_change start - nullable for delete sentinel
     description: Schema.optional(Schema.NullOr(Schema.String)).annotate({
       description: "Description of when to use the agent",
     }),
-    // kilocode_change end
+    // accurecode_change end
     mode: Schema.optional(Schema.Literals(["subagent", "primary", "all"])),
     hidden: Schema.optional(Schema.Boolean).annotate({
       description: "Hide this subagent from the @ autocomplete menu (default: false, only applies to mode: subagent)",
@@ -54,11 +54,11 @@ const AgentSchema = Schema.StructWithRest(
     color: Schema.optional(Color).annotate({
       description: "Hex color code (e.g., #FF5733) or theme color (e.g., primary)",
     }),
-    // kilocode_change start - nullable for delete sentinel
+    // accurecode_change start - nullable for delete sentinel
     steps: Schema.optional(Schema.NullOr(PositiveInt)).annotate({
       description: "Maximum number of agentic iterations before forcing text-only response",
     }),
-    // kilocode_change end
+    // accurecode_change end
     maxSteps: Schema.optional(PositiveInt).annotate({ description: "@deprecated Use 'steps' field instead." }),
     permission: Schema.optional(ConfigPermission.Info),
   }),
@@ -107,10 +107,10 @@ const normalize = (agent: Schema.Schema.Type<typeof AgentSchema>): Schema.Schema
   }
   globalThis.Object.assign(permission, agent.permission)
 
-  // kilocode_change start - preserve null delete sentinel (?? would collapse null to maxSteps)
+  // accurecode_change start - preserve null delete sentinel (?? would collapse null to maxSteps)
   const steps = agent.steps !== undefined ? agent.steps : agent.maxSteps
   return { ...agent, options, permission, ...(steps !== undefined ? { steps } : {}) }
-  // kilocode_change end
+  // accurecode_change end
 }
 
 export const Info = AgentSchema.pipe(
@@ -121,9 +121,9 @@ export const Info = AgentSchema.pipe(
 ).annotate({ identifier: "AgentConfig" })
 export type Info = Schema.Schema.Type<typeof Info>
 
-// kilocode_change start
+// accurecode_change start
 export async function load(dir: string, warnings?: Warning[]) {
-  // kilocode_change end
+  // accurecode_change end
   const result: Record<string, Info> = {}
   for (const item of await Glob.scan("{agent,agents}/**/*.md", {
     cwd: dir,
@@ -135,10 +135,10 @@ export async function load(dir: string, warnings?: Warning[]) {
       const message = ConfigMarkdown.FrontmatterError.isInstance(err)
         ? err.data.message
         : `Failed to parse agent ${item}`
-      // kilocode_change start
+      // accurecode_change start
       if (warnings) warnings.push({ path: item, message })
       try {
-        const { capture } = await import("@/kilocode/instance")
+        const { capture } = await import("@/accurecode/instance")
         const ctx = capture()
         if (ctx) {
           const { Session } = await import("@/session/session")
@@ -147,7 +147,7 @@ export async function load(dir: string, warnings?: Warning[]) {
       } catch (error) {
         log.warn("could not publish session error", { message, err: error })
       }
-      // kilocode_change end
+      // accurecode_change end
       log.error("failed to load agent", { agent: item, err })
       return undefined
     })
@@ -155,7 +155,7 @@ export async function load(dir: string, warnings?: Warning[]) {
 
     const name = configEntryNameFromPath(path.relative(dir, item), ["agent/", "agents/"])
 
-    // kilocode_change start - substitute agent prompt variables relative to the agent file
+    // accurecode_change start - substitute agent prompt variables relative to the agent file
     const prompt = await ConfigVariable.substitute({
       text: md.content.trim(),
       type: "virtual",
@@ -169,25 +169,25 @@ export async function load(dir: string, warnings?: Warning[]) {
       ...md.data,
       prompt,
     }
-    // kilocode_change end
-    // kilocode_change start - use Effect schema (propertyOrder: original) + non-fatal handleInvalid
+    // accurecode_change end
+    // accurecode_change start - use Effect schema (propertyOrder: original) + non-fatal handleInvalid
     try {
       result[config.name] = ConfigParse.schema(Info, config, item) as Info
     } catch (err) {
       if (ConfigError.InvalidError.isInstance(err)) {
-        await KilocodeConfig.handleInvalid("agent", item, err.data.issues ?? [], err, warnings)
+        await AccurecodeConfig.handleInvalid("agent", item, err.data.issues ?? [], err, warnings)
         continue
       }
       throw err
     }
-    // kilocode_change end
+    // accurecode_change end
   }
   return result
 }
 
-// kilocode_change start
+// accurecode_change start
 export async function loadMode(dir: string, warnings?: Warning[]) {
-  // kilocode_change end
+  // accurecode_change end
   const result: Record<string, Info> = {}
   for (const item of await Glob.scan("{mode,modes}/*.md", {
     cwd: dir,
@@ -199,10 +199,10 @@ export async function loadMode(dir: string, warnings?: Warning[]) {
       const message = ConfigMarkdown.FrontmatterError.isInstance(err)
         ? err.data.message
         : `Failed to parse mode ${item}`
-      // kilocode_change start
+      // accurecode_change start
       if (warnings) warnings.push({ path: item, message })
       try {
-        const { capture } = await import("@/kilocode/instance")
+        const { capture } = await import("@/accurecode/instance")
         const ctx = capture()
         if (ctx) {
           const { Session } = await import("@/session/session")
@@ -211,7 +211,7 @@ export async function loadMode(dir: string, warnings?: Warning[]) {
       } catch (error) {
         log.warn("could not publish session error", { message, err: error })
       }
-      // kilocode_change end
+      // accurecode_change end
       log.error("failed to load mode", { mode: item, err })
       return undefined
     })
@@ -222,7 +222,7 @@ export async function loadMode(dir: string, warnings?: Warning[]) {
       ...md.data,
       prompt: md.content.trim(),
     }
-    // kilocode_change start - use Effect schema (propertyOrder: original) + non-fatal handleInvalid
+    // accurecode_change start - use Effect schema (propertyOrder: original) + non-fatal handleInvalid
     try {
       result[config.name] = {
         ...(ConfigParse.schema(Info, config, item) as Info),
@@ -230,12 +230,12 @@ export async function loadMode(dir: string, warnings?: Warning[]) {
       }
     } catch (err) {
       if (ConfigError.InvalidError.isInstance(err)) {
-        await KilocodeConfig.handleInvalid("agent", item, err.data.issues ?? [], err, warnings)
+        await AccurecodeConfig.handleInvalid("agent", item, err.data.issues ?? [], err, warnings)
         continue
       }
       throw err
     }
-    // kilocode_change end
+    // accurecode_change end
   }
   return result
 }

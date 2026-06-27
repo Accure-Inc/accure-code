@@ -1,9 +1,9 @@
 import { AccountID, OrgID } from "@/account/schema"
-import { Snapshot } from "@/snapshot" // kilocode_change
+import { Snapshot } from "@/snapshot" // accurecode_change
 import { MCP } from "@/mcp"
 import { ProviderID, ModelID } from "@/provider/schema"
 import { Session } from "@/session/session"
-import { WorktreeDiff } from "@/kilocode/review/worktree-diff" // kilocode_change
+import { WorktreeDiff } from "@/accurecode/review/worktree-diff" // accurecode_change
 import { Worktree } from "@/worktree"
 import { NonNegativeInt } from "@opencode-ai/core/schema"
 import { Schema } from "effect"
@@ -55,11 +55,11 @@ export const ToolListQuery = Schema.Struct({
   model: ModelID,
 })
 
-// kilocode_change start
+// accurecode_change start
 const WorktreeList = Schema.Array(
   Schema.Struct({ directory: Schema.String, managed: Schema.Boolean }).annotate({ identifier: "WorktreeListItem" }),
 )
-// kilocode_change end
+// accurecode_change end
 const WorktreeErrorName = Schema.Union([
   Schema.Literal("WorktreeNotGitError"),
   Schema.Literal("WorktreeNameGenerationFailedError"),
@@ -78,11 +78,11 @@ export class WorktreeApiError extends Schema.ErrorClass<WorktreeApiError>("Workt
 ) {}
 export const SessionListQuery = Schema.Struct({
   ...WorkspaceRoutingQueryFields,
-  // kilocode_change start
+  // accurecode_change start
   projectID: Schema.optional(Schema.String),
   worktrees: Schema.optional(QueryBoolean),
   current: Schema.optional(QueryBoolean),
-  // kilocode_change end
+  // accurecode_change end
   roots: Schema.optional(QueryBoolean),
   start: Schema.optional(Schema.NumberFromString),
   cursor: Schema.optional(Schema.NumberFromString),
@@ -90,7 +90,7 @@ export const SessionListQuery = Schema.Struct({
   limit: Schema.optional(Schema.NumberFromString),
   archived: Schema.optional(QueryBoolean),
 })
-// kilocode_change start
+// accurecode_change start
 export const WorktreeDiffQuery = Schema.Struct({
   ...WorkspaceRoutingQueryFields,
   base: Schema.optional(Schema.String),
@@ -100,7 +100,7 @@ export const WorktreeDiffFileQuery = Schema.Struct({
   base: Schema.optional(Schema.String),
   file: Schema.String,
 })
-// kilocode_change end
+// accurecode_change end
 
 export const ExperimentalPaths = {
   console: "/experimental/console",
@@ -109,9 +109,9 @@ export const ExperimentalPaths = {
   tool: "/experimental/tool",
   toolIDs: "/experimental/tool/ids",
   worktree: "/experimental/worktree",
-  worktreeDiff: "/experimental/worktree/diff", // kilocode_change
-  worktreeDiffFile: "/experimental/worktree/diff/file", // kilocode_change
-  worktreeDiffSummary: "/experimental/worktree/diff/summary", // kilocode_change
+  worktreeDiff: "/experimental/worktree/diff", // accurecode_change
+  worktreeDiffFile: "/experimental/worktree/diff/file", // accurecode_change
+  worktreeDiffSummary: "/experimental/worktree/diff/summary", // accurecode_change
   worktreeReset: "/experimental/worktree/reset",
   session: "/experimental/session",
   resource: "/experimental/resource",
@@ -152,7 +152,7 @@ export const ExperimentalApi = HttpApi.make("experimental")
           OpenApi.annotations({
             identifier: "experimental.console.switchOrg",
             summary: "Switch active Console org",
-            description: "Persist a new active Console account/org selection for the current local Kilo state.", // kilocode_change
+            description: "Persist a new active Console account/org selection for the current local Accure state.", // accurecode_change
           }),
         ),
         HttpApiEndpoint.get("tool", ExperimentalPaths.tool, {
@@ -181,13 +181,13 @@ export const ExperimentalApi = HttpApi.make("experimental")
         ),
         HttpApiEndpoint.get("worktree", ExperimentalPaths.worktree, {
           query: WorkspaceRoutingQuery,
-          success: described(WorktreeList, "List of worktrees"), // kilocode_change
+          success: described(WorktreeList, "List of worktrees"), // accurecode_change
           error: WorktreeApiError,
         }).annotateMerge(
           OpenApi.annotations({
             identifier: "worktree.list",
             summary: "List worktrees",
-            description: "List all git worktrees for the current project and whether Kilo manages them.", // kilocode_change
+            description: "List all git worktrees for the current project and whether Accure manages them.", // accurecode_change
           }),
         ),
         HttpApiEndpoint.post("worktreeCreate", ExperimentalPaths.worktree, {
@@ -227,7 +227,7 @@ export const ExperimentalApi = HttpApi.make("experimental")
             description: "Reset a worktree branch to the primary default branch.",
           }),
         ),
-        // kilocode_change start - worktree diff endpoints for agent manager
+        // accurecode_change start - worktree diff endpoints for agent manager
         HttpApiEndpoint.get("worktreeDiff", ExperimentalPaths.worktreeDiff, {
           query: WorktreeDiffQuery,
           success: described(Schema.Array(Snapshot.FileDiff), "File diffs"),
@@ -261,7 +261,7 @@ export const ExperimentalApi = HttpApi.make("experimental")
             description: "Get full diff contents for one worktree file compared to its base branch.",
           }),
         ),
-        // kilocode_change end
+        // accurecode_change end
         HttpApiEndpoint.get("session", ExperimentalPaths.session, {
           query: SessionListQuery,
           success: described(Schema.Array(Session.GlobalInfo), "List of sessions"),
@@ -270,7 +270,7 @@ export const ExperimentalApi = HttpApi.make("experimental")
             identifier: "experimental.session.list",
             summary: "List sessions",
             description:
-              "Get a list of all Kilo sessions across projects, sorted by most recently updated. Archived sessions are excluded by default.", // kilocode_change
+              "Get a list of all Accure sessions across projects, sorted by most recently updated. Archived sessions are excluded by default.", // accurecode_change
           }),
         ),
         HttpApiEndpoint.get("resource", ExperimentalPaths.resource, {

@@ -1,4 +1,4 @@
-package ai.kilocode.client.settings.profile
+package ai.accurecode.client.settings.profile
 
 import java.text.DecimalFormat
 

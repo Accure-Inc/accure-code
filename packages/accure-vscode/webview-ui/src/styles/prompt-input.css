@@ -40,7 +40,7 @@
 }
 
 .prompt-review-comments-title {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   font-weight: 600;
   color: var(--vscode-foreground);
 }
@@ -49,7 +49,7 @@
   min-height: 20px;
   height: 20px;
   padding: 0 6px;
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
 }
 
 .prompt-review-chip-list {
@@ -122,7 +122,7 @@
 .prompt-review-chip-title {
   flex: 1;
   min-width: 0;
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-weight: 600;
   color: var(--vscode-foreground);
   white-space: nowrap;
@@ -132,7 +132,7 @@
 
 .prompt-review-chip-line {
   flex-shrink: 0;
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   font-weight: 600;
   color: var(--text-weak, var(--vscode-descriptionForeground));
 }
@@ -145,7 +145,7 @@
   border-radius: 999px;
   background: var(--surface-inset-base, rgba(127, 127, 127, 0.16));
   color: var(--text-weak, var(--vscode-descriptionForeground));
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   line-height: 1;
   cursor: pointer;
   display: flex;
@@ -193,7 +193,7 @@
 }
 
 .prompt-review-modal-label {
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   text-transform: uppercase;
   letter-spacing: 0.3px;
   color: var(--text-weaker, var(--vscode-descriptionForeground));
@@ -203,7 +203,7 @@
 .prompt-review-modal-value {
   margin: 0;
   min-width: 0;
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   line-height: 1.35;
   color: var(--vscode-foreground);
   white-space: pre-wrap;
@@ -221,7 +221,7 @@
   border: 1px solid var(--vscode-panel-border);
   background: var(--vscode-textCodeBlock-background, rgba(127, 127, 127, 0.12));
   font-family: var(--vscode-editor-font-family, var(--vscode-font-family));
-  font-size: var(--kilo-font-size-10);
+  font-size: var(--accure-font-size-10);
   line-height: 1.35;
   max-height: 120px;
   overflow: auto;
@@ -276,7 +276,7 @@
   background: var(--vscode-badge-background, #4d4d4d);
   color: var(--vscode-badge-foreground, #fff);
   border: 1px solid var(--vscode-widget-border, rgba(255, 255, 255, 0.15));
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   line-height: 1;
   display: flex;
   align-items: center;
@@ -401,7 +401,7 @@
   flex-wrap: nowrap;
   align-items: flex-start;
   gap: 8px;
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   color: var(--vscode-descriptionForeground);
   padding: 6px;
 }
@@ -417,7 +417,7 @@
     height: auto !important;
     min-height: 22px;
     padding: 4px 6px !important;
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     line-height: normal;
     border-radius: 6px;
     background: var(--surface-base);
@@ -465,7 +465,7 @@
   }
 
   [data-slot="settings-row-label-subtitle"] {
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     color: var(--text-weak-base, var(--vscode-descriptionForeground));
   }
 }
@@ -478,7 +478,7 @@
 }
 
 [data-slot="remote-settings-label"] {
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   color: var(--text-weak);
   white-space: nowrap;
 }
@@ -490,7 +490,7 @@
 }
 
 [data-slot="remote-settings-status"] {
-  font-size: var(--kilo-font-size-12);
+  font-size: var(--accure-font-size-12);
   font-weight: 500;
   color: var(--text-weak);
 }
@@ -500,7 +500,7 @@
 }
 
 [data-slot="remote-settings-hint"] {
-  font-size: var(--kilo-font-size-11);
+  font-size: var(--accure-font-size-11);
   color: var(--text-weak);
   opacity: 0.7;
   font-style: italic;

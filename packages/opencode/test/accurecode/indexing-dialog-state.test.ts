@@ -1,29 +1,29 @@
 import { describe, expect, test } from "bun:test"
 import { createEffect, createRoot, createSignal } from "solid-js"
-import type { Config, IndexingConfig } from "@kilocode/sdk/v2"
+import type { Config, IndexingConfig } from "@accurecode/sdk/v2"
 import {
   createIndexingDialogState,
-  currentKiloModel,
+  currentAccureModel,
   indexingInheritance,
   indexingPatch,
   indexingScopeConfig,
   inheritedDescription,
-  kiloModelOptions,
-  loadKiloEmbeddingModels,
+  accureModelOptions,
+  loadAccureEmbeddingModels,
   mergeIndexingConfig,
   type IndexingScope,
-} from "../../src/kilocode/components/indexing-dialog-state"
+} from "../../src/accurecode/components/indexing-dialog-state"
 
 describe("indexing dialog state", () => {
-  test.serial("loads Kilo models directly from the public catalog", async () => {
+  test.serial("loads Accure models directly from the public catalog", async () => {
     const original = global.fetch
     const calls: string[] = []
     global.fetch = (async (input) => {
       calls.push(String(input))
       return new Response(
         JSON.stringify({
-          defaultModel: "kilo/default",
-          models: [{ id: "kilo/default", name: "Default", dimension: 1024, scoreThreshold: 0.35 }],
+          defaultModel: "accure/default",
+          models: [{ id: "accure/default", name: "Default", dimension: 1024, scoreThreshold: 0.35 }],
           aliases: {},
         }),
         { status: 200, headers: { "content-type": "application/json" } },
@@ -31,10 +31,10 @@ describe("indexing dialog state", () => {
     }) as typeof global.fetch
 
     try {
-      const catalog = await loadKiloEmbeddingModels()
+      const catalog = await loadAccureEmbeddingModels()
 
       expect(catalog.models).toHaveLength(1)
-      expect(catalog.defaultModel).toBe("kilo/default")
+      expect(catalog.defaultModel).toBe("accure/default")
       expect(calls).toHaveLength(1)
       expect(new URL(calls[0] ?? "https://invalid.test").pathname).toEndWith("/embedding-models")
     } finally {
@@ -43,8 +43,8 @@ describe("indexing dialog state", () => {
   })
 
   test("builds stable loading, empty, and loaded model options", () => {
-    expect(kiloModelOptions()).toEqual([{ value: "", title: "Loading supported models..." }])
-    expect(kiloModelOptions({ defaultModel: "", models: [], aliases: {} })).toEqual([
+    expect(accureModelOptions()).toEqual([{ value: "", title: "Loading supported models..." }])
+    expect(accureModelOptions({ defaultModel: "", models: [], aliases: {} })).toEqual([
       { value: "", title: "No supported models available" },
     ])
 
@@ -57,12 +57,12 @@ describe("indexing dialog state", () => {
       aliases: { code: "provider/code" },
     }
 
-    expect(kiloModelOptions(catalog)).toEqual([
+    expect(accureModelOptions(catalog)).toEqual([
       { value: "provider/default", title: "Default (1024d)" },
       { value: "provider/code", title: "Code (code, 1536d)" },
     ])
-    expect(currentKiloModel(catalog, "code")).toBe("provider/code")
-    expect(currentKiloModel(catalog, "missing")).toBe("provider/default")
+    expect(currentAccureModel(catalog, "code")).toBe("provider/code")
+    expect(currentAccureModel(catalog, "missing")).toBe("provider/default")
   })
 
   test("classifies scalar and partial nested inheritance", () => {
@@ -108,10 +108,10 @@ describe("indexing dialog state", () => {
   })
 
   test("isolates global auth config from project indexing values", () => {
-    const project: IndexingConfig = { kilo: { apiKey: "project-key", baseUrl: "https://project.test" } }
+    const project: IndexingConfig = { accure: { apiKey: "project-key", baseUrl: "https://project.test" } }
     const inherited: IndexingConfig = { enabled: true }
     const effective: Config = {
-      provider: { kilo: { options: { apiKey: "provider-key" } } },
+      provider: { accure: { options: { apiKey: "provider-key" } } },
       indexing: project,
     }
     const global: Config = { provider: effective.provider, indexing: inherited }

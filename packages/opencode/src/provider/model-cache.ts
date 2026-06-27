@@ -1,5 +1,5 @@
-// kilocode_change - new file
-import { fetchKiloModels, type KiloModelsResult } from "@kilocode/accure-gateway"
+// accurecode_change - new file
+import { fetchAccureModels, type AccureModelsResult } from "@accurecode/accure-gateway"
 import { Context, Duration, Effect, Layer, Schema } from "effect"
 import { FetchHttpClient, HttpClient, HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
 import { Config } from "../config/config"
@@ -8,23 +8,23 @@ import type { Provider } from "@opencode-ai/core/models-dev"
 import * as Log from "@opencode-ai/core/util/log"
 
 type Models = Provider["models"]
-type KiloOptions = NonNullable<Parameters<typeof fetchKiloModels>[0]>
-type Options = { -readonly [K in keyof KiloOptions]?: KiloOptions[K] } & { apiKey?: string }
-type Failure = NonNullable<KiloModelsResult["error"]>
+type AccureOptions = NonNullable<Parameters<typeof fetchAccureModels>[0]>
+type Options = { -readonly [K in keyof AccureOptions]?: AccureOptions[K] } & { apiKey?: string }
+type Failure = NonNullable<AccureModelsResult["error"]>
 type Result = { readonly models: Models; readonly error?: Failure }
 type View = { models?: Models; timestamp?: number }
 
-export interface KiloModels {
-  readonly fetch: (options: KiloOptions) => Effect.Effect<KiloModelsResult, unknown>
+export interface AccureModels {
+  readonly fetch: (options: AccureOptions) => Effect.Effect<AccureModelsResult, unknown>
 }
 
-export class KiloModelsService extends Context.Service<KiloModelsService, KiloModels>()(
-  "@kilocode/ModelCache/KiloModels",
+export class AccureModelsService extends Context.Service<AccureModelsService, AccureModels>()(
+  "@accurecode/ModelCache/AccureModels",
 ) {}
 
-export const kiloModelsLayer = Layer.succeed(
-  KiloModelsService,
-  KiloModelsService.of({ fetch: (options) => Effect.tryPromise(() => fetchKiloModels(options)) }),
+export const accureModelsLayer = Layer.succeed(
+  AccureModelsService,
+  AccureModelsService.of({ fetch: (options) => Effect.tryPromise(() => fetchAccureModels(options)) }),
 )
 type Cell = {
   readonly providerID: string
@@ -42,7 +42,7 @@ export interface Interface {
   readonly clear: (providerID: string) => Effect.Effect<void>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@kilocode/ModelCache") {}
+export class Service extends Context.Service<Service, Interface>()("@accurecode/ModelCache") {}
 
 const log = Log.create({ service: "model-cache" })
 const ttl = Duration.minutes(5)
@@ -54,13 +54,13 @@ type ApertisItem = Schema.Schema.Type<typeof ApertisItem>
 export const layer: Layer.Layer<
   Service,
   never,
-  Auth.Service | Config.Service | KiloModelsService | HttpClient.HttpClient
+  Auth.Service | Config.Service | AccureModelsService | HttpClient.HttpClient
 > = Layer.effect(
   Service,
   Effect.gen(function* () {
     const auth = yield* Auth.Service
     const cfg = yield* Config.Service
-    const kilo = yield* KiloModelsService
+    const accure = yield* AccureModelsService
     const http = yield* HttpClient.HttpClient
     const cells = new Map<string, Cell>()
     const active = new Map<string, Cell>()
@@ -113,28 +113,29 @@ export const layer: Layer.Layer<
     })
 
     const authOptions = Effect.fn("ModelCache.authOptions")(function* (providerID: string) {
-      if (providerID !== "kilo" && providerID !== "apertis") return {}
+      if (providerID !== "accure" && providerID !== "apertis") return {}
       const config = yield* cfg.get()
       const options: Options = {}
 
-      if (providerID === "kilo") {
+      if (providerID === "accure") {
         const item = config.provider?.[providerID]
-        if (item?.options?.apiKey) options.kilocodeToken = item.options.apiKey
-        if (item?.options?.kilocodeOrganizationId) options.kilocodeOrganizationId = item.options.kilocodeOrganizationId
+        if (item?.options?.apiKey) options.accurecodeToken = item.options.apiKey
+        if (item?.options?.accurecodeOrganizationId)
+          options.accurecodeOrganizationId = item.options.accurecodeOrganizationId
 
         const info = yield* auth.get(providerID)
-        if (info?.type === "api") options.kilocodeToken = info.key
+        if (info?.type === "api") options.accurecodeToken = info.key
         if (info?.type === "oauth") {
-          options.kilocodeToken = info.access
-          if (info.accountId) options.kilocodeOrganizationId = info.accountId
+          options.accurecodeToken = info.access
+          if (info.accountId) options.accurecodeOrganizationId = info.accountId
         }
 
-        if (process.env.KILO_API_KEY) options.kilocodeToken = process.env.KILO_API_KEY
-        if (process.env.KILO_ORG_ID) options.kilocodeOrganizationId = process.env.KILO_ORG_ID
+        if (process.env.ACCURECODE_API_KEY) options.accurecodeToken = process.env.ACCURECODE_API_KEY
+        if (process.env.ACCURECODE_ORG_ID) options.accurecodeOrganizationId = process.env.ACCURECODE_ORG_ID
         log.debug("auth options resolved", {
           providerID,
-          hasToken: !!options.kilocodeToken,
-          hasOrganizationId: !!options.kilocodeOrganizationId,
+          hasToken: !!options.accurecodeToken,
+          hasOrganizationId: !!options.accurecodeOrganizationId,
         })
       }
 
@@ -158,7 +159,7 @@ export const layer: Layer.Layer<
     })
 
     const fetchModels = (providerID: string, options: Options): Effect.Effect<Result, unknown> => {
-      if (providerID === "kilo") return kilo.fetch(options)
+      if (providerID === "accure") return accure.fetch(options)
       if (providerID === "apertis") return fetchApertisModels(options).pipe(Effect.map((models) => ({ models })))
       log.debug("provider not implemented", { providerID })
       return Effect.succeed({ models: {} })
@@ -177,8 +178,13 @@ export const layer: Layer.Layer<
     })
 
     const key = (providerID: string, options?: Options) => {
-      if (providerID === "kilo") {
-        return JSON.stringify([providerID, options?.baseURL, options?.kilocodeOrganizationId, options?.kilocodeToken])
+      if (providerID === "accure") {
+        return JSON.stringify([
+          providerID,
+          options?.baseURL,
+          options?.accurecodeOrganizationId,
+          options?.accurecodeToken,
+        ])
       }
       if (providerID === "apertis") return JSON.stringify([providerID, options?.baseURL, options?.apiKey])
       return providerID
@@ -279,7 +285,7 @@ export const defaultLayer = layer.pipe(
   Layer.provide(FetchHttpClient.layer),
   Layer.provide(Auth.defaultLayer),
   Layer.provide(Config.defaultLayer),
-  Layer.provide(kiloModelsLayer),
+  Layer.provide(accureModelsLayer),
 )
 
 export * as ModelCache from "./model-cache"
