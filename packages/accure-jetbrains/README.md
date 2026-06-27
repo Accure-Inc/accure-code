@@ -1,8 +1,8 @@
-# Kilo JetBrains
+# Accure JetBrains
 
 AI coding agent plugin for JetBrains IDEs.
 
-To try the v7 Early Access Program plugin, follow the [JetBrains EAP installation guide](https://kilo.ai/docs/code-with-ai/platforms/jetbrains#jetbrains-early-access).
+To try the v7 Early Access Program plugin, follow the [JetBrains EAP installation guide](https://accure.ai/docs/code-with-ai/platforms/jetbrains#jetbrains-early-access).
 
 ---
 
@@ -57,7 +57,7 @@ This builds the CLI binary for your current OS/arch only, copies it into the bac
 Or via Turbo from the repo root:
 
 ```
-bun turbo build --filter=@kilocode/accure-jetbrains
+bun turbo build --filter=@accurecode/accure-jetbrains
 ```
 
 ---
@@ -72,7 +72,7 @@ bun run build:production
 
 This builds CLI binaries for all 6 desktop platforms (darwin-arm64, darwin-x64, linux-arm64, linux-x64, windows-x64, windows-arm64), copies them all into the backend jar, and fails if any are missing. Gradle also validates all platforms are present via `-Pproduction=true`.
 
-The built plugin archive is at `build/distributions/kilo.jetbrains-<version>.zip`. This zip can be installed in any JetBrains IDE via **Settings > Plugins > Install Plugin from Disk**.
+The built plugin archive is at `build/distributions/accurecode.jetbrains-<version>.zip`. This zip can be installed in any JetBrains IDE via **Settings > Plugins > Install Plugin from Disk**.
 
 ---
 
@@ -104,51 +104,51 @@ All properties below are passed with `-P` on the Gradle command line or in the r
 
 | Property | Default | Description |
 |---|---|---|
-| `kilo.splitModeServerPort` | random high port | Backend split-mode server port. `0` or omitted picks a random port from 49152-65535. |
-| `kilo.dev.storage.isolated` | `false` | When `true`, CLI runs with `XDG_*_HOME` pointing to `.kilo-dev/` in the worktree root, fully isolating dev storage from your real Kilo installation. Enabled by default in `Run IDE (Backend)`. |
-| `kilo.dev.worktree.root` | monorepo root | Worktree root used to resolve `.kilo-dev/`. Auto-detected from the Gradle project directory; override only when the auto-detection is wrong. |
-| `kilo.bun.path` | `bun` on `$PATH` | Absolute path to Bun. Set this when IntelliJ-launched Gradle cannot find Bun automatically. |
+| `accurecode.splitModeServerPort` | random high port | Backend split-mode server port. `0` or omitted picks a random port from 49152-65535. |
+| `accurecode.dev.storage.isolated` | `false` | When `true`, CLI runs with `XDG_*_HOME` pointing to `.accurecode-dev/` in the worktree root, fully isolating dev storage from your real Accure installation. Enabled by default in `Run IDE (Backend)`. |
+| `accurecode.dev.worktree.root` | monorepo root | Worktree root used to resolve `.accurecode-dev/`. Auto-detected from the Gradle project directory; override only when the auto-detection is wrong. |
+| `accure.bun.path` | `bun` on `$PATH` | Absolute path to Bun. Set this when IntelliJ-launched Gradle cannot find Bun automatically. |
 
 Example with a fixed split-mode port:
 
 ```text
--Pkilo.dev.log.level=debug -Pkilo.splitModeServerPort=12345
+-Paccure.dev.log.level=debug -Paccure.splitModeServerPort=12345
 ```
 
 ### Dev storage isolation
 
-When `kilo.dev.storage.isolated=true`, the CLI subprocess receives standard `XDG_*_HOME` env vars pointing under `.kilo-dev/` in the worktree root:
+When `accurecode.dev.storage.isolated=true`, the CLI subprocess receives standard `XDG_*_HOME` env vars pointing under `.accurecode-dev/` in the worktree root:
 
 ```
-.kilo-dev/
-  data/    -> XDG_DATA_HOME   (CLI uses .../data/kilo for sessions, logs, ...)
-  config/  -> XDG_CONFIG_HOME (CLI uses .../config/kilo for global config)
-  state/   -> XDG_STATE_HOME  (CLI uses .../state/kilo for state)
-  cache/   -> XDG_CACHE_HOME  (CLI uses .../cache/kilo for cache, bin)
+.accurecode-dev/
+  data/    -> XDG_DATA_HOME   (CLI uses .../data/accure for sessions, logs, ...)
+  config/  -> XDG_CONFIG_HOME (CLI uses .../config/accure for global config)
+  state/   -> XDG_STATE_HOME  (CLI uses .../state/accure for state)
+  cache/   -> XDG_CACHE_HOME  (CLI uses .../cache/accure for cache, bin)
 ```
 
-This keeps all development data isolated from your real Kilo installation. The `.kilo-dev/` directory is gitignored and created automatically on first run.
+This keeps all development data isolated from your real Accure installation. The `.accurecode-dev/` directory is gitignored and created automatically on first run.
 
 The `Run IDE (Backend)` run configuration enables this by default. To disable it:
 
 ```text
--Pkilo.dev.storage.isolated=false
+-Paccure.dev.storage.isolated=false
 ```
 
 ---
 
 ### Debug logging properties
 
-The plugin supports a few JVM system properties for local debugging. These are most useful with `runIde` in sandbox mode because the logs are mirrored to `kilo-dev.log` files for frontend and backend.
+The plugin supports a few JVM system properties for local debugging. These are most useful with `runIde` in sandbox mode because the logs are mirrored to `accure-dev.log` files for frontend and backend.
 
-`kilo.dev.log.level`
+`accurecode.dev.log.level`
 
-- Controls the Kilo debug file logger level.
+- Controls the Accure debug file logger level.
 - Supported values: `DEBUG`, `INFO`, `WARN`, `ERROR`, `OFF`
 - Default: `INFO`
 - Use `DEBUG` to enable detailed chat tracing and lazy `log.debug { ... }` summaries.
 
-`kilo.dev.log.chat.content`
+`accurecode.dev.log.chat.content`
 
 - Controls how much chat text content appears in structured chat logs.
 - Supported values:
@@ -157,27 +157,27 @@ The plugin supports a few JVM system properties for local debugging. These are m
   - `full`: sanitized full content
 - Default: `off`
 
-`kilo.dev.log.chat.preview.max`
+`accurecode.dev.log.chat.preview.max`
 
-- Maximum preview size when `kilo.dev.log.chat.content=preview`
+- Maximum preview size when `accurecode.dev.log.chat.content=preview`
 - Default: `160`
 
 Where to find the log files:
 
-- In sandbox `runIde` runs, Kilo writes separate dev log files for each side under the IDE sandbox log directory reported by `PathManager.getLogDir()`.
-- Frontend log file: `<sandbox log dir>/kilo-frontend/kilo-dev.log`
-- Backend log file: `<sandbox log dir>/kilo-backend/kilo-dev.log`
+- In sandbox `runIde` runs, Accure writes separate dev log files for each side under the IDE sandbox log directory reported by `PathManager.getLogDir()`.
+- Frontend log file: `<sandbox log dir>/accure-frontend/accure-dev.log`
+- Backend log file: `<sandbox log dir>/accure-backend/accure-dev.log`
 - In practice these sit under the current `log_run*` sandbox logs for the active run.
-- If you are unsure of the exact sandbox root, open the IDE log directory from the running sandbox instance and then look for the `kilo-frontend/` and `kilo-backend/` subdirectories.
+- If you are unsure of the exact sandbox root, open the IDE log directory from the running sandbox instance and then look for the `accure-frontend/` and `accure-backend/` subdirectories.
 
 Recommended combinations:
 
 ```text
--Dkilo.dev.log.level=DEBUG -Dkilo.dev.log.chat.content=off
+-Daccure.dev.log.level=DEBUG -Daccure.dev.log.chat.content=off
 ```
 
 ```text
--Dkilo.dev.log.level=DEBUG -Dkilo.dev.log.chat.content=preview -Dkilo.dev.log.chat.preview.max=120
+-Daccure.dev.log.level=DEBUG -Daccure.dev.log.chat.content=preview -Daccure.dev.log.chat.preview.max=120
 ```
 
 Use `off` first. Switch to `preview` only when you need prompt or tool payload hints to diagnose a problem. Use `full` only for short local reproductions because logs can grow quickly.

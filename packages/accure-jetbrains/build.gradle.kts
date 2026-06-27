@@ -6,7 +6,7 @@ import org.jetbrains.intellij.platform.gradle.tasks.RunIdeTask
 import org.jetbrains.intellij.platform.gradle.tasks.aware.SplitModeAware.SplitModeTarget
 import java.time.LocalDate
 
-group = "ai.kilocode.jetbrains"
+group = "ai.accurecode.jetbrains"
 
 val ports = 49152..65535
 
@@ -18,9 +18,9 @@ fun port(value: String): Int {
     val text = value.trim()
     if (text.isEmpty()) return fallback()
     val n = text.toIntOrNull()
-        ?: error("kilo.splitModeServerPort must be an integer from 0 to 65535; use 0 or omit it for a random high port")
+        ?: error("accurecode.splitModeServerPort must be an integer from 0 to 65535; use 0 or omit it for a random high port")
     require(n in 0..65535) {
-        "kilo.splitModeServerPort must be an integer from 0 to 65535; use 0 or omit it for a random high port"
+        "accurecode.splitModeServerPort must be an integer from 0 to 65535; use 0 or omit it for a random high port"
     }
     if (n == 0) return fallback()
     return n
@@ -87,17 +87,17 @@ fun gitTag(): String? {
 }
 
 val release = providers.gradleProperty("production").map { it.toBoolean() }.orElse(false).get()
-val override = providers.gradleProperty("kilo.version").orNull?.trim()?.takeIf { it.isNotEmpty() }
-val prop = providers.gradleProperty("kilo.jetbrains.version").orNull?.trim()?.takeIf { it.isNotEmpty() }
+val override = providers.gradleProperty("accurecode.version").orNull?.trim()?.takeIf { it.isNotEmpty() }
+val prop = providers.gradleProperty("accurecode.jetbrains.version").orNull?.trim()?.takeIf { it.isNotEmpty() }
 val tag = gitTag()?.removePrefix("jetbrains/v")
 val ver = override?.let(::checked) ?: prop?.let(::checked) ?: if (release) checked(
-    tag ?: error("Missing JetBrains plugin version. Publish builds must set kilo.jetbrains.version or run from a jetbrains/v<version> tag."),
+    tag ?: error("Missing JetBrains plugin version. Publish builds must set accurecode.jetbrains.version or run from a jetbrains/v<version> tag."),
 ) else checked(tag ?: "0.0.0-dev")
 
-val channel = providers.gradleProperty("kilo.channel").map { it.trim() }.orElse("default")
-val splitPort = providers.gradleProperty("kilo.splitModeServerPort").orNull?.let(::port) ?: fallback()
-val isolated = providers.gradleProperty("kilo.dev.storage.isolated").map { it.toBoolean() }.orElse(false)
-val worktreeRoot = providers.gradleProperty("kilo.dev.worktree.root").orElse(
+val channel = providers.gradleProperty("accurecode.channel").map { it.trim() }.orElse("default")
+val splitPort = providers.gradleProperty("accurecode.splitModeServerPort").orNull?.let(::port) ?: fallback()
+val isolated = providers.gradleProperty("accurecode.dev.storage.isolated").map { it.toBoolean() }.orElse(false)
+val worktreeRoot = providers.gradleProperty("accurecode.dev.worktree.root").orElse(
     providers.provider { rootProject.layout.projectDirectory.asFile.parentFile.parentFile.canonicalPath }
 )
 
@@ -121,12 +121,12 @@ changelog {
     header = provider { "[${version.get()}] - ${LocalDate.now()}" }
     unreleasedTerm = "[Unreleased]"
     keepUnreleasedSection = true
-    repositoryUrl = "https://github.com/Kilo-Org/kilocode"
+    repositoryUrl = "https://github.com/Accure-Inc/accure-code"
     groups = listOf("Added", "Changed", "Fixed", "Removed", "Security")
     combinePreReleases = false
 }
 
-val notes = providers.gradleProperty("kilo.changeNotes").orElse(
+val notes = providers.gradleProperty("accurecode.changeNotes").orElse(
     provider {
         val versions = selected(ver).filter { changelog.has(it) }
         if (versions.isNotEmpty()) return@provider versions.joinToString("\n") { item ->
@@ -183,8 +183,8 @@ intellijPlatform {
     splitModeTarget = SplitModeTarget.BOTH
 
     pluginConfiguration {
-        id = "ai.kilocode.jetbrains"
-        name = "Kilo Code"
+        id = "ai.accurecode.jetbrains"
+        name = "Accure Code"
         version = provider { ver }
         changeNotes = notes
 
@@ -193,8 +193,8 @@ intellijPlatform {
         }
 
         vendor {
-            name = "Kilo Code"
-            url = "https://kilo.ai"
+            name = "Accure Code"
+            url = "https://accure.ai"
         }
     }
 
@@ -261,14 +261,14 @@ tasks.named<JavaExec>("runIde") {
 }
 
 tasks.withType<RunIdeTask> {
-    val level = providers.gradleProperty("kilo.dev.log.level").orNull ?: "DEBUG"
-    val content = providers.gradleProperty("kilo.dev.log.chat.content").orNull ?: "off"
-    val preview = providers.gradleProperty("kilo.dev.log.chat.preview.max").orNull ?: "160"
-    systemProperty("kilo.dev.log.level", level)
-    systemProperty("kilo.dev.log.chat.content", content)
-    systemProperty("kilo.dev.log.chat.preview.max", preview)
-    systemProperty("kilo.dev.storage.isolated", isolated.get().toString())
-    systemProperty("kilo.dev.worktree.root", worktreeRoot.get())
+    val level = providers.gradleProperty("accurecode.dev.log.level").orNull ?: "DEBUG"
+    val content = providers.gradleProperty("accurecode.dev.log.chat.content").orNull ?: "off"
+    val preview = providers.gradleProperty("accurecode.dev.log.chat.preview.max").orNull ?: "160"
+    systemProperty("accurecode.dev.log.level", level)
+    systemProperty("accurecode.dev.log.chat.content", content)
+    systemProperty("accurecode.dev.log.chat.preview.max", preview)
+    systemProperty("accurecode.dev.storage.isolated", isolated.get().toString())
+    systemProperty("accurecode.dev.worktree.root", worktreeRoot.get())
 }
 
 tasks.named<Delete>("clean") {

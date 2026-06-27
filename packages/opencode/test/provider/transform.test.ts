@@ -2410,7 +2410,7 @@ describe("ProviderTransform.variants", () => {
     expect(result).toEqual({})
   })
 
-  // kilocode_change start: minimax
+  // accurecode_change start: minimax
   test("minimax direct anthropic provider returns instant/thinking toggle", () => {
     const model = createMockModel({
       id: "minimax/MiniMax-M3",
@@ -2428,14 +2428,14 @@ describe("ProviderTransform.variants", () => {
     })
   })
 
-  test("minimax via kilo gateway returns instant/thinking toggle", () => {
+  test("minimax via accure gateway returns instant/thinking toggle", () => {
     const model = createMockModel({
-      id: "kilo/minimax/minimax-m3",
-      providerID: "kilo",
+      id: "accure/minimax/minimax-m3",
+      providerID: "accure",
       api: {
         id: "minimax/minimax-m3",
-        url: "https://gateway.kilo.ai",
-        npm: "@kilocode/accure-gateway",
+        url: "https://gateway.accurecode.ai",
+        npm: "@accurecode/accure-gateway",
       },
     })
     const result = ProviderTransform.variants(model)
@@ -2444,7 +2444,7 @@ describe("ProviderTransform.variants", () => {
       thinking: { reasoning: { enabled: true } },
     })
   })
-  // kilocode_change end
+  // accurecode_change end
 
   test("glm returns empty object", () => {
     const model = createMockModel({
@@ -2596,7 +2596,7 @@ describe("ProviderTransform.variants", () => {
       expect(Object.keys(result)).toEqual(["none", "minimal", "low", "medium", "high", "xhigh"])
     })
 
-    // kilocode_change start
+    // accurecode_change start
     test("mercury-2 returns OPENAI_EFFORTS with reasoning", () => {
       const model = createMockModel({
         id: "openrouter/inception/mercury-2",
@@ -2612,7 +2612,7 @@ describe("ProviderTransform.variants", () => {
       expect(result.low).toEqual({ reasoning: { effort: "low" } })
       expect(result.high).toEqual({ reasoning: { effort: "high" } })
     })
-    // kilocode_change end
+    // accurecode_change end
 
     test("grok-4 returns empty object", () => {
       const model = createMockModel({
@@ -2645,17 +2645,17 @@ describe("ProviderTransform.variants", () => {
     })
   })
 
-  // kilocode_change start
-  describe("@kilocode/accure-gateway", () => {
+  // accurecode_change start
+  describe("@accurecode/accure-gateway", () => {
     test("claude models return empty variants (reasoning disabled)", () => {
       const model = createMockModel({
-        id: "kilo/anthropic/claude-sonnet-4",
-        providerID: "kilo",
+        id: "accure/anthropic/claude-sonnet-4",
+        providerID: "accure",
         capabilities: { reasoning: false },
         api: {
           id: "anthropic/claude-sonnet-4",
-          url: "https://gateway.kilo.ai",
-          npm: "@kilocode/accure-gateway",
+          url: "https://gateway.accurecode.ai",
+          npm: "@accurecode/accure-gateway",
         },
       })
       const result = ProviderTransform.variants(model)
@@ -2664,13 +2664,13 @@ describe("ProviderTransform.variants", () => {
 
     test("anthropic models in api.id return empty variants (reasoning disabled)", () => {
       const model = createMockModel({
-        id: "kilo/anthropic/claude-opus-4",
-        providerID: "kilo",
+        id: "accure/anthropic/claude-opus-4",
+        providerID: "accure",
         capabilities: { reasoning: false },
         api: {
           id: "anthropic/claude-opus-4",
-          url: "https://gateway.kilo.ai",
-          npm: "@kilocode/accure-gateway",
+          url: "https://gateway.accurecode.ai",
+          npm: "@accurecode/accure-gateway",
         },
       })
       const result = ProviderTransform.variants(model)
@@ -2679,12 +2679,12 @@ describe("ProviderTransform.variants", () => {
 
     test("gpt models return OPENAI_EFFORTS with reasoning", () => {
       const model = createMockModel({
-        id: "kilo/openai/gpt-5",
-        providerID: "kilo",
+        id: "accure/openai/gpt-5",
+        providerID: "accure",
         api: {
           id: "openai/gpt-5",
-          url: "https://gateway.kilo.ai",
-          npm: "@kilocode/accure-gateway",
+          url: "https://gateway.accurecode.ai",
+          npm: "@accurecode/accure-gateway",
         },
       })
       const result = ProviderTransform.variants(model)
@@ -2694,12 +2694,12 @@ describe("ProviderTransform.variants", () => {
 
     test("gemini-3 models return OPENAI_EFFORTS with reasoning and encrypted content", () => {
       const model = createMockModel({
-        id: "kilo/google/gemini-3-pro",
-        providerID: "kilo",
+        id: "accure/google/gemini-3-pro",
+        providerID: "accure",
         api: {
           id: "google/gemini-3-pro",
-          url: "https://gateway.kilo.ai",
-          npm: "@kilocode/accure-gateway",
+          url: "https://gateway.accurecode.ai",
+          npm: "@accurecode/accure-gateway",
         },
       })
       const result = ProviderTransform.variants(model)
@@ -2708,12 +2708,12 @@ describe("ProviderTransform.variants", () => {
 
     test("non-qualifying models return empty object", () => {
       const model = createMockModel({
-        id: "kilo/meta/llama-4",
-        providerID: "kilo",
+        id: "accure/meta/llama-4",
+        providerID: "accure",
         api: {
           id: "meta/llama-4",
-          url: "https://gateway.kilo.ai",
-          npm: "@kilocode/accure-gateway",
+          url: "https://gateway.accurecode.ai",
+          npm: "@accurecode/accure-gateway",
         },
       })
       const result = ProviderTransform.variants(model)
@@ -2722,12 +2722,12 @@ describe("ProviderTransform.variants", () => {
 
     test("grok-3-mini returns low and high with reasoning", () => {
       const model = createMockModel({
-        id: "kilo/x-ai/grok-3-mini",
-        providerID: "kilo",
+        id: "accure/x-ai/grok-3-mini",
+        providerID: "accure",
         api: {
           id: "x-ai/grok-3-mini",
-          url: "https://gateway.kilo.ai",
-          npm: "@kilocode/accure-gateway",
+          url: "https://gateway.accurecode.ai",
+          npm: "@accurecode/accure-gateway",
         },
       })
       const result = ProviderTransform.variants(model)
@@ -2738,12 +2738,12 @@ describe("ProviderTransform.variants", () => {
 
     test("codex models return OPENAI_EFFORTS with object-based reasoning format", () => {
       const model = createMockModel({
-        id: "kilo/openai/gpt-5.2-codex",
-        providerID: "kilo",
+        id: "accure/openai/gpt-5.2-codex",
+        providerID: "accure",
         api: {
           id: "openai/gpt-5.2-codex",
-          url: "https://gateway.kilo.ai",
-          npm: "@kilocode/accure-gateway",
+          url: "https://gateway.accurecode.ai",
+          npm: "@accurecode/accure-gateway",
         },
       })
       const result = ProviderTransform.variants(model)
@@ -2753,20 +2753,20 @@ describe("ProviderTransform.variants", () => {
       expect(result.xhigh).toEqual({ reasoning: { effort: "xhigh" } })
     })
 
-    // kilocode_change start
-    test("mercury-2 uses server-provided variants from kilo gateway", () => {
+    // accurecode_change start
+    test("mercury-2 uses server-provided variants from accure gateway", () => {
       const serverVariants = {
         low: { reasoningEffort: "low" },
         medium: { reasoningEffort: "medium" },
         high: { reasoningEffort: "high" },
       }
       const model = createMockModel({
-        id: "kilo/inception/mercury-2",
-        providerID: "kilo",
+        id: "accure/inception/mercury-2",
+        providerID: "accure",
         api: {
           id: "inception/mercury-2",
-          url: "https://gateway.kilo.ai",
-          npm: "@kilocode/accure-gateway",
+          url: "https://gateway.accurecode.ai",
+          npm: "@accurecode/accure-gateway",
         },
         variants: serverVariants,
       })
@@ -2774,9 +2774,9 @@ describe("ProviderTransform.variants", () => {
       expect(result).toEqual(serverVariants)
       expect(Object.keys(result)).toEqual(["low", "medium", "high"])
     })
-    // kilocode_change end
+    // accurecode_change end
   })
-  // kilocode_change end
+  // accurecode_change end
 
   describe("@ai-sdk/gateway", () => {
     test("anthropic sonnet 4.6 models return adaptive thinking options", () => {
@@ -3073,7 +3073,7 @@ describe("ProviderTransform.variants", () => {
     })
   })
 
-  // kilocode_change start
+  // accurecode_change start
   describe("@ai-sdk/azure", () => {
     test("gpt-5.4 includes xhigh", () => {
       const model = createMockModel({
@@ -3095,7 +3095,7 @@ describe("ProviderTransform.variants", () => {
       })
     })
   })
-  // kilocode_change end
+  // accurecode_change end
 
   describe("@ai-sdk/cerebras", () => {
     test("returns WIDELY_SUPPORTED_EFFORTS with reasoningEffort", () => {
@@ -3200,7 +3200,7 @@ describe("ProviderTransform.variants", () => {
       expect(result.high).toEqual({ reasoningEffort: "high" })
     })
 
-    // kilocode_change start
+    // accurecode_change start
     test("mercury-2 returns WIDELY_SUPPORTED_EFFORTS with reasoningEffort", () => {
       const model = createMockModel({
         id: "inception/mercury-2",
@@ -3216,7 +3216,7 @@ describe("ProviderTransform.variants", () => {
       expect(result.low).toEqual({ reasoningEffort: "low" })
       expect(result.high).toEqual({ reasoningEffort: "high" })
     })
-    // kilocode_change end
+    // accurecode_change end
   })
 
   describe("@ai-sdk/azure", () => {
@@ -3840,17 +3840,17 @@ describe("ProviderTransform.variants", () => {
     })
   })
 
-  // kilocode_change start
+  // accurecode_change start
   describe("ProviderTransform.smallOptions", () => {
-    describe("@kilocode/accure-gateway", () => {
+    describe("@accurecode/accure-gateway", () => {
       test("claude models use their default reasoning effort", () => {
         const model = createMockModel({
-          id: "kilo/anthropic/claude-sonnet-4",
-          providerID: "kilo",
+          id: "accure/anthropic/claude-sonnet-4",
+          providerID: "accure",
           api: {
             id: "anthropic/claude-sonnet-4",
-            url: "https://gateway.kilo.ai",
-            npm: "@kilocode/accure-gateway",
+            url: "https://gateway.accurecode.ai",
+            npm: "@accurecode/accure-gateway",
           },
         })
         const result = ProviderTransform.smallOptions(model)
@@ -3859,12 +3859,12 @@ describe("ProviderTransform.variants", () => {
 
       test("non-claude models use their default reasoning effort", () => {
         const model = createMockModel({
-          id: "kilo/openai/gpt-4",
-          providerID: "kilo",
+          id: "accure/openai/gpt-4",
+          providerID: "accure",
           api: {
             id: "openai/gpt-4",
-            url: "https://gateway.kilo.ai",
-            npm: "@kilocode/accure-gateway",
+            url: "https://gateway.accurecode.ai",
+            npm: "@accurecode/accure-gateway",
           },
         })
         const result = ProviderTransform.smallOptions(model)
@@ -3873,12 +3873,12 @@ describe("ProviderTransform.variants", () => {
 
       test("google models use their default reasoning effort", () => {
         const model = createMockModel({
-          id: "kilo/google/gemini-2.0-flash",
-          providerID: "kilo",
+          id: "accure/google/gemini-2.0-flash",
+          providerID: "accure",
           api: {
             id: "google/gemini-2.0-flash",
-            url: "https://gateway.kilo.ai",
-            npm: "@kilocode/accure-gateway",
+            url: "https://gateway.accurecode.ai",
+            npm: "@accurecode/accure-gateway",
           },
         })
         const result = ProviderTransform.smallOptions(model)
@@ -3924,7 +3924,7 @@ describe("ProviderTransform.variants", () => {
       expect(result).toEqual({})
     })
   })
-  // kilocode_change end
+  // accurecode_change end
 
   describe("ai-gateway-provider (cloudflare-ai-gateway)", () => {
     const cfModel = (apiId: string, releaseDate = "2024-01-01") =>
@@ -4112,7 +4112,7 @@ describe("ProviderTransform.providerOptions - ai-gateway-provider", () => {
   })
 })
 
-// kilocode_change start - tests for reasoningSummary guard
+// accurecode_change start - tests for reasoningSummary guard
 describe("ProviderTransform.options - OpenAI Responses API params guard", () => {
   const sessionID = "test-session"
 
@@ -4181,9 +4181,9 @@ describe("ProviderTransform.options - OpenAI Responses API params guard", () => 
     expect(result.reasoningSummary).toBe("auto")
   })
 
-  test("includes reasoningSummary for @kilocode/accure-gateway", () => {
+  test("includes reasoningSummary for @accurecode/accure-gateway", () => {
     const result = ProviderTransform.options({
-      model: gpt5Model("@kilocode/accure-gateway", "kilo"),
+      model: gpt5Model("@accurecode/accure-gateway", "accure"),
       sessionID,
     })
     expect(result.reasoningSummary).toBe("auto")
@@ -4199,4 +4199,4 @@ describe("ProviderTransform.options - OpenAI Responses API params guard", () => 
     }
   })
 })
-// kilocode_change end
+// accurecode_change end

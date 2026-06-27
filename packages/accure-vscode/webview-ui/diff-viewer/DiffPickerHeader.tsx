@@ -1,7 +1,7 @@
 import type { Component, JSXElement } from "solid-js"
 import { createSignal, Show } from "solid-js"
-import { Select } from "@kilocode/accure-ui/select"
-import { Tooltip } from "@kilocode/accure-ui/tooltip"
+import { Select } from "@accurecode/accure-ui/select"
+import { Tooltip } from "@accurecode/accure-ui/tooltip"
 import { useLanguage } from "../src/context/language"
 import type { DiffSourceDescriptor } from "../../src/diff/sources/types"
 

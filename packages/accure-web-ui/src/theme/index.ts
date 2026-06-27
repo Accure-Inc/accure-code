@@ -1,1 +1,1 @@
-export * from "@kilocode/accure-ui/theme"
+export * from "@accurecode/accure-ui/theme"

@@ -5,8 +5,8 @@
  */
 
 import { type Component, Show, createSignal, createEffect, onCleanup } from "solid-js"
-import { Spinner } from "@kilocode/accure-ui/spinner"
-import { Button } from "@kilocode/accure-ui/button"
+import { Spinner } from "@accurecode/accure-ui/spinner"
+import { Button } from "@accurecode/accure-ui/button"
 import { useSession } from "../../context/session"
 import { useLanguage } from "../../context/language"
 import { useVSCode } from "../../context/vscode"

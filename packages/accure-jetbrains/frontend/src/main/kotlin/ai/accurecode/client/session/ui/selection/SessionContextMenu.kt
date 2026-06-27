@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.ui.selection
+package ai.accurecode.client.session.ui.selection
 
 import com.intellij.ide.DataManager
 import com.intellij.openapi.Disposable
@@ -19,7 +19,7 @@ import javax.swing.SwingUtilities
 
 internal object SessionContextMenu {
     private val KEY = Any()
-    private const val ID = "Kilo.Session.ContextMenu"
+    private const val ID = "Accure.Session.ContextMenu"
 
     @RequiresEdt
     fun install(root: JComponent, parent: Disposable) {

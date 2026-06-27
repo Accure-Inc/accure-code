@@ -22,20 +22,20 @@ describe("RuntimeFlags", () => {
       const flags = yield* readFlags.pipe(
         Effect.provide(
           fromConfig({
-            KILO_PURE: "true",
-            KILO_DISABLE_DEFAULT_PLUGINS: "true",
-            KILO_DISABLE_CHANNEL_DB: "true",
-            KILO_AUTO_SHARE: "true",
-            KILO_DISABLE_EMBEDDED_WEB_UI: "true",
-            KILO_DISABLE_EXTERNAL_SKILLS: "true",
-            KILO_DISABLE_LSP_DOWNLOAD: "true",
-            KILO_SKIP_MIGRATIONS: "true",
-            KILO_EXPERIMENTAL: "true",
-            KILO_ENABLE_EXA: "true",
-            KILO_ENABLE_PARALLEL: "true",
-            KILO_ENABLE_EXPERIMENTAL_MODELS: "true",
-            KILO_ENABLE_QUESTION_TOOL: "true",
-            KILO_CLIENT: "desktop",
+            ACCURECODE_PURE: "true",
+            ACCURECODE_DISABLE_DEFAULT_PLUGINS: "true",
+            ACCURECODE_DISABLE_CHANNEL_DB: "true",
+            ACCURECODE_AUTO_SHARE: "true",
+            ACCURECODE_DISABLE_EMBEDDED_WEB_UI: "true",
+            ACCURECODE_DISABLE_EXTERNAL_SKILLS: "true",
+            ACCURECODE_DISABLE_LSP_DOWNLOAD: "true",
+            ACCURECODE_SKIP_MIGRATIONS: "true",
+            ACCURECODE_EXPERIMENTAL: "true",
+            ACCURECODE_ENABLE_EXA: "true",
+            ACCURECODE_ENABLE_PARALLEL: "true",
+            ACCURECODE_ENABLE_EXPERIMENTAL_MODELS: "true",
+            ACCURECODE_ENABLE_QUESTION_TOOL: "true",
+            ACCURECODE_CLIENT: "desktop",
           }),
         ),
       )
@@ -67,12 +67,12 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("defaultLayer parses KILO_EXPERIMENTAL_LSP_TY", () =>
+  it.effect("defaultLayer parses ACCURECODE_EXPERIMENTAL_LSP_TY", () =>
     Effect.gen(function* () {
       const flags = yield* readFlags.pipe(
         Effect.provide(
           fromConfig({
-            KILO_EXPERIMENTAL_LSP_TY: "true",
+            ACCURECODE_EXPERIMENTAL_LSP_TY: "true",
           }),
         ),
       )
@@ -83,8 +83,8 @@ describe("RuntimeFlags", () => {
 
   it.effect("enables native LLM via dedicated or umbrella flag", () =>
     Effect.gen(function* () {
-      const explicit = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_EXPERIMENTAL_NATIVE_LLM: "true" })))
-      const umbrella = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_EXPERIMENTAL: "true" })))
+      const explicit = yield* readFlags.pipe(Effect.provide(fromConfig({ ACCURECODE_EXPERIMENTAL_NATIVE_LLM: "true" })))
+      const umbrella = yield* readFlags.pipe(Effect.provide(fromConfig({ ACCURECODE_EXPERIMENTAL: "true" })))
 
       expect(explicit.experimentalNativeLlm).toBe(true)
       expect(umbrella.experimentalNativeLlm).toBe(true)
@@ -133,9 +133,9 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("disableExternalSkills reads KILO_DISABLE_EXTERNAL_SKILLS", () =>
+  it.effect("disableExternalSkills reads ACCURECODE_DISABLE_EXTERNAL_SKILLS", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_DISABLE_EXTERNAL_SKILLS: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ ACCURECODE_DISABLE_EXTERNAL_SKILLS: "true" })))
 
       expect(flags.disableExternalSkills).toBe(true)
     }),
@@ -149,9 +149,9 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("disableLspDownload reads KILO_DISABLE_LSP_DOWNLOAD", () =>
+  it.effect("disableLspDownload reads ACCURECODE_DISABLE_LSP_DOWNLOAD", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_DISABLE_LSP_DOWNLOAD: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ ACCURECODE_DISABLE_LSP_DOWNLOAD: "true" })))
 
       expect(flags.disableLspDownload).toBe(true)
     }),
@@ -165,9 +165,9 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("skipMigrations reads KILO_SKIP_MIGRATIONS", () =>
+  it.effect("skipMigrations reads ACCURECODE_SKIP_MIGRATIONS", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_SKIP_MIGRATIONS: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ ACCURECODE_SKIP_MIGRATIONS: "true" })))
 
       expect(flags.skipMigrations).toBe(true)
     }),
@@ -181,33 +181,35 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("disableClaudeCodePrompt reads KILO_DISABLE_CLAUDE_CODE_PROMPT", () =>
+  it.effect("disableClaudeCodePrompt reads ACCURECODE_DISABLE_CLAUDE_CODE_PROMPT", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_DISABLE_CLAUDE_CODE_PROMPT: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ ACCURECODE_DISABLE_CLAUDE_CODE_PROMPT: "true" })))
 
       expect(flags.disableClaudeCodePrompt).toBe(true)
     }),
   )
 
-  it.effect("disableClaudeCodePrompt inherits KILO_DISABLE_CLAUDE_CODE", () =>
+  it.effect("disableClaudeCodePrompt inherits ACCURECODE_DISABLE_CLAUDE_CODE", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_DISABLE_CLAUDE_CODE: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ ACCURECODE_DISABLE_CLAUDE_CODE: "true" })))
 
       expect(flags.disableClaudeCodePrompt).toBe(true)
     }),
   )
 
-  it.effect("experimentalIconDiscovery reads KILO_EXPERIMENTAL_ICON_DISCOVERY", () =>
+  it.effect("experimentalIconDiscovery reads ACCURECODE_EXPERIMENTAL_ICON_DISCOVERY", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_EXPERIMENTAL_ICON_DISCOVERY: "true" })))
+      const flags = yield* readFlags.pipe(
+        Effect.provide(fromConfig({ ACCURECODE_EXPERIMENTAL_ICON_DISCOVERY: "true" })),
+      )
 
       expect(flags.experimentalIconDiscovery).toBe(true)
     }),
   )
 
-  it.effect("experimentalIconDiscovery inherits KILO_EXPERIMENTAL", () =>
+  it.effect("experimentalIconDiscovery inherits ACCURECODE_EXPERIMENTAL", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_EXPERIMENTAL: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ ACCURECODE_EXPERIMENTAL: "true" })))
 
       expect(flags.experimentalIconDiscovery).toBe(true)
     }),
@@ -221,12 +223,12 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("experimentalOxfmt is enabled by KILO_EXPERIMENTAL_OXFMT", () =>
+  it.effect("experimentalOxfmt is enabled by ACCURECODE_EXPERIMENTAL_OXFMT", () =>
     Effect.gen(function* () {
       const flags = yield* readFlags.pipe(
         Effect.provide(
           fromConfig({
-            KILO_EXPERIMENTAL_OXFMT: "true",
+            ACCURECODE_EXPERIMENTAL_OXFMT: "true",
           }),
         ),
       )
@@ -235,12 +237,12 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("experimentalOxfmt inherits KILO_EXPERIMENTAL", () =>
+  it.effect("experimentalOxfmt inherits ACCURECODE_EXPERIMENTAL", () =>
     Effect.gen(function* () {
       const flags = yield* readFlags.pipe(
         Effect.provide(
           fromConfig({
-            KILO_EXPERIMENTAL: "true",
+            ACCURECODE_EXPERIMENTAL: "true",
           }),
         ),
       )
@@ -253,19 +255,19 @@ describe("RuntimeFlags", () => {
     { name: "absent", config: {}, expected: undefined },
     {
       name: "valid positive integer",
-      config: { KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "1234" },
+      config: { ACCURECODE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "1234" },
       expected: 1234,
     },
     {
       name: "invalid string",
-      config: { KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "nope" },
+      config: { ACCURECODE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "nope" },
       expected: undefined,
     },
-    { name: "zero", config: { KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "0" }, expected: undefined },
-    { name: "negative", config: { KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "-1" }, expected: undefined },
+    { name: "zero", config: { ACCURECODE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "0" }, expected: undefined },
+    { name: "negative", config: { ACCURECODE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "-1" }, expected: undefined },
     {
       name: "non-integer",
-      config: { KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "1.5" },
+      config: { ACCURECODE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "1.5" },
       expected: undefined,
     },
   ]) {
@@ -282,19 +284,19 @@ describe("RuntimeFlags", () => {
     { name: "absent", config: {}, expected: undefined },
     {
       name: "valid positive integer",
-      config: { KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "1234" },
+      config: { ACCURECODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "1234" },
       expected: 1234,
     },
     {
       name: "invalid string",
-      config: { KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "nope" },
+      config: { ACCURECODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "nope" },
       expected: undefined,
     },
-    { name: "zero", config: { KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "0" }, expected: undefined },
-    { name: "negative", config: { KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "-1" }, expected: undefined },
+    { name: "zero", config: { ACCURECODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "0" }, expected: undefined },
+    { name: "negative", config: { ACCURECODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "-1" }, expected: undefined },
     {
       name: "non-integer",
-      config: { KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "1.5" },
+      config: { ACCURECODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "1.5" },
       expected: undefined,
     },
   ]) {
@@ -314,15 +316,15 @@ describe("RuntimeFlags", () => {
         Effect.provide(
           ConfigProvider.layer(
             ConfigProvider.fromUnknown({
-              KILO_PURE: "true",
-              KILO_DISABLE_DEFAULT_PLUGINS: "true",
-              KILO_DISABLE_EXTERNAL_SKILLS: "true",
-              KILO_DISABLE_LSP_DOWNLOAD: "true",
-              KILO_SKIP_MIGRATIONS: "true",
-              KILO_EXPERIMENTAL: "true",
-              KILO_ENABLE_EXA: "true",
-              KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "1234",
-              KILO_CLIENT: "desktop",
+              ACCURECODE_PURE: "true",
+              ACCURECODE_DISABLE_DEFAULT_PLUGINS: "true",
+              ACCURECODE_DISABLE_EXTERNAL_SKILLS: "true",
+              ACCURECODE_DISABLE_LSP_DOWNLOAD: "true",
+              ACCURECODE_SKIP_MIGRATIONS: "true",
+              ACCURECODE_EXPERIMENTAL: "true",
+              ACCURECODE_ENABLE_EXA: "true",
+              ACCURECODE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "1234",
+              ACCURECODE_CLIENT: "desktop",
             }),
           ),
         ),
@@ -354,17 +356,17 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("disableClaudeCodeSkills reads KILO_DISABLE_CLAUDE_CODE_SKILLS", () =>
+  it.effect("disableClaudeCodeSkills reads ACCURECODE_DISABLE_CLAUDE_CODE_SKILLS", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_DISABLE_CLAUDE_CODE_SKILLS: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ ACCURECODE_DISABLE_CLAUDE_CODE_SKILLS: "true" })))
 
       expect(flags.disableClaudeCodeSkills).toBe(true)
     }),
   )
 
-  it.effect("disableClaudeCodeSkills inherits KILO_DISABLE_CLAUDE_CODE", () =>
+  it.effect("disableClaudeCodeSkills inherits ACCURECODE_DISABLE_CLAUDE_CODE", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_DISABLE_CLAUDE_CODE: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ ACCURECODE_DISABLE_CLAUDE_CODE: "true" })))
 
       expect(flags.disableClaudeCodeSkills).toBe(true)
     }),

@@ -1,9 +1,9 @@
-package ai.kilocode.rpc.dto
+package ai.accurecode.rpc.dto
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class KiloAppStatusDto {
+enum class AccureAppStatusDto {
     DISCONNECTED,
     CONNECTING,
     LOADING,
@@ -95,8 +95,8 @@ data class DeviceAuthDto(
 )
 
 @Serializable
-data class KiloAppStateDto(
-    val status: KiloAppStatusDto,
+data class AccureAppStateDto(
+    val status: AccureAppStatusDto,
     val error: String? = null,
     val errors: List<LoadErrorDto> = emptyList(),
     val progress: LoadProgressDto? = null,

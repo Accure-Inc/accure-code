@@ -36,8 +36,12 @@ export const CustomProviderConfigSchema = z
           .url()
           .refine((value) => value.startsWith("http://") || value.startsWith("https://"), {
             message: INVALID_BASE_URL,
-          }),
+          })
+          .optional(),
         headers: z.record(z.string().trim().min(1), z.string().trim().min(1)).optional(),
+        accessKeyId: z.string().trim().optional(),
+        secretAccessKey: z.string().trim().optional(),
+        region: z.string().trim().optional(),
       })
       .strict(),
     models: z
@@ -54,14 +58,26 @@ export const CustomProviderConfigSchema = z
       .refine((value) => Object.keys(value).length > 0, "At least one model is required"),
   })
   .strict()
+  .refine((data) => {
+    if (data.npm !== "@ai-sdk/amazon-bedrock" && !data.options.baseURL) {
+      return false
+    }
+    return true
+  }, {
+    message: "Base URL is required",
+    path: ["options", "baseURL"],
+  })
 
 export type SanitizedProviderConfig = {
   npm: CustomProviderPackage
   name: string
   env?: string[]
   options: {
-    baseURL: string
+    baseURL?: string
     headers?: Record<string, string>
+    accessKeyId?: string
+    secretAccessKey?: string
+    region?: string
   }
   models: Record<string, { name: string; reasoning?: true; variants?: Record<string, VariantConfig> }>
 }
@@ -125,7 +141,10 @@ export function normalizeCustomProviderConfig(
     name: config.name.trim(),
     ...(config.env ? { env: config.env.map((item) => item.trim()) } : {}),
     options: {
-      baseURL: config.options.baseURL.trim(),
+      ...(config.options.baseURL ? { baseURL: config.options.baseURL.trim() } : {}),
+      ...(config.options.accessKeyId ? { accessKeyId: config.options.accessKeyId.trim() } : {}),
+      ...(config.options.secretAccessKey ? { secretAccessKey: config.options.secretAccessKey.trim() } : {}),
+      ...(config.options.region ? { region: config.options.region.trim() } : {}),
       ...(headers && Object.keys(headers).length > 0 ? { headers } : {}),
     },
     models: Object.fromEntries(

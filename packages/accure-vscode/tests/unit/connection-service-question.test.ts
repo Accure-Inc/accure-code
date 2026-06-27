@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test"
-import { KiloConnectionService } from "../../src/services/cli-backend/connection-service"
+import { AccureConnectionService } from "../../src/services/cli-backend/connection-service"
 
-describe("KiloConnectionService question routing", () => {
+describe("AccureConnectionService question routing", () => {
   test("ignores stale NotFoundError rejects while draining questions", async () => {
-    const service = new KiloConnectionService({} as any)
+    const service = new AccureConnectionService({} as any)
     const client = {
       permission: {
         list: async () => ({ data: [] }),
@@ -27,7 +27,7 @@ describe("KiloConnectionService question routing", () => {
   })
 
   test("records and clears request origins from SSE events", () => {
-    const service = new KiloConnectionService({} as any)
+    const service = new AccureConnectionService({} as any)
     const handler = service as unknown as {
       handleQuestionEvent(event: unknown, directory?: string): void
     }
@@ -56,7 +56,7 @@ describe("KiloConnectionService question routing", () => {
   })
 
   test("prunes stale origins only for successfully scanned directories", () => {
-    const service = new KiloConnectionService({} as any)
+    const service = new AccureConnectionService({} as any)
     service.recordQuestionDirectory("que_active", "/tmp/scanned")
     service.recordQuestionDirectory("que_stale", "/tmp/scanned")
     service.recordQuestionDirectory("que_unknown", "/tmp/failed")

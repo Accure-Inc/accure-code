@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js"
 import { Show } from "solid-js"
-import { ConfigCountTag, ConfigTag, SourceBadge as UiSourceBadge } from "@kilocode/accure-web-ui/console"
+import { ConfigCountTag, ConfigTag, SourceBadge as UiSourceBadge } from "@accurecode/accure-web-ui/console"
 
 export { ConfigCountTag, ConfigTag }
 

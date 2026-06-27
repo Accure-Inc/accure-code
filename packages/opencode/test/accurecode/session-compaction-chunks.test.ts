@@ -13,8 +13,8 @@ import { Plugin } from "../../src/plugin"
 import { provideTestInstance } from "../fixture/fixture"
 import { ModelID, ProviderID } from "../../src/provider/schema"
 import { Snapshot } from "../../src/snapshot"
-import { KiloCompactionChunks } from "../../src/kilocode/session/compaction-chunks"
-import { KiloSessionCompaction } from "../../src/kilocode/session/compaction"
+import { AccureCompactionChunks } from "../../src/accurecode/session/compaction-chunks"
+import { AccureSessionCompaction } from "../../src/accurecode/session/compaction"
 import { LLM } from "../../src/session/llm"
 import { MessageV2 } from "../../src/session/message-v2"
 import { Reference } from "../../src/reference/reference"
@@ -252,7 +252,7 @@ afterEach(() => {
   mock.restore()
 })
 
-describe("KiloCompactionChunks", () => {
+describe("AccureCompactionChunks", () => {
   test("splits oversized history into chronological chunks", async () => {
     const model = ProviderTest.model({ providerID, id: modelID, limit: { context: 7_000, output: 1_000 } })
     const sessionID = SessionID.make("ses_chunks_split")
@@ -276,7 +276,7 @@ describe("KiloCompactionChunks", () => {
       ],
     }))
 
-    const chunks = await Effect.runPromise(KiloCompactionChunks.split({ messages, model, size: 2_000 }))
+    const chunks = await Effect.runPromise(AccureCompactionChunks.split({ messages, model, size: 2_000 }))
 
     expect(chunks.length).toBeGreaterThan(1)
     expect(chunks.flatMap((chunk) => chunk.messages.map((msg) => msg.info.id))).toEqual(
@@ -289,8 +289,8 @@ describe("KiloCompactionChunks", () => {
     const cfg = {} as Config.Info
     const outputTokenMax = 512
 
-    expect(KiloCompactionChunks.needed({ cfg, model, tokens: 5_000, outputTokenMax })).toBe(false)
-    expect(KiloCompactionChunks.budget({ cfg, model, outputTokenMax })).toBe(5_692)
+    expect(AccureCompactionChunks.needed({ cfg, model, tokens: 5_000, outputTokenMax })).toBe(false)
+    expect(AccureCompactionChunks.budget({ cfg, model, outputTokenMax })).toBe(5_692)
   })
 
   test("falls back to chunk workers after the first compaction overflows", async () => {
@@ -304,7 +304,7 @@ describe("KiloCompactionChunks", () => {
         const second = await user(session.id, "second " + "c".repeat(10_000))
         await assistant(session.id, second.id, tmp.path, "reply " + "d".repeat(10_000))
         await Effect.runPromise(
-          KiloSessionCompaction.create({
+          AccureSessionCompaction.create({
             session: store,
             sessionID: session.id,
             agent: "build",
@@ -358,7 +358,7 @@ describe("KiloCompactionChunks", () => {
         const second = await user(session.id, "second " + "c".repeat(10_000))
         await assistant(session.id, second.id, tmp.path, "reply " + "d".repeat(10_000))
         await Effect.runPromise(
-          KiloSessionCompaction.create({
+          AccureSessionCompaction.create({
             session: store,
             sessionID: session.id,
             agent: "build",
@@ -402,7 +402,7 @@ describe("KiloCompactionChunks", () => {
         const first = await user(session.id, "first " + "a".repeat(20_000))
         await assistant(session.id, first.id, tmp.path, "reply " + "b".repeat(20_000))
         await Effect.runPromise(
-          KiloSessionCompaction.create({
+          AccureSessionCompaction.create({
             session: store,
             sessionID: session.id,
             agent: "build",
@@ -453,7 +453,7 @@ describe("KiloCompactionChunks", () => {
         const session = await svc.create({})
         const first = await user(session.id, "single huge request " + "a".repeat(80_000))
         await Effect.runPromise(
-          KiloSessionCompaction.create({
+          AccureSessionCompaction.create({
             session: store,
             sessionID: session.id,
             agent: "build",
@@ -499,7 +499,7 @@ describe("KiloCompactionChunks", () => {
         const first = await user(session.id, "first " + "a".repeat(80_000))
         await assistant(session.id, first.id, tmp.path, "reply " + "b".repeat(80_000))
         await Effect.runPromise(
-          KiloSessionCompaction.create({
+          AccureSessionCompaction.create({
             session: store,
             sessionID: session.id,
             agent: "build",
@@ -548,7 +548,7 @@ describe("KiloCompactionChunks", () => {
         await assistant(session.id, old.id, tmp.path, "old reply")
         const large = await user(session.id, "large replay " + "x".repeat(40_000))
         await Effect.runPromise(
-          KiloSessionCompaction.create({
+          AccureSessionCompaction.create({
             session: store,
             sessionID: session.id,
             agent: "build",

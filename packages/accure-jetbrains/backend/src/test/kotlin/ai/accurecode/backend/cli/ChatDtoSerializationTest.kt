@@ -1,17 +1,17 @@
-package ai.kilocode.backend.cli
+package ai.accurecode.backend.cli
 
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageErrorDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PartTimeDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.PromptDto
-import ai.kilocode.rpc.dto.PromptPartDto
-import ai.kilocode.rpc.dto.QuestionInfoDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageErrorDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PartTimeDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.PromptDto
+import ai.accurecode.rpc.dto.PromptPartDto
+import ai.accurecode.rpc.dto.QuestionInfoDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionStatusDto
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -240,7 +240,7 @@ class ChatDtoSerializationTest {
                 PromptPartDto("text", "hello"),
                 PromptPartDto(type = "file", mime = "image/png", url = "file:///tmp/a.png", filename = "a.png"),
             ),
-            providerID = "kilo",
+            providerID = "accure",
             modelID = "gpt-5",
             agent = "code",
             variant = "medium",

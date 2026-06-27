@@ -1,4 +1,4 @@
-import * as KiloServer from "@/kilocode/server/server" // kilocode_change
+import * as AccureServer from "@/accurecode/server/server" // accurecode_change
 import { Context } from "effect"
 
 const opencodeOrigin = /^https:\/\/([a-z0-9-]+\.)*opencode\.ai$/
@@ -17,9 +17,9 @@ export function isAllowedCorsOrigin(input: string | undefined, opts?: CorsOption
   if (input === "tauri://localhost" || input === "http://tauri.localhost" || input === "https://tauri.localhost")
     return true
   if (opencodeOrigin.test(input)) return true
-  // kilocode_change start
-  if (KiloServer.corsOrigin(input)) return true
-  // kilocode_change end
+  // accurecode_change start
+  if (AccureServer.corsOrigin(input)) return true
+  // accurecode_change end
   return opts?.cors?.includes(input) ?? false
 }
 

@@ -1,6 +1,6 @@
-package ai.kilocode.backend.telemetry
+package ai.accurecode.backend.telemetry
 
-import ai.kilocode.backend.cli.KiloBackendHttpClients
+import ai.accurecode.backend.cli.AccureBackendHttpClients
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -9,15 +9,15 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import java.util.concurrent.TimeUnit
 
-class KiloBackendTelemetryTest {
+class AccureBackendTelemetryTest {
     @Test
     fun `capture posts to telemetry endpoint with auth`() = runBlocking {
         val server = MockWebServer()
         server.enqueue(MockResponse().setBody("{}"))
         server.start()
-        val http = KiloBackendHttpClients.api("secret")
+        val http = AccureBackendHttpClients.api("secret")
         try {
-            KiloBackendTelemetry().capture(http, server.port, "Test Event", mapOf("source" to "test"))
+            AccureBackendTelemetry().capture(http, server.port, "Test Event", mapOf("source" to "test"))
 
             val req = server.takeRequest()
             assertEquals("/telemetry/capture", req.path)
@@ -29,7 +29,7 @@ class KiloBackendTelemetryTest {
             assertTrue(!body.contains("appName"))
             assertTrue(body.contains("source"))
         } finally {
-            KiloBackendHttpClients.shutdown(http)
+            AccureBackendHttpClients.shutdown(http)
             server.shutdown()
         }
     }
@@ -39,22 +39,22 @@ class KiloBackendTelemetryTest {
         val server = MockWebServer()
         server.enqueue(MockResponse().setBody("{}"))
         server.start()
-        val http = KiloBackendHttpClients.api("secret")
+        val http = AccureBackendHttpClients.api("secret")
         try {
-            KiloBackendTelemetry().setEnabled(http, server.port, true)
+            AccureBackendTelemetry().setEnabled(http, server.port, true)
 
             val req = server.takeRequest()
             assertEquals("/telemetry/setEnabled", req.path)
             assertTrue(req.body.readUtf8().contains("enabled"))
         } finally {
-            KiloBackendHttpClients.shutdown(http)
+            AccureBackendHttpClients.shutdown(http)
             server.shutdown()
         }
     }
 
     @Test
     fun `capture failure does not throw`() = runBlocking {
-        KiloBackendTelemetry().capture(null, 0, "Test Event", emptyMap())
+        AccureBackendTelemetry().capture(null, 0, "Test Event", emptyMap())
     }
 
     @Test
@@ -62,14 +62,14 @@ class KiloBackendTelemetryTest {
         System.setProperty("idea.plugin.in.sandbox.mode", "true")
         val server = MockWebServer()
         server.start()
-        val http = KiloBackendHttpClients.api("secret")
+        val http = AccureBackendHttpClients.api("secret")
         try {
-            KiloBackendTelemetry().capture(http, server.port, "Test Event", emptyMap())
+            AccureBackendTelemetry().capture(http, server.port, "Test Event", emptyMap())
 
             assertEquals(null, server.takeRequest(100, TimeUnit.MILLISECONDS))
         } finally {
             System.clearProperty("idea.plugin.in.sandbox.mode")
-            KiloBackendHttpClients.shutdown(http)
+            AccureBackendHttpClients.shutdown(http)
             server.shutdown()
         }
     }

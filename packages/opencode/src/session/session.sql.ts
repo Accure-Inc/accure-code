@@ -32,7 +32,7 @@ export const SessionTable = sqliteTable(
     summary_additions: integer(),
     summary_deletions: integer(),
     summary_files: integer(),
-    summary_diffs: text({ mode: "json" }).$type<Snapshot.SummaryFileDiff[]>(), // kilocode_change
+    summary_diffs: text({ mode: "json" }).$type<Snapshot.SummaryFileDiff[]>(), // accurecode_change
     cost: real().notNull().default(0),
     tokens_input: integer().notNull().default(0),
     tokens_output: integer().notNull().default(0),

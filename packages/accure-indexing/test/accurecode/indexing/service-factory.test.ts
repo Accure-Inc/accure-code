@@ -195,12 +195,12 @@ describe("CodeIndexServiceFactory", () => {
     expect(store.vectorSize).toBe(1024)
   })
 
-  test("creates Kilo embedder with Cloud-provided model", async () => {
+  test("creates Accure embedder with Cloud-provided model", async () => {
     const factory = createFactory({
-      embedderProvider: "kilo",
+      embedderProvider: "accure",
       openAiKey: undefined,
-      kiloApiKey: "kilo-token",
-      kiloOrganizationId: "org_123",
+      accureApiKey: "accure-token",
+      accureOrganizationId: "org_123",
       modelId: "mistralai/mistral-embed-2312",
       modelDimension: 1024,
     })
@@ -213,7 +213,7 @@ describe("CodeIndexServiceFactory", () => {
     const embedder = factory.createEmbedder()
     await embedder.createEmbeddings(["hello"])
 
-    expect(embedder.embedderInfo).toEqual({ name: "kilo" })
+    expect(embedder.embedderInfo).toEqual({ name: "accure" })
     expect(mockEmbeddingsCreate).toHaveBeenCalledWith({
       input: ["hello"],
       model: "mistralai/mistral-embed-2312",

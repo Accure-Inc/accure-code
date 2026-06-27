@@ -1,23 +1,23 @@
-package ai.kilocode.client.testing
+package ai.accurecode.client.testing
 
-import ai.kilocode.rpc.KiloMigrationRpcApi
-import ai.kilocode.rpc.dto.LegacyCleanupReportDto
-import ai.kilocode.rpc.dto.LegacyCleanupTargetsDto
-import ai.kilocode.rpc.dto.LegacyMigrationDetectionDto
-import ai.kilocode.rpc.dto.LegacyMigrationEventDto
-import ai.kilocode.rpc.dto.LegacyMigrationSelectionsDto
-import ai.kilocode.rpc.dto.LegacyMigrationStatusDto
+import ai.accurecode.rpc.AccureMigrationRpcApi
+import ai.accurecode.rpc.dto.LegacyCleanupReportDto
+import ai.accurecode.rpc.dto.LegacyCleanupTargetsDto
+import ai.accurecode.rpc.dto.LegacyMigrationDetectionDto
+import ai.accurecode.rpc.dto.LegacyMigrationEventDto
+import ai.accurecode.rpc.dto.LegacyMigrationSelectionsDto
+import ai.accurecode.rpc.dto.LegacyMigrationStatusDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 /**
- * Fake [KiloMigrationRpcApi] for testing.
+ * Fake [AccureMigrationRpcApi] for testing.
  *
  * Supply [statusResult] and [detectResult] before calling check.
  * Push events via [events] for migration flows.
  * All suspend methods assert they are NOT called on the EDT.
  */
-class FakeMigrationRpcApi : KiloMigrationRpcApi {
+class FakeMigrationRpcApi : AccureMigrationRpcApi {
 
     var statusResult: LegacyMigrationStatusDto? = null
     var detectResult: LegacyMigrationDetectionDto = emptyDetection()

@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.model
+package ai.accurecode.client.session.model
 
 /** Single source of truth for what a session is doing right now. */
 sealed class SessionState {

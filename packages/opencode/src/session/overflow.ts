@@ -2,7 +2,7 @@ import type { Config } from "@/config/config"
 import type { Provider } from "@/provider/provider"
 import { ProviderTransform } from "@/provider/transform"
 import type { MessageV2 } from "./message-v2"
-import { KiloSessionOverflow } from "@/kilocode/session/overflow" // kilocode_change
+import { AccureSessionOverflow } from "@/accurecode/session/overflow" // accurecode_change
 
 const COMPACTION_BUFFER = 20_000
 
@@ -27,9 +27,9 @@ export function isOverflow(input: {
   if (input.cfg.compaction?.auto === false) return false
   if (input.model.limit.context === 0) return false
 
-  const count = KiloSessionOverflow.count(input.tokens) // kilocode_change
-  // kilocode_change start
-  const cap = KiloSessionOverflow.limit({ cfg: input.cfg, model: input.model, usable: usable(input) })
+  const count = AccureSessionOverflow.count(input.tokens) // accurecode_change
+  // accurecode_change start
+  const cap = AccureSessionOverflow.limit({ cfg: input.cfg, model: input.model, usable: usable(input) })
   return count >= cap
-  // kilocode_change end
+  // accurecode_change end
 }

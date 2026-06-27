@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 //
 // Custom test runner that executes each test file in its own isolated process.
 // Prevents cross-contamination between test files by ensuring separate PIDs,
@@ -54,7 +54,7 @@ const ci = argv.includes("--ci")
 const bail = argv.includes("--bail")
 const verbose = argv.includes("--verbose")
 // Cap concurrency at 4 even on bigger runners: the bottleneck is shared
-// resources (ports, global filesystem like ~/.local/share/kilo), not CPU.
+// resources (ports, global filesystem like ~/.local/share/accure), not CPU.
 // Eight parallel processes was triggering port/FS races, not going faster.
 const concurrency = opt("concurrency", Math.min(4, os.cpus().length))
 const timeout = opt("timeout", 60000)
@@ -94,7 +94,7 @@ export const skipped = new Set([
 
 const matched =
   patterns.length > 0 ? all.filter((f) => patterns.some((p) => f.includes(p) || path.join("test", f).includes(p))) : all
-const files = patterns.length > 0 ? matched : matched.filter((f) => !skipped.has(f)) // kilocode_change
+const files = patterns.length > 0 ? matched : matched.filter((f) => !skipped.has(f)) // accurecode_change
 
 if (files.length === 0) {
   console.log("No test files found")

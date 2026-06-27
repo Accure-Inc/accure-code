@@ -57,10 +57,10 @@ export interface ExecBufferResult {
 /**
  * Fixed SSH command injected by {@link nonInteractiveEnv} when the user has
  * not already configured their own. Exported so callers can check whether a
- * `GIT_SSH_COMMAND` originated from Kilo (safe) or was inherited from the
+ * `GIT_SSH_COMMAND` originated from Accure (safe) or was inherited from the
  * parent process (untrusted).
  */
-export const KILO_NON_INTERACTIVE_SSH_COMMAND = "ssh -o BatchMode=yes"
+export const ACCURECODE_NON_INTERACTIVE_SSH_COMMAND = "ssh -o BatchMode=yes"
 
 /**
  * Build environment variables that prevent git and SSH from opening interactive
@@ -77,18 +77,18 @@ export function nonInteractiveEnv(): NodeJS.ProcessEnv {
     GIT_TERMINAL_PROMPT: "0",
   }
   if (!process.env.GIT_SSH_COMMAND) {
-    env.GIT_SSH_COMMAND = KILO_NON_INTERACTIVE_SSH_COMMAND
+    env.GIT_SSH_COMMAND = ACCURECODE_NON_INTERACTIVE_SSH_COMMAND
   }
   return env
 }
 
 /**
- * True when `env.GIT_SSH_COMMAND` is the fixed value Kilo sets, rather than
+ * True when `env.GIT_SSH_COMMAND` is the fixed value Accure sets, rather than
  * an inherited one from the parent process. Use this to decide whether it's
  * safe to pass `allowUnsafeSshCommand: true` to simple-git.
  */
-export function isKiloOwnedSshCommand(env: NodeJS.ProcessEnv): boolean {
-  return env.GIT_SSH_COMMAND === KILO_NON_INTERACTIVE_SSH_COMMAND
+export function isAccureOwnedSshCommand(env: NodeJS.ProcessEnv): boolean {
+  return env.GIT_SSH_COMMAND === ACCURECODE_NON_INTERACTIVE_SSH_COMMAND
 }
 
 export class GitOps {
@@ -362,7 +362,7 @@ export class GitOps {
    * merge-base with `baseBranch`. Optionally scoped to `selectedFiles`.
    */
   async buildWorktreePatch(sourcePath: string, baseBranch: string, selectedFiles?: string[]): Promise<string> {
-    const tmp = await fs.mkdtemp(nodePath.join(os.tmpdir(), "kilo-apply-"))
+    const tmp = await fs.mkdtemp(nodePath.join(os.tmpdir(), "accure-apply-"))
     const index = nodePath.join(tmp, "index")
     const env = { ...process.env, GIT_INDEX_FILE: index }
     const files = (selectedFiles ?? [])

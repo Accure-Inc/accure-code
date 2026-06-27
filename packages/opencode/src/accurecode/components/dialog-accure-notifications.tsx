@@ -1,7 +1,7 @@
 /**
- * Kilo Notifications Dialog
+ * Accure Notifications Dialog
  *
- * Displays all notifications from Kilo API in a scrollable dialog.
+ * Displays all notifications from Accure API in a scrollable dialog.
  * Each notification shows title, message, and clickable action link.
  */
 
@@ -11,13 +11,13 @@ import { useTheme } from "@tui/context/theme"
 import { useDialog } from "@tui/ui/dialog"
 import { Link } from "@tui/ui/link"
 import { TextAttributes } from "@opentui/core"
-import type { KilocodeNotification } from "@kilocode/accure-gateway"
+import type { AccurecodeNotification } from "@accurecode/accure-gateway"
 
-interface DialogKiloNotificationsProps {
-  notifications: KilocodeNotification[]
+interface DialogAccureNotificationsProps {
+  notifications: AccurecodeNotification[]
 }
 
-export function DialogKiloNotifications(props: DialogKiloNotificationsProps) {
+export function DialogAccureNotifications(props: DialogAccureNotificationsProps) {
   const { theme } = useTheme()
   const dialog = useDialog()
   const [closeHover, setCloseHover] = createSignal(false)

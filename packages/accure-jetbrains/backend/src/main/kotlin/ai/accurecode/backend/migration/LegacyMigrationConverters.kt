@@ -1,4 +1,4 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
@@ -8,10 +8,10 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
-import ai.kilocode.backend.migration.LegacyMigrationJson.json
-import ai.kilocode.backend.migration.LegacyMigrationJson.obj
-import ai.kilocode.backend.migration.LegacyMigrationJson.str
-import ai.kilocode.backend.migration.LegacyMigrationJson.arr
+import ai.accurecode.backend.migration.LegacyMigrationJson.json
+import ai.accurecode.backend.migration.LegacyMigrationJson.obj
+import ai.accurecode.backend.migration.LegacyMigrationJson.str
+import ai.accurecode.backend.migration.LegacyMigrationJson.arr
 
 /**
  * Pure conversion functions: parse legacy source data → migration result models.
@@ -154,9 +154,9 @@ object LegacyMigrationConverters {
             ).takeIf { it.enableAutoTrigger != null || it.enableSmartInlineTaskKeybinding != null || it.enableChatAutocomplete != null }
         }
         return LegacySettings(
-            autoApprovalEnabled = globalState("kilo-code.autoApprovalEnabled")?.jsonPrimitive?.content?.toBooleanStrictOrNull(),
-            allowedCommands = globalState("kilo-code.allowedCommands")?.let { parseBoolOrList(it) },
-            deniedCommands = globalState("kilo-code.deniedCommands")?.let { parseBoolOrList(it) },
+            autoApprovalEnabled = globalState("accure-code.autoApprovalEnabled")?.jsonPrimitive?.content?.toBooleanStrictOrNull(),
+            allowedCommands = globalState("accure-code.allowedCommands")?.let { parseBoolOrList(it) },
+            deniedCommands = globalState("accure-code.deniedCommands")?.let { parseBoolOrList(it) },
             alwaysAllowReadOnly = globalState("alwaysAllowReadOnly")?.jsonPrimitive?.content?.toBooleanStrictOrNull(),
             alwaysAllowReadOnlyOutsideWorkspace = globalState("alwaysAllowReadOnlyOutsideWorkspace")?.jsonPrimitive?.content?.toBooleanStrictOrNull(),
             alwaysAllowWrite = globalState("alwaysAllowWrite")?.jsonPrimitive?.content?.toBooleanStrictOrNull(),
@@ -164,7 +164,7 @@ object LegacyMigrationConverters {
             alwaysAllowMcp = globalState("alwaysAllowMcp")?.jsonPrimitive?.content?.toBooleanStrictOrNull(),
             alwaysAllowModeSwitch = globalState("alwaysAllowModeSwitch")?.jsonPrimitive?.content?.toBooleanStrictOrNull(),
             alwaysAllowSubtasks = globalState("alwaysAllowSubtasks")?.jsonPrimitive?.content?.toBooleanStrictOrNull(),
-            language = globalState("kilo-code.language")?.jsonPrimitive?.content,
+            language = globalState("accure-code.language")?.jsonPrimitive?.content,
             autocomplete = autocomplete,
         )
     }
@@ -230,8 +230,8 @@ object LegacyMigrationConverters {
         val apiKey = settings[mapping.key]?.jsonPrimitive?.content?.takeIf { it.isNotBlank() }
             ?: return ProviderConversionResult(null, null, MigrationItemStatus.warning, "No API key found in profile")
 
-        // Kilo gateway — write OAuth-shaped auth with 1-year expiry
-        val auth = if (mapping.id == "kilo") {
+        // Accure gateway — write OAuth-shaped auth with 1-year expiry
+        val auth = if (mapping.id == "accure") {
             val org = mapping.organizationIdField?.let { settings[it]?.jsonPrimitive?.content }
             buildJsonObject {
                 put("type", "oauth")
@@ -605,42 +605,42 @@ object LegacyMigrationConverters {
     val NATIVE_MODE_DEFAULTS: Map<String, NativeModeDefaults> = mapOf(
         "architect" to NativeModeDefaults(
             name = "Architect",
-            roleDefinition = "You are Kilo Code, an experienced technical leader who is inquisitive and an excellent planner. Your goal is to gather information and get context to create a detailed plan for accomplishing the user's task, which the user will review and approve before they switch into another mode to implement the solution.",
+            roleDefinition = "You are Accure Code, an experienced technical leader who is inquisitive and an excellent planner. Your goal is to gather information and get context to create a detailed plan for accomplishing the user's task, which the user will review and approve before they switch into another mode to implement the solution.",
             whenToUse = "Use this mode when you need to plan, design, or strategize before implementation.",
             description = "Plan and design before implementation",
             groups = listOf("read", Pair("edit", mapOf("fileRegex" to "\\.md$", "description" to "Markdown files only")), "browser", "mcp"),
         ),
         "code" to NativeModeDefaults(
             name = "Code",
-            roleDefinition = "You are Kilo Code, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.",
+            roleDefinition = "You are Accure Code, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.",
             whenToUse = "Use this mode when you need to write, modify, or refactor code.",
             description = "Write, modify, and refactor code",
             groups = listOf("read", "edit", "browser", "command", "mcp"),
         ),
         "ask" to NativeModeDefaults(
             name = "Ask",
-            roleDefinition = "You are Kilo Code, a knowledgeable technical assistant focused on answering questions and providing information about software development, technology, and related topics.",
+            roleDefinition = "You are Accure Code, a knowledgeable technical assistant focused on answering questions and providing information about software development, technology, and related topics.",
             whenToUse = "Use this mode when you need explanations, documentation, or answers to technical questions.",
             description = "Get answers and explanations",
             groups = listOf("read", "browser", "mcp"),
         ),
         "debug" to NativeModeDefaults(
             name = "Debug",
-            roleDefinition = "You are Kilo Code, an expert software debugger specializing in systematic problem diagnosis and resolution.",
+            roleDefinition = "You are Accure Code, an expert software debugger specializing in systematic problem diagnosis and resolution.",
             whenToUse = "Use this mode when you're troubleshooting issues, investigating errors, or diagnosing problems.",
             description = "Diagnose and fix software issues",
             groups = listOf("read", "edit", "browser", "command", "mcp"),
         ),
         "orchestrator" to NativeModeDefaults(
             name = "Orchestrator",
-            roleDefinition = "You are Kilo Code, a strategic workflow orchestrator who coordinates complex tasks by delegating them to appropriate specialized modes.",
+            roleDefinition = "You are Accure Code, a strategic workflow orchestrator who coordinates complex tasks by delegating them to appropriate specialized modes.",
             whenToUse = "Use this mode for complex, multi-step projects that require coordination across different specialties.",
             description = "Coordinate tasks across multiple modes",
             groups = emptyList(),
         ),
         "review" to NativeModeDefaults(
             name = "Review",
-            roleDefinition = "You are Kilo Code, an expert code reviewer with deep expertise in software engineering best practices, security vulnerabilities, performance optimization, and code quality.",
+            roleDefinition = "You are Accure Code, an expert code reviewer with deep expertise in software engineering best practices, security vulnerabilities, performance optimization, and code quality.",
             whenToUse = "Use this mode when you need to review code changes.",
             description = "Review code changes locally",
             groups = listOf("read", "browser", "mcp", "command"),

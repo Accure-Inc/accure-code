@@ -1,10 +1,10 @@
-package ai.kilocode.client.settings.models
+package ai.accurecode.client.settings.models
 
-import ai.kilocode.rpc.dto.AgentConfigDto
-import ai.kilocode.rpc.dto.AgentDto
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.LoadErrorDto
-import ai.kilocode.rpc.dto.ProvidersDto
+import ai.accurecode.rpc.dto.AgentConfigDto
+import ai.accurecode.rpc.dto.AgentDto
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.LoadErrorDto
+import ai.accurecode.rpc.dto.ProvidersDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -16,14 +16,14 @@ class ModelsSettingsStateTest {
     @Test
     fun `default model patch set and clear`() {
         val from = ModelsDraft(model = null)
-        val set = ModelsDraft(model = "kilo/gpt-5")
-        assertEquals("kilo/gpt-5", patch(from, set).values["model"])
+        val set = ModelsDraft(model = "accure/gpt-5")
+        assertEquals("accure/gpt-5", patch(from, set).values["model"])
         assertNull(patch(set, from).values["model"])
     }
 
     @Test
     fun `subagent clear clears variant`() {
-        val from = ModelsDraft(subagent = "kilo/gpt-5", variant = "high")
+        val from = ModelsDraft(subagent = "accure/gpt-5", variant = "high")
         val to = ModelsDraft(subagent = null, variant = null)
         val patch = patch(from, to)
         assertNull(patch.values["subagent_model"])
@@ -42,18 +42,18 @@ class ModelsSettingsStateTest {
     fun `draft reads config agent values`() {
         val agents = listOf(AgentDto(name = "ask", displayName = "Ask", mode = "ask"))
         val config = ConfigDto(
-            model = "kilo/gpt-5",
-            smallModel = "kilo/auto-small",
+            model = "accure/gpt-5",
+            smallModel = "accure/auto-small",
             subagentModel = "openai/gpt",
             subagentVariant = "high",
-            agent = mapOf("ask" to AgentConfigDto(model = "kilo/gpt-5")),
+            agent = mapOf("ask" to AgentConfigDto(model = "accure/gpt-5")),
         )
         val draft = modelsDraft(config, agents)
-        assertEquals("kilo/gpt-5", draft.model)
-        assertEquals("kilo/auto-small", draft.small)
+        assertEquals("accure/gpt-5", draft.model)
+        assertEquals("accure/auto-small", draft.small)
         assertEquals("openai/gpt", draft.subagent)
         assertEquals("high", draft.variant)
-        assertEquals("kilo/gpt-5", draft.agents["ask"])
+        assertEquals("accure/gpt-5", draft.agents["ask"])
     }
 
     @Test
@@ -135,7 +135,7 @@ class ModelsSettingsStateTest {
 
     @Test
     fun `saved match requires saved top level values`() {
-        val draft = ModelsDraft(model = "kilo/gpt-5", small = "kilo/auto-small")
+        val draft = ModelsDraft(model = "accure/gpt-5", small = "accure/auto-small")
 
         assertTrue(savedMatches(draft, draft))
         assertFalse(savedMatches(draft.copy(model = "openai/gpt"), draft))
@@ -143,8 +143,8 @@ class ModelsSettingsStateTest {
 
     @Test
     fun `saved match compares known pending agent values`() {
-        val draft = ModelsDraft(agents = mapOf("ask" to "kilo/gpt-5", "code" to null))
-        val base = ModelsDraft(agents = mapOf("ask" to "kilo/gpt-5", "code" to null, "plan" to "openai/gpt"))
+        val draft = ModelsDraft(agents = mapOf("ask" to "accure/gpt-5", "code" to null))
+        val base = ModelsDraft(agents = mapOf("ask" to "accure/gpt-5", "code" to null, "plan" to "openai/gpt"))
 
         assertTrue(savedMatches(base, draft))
         assertFalse(savedMatches(base.copy(agents = base.agents + ("ask" to "openai/gpt")), draft))

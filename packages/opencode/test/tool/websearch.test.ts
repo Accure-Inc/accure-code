@@ -14,17 +14,17 @@ describe("websearch provider", () => {
   })
 
   test("supports an operational override", () => {
-    const original = process.env.KILO_WEBSEARCH_PROVIDER
+    const original = process.env.ACCURECODE_WEBSEARCH_PROVIDER
 
     try {
-      process.env.KILO_WEBSEARCH_PROVIDER = "parallel"
+      process.env.ACCURECODE_WEBSEARCH_PROVIDER = "parallel"
       expect(selectWebSearchProvider(SESSION_ID)).toBe("parallel")
 
-      process.env.KILO_WEBSEARCH_PROVIDER = "exa"
+      process.env.ACCURECODE_WEBSEARCH_PROVIDER = "exa"
       expect(selectWebSearchProvider(SESSION_ID)).toBe("exa")
     } finally {
-      if (original === undefined) delete process.env.KILO_WEBSEARCH_PROVIDER
-      else process.env.KILO_WEBSEARCH_PROVIDER = original
+      if (original === undefined) delete process.env.ACCURECODE_WEBSEARCH_PROVIDER
+      else process.env.ACCURECODE_WEBSEARCH_PROVIDER = original
     }
   })
 
@@ -36,10 +36,10 @@ describe("websearch provider", () => {
     expect(selectWebSearchProvider(SESSION_ID, { exa: false, parallel: true })).toBe("parallel")
   })
 
-  test("is only enabled for kilo or explicit websearch provider flags", () => {
-    // kilocode_change
-    expect(webSearchEnabled(ProviderID.kilo, { exa: false, parallel: false })).toBe(true) // kilocode_change
-    expect(webSearchEnabled(ProviderID.opencode, { exa: false, parallel: false })).toBe(false) // kilocode_change
+  test("is only enabled for accure or explicit websearch provider flags", () => {
+    // accurecode_change
+    expect(webSearchEnabled(ProviderID.accure, { exa: false, parallel: false })).toBe(true) // accurecode_change
+    expect(webSearchEnabled(ProviderID.opencode, { exa: false, parallel: false })).toBe(false) // accurecode_change
     expect(webSearchEnabled(ProviderID.openai, { exa: false, parallel: false })).toBe(false)
     expect(webSearchEnabled(ProviderID.openai, { exa: true, parallel: false })).toBe(true)
     expect(webSearchEnabled(ProviderID.openai, { exa: false, parallel: true })).toBe(true)

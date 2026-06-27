@@ -1,8 +1,8 @@
-import type { KiloConnectionService } from "../services/cli-backend/connection-service"
-import { getErrorMessage } from "../kilo-provider-utils"
+import type { AccureConnectionService } from "../services/cli-backend/connection-service"
+import { getErrorMessage } from "../accure-provider-utils"
 import { getSpeechToTextModel } from "./models"
 
-const PATH = "/kilo/audio/transcriptions"
+const PATH = "/accure/audio/transcriptions"
 const PROMPT =
   "Transcribe exactly what is spoken. Do not paraphrase, summarize, infer intent, or rewrite for clarity. Preserve the speaker's original wording as closely as possible, including incomplete phrases and unusual wording when audible."
 
@@ -31,15 +31,15 @@ type Err = {
 export type SpeechToTextResult = Ok | Err
 
 export async function transcribeSpeech(
-  connection: KiloConnectionService,
+  connection: AccureConnectionService,
   input: Req,
   dir: string,
   signal?: AbortSignal,
 ): Promise<SpeechToTextResult> {
   const cfg = connection.getServerConfig()
-  if (!cfg) return { ok: false, error: "Not connected to the Kilo backend", code: "not_connected" }
+  if (!cfg) return { ok: false, error: "Not connected to the Accure backend", code: "not_connected" }
 
-  const auth = Buffer.from(`kilo:${cfg.password}`).toString("base64")
+  const auth = Buffer.from(`accure:${cfg.password}`).toString("base64")
   const url = new URL(PATH, cfg.baseUrl)
   const model = getSpeechToTextModel(input.model)
   const prompt = model.verbatim ? PROMPT : undefined

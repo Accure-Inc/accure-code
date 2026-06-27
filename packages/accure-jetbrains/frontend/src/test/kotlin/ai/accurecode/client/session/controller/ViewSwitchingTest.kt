@@ -1,12 +1,12 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.SessionRef
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ProfileBalanceDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.ProfileOrganizationDto
+import ai.accurecode.client.session.SessionRef
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ProfileBalanceDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.ProfileOrganizationDto
 import kotlinx.coroutines.CompletableDeferred
 
 class ViewSwitchingTest : SessionControllerTestBase() {
@@ -349,13 +349,13 @@ class ViewSwitchingTest : SessionControllerTestBase() {
         assertEquals("LOCAL", snap.refType)
     }
 
-    private fun session(id: String) = ai.kilocode.rpc.dto.SessionDto(
+    private fun session(id: String) = ai.accurecode.rpc.dto.SessionDto(
         id = id,
         projectID = "prj",
         directory = "/test",
         title = "Title $id",
         version = "1",
-        time = ai.kilocode.rpc.dto.SessionTimeDto(created = 1.0, updated = 2.0),
+        time = ai.accurecode.rpc.dto.SessionTimeDto(created = 1.0, updated = 2.0),
     )
 
     // --- account overlay controller tests ---
@@ -381,7 +381,7 @@ class ViewSwitchingTest : SessionControllerTestBase() {
             name = "Test User",
             balance = ProfileBalanceDto(10.0),
         )
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = prof)
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = prof)
         val m = controller()
         val events = collect(m)
 
@@ -437,7 +437,7 @@ class ViewSwitchingTest : SessionControllerTestBase() {
         flush()
 
         val prof = ProfileDto(email = "user@example.com", balance = ProfileBalanceDto(20.0))
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = prof)
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = prof)
         flush()
 
         val shows = events.filterIsInstance<SessionControllerEvent.AccountOverlayChanged.Show>()
@@ -448,12 +448,12 @@ class ViewSwitchingTest : SessionControllerTestBase() {
     fun `test selecting personal account emits switching overlay`() {
         projectRpc.state.value = workspaceReady()
         rpc.recent.add(session("ses_1"))
-        appRpc.state.value = KiloAppStateDto(
-            KiloAppStatusDto.READY,
+        appRpc.state.value = AccureAppStateDto(
+            AccureAppStatusDto.READY,
             profile = ProfileDto(
                 email = "user@example.com",
                 currentOrgId = "org_1",
-                organizations = listOf(ProfileOrganizationDto("org_1", "Kilo", "OWNER")),
+                organizations = listOf(ProfileOrganizationDto("org_1", "Accure", "OWNER")),
             ),
         )
         val m = controller()

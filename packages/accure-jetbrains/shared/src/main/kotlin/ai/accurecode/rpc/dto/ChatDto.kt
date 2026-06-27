@@ -1,4 +1,4 @@
-package ai.kilocode.rpc.dto
+package ai.accurecode.rpc.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

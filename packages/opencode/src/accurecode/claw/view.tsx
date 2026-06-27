@@ -1,7 +1,7 @@
 /**
- * KiloClaw full-screen view
+ * AccureClaw full-screen view
  *
- * Main layout component for the /kiloclaw route.
+ * Main layout component for the /accureclaw route.
  * Renders a chat panel on the left and a status sidebar on the right.
  * Escape navigates back to the previous route.
  */
@@ -18,7 +18,7 @@ import { createClawStatus, createClawChat } from "./hooks"
 import { DialogConversationList } from "./dialog-conversation-list"
 import type { ClawSlashOption } from "./autocomplete"
 
-export function KiloClawView() {
+export function AccureClawView() {
   const route = useRoute()
   const sdk = useSDK()
   const dialog = useDialog()
@@ -35,24 +35,24 @@ export function KiloClawView() {
     return !s || s.status !== "running"
   })
 
-  // Bot display name — sourced from the KiloClaw platform status (set by the
+  // Bot display name — sourced from the AccureClaw platform status (set by the
   // user during onboarding via patchBotIdentity). Falls back to the literal
-  // "KiloClaw" while loading or for instances that skipped onboarding,
+  // "AccureClaw" while loading or for instances that skipped onboarding,
   // matching the web UI's fallback chain.
-  const botName = createMemo(() => status()?.botName ?? "KiloClaw")
+  const botName = createMemo(() => status()?.botName ?? "AccureClaw")
 
-  // KiloClaw view commands — single source of truth for both the global
+  // AccureClaw view commands — single source of truth for both the global
   // command palette / keybinds and the in-chat slash autocomplete.
   // The list is reactive on `chat.connected` so the slash menu only
-  // exposes `/new` and `/conversations` once we're connected to kilo-chat.
-  const kiloCommands = createMemo(() => {
+  // exposes `/new` and `/conversations` once we're connected to accure-chat.
+  const accureCommands = createMemo(() => {
     const ready = chat.connected()
     return [
       {
-        name: "kiloclaw.back",
+        name: "accureclaw.back",
         title: "Back",
         desc: "Return to the previous view",
-        category: "KiloClaw",
+        category: "AccureClaw",
         namespace: "palette",
         slashName: "back",
         slashAliases: [] as string[],
@@ -64,10 +64,10 @@ export function KiloClawView() {
         },
       },
       {
-        name: "kiloclaw.new",
+        name: "accureclaw.new",
         title: "New conversation",
-        desc: "Start a new KiloClaw conversation",
-        category: "KiloClaw",
+        desc: "Start a new AccureClaw conversation",
+        category: "AccureClaw",
         namespace: "palette",
         slashName: "new",
         slashAliases: [] as string[],
@@ -79,10 +79,10 @@ export function KiloClawView() {
         },
       },
       {
-        name: "kiloclaw.conversations",
+        name: "accureclaw.conversations",
         title: "Conversations",
-        desc: "Browse, rename, and delete KiloClaw conversations",
-        category: "KiloClaw",
+        desc: "Browse, rename, and delete AccureClaw conversations",
+        category: "AccureClaw",
         namespace: "palette",
         slashName: "conversations",
         slashAliases: ["chats"],
@@ -96,15 +96,15 @@ export function KiloClawView() {
   })
 
   useBindings(() => ({
-    commands: kiloCommands(),
-    bindings: [{ key: "escape", cmd: "kiloclaw.back" }],
+    commands: accureCommands(),
+    bindings: [{ key: "escape", cmd: "accureclaw.back" }],
   }))
 
   // Slashes for the in-chat autocomplete — derived from the same list so
   // renames flow through automatically. We pad displays to a common width
   // so the descriptions line up like in the main prompt's autocomplete.
   const clawSlashes = createMemo<ClawSlashOption[]>(() => {
-    const visible = kiloCommands().filter((c) => c.enabled !== false && !c.hidden && c.slashName)
+    const visible = accureCommands().filter((c) => c.enabled !== false && !c.hidden && c.slashName)
     const items = visible.map((c) => ({
       display: "/" + c.slashName,
       description: c.desc ?? c.title,

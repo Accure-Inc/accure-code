@@ -3,13 +3,13 @@ import { ModelCache } from "@/provider/model-cache"
 import { Effect } from "effect"
 
 export const disposeAllInstancesAfterProviderAuthCallback = Effect.fn(
-  "KiloServer.disposeAllInstancesAfterProviderAuthCallback",
+  "AccureServer.disposeAllInstancesAfterProviderAuthCallback",
 )(function* () {
   const store = yield* InstanceStore.Service
   yield* store.disposeAll()
 })
 
-export const invalidateAfterProviderAuthChange = Effect.fn("KiloServer.invalidateAfterProviderAuthChange")(function* (
+export const invalidateAfterProviderAuthChange = Effect.fn("AccureServer.invalidateAfterProviderAuthChange")(function* (
   providerID: string,
 ) {
   const cache = yield* ModelCache.Service

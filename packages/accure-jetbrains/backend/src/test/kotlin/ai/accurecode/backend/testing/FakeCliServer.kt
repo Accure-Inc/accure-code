@@ -1,6 +1,6 @@
-package ai.kilocode.backend.testing
+package ai.accurecode.backend.testing
 
-import ai.kilocode.backend.cli.CliServer
+import ai.accurecode.backend.cli.CliServer
 
 /**
  * Fake [CliServer] that delegates to a [MockCliServer] instead of

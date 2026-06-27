@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test"
-import { KiloConnectionService } from "./connection-service"
+import { AccureConnectionService } from "./connection-service"
 
-describe("KiloConnectionService viewed sessions", () => {
+describe("AccureConnectionService viewed sessions", () => {
   test("keeps Agent Manager sessions when sidebar focus changes during a flush", async () => {
-    const service = new KiloConnectionService({} as any)
+    const service = new AccureConnectionService({} as any)
     const calls: Array<{ focused: string[]; open?: string[] }> = []
     let release!: () => void
     const gate = new Promise<void>((resolve) => {
@@ -45,9 +45,9 @@ describe("KiloConnectionService viewed sessions", () => {
   })
 })
 
-describe("KiloConnectionService drainPendingPrompts", () => {
+describe("AccureConnectionService drainPendingPrompts", () => {
   test("ignores stale NotFoundError replies while draining permissions", async () => {
-    const service = new KiloConnectionService({} as any)
+    const service = new AccureConnectionService({} as any)
     const client = {
       project: {
         list: async () => ({ data: [] }),

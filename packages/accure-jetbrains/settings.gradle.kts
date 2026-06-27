@@ -1,4 +1,4 @@
-rootProject.name = "kilo.jetbrains"
+rootProject.name = "accurecode.jetbrains"
 
 include("shared")
 include("frontend")

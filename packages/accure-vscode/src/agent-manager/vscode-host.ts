@@ -7,8 +7,8 @@
 
 import * as vscode from "vscode"
 import type { Host, PanelContext, OutputHandle, SessionProvider, Disposable } from "./host"
-import type { KiloConnectionService } from "../services/cli-backend"
-import { KiloProvider } from "../KiloProvider"
+import type { AccureConnectionService } from "../services/cli-backend"
+import { AccureProvider } from "../AccureProvider"
 import { PLATFORM, SNAPSHOT_INITIALIZATION } from "./constants"
 import { DiffVirtualProvider } from "../DiffVirtualProvider"
 import { buildWebviewHtml } from "../utils"
@@ -23,7 +23,7 @@ export class VscodeHost implements Host {
 
   constructor(
     private readonly extensionUri: vscode.Uri,
-    private readonly connectionService: KiloConnectionService,
+    private readonly connectionService: AccureConnectionService,
     private readonly context: vscode.ExtensionContext,
     private readonly remoteService: RemoteStatusService,
   ) {}
@@ -77,8 +77,8 @@ export class VscodeHost implements Host {
     }
 
     panel.iconPath = {
-      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-light.svg"),
-      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-dark.svg"),
+      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "accure-light.svg"),
+      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "accure-dark.svg"),
     }
 
     const port = this.connectionService.getServerInfo()?.port
@@ -91,7 +91,7 @@ export class VscodeHost implements Host {
       port,
     })
 
-    const provider = new KiloProvider(this.extensionUri, this.connectionService, this.context, {
+    const provider = new AccureProvider(this.extensionUri, this.connectionService, this.context, {
       platform: PLATFORM,
       snapshotInitialization: SNAPSHOT_INITIALIZATION,
       slimEditMetadata: true,

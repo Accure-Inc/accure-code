@@ -14,14 +14,14 @@ import { ConfigError } from "../../config/error"
 import type { Config } from "../../config/config"
 import type { ConfigAgent } from "../../config/agent"
 import { ModesMigrator } from "../modes-migrator"
-import { fetchOrganizationModes } from "@kilocode/accure-gateway"
+import { fetchOrganizationModes } from "@accurecode/accure-gateway"
 import { RulesMigrator } from "../rules-migrator"
 import { WorkflowsMigrator } from "../workflows-migrator"
 import { McpMigrator } from "../mcp-migrator"
 import { IgnoreMigrator } from "../ignore-migrator"
 
-export namespace KilocodeConfig {
-  const log = Log.create({ service: "kilocode.config" })
+export namespace AccurecodeConfig {
+  const log = Log.create({ service: "accurecode.config" })
 
   // ── Config schema extensions ─────────────────────────────────────────
 
@@ -37,37 +37,42 @@ export namespace KilocodeConfig {
 
   // ── Config file constants ────────────────────────────────────────────
 
-  /** Kilo-specific config file names (highest-to-lowest precedence within kilo). */
-  export const KILO_CONFIG_FILES = ["kilo.jsonc", "kilo.json"] as const
+  /** Accure-specific config file names (highest-to-lowest precedence within accure). */
+  export const ACCURECODE_CONFIG_FILES = ["accure.jsonc", "accure.json"] as const
 
-  /** All config file names in precedence order (kilo + opencode). */
-  export const ALL_CONFIG_FILES = ["kilo.jsonc", "kilo.json", "opencode.jsonc", "opencode.json"] as const
+  /** All config file names in precedence order (accure + opencode). */
+  export const ALL_CONFIG_FILES = ["accure.jsonc", "accure.json", "opencode.jsonc", "opencode.json"] as const
 
-  /** Directory suffixes that Kilo recognizes in addition to .opencode. */
-  export const KILO_DIR_SUFFIXES = [".kilo", ".kilocode"] as const
+  /** Directory suffixes that Accure recognizes in addition to .opencode. */
+  export const ACCURECODE_DIR_SUFFIXES = [".accurecode", ".accurecode"] as const
 
-  /** All config directory suffixes Kilo can update, including upstream .opencode. */
-  export const ALL_CONFIG_DIR_SUFFIXES = [".kilo", ".kilocode", ".opencode"] as const
+  /** All config directory suffixes Accure can update, including upstream .opencode. */
+  export const ALL_CONFIG_DIR_SUFFIXES = [".accurecode", ".accurecode", ".opencode"] as const
 
-  /** Path patterns for resolving kilo agent names from file paths. */
-  export const AGENT_PATTERNS = ["/.kilo/agent/", "/.kilo/agents/", "/.kilocode/agent/", "/.kilocode/agents/"] as const
+  /** Path patterns for resolving accure agent names from file paths. */
+  export const AGENT_PATTERNS = [
+    "/.accurecode/agent/",
+    "/.accurecode/agents/",
+    "/.accurecode/agent/",
+    "/.accurecode/agents/",
+  ] as const
 
-  /** Path patterns for resolving kilo command names from file paths. */
+  /** Path patterns for resolving accure command names from file paths. */
   export const COMMAND_PATTERNS = [
-    "/.kilo/command/",
-    "/.kilo/commands/",
-    "/.kilocode/command/",
-    "/.kilocode/commands/",
+    "/.accurecode/command/",
+    "/.accurecode/commands/",
+    "/.accurecode/command/",
+    "/.accurecode/commands/",
   ] as const
 
   /**
    * Choose the project config file that Config.update should patch.
    *
-   * This mirrors the Kilo project-config load chain: prefer existing config files
+   * This mirrors the Accure project-config load chain: prefer existing config files
    * in ancestor config directories, then existing root config files, and create
-   * `.kilo/kilo.jsonc` when no project config exists yet.
+   * `.accurecode/accure.jsonc` when no project config exists yet.
    */
-  export const projectConfigUpdateTarget = Effect.fn("KilocodeConfig.projectConfigUpdateTarget")(function* (input: {
+  export const projectConfigUpdateTarget = Effect.fn("AccurecodeConfig.projectConfigUpdateTarget")(function* (input: {
     fs: AppFileSystem.Interface
     directory: string
     worktree?: string
@@ -79,10 +84,10 @@ export namespace KilocodeConfig {
       .up({ targets: [...ALL_CONFIG_FILES], start: input.directory, stop: input.worktree })
       .pipe(Effect.orDie)
     const files = [...dirs.flatMap((dir) => ALL_CONFIG_FILES.map((file) => path.join(dir, file))), ...roots]
-    return files.find((file) => existsSync(file)) ?? path.join(input.directory, ".kilo", "kilo.jsonc")
+    return files.find((file) => existsSync(file)) ?? path.join(input.directory, ".accurecode", "accure.jsonc")
   })
 
-  export const updateProjectConfig = Effect.fn("KilocodeConfig.updateProjectConfig")(function* (input: {
+  export const updateProjectConfig = Effect.fn("AccurecodeConfig.updateProjectConfig")(function* (input: {
     fs: AppFileSystem.Interface
     directory: string
     worktree?: string
@@ -181,7 +186,10 @@ export namespace KilocodeConfig {
     const err = new ConfigError.InvalidError({ path: item, issues }, { cause })
     if (warnings) warnings.push({ path: item, message, detail: text || undefined })
     try {
-      const [{ Session }, { capture }] = await Promise.all([import("@/session/session"), import("@/kilocode/instance")])
+      const [{ Session }, { capture }] = await Promise.all([
+        import("@/session/session"),
+        import("@/accurecode/instance"),
+      ])
       const ctx = capture()
       if (ctx) Bus.publish(ctx, Session.Event.Error, { error: new NamedError.Unknown({ message }).toObject() })
     } catch (e) {
@@ -213,7 +221,7 @@ export namespace KilocodeConfig {
   type MergeFn = (target: Config.Info, source: Config.Info) => Config.Info
 
   /**
-   * Load all Kilocode legacy configs (modes, workflows, rules, MCP, ignore).
+   * Load all Accurecode legacy configs (modes, workflows, rules, MCP, ignore).
    * These have the lowest precedence in the config chain.
    */
   export async function loadLegacyConfigs(input: {
@@ -223,73 +231,73 @@ export namespace KilocodeConfig {
     const warnings: Config.Warning[] = []
     let result: Config.Info = {}
 
-    // Load Kilocode custom modes
+    // Load Accurecode custom modes
     try {
       const migration = await ModesMigrator.migrate({ projectDir: input.projectDir })
       if (Object.keys(migration.agents).length > 0) {
         result = input.merge(result, { agent: migration.agents })
-        log.debug("loaded kilocode custom modes", {
+        log.debug("loaded accurecode custom modes", {
           count: Object.keys(migration.agents).length,
           modes: Object.keys(migration.agents),
         })
       }
       for (const skipped of migration.skipped) {
-        log.debug("skipped kilocode mode", { slug: skipped.slug, reason: skipped.reason })
+        log.debug("skipped accurecode mode", { slug: skipped.slug, reason: skipped.reason })
       }
     } catch (err) {
-      log.warn("failed to load kilocode modes", { error: err })
+      log.warn("failed to load accurecode modes", { error: err })
     }
 
-    // Load Kilocode workflows as commands
+    // Load Accurecode workflows as commands
     try {
       const migration = await WorkflowsMigrator.migrate({ projectDir: input.projectDir })
       if (Object.keys(migration.commands).length > 0) {
         result = input.merge(result, { command: migration.commands })
-        log.debug("loaded kilocode workflows as commands", {
+        log.debug("loaded accurecode workflows as commands", {
           count: Object.keys(migration.commands).length,
           commands: Object.keys(migration.commands),
         })
       }
     } catch (err) {
-      log.warn("failed to load kilocode workflows", { error: err })
+      log.warn("failed to load accurecode workflows", { error: err })
     }
 
-    // Load Kilocode rules
+    // Load Accurecode rules
     try {
       const migration = await RulesMigrator.migrate({ projectDir: input.projectDir })
       if (migration.instructions.length > 0) {
         result = input.merge(result, { instructions: migration.instructions })
-        log.debug("loaded kilocode rules", {
+        log.debug("loaded accurecode rules", {
           count: migration.instructions.length,
           files: migration.instructions,
         })
       }
       for (const warning of migration.warnings) {
-        log.debug("kilocode rules warning", { warning })
+        log.debug("accurecode rules warning", { warning })
       }
     } catch (err) {
-      log.warn("failed to load kilocode rules", { error: err })
+      log.warn("failed to load accurecode rules", { error: err })
     }
 
-    // Load Kilocode MCP servers (skip global VSCode extension paths unless running in an editor or Console daemon)
-    const skipGlobal = process.env["KILO_PLATFORM"] !== "vscode" && process.env["KILOCODE_FEATURE"] !== "daemon"
+    // Load Accurecode MCP servers (skip global VSCode extension paths unless running in an editor or Console daemon)
+    const skipGlobal = process.env["ACCURECODE_PLATFORM"] !== "vscode" && process.env["ACCURECODE_FEATURE"] !== "daemon"
     const mcp = await McpMigrator.loadMcpConfig(input.projectDir, skipGlobal)
     if (Object.keys(mcp).length > 0) {
       result = input.merge(result, { mcp })
     }
 
-    // Load .kilocodeignore patterns
+    // Load .accurecodeignore patterns
     try {
       const permission = await IgnoreMigrator.loadIgnoreConfig(input.projectDir)
       if (Object.keys(permission).length > 0) {
         result = input.merge(result, { permission })
-        log.debug("loaded kilocode ignore patterns", {
+        log.debug("loaded accurecode ignore patterns", {
           hasRead: !!(permission as Record<string, unknown>).read,
           hasEdit: !!(permission as Record<string, unknown>).edit,
         })
       }
     } catch (err) {
-      log.warn("failed to load kilocode ignore patterns", { error: err })
+      log.warn("failed to load accurecode ignore patterns", { error: err })
     }
 
     return { config: result, warnings }
@@ -298,7 +306,7 @@ export namespace KilocodeConfig {
   // ── Organization modes ───────────────────────────────────────────────
 
   /**
-   * Load organization custom modes from the Kilo Cloud API.
+   * Load organization custom modes from the Accure Cloud API.
    * Returns empty agents + warnings if the user is not authenticated.
    */
   export async function loadOrganizationModes(
@@ -306,9 +314,9 @@ export namespace KilocodeConfig {
   ): Promise<{ agents: Record<string, ConfigAgent.Info>; warnings: Config.Warning[] }> {
     const warnings: Config.Warning[] = []
     try {
-      const kilo = auth["kilo"]
-      if (kilo?.type === "oauth" && kilo.access && kilo.accountId) {
-        const modes = await fetchOrganizationModes(kilo.access, kilo.accountId)
+      const accure = auth["accure"]
+      if (accure?.type === "oauth" && accure.access && accure.accountId) {
+        const modes = await fetchOrganizationModes(accure.access, accure.accountId)
         if (modes.length > 0) {
           const agents = ModesMigrator.convertOrganizationModes(modes)
           log.debug("loaded organization custom modes", {
@@ -326,7 +334,7 @@ export namespace KilocodeConfig {
 
   // ── Bash permission migration ────────────────────────────────────────
 
-  const GLOBAL_CONFIG_FILES = ["config.json", "kilo.json", "kilo.jsonc", "opencode.json", "opencode.jsonc"]
+  const GLOBAL_CONFIG_FILES = ["config.json", "accure.json", "accure.jsonc", "opencode.json", "opencode.jsonc"]
 
   /**
    * Migrate bash permission for existing users before config is consumed.
@@ -437,6 +445,6 @@ export namespace KilocodeConfig {
 
   /** Check whether a directory path should be treated as a config directory (for loading config files). */
   export function isConfigDir(dir: string, flagDir?: string): boolean {
-    return dir.endsWith(".kilo") || dir.endsWith(".kilocode") || dir.endsWith(".opencode") || dir === flagDir
+    return dir.endsWith(".accurecode") || dir.endsWith(".accurecode") || dir.endsWith(".opencode") || dir === flagDir
   }
 }

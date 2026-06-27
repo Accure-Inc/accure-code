@@ -1,5 +1,5 @@
 import { createSignal, onCleanup } from "solid-js"
-import { showToast } from "@kilocode/accure-ui/toast"
+import { showToast } from "@accurecode/accure-ui/toast"
 import type { Accessor } from "solid-js"
 import type { ExtensionMessage, WebviewMessage } from "../../types/messages"
 

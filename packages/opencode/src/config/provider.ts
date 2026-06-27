@@ -1,5 +1,5 @@
 import { Schema } from "effect"
-import { PROMPTS, AI_SDK_PROVIDERS } from "@kilocode/accure-gateway" // kilocode_change
+import { PROMPTS, AI_SDK_PROVIDERS } from "@accurecode/accure-gateway" // accurecode_change
 import { PositiveInt } from "@opencode-ai/core/schema"
 import { ModelStatus } from "@/provider/model-status"
 
@@ -7,12 +7,12 @@ export const Model = Schema.Struct({
   id: Schema.optional(Schema.String),
   name: Schema.optional(Schema.String),
   family: Schema.optional(Schema.String),
-  prompt: Schema.optional(Schema.Literals(PROMPTS)), // kilocode_change
-  isFree: Schema.optional(Schema.Boolean), // kilocode_change
-  ai_sdk_provider: Schema.optional(Schema.Literals(AI_SDK_PROVIDERS)), // kilocode_change
+  prompt: Schema.optional(Schema.Literals(PROMPTS)), // accurecode_change
+  isFree: Schema.optional(Schema.Boolean), // accurecode_change
+  ai_sdk_provider: Schema.optional(Schema.Literals(AI_SDK_PROVIDERS)), // accurecode_change
   release_date: Schema.optional(Schema.String),
   attachment: Schema.optional(Schema.Boolean),
-  reasoning: Schema.optional(Schema.NullOr(Schema.Boolean)), // kilocode_change - allow null so reasoning can be removed via stripNulls on save
+  reasoning: Schema.optional(Schema.NullOr(Schema.Boolean)), // accurecode_change - allow null so reasoning can be removed via stripNulls on save
   temperature: Schema.optional(Schema.Boolean),
   tool_call: Schema.optional(Schema.Boolean),
   interleaved: Schema.optional(
@@ -63,7 +63,7 @@ export const Model = Schema.Struct({
     Schema.Record(
       Schema.String,
       Schema.NullOr(
-        // kilocode_change - allow null values so removed variants can be deleted via stripNulls on save
+        // accurecode_change - allow null values so removed variants can be deleted via stripNulls on save
         Schema.StructWithRest(
           Schema.Struct({
             disabled: Schema.optional(Schema.Boolean).annotate({ description: "Disable this variant for the model" }),
@@ -111,7 +111,7 @@ export const Info = Schema.Struct({
       [Schema.Record(Schema.String, Schema.Any)],
     ),
   ),
-  models: Schema.optional(Schema.Record(Schema.String, Schema.NullOr(Model))), // kilocode_change - allow null values so removed models can be deleted via stripNulls on save
+  models: Schema.optional(Schema.Record(Schema.String, Schema.NullOr(Model))), // accurecode_change - allow null values so removed models can be deleted via stripNulls on save
 }).annotate({ identifier: "ProviderConfig" })
 export type Info = Schema.Schema.Type<typeof Info>
 

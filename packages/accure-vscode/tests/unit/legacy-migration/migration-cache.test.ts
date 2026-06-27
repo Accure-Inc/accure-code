@@ -6,7 +6,7 @@ import {
   type MigrationCache,
   type MigrationCacheEntry,
   type MigrationContext,
-} from "../../../src/kilo-provider/handlers/migration"
+} from "../../../src/accure-provider/handlers/migration"
 
 const legacy = {
   hasData: false,

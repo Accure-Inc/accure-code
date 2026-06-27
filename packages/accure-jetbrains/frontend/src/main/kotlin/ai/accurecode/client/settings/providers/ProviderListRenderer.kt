@@ -1,12 +1,12 @@
-package ai.kilocode.client.settings.providers
+package ai.accurecode.client.settings.providers
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.PickerRow
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.PickerRow
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
 import com.intellij.ui.CollectionListModel
 import com.intellij.ui.GroupHeaderSeparator
 import com.intellij.ui.SimpleColoredComponent
@@ -69,10 +69,10 @@ internal class ProviderListRenderer(
         }
 
         internal fun text(action: ProviderListAction) = when (action) {
-            ProviderListAction.CONNECT -> KiloBundle.message("settings.providers.connect")
-            ProviderListAction.OAUTH -> KiloBundle.message("settings.providers.oauth")
-            ProviderListAction.DISCONNECT -> KiloBundle.message("settings.providers.disconnect")
-            ProviderListAction.ENABLE -> KiloBundle.message("settings.providers.enable")
+            ProviderListAction.CONNECT -> AccureBundle.message("settings.providers.connect")
+            ProviderListAction.OAUTH -> AccureBundle.message("settings.providers.oauth")
+            ProviderListAction.DISCONNECT -> AccureBundle.message("settings.providers.disconnect")
+            ProviderListAction.ENABLE -> AccureBundle.message("settings.providers.enable")
         }
 
         internal fun visibleActions(row: ProviderListRow, selected: Boolean): List<ProviderListAction> {

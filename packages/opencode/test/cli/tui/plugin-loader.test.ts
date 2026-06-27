@@ -3,7 +3,7 @@ import fs from "fs/promises"
 import path from "path"
 import { pathToFileURL } from "url"
 import { createTestKeymap } from "@opentui/keymap/testing"
-import type { TuiAttentionSoundPack } from "@kilocode/plugin/tui"
+import type { TuiAttentionSoundPack } from "@accurecode/plugin/tui"
 import { tmpdir } from "../../fixture/fixture"
 import { createTuiPluginApi } from "../../fixture/tui-plugin"
 import { createTuiResolvedConfig, mockTuiRuntime } from "../../fixture/tui-runtime"
@@ -624,7 +624,7 @@ test("continues loading when a plugin is missing config metadata", async () => {
     },
   })
 
-  process.env.KILO_PLUGIN_META_FILE = path.join(tmp.path, "plugin-meta.json")
+  process.env.ACCURECODE_PLUGIN_META_FILE = path.join(tmp.path, "plugin-meta.json")
   const config = createTuiResolvedConfig({
     plugin: [
       [tmp.extra.badSpec, { marker: path.join(tmp.path, "bad.txt") }],
@@ -659,7 +659,7 @@ test("continues loading when a plugin is missing config metadata", async () => {
     await TuiPluginRuntime.dispose()
     cwd.mockRestore()
     wait.mockRestore()
-    delete process.env.KILO_PLUGIN_META_FILE
+    delete process.env.ACCURECODE_PLUGIN_META_FILE
   }
 })
 
@@ -696,7 +696,7 @@ test("does not wait on permanent tui plugin startup failures", async () => {
     },
   })
 
-  process.env.KILO_PLUGIN_META_FILE = path.join(tmp.path, "plugin-meta.json")
+  process.env.ACCURECODE_PLUGIN_META_FILE = path.join(tmp.path, "plugin-meta.json")
   const wait = spyOn(TuiConfig, "waitForDependencies").mockResolvedValue()
   const cwd = spyOn(process, "cwd").mockImplementation(() => tmp.path)
 
@@ -724,7 +724,7 @@ test("does not wait on permanent tui plugin startup failures", async () => {
     await TuiPluginRuntime.dispose()
     cwd.mockRestore()
     wait.mockRestore()
-    delete process.env.KILO_PLUGIN_META_FILE
+    delete process.env.ACCURECODE_PLUGIN_META_FILE
   }
 })
 
@@ -781,7 +781,7 @@ export default {
     },
   })
 
-  process.env.KILO_PLUGIN_META_FILE = path.join(tmp.path, "plugin-meta.json")
+  process.env.ACCURECODE_PLUGIN_META_FILE = path.join(tmp.path, "plugin-meta.json")
   const cwd = spyOn(process, "cwd").mockImplementation(() => tmp.path)
 
   try {
@@ -802,7 +802,7 @@ export default {
   } finally {
     await TuiPluginRuntime.dispose()
     cwd.mockRestore()
-    delete process.env.KILO_PLUGIN_META_FILE
+    delete process.env.ACCURECODE_PLUGIN_META_FILE
 
     if (backupJson === undefined) {
       await fs.rm(globalJson, { force: true }).catch(() => {})
@@ -1268,7 +1268,7 @@ test("updates installed theme when plugin metadata changes", async () => {
     },
   })
 
-  process.env.KILO_PLUGIN_META_FILE = path.join(tmp.path, "plugin-meta.json")
+  process.env.ACCURECODE_PLUGIN_META_FILE = path.join(tmp.path, "plugin-meta.json")
   const cwd = spyOn(process, "cwd").mockImplementation(() => tmp.path)
   const wait = spyOn(TuiConfig, "waitForDependencies").mockResolvedValue()
 
@@ -1320,13 +1320,13 @@ test("updates installed theme when plugin metadata changes", async () => {
     expect(text).toContain("#222222")
     expect(text).not.toContain("#111111")
     const list = await Filesystem.readJson<Record<string, { themes?: Record<string, { dest: string }> }>>(
-      process.env.KILO_PLUGIN_META_FILE!,
+      process.env.ACCURECODE_PLUGIN_META_FILE!,
     )
     expect(list["demo.theme-update"]?.themes?.[tmp.extra.themeName]?.dest).toBe(tmp.extra.dest)
   } finally {
     await TuiPluginRuntime.dispose()
     cwd.mockRestore()
     wait.mockRestore()
-    delete process.env.KILO_PLUGIN_META_FILE
+    delete process.env.ACCURECODE_PLUGIN_META_FILE
   }
 })

@@ -1,6 +1,6 @@
 import { Component, createSignal } from "solid-js"
-import { InlineInput } from "@kilocode/accure-ui/inline-input"
-import { showToast } from "@kilocode/accure-ui/toast"
+import { InlineInput } from "@accurecode/accure-ui/inline-input"
+import { showToast } from "@accurecode/accure-ui/toast"
 import { useLanguage } from "../../context/language"
 import { parseSessionTitle, SESSION_TITLE_LIMIT } from "../../../../src/shared/session-title"
 

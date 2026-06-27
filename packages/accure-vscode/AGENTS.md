@@ -8,12 +8,12 @@ Accure Code is an open source AI coding agent platform. It ships as a CLI and ed
 
 ### Products and How They Relate
 
-All products are thin clients over the **CLI** (`packages/opencode/`, published as `@kilocode/cli`). The CLI is a fork of upstream [OpenCode](https://github.com/anomalyco/opencode) with Kilo-specific additions (gateway auth, telemetry, migration, code review, branding). It contains the full AI agent runtime, tool execution, session management, provider integrations (500+ models), and an HTTP API server.
+All products are thin clients over the **CLI** (`packages/opencode/`, published as `@accurecode/cli`). The CLI is a fork of upstream [OpenCode](https://github.com/anomalyco/opencode) with Accure-specific additions (gateway auth, telemetry, migration, code review, branding). It contains the full AI agent runtime, tool execution, session management, provider integrations (500+ models), and an HTTP API server.
 
-Every client spawns or connects to a `kilo serve` process and communicates via HTTP REST + SSE using the auto-generated `@kilocode/sdk`.
+Every client spawns or connects to a `accure serve` process and communicates via HTTP REST + SSE using the auto-generated `@accurecode/sdk`.
 
 ```
-                        @kilocode/cli  (packages/opencode/)
+                        @accurecode/cli  (packages/opencode/)
                      ┌────────────────────────────────┐
                      │  AI agents, tools, sessions,    │
                      │  providers, config, MCP, LSP    │
@@ -28,30 +28,30 @@ Every client spawns or connects to a `kilo serve` process and communicates via H
 
 | Product | Package | What it is | How it uses the CLI |
 |---|---|---|---|
-| Kilo CLI (TUI) | `packages/opencode/` | Interactive terminal UI (SolidJS + OpenTUI) | In-process — TUI and server run together |
-| Kilo CLI (`kilo run`) | `packages/opencode/` | Non-interactive headless mode for scripting | In-process — no network socket |
-| **Kilo VS Code Extension** | **`packages/accure-vscode/`** | VS Code extension with sidebar chat + Agent Manager | Bundles CLI binary, spawns `kilo serve --port 0` as child process |
+| Accure CLI (TUI) | `packages/opencode/` | Interactive terminal UI (SolidJS + OpenTUI) | In-process — TUI and server run together |
+| Accure CLI (`accure run`) | `packages/opencode/` | Non-interactive headless mode for scripting | In-process — no network socket |
+| **Accure VS Code Extension** | **`packages/accure-vscode/`** | VS Code extension with sidebar chat + Agent Manager | Bundles CLI binary, spawns `accure serve --port 0` as child process |
 
-### Kilo-Domain Packages
+### Accure-Domain Packages
 
 | Package | Name | Role |
 |---|---|---|
 | `packages/accure-vscode/` | `accure-code` | **This package.** VS Code extension. |
-| `packages/accure-gateway/` | `@kilocode/accure-gateway` | Auth (device flow), AI provider routing (OpenRouter), Kilo API integration (profile, balance, teams) |
-| `packages/accure-ui/` | `@kilocode/accure-ui` | SolidJS component library (40+ components, built on `@kobalte/core`). Shared by this extension's webview and docs screenshot stories |
-| `packages/accure-telemetry/` | `@kilocode/accure-telemetry` | PostHog analytics + OpenTelemetry tracing for the CLI |
-| `packages/accure-i18n/` | `@kilocode/accure-i18n` | Translation strings (16 languages) |
-| `packages/accure-docs/` | `@kilocode/accure-docs` | Documentation site (Next.js + Markdoc) |
+| `packages/accure-gateway/` | `@accurecode/accure-gateway` | Auth (device flow), AI provider routing (OpenRouter), Accure API integration (profile, balance, teams) |
+| `packages/accure-ui/` | `@accurecode/accure-ui` | SolidJS component library (40+ components, built on `@kobalte/core`). Shared by this extension's webview and docs screenshot stories |
+| `packages/accure-telemetry/` | `@accurecode/accure-telemetry` | PostHog analytics + OpenTelemetry tracing for the CLI |
+| `packages/accure-i18n/` | `@accurecode/accure-i18n` | Translation strings (16 languages) |
+| `packages/accure-docs/` | `@accurecode/accure-docs` | Documentation site (Next.js + Markdoc) |
 
-### Upstream OpenCode Packages (not Kilo-specific)
+### Upstream OpenCode Packages (not Accure-specific)
 
 | Package | Name | Role |
 |---|---|---|
-| `packages/opencode/` | `@kilocode/cli` | Core CLI — forked from upstream OpenCode. AI agents, tools, sessions, server. |
-| `packages/sdk/js/` | `@kilocode/sdk` | Auto-generated TypeScript SDK client for the server API. Do not edit `src/gen/` by hand. |
+| `packages/opencode/` | `@accurecode/cli` | Core CLI — forked from upstream OpenCode. AI agents, tools, sessions, server. |
+| `packages/sdk/js/` | `@accurecode/sdk` | Auto-generated TypeScript SDK client for the server API. Do not edit `src/gen/` by hand. |
 | `packages/ui/` | `@opencode-ai/ui` | Shared UI primitives |
 | `packages/util/` | `@opencode-ai/util` | Shared utilities (error, path, retry, slug) |
-| `packages/plugin/` | `@kilocode/plugin` | Plugin/tool interface definitions |
+| `packages/plugin/` | `@accurecode/plugin` | Plugin/tool interface definitions |
 
 ## Commands
 
@@ -70,7 +70,7 @@ Single test: `bun run test -- --grep "test name"`
 
 ## CLI Binary
 
-The extension bundles its own CLI binary at `bin/kilo` — it does NOT use a system-installed CLI. To build it:
+The extension bundles its own CLI binary at `bin/accure` — it does NOT use a system-installed CLI. To build it:
 
 ```bash
 bun script/local-bin.ts
@@ -82,31 +82,31 @@ Or use `--force` to rebuild:
 bun script/local-bin.ts --force
 ```
 
-The script checks for a prebuilt binary in `packages/opencode/dist/`, builds the CLI if needed, and copies it to `bin/kilo`.
+The script checks for a prebuilt binary in `packages/opencode/dist/`, builds the CLI if needed, and copies it to `bin/accure`.
 
 ## Architecture
 
 ### Extension ↔ CLI Backend
 
-The extension is a client of the CLI. Activation creates one shared `KiloConnectionService`; on its first connection, which autocomplete may prewarm, `ServerManager` spawns `bin/kilo serve --port 0`, captures the dynamically assigned port from stdout, and communicates over HTTP + SSE. The current child process is reused unless it exits. A random password is generated and passed via `KILO_SERVER_PASSWORD` env var for basic auth.
+The extension is a client of the CLI. Activation creates one shared `AccureConnectionService`; on its first connection, which autocomplete may prewarm, `ServerManager` spawns `bin/accure serve --port 0`, captures the dynamically assigned port from stdout, and communicates over HTTP + SSE. The current child process is reused unless it exits. A random password is generated and passed via `ACCURECODE_SERVER_PASSWORD` env var for basic auth.
 
 ```
 Extension (Node.js)                          CLI Backend (child process)
 ┌──────────────────────────┐                ┌──────────────────────┐
-│ KiloConnectionService    │── HTTP/SSE ──> │ kilo serve --port 0  │
+│ AccureConnectionService    │── HTTP/SSE ──> │ accure serve --port 0  │
 │   ├── ServerManager      │                │   Hono REST API      │
 │   ├── HttpClient         │                │   SSE event stream   │
 │   └── SSEClient          │                │   Session management │
 │                          │                │   AI agent runtime   │
-│ KiloProvider (sidebar)   │                └──────────────────────┘
-│ KiloProvider (agent mgr) │
-│ KiloProvider (open tabs) │
+│ AccureProvider (sidebar)   │                └──────────────────────┘
+│ AccureProvider (agent mgr) │
+│ AccureProvider (open tabs) │
 └──────────────────────────┘
 ```
 
-- **`KiloConnectionService`** (`src/services/cli-backend/connection-service.ts`) is created once during extension activation and shared across the sidebar, Kilo editor tabs, and Agent Manager. It owns the current server process, HTTP client, and SSE connection.
+- **`AccureConnectionService`** (`src/services/cli-backend/connection-service.ts`) is created once during extension activation and shared across the sidebar, Accure editor tabs, and Agent Manager. It owns the current server process, HTTP client, and SSE connection.
 - **`ServerManager`** (`src/services/cli-backend/server-manager.ts`) lazily spawns the CLI binary, reuses its current process, and can start a replacement if that process exits.
-- The sidebar, every **Open in Tab** Kilo panel, and the Agent Manager chat provider reuse this connection. Multiple **`KiloProvider`** instances subscribe to it, with SSE events filtered per-webview via a `trackedSessionIds` Set. Agent Manager terminals may use additional PTY/WebSocket channels to the same backend, not separate `kilo serve` processes.
+- The sidebar, every **Open in Tab** Accure panel, and the Agent Manager chat provider reuse this connection. Multiple **`AccureProvider`** instances subscribe to it, with SSE events filtered per-webview via a `trackedSessionIds` Set. Agent Manager terminals may use additional PTY/WebSocket channels to the same backend, not separate `accure serve` processes.
 - Backend state follows where it is allocated, not the worktree shown in a panel. Snapshot repository state uses directory-keyed `InstanceState`, while `trackState` is created once in the active Snapshot service closure. For these shared VS Code session paths, its slow-track `asked` guard spans worktree requests; choosing **Continue with snapshots** resets `asked` only when continued tracking returns a snapshot hash.
 
 ### Builds
@@ -121,7 +121,7 @@ Two separate esbuild builds in [`esbuild.js`](esbuild.js):
 - Webview uses **Solid.js** (not React) — JSX compiles via `esbuild-plugin-solid`
 - Extension code in `src/`, webview code in `webview-ui/src/` with separate tsconfig
 - Tests compile to `out/` via `compile-tests`, not `dist/`
-- CSP requires nonce for scripts and `font-src` for bundled fonts — see [`KiloProvider.ts`](src/KiloProvider.ts:777)
+- CSP requires nonce for scripts and `font-src` for bundled fonts — see [`AccureProvider.ts`](src/AccureProvider.ts:777)
 - HTML root has `data-theme="accure-vscode"` to activate accure-ui's VS Code theme bridge
 - Extension and webview have no shared state — communicate via `vscode.Webview.postMessage()`
 - For editor panels, use [`AgentManagerProvider`](src/agent-manager/AgentManagerProvider.ts) pattern with `retainContextWhenHidden: true`
@@ -134,14 +134,14 @@ When adding a new feature that requires data from the CLI backend to be displaye
 
 1. **Types** (`src/services/cli-backend/types.ts`): Add response types for the backend data
 2. **HTTP Client** (`src/services/cli-backend/http-client.ts`): Add a fetch method to retrieve the data
-3. **KiloProvider** (`src/KiloProvider.ts`): Add a `fetchAndSend*()` method using the cached message pattern, and handle the corresponding `request*` message from the webview in `handleWebviewMessage()`
+3. **AccureProvider** (`src/AccureProvider.ts`): Add a `fetchAndSend*()` method using the cached message pattern, and handle the corresponding `request*` message from the webview in `handleWebviewMessage()`
 4. **Message Types** (`webview-ui/src/types/messages.ts`): Add `*LoadedMessage` (extension→webview) and `Request*Message` (webview→extension) types to the `ExtensionMessage` / `WebviewMessage` unions
 5. **Context** (`webview-ui/src/context/`): Subscribe to the loaded message **outside** `onMount` (to catch early pushes before mount), add retry logic for the request message, expose state via context
 6. **Component** (`webview-ui/src/components/`): Consume context, render UI
 
 Key patterns:
 
-- **Cached messages** (e.g. `cachedProvidersMessage`, `cachedAgentsMessage` in KiloProvider): Ensures webview refreshes get data immediately without waiting for a new HTTP round-trip
+- **Cached messages** (e.g. `cachedProvidersMessage`, `cachedAgentsMessage` in AccureProvider): Ensures webview refreshes get data immediately without waiting for a new HTTP round-trip
 - **Retry timers** (e.g. `agentRetryTimer` in session context): Handles race conditions where the extension's HTTP client isn't ready when the webview first requests data
 
 ## Agent Manager
@@ -155,25 +155,25 @@ The Agent Manager is a feature within this extension (not a separate product). I
 | Location | Activity bar sidebar panel | Editor tab (full panel) |
 | Sessions | Single session at a time | Multiple parallel sessions with tabbed UI |
 | Git isolation | Uses workspace root | Each session can get its own worktree branch |
-| State | No dedicated state file | `.kilo/agent-manager.json` |
+| State | No dedicated state file | `.accurecode/agent-manager.json` |
 | Terminals | None | Dedicated VS Code terminal per session |
-| Setup scripts | None | Configurable `.kilo/setup-script` runs per worktree |
+| Setup scripts | None | Configurable `.accurecode/setup-script` runs per worktree |
 | Multi-version | Not supported | Up to 4 parallel worktrees with the same prompt |
 
 ### Architecture
 
-Agent Manager local worktree sessions use the current shared `kilo serve` process owned by `KiloConnectionService`; no session starts its own backend. Their CLI requests pass the worktree path as `directory`, which resolves directory-scoped backend state. Setup scripts, terminal PTYs, git subprocesses, and a separately opened VS Code window are separate process or extension-host boundaries, not per-worktree `kilo serve` instances.
+Agent Manager local worktree sessions use the current shared `accure serve` process owned by `AccureConnectionService`; no session starts its own backend. Their CLI requests pass the worktree path as `directory`, which resolves directory-scoped backend state. Setup scripts, terminal PTYs, git subprocesses, and a separately opened VS Code window are separate process or extension-host boundaries, not per-worktree `accure serve` instances.
 
 Extension-side code lives in `src/agent-manager/`, webview code in `webview-ui/agent-manager/`. The webview reuses the sidebar's provider chain and `ChatView` component, adding a `WorktreeModeProvider` and a split layout.
 
 ## Webview UI (accure-ui)
 
-New webview features must use **`@kilocode/accure-ui`** components instead of raw HTML elements with inline styles. This is a Solid.js component library built on `@kobalte/core`.
+New webview features must use **`@accurecode/accure-ui`** components instead of raw HTML elements with inline styles. This is a Solid.js component library built on `@kobalte/core`.
 
-- Import via deep subpaths: `import { Button } from "@kilocode/accure-ui/button"`
+- Import via deep subpaths: `import { Button } from "@accurecode/accure-ui/button"`
 - Available components include `Button`, `IconButton`, `Dialog`, `Spinner`, `Card`, `Tabs`, `Tooltip`, `Toast`, `Code`, `Markdown`, and more
 - Provider hierarchy in [`App.tsx`](webview-ui/src/App.tsx:113): `ThemeProvider → I18nProvider → DialogProvider → MarkedProvider → VSCodeProvider → ServerProvider → ProviderProvider → SessionProvider`
-- Global styles imported via `import "@kilocode/accure-ui/styles"` in [`index.tsx`](webview-ui/src/index.tsx:2)
+- Global styles imported via `import "@accurecode/accure-ui/styles"` in [`index.tsx`](webview-ui/src/index.tsx:2)
 - [`chat.css`](webview-ui/src/styles/chat.css) is being progressively migrated — when replacing a component with accure-ui, remove the corresponding CSS rules from it
 - New CSS for components not yet in accure-ui goes into `chat.css` grouped by comment-delimited sections (`/* Component Name */`). Once a accure-ui equivalent exists, remove the section.
 - **Check existing webview usages first**: `webview-ui/src/` and `packages/accure-ui/src/stories/` show how accure-ui components are composed. Do not rely only on the component API in isolation.
@@ -198,16 +198,16 @@ Generated screenshot baselines live under `packages/accure-docs/public/img/scree
 - Extension logs: "Extension Host" output channel (not Debug Console)
 - Webview logs: Command Palette → "Developer: Open Webview Developer Tools"
 - In Chrome/VS Code performance traces, associate CPU `ProfileChunk` events to their `Profile.id` target before attributing work to a thread. `v8:ProfEvntProc` is a profile delivery thread, not evidence that application work ran off the webview main thread.
-- All debug output must be prepended with `[Kilo New]` for easy filtering
+- All debug output must be prepended with `[Accure New]` for easy filtering
 
 ## Naming Conventions
 
 - All VSCode commands must use `accure-code.` prefix (not `accure-code.`)
 - All view IDs must use `accure-code.` prefix, **except** the sidebar view which uses `accure-code.SidebarProvider` to preserve user sidebar position when upgrading from the legacy extension
 
-## Kilocode Change Markers
+## Accurecode Change Markers
 
-This package is entirely Kilo-specific — `kilocode_change` markers are NOT needed in any files under `packages/accure-vscode/`. The markers are only necessary when modifying shared upstream opencode files.
+This package is entirely Accure-specific — `accurecode_change` markers are NOT needed in any files under `packages/accure-vscode/`. The markers are only necessary when modifying shared upstream opencode files.
 
 ## Process Spawning (Windows)
 
@@ -217,7 +217,7 @@ On Windows, any `spawn`/`execFile`/`exec` call that does not set `windowsHide: t
 import { spawn, exec } from "../util/process"
 ```
 
-The `spawn` wrapper covers long-lived processes (e.g. `kilo serve`). The `exec` wrapper covers short commands (e.g. `git`, `tar`). If you need the raw callback form of `execFile` for some reason, pass `windowsHide: true` explicitly in the options object.
+The `spawn` wrapper covers long-lived processes (e.g. `accure serve`). The `exec` wrapper covers short commands (e.g. `git`, `tar`). If you need the raw callback form of `execFile` for some reason, pass `windowsHide: true` explicitly in the options object.
 
 ## Style
 

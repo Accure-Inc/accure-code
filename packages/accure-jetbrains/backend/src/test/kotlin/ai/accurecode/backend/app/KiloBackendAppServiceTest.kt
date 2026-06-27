@@ -1,11 +1,11 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.backend.app.KiloAppState
-import ai.kilocode.backend.app.KiloBackendAppService
-import ai.kilocode.backend.rpc.appStateDto
-import ai.kilocode.backend.testing.FakeCliServer
-import ai.kilocode.backend.testing.MockCliServer
-import ai.kilocode.backend.testing.TestLog
+import ai.accurecode.backend.app.AccureAppState
+import ai.accurecode.backend.app.AccureBackendAppService
+import ai.accurecode.backend.rpc.appStateDto
+import ai.accurecode.backend.testing.FakeCliServer
+import ai.accurecode.backend.testing.MockCliServer
+import ai.accurecode.backend.testing.TestLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -25,7 +25,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.assertContains
 
-class KiloBackendAppServiceTest {
+class AccureBackendAppServiceTest {
 
     private val mock = MockCliServer()
     private val log = TestLog()
@@ -37,8 +37,8 @@ class KiloBackendAppServiceTest {
         mock.close()
     }
 
-    private fun create(loadTimeoutMs: Long = 30_000L): KiloBackendAppService =
-        KiloBackendAppService.create(scope, FakeCliServer(mock), log, loadTimeoutMs)
+    private fun create(loadTimeoutMs: Long = 30_000L): AccureBackendAppService =
+        AccureBackendAppService.create(scope, FakeCliServer(mock), log, loadTimeoutMs)
 
     @Test
     fun `full lifecycle reaches Ready`() = runBlocking {
@@ -46,10 +46,10 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
-        val ready = svc.appState.value as KiloAppState.Ready
+        val ready = svc.appState.value as AccureAppState.Ready
         assertNotNull(ready.data.config)
         assertNotNull(ready.data.notifications)
     }
@@ -57,18 +57,18 @@ class KiloBackendAppServiceTest {
     @Test
     fun `shutdown for unload clears runtime and disposes server once`() = runBlocking {
         val server = FakeCliServer(mock)
-        val svc = KiloBackendAppService.create(scope, server, log)
+        val svc = AccureBackendAppService.create(scope, server, log)
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         svc.shutdownForUnload()
         svc.shutdownForUnload()
         svc.dispose()
 
-        assertEquals(KiloAppState.Disconnected, svc.appState.value)
+        assertEquals(AccureAppState.Disconnected, svc.appState.value)
         assertNull(svc.profile)
         assertNull(svc.config)
         assertTrue(svc.notifications.isEmpty())
@@ -83,7 +83,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         assertNotNull(svc.config)
@@ -97,7 +97,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         val dto = appStateDto(svc.appState.value)
@@ -108,55 +108,55 @@ class KiloBackendAppServiceTest {
 
     @Test
     fun `config warnings are loaded without blocking Ready`() = runBlocking {
-        mock.warnings = """[{"path":".kilo/kilo.json","message":"Invalid JSON","detail":"CloseBraceExpected"}]"""
+        mock.warnings = """[{"path":".accurecode/accure.json","message":"Invalid JSON","detail":"CloseBraceExpected"}]"""
         val svc = create()
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
-        val ready = svc.appState.value as KiloAppState.Ready
+        val ready = svc.appState.value as AccureAppState.Ready
         assertEquals(1, ready.data.warnings.size)
-        assertEquals(".kilo/kilo.json", ready.data.warnings.first().path)
+        assertEquals(".accurecode/accure.json", ready.data.warnings.first().path)
         assertEquals("Invalid JSON", ready.data.warnings.first().message)
     }
 
     @Test
     fun `retry refreshes warnings while Ready`() = runBlocking {
-        mock.warnings = """[{"path":".kilo/kilo.json","message":"Invalid JSON","detail":"CloseBraceExpected"}]"""
+        mock.warnings = """[{"path":".accurecode/accure.json","message":"Invalid JSON","detail":"CloseBraceExpected"}]"""
         val svc = create()
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
-        val before = svc.appState.value as KiloAppState.Ready
+        val before = svc.appState.value as AccureAppState.Ready
         assertEquals(1, before.data.warnings.size)
 
         mock.warnings = "[]"
         svc.retry()
 
         withTimeout(5_000) {
-            while ((svc.appState.value as? KiloAppState.Ready)?.data?.warnings?.isNotEmpty() == true) {
+            while ((svc.appState.value as? AccureAppState.Ready)?.data?.warnings?.isNotEmpty() == true) {
                 delay(100)
             }
         }
 
-        val ready = svc.appState.value as KiloAppState.Ready
+        val ready = svc.appState.value as AccureAppState.Ready
         assertTrue(ready.data.warnings.isEmpty())
         assertTrue(svc.warnings.isEmpty())
     }
 
     @Test
     fun `retry restarts app when warnings remain after refresh`() = runBlocking {
-        mock.warnings = """[{"path":".kilo/kilo.json","message":"Invalid JSON","detail":"CloseBraceExpected"}]"""
+        mock.warnings = """[{"path":".accurecode/accure.json","message":"Invalid JSON","detail":"CloseBraceExpected"}]"""
         val svc = create()
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         val before = mock.requestCount("/global/config")
@@ -179,7 +179,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         assertNotNull(svc.profile)
@@ -192,7 +192,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         svc.setOrganization("org_1")
@@ -209,12 +209,12 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         // Profile is null but we still reached Ready
         assertNull(svc.profile)
-        assertIs<KiloAppState.Ready>(svc.appState.value)
+        assertIs<AccureAppState.Ready>(svc.appState.value)
     }
 
     @Test
@@ -225,10 +225,10 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(15_000) {
-            svc.appState.first { it is KiloAppState.Error }
+            svc.appState.first { it is AccureAppState.Error }
         }
 
-        val err = svc.appState.value as KiloAppState.Error
+        val err = svc.appState.value as AccureAppState.Error
         assertEquals("Failed to load required data", err.message)
         assertTrue(err.errors.any { it.resource == "config" })
     }
@@ -241,10 +241,10 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(15_000) {
-            svc.appState.first { it is KiloAppState.Error }
+            svc.appState.first { it is AccureAppState.Error }
         }
 
-        val err = svc.appState.value as KiloAppState.Error
+        val err = svc.appState.value as AccureAppState.Error
         assertTrue(err.errors.any { it.resource == "notifications" })
     }
 
@@ -256,7 +256,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(15_000) {
-            svc.appState.first { it is KiloAppState.Error }
+            svc.appState.first { it is AccureAppState.Error }
         }
 
         assertEquals(3, mock.requestCount("/global/config"))
@@ -266,7 +266,7 @@ class KiloBackendAppServiceTest {
         svc.retry()
 
         withTimeout(15_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         assertEquals("retry/model", svc.config?.model)
@@ -275,10 +275,10 @@ class KiloBackendAppServiceTest {
 
     @Test
     fun `connection error surfaces details as connection load error`() = runBlocking {
-        val failing = object : ai.kilocode.backend.cli.CliServer {
+        val failing = object : ai.accurecode.backend.cli.CliServer {
             override var forceExtract = false
             override fun process(): Process? = null
-            override suspend fun init() = ai.kilocode.backend.cli.CliServer.State.Error(
+            override suspend fun init() = ai.accurecode.backend.cli.CliServer.State.Error(
                 message = "CLI startup failed",
                 details = "stderr: missing dependency",
             )
@@ -286,14 +286,14 @@ class KiloBackendAppServiceTest {
             override fun stop() {}
             override fun dispose() {}
         }
-        val svc = KiloBackendAppService.create(scope, failing, log)
+        val svc = AccureBackendAppService.create(scope, failing, log)
         svc.connect()
 
         withTimeout(5_000) {
-            svc.appState.first { it is KiloAppState.Error }
+            svc.appState.first { it is AccureAppState.Error }
         }
 
-        val err = svc.appState.value as KiloAppState.Error
+        val err = svc.appState.value as AccureAppState.Error
         assertEquals("CLI startup failed", err.message)
         assertContains(err.errors.map { it.resource }, "connection")
         assertEquals("stderr: missing dependency", err.errors.first { it.resource == "connection" }.detail)
@@ -302,18 +302,18 @@ class KiloBackendAppServiceTest {
 
     @Test
     fun `warning state emits final warn log`() = runBlocking {
-        mock.warnings = """[{"path":".kilo/kilo.json","message":"Invalid JSON","detail":"CloseBraceExpected"}]"""
+        mock.warnings = """[{"path":".accurecode/accure.json","message":"Invalid JSON","detail":"CloseBraceExpected"}]"""
         val svc = create()
         svc.connect()
 
         withTimeout(10_000) {
             svc.appState.first { state ->
-                state is KiloAppState.Ready && state.data.warnings.any { it.path == ".kilo/kilo.json" }
+                state is AccureAppState.Ready && state.data.warnings.any { it.path == ".accurecode/accure.json" }
             }
         }
 
         assertTrue(log.awaitMessage {
-            it.contains("App warnings:") && it.contains(".kilo/kilo.json: Invalid JSON")
+            it.contains("App warnings:") && it.contains(".accurecode/accure.json: Invalid JSON")
         })
     }
 
@@ -325,7 +325,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(15_000) {
-            svc.appState.first { it is KiloAppState.Error }
+            svc.appState.first { it is AccureAppState.Error }
         }
 
         assertTrue(log.messages.any {
@@ -339,12 +339,12 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         // Second connect should not change state
         svc.connect()
-        assertIs<KiloAppState.Ready>(svc.appState.value)
+        assertIs<AccureAppState.Ready>(svc.appState.value)
     }
 
     @Test
@@ -353,7 +353,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         val dto = svc.health()
@@ -368,7 +368,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         val dto = svc.health()
@@ -384,11 +384,11 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(15_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         assertNull(svc.profile)
-        assertIs<KiloAppState.Ready>(svc.appState.value)
+        assertIs<AccureAppState.Ready>(svc.appState.value)
     }
 
     @Test
@@ -397,11 +397,11 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         svc.dispose()
-        assertEquals(KiloAppState.Disconnected, svc.appState.value)
+        assertEquals(AccureAppState.Disconnected, svc.appState.value)
     }
 
     @Test
@@ -414,15 +414,15 @@ class KiloBackendAppServiceTest {
             svc.connect()
 
             val loading = withTimeout(10_000) {
-                svc.appState.first { it is KiloAppState.Loading }
+                svc.appState.first { it is AccureAppState.Loading }
             }
-            assertIs<KiloAppState.Loading>(loading)
+            assertIs<AccureAppState.Loading>(loading)
 
             gate.countDown()
             val ready = withTimeout(10_000) {
-                svc.appState.first { it is KiloAppState.Ready }
+                svc.appState.first { it is AccureAppState.Ready }
             }
-            assertIs<KiloAppState.Ready>(ready)
+            assertIs<AccureAppState.Ready>(ready)
         } finally {
             gate.countDown()
         }
@@ -438,12 +438,12 @@ class KiloBackendAppServiceTest {
             svc.connect()
 
             withTimeout(10_000) {
-                svc.appState.first { it is KiloAppState.Loading }
+                svc.appState.first { it is AccureAppState.Loading }
             }
 
             val err = withTimeout(10_000) {
-                svc.appState.first { it is KiloAppState.Error }
-            } as KiloAppState.Error
+                svc.appState.first { it is AccureAppState.Error }
+            } as AccureAppState.Error
 
             assertEquals("Failed to load required data", err.message)
             assertTrue(err.errors.any { it.detail?.contains("timeout", ignoreCase = true) == true })
@@ -462,8 +462,8 @@ class KiloBackendAppServiceTest {
             svc.connect()
 
             val ready = withTimeout(10_000) {
-                svc.appState.first { it is KiloAppState.Ready }
-            } as KiloAppState.Ready
+                svc.appState.first { it is AccureAppState.Ready }
+            } as AccureAppState.Ready
 
             assertTrue(ready.data.warnings.isEmpty())
             assertTrue(svc.warnings.isEmpty())
@@ -482,17 +482,17 @@ class KiloBackendAppServiceTest {
             svc.connect()
 
             withTimeout(10_000) {
-                svc.appState.first { it is KiloAppState.Loading }
+                svc.appState.first { it is AccureAppState.Loading }
             }
 
             gate.countDown()
             svc.restart()
 
             withTimeout(10_000) {
-                svc.appState.first { it is KiloAppState.Ready }
+                svc.appState.first { it is AccureAppState.Ready }
             }
 
-            assertIs<KiloAppState.Ready>(svc.appState.value)
+            assertIs<AccureAppState.Ready>(svc.appState.value)
             assertFalse(log.messages.any { it.contains("Application start timed out") })
         } finally {
             gate.countDown()
@@ -509,17 +509,17 @@ class KiloBackendAppServiceTest {
             svc.connect()
 
             withTimeout(10_000) {
-                svc.appState.first { it is KiloAppState.Loading }
+                svc.appState.first { it is AccureAppState.Loading }
             }
 
             gate.countDown()
             svc.reinstall()
 
             withTimeout(10_000) {
-                svc.appState.first { it is KiloAppState.Ready }
+                svc.appState.first { it is AccureAppState.Ready }
             }
 
-            assertIs<KiloAppState.Ready>(svc.appState.value)
+            assertIs<AccureAppState.Ready>(svc.appState.value)
             assertFalse(log.messages.any { it.contains("Application start timed out") })
         } finally {
             gate.countDown()
@@ -533,7 +533,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         assertEquals("initial", svc.config?.model)
@@ -547,7 +547,7 @@ class KiloBackendAppServiceTest {
         assertTrue(mock.awaitRequestCount("/global/config", before + 1))
         withTimeout(5_000) {
             svc.appState.first { state ->
-                state is KiloAppState.Ready && state.data.config.model == "updated"
+                state is AccureAppState.Ready && state.data.config.model == "updated"
             }
         }
 
@@ -556,15 +556,15 @@ class KiloBackendAppServiceTest {
 
     @Test
     fun `SSE config updated refreshes warnings`() = runBlocking {
-        mock.warnings = """[{"path":".kilo/kilo.json","message":"Invalid JSON","detail":"CloseBraceExpected"}]"""
+        mock.warnings = """[{"path":".accurecode/accure.json","message":"Invalid JSON","detail":"CloseBraceExpected"}]"""
         val svc = create()
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
-        assertEquals(1, (svc.appState.value as KiloAppState.Ready).data.warnings.size)
+        assertEquals(1, (svc.appState.value as AccureAppState.Ready).data.warnings.size)
 
         mock.warnings = "[]"
         val before = mock.requestCount("/config/warnings")
@@ -574,27 +574,27 @@ class KiloBackendAppServiceTest {
         assertTrue(mock.awaitRequestCount("/config/warnings", before + 1))
         withTimeout(5_000) {
             svc.appState.first { state ->
-                state is KiloAppState.Ready && state.data.warnings.isEmpty()
+                state is AccureAppState.Ready && state.data.warnings.isEmpty()
             }
         }
 
-        assertTrue((svc.appState.value as KiloAppState.Ready).data.warnings.isEmpty())
+        assertTrue((svc.appState.value as AccureAppState.Ready).data.warnings.isEmpty())
     }
 
     // ------ Auth mapping tests ------
 
     @Test
     fun `start login maps device auth response`() = runBlocking<Unit> {
-        // Default authorizeResponse: url=https://auth.kilo.ai/device, code=TEST-1234
+        // Default authorizeResponse: url=https://auth.accurecode.ai/device, code=TEST-1234
         val svc = create()
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         val auth = svc.startLogin(null)
-        assertEquals("https://auth.kilo.ai/device", auth.verificationUrl)
+        assertEquals("https://auth.accurecode.ai/device", auth.verificationUrl)
         assertEquals("TEST-1234", auth.code)
         assertEquals(900, auth.expiresIn)
         assertNotNull(mock.lastAuthorizeBody)
@@ -607,7 +607,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         val profile = svc.completeLogin(null)
@@ -624,7 +624,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         mock.awaitSseConnection()
@@ -639,16 +639,16 @@ class KiloBackendAppServiceTest {
             // Allow transient Loading states, wait for final Ready
             while (true) {
                 val state = svc.appState.value
-                if (state is KiloAppState.Ready) {
+                if (state is AccureAppState.Ready) {
                     // Verify it's stable
                     delay(500)
-                    if (svc.appState.value is KiloAppState.Ready) break
+                    if (svc.appState.value is AccureAppState.Ready) break
                 }
                 delay(100)
             }
         }
 
-        assertIs<KiloAppState.Ready>(svc.appState.value)
+        assertIs<AccureAppState.Ready>(svc.appState.value)
         assertNotNull(svc.config)
     }
 
@@ -658,7 +658,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         // Restart should tear down and reconnect
@@ -666,10 +666,10 @@ class KiloBackendAppServiceTest {
 
         // Should transition back to Ready after restart
         withTimeout(15_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
-        assertIs<KiloAppState.Ready>(svc.appState.value)
+        assertIs<AccureAppState.Ready>(svc.appState.value)
         assertNotNull(svc.config)
     }
 
@@ -679,7 +679,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         // Close SSE to trigger reconnect path
@@ -690,10 +690,10 @@ class KiloBackendAppServiceTest {
         // FakeCliServer returns no process, so it delegates to onReconnect
         // which calls reconnect() under mutex)
         withTimeout(15_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
-        assertIs<KiloAppState.Ready>(svc.appState.value)
+        assertIs<AccureAppState.Ready>(svc.appState.value)
     }
 
     // ------ Profile DTO mapping tests ------
@@ -713,7 +713,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         val dto = appStateDto(svc.appState.value)
@@ -731,7 +731,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         // Update mock to return different profile
@@ -751,7 +751,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         assertNotNull(svc.profile)
@@ -770,7 +770,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         val before = svc.profile
@@ -794,7 +794,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         mock.authorizeStatus = 500
@@ -810,17 +810,17 @@ class KiloBackendAppServiceTest {
     @Test
     fun `start login without code returns null code but url present`() = runBlocking {
         // Instructions without 'code:' — the regex match should return null
-        mock.authorizeResponse = """{"url":"https://auth.kilo.ai/device","method":"code","instructions":"Open the URL in your browser to sign in"}"""
+        mock.authorizeResponse = """{"url":"https://auth.accurecode.ai/device","method":"code","instructions":"Open the URL in your browser to sign in"}"""
         val svc = create()
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         val auth = svc.startLogin(null)
         assertNull(auth.code, "code should be null when instructions have no code: prefix")
-        assertEquals("https://auth.kilo.ai/device", auth.verificationUrl)
+        assertEquals("https://auth.accurecode.ai/device", auth.verificationUrl)
     }
 
     @Test
@@ -829,7 +829,7 @@ class KiloBackendAppServiceTest {
         svc.connect()
 
         withTimeout(10_000) {
-            svc.appState.first { it is KiloAppState.Ready }
+            svc.appState.first { it is AccureAppState.Ready }
         }
 
         mock.callbackStatus = 500

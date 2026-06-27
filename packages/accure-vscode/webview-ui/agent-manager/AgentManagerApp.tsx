@@ -52,32 +52,32 @@ import {
   createSortable,
 } from "@thisbeyond/solid-dnd"
 import type { DragEvent } from "@thisbeyond/solid-dnd"
-import { ThemeProvider } from "@kilocode/accure-ui/theme"
-import { DialogProvider, useDialog } from "@kilocode/accure-ui/context/dialog"
-import { Dialog } from "@kilocode/accure-ui/dialog"
-import { DropdownMenu } from "@kilocode/accure-ui/dropdown-menu"
-import { ContextMenu } from "@kilocode/accure-ui/context-menu"
-import { MarkedProvider } from "@kilocode/accure-ui/context/marked"
-import { CodeComponentProvider } from "@kilocode/accure-ui/context/code"
-import { DiffComponentProvider } from "@kilocode/accure-ui/context/diff"
-import { FileComponentProvider } from "@kilocode/accure-ui/context/file"
-import { Code } from "@kilocode/accure-ui/code"
-import { Diff } from "@kilocode/accure-ui/diff"
-import { File } from "@kilocode/accure-ui/file"
-import { Toast, showToast } from "@kilocode/accure-ui/toast"
-import { ResizeHandle } from "@kilocode/accure-ui/resize-handle"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { Button } from "@kilocode/accure-ui/button"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
-import { Spinner } from "@kilocode/accure-ui/spinner"
-import { Tooltip, TooltipKeybind } from "@kilocode/accure-ui/tooltip"
-import { Popover } from "@kilocode/accure-ui/popover"
+import { ThemeProvider } from "@accurecode/accure-ui/theme"
+import { DialogProvider, useDialog } from "@accurecode/accure-ui/context/dialog"
+import { Dialog } from "@accurecode/accure-ui/dialog"
+import { DropdownMenu } from "@accurecode/accure-ui/dropdown-menu"
+import { ContextMenu } from "@accurecode/accure-ui/context-menu"
+import { MarkedProvider } from "@accurecode/accure-ui/context/marked"
+import { CodeComponentProvider } from "@accurecode/accure-ui/context/code"
+import { DiffComponentProvider } from "@accurecode/accure-ui/context/diff"
+import { FileComponentProvider } from "@accurecode/accure-ui/context/file"
+import { Code } from "@accurecode/accure-ui/code"
+import { Diff } from "@accurecode/accure-ui/diff"
+import { File } from "@accurecode/accure-ui/file"
+import { Toast, showToast } from "@accurecode/accure-ui/toast"
+import { ResizeHandle } from "@accurecode/accure-ui/resize-handle"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { Button } from "@accurecode/accure-ui/button"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
+import { Spinner } from "@accurecode/accure-ui/spinner"
+import { Tooltip, TooltipKeybind } from "@accurecode/accure-ui/tooltip"
+import { Popover } from "@accurecode/accure-ui/popover"
 import { VSCodeProvider, useVSCode } from "../src/context/vscode"
 import { ServerProvider } from "../src/context/server"
 import { ProviderProvider } from "../src/context/provider"
 import { ConfigProvider } from "../src/context/config"
 import { DisplayProvider } from "../src/context/display"
-import { KiloEmbeddingModelsProvider } from "../src/context/kilo-embedding-models"
+import { AccureEmbeddingModelsProvider } from "../src/context/accure-embedding-models"
 import { NotificationsProvider } from "../src/context/notifications"
 import { FeedbackProvider } from "../src/context/feedback"
 import { SessionProvider, useSession } from "../src/context/session"
@@ -1272,7 +1272,7 @@ const AgentManagerContent: Component = () => {
         setStaleWorktreeIds(new Set(state.staleWorktreeIds ?? []))
         if (state.isGitRepo !== undefined) setIsGitRepo(state.isGitRepo)
         if (!worktreesLoaded()) setWorktreesLoaded(true)
-        // When not a git repo, also mark sessions as loaded since the Kilo
+        // When not a git repo, also mark sessions as loaded since the Accure
         // server won't connect to send the sessionsLoaded message.
         if (state.isGitRepo === false && !sessionsLoaded()) setSessionsLoaded(true)
         const prev = new Set(sections().map((s) => s.id)),
@@ -1359,7 +1359,7 @@ const AgentManagerContent: Component = () => {
 
       // Handle initial message send for multi-version sessions.
       // The extension creates the worktrees/sessions, then asks the webview
-      // to send the prompt through the normal KiloProvider sendMessage path.
+      // to send the prompt through the normal AccureProvider sendMessage path.
       // Once the message is sent, clear the loading state for that worktree.
       if ((msg as { type: string }).type === "agentManager.sendInitialMessage") {
         const ev = msg as unknown as AgentManagerSendInitialMessage
@@ -3133,7 +3133,7 @@ export const AgentManagerApp: Component = () => {
                         <ConfigProvider>
                           <DisplayProvider>
                             <IndexingProvider>
-                              <KiloEmbeddingModelsProvider>
+                              <AccureEmbeddingModelsProvider>
                                 <NotificationsProvider>
                                   <SessionProvider>
                                     <FeedbackProvider>
@@ -3145,7 +3145,7 @@ export const AgentManagerApp: Component = () => {
                                     </FeedbackProvider>
                                   </SessionProvider>
                                 </NotificationsProvider>
-                              </KiloEmbeddingModelsProvider>
+                              </AccureEmbeddingModelsProvider>
                             </IndexingProvider>
                           </DisplayProvider>
                         </ConfigProvider>

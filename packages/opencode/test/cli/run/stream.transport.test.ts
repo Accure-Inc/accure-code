@@ -1,15 +1,15 @@
 import { afterEach, describe, expect, mock, spyOn, test } from "bun:test"
-import { KiloClient, type GlobalEvent } from "@kilocode/sdk/v2"
+import { AccureClient, type GlobalEvent } from "@accurecode/sdk/v2"
 import { createSessionTransport } from "@/cli/cmd/run/stream.transport"
 import type { FooterApi, FooterEvent, RunFilePart, StreamCommit } from "@/cli/cmd/run/types"
 
 type SdkEvent = GlobalEvent["payload"]
 type EventStream = AsyncGenerator<SdkEvent, void, unknown>
-type GlobalEventStream = Awaited<ReturnType<KiloClient["global"]["event"]>>["stream"]
-type SessionMessage = NonNullable<Awaited<ReturnType<KiloClient["session"]["messages"]>>["data"]>[number]
-type SessionChild = NonNullable<Awaited<ReturnType<KiloClient["session"]["children"]>>["data"]>[number]
+type GlobalEventStream = Awaited<ReturnType<AccureClient["global"]["event"]>>["stream"]
+type SessionMessage = NonNullable<Awaited<ReturnType<AccureClient["session"]["messages"]>>["data"]>[number]
+type SessionChild = NonNullable<Awaited<ReturnType<AccureClient["session"]["children"]>>["data"]>[number]
 type SessionToolPart = Extract<SessionMessage["parts"][number], { type: "tool" }>
-type SessionStatusMap = NonNullable<Awaited<ReturnType<KiloClient["session"]["status"]>>["data"]>
+type SessionStatusMap = NonNullable<Awaited<ReturnType<AccureClient["session"]["status"]>>["data"]>
 type TextPart = Extract<SessionMessage["parts"][number], { type: "text" }>
 
 afterEach(() => {
@@ -401,25 +401,25 @@ function sdk(
   input: {
     stream?: EventStream
     globalStream?: GlobalEventStream
-    globalEvent?: KiloClient["global"]["event"]
-    promptAsync?: KiloClient["session"]["promptAsync"]
-    status?: KiloClient["session"]["status"]
-    messages?: KiloClient["session"]["messages"]
-    children?: KiloClient["session"]["children"]
-    permissions?: KiloClient["permission"]["list"]
-    questions?: KiloClient["question"]["list"]
+    globalEvent?: AccureClient["global"]["event"]
+    promptAsync?: AccureClient["session"]["promptAsync"]
+    status?: AccureClient["session"]["status"]
+    messages?: AccureClient["session"]["messages"]
+    children?: AccureClient["session"]["children"]
+    permissions?: AccureClient["permission"]["list"]
+    questions?: AccureClient["question"]["list"]
   } = {},
 ) {
-  const client = new KiloClient()
+  const client = new AccureClient()
 
-  const globalEvent: KiloClient["global"]["event"] =
+  const globalEvent: AccureClient["global"]["event"] =
     input.globalEvent ?? (() => globalSse(input.globalStream ?? wrapGlobalStream(input.stream ?? emptyStream())))
-  const promptAsync: KiloClient["session"]["promptAsync"] = input.promptAsync ?? (() => ok(undefined))
-  const status: KiloClient["session"]["status"] = input.status ?? (() => ok({}))
-  const messages: KiloClient["session"]["messages"] = input.messages ?? (() => ok([]))
-  const children: KiloClient["session"]["children"] = input.children ?? (() => ok([]))
-  const permissions: KiloClient["permission"]["list"] = input.permissions ?? (() => ok([]))
-  const questions: KiloClient["question"]["list"] = input.questions ?? (() => ok([]))
+  const promptAsync: AccureClient["session"]["promptAsync"] = input.promptAsync ?? (() => ok(undefined))
+  const status: AccureClient["session"]["status"] = input.status ?? (() => ok({}))
+  const messages: AccureClient["session"]["messages"] = input.messages ?? (() => ok([]))
+  const children: AccureClient["session"]["children"] = input.children ?? (() => ok([]))
+  const permissions: AccureClient["permission"]["list"] = input.permissions ?? (() => ok([]))
+  const questions: AccureClient["question"]["list"] = input.questions ?? (() => ok([]))
 
   spyOn(client.global, "event").mockImplementation(globalEvent)
   spyOn(client.session, "promptAsync").mockImplementation(promptAsync)

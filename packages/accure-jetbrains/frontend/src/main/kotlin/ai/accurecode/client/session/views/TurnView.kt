@@ -1,13 +1,13 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.FileAttachment
-import ai.kilocode.client.session.model.Message
-import ai.kilocode.client.session.ui.SessionLayoutPanel
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.base.PartView
+import ai.accurecode.client.session.model.FileAttachment
+import ai.accurecode.client.session.model.Message
+import ai.accurecode.client.session.ui.SessionLayoutPanel
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.base.PartView
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
 import com.intellij.util.concurrency.annotations.RequiresEdt
@@ -21,7 +21,7 @@ import javax.swing.JComponent
  * assistant [MessageView]s that follow it. The turn id matches the user anchor
  * message id, or the first assistant message id when no user message precedes.
  *
- * Children are stacked by [ai.kilocode.client.session.ui.SessionLayout].
+ * Children are stacked by [ai.accurecode.client.session.ui.SessionLayout].
  */
 class TurnView(
     val id: String,

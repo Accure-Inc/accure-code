@@ -1,6 +1,6 @@
-export const defaultEndpoint = "https://supermassive-black-hole.kiloapps.io/v1/session-export/batch"
+export const defaultEndpoint = "https://supermassive-black-hole.accureapps.io/v1/session-export/batch"
 
-const hosts = new Set(["supermassive-black-hole.kiloapps.io"])
+const hosts = new Set(["supermassive-black-hole.accureapps.io"])
 
 export function resolveEndpoint(opts: { endpoint?: string; env?: string; allowCustom?: boolean }): string {
   const endpoint = opts.endpoint ?? opts.env ?? defaultEndpoint

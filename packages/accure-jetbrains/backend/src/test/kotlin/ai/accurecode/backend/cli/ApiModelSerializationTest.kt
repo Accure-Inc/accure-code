@@ -1,14 +1,14 @@
-package ai.kilocode.backend.cli
+package ai.accurecode.backend.cli
 
-import ai.kilocode.jetbrains.api.infrastructure.Serializer
-import ai.kilocode.jetbrains.api.model.Config
-import ai.kilocode.jetbrains.api.model.GlobalHealth200Response
-import ai.kilocode.jetbrains.api.model.KiloNotifications200ResponseInner
-import ai.kilocode.jetbrains.api.model.KiloNotifications200ResponseInnerAction
-import ai.kilocode.jetbrains.api.model.KiloProfile200Response
-import ai.kilocode.jetbrains.api.model.KiloProfile200ResponseBalance
-import ai.kilocode.jetbrains.api.model.KiloProfile200ResponseProfile
-import ai.kilocode.jetbrains.api.model.KiloProfile200ResponseProfileOrganizationsInner
+import ai.accurecode.jetbrains.api.infrastructure.Serializer
+import ai.accurecode.jetbrains.api.model.Config
+import ai.accurecode.jetbrains.api.model.GlobalHealth200Response
+import ai.accurecode.jetbrains.api.model.AccureNotifications200ResponseInner
+import ai.accurecode.jetbrains.api.model.AccureNotifications200ResponseInnerAction
+import ai.accurecode.jetbrains.api.model.AccureProfile200Response
+import ai.accurecode.jetbrains.api.model.AccureProfile200ResponseBalance
+import ai.accurecode.jetbrains.api.model.AccureProfile200ResponseProfile
+import ai.accurecode.jetbrains.api.model.AccureProfile200ResponseProfileOrganizationsInner
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -60,14 +60,14 @@ class ApiModelSerializationTest {
     }
 
     @Test
-    fun `KiloNotifications200ResponseInner with action`() {
+    fun `AccureNotifications200ResponseInner with action`() {
         val src = """{
             "id": "notif-1",
             "title": "Update available",
             "message": "Version 3.0 is out",
             "action": {"actionText": "Update now", "actionURL": "https://example.com/update"}
         }"""
-        val obj = json.decodeFromString<KiloNotifications200ResponseInner>(src)
+        val obj = json.decodeFromString<AccureNotifications200ResponseInner>(src)
         assertEquals("notif-1", obj.id)
         assertEquals("Update available", obj.title)
         assertEquals("Version 3.0 is out", obj.message)
@@ -77,16 +77,16 @@ class ApiModelSerializationTest {
     }
 
     @Test
-    fun `KiloNotifications200ResponseInner without action`() {
+    fun `AccureNotifications200ResponseInner without action`() {
         val src = """{"id":"n2","title":"Info","message":"Hello"}"""
-        val obj = json.decodeFromString<KiloNotifications200ResponseInner>(src)
+        val obj = json.decodeFromString<AccureNotifications200ResponseInner>(src)
         assertEquals("n2", obj.id)
         assertNull(obj.action)
         assertNull(obj.showIn)
     }
 
     @Test
-    fun `KiloNotifications200ResponseInner with showIn and suggestModelId`() {
+    fun `AccureNotifications200ResponseInner with showIn and suggestModelId`() {
         val src = """{
             "id": "n3",
             "title": "Try new model",
@@ -94,25 +94,25 @@ class ApiModelSerializationTest {
             "showIn": ["cli", "vscode"],
             "suggestModelId": "claude-4"
         }"""
-        val obj = json.decodeFromString<KiloNotifications200ResponseInner>(src)
+        val obj = json.decodeFromString<AccureNotifications200ResponseInner>(src)
         assertEquals(listOf("cli", "vscode"), obj.showIn)
         assertEquals("claude-4", obj.suggestModelId)
     }
 
     @Test
     fun `empty notifications array`() {
-        val list = json.decodeFromString<List<KiloNotifications200ResponseInner>>("[]")
+        val list = json.decodeFromString<List<AccureNotifications200ResponseInner>>("[]")
         assertTrue(list.isEmpty())
     }
 
     @Test
-    fun `KiloProfile200Response with balance`() {
+    fun `AccureProfile200Response with balance`() {
         val src = """{
             "profile": {"email": "user@test.com", "name": "User"},
             "balance": {"balance": 42.5},
             "currentOrgId": "org-1"
         }"""
-        val obj = json.decodeFromString<KiloProfile200Response>(src)
+        val obj = json.decodeFromString<AccureProfile200Response>(src)
         assertEquals("user@test.com", obj.profile.email)
         assertEquals("User", obj.profile.name)
         assertNotNull(obj.balance)
@@ -121,20 +121,20 @@ class ApiModelSerializationTest {
     }
 
     @Test
-    fun `KiloProfile200Response with null balance`() {
+    fun `AccureProfile200Response with null balance`() {
         val src = """{
             "profile": {"email": "user@test.com"},
             "balance": null,
             "currentOrgId": null
         }"""
-        val obj = json.decodeFromString<KiloProfile200Response>(src)
+        val obj = json.decodeFromString<AccureProfile200Response>(src)
         assertEquals("user@test.com", obj.profile.email)
         assertNull(obj.balance)
         assertNull(obj.currentOrgId)
     }
 
     @Test
-    fun `KiloProfile200Response with organizations`() {
+    fun `AccureProfile200Response with organizations`() {
         val src = """{
             "profile": {
                 "email": "user@test.com",
@@ -146,7 +146,7 @@ class ApiModelSerializationTest {
             "balance": null,
             "currentOrgId": "org-1"
         }"""
-        val obj = json.decodeFromString<KiloProfile200Response>(src)
+        val obj = json.decodeFromString<AccureProfile200Response>(src)
         assertNotNull(obj.profile.organizations)
         assertEquals(2, obj.profile.organizations!!.size)
         assertEquals("Acme", obj.profile.organizations!![0].name)

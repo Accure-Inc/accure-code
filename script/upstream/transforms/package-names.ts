@@ -1,16 +1,16 @@
 #!/usr/bin/env bun
 /**
- * Transform package names and branding from opencode to kilo
+ * Transform package names and branding from opencode to accure
  *
  * This script transforms:
- * - opencode-ai -> @kilocode/cli
- * - @opencode-ai/cli -> @kilocode/cli
- * - @opencode-ai/sdk -> @kilocode/sdk
- * - @opencode-ai/plugin -> @kilocode/plugin
- * - OPENCODE_* -> KILO_* (env variables, excluding OPENCODE_API_KEY)
- * - x-opencode-* -> x-kilo-* (HTTP headers)
- * - opencode.db -> kilo.db (database filename)
- * - window.__OPENCODE__ -> window.__KILO__ (window global)
+ * - opencode-ai -> @accurecode/cli
+ * - @opencode-ai/cli -> @accurecode/cli
+ * - @opencode-ai/sdk -> @accurecode/sdk
+ * - @opencode-ai/plugin -> @accurecode/plugin
+ * - OPENCODE_* -> ACCURE_* (env variables, excluding OPENCODE_API_KEY)
+ * - x-opencode-* -> x-accure-* (HTTP headers)
+ * - opencode.db -> accure.db (database filename)
+ * - window.__OPENCODE__ -> window.__ACCURECODE__ (window global)
  */
 
 import { Glob } from "bun"
@@ -30,65 +30,65 @@ export interface TransformOptions {
 
 const PACKAGE_PATTERNS = [
   // In package.json name field
-  { pattern: /"name":\s*"opencode-ai"/, replacement: '"name": "@kilocode/cli"' },
-  { pattern: /"name":\s*"@opencode-ai\/cli"/, replacement: '"name": "@kilocode/cli"' },
+  { pattern: /"name":\s*"opencode-ai"/, replacement: '"name": "@accurecode/cli"' },
+  { pattern: /"name":\s*"@opencode-ai\/cli"/, replacement: '"name": "@accurecode/cli"' },
 
   // In dependencies/devDependencies
-  { pattern: /"opencode-ai":\s*"/g, replacement: '"@kilocode/cli": "' },
-  { pattern: /"@opencode-ai\/cli":\s*"/g, replacement: '"@kilocode/cli": "' },
-  { pattern: /"@opencode-ai\/sdk":\s*"/g, replacement: '"@kilocode/sdk": "' },
-  { pattern: /"@opencode-ai\/plugin":\s*"/g, replacement: '"@kilocode/plugin": "' },
+  { pattern: /"opencode-ai":\s*"/g, replacement: '"@accurecode/cli": "' },
+  { pattern: /"@opencode-ai\/cli":\s*"/g, replacement: '"@accurecode/cli": "' },
+  { pattern: /"@opencode-ai\/sdk":\s*"/g, replacement: '"@accurecode/sdk": "' },
+  { pattern: /"@opencode-ai\/plugin":\s*"/g, replacement: '"@accurecode/plugin": "' },
 
   // In any string context (mock.module, dynamic references, etc.)
   // Only cli, sdk, and plugin are renamed — other @opencode-ai/* packages
   // (e.g. @opencode-ai/ui, @opencode-ai/util) keep their upstream names.
-  { pattern: /@opencode-ai\/cli(?=\/|"|'|`|$)/g, replacement: "@kilocode/cli" },
-  { pattern: /@opencode-ai\/sdk(?=\/|"|'|`|$)/g, replacement: "@kilocode/sdk" },
-  { pattern: /@opencode-ai\/plugin(?=\/|"|'|`|$)/g, replacement: "@kilocode/plugin" },
+  { pattern: /@opencode-ai\/cli(?=\/|"|'|`|$)/g, replacement: "@accurecode/cli" },
+  { pattern: /@opencode-ai\/sdk(?=\/|"|'|`|$)/g, replacement: "@accurecode/sdk" },
+  { pattern: /@opencode-ai\/plugin(?=\/|"|'|`|$)/g, replacement: "@accurecode/plugin" },
 
   // In import statements (supports subpaths like @opencode-ai/sdk/v2)
-  { pattern: /from\s+["']opencode-ai["']/g, replacement: 'from "@kilocode/cli"' },
-  { pattern: /from\s+["']@opencode-ai\/cli(\/[^"']*)?["']/g, replacement: 'from "@kilocode/cli$1"' },
-  { pattern: /from\s+["']@opencode-ai\/sdk(\/[^"']*)?["']/g, replacement: 'from "@kilocode/sdk$1"' },
-  { pattern: /from\s+["']@opencode-ai\/plugin(\/[^"']*)?["']/g, replacement: 'from "@kilocode/plugin$1"' },
+  { pattern: /from\s+["']opencode-ai["']/g, replacement: 'from "@accurecode/cli"' },
+  { pattern: /from\s+["']@opencode-ai\/cli(\/[^"']*)?["']/g, replacement: 'from "@accurecode/cli$1"' },
+  { pattern: /from\s+["']@opencode-ai\/sdk(\/[^"']*)?["']/g, replacement: 'from "@accurecode/sdk$1"' },
+  { pattern: /from\s+["']@opencode-ai\/plugin(\/[^"']*)?["']/g, replacement: 'from "@accurecode/plugin$1"' },
 
   // In require statements (supports subpaths like @opencode-ai/sdk/v2)
-  { pattern: /require\(["']opencode-ai["']\)/g, replacement: 'require("@kilocode/cli")' },
-  { pattern: /require\(["']@opencode-ai\/cli(\/[^"']*)?["']\)/g, replacement: 'require("@kilocode/cli$1")' },
-  { pattern: /require\(["']@opencode-ai\/sdk(\/[^"']*)?["']\)/g, replacement: 'require("@kilocode/sdk$1")' },
-  { pattern: /require\(["']@opencode-ai\/plugin(\/[^"']*)?["']\)/g, replacement: 'require("@kilocode/plugin$1")' },
+  { pattern: /require\(["']opencode-ai["']\)/g, replacement: 'require("@accurecode/cli")' },
+  { pattern: /require\(["']@opencode-ai\/cli(\/[^"']*)?["']\)/g, replacement: 'require("@accurecode/cli$1")' },
+  { pattern: /require\(["']@opencode-ai\/sdk(\/[^"']*)?["']\)/g, replacement: 'require("@accurecode/sdk$1")' },
+  { pattern: /require\(["']@opencode-ai\/plugin(\/[^"']*)?["']\)/g, replacement: 'require("@accurecode/plugin$1")' },
 
   // Internal placeholder hostname used for in-process RPC (never resolved by DNS)
-  { pattern: /opencode\.internal/g, replacement: "kilo.internal" },
+  { pattern: /opencode\.internal/g, replacement: "accure.internal" },
 
   // In npx/npm commands
-  { pattern: /npx opencode-ai/g, replacement: "npx @kilocode/cli" },
-  { pattern: /npm install opencode-ai/g, replacement: "npm install @kilocode/cli" },
-  { pattern: /bun add opencode-ai/g, replacement: "bun add @kilocode/cli" },
+  { pattern: /npx opencode-ai/g, replacement: "npx @accurecode/cli" },
+  { pattern: /npm install opencode-ai/g, replacement: "npm install @accurecode/cli" },
+  { pattern: /bun add opencode-ai/g, replacement: "bun add @accurecode/cli" },
 
-  // SDK public API renames (Opencode → Kilo)
+  // SDK public API renames (Opencode → Accure)
   // Order matters: longer names first to avoid partial matches
-  { pattern: /OpencodeClientConfig/g, replacement: "KiloClientConfig" },
-  { pattern: /createOpencodeClient/g, replacement: "createKiloClient" },
-  { pattern: /createOpencodeServer/g, replacement: "createKiloServer" },
-  { pattern: /createOpencodeTui/g, replacement: "createKiloTui" },
-  { pattern: /OpencodeClient/g, replacement: "KiloClient" },
+  { pattern: /OpencodeClientConfig/g, replacement: "AccureClientConfig" },
+  { pattern: /createOpencodeClient/g, replacement: "createAccureClient" },
+  { pattern: /createOpencodeServer/g, replacement: "createAccureServer" },
+  { pattern: /createOpencodeTui/g, replacement: "createAccureTui" },
+  { pattern: /OpencodeClient/g, replacement: "AccureClient" },
   // createOpencode (without suffix) needs negative lookahead to avoid matching createOpencodeClient
-  { pattern: /\bcreateOpencode\b(?!Client|Server|Tui)/g, replacement: "createKilo" },
+  { pattern: /\bcreateOpencode\b(?!Client|Server|Tui)/g, replacement: "createAccure" },
 
   // Branding: environment variables (exclude OPENCODE_API_KEY — upstream Zen SaaS key)
-  { pattern: /\bOPENCODE_(?!API_KEY\b)([A-Z_]+)\b/g, replacement: "KILO_$1" },
-  { pattern: /VITE_OPENCODE_/g, replacement: "VITE_KILO_" },
-  { pattern: /_EXTENSION_OPENCODE_/g, replacement: "_EXTENSION_KILO_" },
+  { pattern: /\bOPENCODE_(?!API_KEY\b)([A-Z_]+)\b/g, replacement: "ACCURE_$1" },
+  { pattern: /VITE_OPENCODE_/g, replacement: "VITE_ACCURECODE_" },
+  { pattern: /_EXTENSION_OPENCODE_/g, replacement: "_EXTENSION_ACCURECODE_" },
 
   // Branding: HTTP header prefix
-  { pattern: /x-opencode-/g, replacement: "x-kilo-" },
+  { pattern: /x-opencode-/g, replacement: "x-accure-" },
 
   // Branding: window global
-  { pattern: /window\.__OPENCODE__/g, replacement: "window.__KILO__" },
+  { pattern: /window\.__OPENCODE__/g, replacement: "window.__ACCURECODE__" },
 
   // Branding: database filename
-  { pattern: /opencode\.db/g, replacement: "kilo.db" },
+  { pattern: /opencode\.db/g, replacement: "accure.db" },
 ]
 
 /**

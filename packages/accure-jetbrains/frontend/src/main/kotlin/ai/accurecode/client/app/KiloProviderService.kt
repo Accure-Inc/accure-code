@@ -1,21 +1,21 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.client.app
+package ai.accurecode.client.app
 
-import ai.kilocode.log.KiloLog
-import ai.kilocode.rpc.KiloProviderRpcApi
-import ai.kilocode.rpc.dto.CustomModelFetchDto
-import ai.kilocode.rpc.dto.CustomModelFetchResultDto
-import ai.kilocode.rpc.dto.CustomProviderSaveDto
-import ai.kilocode.rpc.dto.LoadErrorDto
-import ai.kilocode.rpc.dto.ProviderActionResultDto
-import ai.kilocode.rpc.dto.ProviderConnectDto
-import ai.kilocode.rpc.dto.ProviderDisconnectDto
-import ai.kilocode.rpc.dto.ProviderEnableDto
-import ai.kilocode.rpc.dto.ProviderOAuthAuthorizeDto
-import ai.kilocode.rpc.dto.ProviderOAuthCallbackDto
-import ai.kilocode.rpc.dto.ProviderOAuthReadyDto
-import ai.kilocode.rpc.dto.ProviderSettingsDto
+import ai.accurecode.log.AccureLog
+import ai.accurecode.rpc.AccureProviderRpcApi
+import ai.accurecode.rpc.dto.CustomModelFetchDto
+import ai.accurecode.rpc.dto.CustomModelFetchResultDto
+import ai.accurecode.rpc.dto.CustomProviderSaveDto
+import ai.accurecode.rpc.dto.LoadErrorDto
+import ai.accurecode.rpc.dto.ProviderActionResultDto
+import ai.accurecode.rpc.dto.ProviderConnectDto
+import ai.accurecode.rpc.dto.ProviderDisconnectDto
+import ai.accurecode.rpc.dto.ProviderEnableDto
+import ai.accurecode.rpc.dto.ProviderOAuthAuthorizeDto
+import ai.accurecode.rpc.dto.ProviderOAuthCallbackDto
+import ai.accurecode.rpc.dto.ProviderOAuthReadyDto
+import ai.accurecode.rpc.dto.ProviderSettingsDto
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import fleet.rpc.client.durable
@@ -24,25 +24,25 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withTimeout
 
 @Service(Service.Level.APP)
-class KiloProviderService internal constructor(
+class AccureProviderService internal constructor(
     private val cs: CoroutineScope,
-    private val rpc: KiloProviderRpcApi?,
+    private val rpc: AccureProviderRpcApi?,
 ) {
     constructor(cs: CoroutineScope) : this(cs, null)
 
     companion object {
-        private val LOG = KiloLog.create(KiloProviderService::class.java)
+        private val LOG = AccureLog.create(AccureProviderService::class.java)
         private const val RPC_TIMEOUT_MS = 20_000L
         internal const val OAUTH_RPC_TIMEOUT_MS = 90_000L
     }
 
-    private suspend fun <T> call(name: String, timeoutMs: Long = RPC_TIMEOUT_MS, block: suspend KiloProviderRpcApi.() -> T): T {
+    private suspend fun <T> call(name: String, timeoutMs: Long = RPC_TIMEOUT_MS, block: suspend AccureProviderRpcApi.() -> T): T {
         val start = System.currentTimeMillis()
         LOG.info("provider settings rpc $name: start")
         val api = rpc
         return try {
             val result = withTimeout(timeoutMs) {
-                if (api != null) block(api) else durable { block(KiloProviderRpcApi.getInstance()) }
+                if (api != null) block(api) else durable { block(AccureProviderRpcApi.getInstance()) }
             }
             LOG.info("provider settings rpc $name: completed durationMs=${System.currentTimeMillis() - start}")
             result
@@ -67,7 +67,7 @@ class KiloProviderService internal constructor(
     suspend fun saveCustom(input: CustomProviderSaveDto): ProviderActionResultDto = action(input.directory) { saveCustom(input) }
     suspend fun fetchCustomModels(input: CustomModelFetchDto): CustomModelFetchResultDto = call("fetch custom models") { fetchCustomModels(input) }
 
-    private suspend fun action(directory: String, timeoutMs: Long = RPC_TIMEOUT_MS, block: suspend KiloProviderRpcApi.() -> ProviderActionResultDto): ProviderActionResultDto {
+    private suspend fun action(directory: String, timeoutMs: Long = RPC_TIMEOUT_MS, block: suspend AccureProviderRpcApi.() -> ProviderActionResultDto): ProviderActionResultDto {
         LOG.info("provider settings action: start dir=$directory")
         val result = try {
             call("action dir=$directory", timeoutMs, block)
@@ -77,8 +77,8 @@ class KiloProviderService internal constructor(
             LOG.warn("provider settings action failed for directory=$directory", e)
             return ProviderActionResultDto(state(directory), error = e.message)
         }
-        service<KiloWorkspaceService>().reload(directory)
-        service<KiloAppService>().refreshProfileAsync()
+        service<AccureWorkspaceService>().reload(directory)
+        service<AccureAppService>().refreshProfileAsync()
         LOG.info("provider settings action: completed dir=$directory")
         return result
     }

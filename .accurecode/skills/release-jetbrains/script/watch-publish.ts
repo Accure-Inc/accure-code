@@ -3,7 +3,7 @@
 import { $ } from "bun"
 import { parseArgs } from "util"
 
-const repo = process.env.GH_REPO ?? process.env.GITHUB_REPOSITORY ?? "Kilo-Org/kilocode"
+const repo = process.env.GH_REPO ?? process.env.GITHUB_REPOSITORY ?? "Accure-Inc/accure-code"
 const workflow = "publish-jetbrains.yml"
 const { values } = parseArgs({
   args: Bun.argv.slice(2),
@@ -18,7 +18,7 @@ const { values } = parseArgs({
 
 if (values.help) {
   console.log(
-    `Usage: bun .kilo/skills/release-jetbrains/script/watch-publish.ts --pr <number> --version <version> [--merge] [--run-id <id>]`,
+    `Usage: bun .accurecode/skills/release-jetbrains/script/watch-publish.ts --pr <number> --version <version> [--merge] [--run-id <id>]`,
   )
   process.exit(0)
 }
@@ -84,7 +84,9 @@ async function find() {
     if (run) return String(run.databaseId)
     await Bun.sleep(1000)
   }
-  throw new Error(`No ${workflow} run found for ${branch}. Merge PR ${pr} first, or pass --merge to merge it automatically.`)
+  throw new Error(
+    `No ${workflow} run found for ${branch}. Merge PR ${pr} first, or pass --merge to merge it automatically.`,
+  )
 }
 
 async function merged() {

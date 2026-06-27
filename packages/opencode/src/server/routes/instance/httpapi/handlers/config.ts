@@ -1,14 +1,14 @@
 import { Config } from "@/config/config"
-// kilocode_change start - preserve Kilo API default model overlay
-import { fetchDefaultModel } from "@kilocode/accure-gateway"
+// accurecode_change start - preserve Accure API default model overlay
+import { fetchDefaultModel } from "@accurecode/accure-gateway"
 import { Auth } from "@/auth"
 import { ModelID, ProviderID } from "@/provider/schema"
-import { filterPromptTrainingModels, nonEmptyProviders } from "@/kilocode/provider/model-filter"
-// kilocode_change end
+import { filterPromptTrainingModels, nonEmptyProviders, filterBedrockModels } from "@/accurecode/provider/model-filter"
+// accurecode_change end
 import { Provider } from "@/provider/provider"
 import * as InstanceState from "@/effect/instance-state"
 import { Effect } from "effect"
-import { HttpApiBuilder, HttpApiError } from "effect/unstable/httpapi" // kilocode_change
+import { HttpApiBuilder, HttpApiError } from "effect/unstable/httpapi" // accurecode_change
 import { InstanceHttpApi } from "../api"
 import { markInstanceForDisposal } from "../lifecycle"
 
@@ -27,32 +27,33 @@ export const configHandlers = HttpApiBuilder.group(InstanceHttpApi, "config", (h
       return ctx.payload
     })
 
-    // kilocode_change start
+    // accurecode_change start
     const warnings = Effect.fn("ConfigHttpApi.warnings")(function* () {
       return yield* configSvc.warnings()
     })
-    // kilocode_change end
+    // accurecode_change end
 
     const providers = Effect.fn("ConfigHttpApi.providers")(function* () {
-      // kilocode_change start
+      // accurecode_change start
       const config = yield* configSvc.get()
-      const providers = filterPromptTrainingModels(
+      const providers = filterBedrockModels(filterPromptTrainingModels( // accurecode_change
         yield* providerSvc.list(),
         config.hide_prompt_training_models === true,
-      )
+      ))
       const defaults = Provider.defaultModelIDs(nonEmptyProviders(providers))
-      // kilocode_change end
+      // accurecode_change end
 
-      // kilocode_change start - Fetch default model from Kilo API when the kilo provider is available.
-      if (providers[ProviderID.kilo]) {
+      // accurecode_change start - Fetch default model from Accure API when the accure provider is available.
+      if (providers[ProviderID.accure]) {
         const auth = yield* Auth.Service
-        const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({}))) // kilocode_change
+        const info = yield* auth.get("accure").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({}))) // accurecode_change
         const token = info?.type === "oauth" ? info.access : info?.key
         const organizationId = info?.type === "oauth" ? info.accountId : undefined
         const model = yield* Effect.promise(() => fetchDefaultModel(token, organizationId))
-        if (model && providers[ProviderID.kilo]?.models[model]) defaults[ProviderID.kilo] = ModelID.make(model)
+        if (model && providers[ProviderID.accure]?.models[model])
+          defaults[ProviderID.accure] = ModelID.make(model)
       }
-      // kilocode_change end
+      // accurecode_change end
 
       return {
         providers: Object.values(providers).map(Provider.toPublicInfo),
@@ -64,6 +65,6 @@ export const configHandlers = HttpApiBuilder.group(InstanceHttpApi, "config", (h
       .handle("get", get)
       .handle("update", update)
       .handle("warnings", warnings)
-      .handle("providers", providers) // kilocode_change
+      .handle("providers", providers) // accurecode_change
   }),
 )

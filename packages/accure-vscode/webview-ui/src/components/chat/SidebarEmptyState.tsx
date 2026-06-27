@@ -1,9 +1,9 @@
 import { type Component, Show } from "solid-js"
-import { Spinner } from "@kilocode/accure-ui/spinner"
+import { Spinner } from "@accurecode/accure-ui/spinner"
 import { useWorkStyle } from "../../context/work-style"
 import { useLanguage } from "../../context/language"
 import { WorkStylePicker } from "../shared/WorkStylePicker"
-import { KiloLogo, WelcomeEmptyState } from "./WelcomeEmptyState"
+import { AccureLogo, WelcomeEmptyState } from "./WelcomeEmptyState"
 
 interface SidebarEmptyStateProps {
   onSelectSession?: (id: string) => void
@@ -29,7 +29,7 @@ export const SidebarEmptyState: Component<SidebarEmptyStateProps> = (props) => {
         fallback={<WelcomeEmptyState onSelectSession={props.onSelectSession} onShowHistory={props.onShowHistory} />}
       >
         <div class="message-list-empty work-style-empty">
-          <KiloLogo />
+          <AccureLogo />
           <h1 class="work-style-welcome">{language.t("workStyle.onboarding.welcome")}</h1>
           <WorkStylePicker />
         </div>

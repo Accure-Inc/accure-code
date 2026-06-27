@@ -1,11 +1,11 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.controller.SessionController
-import ai.kilocode.client.session.controller.SessionControllerEvent
-import ai.kilocode.client.session.controller.SessionControllerListener
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.controller.SessionController
+import ai.accurecode.client.session.controller.SessionControllerEvent
+import ai.accurecode.client.session.controller.SessionControllerListener
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
@@ -58,7 +58,7 @@ class ConnectionPanel(
         addMouseListener(click)
     }
 
-    private val retry = ActionLink(KiloBundle.message("session.connection.retry")) {
+    private val retry = ActionLink(AccureBundle.message("session.connection.retry")) {
         controller.retryConnection()
     }.apply {
         isVisible = false
@@ -126,7 +126,7 @@ class ConnectionPanel(
 
     private fun showConnecting() {
         label.foreground = UiStyle.Colors.weak()
-        label.text = KiloBundle.message("session.connection.connecting")
+        label.text = AccureBundle.message("session.connection.connecting")
         detail = null
         expanded = false
         toggle.isVisible = false

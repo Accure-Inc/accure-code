@@ -1,4 +1,4 @@
-import type { KilocodeSessionImportProjectData as Project } from "@kilocode/sdk/v2"
+import type { AccurecodeSessionImportProjectData as Project } from "@accurecode/sdk/v2"
 import type { LegacyHistoryItem } from "./legacy-types"
 import { createProjectID } from "./ids"
 

@@ -1,4 +1,4 @@
-package ai.kilocode.client.ui.layout
+package ai.accurecode.client.ui.layout
 
 import java.awt.Component
 import java.awt.Container

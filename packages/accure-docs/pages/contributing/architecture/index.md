@@ -1,11 +1,11 @@
 ---
 title: "Architecture Overview"
-description: "Overview of the Kilo Code platform architecture"
+description: "Overview of the Accure Code platform architecture"
 ---
 
 # Architecture Overview
 
-This page maps Kilo Code's repository-defined architecture. It introduces the local runtime, editor clients, cloud service boundaries, and hosted execution products before the subsystem pages add implementation detail.
+This page maps Accure Code's repository-defined architecture. It introduces the local runtime, editor clients, cloud service boundaries, and hosted execution products before the subsystem pages add implementation detail.
 
 {% callout type="info" title="Scope" %}
 Use these pages for stable system boundaries and contributor-wide contracts. Source code remains the reference for feature-level implementation details. Static source shows code paths and deployable surfaces, not production enablement, traffic, retention, or vendor configuration.
@@ -29,33 +29,33 @@ Architecture pages cross two repositories:
 
 | Repository | Contents |
 |---|---|
-| [Kilo&#8209;Org/kilocode](https://github.com/Kilo-Org/kilocode) | Kilo CLI runtime, local daemon, Kilo Console, VS Code extension, JetBrains plugin, JavaScript SDK, codebase indexing, Kilo Gateway client, telemetry, docs, and shared UI packages |
-| [Kilo&#8209;Org/cloud](https://github.com/Kilo-Org/cloud) | Web control plane, Kilo Gateway routes, Cloud Agent session runtime, automation, generated-application preview and deployment services, KiloClaw, Gas Town, billing, and supporting Workers |
+| [Accure&#8209;Org/accurecode](https://github.com/Accure-Inc/accure-code) | Accure CLI runtime, local daemon, Accure Console, VS Code extension, JetBrains plugin, JavaScript SDK, codebase indexing, Accure Gateway client, telemetry, docs, and shared UI packages |
+| [Accure&#8209;Org/cloud](https://github.com/Accure-Org/cloud) | Web control plane, Accure Gateway routes, Cloud Agent session runtime, automation, generated-application preview and deployment services, AccureClaw, Gas Town, billing, and supporting Workers |
 
 ## Three architecture layers
 
 | Layer | Responsibility | Typical boundaries |
 |---|---|---|
-| Local runtime and clients | Runs local coding sessions and connects editor surfaces to one local agent engine | Kilo CLI runtime, `kilo serve` server, local daemon, Kilo Console, VS Code extension, JetBrains plugin |
-| Kilo Cloud shared services | Handles hosted identity, authorization, model routing, billing, orchestration, and shared product services | Web control plane, Kilo Gateway, Workers, queues, Durable Objects, persistence |
-| Hosted product runtimes and automation | Runs scoped cloud work for coding, app generation, assistants, security analysis, and multi-agent orchestration | Cloud Agent, Automation Services, App Builder, Security Agent, KiloClaw, Gas Town, Wasteland |
+| Local runtime and clients | Runs local coding sessions and connects editor surfaces to one local agent engine | Accure CLI runtime, `accure serve` server, local daemon, Accure Console, VS Code extension, JetBrains plugin |
+| Accure Cloud shared services | Handles hosted identity, authorization, model routing, billing, orchestration, and shared product services | Web control plane, Accure Gateway, Workers, queues, Durable Objects, persistence |
+| Hosted product runtimes and automation | Runs scoped cloud work for coding, app generation, assistants, security analysis, and multi-agent orchestration | Cloud Agent, Automation Services, App Builder, Security Agent, AccureClaw, Gas Town, Wasteland |
 
-Local execution and hosted execution are separate boundaries. Editor clients use a local `kilo serve` server. Hosted automation can launch Cloud Agent execution sessions when cloud coding work is required.
+Local execution and hosted execution are separate boundaries. Editor clients use a local `accure serve` server. Hosted automation can launch Cloud Agent execution sessions when cloud coding work is required.
 
 ## Terms used throughout
 
 | Term | Meaning |
 |---|---|
-| Kilo Code | Umbrella product across local clients, Kilo CLI runtime, and Kilo Cloud services |
-| Kilo CLI runtime | Local agent engine in `packages/opencode/`; owns tools, sessions, config, persistence, and provider routing |
-| `kilo serve` server | Local HTTP and SSE process used by editor clients and Kilo Console; selected browser-oriented paths also use WebSocket |
-| Local daemon | Detached reusable `kilo serve` server managed by `kilo daemon` commands |
+| Accure Code | Umbrella product across local clients, Accure CLI runtime, and Accure Cloud services |
+| Accure CLI runtime | Local agent engine in `packages/opencode/`; owns tools, sessions, config, persistence, and provider routing |
+| `accure serve` server | Local HTTP and SSE process used by editor clients and Accure Console; selected browser-oriented paths also use WebSocket |
+| Local daemon | Detached reusable `accure serve` server managed by `accure daemon` commands |
 | Directory context | Normalized local filesystem directory used to select local runtime state |
-| Local runtime instance | Directory-keyed runtime context inside one Kilo CLI process |
+| Local runtime instance | Directory-keyed runtime context inside one Accure CLI process |
 | Local routing workspace | Optional routing context that can resolve to a local directory or remote target |
 | Worktree directory | Alternate git worktree path used as a directory context for isolated concurrent work |
-| Web control plane | Hosted Kilo Cloud application layer for identity, organization authorization, billing, product configuration, and API orchestration |
-| Kilo Gateway | First-party hosted model-routing boundary |
+| Web control plane | Hosted Accure Cloud application layer for identity, organization authorization, billing, product configuration, and API orchestration |
+| Accure Gateway | First-party hosted model-routing boundary |
 | Cloud Agent | Hosted coding-session capability. A Cloud Agent execution session is one hosted run; current session runtime implementation lives in `services/cloud-agent-next/`. |
 
 ## Core execution spine
@@ -65,23 +65,23 @@ The three layers appear in two primary execution shapes: local client requests a
 ```mermaid
 flowchart LR
   subgraph clients ["Local clients"]
-    tui["Kilo CLI TUI"]
-    run["kilo run"]
-    console["Kilo Console"]
+    tui["Accure CLI TUI"]
+    run["accure run"]
+    console["Accure Console"]
     editors["VS Code and JetBrains"]
   end
 
-  subgraph local ["Local Kilo CLI boundary"]
+  subgraph local ["Local Accure CLI boundary"]
     daemon["Local daemon manager"]
-    server["kilo serve server"]
-    runtime["Kilo CLI runtime"]
+    server["accure serve server"]
+    runtime["Accure CLI runtime"]
     router["Provider router"]
   end
 
-  subgraph cloud ["Kilo Cloud shared services"]
+  subgraph cloud ["Accure Cloud shared services"]
     web["Web control plane"]
     workers["Automation Workers, queues, and Durable Objects"]
-    gateway["Kilo Gateway"]
+    gateway["Accure Gateway"]
     agent["Cloud Agent"]
   end
 
@@ -112,8 +112,8 @@ flowchart LR
 
 | Path | Starts from | Runs in | What to remember |
 |---|---|---|---|
-| Local coding | Kilo CLI, Kilo Console, VS Code, or JetBrains | Kilo CLI runtime on developer machine | Editor clients talk to local `kilo serve` server. Local runtime owns coding session and sends model requests directly or through Kilo Gateway. |
-| Hosted work | Webhook, source-control event, command, schedule, or hosted product | Kilo Cloud services; Cloud Agent when coding is required | Cloud services coordinate work. Only flows that need repository changes launch Cloud Agent execution session. |
+| Local coding | Accure CLI, Accure Console, VS Code, or JetBrains | Accure CLI runtime on developer machine | Editor clients talk to local `accure serve` server. Local runtime owns coding session and sends model requests directly or through Accure Gateway. |
+| Hosted work | Webhook, source-control event, command, schedule, or hosted product | Accure Cloud services; Cloud Agent when coding is required | Cloud services coordinate work. Only flows that need repository changes launch Cloud Agent execution session. |
 
 This distinction is central: using editor does not move coding session into Cloud Agent. Cloud services also route model requests, deliver chat events, dispatch notifications, serve generated applications, and coordinate adjacent hosted boundaries without launching Cloud Agent.
 
@@ -130,8 +130,8 @@ flowchart LR
   preview["Generated-application preview"]
   deploy["Generated-application deployment"]
   security["Security Agent"]
-  chat["Kilo Chat, events, and notifications"]
-  claw["KiloClaw"]
+  chat["Accure Chat, events, and notifications"]
+  claw["AccureClaw"]
   town["Gas Town"]
   wasteland["Wasteland"]
 
@@ -151,53 +151,53 @@ flowchart LR
 | Automation Services | Turns commands, source-control events, labels, webhooks, and schedules into scoped work | [Automation Services](/docs/contributing/architecture/automation-services) | [Trust boundaries](/docs/contributing/architecture/cloud-security#trust-boundaries) |
 | App Builder | Coordinates generated-application coding, preview, build, and deployment boundaries | [Cloud Platform](/docs/contributing/architecture/cloud-platform#app-generation-boundaries) | [Preview and deployment](/docs/contributing/architecture/cloud-security#generated-application-preview-and-deployment) |
 | Security Agent | Syncs findings and analyzes risk; selected deep analysis can launch Cloud Agent | [Cloud Platform](/docs/contributing/architecture/cloud-platform#security-agent) | [Sync and cleanup](/docs/contributing/architecture/cloud-security#security-agent-sync-and-cleanup) |
-| KiloClaw | Coordinates owner-scoped hosted assistant runtimes | [Cloud Platform](/docs/contributing/architecture/cloud-platform#kiloclaw) | [KiloClaw ingress](/docs/contributing/architecture/cloud-security#kiloclaw-ingress) |
+| AccureClaw | Coordinates owner-scoped hosted assistant runtimes | [Cloud Platform](/docs/contributing/architecture/cloud-platform#accureclaw) | [AccureClaw ingress](/docs/contributing/architecture/cloud-security#accureclaw-ingress) |
 | Gas Town and Wasteland | Coordinate multi-agent repository work and collaborative commons paths | [Cloud Platform](/docs/contributing/architecture/cloud-platform#gas-town-and-wasteland) | [Trust boundaries](/docs/contributing/architecture/cloud-security#trust-boundaries) |
 
 ## Local entry points and clients
 
-These local surfaces live in [`Kilo-Org/kilocode`](https://github.com/Kilo-Org/kilocode). Package paths below are relative to that repository root.
+These local surfaces live in [`Accure-Inc/accure-code`](https://github.com/Accure-Inc/accure-code). Package paths below are relative to that repository root.
 
-| Surface | Package in `Kilo-Org/kilocode` | Runtime model |
+| Surface | Package in `Accure-Inc/accure-code` | Runtime model |
 |---|---|---|
-| Kilo CLI TUI | `packages/opencode/` | Interactive local client with daemon attach and worker-backed fallback paths |
-| `kilo run` | `packages/opencode/` | Headless prompt execution through explicit attach, daemon attach, or embedded fallback |
-| `kilo serve` | `packages/opencode/` | Local HTTP + SSE server for local clients |
-| Kilo Console | `packages/accure-console/`{% linebreak /%}`packages/opencode/` | Browser UI served at `/console` by a started or reused local daemon |
-| VS Code extension | `packages/accure-vscode/` | Extension host starts one shared editor-owned `kilo serve` server and routes webviews through HTTP + global SSE; SDK directory selects local runtime instance |
-| JetBrains plugin | `packages/accure-jetbrains/` | Split-mode Swing plugin; backend module starts one editor-owned `kilo serve` server and caches workspace clients by directory |
+| Accure CLI TUI | `packages/opencode/` | Interactive local client with daemon attach and worker-backed fallback paths |
+| `accure run` | `packages/opencode/` | Headless prompt execution through explicit attach, daemon attach, or embedded fallback |
+| `accure serve` | `packages/opencode/` | Local HTTP + SSE server for local clients |
+| Accure Console | `packages/accure-console/`{% linebreak /%}`packages/opencode/` | Browser UI served at `/console` by a started or reused local daemon |
+| VS Code extension | `packages/accure-vscode/` | Extension host starts one shared editor-owned `accure serve` server and routes webviews through HTTP + global SSE; SDK directory selects local runtime instance |
+| JetBrains plugin | `packages/accure-jetbrains/` | Split-mode Swing plugin; backend module starts one editor-owned `accure serve` server and caches workspace clients by directory |
 
 ## Cloud service families
 
-Hosted service families live in [`Kilo-Org/cloud`](https://github.com/Kilo-Org/cloud). Paths below are relative to that repository root unless another repository is named.
+Hosted service families live in [`Accure-Org/cloud`](https://github.com/Accure-Org/cloud). Paths below are relative to that repository root unless another repository is named.
 
 | Boundary | Primary source paths | Role |
 |---|---|---|
-| Kilo Cloud | `apps/web/`{% linebreak /%}`services/` | Hosted platform repository for identity, billing, routing, product configuration, automation, and scoped execution services |
+| Accure Cloud | `apps/web/`{% linebreak /%}`services/` | Hosted platform repository for identity, billing, routing, product configuration, automation, and scoped execution services |
 | Web control plane | `apps/web/` | Hosted application layer for authorization, configuration, and API orchestration |
-| Kilo Gateway | `apps/web/src/app/api/gateway/`{% linebreak /%}`apps/web/src/lib/ai-gateway/`{% linebreak /%}Local integration: `Kilo-Org/kilocode/packages/accure-gateway/` | First-party model-routing boundary and local client integration |
+| Accure Gateway | `apps/web/src/app/api/gateway/`{% linebreak /%}`apps/web/src/lib/ai-gateway/`{% linebreak /%}Local integration: `Accure-Inc/accure-code/packages/accure-gateway/` | First-party model-routing boundary and local client integration |
 | Cloud Agent | `services/cloud-agent-next/` | Hosted coding-session capability with policy-selected sandbox allocation |
 | Automation Services | `services/code-review-infra/`{% linebreak /%}`services/auto-triage-infra/`{% linebreak /%}`services/auto-fix-infra/`{% linebreak /%}`services/security-auto-analysis/`{% linebreak /%}`services/security-sync/`{% linebreak /%}`services/webhook-agent-ingest/` | Trigger-driven review, triage, fix, security, and configured webhook flows |
-| Adjacent hosted boundaries | `services/app-builder/`{% linebreak /%}`services/kiloclaw/`{% linebreak /%}`services/gastown/`{% linebreak /%}`services/wasteland/`{% linebreak /%}Supporting services | App Builder, KiloClaw, Gas Town, Wasteland, chat, notifications, and supporting services |
+| Adjacent hosted boundaries | `services/app-builder/`{% linebreak /%}`services/accureclaw/`{% linebreak /%}`services/gastown/`{% linebreak /%}`services/wasteland/`{% linebreak /%}Supporting services | App Builder, AccureClaw, Gas Town, Wasteland, chat, notifications, and supporting services |
 
 ## Supporting packages
 
-These supporting packages also live in [`Kilo-Org/kilocode`](https://github.com/Kilo-Org/kilocode). Package paths below are relative to that repository root.
+These supporting packages also live in [`Accure-Inc/accure-code`](https://github.com/Accure-Inc/accure-code). Package paths below are relative to that repository root.
 
-| Package in `Kilo-Org/kilocode` | Role |
+| Package in `Accure-Inc/accure-code` | Role |
 |---|---|
-| `packages/accure-indexing/` | Per-directory asynchronous codebase indexing engine behind Kilo CLI bridge |
+| `packages/accure-indexing/` | Per-directory asynchronous codebase indexing engine behind Accure CLI bridge |
 | `packages/sdk/js/` | Generated JavaScript client and handwritten wrapper for local server APIs |
-| `packages/accure-gateway/` | Local Kilo Gateway client integration used by Kilo CLI runtime |
+| `packages/accure-gateway/` | Local Accure Gateway client integration used by Accure CLI runtime |
 | `packages/accure-console/` | Browser UI served by local daemon at `/console` |
 
 ## Architecture pages
 
 | Page | What it covers |
 |---|---|
-| [CLI Runtime](/docs/contributing/architecture/cli-runtime) | Local execution modes, daemon, server authentication, routing, persistence, snapshots, SDK, config, SSE, Kilo Console, and indexing |
-| [VS Code Extension](/docs/contributing/architecture/vscode-extension) | Shared local `kilo serve` ownership, webview bridge, Agent Manager, PTYs, recovery, bundled resources, and build outputs |
-| [JetBrains Plugin](/docs/contributing/architecture/jetbrains-plugin) | Split-mode modules, RPC, bundled local `kilo serve` lifecycle, Kotlin SDK, recovery, and remote-development constraints |
+| [CLI Runtime](/docs/contributing/architecture/cli-runtime) | Local execution modes, daemon, server authentication, routing, persistence, snapshots, SDK, config, SSE, Accure Console, and indexing |
+| [VS Code Extension](/docs/contributing/architecture/vscode-extension) | Shared local `accure serve` ownership, webview bridge, Agent Manager, PTYs, recovery, bundled resources, and build outputs |
+| [JetBrains Plugin](/docs/contributing/architecture/jetbrains-plugin) | Split-mode modules, RPC, bundled local `accure serve` lifecycle, Kotlin SDK, recovery, and remote-development constraints |
 | [Cloud Platform](/docs/contributing/architecture/cloud-platform) | Hosted service inventory, Cloud Agent topology, shared cloud boundaries, and adjacent hosted runtimes |
 | [Automation Services](/docs/contributing/architecture/automation-services) | Trigger-driven Workers, queues, callbacks, ownership, and scoped execution paths |
 | [Cloud Security](/docs/contributing/architecture/cloud-security) | Cloud trust boundaries, data flows, persistence, isolation, controls, and third-party categories |
@@ -219,4 +219,4 @@ After system-boundary pages, continue with Development Patterns for implementati
 - [Development Patterns](/docs/contributing/architecture/development-patterns) - code-ownership decisions and contributor workflow
 - [Development Environment](/docs/contributing/development-environment) - setup guide
 - [Ecosystem](/docs/contributing/ecosystem) - related projects and integrations
-- [KiloClaw Overview](/docs/kiloclaw/overview) - customer-facing KiloClaw docs
+- [AccureClaw Overview](/docs/accureclaw/overview) - customer-facing AccureClaw docs

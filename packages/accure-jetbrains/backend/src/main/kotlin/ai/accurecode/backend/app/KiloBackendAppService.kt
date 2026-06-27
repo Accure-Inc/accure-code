@@ -1,27 +1,27 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.backend.cli.CliServer
-import ai.kilocode.backend.cli.KiloBackendCliManager
-import ai.kilocode.backend.cli.KiloCliDataParser
-import ai.kilocode.backend.migration.KiloBackendLegacyMigrationStoreService
-import ai.kilocode.backend.migration.LegacyMigrationDetection
-import ai.kilocode.backend.telemetry.KiloBackendTelemetry
-import ai.kilocode.log.KiloLog
-import ai.kilocode.backend.workspace.KiloBackendWorkspaceManager
-import ai.kilocode.jetbrains.api.client.DefaultApi
-import ai.kilocode.jetbrains.api.infrastructure.ClientError
-import ai.kilocode.jetbrains.api.infrastructure.ClientException
-import ai.kilocode.jetbrains.api.infrastructure.ServerError
-import ai.kilocode.jetbrains.api.infrastructure.ServerException
-import ai.kilocode.jetbrains.api.model.Config
-import ai.kilocode.jetbrains.api.model.ConfigWarnings200ResponseInner
-import ai.kilocode.jetbrains.api.model.KiloNotifications200ResponseInner
-import ai.kilocode.jetbrains.api.model.KiloProfile200Response
-import ai.kilocode.jetbrains.api.model.ProviderOauthAuthorizeRequest
-import ai.kilocode.jetbrains.api.model.ProviderOauthCallbackRequest
-import ai.kilocode.rpc.dto.DeviceAuthDto
-import ai.kilocode.rpc.dto.ConfigPatchDto
-import ai.kilocode.rpc.dto.HealthDto
+import ai.accurecode.backend.cli.CliServer
+import ai.accurecode.backend.cli.AccureBackendCliManager
+import ai.accurecode.backend.cli.AccureCliDataParser
+import ai.accurecode.backend.migration.AccureBackendLegacyMigrationStoreService
+import ai.accurecode.backend.migration.LegacyMigrationDetection
+import ai.accurecode.backend.telemetry.AccureBackendTelemetry
+import ai.accurecode.log.AccureLog
+import ai.accurecode.backend.workspace.AccureBackendWorkspaceManager
+import ai.accurecode.jetbrains.api.client.DefaultApi
+import ai.accurecode.jetbrains.api.infrastructure.ClientError
+import ai.accurecode.jetbrains.api.infrastructure.ClientException
+import ai.accurecode.jetbrains.api.infrastructure.ServerError
+import ai.accurecode.jetbrains.api.infrastructure.ServerException
+import ai.accurecode.jetbrains.api.model.Config
+import ai.accurecode.jetbrains.api.model.ConfigWarnings200ResponseInner
+import ai.accurecode.jetbrains.api.model.AccureNotifications200ResponseInner
+import ai.accurecode.jetbrains.api.model.AccureProfile200Response
+import ai.accurecode.jetbrains.api.model.ProviderOauthAuthorizeRequest
+import ai.accurecode.jetbrains.api.model.ProviderOauthCallbackRequest
+import ai.accurecode.rpc.dto.DeviceAuthDto
+import ai.accurecode.rpc.dto.ConfigPatchDto
+import ai.accurecode.rpc.dto.HealthDto
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
@@ -62,30 +62,30 @@ import java.util.concurrent.atomic.AtomicReference
  * loads project-independent data after the connection is established.
  *
  * This is the single entry point for the CLI backend. The frontend
- * reaches it via [KiloAppRpcApi][ai.kilocode.rpc.KiloAppRpcApi] RPC.
+ * reaches it via [AccureAppRpcApi][ai.accurecode.rpc.AccureAppRpcApi] RPC.
  *
  * All lifecycle operations ([connect], [restart], [reinstall], and
  * internal reconnect) are serialized by a single [Mutex]. The owned
- * [KiloBackendCliManager] and [KiloConnectionService] perform no
+ * [AccureBackendCliManager] and [AccureConnectionService] perform no
  * internal synchronization — they rely on this mutex.
  *
- * After the CLI server connects, the app enters a [KiloAppState.Loading]
+ * After the CLI server connects, the app enters a [AccureAppState.Loading]
  * phase. Config and notifications are required (retried up to 3×).
  * Profile is optional — 401 (not logged in) is not an error.
  */
 @Service(Service.Level.APP)
-class KiloBackendAppService private constructor(
+class AccureBackendAppService private constructor(
   private val cs: CoroutineScope,
   private val server: CliServer,
-  private val log: KiloLog,
+  private val log: AccureLog,
   private val loadTimeoutMs: Long,
 ) : Disposable {
 
     /** IntelliJ service injection entry point. */
     constructor(cs: CoroutineScope) : this(
         cs,
-        KiloBackendCliManager(),
-      KiloLog.create(KiloBackendAppService::class.java),
+        AccureBackendCliManager(),
+      AccureLog.create(AccureBackendAppService::class.java),
         APP_LOAD_TIMEOUT_MS,
     )
 
@@ -99,13 +99,13 @@ class KiloBackendAppService private constructor(
         internal fun create(
           cs: CoroutineScope,
           server: CliServer,
-          log: KiloLog,
+          log: AccureLog,
           loadTimeoutMs: Long = APP_LOAD_TIMEOUT_MS,
-        ) = KiloBackendAppService(cs, server, log, loadTimeoutMs)
+        ) = AccureBackendAppService(cs, server, log, loadTimeoutMs)
     }
 
     private val mutex = Mutex()
-    private val connection = KiloConnectionService(cs, server, onReconnect = {
+    private val connection = AccureConnectionService(cs, server, onReconnect = {
         cs.launch { reconnect() }
     }, appLoadTimeoutMs = loadTimeoutMs, log = log)
 
@@ -115,25 +115,25 @@ class KiloBackendAppService private constructor(
     private var closed = false
     private val loadLock = Any()
 
-    private val _appState = MutableStateFlow<KiloAppState>(KiloAppState.Disconnected)
-    val appState: StateFlow<KiloAppState> = _appState.asStateFlow()
+    private val _appState = MutableStateFlow<AccureAppState>(AccureAppState.Disconnected)
+    val appState: StateFlow<AccureAppState> = _appState.asStateFlow()
 
     val events: SharedFlow<SseEvent> get() = connection.events
     val api: DefaultApi? get() = connection.api
     val http: OkHttpClient? get() = connection.apiClient
     val port: Int get() = connection.port
 
-    val sessions = KiloBackendSessionManager(cs, log)
-    val chat = KiloBackendChatManager(cs, log)
-    val models = KiloBackendModelStateManager(log)
-    val workspaces = KiloBackendWorkspaceManager(cs, sessions, log)
-    @Volatile var profile: KiloProfile200Response? = null
+    val sessions = AccureBackendSessionManager(cs, log)
+    val chat = AccureBackendChatManager(cs, log)
+    val models = AccureBackendModelStateManager(log)
+    val workspaces = AccureBackendWorkspaceManager(cs, sessions, log)
+    @Volatile var profile: AccureProfile200Response? = null
         private set
 
     @Volatile var config: Config? = null
         private set
 
-    @Volatile var notifications: List<KiloNotifications200ResponseInner> = emptyList()
+    @Volatile var notifications: List<AccureNotifications200ResponseInner> = emptyList()
         private set
 
     @Volatile var warnings: List<ConfigWarning> = emptyList()
@@ -142,7 +142,7 @@ class KiloBackendAppService private constructor(
     suspend fun connect() {
         mutex.withLock {
             val current = _appState.value
-            if (current is KiloAppState.Ready || current is KiloAppState.Connecting || current is KiloAppState.Loading || current is KiloAppState.MigrationRequired) return
+            if (current is AccureAppState.Ready || current is AccureAppState.Connecting || current is AccureAppState.Loading || current is AccureAppState.MigrationRequired) return
             ensureWatcher()
             connection.connect()
         }
@@ -171,34 +171,34 @@ class KiloBackendAppService private constructor(
     suspend fun retry() {
         mutex.withLock {
             when (val current = _appState.value) {
-                KiloAppState.Disconnected -> {
+                AccureAppState.Disconnected -> {
                     ensureWatcher()
                     connection.connect()
                 }
-                KiloAppState.Connecting,
-                is KiloAppState.Loading -> Unit
-                is KiloAppState.MigrationRequired -> {
+                AccureAppState.Connecting,
+                is AccureAppState.Loading -> Unit
+                is AccureAppState.MigrationRequired -> {
                     log.info("retry: rerunning migration detection")
                     load()
                 }
-                is KiloAppState.Ready -> {
+                is AccureAppState.Ready -> {
                     if (current.data.warnings.isEmpty()) return
                     log.info("retry: refreshing config warnings")
                     refreshConfigState()
                     val next = _appState.value
-                    val warns = (next as? KiloAppState.Ready)?.data?.warnings
-                    if (next is KiloAppState.Ready && warns.isNullOrEmpty()) return
+                    val warns = (next as? AccureAppState.Ready)?.data?.warnings
+                    if (next is AccureAppState.Ready && warns.isNullOrEmpty()) return
                     restartConnection("warnings remained after refresh")
                 }
-                is KiloAppState.Error -> {
+                is AccureAppState.Error -> {
                     val load = current.errors.none { it.resource == "connection" }
                     if (load && connection.api != null) {
                         log.info("retry: rerunning app load from ${current.message}")
                         val prev = _appState.value
                         load()
                         val next = awaitLoadResult(prev)
-                        val warns = (next as? KiloAppState.Ready)?.data?.warnings
-                        if (next is KiloAppState.Ready && warns.isNullOrEmpty()) return
+                        val warns = (next as? AccureAppState.Ready)?.data?.warnings
+                        if (next is AccureAppState.Ready && warns.isNullOrEmpty()) return
                         restartConnection("state remained problematic after load retry")
                         return
                     }
@@ -217,35 +217,35 @@ class KiloBackendAppService private constructor(
 
     fun requireReady() {
         when (_appState.value) {
-            is KiloAppState.Ready -> return
-            is KiloAppState.MigrationRequired -> throw IllegalStateException("Migration required")
-            else -> throw IllegalStateException("Kilo backend is not ready")
+            is AccureAppState.Ready -> return
+            is AccureAppState.MigrationRequired -> throw IllegalStateException("Migration required")
+            else -> throw IllegalStateException("Accure backend is not ready")
         }
     }
 
     suspend fun awaitReady(timeoutMs: Long = READY_TIMEOUT_MS) {
         when (_appState.value) {
-            is KiloAppState.Ready -> return
-            is KiloAppState.MigrationRequired -> throw IllegalStateException("Migration required")
-            is KiloAppState.Loading,
-            KiloAppState.Connecting -> {
+            is AccureAppState.Ready -> return
+            is AccureAppState.MigrationRequired -> throw IllegalStateException("Migration required")
+            is AccureAppState.Loading,
+            AccureAppState.Connecting -> {
                 val state = withTimeoutOrNull(timeoutMs) {
-                    appState.first { it !is KiloAppState.Loading && it !is KiloAppState.Connecting }
+                    appState.first { it !is AccureAppState.Loading && it !is AccureAppState.Connecting }
                 }
                 when (state) {
-                    is KiloAppState.Ready -> return
-                    is KiloAppState.MigrationRequired -> throw IllegalStateException("Migration required")
-                    else -> throw IllegalStateException("Kilo backend is not ready")
+                    is AccureAppState.Ready -> return
+                    is AccureAppState.MigrationRequired -> throw IllegalStateException("Migration required")
+                    else -> throw IllegalStateException("Accure backend is not ready")
                 }
             }
-            else -> throw IllegalStateException("Kilo backend is not ready")
+            else -> throw IllegalStateException("Accure backend is not ready")
         }
     }
 
-    suspend fun updateConfig(patch: ConfigPatchDto): KiloAppState {
+    suspend fun updateConfig(patch: ConfigPatchDto): AccureAppState {
         val http = connection.apiClient ?: throw IllegalStateException("Not connected")
-        val current = _appState.value as? KiloAppState.Ready ?: throw IllegalStateException("Kilo backend is not ready")
-        val body = KiloCliDataParser.buildConfigPatch(patch)
+        val current = _appState.value as? AccureAppState.Ready ?: throw IllegalStateException("Accure backend is not ready")
+        val body = AccureCliDataParser.buildConfigPatch(patch)
         val summary = summary(patch)
         log.info("Global config patch: started $summary")
         val request = Request.Builder()
@@ -265,12 +265,12 @@ class KiloBackendAppService private constructor(
         log.info("Global config patch: saved $summary")
         refreshConfigState()
         log.info("Global config patch: state refreshed $summary")
-        return (_appState.value as? KiloAppState.Ready) ?: current
+        return (_appState.value as? AccureAppState.Ready) ?: current
     }
 
     internal suspend fun resumeAfterMigration() {
         mutex.withLock {
-            if (_appState.value !is KiloAppState.MigrationRequired) return
+            if (_appState.value !is AccureAppState.MigrationRequired) return
             load()
         }
     }
@@ -278,7 +278,7 @@ class KiloBackendAppService private constructor(
     private suspend fun reconnect() {
         mutex.withLock {
             val current = _appState.value
-            if (current is KiloAppState.Ready || current is KiloAppState.Connecting || current is KiloAppState.Loading || current is KiloAppState.MigrationRequired) {
+            if (current is AccureAppState.Ready || current is AccureAppState.Connecting || current is AccureAppState.Loading || current is AccureAppState.MigrationRequired) {
                 log.info("reconnect: already ${current::class.simpleName} — skipping")
                 return
             }
@@ -292,8 +292,8 @@ class KiloBackendAppService private constructor(
         watcher = cs.launch {
             connection.state.collect { next ->
                 when (next) {
-                    ConnectionState.Disconnected -> _appState.value = KiloAppState.Disconnected
-                    ConnectionState.Connecting -> _appState.value = KiloAppState.Connecting
+                    ConnectionState.Disconnected -> _appState.value = AccureAppState.Disconnected
+                    ConnectionState.Connecting -> _appState.value = AccureAppState.Connecting
                     is ConnectionState.Connected -> {
                         load()
                     }
@@ -314,9 +314,9 @@ class KiloBackendAppService private constructor(
      * Config and notifications are required — retried up to [MAX_RETRIES] times.
      * Profile is optional — 401 (not logged in) is fine.
      *
-     * Progress is tracked via [LoadProgress] and emitted as [KiloAppState.Loading].
-     * On success, transitions to [KiloAppState.Ready].
-     * On failure of required data, transitions to [KiloAppState.Error].
+     * Progress is tracked via [LoadProgress] and emitted as [AccureAppState.Loading].
+     * On success, transitions to [AccureAppState.Ready].
+     * On failure of required data, transitions to [AccureAppState.Error].
      */
     private fun load() {
         synchronized(loadLock) {
@@ -326,7 +326,7 @@ class KiloBackendAppService private constructor(
                 val start = System.currentTimeMillis()
                 log.info("Application starting — loading config, profile, notifications")
                 val progress = AtomicReference(LoadProgress())
-                _appState.value = KiloAppState.Loading(progress.get())
+                _appState.value = AccureAppState.Loading(progress.get())
 
                 val migration = detectMigration()
                 if (migration != null) {
@@ -336,15 +336,15 @@ class KiloBackendAppService private constructor(
                     config = null
                     notifications = emptyList()
                     warnings = emptyList()
-                    _appState.value = KiloAppState.MigrationRequired(migration)
+                    _appState.value = AccureAppState.MigrationRequired(migration)
                     log.info("Application paused — legacy migration required")
                     return@launch
                 }
 
                 val errors = CopyOnWriteArrayList<LoadError>()
                 var cfg: Config? = null
-                var prof: KiloProfile200Response? = null
-                var notifs: List<KiloNotifications200ResponseInner> = emptyList()
+                var prof: AccureProfile200Response? = null
+                var notifs: List<AccureNotifications200ResponseInner> = emptyList()
                 var warns: List<ConfigWarning> = emptyList()
 
                 try {
@@ -364,14 +364,14 @@ class KiloBackendAppService private constructor(
                                 else -> ProfileResult.NOT_LOGGED_IN
                             }
                             progress.updateAndGet { it.copy(profile = status) }
-                                .also { _appState.value = KiloAppState.Loading(it) }
+                                .also { _appState.value = AccureAppState.Loading(it) }
                         }
                         launch {
                             val result = fetchWithRetry("config") { fetchConfig() }
                             if (result.value != null) {
                                 cfg = result.value
                                 progress.updateAndGet { it.copy(config = true) }
-                                    .also { _appState.value = KiloAppState.Loading(it) }
+                                    .also { _appState.value = AccureAppState.Loading(it) }
                             } else {
                                 val err = result.error!!
                                 errors.add(err)
@@ -383,7 +383,7 @@ class KiloBackendAppService private constructor(
                             if (result.value != null) {
                                 notifs = result.value
                                 progress.updateAndGet { it.copy(notifications = true) }
-                                    .also { _appState.value = KiloAppState.Loading(it) }
+                                    .also { _appState.value = AccureAppState.Loading(it) }
                             } else {
                                 val err = result.error!!
                                 errors.add(err)
@@ -458,7 +458,7 @@ class KiloBackendAppService private constructor(
         val port = connection.port
         cs.launch {
             runCatching {
-                service<KiloBackendTelemetry>().capture(
+                service<AccureBackendTelemetry>().capture(
                     http,
                     port,
                     event,
@@ -473,7 +473,7 @@ class KiloBackendAppService private constructor(
         val port = connection.port
         cs.launch {
             runCatching {
-                service<KiloBackendTelemetry>().setEnabled(http, port, enabled)
+                service<AccureBackendTelemetry>().setEnabled(http, port, enabled)
             }.onFailure { log.info("Skipping telemetry setEnabled: ${it.message}") }
         }
     }
@@ -483,7 +483,7 @@ class KiloBackendAppService private constructor(
         val port = connection.port
         cs.launch {
             runCatching {
-                service<KiloBackendTelemetry>().capture(http, port, event, props)
+                service<AccureBackendTelemetry>().capture(http, port, event, props)
             }.onFailure { log.info("Skipping backend telemetry: ${it.message}") }
         }
     }
@@ -494,13 +494,13 @@ class KiloBackendAppService private constructor(
             return@withContext null
         }
         log.info("Migration check: started")
-        val store = KiloBackendLegacyMigrationStoreService.store(log)
+        val store = AccureBackendLegacyMigrationStoreService.store(log)
         val status = store.status()
         if (status != null) {
             log.info("Migration check: skipped because status=$status")
             return@withContext null
         }
-        val detection = KiloBackendMigrationManager(http, connection.port).detect(store)
+        val detection = AccureBackendMigrationManager(http, connection.port).detect(store)
         log.info("Migration check: completed hasData=${detection.hasData} ${migrationSummary(detection)}")
         if (detection.hasData) detection else null
     }
@@ -520,11 +520,11 @@ class KiloBackendAppService private constructor(
      * errors) are both non-fatal. Only unexpected client errors are treated
      * as failures.
      */
-    private suspend fun fetchProfile(): FetchResult<KiloProfile200Response?> {
+    private suspend fun fetchProfile(): FetchResult<AccureProfile200Response?> {
         val client = connection.appLoadApi
             ?: return FetchResult.ok(null)
         return try {
-            val response = client.kiloProfile()
+            val response = client.accureProfile()
             log.info("Profile: ${response.profile.email}")
             FetchResult.ok(response)
         } catch (e: ClientException) {
@@ -560,11 +560,11 @@ class KiloBackendAppService private constructor(
         }
     }
 
-    private suspend fun fetchNotifications(): FetchResult<List<KiloNotifications200ResponseInner>> {
+    private suspend fun fetchNotifications(): FetchResult<List<AccureNotifications200ResponseInner>> {
         val client = connection.appLoadApi
             ?: return FetchResult.fail("notifications", detail = "Not connected")
         return try {
-            FetchResult.ok(client.kiloNotifications())
+            FetchResult.ok(client.accureNotifications())
         } catch (e: Exception) {
             log.warn("Notifications fetch failed: ${e.message}", e)
             logResponseBody("notifications", e)
@@ -589,12 +589,12 @@ class KiloBackendAppService private constructor(
     )
 
     private suspend fun refreshConfigState() {
-        val current = _appState.value as? KiloAppState.Ready ?: return
+        val current = _appState.value as? AccureAppState.Ready ?: return
         val connection = connection.state.value as? ConnectionState.Connected ?: return
         val cfg = fetchConfig().value ?: return
         val warns = fetchWarnings()
         val state = _appState.value
-        if (state !is KiloAppState.Ready || state.data !== current.data) return
+        if (state !is AccureAppState.Ready || state.data !== current.data) return
         if (this.connection.state.value != connection) return
         config = cfg
         setAppReady(
@@ -608,16 +608,16 @@ class KiloBackendAppService private constructor(
     private fun setAppReady(data: AppData) {
         warnings = data.warnings
         if (data.warnings.isNotEmpty()) warnAppWarnings(data.warnings)
-        _appState.value = KiloAppState.Ready(data)
+        _appState.value = AccureAppState.Ready(data)
     }
 
     private fun setAppError(message: String, errors: List<LoadError>) {
-        val state = KiloAppState.Error(message, errors)
+        val state = AccureAppState.Error(message, errors)
         warnAppError(state)
         _appState.value = state
     }
 
-    private fun warnAppError(state: KiloAppState.Error) {
+    private fun warnAppError(state: AccureAppState.Error) {
         val text = if (state.errors.isEmpty()) state.message
         else "${state.message} [${state.errors.joinToString("; ") { error(it) }}]"
         log.warn("App error: $text")
@@ -645,10 +645,10 @@ class KiloBackendAppService private constructor(
         log.info("retry: restarted connection ($reason)")
     }
 
-    private suspend fun awaitLoadResult(prev: KiloAppState): KiloAppState {
+    private suspend fun awaitLoadResult(prev: AccureAppState): AccureAppState {
         val next = appState.first { it !== prev }
-        if (next !is KiloAppState.Loading) return next
-        return appState.first { it !is KiloAppState.Loading }
+        if (next !is AccureAppState.Loading) return next
+        return appState.first { it !is AccureAppState.Loading }
     }
 
     /**
@@ -689,7 +689,7 @@ class KiloBackendAppService private constructor(
      * Watch global SSE events to keep app state in sync with the CLI server.
      *
      * - `global.config.updated` — the project config changed on disk or via CLI.
-     *   Re-fetches config and updates [KiloAppState.Ready] data in-place.
+     *   Re-fetches config and updates [AccureAppState.Ready] data in-place.
      *
      * - `global.disposed` — the CLI server's global context was torn down
      *   (e.g. during a restart). Triggers a full reload to re-populate all data.
@@ -717,12 +717,12 @@ class KiloBackendAppService private constructor(
                         "global.disposed" -> {
                             log.info("SSE global.disposed — triggering full application reload")
                             val current = _appState.value
-                            if (current is KiloAppState.Ready) load()
+                            if (current is AccureAppState.Ready) load()
                         }
                         "server.instance.disposed" -> {
                             log.info("SSE server.instance.disposed — triggering full application reload")
                             val current = _appState.value
-                            if (current is KiloAppState.Ready) load()
+                            if (current is AccureAppState.Ready) load()
                         }
                     }
                 }
@@ -740,7 +740,7 @@ class KiloBackendAppService private constructor(
         config = null
         notifications = emptyList()
         warnings = emptyList()
-        _appState.value = KiloAppState.Disconnected
+        _appState.value = AccureAppState.Disconnected
     }
 
     private fun stopRuntime() {
@@ -753,13 +753,13 @@ class KiloBackendAppService private constructor(
     /**
      * Refresh the user profile from the CLI backend.
      * Returns the latest profile data, or null when not logged in.
-     * Updates the current [KiloAppState.Ready] profile in-place if the app is ready.
+     * Updates the current [AccureAppState.Ready] profile in-place if the app is ready.
      */
-    suspend fun refreshProfile(): KiloProfile200Response? {
+    suspend fun refreshProfile(): AccureProfile200Response? {
         val result = fetchProfile()
         val fresh = result.value
         val current = _appState.value
-        if (current is KiloAppState.Ready) {
+        if (current is AccureAppState.Ready) {
             setAppReady(current.data.copy(profile = fresh))
         }
         profile = fresh
@@ -767,13 +767,13 @@ class KiloBackendAppService private constructor(
     }
 
     /**
-     * Start the Kilo device auth login flow.
+     * Start the Accure device auth login flow.
      * Returns [DeviceAuthDto] containing the verification URL and code for display in the UI.
      */
     suspend fun startLogin(directory: String?): DeviceAuthDto {
         val client = connection.api ?: throw IllegalStateException("Not connected")
         val body = ProviderOauthAuthorizeRequest(method = 0.0)
-        val response = client.providerOauthAuthorize(providerID = "kilo", directory = directory, providerOauthAuthorizeRequest = body)
+        val response = client.providerOauthAuthorize(providerID = "accure", directory = directory, providerOauthAuthorizeRequest = body)
         val match = response.instructions.let { Regex("""code:\s*(\S+)""", RegexOption.IGNORE_CASE).find(it) }
         return DeviceAuthDto(
             code = match?.groupValues?.get(1),
@@ -783,25 +783,25 @@ class KiloBackendAppService private constructor(
     }
 
     /**
-     * Complete the Kilo device auth login flow.
+     * Complete the Accure device auth login flow.
      * Blocks until the user completes authentication on the browser side.
      * Returns the user profile on success, or null if the login could not be completed.
      */
-    suspend fun completeLogin(directory: String?): KiloProfile200Response? {
+    suspend fun completeLogin(directory: String?): AccureProfile200Response? {
         val client = connection.api ?: throw IllegalStateException("Not connected")
-        client.providerOauthCallback(providerID = "kilo", directory = directory, providerOauthCallbackRequest = ProviderOauthCallbackRequest(method = 0.0))
+        client.providerOauthCallback(providerID = "accure", directory = directory, providerOauthCallbackRequest = ProviderOauthCallbackRequest(method = 0.0))
         return refreshProfile()
     }
 
     /**
-     * Log out from Kilo Gateway.
+     * Log out from Accure Gateway.
      * Removes credentials and clears the profile from app state.
      */
     suspend fun logout(): Boolean {
         val client = connection.api ?: throw IllegalStateException("Not connected")
-        val result = client.authRemove(providerID = "kilo")
+        val result = client.authRemove(providerID = "accure")
         val current = _appState.value
-        if (current is KiloAppState.Ready) {
+        if (current is AccureAppState.Ready) {
             profile = null
             setAppReady(current.data.copy(profile = null))
         }
@@ -813,13 +813,13 @@ class KiloBackendAppService private constructor(
      * Pass null for personal account, an organization ID for org context.
      * Returns the updated profile after the switch.
      */
-    suspend fun setOrganization(organizationId: String?): KiloProfile200Response? {
+    suspend fun setOrganization(organizationId: String?): AccureProfile200Response? {
         val http = connection.apiClient ?: throw IllegalStateException("Not connected")
         val body = JsonObject(
             mapOf("organizationId" to (organizationId?.let { JsonPrimitive(it) } ?: JsonNull)),
         ).toString()
         val request = Request.Builder()
-            .url("http://127.0.0.1:$port/kilo/organization")
+            .url("http://127.0.0.1:$port/accure/organization")
             .header("Accept", "application/json")
             .post(body.toRequestBody("application/json".toMediaType()))
             .build()

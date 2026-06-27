@@ -1,9 +1,9 @@
 # Plan Mode Over-Prompting to Implement
 
 **Priority:** P1
-**Issue:** [#6143](https://github.com/Kilo-Org/kilocode/issues/6143)
+**Issue:** [#6143](https://github.com/Accure-Inc/accure-code/issues/6143)
 
-An experimental plan mode prompt exists (`Flag.KILO_EXPERIMENTAL_PLAN_MODE`) that is verbose. Agent still tends to ask "Should I implement this?" repeatedly.
+An experimental plan mode prompt exists (`Flag.ACCURECODE_EXPERIMENTAL_PLAN_MODE`) that is verbose. Agent still tends to ask "Should I implement this?" repeatedly.
 
 ## Remaining Work
 

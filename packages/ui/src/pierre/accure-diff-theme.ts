@@ -1,15 +1,15 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { registerCustomTheme, RegisteredCustomThemes, type ThemeRegistrationResolved } from "@pierre/diffs"
 
-// The "Kilo" Pierre/Shiki theme used by every diff review surface (Code / Diff /
+// The "Accure" Pierre/Shiki theme used by every diff review surface (Code / Diff /
 // File / SessionReview) and by markdown code highlighting. Pierre resolves the
-// theme by name when a worker pool initializes (resolveThemes(["Kilo"])) or when
+// theme by name when a worker pool initializes (resolveThemes(["Accure"])) or when
 // getSharedHighlighter() attaches it; if the name was never registered it throws
-// "resolveTheme: No valid loader for Kilo".
+// "resolveTheme: No valid loader for Accure".
 //
 // This registration lives next to the worker pool factory (./worker) so that it
 // is a guaranteed, synchronous precondition of using the diff machinery: every
-// diff component imports the worker factory, which calls ensureKiloDiffTheme()
+// diff component imports the worker factory, which calls ensureAccureDiffTheme()
 // at module load — before any WorkerPoolManager.initialize() runs. Previously the
 // registration was only a side effect of importing the (heavy, katex/marked-
 // pulling) markdown context module, which forced consumers that render diffs
@@ -19,20 +19,20 @@ import { registerCustomTheme, RegisteredCustomThemes, type ThemeRegistrationReso
 //
 // Upstream owns the equivalent registerCustomTheme("OpenCode", …) block inline in
 // context/marked.tsx. Do not restore that inline block on upstream merges — route
-// the registration through ensureKiloDiffTheme() instead.
+// the registration through ensureAccureDiffTheme() instead.
 
-export const KILO_DIFF_THEME = "Kilo"
+export const ACCURECODE_DIFF_THEME = "Accure"
 
 // Idempotent: this is reached from both the markdown context and the diff worker
 // factory. Guard against the authoritative Pierre registry (rather than a local
 // flag) so it stays a no-op even if this module is instantiated more than once
 // across separate bundles — @pierre/diffs otherwise logs an error on duplicates.
-export function ensureKiloDiffTheme(): void {
-  if (RegisteredCustomThemes.has(KILO_DIFF_THEME)) return
+export function ensureAccureDiffTheme(): void {
+  if (RegisteredCustomThemes.has(ACCURECODE_DIFF_THEME)) return
 
-  registerCustomTheme(KILO_DIFF_THEME, () => {
+  registerCustomTheme(ACCURECODE_DIFF_THEME, () => {
     return Promise.resolve({
-      name: KILO_DIFF_THEME,
+      name: ACCURECODE_DIFF_THEME,
       colors: {
         "editor.background": "var(--color-background-stronger)",
         "editor.foreground": "var(--text-base)",

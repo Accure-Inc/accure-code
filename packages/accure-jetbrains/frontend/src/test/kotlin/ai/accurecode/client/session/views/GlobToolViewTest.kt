@@ -1,13 +1,13 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.model.toolKind
-import ai.kilocode.client.session.views.base.SecondarySessionPartView
-import ai.kilocode.client.session.views.tool.GlobToolView
-import ai.kilocode.client.session.views.tool.ReadToolView
-import ai.kilocode.client.session.views.tool.ToolView
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.model.toolKind
+import ai.accurecode.client.session.views.base.SecondarySessionPartView
+import ai.accurecode.client.session.views.tool.GlobToolView
+import ai.accurecode.client.session.views.tool.ReadToolView
+import ai.accurecode.client.session.views.tool.ToolView
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
 import com.intellij.openapi.util.Disposer
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import javax.swing.ScrollPaneConstants

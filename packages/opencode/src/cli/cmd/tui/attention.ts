@@ -8,7 +8,7 @@ import type {
   TuiAttentionSoundName,
   TuiAttentionSoundPack,
   TuiAttentionSoundPackInfo,
-} from "@kilocode/plugin/tui"
+} from "@accurecode/plugin/tui"
 import stripAnsi from "strip-ansi"
 import type { TuiConfig } from "./config/tui"
 import { isAttentionSoundName } from "./config/tui-schema"
@@ -40,14 +40,14 @@ type TuiAttentionHost = TuiAttention & {
 
 const log = Log.create({ service: "tui.attention" })
 
-const DEFAULT_TITLE = "Kilo" // kilocode_change
-const DEFAULT_PACK_ID = "kilo.default" // kilocode_change
+const DEFAULT_TITLE = "Accure" // accurecode_change
+const DEFAULT_PACK_ID = "accure.default" // accurecode_change
 const KV_SOUND_PACK = "attention_sound_pack"
 const TITLE_LIMIT = 80
 const MESSAGE_LIMIT = 240
 const BUILTIN_PACK: RegisteredSoundPack = {
   id: DEFAULT_PACK_ID,
-  name: "Kilo Default", // kilocode_change
+  name: "Accure Default", // accurecode_change
   builtin: true,
   sounds: {
     default: defaultSoundPath,

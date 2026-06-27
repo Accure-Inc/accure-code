@@ -1,6 +1,6 @@
 ---
 name: vscode-visual-regression
-description: Write Storybook stories and visual regression tests for the Kilo VS Code extension webview UI
+description: Write Storybook stories and visual regression tests for the Accure VS Code extension webview UI
 ---
 
 Use this skill when the user asks you to add visual regression tests, screenshot tests, or Storybook stories for components in `packages/accure-vscode/`.
@@ -282,15 +282,15 @@ import "../../agent-manager/agent-manager.css" // Required for AM component styl
 accure-ui components are imported via deep subpaths:
 
 ```tsx
-import { Part } from "@kilocode/accure-ui/message-part"
-import { BasicTool } from "@kilocode/accure-ui/basic-tool"
-import { Button } from "@kilocode/accure-ui/button"
+import { Part } from "@accurecode/accure-ui/message-part"
+import { BasicTool } from "@accurecode/accure-ui/basic-tool"
+import { Button } from "@accurecode/accure-ui/button"
 ```
 
 SDK types for mock data:
 
 ```tsx
-import type { AssistantMessage as SDKAssistantMessage, TextPart, ToolPart } from "@kilocode/sdk/v2"
+import type { AssistantMessage as SDKAssistantMessage, TextPart, ToolPart } from "@accurecode/sdk/v2"
 import type { PermissionRequest, QuestionRequest } from "../types/messages"
 ```
 
@@ -302,7 +302,7 @@ The test runner renders every story with dark theme globals:
 globals=colorScheme:dark;theme:accure-vscode;vscodeTheme:dark-modern
 ```
 
-The `.storybook/preview.tsx` applies these via a decorator that calls `applyVscodeTheme()` / `applyKiloTheme()` from accure-ui. Stories do NOT need to handle theming — it happens automatically.
+The `.storybook/preview.tsx` applies these via a decorator that calls `applyVscodeTheme()` / `applyAccureTheme()` from accure-ui. Stories do NOT need to handle theming — it happens automatically.
 
 # Reference: tool override registration
 

@@ -1,8 +1,8 @@
-package ai.kilocode.client.session
+package ai.accurecode.client.session
 
-import ai.kilocode.rpc.dto.CloudSessionDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionTimeDto
+import ai.accurecode.rpc.dto.CloudSessionDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionTimeDto
 import junit.framework.TestCase
 
 class SessionRefTest : TestCase() {

@@ -1,6 +1,6 @@
 import * as fs from "fs"
 import * as path from "path"
-import type { TuiAttentionSoundName } from "@kilocode/plugin/tui"
+import type { TuiAttentionSoundName } from "@accurecode/plugin/tui"
 import { exec } from "../../util/process"
 
 export const CustomSoundIDs = [
@@ -79,7 +79,7 @@ async function run(commands: Array<{ cmd: string; args: string[]; env?: NodeJS.P
     const ok = await exec(command.cmd, command.args, command.env ? { env: command.env } : {}).then(
       () => true,
       (error) => {
-        console.debug("[Kilo New] notification sound command failed", { cmd: command.cmd, error })
+        console.debug("[Accure New] notification sound command failed", { cmd: command.cmd, error })
         return false
       },
     )
@@ -129,9 +129,9 @@ function fileCommands(file: string): Array<{ cmd: string; args: string[]; env?: 
           "-NoProfile",
           "-NonInteractive",
           "-Command",
-          "$sound = [System.Media.SoundPlayer]::new($env:KILO_SOUND_PATH); $sound.PlaySync(); $sound.Dispose()",
+          "$sound = [System.Media.SoundPlayer]::new($env:ACCURECODE_SOUND_PATH); $sound.PlaySync(); $sound.Dispose()",
         ],
-        env: { ...process.env, KILO_SOUND_PATH: file },
+        env: { ...process.env, ACCURECODE_SOUND_PATH: file },
       },
     ]
   }
@@ -144,11 +144,11 @@ async function perform(name: TuiAttentionSoundName, selected: AttentionSoundID, 
   const file = path.resolve(dir, `${id}.wav`)
   if (!file.startsWith(`${path.resolve(dir)}${path.sep}`)) return false
   if (!fs.existsSync(file)) {
-    console.warn("[Kilo New] notification sound is missing", { file })
+    console.warn("[Accure New] notification sound is missing", { file })
     return false
   }
   const ok = await run(fileCommands(file))
-  if (ok) console.debug("[Kilo New] notification sound played", { name, selected })
+  if (ok) console.debug("[Accure New] notification sound played", { name, selected })
   return ok
 }
 

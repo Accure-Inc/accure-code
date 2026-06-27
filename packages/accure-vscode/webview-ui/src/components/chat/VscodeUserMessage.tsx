@@ -1,5 +1,5 @@
 import { createMemo, type Component } from "solid-js"
-import { UserMessageDisplay } from "@kilocode/accure-ui/message-part"
+import { UserMessageDisplay } from "@accurecode/accure-ui/message-part"
 import { partReview } from "../../../../src/shared/review-comments"
 import type { Message, Part, TextPart } from "../../types/messages"
 import { ReviewComments } from "./ReviewComments"

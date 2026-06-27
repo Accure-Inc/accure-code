@@ -1,1 +1,1 @@
-export * from "@kilocode/accure-ui/context/diff"
+export * from "@accurecode/accure-ui/context/diff"

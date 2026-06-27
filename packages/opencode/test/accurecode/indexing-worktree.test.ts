@@ -2,12 +2,12 @@ import { afterEach, describe, expect, test } from "bun:test"
 import { mkdir } from "node:fs/promises"
 import path from "node:path"
 import type { Config } from "../../src/config/config"
-import { KiloIndexing } from "../../src/kilocode/indexing"
-import { IndexingWorker } from "../../src/kilocode/indexing-worker-client"
+import { AccureIndexing } from "../../src/accurecode/indexing"
+import { IndexingWorker } from "../../src/accurecode/indexing-worker-client"
 import { disposeAllInstances, provideTestInstance, tmpdir } from "../fixture/fixture"
 
 const cfg: Partial<Config.Info> = {
-  plugin: ["@kilocode/accure-indexing"],
+  plugin: ["@accurecode/accure-indexing"],
   indexing: {
     enabled: true,
     provider: "ollama",
@@ -18,7 +18,7 @@ const cfg: Partial<Config.Info> = {
   },
 }
 
-const configDir = process.env["KILO_CONFIG_DIR"]
+const configDir = process.env["ACCURECODE_CONFIG_DIR"]
 const indexed = {
   state: "Complete" as const,
   message: "Index up-to-date.",
@@ -29,16 +29,16 @@ const indexed = {
 
 afterEach(async () => {
   IndexingWorker.override()
-  if (configDir === undefined) delete process.env["KILO_CONFIG_DIR"]
-  else process.env["KILO_CONFIG_DIR"] = configDir
+  if (configDir === undefined) delete process.env["ACCURECODE_CONFIG_DIR"]
+  else process.env["ACCURECODE_CONFIG_DIR"] = configDir
   await disposeAllInstances()
 })
 
 describe("indexing worktrees", () => {
   test("shares the primary checkout index with a linked worktree", async () => {
     await using tmp = await tmpdir({ git: true, config: cfg })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
-    const worktree = path.join(tmp.path, ".kilo", "worktrees", "feature")
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
+    const worktree = path.join(tmp.path, ".accurecode", "worktrees", "feature")
     await Bun.$`git -C ${tmp.path} worktree add -b feature ${worktree}`.quiet()
 
     const calls: Array<{ directory: string; baseline?: string }> = []
@@ -56,9 +56,9 @@ describe("indexing worktrees", () => {
     await provideTestInstance({
       directory: worktree,
       fn: async () => {
-        await KiloIndexing.search("worktree")
-        expect((await KiloIndexing.current()).state).toBe("Complete")
-        expect(await KiloIndexing.available()).toBe(true)
+        await AccureIndexing.search("worktree")
+        expect((await AccureIndexing.current()).state).toBe("Complete")
+        expect(await AccureIndexing.available()).toBe(true)
       },
     })
 
@@ -67,8 +67,8 @@ describe("indexing worktrees", () => {
 
   test("does not classify an ordinary directory from its pathname", async () => {
     await using tmp = await tmpdir({ git: true, config: cfg })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
-    const directory = path.join(tmp.path, ".kilocode", "worktrees", "feature")
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
+    const directory = path.join(tmp.path, ".accurecode", "worktrees", "feature")
     await mkdir(directory, { recursive: true })
     await Bun.write(path.join(directory, "file.ts"), "export const value = 1\n")
 
@@ -87,9 +87,9 @@ describe("indexing worktrees", () => {
     await provideTestInstance({
       directory,
       fn: async () => {
-        await KiloIndexing.search("ordinary directory")
-        expect((await KiloIndexing.current()).state).toBe("Complete")
-        expect(await KiloIndexing.available()).toBe(true)
+        await AccureIndexing.search("ordinary directory")
+        expect((await AccureIndexing.current()).state).toBe("Complete")
+        expect(await AccureIndexing.available()).toBe(true)
       },
     })
 

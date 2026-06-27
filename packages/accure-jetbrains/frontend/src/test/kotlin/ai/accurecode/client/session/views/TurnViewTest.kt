@@ -1,14 +1,14 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Message
-import ai.kilocode.client.session.model.Reasoning
-import ai.kilocode.client.session.model.Text
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.model.toolKind
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageTimeDto
+import ai.accurecode.client.session.model.Message
+import ai.accurecode.client.session.model.Reasoning
+import ai.accurecode.client.session.model.Text
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.model.toolKind
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageTimeDto
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.util.ui.JBUI
 import java.awt.image.BufferedImage
@@ -133,7 +133,7 @@ class TurnViewTest : BasePlatformTestCase() {
 
     fun `test upsertPart adds a new TextView for Text content`() {
         val mv = MessageView(msg("a1", "assistant"), openFile)
-        val text = ai.kilocode.client.session.model.Text("p1")
+        val text = ai.accurecode.client.session.model.Text("p1")
         text.content.append("hello")
         mv.upsertPart(text)
 
@@ -143,7 +143,7 @@ class TurnViewTest : BasePlatformTestCase() {
 
     fun `test user text view is transparent`() {
         val mv = MessageView(msg("u1", "user"), openFile)
-        val text = ai.kilocode.client.session.model.Text("p1")
+        val text = ai.accurecode.client.session.model.Text("p1")
         text.content.append("hello")
 
         mv.upsertPart(text)
@@ -153,7 +153,7 @@ class TurnViewTest : BasePlatformTestCase() {
 
     fun `test assistant text view is transparent`() {
         val mv = MessageView(msg("a1", "assistant"), openFile)
-        val text = ai.kilocode.client.session.model.Text("p1")
+        val text = ai.accurecode.client.session.model.Text("p1")
         text.content.append("hello")
 
         mv.upsertPart(text)
@@ -163,10 +163,10 @@ class TurnViewTest : BasePlatformTestCase() {
 
     fun `test upsertPart updates existing part rather than adding duplicate`() {
         val mv = MessageView(msg("a1", "assistant"), openFile)
-        val t1 = ai.kilocode.client.session.model.Text("p1").also { it.content.append("v1") }
+        val t1 = ai.accurecode.client.session.model.Text("p1").also { it.content.append("v1") }
         mv.upsertPart(t1)
 
-        val t2 = ai.kilocode.client.session.model.Text("p1").also { it.content.append("v2") }
+        val t2 = ai.accurecode.client.session.model.Text("p1").also { it.content.append("v2") }
         mv.upsertPart(t2)
 
         assertEquals(1, mv.partIds().size)
@@ -176,7 +176,7 @@ class TurnViewTest : BasePlatformTestCase() {
 
     fun `test removePart removes the renderer`() {
         val mv = MessageView(msg("a1", "assistant"), openFile)
-        mv.upsertPart(ai.kilocode.client.session.model.Text("p1").also { it.content.append("x") })
+        mv.upsertPart(ai.accurecode.client.session.model.Text("p1").also { it.content.append("x") })
         mv.removePart("p1")
 
         assertTrue(mv.partIds().isEmpty())
@@ -191,7 +191,7 @@ class TurnViewTest : BasePlatformTestCase() {
 
     fun `test appendDelta reaches TextView`() {
         val mv = MessageView(msg("a1", "assistant"), openFile)
-        mv.upsertPart(ai.kilocode.client.session.model.Text("p1").also { it.content.append("hello ") })
+        mv.upsertPart(ai.accurecode.client.session.model.Text("p1").also { it.content.append("hello ") })
 
         mv.appendDelta("p1", "world")
 
@@ -295,7 +295,7 @@ class TurnViewTest : BasePlatformTestCase() {
 
     fun `test MessageView pre-populates parts from Message on creation`() {
         val message = msg("a1", "assistant")
-        val text = ai.kilocode.client.session.model.Text("p1").also { it.content.append("preloaded") }
+        val text = ai.accurecode.client.session.model.Text("p1").also { it.content.append("preloaded") }
         message.parts["p1"] = text
 
         val mv = MessageView(message, openFile)

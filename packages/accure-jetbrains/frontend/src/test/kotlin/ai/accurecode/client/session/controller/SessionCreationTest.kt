@@ -1,11 +1,11 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ModelDto
-import ai.kilocode.rpc.dto.ModelStateDto
-import ai.kilocode.rpc.dto.ProviderDto
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ModelDto
+import ai.accurecode.rpc.dto.ModelStateDto
+import ai.accurecode.rpc.dto.ProviderDto
 
 class SessionCreationTest : SessionControllerTestBase() {
 
@@ -57,13 +57,13 @@ class SessionCreationTest : SessionControllerTestBase() {
     }
 
     fun `test prompt sends selected model agent and variant`() {
-        appRpc.models = ModelStateDto(variant = mapOf("kilo/gpt-5" to "medium"))
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, config = ConfigDto(model = "kilo/gpt-5"))
+        appRpc.models = ModelStateDto(variant = mapOf("accure/gpt-5" to "medium"))
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, config = ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady(
             providers = listOf(
                 ProviderDto(
-                    id = "kilo",
-                    name = "Kilo",
+                    id = "accure",
+                    name = "Accure",
                     models = mapOf(
                         "gpt-5" to ModelDto(id = "gpt-5", name = "GPT-5", variants = listOf("low", "medium", "high")),
                     ),
@@ -78,7 +78,7 @@ class SessionCreationTest : SessionControllerTestBase() {
         flush()
 
         val prompt = rpc.prompts.single().third
-        assertEquals("kilo", prompt.providerID)
+        assertEquals("accure", prompt.providerID)
         assertEquals("gpt-5", prompt.modelID)
         assertEquals("code", prompt.agent)
         assertEquals("medium", prompt.variant)

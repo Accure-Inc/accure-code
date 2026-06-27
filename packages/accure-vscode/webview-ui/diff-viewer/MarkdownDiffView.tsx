@@ -1,6 +1,6 @@
 import { type Component, Show } from "solid-js"
 import type { AnnotationSide, DiffLineAnnotation, SelectedLineRange } from "@pierre/diffs"
-import { Markdown } from "@kilocode/accure-ui/markdown"
+import { Markdown } from "@accurecode/accure-ui/markdown"
 import { MarkdownAnnotationLayer } from "./MarkdownAnnotationLayer"
 import type { AnnotationMeta } from "./review-annotations"
 

@@ -1,17 +1,17 @@
-package ai.kilocode.client.settings.models
+package ai.accurecode.client.settings.models
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.settings.base.KiloReadyConfigurable
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.settings.base.AccureReadyConfigurable
 import com.intellij.openapi.project.ProjectManager
 import kotlinx.coroutines.CoroutineScope
 import javax.swing.JComponent
 
-class ModelsConfigurable : KiloReadyConfigurable() {
+class ModelsConfigurable : AccureReadyConfigurable() {
     private var ui: ModelsSettingsUi? = null
 
     override fun getId(): String = ID
 
-    override fun getDisplayName(): String = KiloBundle.message("settings.models.displayName")
+    override fun getDisplayName(): String = AccureBundle.message("settings.models.displayName")
 
     override fun createReadyComponent(cs: CoroutineScope): JComponent {
         val dir = ProjectManager.getInstance().openProjects.firstOrNull { !it.isDefault }?.basePath
@@ -37,6 +37,6 @@ class ModelsConfigurable : KiloReadyConfigurable() {
     }
 
     companion object {
-        const val ID = "ai.kilocode.jetbrains.settings.models"
+        const val ID = "ai.accurecode.jetbrains.settings.models"
     }
 }

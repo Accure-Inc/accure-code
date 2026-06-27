@@ -6,12 +6,12 @@ import { MarketplaceInstaller } from "../../src/services/marketplace/installer"
 import { MarketplacePaths } from "../../src/services/marketplace/paths"
 import { exec } from "../../src/util/process"
 
-const tmpDir = path.join(os.tmpdir(), `kilo-test-${Date.now()}`)
+const tmpDir = path.join(os.tmpdir(), `accure-test-${Date.now()}`)
 
 class TestPaths extends MarketplacePaths {
   override configPath(scope: "project" | "global", workspace?: string): string {
-    if (scope === "global") return path.join(tmpDir, "global", "kilo.json")
-    return path.join(tmpDir, "project", ".kilo", "kilo.json")
+    if (scope === "global") return path.join(tmpDir, "global", "accure.json")
+    return path.join(tmpDir, "project", ".accurecode", "accure.json")
   }
   override skillsDir(scope: "project" | "global", workspace?: string): string {
     return path.join(tmpDir, "skills")

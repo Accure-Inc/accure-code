@@ -6,10 +6,10 @@ import path from "path"
 import { Identifier } from "../../src/id/id"
 import { SessionID, MessageID, PartID } from "../../src/session/schema"
 import { ModelID, ProviderID } from "../../src/provider/schema"
-import { Instance } from "../../src/kilocode/instance"
+import { Instance } from "../../src/accurecode/instance"
 import { provideTestInstance } from "../fixture/fixture"
-import { PlanFollowup } from "../../src/kilocode/plan-followup"
-import { KiloSessionPrompt } from "../../src/kilocode/session/prompt"
+import { PlanFollowup } from "../../src/accurecode/plan-followup"
+import { AccureSessionPrompt } from "../../src/accurecode/session/prompt"
 import { makeRuntime } from "../../src/effect/run-service"
 import { Question } from "../../src/question"
 import { Session } from "../../src/session/session"
@@ -165,7 +165,7 @@ describe("plan_exit detection", () => {
           {
             tool: "plan_exit",
             input: {},
-            output: "Plan is ready at .kilo/plans/plan.md. Ending planning turn.",
+            output: "Plan is ready at .accurecode/plans/plan.md. Ending planning turn.",
           },
         ],
       })
@@ -186,7 +186,7 @@ describe("plan_exit detection", () => {
       await expect(pending).resolves.toBe("break")
     }))
 
-  test("KiloSessionPrompt resolves plan follow-up through the supplied question service", () =>
+  test("AccureSessionPrompt resolves plan follow-up through the supplied question service", () =>
     withInstance(async () => {
       const seeded = await seed({
         text: "Here is the plan",
@@ -202,7 +202,7 @@ describe("plan_exit detection", () => {
       const result = await Effect.runPromise(
         Effect.gen(function* () {
           const question = yield* Question.Service
-          const pending = KiloSessionPrompt.askPlanFollowup({
+          const pending = AccureSessionPrompt.askPlanFollowup({
             sessionID: seeded.sessionID,
             messages: seeded.messages,
             abort: AbortSignal.any([]),
@@ -224,7 +224,7 @@ describe("plan_exit detection", () => {
       expect(result).toBe("continue")
     }))
 
-  test("KiloSessionPrompt cleans listener-local plan follow-up when aborted outside instance context", () => {
+  test("AccureSessionPrompt cleans listener-local plan follow-up when aborted outside instance context", () => {
     const outside = new AsyncResource("plan-followup-abort-test")
     return withInstance(async () => {
       const seeded = await seed({
@@ -242,7 +242,7 @@ describe("plan_exit detection", () => {
         Effect.gen(function* () {
           const question = yield* Question.Service
           const abort = new AbortController()
-          const pending = KiloSessionPrompt.askPlanFollowup({
+          const pending = AccureSessionPrompt.askPlanFollowup({
             sessionID: seeded.sessionID,
             messages: seeded.messages,
             abort: abort.signal,
@@ -304,9 +304,9 @@ describe("plan_exit detection", () => {
 
   test("JetBrains client enables plan follow-up with custom answer", () =>
     withInstance(async () => {
-      const prev = process.env.KILO_CLIENT
+      const prev = process.env.ACCURECODE_CLIENT
       try {
-        process.env.KILO_CLIENT = "jetbrains"
+        process.env.ACCURECODE_CLIENT = "jetbrains"
         const seeded = await seed({
           text: "Here is the plan",
           tools: [
@@ -345,8 +345,8 @@ describe("plan_exit detection", () => {
         await questions.reject(question.id)
         await expect(pending).resolves.toBe("break")
       } finally {
-        if (prev === undefined) delete process.env.KILO_CLIENT
-        else process.env.KILO_CLIENT = prev
+        if (prev === undefined) delete process.env.ACCURECODE_CLIENT
+        else process.env.ACCURECODE_CLIENT = prev
       }
     }))
 
@@ -633,7 +633,7 @@ describe("plan_exit detection", () => {
           },
         ],
       }
-      await KiloSessionPrompt.insertPlanReminders({
+      await AccureSessionPrompt.insertPlanReminders({
         agent: { name: "Architect", options: {} },
         session,
         userMessage: user,
@@ -672,7 +672,7 @@ describe("plan_exit detection", () => {
         ],
       }
 
-      await KiloSessionPrompt.insertPlanReminders({
+      await AccureSessionPrompt.insertPlanReminders({
         agent: { name: "plan", options: {} },
         session,
         userMessage: user,
@@ -723,7 +723,7 @@ describe("plan_exit detection", () => {
           },
         ],
       }
-      await KiloSessionPrompt.insertPlanReminders({
+      await AccureSessionPrompt.insertPlanReminders({
         agent: { name: "plan", options: {} },
         session,
         userMessage: user,
@@ -761,7 +761,7 @@ describe("plan_exit detection", () => {
         ],
       }
 
-      await KiloSessionPrompt.insertPlanReminders({
+      await AccureSessionPrompt.insertPlanReminders({
         agent: { name: "Architect", options: {} },
         session,
         userMessage: user,

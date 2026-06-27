@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test"
-import { fetchMessagePage } from "../../src/kilo-provider/message-page"
+import { fetchMessagePage } from "../../src/accure-provider/message-page"
 
 type Message = { info: { id: string; role: "user" | "assistant"; time: { created: number } }; parts: unknown[] }
 

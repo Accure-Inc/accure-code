@@ -1,11 +1,11 @@
 ---
 title: "Models & Providers"
-description: "Learn about the AI models available through the Kilo AI Gateway, including model IDs and how to use them."
+description: "Learn about the AI models available through the Accure AI Gateway, including model IDs and how to use them."
 ---
 
 # Models & Providers
 
-The Kilo AI Gateway provides access to hundreds of AI models through a single unified API. You can switch between models by changing the model ID string -- no code changes required.
+The Accure AI Gateway provides access to hundreds of AI models through a single unified API. You can switch between models by changing the model ID string -- no code changes required.
 
 ## Specifying a model
 
@@ -13,7 +13,7 @@ Models are identified using the format `provider/model-name`. Pass this as the `
 
 ```typescript
 const result = streamText({
-  model: kilo.chat("anthropic/claude-sonnet-4.6"),
+  model: accure.chat("anthropic/claude-sonnet-4.6"),
   prompt: "Hello!",
 })
 ```
@@ -32,7 +32,7 @@ Or in a raw API request:
 You can browse the full list of available models via the models endpoint:
 
 ```
-GET https://api.kilo.ai/api/gateway/models
+GET https://api.accurecode.ai/api/gateway/models
 ```
 
 This returns model information including pricing, context window, and supported features. No authentication is required.
@@ -73,13 +73,13 @@ For NVIDIA free endpoints (Super/Ultra/etc): Trial use only - do not submit pers
 
 ## Auto models
 
-Auto virtual models select an underlying model using tier-specific routing. Frontier uses the `x-kilocode-mode` request header. Balanced uses the API interface, Free uses deterministic affinity across available candidates, and Small uses account balance.
+Auto virtual models select an underlying model using tier-specific routing. Frontier uses the `x-accurecode-mode` request header. Balanced uses the API interface, Free uses deterministic affinity across available candidates, and Small uses account balance.
 
 {% callout type="info" title="Underlying models can change" %}
-The mappings below reflect the current routing. The underlying models behind each `kilo-auto/*` tier are updated server-side as better options become available or as providers change pricing and availability — the tier IDs themselves remain stable.
+The mappings below reflect the current routing. The underlying models behind each `accure-auto/*` tier are updated server-side as better options become available or as providers change pricing and availability — the tier IDs themselves remain stable.
 {% /callout %}
 
-### `kilo-auto/frontier`
+### `accure-auto/frontier`
 
 Highest performance and capability for any task. Frontier requests are sent with medium reasoning effort and medium verbosity.
 
@@ -89,7 +89,7 @@ Highest performance and capability for any task. Frontier requests are sent with
 | `build`, `explore`, `code` | `anthropic/claude-sonnet-4.6` |
 | Default (no / unknown mode) | `anthropic/claude-sonnet-4.6` |
 
-### `kilo-auto/balanced`
+### `accure-auto/balanced`
 
 Great balance of price and capability. The resolved model depends on the API interface used by the client.
 
@@ -99,7 +99,7 @@ Great balance of price and capability. The resolved model depends on the API int
 | Responses API | `openai/gpt-5.5` | low |
 | Messages API | `anthropic/claude-sonnet-4.6` | low |
 
-### `kilo-auto/free`
+### `accure-auto/free`
 
 Free with limited capability. No credits required. The resolved model is selected dynamically per session from a curated set of available free models; the mapping updates server-side as free model availability shifts.
 
@@ -107,7 +107,7 @@ Free with limited capability. No credits required. The resolved model is selecte
 Auto Free may route your requests to providers that log prompts and outputs and use them to improve their services. Do not submit personal or confidential data when using Auto Free. In particular, it may route to NVIDIA's free endpoints (see NVIDIA Trial Terms of Service above).
 {% /callout %}
 
-### `kilo-auto/small`
+### `accure-auto/small`
 
 Automatically routes to a small, fast model for lightweight background tasks (session titles, commit messages, summaries).
 
@@ -120,7 +120,7 @@ Automatically routes to a small, fast model for lightweight background tasks (se
 
 ```json
 {
-  "model": "kilo-auto/frontier",
+  "model": "accure-auto/frontier",
   "messages": [{ "role": "user", "content": "Help me design a database schema" }]
 }
 ```
@@ -128,9 +128,9 @@ Automatically routes to a small, fast model for lightweight background tasks (se
 With the mode header:
 
 ```bash
-curl -X POST "https://api.kilo.ai/api/gateway/chat/completions" \
-  -H "Authorization: Bearer $KILO_API_KEY" \
-  -H "x-kilocode-mode: plan" \
+curl -X POST "https://api.accurecode.ai/api/gateway/chat/completions" \
+  -H "Authorization: Bearer $ACCURECODE_API_KEY" \
+  -H "x-accurecode-mode: plan" \
   -H "Content-Type: application/json" \
-  -d '{"model": "kilo-auto/balanced", "messages": [{"role": "user", "content": "Design a database schema"}]}'
+  -d '{"model": "accure-auto/balanced", "messages": [{"role": "user", "content": "Design a database schema"}]}'
 ```

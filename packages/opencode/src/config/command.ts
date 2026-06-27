@@ -7,12 +7,12 @@ import { Glob } from "@opencode-ai/core/util/glob"
 import { configEntryNameFromPath } from "./entry-name"
 import * as ConfigMarkdown from "./markdown"
 import { ConfigModelID } from "./model-id"
-// kilocode_change start
+// accurecode_change start
 import { Bus } from "@/bus"
 import { NamedError } from "@opencode-ai/core/util/error"
-import { KilocodeConfig } from "@/kilocode/config/config"
+import { AccurecodeConfig } from "@/accurecode/config/config"
 import type { Warning } from "./config"
-// kilocode_change end
+// accurecode_change end
 
 const log = Log.create({ service: "config" })
 
@@ -28,9 +28,9 @@ export type Info = Schema.Schema.Type<typeof Info>
 
 const decodeInfo = Schema.decodeUnknownExit(Info)
 
-// kilocode_change start
+// accurecode_change start
 export async function load(dir: string, warnings?: Warning[]) {
-  // kilocode_change end
+  // accurecode_change end
   const result: Record<string, Info> = {}
   for (const item of await Glob.scan("{command,commands}/**/*.md", {
     cwd: dir,
@@ -42,10 +42,10 @@ export async function load(dir: string, warnings?: Warning[]) {
       const message = ConfigMarkdown.FrontmatterError.isInstance(err)
         ? err.data.message
         : `Failed to parse command ${item}`
-      // kilocode_change start
+      // accurecode_change start
       if (warnings) warnings.push({ path: item, message })
       try {
-        const { capture } = await import("@/kilocode/instance")
+        const { capture } = await import("@/accurecode/instance")
         const ctx = capture()
         if (ctx) {
           const { Session } = await import("@/session/session")
@@ -54,7 +54,7 @@ export async function load(dir: string, warnings?: Warning[]) {
       } catch (error) {
         log.warn("could not publish session error", { message, err: error })
       }
-      // kilocode_change end
+      // accurecode_change end
       log.error("failed to load command", { command: item, err })
       return undefined
     })
@@ -72,7 +72,7 @@ export async function load(dir: string, warnings?: Warning[]) {
       result[config.name] = parsed.value
       continue
     }
-    // kilocode_change start
+    // accurecode_change start
     const error = Cause.squash(parsed.cause)
     const issues = Schema.isSchemaError(error)
       ? SchemaIssue.makeFormatterStandardSchemaV1()(error.issue).issues.map((issue) => ({
@@ -82,8 +82,8 @@ export async function load(dir: string, warnings?: Warning[]) {
         }))
       : [{ message: String(error), path: [] }]
     const cause = error instanceof Error ? error : new Error(String(error))
-    await KilocodeConfig.handleInvalid("command", item, issues, cause, warnings)
-    // kilocode_change end
+    await AccurecodeConfig.handleInvalid("command", item, issues, cause, warnings)
+    // accurecode_change end
   }
   return result
 }

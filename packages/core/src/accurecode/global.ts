@@ -3,7 +3,7 @@ import fs from "fs/promises"
 /**
  * Like `fs.mkdir({ recursive: true })` but also repairs broken symlinks and
  * junctions whose target no longer exists (a Windows edge-case where the user
- * had a junction at e.g. `~/.kilocode` pointing to a deleted directory).
+ * had a junction at e.g. `~/.accurecode` pointing to a deleted directory).
  *
  * `fs.mkdir({ recursive: true })` silently no-ops when a junction exists even
  * if its target is gone, so subsequent writes inside that path fail with ENOENT.

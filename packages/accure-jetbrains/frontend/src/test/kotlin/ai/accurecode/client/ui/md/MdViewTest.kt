@@ -1,6 +1,6 @@
-package ai.kilocode.client.ui.md
+package ai.accurecode.client.ui.md
 
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.HighlighterColors
 import com.intellij.openapi.editor.colors.CodeInsightColors

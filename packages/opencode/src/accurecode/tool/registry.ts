@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { CodebaseSearchTool } from "../../tool/warpgrep"
 import { RecallTool } from "../../tool/recall"
 import { AgentManagerTool } from "./agent-manager"
@@ -11,14 +11,14 @@ import { Agent } from "@/agent/agent"
 import * as Truncate from "@/tool/truncate"
 import type { Config } from "@/config/config"
 
-const log = Log.create({ service: "kilocode-tool-registry" })
+const log = Log.create({ service: "accurecode-tool-registry" })
 type Deps = { agent: Agent.Interface; truncate: Truncate.Interface; indexing?: boolean }
 type Loaders = {
-  indexing?: () => Promise<{ KiloIndexing: { ready: () => boolean } }>
-  semantic?: () => Promise<Pick<typeof import("@/kilocode/tool/semantic-search"), "SemanticSearchTool">>
+  indexing?: () => Promise<{ AccureIndexing: { ready: () => boolean } }>
+  semantic?: () => Promise<Pick<typeof import("@/accurecode/tool/semantic-search"), "SemanticSearchTool">>
 }
 
-export namespace KiloToolRegistry {
+export namespace AccureToolRegistry {
   const hint =
     "- When you are doing an open-ended search where you do not know the exact symbol name, use the `semantic_search` tool first to narrow down the search scope, then follow up with `Grep` and/or `Read`"
 
@@ -29,7 +29,7 @@ export namespace KiloToolRegistry {
     return config.indexing?.enabled ?? global?.indexing?.enabled
   }
 
-  /** Resolve Kilo-specific tool Infos outside any InstanceState, so their Truncate/Agent deps are
+  /** Resolve Accure-specific tool Infos outside any InstanceState, so their Truncate/Agent deps are
    * satisfied at the outer registry scope instead of leaking into InstanceState's Effect. */
   export function infos() {
     return Effect.gen(function* () {
@@ -41,7 +41,7 @@ export namespace KiloToolRegistry {
     })
   }
 
-  /** Finalize Kilo-specific tools into Tool.Defs. Call this inside the InstanceState state Effect —
+  /** Finalize Accure-specific tools into Tool.Defs. Call this inside the InstanceState state Effect —
    * it has no Service deps beyond what Tool.init itself needs. */
   export function build(
     tools: { codebase: Tool.Info; recall: Tool.Info; manager: Tool.Info; process: Tool.Info },
@@ -64,8 +64,8 @@ export namespace KiloToolRegistry {
     return Effect.gen(function* () {
       const ready = yield* deps.indexing === undefined
         ? (() => {
-            const indexing = loaders.indexing ?? (() => import("@/kilocode/indexing"))
-            return Effect.tryPromise(() => indexing().then((mod) => mod.KiloIndexing.ready())).pipe(
+            const indexing = loaders.indexing ?? (() => import("@/accurecode/indexing"))
+            return Effect.tryPromise(() => indexing().then((mod) => mod.AccureIndexing.ready())).pipe(
               Effect.catch((err) =>
                 Effect.sync(() => {
                   log.warn("semantic search unavailable", { err })
@@ -77,7 +77,7 @@ export namespace KiloToolRegistry {
         : Effect.succeed(deps.indexing)
       if (!ready) return undefined
 
-      const semantic = loaders.semantic ?? (() => import("@/kilocode/tool/semantic-search"))
+      const semantic = loaders.semantic ?? (() => import("@/accurecode/tool/semantic-search"))
       const mod = yield* Effect.tryPromise(() => semantic()).pipe(
         Effect.catch((err) =>
           Effect.sync(() => {
@@ -97,7 +97,7 @@ export namespace KiloToolRegistry {
     })
   }
 
-  /** Kilo-specific tools to append to the builtin list */
+  /** Accure-specific tools to append to the builtin list */
   export function extra(
     tools: { codebase: Tool.Def; semantic?: Tool.Def; recall: Tool.Def; manager: Tool.Def; process: Tool.Def },
     cfg: { experimental?: { codebase_search?: boolean } },
@@ -106,9 +106,9 @@ export namespace KiloToolRegistry {
       ...(cfg.experimental?.codebase_search === true ? [tools.codebase] : []),
       ...(tools.semantic ? [tools.semantic] : []),
       tools.recall,
-      ...(Flag.KILO_CLIENT === "cli" || Flag.KILO_CLIENT === "vscode" ? [tools.process] : []),
+      ...(Flag.ACCURECODE_CLIENT === "cli" || Flag.ACCURECODE_CLIENT === "vscode" ? [tools.process] : []),
       // The extension is the only client that can consume the Agent Manager start event.
-      ...(Flag.KILO_CLIENT === "vscode" ? [tools.manager] : []),
+      ...(Flag.ACCURECODE_CLIENT === "vscode" ? [tools.manager] : []),
     ]
   }
 

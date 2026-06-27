@@ -41,7 +41,7 @@ interface GitStatsPollerOptions {
   getWorkspaceRoot: () => string | undefined
   /**
    * Compute diff summaries locally (in the extension host) rather than over
-   * HTTP to `kilo serve`. Keeps git spawning out of the Bun process, which
+   * HTTP to `accure serve`. Keeps git spawning out of the Bun process, which
    * leaks native memory on Windows (oven-sh/bun#18265).
    */
   localDiff: (dir: string, base: string) => Promise<WorktreeDiffEntry[]>

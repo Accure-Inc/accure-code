@@ -1,31 +1,36 @@
 import { fetchBalance, fetchProfile } from "../api/profile.js"
-import { fetchKilocodeNotifications } from "../api/notifications.js"
+import { fetchAccurecodeNotifications } from "../api/notifications.js"
 import { clearModesCache } from "../api/modes.js"
-import { HEADER_ORGANIZATIONID, KILO_API_BASE, KILO_CHAT_URL, KILO_EVENT_SERVICE_URL } from "../api/constants.js"
-import type { KilocodeBalance, KilocodeProfile } from "../types.js"
-import { buildKiloHeaders } from "../headers.js"
+import {
+  HEADER_ORGANIZATIONID,
+  ACCURECODE_API_BASE,
+  ACCURECODE_CHAT_URL,
+  ACCURECODE_EVENT_SERVICE_URL,
+} from "../api/constants.js"
+import type { AccurecodeBalance, AccurecodeProfile } from "../types.js"
+import { buildAccureHeaders } from "../headers.js"
 
-export type KiloAuth =
+export type AccureAuth =
   | { type: "api"; key: string }
   | { type: "oauth"; access: string; refresh: string; expires: number; accountId?: string }
   | { type: "wellknown"; key: string; token: string }
 
-export interface KiloProfileResult {
-  profile: KilocodeProfile
-  balance: KilocodeBalance | null
+export interface AccureProfileResult {
+  profile: AccurecodeProfile
+  balance: AccurecodeBalance | null
   currentOrgId: string | null
 }
 
 export interface ClawChatCredentials {
   token: string
   expiresAt: string
-  kiloChatUrl: string
+  accureChatUrl: string
   eventServiceUrl: string
 }
 
 export interface AuthStore {
-  get(provider: string): Promise<KiloAuth | undefined>
-  set(provider: string, auth: Extract<KiloAuth, { type: "oauth" }>): Promise<void>
+  get(provider: string): Promise<AccureAuth | undefined>
+  set(provider: string, auth: Extract<AccureAuth, { type: "oauth" }>): Promise<void>
 }
 
 export interface OrganizationDeps {
@@ -51,20 +56,20 @@ export class GatewayError extends Error {
   }
 }
 
-export function getToken(auth: KiloAuth | undefined) {
+export function getToken(auth: AccureAuth | undefined) {
   if (auth?.type === "api") return auth.key
   if (auth?.type === "oauth") return auth.access
   return undefined
 }
 
-export function getOrganizationId(auth: KiloAuth | undefined) {
+export function getOrganizationId(auth: AccureAuth | undefined) {
   if (auth?.type === "oauth") return auth.accountId
   return undefined
 }
 
-export async function getProfile(auth: AuthStore): Promise<KiloProfileResult> {
-  const info = await auth.get("kilo")
-  if (!info || info.type !== "oauth") throw new UnauthorizedError("Not authenticated with Kilo Gateway")
+export async function getProfile(auth: AuthStore): Promise<AccureProfileResult> {
+  const info = await auth.get("accure")
+  if (!info || info.type !== "oauth") throw new UnauthorizedError("Not authenticated with Accure Gateway")
 
   const currentOrgId = info.accountId ?? null
   const [profile, balance] = await Promise.all([
@@ -75,21 +80,21 @@ export async function getProfile(auth: AuthStore): Promise<KiloProfileResult> {
 }
 
 export async function getNotifications(auth: AuthStore) {
-  const info = await auth.get("kilo")
+  const info = await auth.get("accure")
   const token = getToken(info)
   if (!token) return []
 
-  return fetchKilocodeNotifications({
-    kilocodeToken: token,
-    kilocodeOrganizationId: getOrganizationId(info),
+  return fetchAccurecodeNotifications({
+    accurecodeToken: token,
+    accurecodeOrganizationId: getOrganizationId(info),
   })
 }
 
 export async function setOrganization(deps: OrganizationDeps, organizationId: string | null) {
-  const info = await deps.auth.get("kilo")
-  if (!info || info.type !== "oauth") throw new UnauthorizedError("Not authenticated with Kilo Gateway")
+  const info = await deps.auth.get("accure")
+  if (!info || info.type !== "oauth") throw new UnauthorizedError("Not authenticated with Accure Gateway")
 
-  await deps.auth.set("kilo", {
+  await deps.auth.set("accure", {
     type: "oauth",
     refresh: info.refresh,
     access: info.access,
@@ -108,7 +113,7 @@ export async function getClawStatus(auth: AuthStore) {
 }
 
 export async function getClawChatCredentials(auth: AuthStore): Promise<ClawChatCredentials> {
-  throw new UnauthorizedError("KiloClaw features are disabled for Accure Code")
+  throw new UnauthorizedError("AccureClaw features are disabled for Accure Code")
 }
 
 export async function getCloudSessions(token: string, input: CloudSessionsInput) {

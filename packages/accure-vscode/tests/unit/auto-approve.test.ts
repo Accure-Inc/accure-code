@@ -1,9 +1,9 @@
 import { describe, expect, it } from "bun:test"
 import * as vscode from "vscode"
 import { registerToggleAutoApprove, type AutoApproveController } from "../../src/commands/toggle-auto-approve"
-import { createAutoApproveBridge } from "../../src/kilo-provider/auto-approve"
-import type { Event, KiloClient } from "@kilocode/sdk/v2/client"
-import type { KiloConnectionService } from "../../src/services/cli-backend/connection-service"
+import { createAutoApproveBridge } from "../../src/accure-provider/auto-approve"
+import type { Event, AccureClient } from "@accurecode/sdk/v2/client"
+import type { AccureConnectionService } from "../../src/services/cli-backend/connection-service"
 
 type ConfigEvent = { affectsConfiguration(key: string): boolean }
 type Permission = { id: string }
@@ -79,7 +79,7 @@ function context() {
   return { subscriptions: [] as Array<{ dispose(): void }> } as vscode.ExtensionContext
 }
 
-function connection(client: KiloClient | null, dirs = new Map<string, string>()) {
+function connection(client: AccureClient | null, dirs = new Map<string, string>()) {
   const listeners: Array<(event: Event, directory?: string) => void> = []
   const svc = {
     getClient: () => {
@@ -94,7 +94,7 @@ function connection(client: KiloClient | null, dirs = new Map<string, string>())
       }
     },
     getPermissionDirectory: (id: string) => dirs.get(id),
-  } as unknown as KiloConnectionService
+  } as unknown as AccureConnectionService
 
   return {
     svc,
@@ -113,7 +113,7 @@ function client(opts: {
       list: async (args: { directory: string }) => opts.list?.(args.directory) ?? { data: [] },
       reply: async (args: { requestID: string; directory: string; reply: "once" }) => opts.reply?.(args),
     },
-  } as unknown as KiloClient
+  } as unknown as AccureClient
 }
 
 function asked(id: string, sessionID = "ses_1") {
@@ -164,12 +164,12 @@ describe("registerToggleAutoApprove", () => {
       () => ["/workspace"],
     )
 
-    conn.emit(asked("perm_worktree", "ses_worktree"), "/workspace/.kilo/worktrees/feature")
-    conn.emit(asked("perm_child", "ses_child"), "/workspace/.kilo/worktrees/feature")
+    conn.emit(asked("perm_worktree", "ses_worktree"), "/workspace/.accurecode/worktrees/feature")
+    conn.emit(asked("perm_child", "ses_child"), "/workspace/.accurecode/worktrees/feature")
 
     expect(replies).toEqual([
-      { requestID: "perm_worktree", directory: "/workspace/.kilo/worktrees/feature", reply: "once" },
-      { requestID: "perm_child", directory: "/workspace/.kilo/worktrees/feature", reply: "once" },
+      { requestID: "perm_worktree", directory: "/workspace/.accurecode/worktrees/feature", reply: "once" },
+      { requestID: "perm_child", directory: "/workspace/.accurecode/worktrees/feature", reply: "once" },
     ])
   })
 
@@ -178,7 +178,7 @@ describe("registerToggleAutoApprove", () => {
     const replies: unknown[] = []
     const conn = connection(
       client({ reply: async (args) => replies.push(args) }),
-      new Map([["perm_shared", "/workspace/.kilo/worktrees/shared"]]),
+      new Map([["perm_shared", "/workspace/.accurecode/worktrees/shared"]]),
     )
     registerToggleAutoApprove(
       context(),
@@ -190,7 +190,7 @@ describe("registerToggleAutoApprove", () => {
     conn.emit(asked("perm_shared", "ses_child"))
 
     expect(replies).toEqual([
-      { requestID: "perm_shared", directory: "/workspace/.kilo/worktrees/shared", reply: "once" },
+      { requestID: "perm_shared", directory: "/workspace/.accurecode/worktrees/shared", reply: "once" },
     ])
   })
 

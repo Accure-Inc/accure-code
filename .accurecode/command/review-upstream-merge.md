@@ -10,11 +10,11 @@ When all subagents are done, commit the report files and create a draft PR with 
 
 Do not include exhaustive per-file checklists in the report files. Summarize the scope and methodology, then list only findings, notable non-findings, command outputs, and limitations.
 
-## KILOCODE_CHANGE_MARKERS.md
+## ACCURECODE_CHANGE_MARKERS.md
 
-Review carefully, file by file, whether we accidentally removed any `kilocode_change` marker.
+Review carefully, file by file, whether we accidentally removed any `accurecode_change` marker.
 
-Get the full list of files changed in the reviewed PR. Check each changed file. For each file, compare both our `main` branch and the upstream-merged version in the reviewed PR. Determine whether any marker removal, marker move, or Kilo-specific change makes sense, and comment on that.
+Get the full list of files changed in the reviewed PR. Check each changed file. For each file, compare both our `main` branch and the upstream-merged version in the reviewed PR. Determine whether any marker removal, marker move, or Accure-specific change makes sense, and comment on that.
 
 Do not include a full "Files Checked" section. Mention the number of changed files checked, but only list files that have findings or need human verification.
 
@@ -28,13 +28,13 @@ Do not include a full "Files Checked" section. Only list infrastructure-relevant
 
 ## OPENCODE_MENTIONS.md
 
-Check whether the merge now mentions OpenCode somewhere user-facing instead of Kilo, or links to OpenCode web properties.
+Check whether the merge now mentions OpenCode somewhere user-facing instead of Accure, or links to OpenCode web properties.
 
 Focus on UI strings, docs, help text, package metadata shown to users, URLs, CLI output, config docs, generated SDK/OpenAPI descriptions, and error messages.
 
 ## UNNECESSARY_MARKERS.md
 
-Check whether any merged files now use `kilocode_change` markers without any actual difference to upstream.
+Check whether any merged files now use `accurecode_change` markers without any actual difference to upstream.
 
 Use `script/upstream/find-reset-candidates.ts --dry-run` to see whether any files changed in the PR are actually now identical to upstream. If you find candidates, verify them with `script/upstream/reset-to-upstream.ts --dry-run`.
 
@@ -50,7 +50,7 @@ Look for cases like:
 - A config option that is defined but never propagated to where it is used.
 - A type definition extended on one side but not consumed on the other.
 
-For each `kilocode_change` in this PR, trace the full chain: where the value or behavior is introduced, where it needs to flow through, and where it is ultimately consumed. Verify every link in the chain still exists after the merge.
+For each `accurecode_change` in this PR, trace the full chain: where the value or behavior is introduced, where it needs to flow through, and where it is ultimately consumed. Verify every link in the chain still exists after the merge.
 
 Pay special attention to:
 
@@ -64,6 +64,6 @@ When in doubt, add a finding. A human will verify it. Compiling code is not proo
 
 ## TESTS.md
 
-Check whether this PR removed any Kilo-specific tests.
+Check whether this PR removed any Accure-specific tests.
 
-Kilo-specific tests may live in paths containing `kilo` or `kilocode`, or may include Kilo-specific assertions, fixtures, or `kilocode_change` markers.
+Accure-specific tests may live in paths containing `accure` or `accurecode`, or may include Accure-specific assertions, fixtures, or `accurecode_change` markers.

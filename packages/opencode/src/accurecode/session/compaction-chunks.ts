@@ -15,7 +15,7 @@ import * as Log from "@opencode-ai/core/util/log"
 type Update = <T extends MessageV2.Part>(part: T) => Effect.Effect<T>
 type UpdateMessage = <T extends MessageV2.Info>(msg: T) => Effect.Effect<T>
 
-const log = Log.create({ service: "kilocode.compaction.chunks" })
+const log = Log.create({ service: "accurecode.compaction.chunks" })
 const TOOL_OUTPUT_MAX_CHARS = 2_000
 const TRANSCRIPT_MAX_CHARS = 16_000
 const RATIO = 0.6
@@ -23,7 +23,7 @@ const CONCURRENCY = 3
 const DEPTH = 3
 const OUTPUT = 2_048
 
-export namespace KiloCompactionChunks {
+export namespace AccureCompactionChunks {
   type Chunk = {
     index: number
     messages: MessageV2.WithParts[]

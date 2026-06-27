@@ -1,7 +1,7 @@
-// kilocode_change - new file
+// accurecode_change - new file
 
 /**
- * KiloClaw status sidebar
+ * AccureClaw status sidebar
  *
  * Mirrors the session sidebar (routes/session/sidebar.tsx): bold
  * conversation title at the top, then context-window usage, then
@@ -199,7 +199,7 @@ export function ClawSidebar(props: {
           <Show when={!props.loading && !props.error && !props.status}>
             <box>
               <text fg={theme.textMuted}>No instance found.</text>
-              <text fg={theme.textMuted}>Visit kilo.ai/claw</text>
+              <text fg={theme.textMuted}>Visit accure.ai/claw</text>
               <text fg={theme.textMuted}>to set one up.</text>
             </box>
           </Show>

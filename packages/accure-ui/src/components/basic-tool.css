@@ -7,7 +7,7 @@
   }
 
   [data-slot="basic-tool-tool-info"] {
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     text-align: start;
   }
 
@@ -34,29 +34,29 @@
   }
 
   [data-slot="basic-tool-tool-subtitle"] {
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     color: var(--text-weak);
   }
 
   [data-slot="basic-tool-tool-title"] {
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     font-weight: var(--font-weight-regular);
     color: var(--text-weak);
   }
 
   [data-slot="message-part-title-text"] {
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     font-weight: var(--font-weight-regular);
     color: var(--text-weak);
   }
 
   [data-slot="basic-tool-tool-arg"] {
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     color: var(--text-weak);
   }
 
   [data-slot="message-part-title-filename"] {
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     color: var(--text-weak);
   }
 
@@ -68,7 +68,7 @@
     white-space: nowrap;
     min-width: 0;
     flex-shrink: 1;
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     color: var(--text-weak);
 
     &.clickable {
@@ -100,7 +100,7 @@
     text-align: left;
     flex-shrink: 1;
     min-width: 0;
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
   }
 
   [data-slot="webfetch-meta"] {
@@ -194,7 +194,7 @@ html[data-theme="accure-vscode"] [data-component="tool-part-wrapper"][data-part-
     [data-slot="message-part-title-filename"],
     [data-slot="message-part-directory-inline"],
     [data-slot="message-part-meta-line"] {
-      line-height: var(--kilo-font-size-16);
+      line-height: var(--accure-font-size-16);
     }
 
     [data-slot="collapsible-trigger"][aria-expanded="true"] {
@@ -251,7 +251,7 @@ html[data-theme="accure-vscode"] [data-component="tool-part-wrapper"][data-part-
 
   [data-slot="mcp-section-label"] {
     padding: 6px 12px 0;
-    font-size: var(--kilo-font-size-11);
+    font-size: var(--accure-font-size-11);
     color: var(--text-weak, var(--vscode-descriptionForeground));
   }
 
@@ -270,8 +270,8 @@ html[data-theme="accure-vscode"] [data-component="tool-part-wrapper"][data-part-
     border-radius: var(--radius-sm);
     background: var(--surface-tool-output-base);
     color: var(--text-weak);
-    font-size: var(--kilo-font-size-12);
-    line-height: var(--kilo-font-size-16);
+    font-size: var(--accure-font-size-12);
+    line-height: var(--accure-font-size-16);
     scrollbar-width: none;
 
     &::-webkit-scrollbar {
@@ -294,9 +294,9 @@ html[data-theme="accure-vscode"] [data-component="tool-part-wrapper"][data-part-
 
     [data-slot="context-tool-group-title"] {
       gap: 6px;
-      font-size: var(--kilo-font-size-12);
+      font-size: var(--accure-font-size-12);
       font-weight: var(--font-weight-regular);
-      line-height: var(--kilo-font-size-16);
+      line-height: var(--accure-font-size-16);
       color: var(--text-weak);
     }
 
@@ -331,8 +331,8 @@ html[data-theme="accure-vscode"] [data-component="tool-part-wrapper"][data-part-
     align-items: baseline;
     column-gap: 8px;
     min-height: 20px;
-    font-size: var(--kilo-font-size-12);
-    line-height: var(--kilo-font-size-16);
+    font-size: var(--accure-font-size-12);
+    line-height: var(--accure-font-size-16);
   }
 
   [data-component="context-tool-expanded-row"] {
@@ -379,7 +379,7 @@ html[data-theme="accure-vscode"] [data-component="tool-part-wrapper"][data-part-
     color: var(--text-weak);
     font-family: var(--font-family-mono);
     font-feature-settings: var(--font-family-mono--font-feature-settings);
-    font-size: var(--kilo-font-size-12);
+    font-size: var(--accure-font-size-12);
     line-height: var(--line-height-large);
     white-space: pre-wrap;
     overflow-wrap: anywhere;

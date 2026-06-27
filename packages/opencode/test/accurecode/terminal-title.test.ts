@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test"
-import { KiloTerminalTitle } from "../../src/kilocode/cli/cmd/tui/terminal-title"
+import { AccureTerminalTitle } from "../../src/accurecode/cli/cmd/tui/terminal-title"
 
-const base = "Kilo CLI"
+const base = "Accure CLI"
 
-function data(input: Partial<KiloTerminalTitle.Data> = {}): KiloTerminalTitle.Data {
+function data(input: Partial<AccureTerminalTitle.Data> = {}): AccureTerminalTitle.Data {
   return {
     session: [{ id: "parent", title: "Build status" }],
     session_status: {},
@@ -17,66 +17,66 @@ function data(input: Partial<KiloTerminalTitle.Data> = {}): KiloTerminalTitle.Da
   }
 }
 
-describe("KiloTerminalTitle", () => {
+describe("AccureTerminalTitle", () => {
   test("format_noneStyle_hidesStatusIcon", () => {
-    expect(KiloTerminalTitle.format({ base, title: "Build status", indicator: "working" })).toBe(
-      "Kilo CLI | Build status",
+    expect(AccureTerminalTitle.format({ base, title: "Build status", indicator: "working" })).toBe(
+      "Accure CLI | Build status",
     )
   })
 
   test("format_noIndicator_returnsBaseTitle", () => {
-    expect(KiloTerminalTitle.format({ base, indicator: "none", icon: "unicode" })).toBe("Kilo CLI")
+    expect(AccureTerminalTitle.format({ base, indicator: "none", icon: "unicode" })).toBe("Accure CLI")
   })
 
   test("format_unicodeStyle_usesUnicodeIcons", () => {
-    expect(KiloTerminalTitle.format({ base, indicator: "working", icon: "unicode" })).toBe("◔ Kilo CLI")
-    expect(KiloTerminalTitle.format({ base, indicator: "attention", icon: "unicode" })).toBe("⚠ Kilo CLI")
-    expect(KiloTerminalTitle.format({ base, indicator: "finished", icon: "unicode" })).toBe("✓ Kilo CLI")
+    expect(AccureTerminalTitle.format({ base, indicator: "working", icon: "unicode" })).toBe("◔ Accure CLI")
+    expect(AccureTerminalTitle.format({ base, indicator: "attention", icon: "unicode" })).toBe("⚠ Accure CLI")
+    expect(AccureTerminalTitle.format({ base, indicator: "finished", icon: "unicode" })).toBe("✓ Accure CLI")
   })
 
   test("format_emojiStyle_usesEmojiIcons", () => {
-    expect(KiloTerminalTitle.format({ base, indicator: "working", icon: "emojis" })).toBe("💭 Kilo CLI")
-    expect(KiloTerminalTitle.format({ base, indicator: "attention", icon: "emojis" })).toBe("🔶 Kilo CLI")
-    expect(KiloTerminalTitle.format({ base, indicator: "finished", icon: "emojis" })).toBe("✅ Kilo CLI")
+    expect(AccureTerminalTitle.format({ base, indicator: "working", icon: "emojis" })).toBe("💭 Accure CLI")
+    expect(AccureTerminalTitle.format({ base, indicator: "attention", icon: "emojis" })).toBe("🔶 Accure CLI")
+    expect(AccureTerminalTitle.format({ base, indicator: "finished", icon: "emojis" })).toBe("✅ Accure CLI")
   })
 
   test("format_longSessionTitle_truncatesToExistingLimit", () => {
     expect(
-      KiloTerminalTitle.format({
+      AccureTerminalTitle.format({
         base,
         title: "12345678901234567890123456789012345678901234567890",
         indicator: "working",
         icon: "unicode",
       }),
-    ).toBe("◔ Kilo CLI | 1234567890123456789012345678901234567...")
+    ).toBe("◔ Accure CLI | 1234567890123456789012345678901234567...")
   })
 
   test("session_newIdleSession_hasNoIndicator", () => {
     expect(
-      KiloTerminalTitle.session({
+      AccureTerminalTitle.session({
         base,
         id: "parent",
         data: data(),
         done: {},
       }),
-    ).toEqual({ title: "Kilo CLI | Build status", id: "parent", active: false, indicator: "none" })
+    ).toEqual({ title: "Accure CLI | Build status", id: "parent", active: false, indicator: "none" })
   })
 
   test("session_busySession_isWorking", () => {
     expect(
-      KiloTerminalTitle.session({
+      AccureTerminalTitle.session({
         base,
         id: "parent",
         data: data({ session_status: { parent: { type: "busy" } } }),
         done: {},
         icon: "unicode",
       }),
-    ).toEqual({ title: "◔ Kilo CLI | Build status", id: "parent", active: true, indicator: "working" })
+    ).toEqual({ title: "◔ Accure CLI | Build status", id: "parent", active: true, indicator: "working" })
   })
 
   test("session_pendingPermission_overridesBusy", () => {
     expect(
-      KiloTerminalTitle.session({
+      AccureTerminalTitle.session({
         base,
         id: "parent",
         data: data({
@@ -90,7 +90,7 @@ describe("KiloTerminalTitle", () => {
 
   test("session_childQuestion_marksParentAttention", () => {
     expect(
-      KiloTerminalTitle.session({
+      AccureTerminalTitle.session({
         base,
         id: "parent",
         data: data({
@@ -107,7 +107,7 @@ describe("KiloTerminalTitle", () => {
 
   test("session_latestAssistantPlanExit_marksAttention", () => {
     expect(
-      KiloTerminalTitle.session({
+      AccureTerminalTitle.session({
         base,
         id: "parent",
         data: data({
@@ -123,7 +123,7 @@ describe("KiloTerminalTitle", () => {
 
   test("session_latestUserAfterPlanExit_clearsPlanExitAttention", () => {
     expect(
-      KiloTerminalTitle.session({
+      AccureTerminalTitle.session({
         base,
         id: "parent",
         data: data({
@@ -144,7 +144,7 @@ describe("KiloTerminalTitle", () => {
 
   test("session_doneIdleSession_isFinished", () => {
     expect(
-      KiloTerminalTitle.session({
+      AccureTerminalTitle.session({
         base,
         id: "parent",
         data: data(),

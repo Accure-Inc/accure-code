@@ -1,11 +1,11 @@
-package ai.kilocode.client.session.ui.empty
+package ai.accurecode.client.session.ui.empty
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.ui.popup.Balloon
@@ -81,12 +81,12 @@ internal class EmptySessionFeedback(
     companion object {
         @RequiresEdt
         fun content(open: (String) -> Unit): JComponent {
-            val logo = JBLabel(IconLoader.getIcon("/icons/kilo-content.svg", EmptySessionPanel::class.java)).apply {
+            val logo = JBLabel(IconLoader.getIcon("/icons/accure-content.svg", EmptySessionPanel::class.java)).apply {
                 horizontalAlignment = JBLabel.CENTER
                 cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
                 addMouseListener(object : MouseAdapter() {
                     override fun mouseClicked(e: MouseEvent) {
-                        open(KILO_URL)
+                        open(ACCURECODE_URL)
                     }
                 })
             }
@@ -95,13 +95,13 @@ internal class EmptySessionFeedback(
                 horizontalAlignment = JBLabel.CENTER
             }
             val actions = Stack.vertical(gap = UiStyle.Gap.sm())
-                .next(ActionButton(KiloBundle.message("feedback.dialog.github"), AllIcons.Vcs.Vendors.Github) {
+                .next(ActionButton(AccureBundle.message("feedback.dialog.github"), AllIcons.Vcs.Vendors.Github) {
                     open(GITHUB_ISSUES_URL)
                 }.align(HAlign.CENTER, VAlign.CENTER))
-                .next(ActionButton(KiloBundle.message("feedback.dialog.discord"), DISCORD_ICON) {
+                .next(ActionButton(AccureBundle.message("feedback.dialog.discord"), DISCORD_ICON) {
                     open(DISCORD_URL)
                 }.align(HAlign.CENTER, VAlign.CENTER))
-                .next(ActionButton(KiloBundle.message("feedback.dialog.support"), AllIcons.Actions.Help) {
+                .next(ActionButton(AccureBundle.message("feedback.dialog.support"), AllIcons.Actions.Help) {
                     open(SUPPORT_URL)
                 }.align(HAlign.CENTER, VAlign.CENTER))
 
@@ -117,17 +117,17 @@ internal class EmptySessionFeedback(
         fun urls() = listOf(GITHUB_ISSUES_URL, DISCORD_URL, SUPPORT_URL)
 
         private fun messageHtml() = XmlStringUtil.wrapInHtml(
-            "<div style='text-align:center'>${XmlStringUtil.escapeString(KiloBundle.message("feedback.dialog.message"))}</div>"
+            "<div style='text-align:center'>${XmlStringUtil.escapeString(AccureBundle.message("feedback.dialog.message"))}</div>"
         )
 
         private fun buttonHtml() = XmlStringUtil.wrapInHtml(
-            XmlStringUtil.escapeString(KiloBundle.message("feedback.button"))
+            XmlStringUtil.escapeString(AccureBundle.message("feedback.button"))
         )
 
-        private const val KILO_URL = "https://kilocode.ai"
-        private const val GITHUB_ISSUES_URL = "https://github.com/Kilo-Org/kilocode/issues/new/choose"
-        private const val DISCORD_URL = "https://kilo.ai/discord"
-        private const val SUPPORT_URL = "https://kilo.ai/support"
+        private const val ACCURECODE_URL = "https://accurecode.ai"
+        private const val GITHUB_ISSUES_URL = "https://github.com/Accure-Inc/accure-code/issues/new/choose"
+        private const val DISCORD_URL = "https://accure.ai/discord"
+        private const val SUPPORT_URL = "https://accure.ai/support"
         private val DISCORD_ICON = IconLoader.getIcon("/icons/discord.svg", EmptySessionPanel::class.java)
     }
 }

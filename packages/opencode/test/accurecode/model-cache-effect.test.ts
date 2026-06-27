@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { expect } from "bun:test"
 import { Deferred, Effect, Fiber, Layer, Ref } from "effect"
 import { HttpClient, HttpClientResponse } from "effect/unstable/http"
@@ -40,7 +40,7 @@ function layer(
     Layer.provide(Layer.succeed(HttpClient.HttpClient, http)),
     Layer.provide(cfg),
     Layer.provide(access),
-    Layer.provide(ModelCache.kiloModelsLayer),
+    Layer.provide(ModelCache.accureModelsLayer),
   )
 }
 

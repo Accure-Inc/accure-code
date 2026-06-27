@@ -1,4 +1,4 @@
-import type { KiloConnectionService } from "./cli-backend/connection-service"
+import type { AccureConnectionService } from "./cli-backend/connection-service"
 import { routeAutocompleteMessage } from "./autocomplete/settings"
 import { handleSpeechToTextCancel, handleSpeechToTextStart, handleSpeechToTextStop } from "../speech-to-text/handler"
 
@@ -10,7 +10,7 @@ type Msg = {
 }
 
 type Ctx = {
-  connection: KiloConnectionService
+  connection: AccureConnectionService
   dir: string
   post: (msg: unknown) => void
 }

@@ -102,12 +102,12 @@ function book(sheet: WorkSheet, name = "Visible") {
   return value
 }
 
-describe("kilocode XLSX reads", () => {
+describe("accurecode XLSX reads", () => {
   it.live("extracts labelled formatted content from case-variant XLSX files", () =>
     Effect.gen(function* () {
       const dir = yield* tmpdirScoped()
       const sheet: WorkSheet = {
-        A1: { t: "s", v: "Link", l: { Target: "https://kilo.ai" } },
+        A1: { t: "s", v: "Link", l: { Target: "https://accure.ai" } },
         B1: { t: "d", v: new Date("2026-05-29T00:00:00.000Z") },
         C1: { t: "n", v: 42, f: "SUM(40,2)" },
         D1: { t: "e", v: 0x07, w: "#DIV/0!" },
@@ -121,7 +121,7 @@ describe("kilocode XLSX reads", () => {
       const result = yield* run(dir, file)
 
       expect(result.output).toContain("--- Sheet: Visible ---")
-      expect(result.output).toContain("Link (https://kilo.ai)")
+      expect(result.output).toContain("Link (https://accure.ai)")
       expect(result.output).toContain("2026-05-29")
       expect(result.output).toContain("42")
       expect(result.output).toContain("[Formula: SUM(C1:C1)]")
@@ -247,12 +247,12 @@ describe("kilocode XLSX reads", () => {
   )
 })
 
-describe("kilocode ODS reads", () => {
+describe("accurecode ODS reads", () => {
   it.live("extracts labelled formatted content from case-variant ODS files", () =>
     Effect.gen(function* () {
       const dir = yield* tmpdirScoped()
       const sheet: WorkSheet = {
-        A1: { t: "s", v: "Link", l: { Target: "https://kilo.ai" } },
+        A1: { t: "s", v: "Link", l: { Target: "https://accure.ai" } },
         B1: { t: "d", v: new Date("2026-05-29T00:00:00.000Z") },
         C1: { t: "n", v: 42 },
         A4: { t: "s", v: "After blank row" },
@@ -264,7 +264,7 @@ describe("kilocode ODS reads", () => {
       const result = yield* run(dir, file)
 
       expect(result.output).toContain("--- Sheet: Visible ---")
-      expect(result.output).toContain("Link (https://kilo.ai)")
+      expect(result.output).toContain("Link (https://accure.ai)")
       expect(result.output).toContain("2026-05-29")
       expect(result.output).toContain("42")
       expect(result.output).toContain("After blank row")

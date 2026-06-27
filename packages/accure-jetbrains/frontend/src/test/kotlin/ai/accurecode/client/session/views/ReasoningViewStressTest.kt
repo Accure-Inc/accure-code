@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Reasoning
+import ai.accurecode.client.session.model.Reasoning
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.util.Disposer
 import com.intellij.testFramework.fixtures.BasePlatformTestCase

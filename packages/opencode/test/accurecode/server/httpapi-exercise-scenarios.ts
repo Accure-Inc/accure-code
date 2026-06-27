@@ -20,7 +20,7 @@ function file(ctx: ScenarioContext, name: string, content: string) {
 }
 
 const edit = {
-  provider: "kilo",
+  provider: "accure",
   model: "inception/mercury-next-edit",
   currentFilePath: "src/index.ts",
   currentFileContent: "export const value = 1\n",
@@ -32,7 +32,7 @@ const edit = {
   editDiffHistory: [],
 }
 
-export const kiloScenarios: Scenario[] = [
+export const accureScenarios: Scenario[] = [
   http.protected.get("/background-process", "backgroundProcess.list").json(200, array),
   http.protected
     .get("/background-process/{processID}", "backgroundProcess.get")
@@ -131,48 +131,51 @@ export const kiloScenarios: Scenario[] = [
   http.protected.get("/indexing/status", "indexing.status").json(200, object),
   http.protected.get("/indexing/models", "indexing.models").json(200, object),
   http.protected.get("/indexing/warnings", "indexing.warnings").json(200, array),
-  http.protected.get("/kilo/profile", "kilo.profile").probe({ path: "/path" }).status(401),
-  http.protected.get("/kilo/auth-status", "kilo.authStatus").json(200, (body) => {
+  http.protected.get("/accure/profile", "accure.profile").probe({ path: "/path" }).status(401),
+  http.protected.get("/accure/auth-status", "accure.authStatus").json(200, (body) => {
     object(body)
-    check(body.authenticated === false, "Kilo auth status should report signed out")
-    check(body.type === undefined, "Kilo auth status should not expose a credential type while signed out")
+    check(body.authenticated === false, "Accure auth status should report signed out")
+    check(body.type === undefined, "Accure auth status should not expose a credential type while signed out")
   }),
-  http.protected.get("/kilo/modes", "kilo.modes").json(200, (body) => {
+  http.protected.get("/accure/modes", "accure.modes").json(200, (body) => {
     object(body)
     array(body.modes)
   }),
   http.protected
-    .post("/kilo/fim", "kilo.fim")
-    .at((ctx) => ({ path: "/kilo/fim", headers: ctx.headers(), body: { prefix: "const value = ", suffix: "\n" } }))
+    .post("/accure/fim", "accure.fim")
+    .at((ctx) => ({ path: "/accure/fim", headers: ctx.headers(), body: { prefix: "const value = ", suffix: "\n" } }))
     .status(401),
   http.protected
-    .post("/kilo/edit", "kilo.edit")
-    .at((ctx) => ({ path: "/kilo/edit", headers: ctx.headers(), body: edit }))
+    .post("/accure/edit", "accure.edit")
+    .at((ctx) => ({ path: "/accure/edit", headers: ctx.headers(), body: edit }))
     .status(401),
   http.protected
-    .post("/kilo/audio/transcriptions", "kilo.audio.transcriptions")
+    .post("/accure/audio/transcriptions", "accure.audio.transcriptions")
     .at((ctx) => ({
-      path: "/kilo/audio/transcriptions",
+      path: "/accure/audio/transcriptions",
       headers: ctx.headers(),
       body: { model: "whisper-1", input_audio: { data: "", format: "wav" } },
     }))
     .status(401),
-  http.protected.get("/kilo/notifications", "kilo.notifications").json(200, array),
+  http.protected.get("/accure/notifications", "accure.notifications").json(200, array),
   http.protected
-    .post("/kilo/organization", "kilo.organization.set")
-    .at((ctx) => ({ path: "/kilo/organization", headers: ctx.headers(), body: { organizationId: null } }))
+    .post("/accure/organization", "accure.organization.set")
+    .at((ctx) => ({ path: "/accure/organization", headers: ctx.headers(), body: { organizationId: null } }))
     .status(401),
-  http.protected.get("/kilo/claw/status", "kilo.claw.status").probe({ path: "/path" }).status(401),
-  http.protected.get("/kilo/claw/chat-credentials", "kilo.claw.chatCredentials").probe({ path: "/path" }).status(401),
-  http.protected.get("/kilo/cloud-sessions", "kilo.cloudSessions").probe({ path: "/path" }).status(401),
+  http.protected.get("/accure/claw/status", "accure.claw.status").probe({ path: "/path" }).status(401),
   http.protected
-    .get("/kilo/cloud/session/{id}", "kilo.cloud.session.get")
+    .get("/accure/claw/chat-credentials", "accure.claw.chatCredentials")
     .probe({ path: "/path" })
-    .at((ctx) => ({ path: route("/kilo/cloud/session/{id}", { id: "httpapi-missing" }), headers: ctx.headers() }))
+    .status(401),
+  http.protected.get("/accure/cloud-sessions", "accure.cloudSessions").probe({ path: "/path" }).status(401),
+  http.protected
+    .get("/accure/cloud/session/{id}", "accure.cloud.session.get")
+    .probe({ path: "/path" })
+    .at((ctx) => ({ path: route("/accure/cloud/session/{id}", { id: "httpapi-missing" }), headers: ctx.headers() }))
     .status(401),
   http.protected
-    .post("/kilo/cloud/session/import", "kilo.cloud.session.import")
-    .at((ctx) => ({ path: "/kilo/cloud/session/import", headers: ctx.headers(), body: { sessionId: "missing" } }))
+    .post("/accure/cloud/session/import", "accure.cloud.session.import")
+    .at((ctx) => ({ path: "/accure/cloud/session/import", headers: ctx.headers(), body: { sessionId: "missing" } }))
     .status(401),
   http.protected.get("/network", "network.list").json(200, array),
   http.protected
@@ -229,7 +232,7 @@ export const kiloScenarios: Scenario[] = [
     .at((ctx) => ({ path: "/enhance-prompt", headers: ctx.headers(), body: { text: "" } }))
     .status(400),
   http.protected
-    .post("/kilocode/heap/snapshot", "kilocode.heap.snapshot")
+    .post("/accurecode/heap/snapshot", "accurecode.heap.snapshot")
     .mutating()
     .jsonEffect(200, (body) =>
       Effect.gen(function* () {
@@ -238,7 +241,7 @@ export const kiloScenarios: Scenario[] = [
       }),
     ),
   http.protected
-    .post("/kilocode/skill/remove", "kilocode.removeSkill")
+    .post("/accurecode/skill/remove", "accurecode.removeSkill")
     .mutating()
     .preserveDatabase()
     .seeded((ctx) =>
@@ -253,7 +256,7 @@ export const kiloScenarios: Scenario[] = [
       }),
     )
     .at((ctx) => ({
-      path: "/kilocode/skill/remove",
+      path: "/accurecode/skill/remove",
       headers: ctx.headers(),
       body: { location: ctx.state.location },
     }))
@@ -271,12 +274,12 @@ export const kiloScenarios: Scenario[] = [
       }),
     ),
   http.protected
-    .post("/kilocode/agent/remove", "kilocode.removeAgent")
+    .post("/accurecode/agent/remove", "accurecode.removeAgent")
     .mutating()
     .seeded((ctx) =>
       file(ctx, ".opencode/agent/httpapi-remove.md", "---\ndescription: HTTP API remove\n---\nRemove me.\n"),
     )
-    .at((ctx) => ({ path: "/kilocode/agent/remove", headers: ctx.headers(), body: { name: "httpapi-remove" } }))
+    .at((ctx) => ({ path: "/accurecode/agent/remove", headers: ctx.headers(), body: { name: "httpapi-remove" } }))
     .jsonEffect(200, (body, ctx) =>
       Effect.gen(function* () {
         check(body === true, "agent removal should return true")
@@ -284,10 +287,10 @@ export const kiloScenarios: Scenario[] = [
       }),
     ),
   http.protected
-    .post("/kilocode/session-import/project", "kilocode.sessionImport.project")
+    .post("/accurecode/session-import/project", "accurecode.sessionImport.project")
     .mutating()
     .at((ctx) => ({
-      path: "/kilocode/session-import/project",
+      path: "/accurecode/session-import/project",
       headers: ctx.headers(),
       body: {
         id: "prj_httpapi_import",
@@ -302,11 +305,11 @@ export const kiloScenarios: Scenario[] = [
       check(body.ok === true && typeof body.id === "string", "project import should return the resolved project")
     }),
   http.protected
-    .post("/kilocode/session-import/session", "kilocode.sessionImport.session")
+    .post("/accurecode/session-import/session", "accurecode.sessionImport.session")
     .mutating()
     .seeded((ctx) => ctx.project())
     .at((ctx) => ({
-      path: "/kilocode/session-import/session",
+      path: "/accurecode/session-import/session",
       headers: ctx.headers(),
       body: {
         id: "ses_httpapi_import",
@@ -324,11 +327,11 @@ export const kiloScenarios: Scenario[] = [
       check(body.ok === true && body.id === "ses_httpapi_import", "session import should return imported ID")
     }),
   http.protected
-    .post("/kilocode/session-import/message", "kilocode.sessionImport.message")
+    .post("/accurecode/session-import/message", "accurecode.sessionImport.message")
     .mutating()
     .seeded((ctx) => ctx.session({ title: "Import message" }))
     .at((ctx) => ({
-      path: "/kilocode/session-import/message",
+      path: "/accurecode/session-import/message",
       headers: ctx.headers(),
       body: {
         id: "msg_httpapi_import",
@@ -347,7 +350,7 @@ export const kiloScenarios: Scenario[] = [
       check(body.ok === true && body.id === "msg_httpapi_import", "message import should return imported ID")
     }),
   http.protected
-    .post("/kilocode/session-import/part", "kilocode.sessionImport.part")
+    .post("/accurecode/session-import/part", "accurecode.sessionImport.part")
     .mutating()
     .seeded((ctx) =>
       Effect.gen(function* () {
@@ -357,7 +360,7 @@ export const kiloScenarios: Scenario[] = [
       }),
     )
     .at((ctx) => ({
-      path: "/kilocode/session-import/part",
+      path: "/accurecode/session-import/part",
       headers: ctx.headers(),
       body: {
         id: "prt_httpapi_import",

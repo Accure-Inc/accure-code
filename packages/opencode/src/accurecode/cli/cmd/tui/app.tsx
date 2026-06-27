@@ -1,5 +1,5 @@
 /**
- * Kilo-specific TUI app customizations.
+ * Accure-specific TUI app customizations.
  *
  * Everything in this module is called from the shared upstream `app.tsx`
  * via thin integration points so the upstream diff stays minimal.
@@ -18,35 +18,35 @@ import { useTheme } from "@tui/context/theme"
 import { DialogAlert } from "@tui/ui/dialog-alert"
 import { DialogSelect } from "@tui/ui/dialog-select"
 import { Link } from "@tui/ui/link"
-import { isKiloError, showKiloErrorToast } from "@/kilocode/kilo-errors"
-import { registerKiloCommands } from "@/kilocode/kilo-commands"
-import { initializeTUIDependencies } from "@kilocode/accure-gateway/tui"
-import { DialogProcessList } from "@/kilocode/cli/cmd/tui/component/dialog-process-list"
-import { useIndexingWarnings } from "@/kilocode/cli/cmd/tui/indexing-warning"
-import { KiloTerminalTitle } from "./terminal-title"
-import type { KiloTitleIcon } from "./title-icon"
+import { isAccureError, showAccureErrorToast } from "@/accurecode/accure-errors"
+import { registerAccureCommands } from "@/accurecode/accure-commands"
+import { initializeTUIDependencies } from "@accurecode/accure-gateway/tui"
+import { DialogProcessList } from "@/accurecode/cli/cmd/tui/component/dialog-process-list"
+import { useIndexingWarnings } from "@/accurecode/cli/cmd/tui/indexing-warning"
+import { AccureTerminalTitle } from "./terminal-title"
+import type { AccureTitleIcon } from "./title-icon"
 import { Session as SessionApi } from "@/session/session"
 
 // Re-export so upstream can render the route without importing directly
-export { KiloClawView } from "@/kilocode/claw/view"
-export { KiloTerminalTitle } from "./terminal-title"
+export { AccureClawView } from "@/accurecode/claw/view"
+export { AccureTerminalTitle } from "./terminal-title"
 
-// Hot reload TUI-local settings (keybinds/theme/ui) when changed from the Kilo Console.
+// Hot reload TUI-local settings (keybinds/theme/ui) when changed from the Accure Console.
 // Called from the App body (below SDKProvider and the TuiConfig provider).
-export { useTuiConfigHotReload } from "@/kilocode/cli/cmd/tui/context/tui-config-hot-reload"
+export { useTuiConfigHotReload } from "@/accurecode/cli/cmd/tui/context/tui-config-hot-reload"
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
 /** Default terminal window title. */
-export const APP_TITLE = "Kilo CLI"
+export const APP_TITLE = "Accure CLI"
 
 /** Public docs URL shown in the command palette. */
-export const DOCS_URL = "https://kilo.ai/docs"
+export const DOCS_URL = "https://accure.ai/docs"
 
 /** Human-readable product name used in user-facing messages. */
-export const APP_NAME = "Kilo"
+export const APP_NAME = "Accure"
 
 // ---------------------------------------------------------------------------
 // Utilities
@@ -76,7 +76,7 @@ export function useSessionEffects(deps: {
   sdk: ReturnType<typeof useSDK>
   sync: ReturnType<typeof useSync>
 }) {
-  const pty = process.env.KILO_PTY_ID
+  const pty = process.env.ACCURECODE_PTY_ID
   const state = { prev: "" }
 
   // Notify server which session the user is viewing
@@ -122,18 +122,18 @@ export function getTerminalTitle(input: {
   base: string
   sync: ReturnType<typeof useSync>
   done: Record<string, true>
-  icon?: KiloTitleIcon.Value
-}): KiloTerminalTitle.Result | undefined {
+  icon?: AccureTitleIcon.Value
+}): AccureTerminalTitle.Result | undefined {
   if (input.route.data.type === "home") {
     return {
-      title: KiloTerminalTitle.format({ base: input.base, indicator: "none", icon: input.icon }),
+      title: AccureTerminalTitle.format({ base: input.base, indicator: "none", icon: input.icon }),
       active: false,
       indicator: "none",
     }
   }
 
   if (input.route.data.type === "session") {
-    const state = KiloTerminalTitle.session({
+    const state = AccureTerminalTitle.session({
       base: input.base,
       id: input.route.data.sessionID,
       data: input.sync.data,
@@ -144,13 +144,13 @@ export function getTerminalTitle(input: {
     const title = !session || SessionApi.isDefaultTitle(session.title) ? undefined : session.title
     return {
       ...state,
-      title: KiloTerminalTitle.format({ base: input.base, title, indicator: state.indicator, icon: input.icon }),
+      title: AccureTerminalTitle.format({ base: input.base, title, indicator: state.indicator, icon: input.icon }),
     }
   }
 
   if (input.route.data.type === "plugin") {
     return {
-      title: KiloTerminalTitle.format({
+      title: AccureTerminalTitle.format({
         base: input.base,
         title: input.route.data.id,
         indicator: "none",
@@ -161,9 +161,9 @@ export function getTerminalTitle(input: {
     }
   }
 
-  if (input.route.data.type === "kiloclaw") {
+  if (input.route.data.type === "accureclaw") {
     return {
-      title: KiloTerminalTitle.format({ base: input.base, title: "KiloClaw", indicator: "none", icon: input.icon }),
+      title: AccureTerminalTitle.format({ base: input.base, title: "AccureClaw", indicator: "none", icon: input.icon }),
       active: false,
       indicator: "none",
     }
@@ -175,12 +175,12 @@ export function getTerminalTitle(input: {
 // ---------------------------------------------------------------------------
 
 /**
- * Intercepts Kilo-specific errors and shows a warning toast.
+ * Intercepts Accure-specific errors and shows a warning toast.
  * Returns `true` if the error was handled, `false` otherwise.
  */
 export function handleSessionError(error: unknown, toast: ReturnType<typeof useToast>): boolean {
-  if (error && typeof error === "object" && isKiloError(error as any)) {
-    showKiloErrorToast(error as any, toast)
+  if (error && typeof error === "object" && isAccureError(error as any)) {
+    showAccureErrorToast(error as any, toast)
     return true
   }
   return false
@@ -194,7 +194,7 @@ export function handleSessionError(error: unknown, toast: ReturnType<typeof useT
  * One-shot initialiser called from the App component body.
  *
  * - Injects TUI dependencies into accure-gateway
- * - Registers Kilo Gateway commands (profile, teams, kiloclaw, etc.)
+ * - Registers Accure Gateway commands (profile, teams, accureclaw, etc.)
  * - Registers the auto-approve toggle command
  */
 export function init() {
@@ -220,8 +220,8 @@ export function init() {
     TextAttributes,
   })
 
-  // Register Kilo Gateway commands (profile, teams, kiloclaw, remote, etc.)
-  registerKiloCommands(useSDK)
+  // Register Accure Gateway commands (profile, teams, accureclaw, remote, etc.)
+  registerAccureCommands(useSDK)
 
   // Register auto-approve toggle
   useBindings(() => ({
@@ -231,7 +231,7 @@ export function init() {
         name: "background_process.list",
         title: "Background processes",
         desc: "List and manage tracked background processes",
-        category: "Kilo",
+        category: "Accure",
         slashName: "process",
         slashAliases: ["processes"],
         run: () => {

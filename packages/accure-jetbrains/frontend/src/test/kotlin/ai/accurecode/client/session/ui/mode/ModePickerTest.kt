@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.ui.mode
+package ai.accurecode.client.session.ui.mode
 
 import com.intellij.icons.AllIcons
 import com.intellij.ui.components.JBList

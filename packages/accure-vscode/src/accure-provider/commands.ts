@@ -1,4 +1,4 @@
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 import { retry } from "../services/cli-backend/retry"
 
 const promises = new Map<string, Promise<unknown>>()
@@ -7,7 +7,7 @@ export function clearCommandsCache(): void {
   promises.clear()
 }
 
-export async function loadCommands(client: KiloClient, dir: string): Promise<unknown> {
+export async function loadCommands(client: AccureClient, dir: string): Promise<unknown> {
   const pending = promises.get(dir)
   if (pending) return pending
 

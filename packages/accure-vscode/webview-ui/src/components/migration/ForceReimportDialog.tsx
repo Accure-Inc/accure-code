@@ -1,7 +1,7 @@
 import type { Component } from "solid-js"
-import { Dialog } from "@kilocode/accure-ui/dialog"
-import { Button } from "@kilocode/accure-ui/button"
-import { useDialog } from "@kilocode/accure-ui/context/dialog"
+import { Dialog } from "@accurecode/accure-ui/dialog"
+import { Button } from "@accurecode/accure-ui/button"
+import { useDialog } from "@accurecode/accure-ui/context/dialog"
 import { useLanguage } from "../../context/language"
 
 interface ForceReimportDialogProps {

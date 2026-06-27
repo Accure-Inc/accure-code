@@ -1,4 +1,4 @@
-import "@kilocode/accure-web-ui/styles"
+import "@accurecode/accure-web-ui/styles"
 import { Router, Route } from "@solidjs/router"
 import { render } from "solid-js/web"
 import App from "./App"
@@ -28,7 +28,7 @@ render(
         {routes()}
       </Route>
       <Route path="/profile" component={ProfileRoute} />
-      <Route path="/kilo/login" component={LoginRoute} />
+      <Route path="/accure/login" component={LoginRoute} />
       <Route path="/settings" component={ConfigLayout}>
         {routes()}
       </Route>

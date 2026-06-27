@@ -3,7 +3,7 @@ import { describe, expect, test } from "bun:test"
 import { Global } from "@opencode-ai/core/global"
 import { disposeAllInstances, provideTestInstance, tmpdir } from "../../../fixture/fixture"
 import { mount, wait } from "./sync-fixture"
-import type { GlobalEvent } from "@kilocode/sdk/v2"
+import type { GlobalEvent } from "@accurecode/sdk/v2"
 
 function branchEvent(branch: string, workspace?: string): GlobalEvent {
   return {
@@ -24,7 +24,7 @@ describe("tui sync", () => {
     await using tmp = await tmpdir()
     Global.Path.state = tmp.path
     await Bun.write(`${tmp.path}/kv.json`, "{}")
-    const { app, kv, sync, session } = await provideTestInstance({ directory: tmp.path, fn: () => mount() }) // kilocode_change
+    const { app, kv, sync, session } = await provideTestInstance({ directory: tmp.path, fn: () => mount() }) // accurecode_change
 
     try {
       expect(kv.get("session_directory_filter_enabled", true)).toBe(true)
@@ -38,7 +38,7 @@ describe("tui sync", () => {
       expect(session.at(-1)?.searchParams.get("path")).toBeNull()
     } finally {
       app.renderer.destroy()
-      await disposeAllInstances() // kilocode_change
+      await disposeAllInstances() // accurecode_change
       Global.Path.state = previous
     }
   })

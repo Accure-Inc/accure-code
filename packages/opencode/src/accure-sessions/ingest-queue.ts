@@ -1,6 +1,6 @@
 import { ulid } from "ulid"
-import type * as SDK from "@kilocode/sdk/v2"
-import type { KiloSession } from "@/kilocode/session"
+import type * as SDK from "@accurecode/sdk/v2"
+import type { AccureSession } from "@/accurecode/session"
 
 export namespace IngestQueue {
   export type Client = {
@@ -8,11 +8,11 @@ export namespace IngestQueue {
     fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
   }
 
-  export type CloseReason = KiloSession.CloseReason
+  export type CloseReason = AccureSession.CloseReason
 
   export type Data =
     | {
-        type: "kilo_meta"
+        type: "accure_meta"
         data: {
           platform: string
           orgId?: string
@@ -122,7 +122,7 @@ export namespace IngestQueue {
     function key(item: Data) {
       // Stable keys are important so updates for the same entity collapse to a single queued item.
       // If we can't derive a stable key, we fall back to a random key (ulid) so the item is still sent.
-      if (item.type === "kilo_meta") return "kilo_meta"
+      if (item.type === "accure_meta") return "accure_meta"
       if (item.type === "session") return "session"
       if (item.type === "session_diff") return "session_diff"
       if (item.type === "session_open") return "session_open"

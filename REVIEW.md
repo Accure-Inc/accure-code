@@ -1,6 +1,6 @@
 # REVIEW.md
 
-Guidance for the automated reviewer (kilo-code-bot) on PRs in this repo.
+Guidance for the automated reviewer (accure-code-bot) on PRs in this repo.
 
 The goal of the review is to catch things CI **cannot** catch: bugs, design issues, and judgment calls about style and fork hygiene. Be helpful, not pedantic — frame everything as a suggestion the human can accept or reject.
 
@@ -11,15 +11,15 @@ CI already runs and will report failures directly. Do **not** comment on:
 - Lint, formatting, or typecheck errors (root `lint`, `turbo typecheck`)
 - Test failures (CLI tests, vscode tests)
 - `knip` unused exports
-- `kilocode_change` marker rules — both directions:
+- `accurecode_change` marker rules — both directions:
   - Missing markers on shared opencode files (`script/check-opencode-annotations.ts`)
-  - Markers present in kilo-only paths like `packages/accure-vscode/`, `packages/accure-ui/`, `packages/opencode/src/kilocode/` (`bun run check-kilocode-change`)
+  - Markers present in accure-only paths like `packages/accure-vscode/`, `packages/accure-ui/`, `packages/opencode/src/accurecode/` (`bun run check-accurecode-change`)
 - Workflow allowlist drift (`script/check-workflows.ts`)
 - Stale `packages/accure-docs/source-links.md` (`script/extract-source-links.ts`)
 - Markdown table padding (`script/check-md-table-padding.ts`)
 - Visual regression snapshots (CI generates baselines on Linux)
 - SDK regeneration drift (`generate.yml`)
-- Generated artifact freshness (`check-kilo-generated-artifacts.yml`)
+- Generated artifact freshness (`check-accure-generated-artifacts.yml`)
 - Docs link checks, nix evals, container builds
 
 If the only issue you'd raise is one of the above, just say `lgtm`.
@@ -54,15 +54,15 @@ When suggesting fixes, ensure the suggestion is valid TypeScript (matched braces
 
 ### 3. Fork merge hygiene
 
-Kilo CLI is a fork of opencode. Minimizing diff against upstream is a top priority.
+Accure CLI is a fork of opencode. Minimizing diff against upstream is a top priority.
 
-- If a change modifies a shared opencode file (anything under `packages/opencode/` not in a path containing `kilocode`), ask whether the logic could live in a Kilo-only directory instead (`packages/opencode/src/kilocode/`, `packages/accure-gateway/`, etc.) or be reduced to a smaller hook.
+- If a change modifies a shared opencode file (anything under `packages/opencode/` not in a path containing `accurecode`), ask whether the logic could live in a Accure-only directory instead (`packages/opencode/src/accurecode/`, `packages/accure-gateway/`, etc.) or be reduced to a smaller hook.
 - Refactors or reorganizations of upstream code are a red flag — flag them unless clearly justified.
-- See `.kilo/skills/kilocode-merge-minimizer/SKILL.md` for the decision rules.
+- See `.accurecode/skills/accurecode-merge-minimizer/SKILL.md` for the decision rules.
 
 ### 4. Cloud config schema mirror
 
-When `Config.Info` in `packages/opencode/src/config/config.ts` gains a new `kilocode_change` field, the matching JSON Schema entry must also be added in the cloud repo (`apps/web/src/app/config.json/extras.ts`). CI does **not** check this — flag it as a reminder if you see a new config field added.
+When `Config.Info` in `packages/opencode/src/config/config.ts` gains a new `accurecode_change` field, the matching JSON Schema entry must also be added in the cloud repo (`apps/web/src/app/config.json/extras.ts`). CI does **not** check this — flag it as a reminder if you see a new config field added.
 
 ### 5. Test quality
 

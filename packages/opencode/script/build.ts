@@ -2,16 +2,16 @@
 
 import { $ } from "bun"
 import fs from "fs"
-import os from "os" // kilocode_change
+import os from "os" // accurecode_change
 import path from "path"
 import { fileURLToPath } from "url"
 import { createSolidTransformPlugin } from "@opentui/solid/bun-plugin"
-import { createRequire } from "module" // kilocode_change
+import { createRequire } from "module" // accurecode_change
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const dir = path.resolve(__dirname, "..")
-const require = createRequire(import.meta.url) // kilocode_change
+const require = createRequire(import.meta.url) // accurecode_change
 
 process.chdir(dir)
 
@@ -19,7 +19,7 @@ const generated = await import("./generate.ts")
 
 import { Script } from "@opencode-ai/script"
 import pkg from "../package.json"
-import { LanceDBRuntime } from "../src/kilocode/lancedb" // kilocode_change
+import { LanceDBRuntime } from "../src/accurecode/lancedb" // accurecode_change
 
 // Load migrations from migration directories
 const migrationDirs = (
@@ -56,9 +56,9 @@ const baselineFlag = process.argv.includes("--baseline")
 const skipInstall = process.argv.includes("--skip-install")
 const sourcemapsFlag = process.argv.includes("--sourcemaps")
 const plugin = createSolidTransformPlugin()
-// kilocode_change - packages/app was removed; the web UI embed step is no longer applicable
+// accurecode_change - packages/app was removed; the web UI embed step is no longer applicable
 
-// kilocode_change start - codebase indexing
+// accurecode_change start - codebase indexing
 async function copyTreeSitterWasms(outputDir: string) {
   const runtimeWasmPath = require.resolve("web-tree-sitter/tree-sitter.wasm")
   const languagePackagePath = require.resolve("tree-sitter-wasms/package.json")
@@ -76,55 +76,55 @@ async function copyTreeSitterWasms(outputDir: string) {
 
   console.log(`copied ${languageWasmFiles.length + 1} tree-sitter wasm files to ${targetDir}`)
 }
-// kilocode_change end
+// accurecode_change end
 
-// kilocode_change start - embed Kilo Console static assets
-async function buildKiloConsole() {
+// accurecode_change start - embed Accure Console static assets
+async function buildAccureConsole() {
   const app = path.resolve(dir, "../accure-console")
   const out = path.join(app, "dist")
-  console.log("building Kilo Console")
+  console.log("building Accure Console")
   const proc = Bun.spawn([process.execPath, "run", "build"], {
     cwd: app,
-    env: { ...process.env, KILO_CONSOLE_BASE: "/console/" },
+    env: { ...process.env, ACCURECODE_CONSOLE_BASE: "/console/" },
     stdout: "inherit",
     stderr: "inherit",
     windowsHide: true,
   })
   const code = await proc.exited
-  if (code !== 0) throw new Error(`Kilo Console build failed with exit code ${code}`)
+  if (code !== 0) throw new Error(`Accure Console build failed with exit code ${code}`)
   return out
 }
 
-async function copyKiloConsole(input: string, outputDir: string) {
+async function copyAccureConsole(input: string, outputDir: string) {
   const target = path.join(outputDir, "console")
   await fs.promises.rm(target, { recursive: true, force: true })
   await fs.promises.cp(input, target, { recursive: true })
-  console.log(`copied Kilo Console assets to ${target}`)
+  console.log(`copied Accure Console assets to ${target}`)
 }
-// kilocode_change end
+// accurecode_change end
 
-// kilocode_change start - validate compiled binaries load the embedded models snapshot
+// accurecode_change start - validate compiled binaries load the embedded models snapshot
 function smokeEnv(root: string) {
   const env = { ...process.env }
-  delete env.KILO_MODELS_PATH
-  delete env.KILO_MODELS_URL
-  delete env.KILO_CONFIG
-  delete env.KILO_CONFIG_DIR
+  delete env.ACCURECODE_MODELS_PATH
+  delete env.ACCURECODE_MODELS_URL
+  delete env.ACCURECODE_CONFIG
+  delete env.ACCURECODE_CONFIG_DIR
   return {
     ...env,
     XDG_DATA_HOME: path.join(root, "data"),
     XDG_CACHE_HOME: path.join(root, "cache"),
     XDG_CONFIG_HOME: path.join(root, "config"),
     XDG_STATE_HOME: path.join(root, "state"),
-    KILO_DISABLE_MODELS_FETCH: "1",
-    KILO_DISABLE_PROJECT_CONFIG: "1",
-    KILO_CONFIG_CONTENT: JSON.stringify({ enabled_providers: ["anthropic"] }),
+    ACCURECODE_DISABLE_MODELS_FETCH: "1",
+    ACCURECODE_DISABLE_PROJECT_CONFIG: "1",
+    ACCURECODE_CONFIG_CONTENT: JSON.stringify({ enabled_providers: ["anthropic"] }),
     ANTHROPIC_API_KEY: "dummy",
   }
 }
 
 async function smokeModels(binaryPath: string) {
-  const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "kilo-models-"))
+  const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "accure-models-"))
   try {
     const out = await $`${binaryPath} --pure models anthropic`.env(smokeEnv(root)).text()
     if (out.split(/\r?\n/).some((line) => line.startsWith("anthropic/"))) return
@@ -135,10 +135,10 @@ async function smokeModels(binaryPath: string) {
       .catch((err) => console.warn(`Failed to remove smoke test directory ${root}`, err))
   }
 }
-// kilocode_change end
+// accurecode_change end
 
-// kilocode_change start - upstream's createEmbeddedWebUIBundle is intentionally removed because
-// Kilo dropped the packages/app web UI. Kept here as a commented reference so future upstream merges
+// accurecode_change start - upstream's createEmbeddedWebUIBundle is intentionally removed because
+// Accure dropped the packages/app web UI. Kept here as a commented reference so future upstream merges
 // can see the deliberate divergence rather than treating a re-add as a clean re-introduction.
 // const createEmbeddedWebUIBundle = async () => {
 //   console.log(`Building Web UI to embed in the binary`)
@@ -163,7 +163,7 @@ async function smokeModels(binaryPath: string) {
 //     `}`,
 //   ].join("\n")
 // }
-// kilocode_change end
+// accurecode_change end
 
 const allTargets: {
   os: string
@@ -250,7 +250,7 @@ const targets = singleFlag
   : allTargets
 
 await $`rm -rf dist`
-const kiloConsoleDist = await buildKiloConsole() // kilocode_change
+const accureConsoleDist = await buildAccureConsole() // accurecode_change
 
 const binaries: Record<string, string> = {}
 if (!skipInstall) {
@@ -276,8 +276,8 @@ for (const item of targets) {
   const rootPath = path.resolve(dir, "../../node_modules/@opentui/core/parser.worker.js")
   const parserWorker = fs.realpathSync(fs.existsSync(localPath) ? localPath : rootPath)
   const workerPath = "./src/cli/cmd/tui/worker.ts"
-  const sessionExportWorkerPath = "./src/kilocode/session-export/worker.ts" // kilocode_change
-  const indexingWorkerPath = "./src/kilocode/indexing-worker.ts" // kilocode_change
+  const sessionExportWorkerPath = "./src/accurecode/session-export/worker.ts" // accurecode_change
+  const indexingWorkerPath = "./src/accurecode/indexing-worker.ts" // accurecode_change
 
   // Use platform-specific bunfs root path based on target OS
   const bunfsRoot = item.os === "win32" ? "B:/~BUN/root/" : "/$bunfs/root/"
@@ -287,13 +287,13 @@ for (const item of targets) {
     conditions: ["browser"],
     tsconfig: "./tsconfig.json",
     plugins: [plugin],
-    // kilocode_change start - skip sourcemaps for release builds (each .js.map adds ~50 MB per target → ~600 MB total)
+    // accurecode_change start - skip sourcemaps for release builds (each .js.map adds ~50 MB per target → ~600 MB total)
     sourcemap: Script.release ? "none" : "external",
-    // kilocode_change end
-    external: ["node-gyp", ...LanceDBRuntime.external], // kilocode_change
+    // accurecode_change end
+    external: ["node-gyp", ...LanceDBRuntime.external], // accurecode_change
     format: "esm",
     minify: true,
-    // kilocode_change start - disable code-splitting to avoid a Bun 1.3.14 codegen bug.
+    // accurecode_change start - disable code-splitting to avoid a Bun 1.3.14 codegen bug.
     // With splitting:true Bun emits cross-chunk re-exports like `import{vn as G9}` whose
     // binding isn't top-level, so the compiled binary crashes at startup on the baseline
     // target: "SyntaxError: Exported binding 'G9' needs to refer to a top-level declared
@@ -301,39 +301,39 @@ for (const item of targets) {
     // in Bun#26089, post-1.3.14. Splitting only deduped shared code between the entrypoints;
     // turning it off inlines per entrypoint and produces a valid binary.
     splitting: false,
-    // kilocode_change end
+    // accurecode_change end
     compile: {
       autoloadBunfig: false,
       autoloadDotenv: false,
       autoloadTsconfig: true,
       autoloadPackageJson: true,
       target: name.replace(pkg.name, "bun") as any,
-      outfile: `dist/${name}/bin/kilo`, // kilocode_change
-      execArgv: [`--user-agent=kilo/${Script.version}`, "--use-system-ca", "--"], // kilocode_change
+      outfile: `dist/${name}/bin/accure`, // accurecode_change
+      execArgv: [`--user-agent=accure/${Script.version}`, "--use-system-ca", "--"], // accurecode_change
       windows: {},
     },
-    // kilocode_change start - packages/app was removed; no embedded web UI
+    // accurecode_change start - packages/app was removed; no embedded web UI
     files: {},
     entrypoints: ["./src/index.ts", parserWorker, workerPath, sessionExportWorkerPath, indexingWorkerPath],
-    // kilocode_change end
+    // accurecode_change end
     define: {
-      KILO_VERSION: `'${Script.version}'`,
-      KILO_MIGRATIONS: JSON.stringify(migrations),
-      KILO_MODELS_DEV: generated.modelsData,
+      ACCURECODE_VERSION: `'${Script.version}'`,
+      ACCURECODE_MIGRATIONS: JSON.stringify(migrations),
+      ACCURECODE_MODELS_DEV: generated.modelsData,
       OTUI_TREE_SITTER_WORKER_PATH: bunfsRoot + workerRelativePath,
-      KILO_WORKER_PATH: workerPath,
-      KILO_SESSION_EXPORT_WORKER_PATH: sessionExportWorkerPath, // kilocode_change
-      KILO_INDEXING_WORKER_PATH: indexingWorkerPath, // kilocode_change
-      KILO_CHANNEL: `'${Script.channel}'`,
-      KILO_LIBC: item.os === "linux" ? `'${item.abi ?? "glibc"}'` : "",
-      KILO_BUILD_KIND: Script.release ? `'release'` : `'source'`, // kilocode_change
+      ACCURECODE_WORKER_PATH: workerPath,
+      ACCURECODE_SESSION_EXPORT_WORKER_PATH: sessionExportWorkerPath, // accurecode_change
+      ACCURECODE_INDEXING_WORKER_PATH: indexingWorkerPath, // accurecode_change
+      ACCURECODE_CHANNEL: `'${Script.channel}'`,
+      ACCURECODE_LIBC: item.os === "linux" ? `'${item.abi ?? "glibc"}'` : "",
+      ACCURECODE_BUILD_KIND: Script.release ? `'release'` : `'source'`, // accurecode_change
     },
   })
 
-  await copyTreeSitterWasms(path.resolve(dir, `dist/${name}/bin`)) // kilocode_change
-  await copyKiloConsole(kiloConsoleDist, path.resolve(dir, `dist/${name}/bin`)) // kilocode_change
+  await copyTreeSitterWasms(path.resolve(dir, `dist/${name}/bin`)) // accurecode_change
+  await copyAccureConsole(accureConsoleDist, path.resolve(dir, `dist/${name}/bin`)) // accurecode_change
 
-  // kilocode_change start - fix Nix-specific ELF interpreter paths for Linux binaries
+  // accurecode_change start - fix Nix-specific ELF interpreter paths for Linux binaries
   if (item.os === "linux") {
     const interpreters: Record<string, string> = {
       x64: "/lib64/ld-linux-x86-64.so.2",
@@ -345,18 +345,18 @@ for (const item of targets) {
     const interpreter = interpreters[key]
     if (interpreter) {
       try {
-        await $`patchelf --set-interpreter ${interpreter} dist/${name}/bin/kilo`
+        await $`patchelf --set-interpreter ${interpreter} dist/${name}/bin/accure`
         console.log(`patched interpreter for ${name} -> ${interpreter}`)
       } catch {
         console.warn(`patchelf not available, skipping interpreter fix for ${name}`)
       }
     }
   }
-  // kilocode_change end
+  // accurecode_change end
 
   // Smoke test: only run if binary is for current platform
   if (item.os === process.platform && item.arch === process.arch && !item.abi) {
-    const binaryPath = `dist/${name}/bin/kilo` // kilocode_change
+    const binaryPath = `dist/${name}/bin/accure` // accurecode_change
     console.log(`Running smoke test: ${binaryPath} --version`)
     try {
       const versionOutput = await $`${binaryPath} --version`.text()
@@ -379,14 +379,14 @@ for (const item of targets) {
         preferUnplugged: true,
         os: [item.os],
         cpu: [item.arch],
-        keywords: pkg.keywords, // kilocode_change
-        private: pkg.private, // kilocode_change
-        // kilocode_change start
+        keywords: pkg.keywords, // accurecode_change
+        private: pkg.private, // accurecode_change
+        // accurecode_change start
         repository: {
           type: "git",
-          url: "https://github.com/Kilo-Org/kilocode",
+          url: "https://github.com/Accure-Inc/accure-code",
         },
-        // kilocode_change end
+        // accurecode_change end
       },
       null,
       2,
@@ -396,20 +396,20 @@ for (const item of targets) {
 }
 
 if (Script.release) {
-  const archives: string[] = [] // kilocode_change
+  const archives: string[] = [] // accurecode_change
   for (const key of Object.keys(binaries)) {
-    const archive = key.replace(pkg.name, "kilo") // kilocode_change
+    const archive = key.replace(pkg.name, "accure") // accurecode_change
     if (key.includes("linux")) {
-      const out = path.resolve("dist", `${archive}.tar.gz`) // kilocode_change
-      await $`tar -czf ${out} *`.cwd(`dist/${key}/bin`) // kilocode_change
-      archives.push(out) // kilocode_change
+      const out = path.resolve("dist", `${archive}.tar.gz`) // accurecode_change
+      await $`tar -czf ${out} *`.cwd(`dist/${key}/bin`) // accurecode_change
+      archives.push(out) // accurecode_change
     } else {
-      const out = path.resolve("dist", `${archive}.zip`) // kilocode_change
-      await $`zip -r ${out} *`.cwd(`dist/${key}/bin`) // kilocode_change
-      archives.push(out) // kilocode_change
+      const out = path.resolve("dist", `${archive}.zip`) // accurecode_change
+      await $`zip -r ${out} *`.cwd(`dist/${key}/bin`) // accurecode_change
+      archives.push(out) // accurecode_change
     }
   }
-  await $`gh release upload v${Script.version} ${archives} --clobber` // kilocode_change
+  await $`gh release upload v${Script.version} ${archives} --clobber` // accurecode_change
 }
 
 export { binaries }

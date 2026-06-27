@@ -10,7 +10,7 @@
  */
 
 import { Component, createMemo, Show } from "solid-js"
-import { Tooltip } from "@kilocode/accure-ui/tooltip"
+import { Tooltip } from "@accurecode/accure-ui/tooltip"
 import { useSession } from "../../context/session"
 import { useProvider } from "../../context/provider"
 

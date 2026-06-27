@@ -1,5 +1,5 @@
-import { Button } from "@kilocode/accure-web-ui/button"
-import { Input } from "@kilocode/accure-web-ui/input"
+import { Button } from "@accurecode/accure-web-ui/button"
+import { Input } from "@accurecode/accure-web-ui/input"
 import { createUniqueId, Show } from "solid-js"
 
 type Props = {

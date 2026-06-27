@@ -1,21 +1,21 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.client.app
+package ai.accurecode.client.app
 
-import ai.kilocode.rpc.KiloAppRpcApi
-import ai.kilocode.rpc.dto.ConfigPatchDto
-import ai.kilocode.rpc.dto.DeviceAuthDto
-import ai.kilocode.rpc.dto.HealthDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ModelFavoriteUpdateDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.ModelSelectionUpdateDto
-import ai.kilocode.rpc.dto.ModelStateDto
-import ai.kilocode.rpc.dto.ModelVariantUpdateDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.ProfileStatusDto
-import ai.kilocode.log.KiloLog
+import ai.accurecode.rpc.AccureAppRpcApi
+import ai.accurecode.rpc.dto.ConfigPatchDto
+import ai.accurecode.rpc.dto.DeviceAuthDto
+import ai.accurecode.rpc.dto.HealthDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ModelFavoriteUpdateDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.ModelSelectionUpdateDto
+import ai.accurecode.rpc.dto.ModelStateDto
+import ai.accurecode.rpc.dto.ModelVariantUpdateDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.ProfileStatusDto
+import ai.accurecode.log.AccureLog
 import com.intellij.openapi.components.Service
 import fleet.rpc.client.durable
 import java.util.concurrent.atomic.AtomicBoolean
@@ -27,22 +27,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
- * App-level frontend service for Kilo CLI interaction.
+ * App-level frontend service for Accure CLI interaction.
  *
- * Communicates with the backend via [KiloAppRpcApi]. All operations
+ * Communicates with the backend via [AccureAppRpcApi]. All operations
  * are app-scoped — no project context is needed.
  */
 @Service(Service.Level.APP)
-class KiloAppService internal constructor(
+class AccureAppService internal constructor(
     private val cs: CoroutineScope,
-    private val rpc: KiloAppRpcApi?,
+    private val rpc: AccureAppRpcApi?,
 ) {
     /** Platform constructor — resolves RPC from the service container. */
     constructor(cs: CoroutineScope) : this(cs, null)
 
     companion object {
-        private val LOG = KiloLog.create(KiloAppService::class.java)
-        private val init = KiloAppStateDto(KiloAppStatusDto.DISCONNECTED)
+        private val LOG = AccureLog.create(AccureAppService::class.java)
+        private val init = AccureAppStateDto(AccureAppStatusDto.DISCONNECTED)
     }
 
     private val started = AtomicBoolean(false)
@@ -53,7 +53,7 @@ class KiloAppService internal constructor(
         private set
 
     internal val _state = MutableStateFlow(init)
-    val state: StateFlow<KiloAppStateDto> = _state.asStateFlow()
+    val state: StateFlow<AccureAppStateDto> = _state.asStateFlow()
     private val _models = MutableStateFlow(ModelStateDto())
     val models: StateFlow<ModelStateDto> = _models.asStateFlow()
     private val _favorites = MutableStateFlow<List<ModelSelectionDto>>(emptyList())
@@ -61,9 +61,9 @@ class KiloAppService internal constructor(
 
     // ------ RPC helper ------
 
-    private suspend fun <T> call(block: suspend KiloAppRpcApi.() -> T): T {
+    private suspend fun <T> call(block: suspend AccureAppRpcApi.() -> T): T {
         val api = rpc
-        return if (api != null) block(api) else durable { block(KiloAppRpcApi.getInstance()) }
+        return if (api != null) block(api) else durable { block(AccureAppRpcApi.getInstance()) }
     }
 
     // ------ Lifecycle ------
@@ -74,13 +74,13 @@ class KiloAppService internal constructor(
         cs.launch {
             val api = rpc
             if (api != null) api.state().collect { onState(it) }
-            else durable { KiloAppRpcApi.getInstance().state().collect { onState(it) } }
+            else durable { AccureAppRpcApi.getInstance().state().collect { onState(it) } }
         }
     }
 
-    private fun onState(state: KiloAppStateDto) {
+    private fun onState(state: AccureAppStateDto) {
         _state.value = state
-        if (state.status == KiloAppStatusDto.READY) refreshModelFavoritesAsync()
+        if (state.status == AccureAppStatusDto.READY) refreshModelFavoritesAsync()
     }
 
     /** One-shot health check. Returns null on failure. */
@@ -215,7 +215,7 @@ class KiloAppService internal constructor(
         }
     }
 
-    suspend fun updateConfig(patch: ConfigPatchDto): KiloAppStateDto? = try {
+    suspend fun updateConfig(patch: ConfigPatchDto): AccureAppStateDto? = try {
         LOG.info("config update: sending RPC ${summary(patch)}")
         val next = call { updateConfig(patch) }
         _state.value = next
@@ -228,7 +228,7 @@ class KiloAppService internal constructor(
 
     fun updateConfigAsync(
         patch: ConfigPatchDto,
-        done: (KiloAppStateDto?) -> Unit,
+        done: (AccureAppStateDto?) -> Unit,
     ): Job = cs.launch {
         val state = updateConfig(patch)
         done(state)
@@ -253,7 +253,7 @@ class KiloAppService internal constructor(
     }
 
     /**
-     * Start the Kilo device auth login flow.
+     * Start the Accure device auth login flow.
      * Returns [DeviceAuthDto] with the URL/code to display.
      * Throws on failure.
      */
@@ -295,10 +295,10 @@ class KiloAppService internal constructor(
     /**
      * Collect app state changes and invoke [fn] for each update.
      */
-    fun watch(fn: (KiloAppStateDto) -> Unit): Job {
+    fun watch(fn: (AccureAppStateDto) -> Unit): Job {
         return cs.launch {
             state.collect { next ->
-                if (next.status == KiloAppStatusDto.READY) fetchVersionAsync()
+                if (next.status == AccureAppStatusDto.READY) fetchVersionAsync()
                 fn(next)
             }
         }

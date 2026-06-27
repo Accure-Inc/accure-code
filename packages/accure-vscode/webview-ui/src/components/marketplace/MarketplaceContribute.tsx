@@ -1,8 +1,8 @@
-import { Button } from "@kilocode/accure-ui/button"
+import { Button } from "@accurecode/accure-ui/button"
 import { useVSCode } from "../../context/vscode"
 import { useLanguage } from "../../context/language"
 
-const REPO_URL = "https://github.com/Kilo-Org/kilo-marketplace"
+const REPO_URL = "https://github.com/Accure-Org/accure-marketplace"
 
 export const MarketplaceContribute = () => {
   const vscode = useVSCode()

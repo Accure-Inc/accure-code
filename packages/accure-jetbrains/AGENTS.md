@@ -1,18 +1,18 @@
-# AGENTS.md — Kilo JetBrains Plugin
+# AGENTS.md — Accure JetBrains Plugin
 
 ## Package Overview
 
-- **Split-mode plugin** with three Gradle modules: `shared/`, `frontend/`, `backend/`. The module descriptors are `kilo.jetbrains.shared.xml`, `kilo.jetbrains.frontend.xml`, `kilo.jetbrains.backend.xml` — these must stay in sync with `plugin.xml`'s `<content>` block.
+- **Split-mode plugin** with three Gradle modules: `shared/`, `frontend/`, `backend/`. The module descriptors are `accurecode.jetbrains.shared.xml`, `accurecode.jetbrains.frontend.xml`, `accurecode.jetbrains.backend.xml` — these must stay in sync with `plugin.xml`'s `<content>` block.
 - Reference template for the split-mode structure: https://github.com/JetBrains/intellij-platform-modular-plugin-template
 - Official docs: https://plugins.jetbrains.com/docs/intellij/split-mode-for-remote-development.html
-- Kotlin source goes under `{module}/src/main/kotlin/ai/kilocode/jetbrains/`. Package name is `ai.kilocode.jetbrains` (matches `group` in root `build.gradle.kts`).
+- Kotlin source goes under `{module}/src/main/kotlin/ai/accurecode/jetbrains/`. Package name is `ai.accurecode.jetbrains` (matches `group` in root `build.gradle.kts`).
 - The root `plugin.xml` is wiring only: keep plugin metadata and the `<content>` block there. Register services, extensions, listeners, and actions in the module XML descriptors, not in root `plugin.xml`.
 - Module descriptor files must live directly in `{module}/src/main/resources/`, not in `META-INF/`.
 - Module XMLs use `<dependencies>`, not `<depends>`. The allowed top-level registration tags are limited; keep module XMLs focused on `<resource-bundle>`, `<extensions>`, `<extensionPoints>`, `<actions>`, `<applicationListeners>`, and `<projectListeners>`.
 
 ### Files That Must Change Together
 
-- `plugin.xml` `<content>` entries ↔ module XML descriptors (`kilo.jetbrains.{shared,frontend,backend}.xml`)
+- `plugin.xml` `<content>` entries ↔ module XML descriptors (`accurecode.jetbrains.{shared,frontend,backend}.xml`)
 - Service classes ↔ `<applicationService>`/`<projectService>` entries in the corresponding module XML
 - `script/build.ts` platform list ↔ `backend/build.gradle.kts` `requiredPlatforms` list
 
@@ -48,7 +48,7 @@ In monolithic IDE mode (non-remote), all three modules load in one process — s
 - **Frontend modules** host UI, typing assistance, and latency-sensitive features.
 - **Shared modules** define RPC interfaces and data types used by both sides.
 - Module dependencies determine where code loads. In monolith mode both frontend and backend dependencies are satisfied, so both modules load together.
-- Non-light services that need XML registration go in `kilo.jetbrains.backend.xml` under `<extensions defaultExtensionNs="com.intellij"><applicationService>` (or `<projectService>`).
+- Non-light services that need XML registration go in `accurecode.jetbrains.backend.xml` under `<extensions defaultExtensionNs="com.intellij"><applicationService>` (or `<projectService>`).
 
 ### RPC Contracts and Payloads
 
@@ -154,27 +154,27 @@ For blocking I/O in coroutines, move the dispatcher switch inside the callee usi
 
 ### Server Protocol
 
-- The plugin spawns `kilo serve --port 0` (OS assigns random port) and reads stdout for `listening on http://...:(\d+)` to discover the port.
-- A random 32-byte hex password is passed via `KILO_SERVER_PASSWORD` env var for Basic Auth.
-- Fixed env vars set on every spawn: `KILO_CLIENT=jetbrains`, `KILO_PLATFORM=jetbrains`, `KILO_APP_NAME=kilo-code`, `KILO_ENABLE_QUESTION_TOOL=true`, `KILO_DISABLE_CLAUDE_CODE=true`, `KILOCODE_FEATURE=jetbrains-plugin`.
-- Unless already provided by the base environment, the backend sets `KILO_CONFIG_CONTENT` to make `edit` and `bash` permissions ask by default for JetBrains-launched CLI processes.
+- The plugin spawns `accure serve --port 0` (OS assigns random port) and reads stdout for `listening on http://...:(\d+)` to discover the port.
+- A random 32-byte hex password is passed via `ACCURECODE_SERVER_PASSWORD` env var for Basic Auth.
+- Fixed env vars set on every spawn: `ACCURECODE_CLIENT=jetbrains`, `ACCURECODE_PLATFORM=jetbrains`, `ACCURECODE_APP_NAME=accure-code`, `ACCURECODE_ENABLE_QUESTION_TOOL=true`, `ACCURECODE_DISABLE_CLAUDE_CODE=true`, `ACCURECODE_FEATURE=jetbrains-plugin`.
+- Unless already provided by the base environment, the backend sets `ACCURECODE_CONFIG_CONTENT` to make `edit` and `bash` permissions ask by default for JetBrains-launched CLI processes.
 - This is the same protocol used by the VS Code extension (`packages/accure-vscode/src/services/cli-backend/server-manager.ts`).
 
 ### Dev Storage Isolation
 
-- In development (`runIdeBackend` / `runIde`), the Gradle property `kilo.dev.storage.isolated=true` makes the backend set `XDG_DATA_HOME`, `XDG_CONFIG_HOME`, `XDG_STATE_HOME`, and `XDG_CACHE_HOME` to `<worktree>/.kilo-dev/{data,config,state,cache}` before spawning the CLI. The worktree root comes from the `kilo.dev.worktree.root` JVM system property (auto-set by Gradle from the project directory).
-- The checked-in `Run IDE (Backend)` run configuration enables isolation by default (`-Pkilo.dev.storage.isolated=true`). Developers can disable it by passing `-Pkilo.dev.storage.isolated=false`.
-- Use standard `XDG_*_HOME` env vars for this isolation. Do not introduce custom `KILO_DATA_DIR`, `KILO_GLOBAL_CONFIG_DIR`, `KILO_STATE_DIR`, or `KILO_CACHE_DIR` env vars — the CLI core already respects `XDG_*_HOME` via `xdg-basedir`.
-- The `.kilo-dev/` directory is gitignored and created automatically on first run.
-- The implementation lives in `KiloBackendCliManager.buildEnv()` / `devStorageEnv()`. Tests: `KiloBackendCliManagerEnvTest`.
+- In development (`runIdeBackend` / `runIde`), the Gradle property `accurecode.dev.storage.isolated=true` makes the backend set `XDG_DATA_HOME`, `XDG_CONFIG_HOME`, `XDG_STATE_HOME`, and `XDG_CACHE_HOME` to `<worktree>/.accurecode-dev/{data,config,state,cache}` before spawning the CLI. The worktree root comes from the `accurecode.dev.worktree.root` JVM system property (auto-set by Gradle from the project directory).
+- The checked-in `Run IDE (Backend)` run configuration enables isolation by default (`-Paccure.dev.storage.isolated=true`). Developers can disable it by passing `-Paccure.dev.storage.isolated=false`.
+- Use standard `XDG_*_HOME` env vars for this isolation. Do not introduce custom `ACCURECODE_DATA_DIR`, `ACCURECODE_GLOBAL_CONFIG_DIR`, `ACCURECODE_STATE_DIR`, or `ACCURECODE_CACHE_DIR` env vars — the CLI core already respects `XDG_*_HOME` via `xdg-basedir`.
+- The `.accurecode-dev/` directory is gitignored and created automatically on first run.
+- The implementation lives in `AccureBackendCliManager.buildEnv()` / `devStorageEnv()`. Tests: `AccureBackendCliManagerEnvTest`.
 
 ### Debugging Session Event Logs
 
 - Use `script/dev/part-update.sh client <session-id>` from `packages/accure-jetbrains/` to print frontend `message.part.delta` text by part id.
 - Use `script/dev/part-update.sh backend <session-id>` from `packages/accure-jetbrains/` for backend sandbox events.
 - Append with `>> file.txt` when you need to keep the output.
-- For full chat payload previews in JetBrains dev runs, pass `-Pkilo.dev.log.chat.content=<mode>` where `<mode>` is `off` (default, no content), `preview` (cleaned/truncated content), or `full` (cleaned full content).
-- `-Pkilo.dev.log.chat.preview.max=<n>` controls preview length, clamped from 1 to 2000.
+- For full chat payload previews in JetBrains dev runs, pass `-Paccure.dev.log.chat.content=<mode>` where `<mode>` is `off` (default, no content), `preview` (cleaned/truncated content), or `full` (cleaned full content).
+- `-Paccure.dev.log.chat.preview.max=<n>` controls preview length, clamped from 1 to 2000.
 
 ## Build and Verification
 
@@ -184,7 +184,7 @@ For blocking I/O in coroutines, move the dispatcher switch inside the callee usi
 - **Full build**: `bun run build` from `packages/accure-jetbrains/` (prepares CLI binaries + runs Gradle `buildPlugin`).
 - **Gradle only**: `./gradlew buildPlugin` from `packages/accure-jetbrains/` (requires CLI binaries already present in `backend/build/generated/cli/`; run `bun run build --prepare-cli` first).
 - **Java checks**: Do not run `java -version` as a routine preflight. Gradle commands already fail clearly when Java is missing or incompatible; check Java only when diagnosing that failure mode.
-- **Via Turbo**: `bun turbo build --filter=@kilocode/accure-jetbrains` from repo root.
+- **Via Turbo**: `bun turbo build --filter=@accurecode/accure-jetbrains` from repo root.
 - **Run in sandbox**: `./gradlew runIde` — launches sandboxed IntelliJ with the plugin. Does NOT build CLI binaries.
 - **Run split backend**: `./gradlew runIdeBackend` — if it exits shortly after startup, check for an orphaned Java process from a previous backend run and kill it before restarting.
 - **Test split mode**: `./gradlew generateSplitModeRunConfigurations` creates a "Run IDE (Split Mode)" config that starts both frontend and backend processes locally. Emulate latency via the Split Mode widget (requires internal mode: `-Didea.is.internal=true`).
@@ -199,9 +199,9 @@ For blocking I/O in coroutines, move the dispatcher switch inside the callee usi
 
 ### Technology Choices
 
-**Do not use Kotlin UI DSL v2 (`com.intellij.ui.dsl.builder`) in this plugin.** Use standard Swing with IntelliJ Platform components for all UI layout. The JetBrains modular template and some older sections of the codebase reference the DSL, but Kilo should not introduce it.
+**Do not use Kotlin UI DSL v2 (`com.intellij.ui.dsl.builder`) in this plugin.** Use standard Swing with IntelliJ Platform components for all UI layout. The JetBrains modular template and some older sections of the codebase reference the DSL, but Accure should not introduce it.
 
-**Do not use Kotlin Compose or `intellij.platform.compose` in this plugin.** The JetBrains modular template uses Compose for its demo tool window, but Kilo should use standard Swing with IntelliJ Platform components only. Keep all plugin UI in the existing Swing-based stack.
+**Do not use Kotlin Compose or `intellij.platform.compose` in this plugin.** The JetBrains modular template uses Compose for its demo tool window, but Accure should use standard Swing with IntelliJ Platform components only. Keep all plugin UI in the existing Swing-based stack.
 
 **Do not use JCEF (`JBCefBrowser`) in this plugin.** JCEF does not work in JetBrains remote development (split mode): the frontend process runs on the client machine but JCEF requires a display on the host, making it effectively unusable for remote users. Use standard Swing with IntelliJ Platform components for all UI.
 
@@ -214,7 +214,7 @@ For blocking I/O in coroutines, move the dispatcher switch inside the callee usi
 
 ### Style Tokens
 
-**`UiStyle`** (`frontend/src/main/kotlin/ai/kilocode/client/ui/UiStyle.kt`) is the single source of truth for reusable UI constants in this plugin.
+**`UiStyle`** (`frontend/src/main/kotlin/ai/accurecode/client/ui/UiStyle.kt`) is the single source of truth for reusable UI constants in this plugin.
 
 Before introducing any new reusable color, spacing value, border, size, font, or helper:
 
@@ -227,7 +227,7 @@ Before introducing any new reusable color, spacing value, border, size, font, or
 - `UiStyle.Colors` — theme-aware generic colors (`bg`, `fg`, `weak`, `editorBackground`, `errorLabelForeground`, `warningLabelForeground`).
 - `UiStyle.Components` — small reusable Swing helpers (e.g. `transparent()`).
 
-**`SessionUiStyle`** (`frontend/src/main/kotlin/ai/kilocode/client/session/ui/style/SessionUiStyle.kt`) owns static tokens specific to the chat/session UI:
+**`SessionUiStyle`** (`frontend/src/main/kotlin/ai/accurecode/client/session/ui/style/SessionUiStyle.kt`) owns static tokens specific to the chat/session UI:
 - `SessionUiStyle.SessionLayout` — transcript list geometry and scroll increments.
 - `SessionUiStyle.View` — card sizing, card borders, surfaces, hover colors, and nested objects for `Prompt`, `Reasoning`, `Message`, and `Tool`.
 - `SessionUiStyle.RecentSessions` — recent sessions list limits.
@@ -402,13 +402,13 @@ For common spacing lookups, prefer `JBUI.CurrentTheme` area-specific insets (e.g
 | Side separators | `JBUI.Borders.customLineTop(...)`, `customLineBottom(...)` |
 | Composed borders | `JBUI.Borders.compound(...)`, `JBUI.Borders.merge(...)` |
 | Simple `BorderLayout` panels | `JBUI.Panels.simplePanel(...)`, `BorderLayoutPanel` |
-| One-dimensional multi-component rows/columns | `ai.kilocode.client.ui.layout.Stack` — see section below |
+| One-dimensional multi-component rows/columns | `ai.accurecode.client.ui.layout.Stack` — see section below |
 | Fluent platform panels | `JBPanel.withBorder(...)`, `.andTransparent()`, `.andOpaque()`, `.withBackground(...)` |
-| Single-component alignment wrapper | `ai.kilocode.client.ui.layout.Align` — see section below |
+| Single-component alignment wrapper | `ai.accurecode.client.ui.layout.Align` — see section below |
 
 ### Stack — One-Dimensional Multi-Component Layout
 
-Use `Stack` (`ai.kilocode.client.ui.layout.Stack`) when multiple Swing components should be laid out as one vertical column or one horizontal row without visual chrome. It is a transparent, no-border, no-color `JPanel(null)` that lays out visible children in insertion order.
+Use `Stack` (`ai.accurecode.client.ui.layout.Stack`) when multiple Swing components should be laid out as one vertical column or one horizontal row without visual chrome. It is a transparent, no-border, no-color `JPanel(null)` that lays out visible children in insertion order.
 
 **Behavior:**
 
@@ -457,7 +457,7 @@ Stack.horizontal()
 
 ### Align — Single-Component Alignment Wrapper
 
-Use `Align` (`ai.kilocode.client.ui.layout.Align`) when a single Swing component must be positioned inside available space without adding visual chrome. It is a transparent, no-border, no-color `JPanel(null)` that lays out its one child according to independent horizontal (`HAlign`) and vertical (`VAlign`) modes. `CenterShrinkPanel` has been removed; use `child.align(HAlign.CENTER, VAlign.CENTER)` as a direct replacement.
+Use `Align` (`ai.accurecode.client.ui.layout.Align`) when a single Swing component must be positioned inside available space without adding visual chrome. It is a transparent, no-border, no-color `JPanel(null)` that lays out its one child according to independent horizontal (`HAlign`) and vertical (`VAlign`) modes. `CenterShrinkPanel` has been removed; use `child.align(HAlign.CENTER, VAlign.CENTER)` as a direct replacement.
 
 **Alignment modes:**
 
@@ -491,7 +491,7 @@ child.align(HAlign.TRACK, VAlign.TRACK)   // fill all available space
 
 #### Tool Windows
 
-- Register declaratively in module XML via `com.intellij.toolWindow` extension point (already done in `kilo.jetbrains.frontend.xml`).
+- Register declaratively in module XML via `com.intellij.toolWindow` extension point (already done in `accurecode.jetbrains.frontend.xml`).
 - Implement `ToolWindowFactory.createToolWindowContent()` — called lazily on first click.
 - Use `SimpleToolWindowPanel(vertical = true)` as a convenient base — supports toolbar + content layout.
 - Add tabs via `ToolWindow.contentManager`: create content with `ContentFactory.getInstance().createContent(component, title, isLockable)`, then `contentManager.addContent()`.
@@ -508,11 +508,11 @@ child.align(HAlign.TRACK, VAlign.TRACK)   // fill all available space
 
 #### Notifications
 
-- Declare in module XML: `<notificationGroup id="Kilo Code" displayType="BALLOON"/>`.
-- Show: `Notification("Kilo Code", "message", NotificationType.INFORMATION).notify(project)`.
+- Declare in module XML: `<notificationGroup id="Accure Code" displayType="BALLOON"/>`.
+- Show: `Notification("Accure Code", "message", NotificationType.INFORMATION).notify(project)`.
 - Add actions: `.addAction(NotificationAction.createSimpleExpiring("Label") { ... })`.
 - Sticky (user must dismiss): `displayType="STICKY_BALLOON"` + `.setSuggestionType(true)`.
-- Tool-window-bound: `displayType="TOOL_WINDOW" toolWindowId="Kilo Code"`.
+- Tool-window-bound: `displayType="TOOL_WINDOW" toolWindowId="Accure Code"`.
 - Prefer non-modal notifications over `Messages.show*()` dialogs.
 
 #### Popups
@@ -578,7 +578,7 @@ Review generated UI code and remove:
 ## Session Component
 
 The chat session feature uses a three-layer Model / Controller / View architecture. All files live under
-`frontend/src/main/kotlin/ai/kilocode/client/session/`.
+`frontend/src/main/kotlin/ai/accurecode/client/session/`.
 
 ### Architecture
 
@@ -597,7 +597,7 @@ The chat session feature uses a three-layer Model / Controller / View architectu
 - Accepts an optional `id` at construction.
   - `id = null` → lazily creates a new session on the first `prompt()` call. This guarantees events are subscribed before the prompt is sent, eliminating race conditions.
   - `id != null` → immediately loads history and subscribes to SSE events on construction.
-- After history load, `recoverPending()` seeds state in this priority order: (1) pending permission, (2) pending question, (3) current session status (`busy`/`retry`/`offline` from `KiloSessionService.statuses`), (4) `Idle`.
+- After history load, `recoverPending()` seeds state in this priority order: (1) pending permission, (2) pending question, (3) current session status (`busy`/`retry`/`offline` from `AccureSessionService.statuses`), (4) `Idle`.
 - All SSE events are filtered by `sessionID` before being handled. `session.error` events with `null` sessionID are treated as global and pass through.
 - Publishes coarser lifecycle updates (app/workspace changes, view switching) via `SessionControllerEvent` to registered listeners — keep these separate from the fine-grained `SessionModelEvent` stream.
 
@@ -652,7 +652,7 @@ assertSession("""
     text#prt1:
       hello
 
-    [code] [kilo/gpt-5] [idle]
+    [code] [accure/gpt-5] [idle]
 """, m)
 
 // Just the model transcript (no status line)

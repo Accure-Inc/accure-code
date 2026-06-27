@@ -2,8 +2,8 @@ import type { Argv } from "yargs"
 import { cmd } from "@/cli/cmd/cmd"
 import { explicitNetworkOptions, withNetworkOptions, resolveNetworkOptions } from "@/cli/network"
 import { AppRuntime } from "@/effect/app-runtime"
-import { Daemon } from "@/kilocode/daemon/daemon"
-import { warnPort } from "@/kilocode/cli/port-warning"
+import { Daemon } from "@/accurecode/daemon/daemon"
+import { warnPort } from "@/accurecode/cli/port-warning"
 
 function withJson<T>(yargs: Argv<T>) {
   return yargs.option("json", {
@@ -50,12 +50,12 @@ function print(input: Daemon.Status, json?: boolean) {
     return
   }
   if (!input.running) {
-    console.log(input.stale ? `kilo daemon stale: ${input.reason}` : `kilo daemon not running`)
+    console.log(input.stale ? `accure daemon stale: ${input.reason}` : `accure daemon not running`)
     console.log(`state: ${input.file}`)
     if (input.state?.log) console.log(`log: ${input.state.log}`)
     return
   }
-  console.log(`kilo daemon running`)
+  console.log(`accure daemon running`)
   if (input.state?.urls) {
     const urls = input.state.urls
     console.log(`local:   ${urls.local}`)
@@ -77,7 +77,7 @@ async function hold(enabled: boolean, json: boolean, run: (signal?: AbortSignal)
   }
   await Daemon.foreground(async (signal) => {
     const state = await run(signal)
-    if (!signal.aborted && !json) console.log("Press Ctrl+C to stop the Kilo daemon.")
+    if (!signal.aborted && !json) console.log("Press Ctrl+C to stop the Accure daemon.")
     return state
   })
 }
@@ -85,7 +85,7 @@ async function hold(enabled: boolean, json: boolean, run: (signal?: AbortSignal)
 function start(command: string) {
   return cmd({
     command,
-    describe: "start the local kilo daemon",
+    describe: "start the local accure daemon",
     builder: (yargs) => withForeground(withJson(withNetworkOptions(yargs))),
     handler: async (args) => {
       await hold(Boolean(args.foreground), Boolean(args.json), async (signal) => {
@@ -94,16 +94,16 @@ function start(command: string) {
         const daemon = await Daemon.ensure(opts, explicitNetworkOptions())
         const result = daemon.result
         const state = result.state
-        if (!state) throw new Error("Kilo daemon did not provide process state")
+        if (!state) throw new Error("Accure daemon did not provide process state")
         if (signal?.aborted) return state
         if (args.json) print(result, true)
         if (!args.json) {
           console.log(
             result.reused
-              ? "kilo daemon already running"
+              ? "accure daemon already running"
               : daemon.restarted
-                ? "kilo daemon restarted"
-                : "kilo daemon started",
+                ? "accure daemon restarted"
+                : "accure daemon started",
           )
           print(result)
         }
@@ -118,7 +118,7 @@ const StartCommand = start("start")
 
 const StatusCommand = cmd({
   command: "status",
-  describe: "show local kilo daemon status",
+  describe: "show local accure daemon status",
   builder: (yargs) => withJson(yargs),
   handler: async (args) => {
     print(await Daemon.status(), Boolean(args.json))
@@ -127,7 +127,7 @@ const StatusCommand = cmd({
 
 export const StopCommand = cmd({
   command: "stop",
-  describe: "stop the local kilo daemon",
+  describe: "stop the local accure daemon",
   builder: (yargs) => withJson(yargs),
   handler: async (args) => {
     const result = await Daemon.stop()
@@ -135,13 +135,13 @@ export const StopCommand = cmd({
       print(result, true)
       return
     }
-    console.log(result.stopped ? "kilo daemon stopped" : "kilo daemon not running")
+    console.log(result.stopped ? "accure daemon stopped" : "accure daemon not running")
   },
 })
 
 const RestartCommand = cmd({
   command: "restart",
-  describe: "restart the local kilo daemon",
+  describe: "restart the local accure daemon",
   builder: (yargs) => withForeground(withJson(withNetworkOptions(yargs))),
   handler: async (args) => {
     await hold(Boolean(args.foreground), Boolean(args.json), async (signal) => {
@@ -149,11 +149,11 @@ const RestartCommand = cmd({
       warnPort(opts.port)
       const result = await Daemon.restart(opts)
       const state = result.state
-      if (!state) throw new Error("Kilo daemon did not provide process state")
+      if (!state) throw new Error("Accure daemon did not provide process state")
       if (signal?.aborted) return state
       if (args.json) print(result, true)
       if (!args.json) {
-        console.log("kilo daemon restarted")
+        console.log("accure daemon restarted")
         print(result)
       }
       return state
@@ -163,7 +163,7 @@ const RestartCommand = cmd({
 
 export const DaemonCommand = cmd({
   command: "daemon",
-  describe: "manage the local kilo daemon",
+  describe: "manage the local accure daemon",
   builder: (yargs: Argv) =>
     yargs
       .command(DefaultCommand)

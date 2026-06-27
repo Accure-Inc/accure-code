@@ -7,11 +7,11 @@ description: "Guide to choosing the right AI model for your tasks"
 
 Here's the honest truth about AI model recommendations: by the time I write them down, they're probably already outdated. New models drop every few weeks, existing ones get updated, prices shift, and yesterday's champion becomes today's budget option.
 
-Instead of maintaining a static list that's perpetually behind, we built something better — a real-time leaderboard showing which models Kilo Code users are actually having success with right now.
+Instead of maintaining a static list that's perpetually behind, we built something better — a real-time leaderboard showing which models Accure Code users are actually having success with right now.
 
 ## Check the Live Models List
 
-**[👉 See what's working today at kilo.ai/models](https://kilo.ai/models)**
+**[👉 See what's working today at accure.ai/models](https://accure.ai/models)**
 
 This isn't benchmarks from some lab. It's real usage data from developers like you, updated continuously. You'll see which models people are choosing for different tasks, what's delivering results, and how the landscape is shifting in real-time.
 
@@ -26,7 +26,7 @@ While the specifics change constantly, some principles stay consistent:
 
 - Use the **model selector** in the chat prompt area to pick a model for the current session. You can also type `/models` to open the model picker.
 - When the selected model supports variants, type `/variant` to open the reasoning effort selector.
-- Set per-agent defaults and a global default in the **Settings** panel (Models tab), or directly in the `kilo.jsonc` config file.
+- Set per-agent defaults and a global default in the **Settings** panel (Models tab), or directly in the `accure.jsonc` config file.
 - **Model precedence:** Session override → Last picked per agent → Per-agent config → Global config → [Auto Free](/docs/code-with-ai/agents/auto-model#tiers) (note: Auto Free may route to providers that log prompts — see the Auto Model page for details).
 - The model selector remembers the last model you picked for each agent — switching agents restores your previous choice. A manual pick always beats config settings; use the **reset button** (visible when your active model differs from config) to go back to the config default.
 
@@ -34,8 +34,8 @@ While the specifics change constantly, some principles stay consistent:
 {% tab label="CLI" %}
 
 - In the TUI, use the **model picker** (`Ctrl+X m` or `/models`) to switch models.
-- For non-interactive use, pass `--model` flag to `kilo run` (e.g., `kilo run --model claude-sonnet-4-20250514`).
-- Set the global default with the `model` key in `kilo.jsonc`, or configure per-agent models in the `agent` section.
+- For non-interactive use, pass `--model` flag to `accure run` (e.g., `accure run --model claude-sonnet-4-20250514`).
+- Set the global default with the `model` key in `accure.jsonc`, or configure per-agent models in the `agent` section.
 - **Model precedence:** `--model` flag → Per-agent config → Last used in session → Global config → Recent models → First available.
 
 {% /tab %}
@@ -60,12 +60,12 @@ While the specifics change constantly, some principles stay consistent:
 
 ## Free and Budget Model Picks
 
-You don't need a paid API key to use Kilo Code productively. For the lowest cost on paid work, [Auto Efficient](/docs/code-with-ai/agents/auto-model#tiers) (`kilo-auto/efficient`) routes each request to the cheapest model proven accurate enough for that task. The fastest way to start for free is [Auto Model Free](/docs/code-with-ai/agents/auto-model) (`kilo-auto/free`), which routes to the best available free models automatically. See [Using Kilo for Free](/docs/getting-started/using-kilo-for-free) for the full zero-cost setup.
+You don't need a paid API key to use Accure Code productively. For the lowest cost on paid work, [Auto Efficient](/docs/code-with-ai/agents/auto-model#tiers) (`accure-auto/efficient`) routes each request to the cheapest model proven accurate enough for that task. The fastest way to start for free is [Auto Model Free](/docs/code-with-ai/agents/auto-model) (`accure-auto/free`), which routes to the best available free models automatically. See [Using Accure for Free](/docs/getting-started/using-accure-for-free) for the full zero-cost setup.
 
-If you prefer to pick models yourself, type `free` in the model picker to filter by free models, or browse the full list at [kilo.ai/models](https://kilo.ai/models).
+If you prefer to pick models yourself, type `free` in the model picker to filter by free models, or browse the full list at [accure.ai/models](https://accure.ai/models).
 
 {% callout type="info" %}
-Free model availability changes as providers adjust promotional periods. Check [kilo.ai/models](https://kilo.ai/models) for the live list.
+Free model availability changes as providers adjust promotional periods. Check [accure.ai/models](https://accure.ai/models) for the live list.
 {% /callout %}
 
 ## Context Windows Matter
@@ -112,7 +112,7 @@ This sets the `explore` subagent to always use Haiku regardless of the parent's 
 Subagents inherit the model currently active in the primary agent session — the model shown in the selector at the bottom of the chat. To bypass inheritance and pin a specific model for a subagent:
 
 - **Via Settings** — open **Settings → Models → Model per Mode**, find the subagent, and pick its model.
-- **Via config file** — edit `kilo.jsonc`:
+- **Via config file** — edit `accure.jsonc`:
 
 ```json
 {
@@ -151,31 +151,31 @@ The VS Code extension supports a `vscode://` protocol handler that lets you open
 Include at least one of the `model` or `agent` parameters:
 
 ```
-vscode://kilocode.kilo-code/kilocode/switch?model=<modelID>
-vscode://kilocode.kilo-code/kilocode/switch?agent=<agentName>
-vscode://kilocode.kilo-code/kilocode/switch?model=<modelID>&agent=<agentName>
+vscode://accurecode.accurecode-code/accurecode/switch?model=<modelID>
+vscode://accurecode.accurecode-code/accurecode/switch?agent=<agentName>
+vscode://accurecode.accurecode-code/accurecode/switch?model=<modelID>&agent=<agentName>
 ```
 
-Replace `<modelID>` with a Kilo Gateway model ID such as `kilo-auto/free`. Replace `<agentName>` with a visible primary agent ID such as `code` or `plan`, rather than its display name.
+Replace `<modelID>` with a Accure Gateway model ID such as `accure-auto/free`. Replace `<agentName>` with a visible primary agent ID such as `code` or `plan`, rather than its display name.
 
 ### Example: Auto Free
 
-To open Kilo Code and switch to the [Auto Free](/docs/code-with-ai/agents/auto-model) tier (`kilo-auto/free`), use:
+To open Accure Code and switch to the [Auto Free](/docs/code-with-ai/agents/auto-model) tier (`accure-auto/free`), use:
 
 ```
-vscode://kilocode.kilo-code/kilocode/switch?model=kilo-auto%2Ffree
+vscode://accurecode.accurecode-code/accurecode/switch?model=accure-auto%2Ffree
 ```
 
 To switch only to Plan and use its normal model selection, specify the agent without a model:
 
 ```
-vscode://kilocode.kilo-code/kilocode/switch?agent=plan
+vscode://accurecode.accurecode-code/accurecode/switch?agent=plan
 ```
 
 To select both at the same time, include both parameters:
 
 ```
-vscode://kilocode.kilo-code/kilocode/switch?model=kilo-auto%2Ffree&agent=plan
+vscode://accurecode.accurecode-code/accurecode/switch?model=accure-auto%2Ffree&agent=plan
 ```
 
 {% callout type="tip" %}
@@ -184,9 +184,9 @@ URL-encode the `/` in model IDs as `%2F` when embedding this URL in HTML links o
 
 ### How It Works
 
-- **VS Code open**: the Kilo sidebar is focused and the linked selection is applied to the active session immediately.
+- **VS Code open**: the Accure sidebar is focused and the linked selection is applied to the active session immediately.
 - **VS Code closed**: VS Code launches, then applies the selection once the extension is ready.
-- When `model` is provided, it must identify a model in the current Kilo Gateway catalog. Invalid or unavailable models cause the deep link to be ignored.
+- When `model` is provided, it must identify a model in the current Accure Gateway catalog. Invalid or unavailable models cause the deep link to be ignored.
 - When `agent` is provided, it must identify a visible primary agent. Invalid or unavailable agents cause the deep link to be ignored.
 - An agent-only link uses the model that would normally be selected for that agent. When both parameters are present, the agent is selected first so the linked model applies to it.
 - The selection follows the same precedence as using the pickers: it updates the active session, or the next session when no session is active. It does **not** change your configured defaults in settings.
@@ -196,8 +196,8 @@ URL-encode the `/` in model IDs as `%2F` when embedding this URL in HTML links o
 You can embed these links in a web page:
 
 ```html
-<a href="vscode://kilocode.kilo-code/kilocode/switch?model=kilo-auto%2Ffree&amp;agent=plan">
-  Open Kilo Code with Auto Free in Plan
+<a href="vscode://accurecode.accurecode-code/accurecode/switch?model=accure-auto%2Ffree&amp;agent=plan">
+  Open Accure Code with Auto Free in Plan
 </a>
 ```
 
@@ -205,4 +205,4 @@ Or share as a plain URL that users can paste into their browser's address bar.
 
 ## Stay Current
 
-The AI model space moves fast. Bookmark [kilo.ai/models](https://kilo.ai/models) and check back when you're evaluating options. What's best today might not be best next month — and that's actually exciting.
+The AI model space moves fast. Bookmark [accure.ai/models](https://accure.ai/models) and check back when you're evaluating options. What's best today might not be best next month — and that's actually exciting.

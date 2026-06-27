@@ -5,9 +5,9 @@
  */
 
 import { Component, For, Show } from "solid-js"
-import { Button } from "@kilocode/accure-ui/button"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { DiffChanges } from "@kilocode/accure-ui/diff-changes"
+import { Button } from "@accurecode/accure-ui/button"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { DiffChanges } from "@accurecode/accure-ui/diff-changes"
 import { useSession } from "../../context/session"
 import { useLanguage } from "../../context/language"
 

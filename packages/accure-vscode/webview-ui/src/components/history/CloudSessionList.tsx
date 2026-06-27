@@ -1,13 +1,13 @@
 /**
  * CloudSessionList component
- * Displays cloud sessions from the Kilo cloud API, grouped by date.
+ * Displays cloud sessions from the Accure cloud API, grouped by date.
  * Supports filtering by repository (git URL) and search by title.
  * Header/back button/import button are owned by the parent HistoryView.
  */
 
 import { Component, Show, createSignal, createEffect, onMount, onCleanup } from "solid-js"
-import { List } from "@kilocode/accure-ui/list"
-import { Checkbox } from "@kilocode/accure-ui/checkbox"
+import { List } from "@accurecode/accure-ui/list"
+import { Checkbox } from "@accurecode/accure-ui/checkbox"
 import { useVSCode } from "../../context/vscode"
 import { useLanguage } from "../../context/language"
 import { formatRelativeDate } from "../../utils/date"

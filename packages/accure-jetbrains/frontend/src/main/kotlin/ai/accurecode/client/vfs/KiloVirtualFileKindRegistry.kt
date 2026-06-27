@@ -1,13 +1,13 @@
-package ai.kilocode.client.vfs
+package ai.accurecode.client.vfs
 
 import com.intellij.openapi.components.Service
 import java.util.concurrent.ConcurrentHashMap
 
 @Service(Service.Level.APP)
-class KiloVirtualFileKindRegistry {
-    private val kinds = ConcurrentHashMap<String, KiloVirtualFileKind>()
+class AccureVirtualFileKindRegistry {
+    private val kinds = ConcurrentHashMap<String, AccureVirtualFileKind>()
 
-    fun register(kind: KiloVirtualFileKind) {
+    fun register(kind: AccureVirtualFileKind) {
         kinds[kind.id] = kind
     }
 
@@ -19,5 +19,5 @@ class KiloVirtualFileKindRegistry {
         kinds.clear()
     }
 
-    fun get(id: String): KiloVirtualFileKind? = kinds[id]
+    fun get(id: String): AccureVirtualFileKind? = kinds[id]
 }

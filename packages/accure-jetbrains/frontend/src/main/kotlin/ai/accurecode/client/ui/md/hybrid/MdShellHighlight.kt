@@ -1,4 +1,4 @@
-package ai.kilocode.client.ui.md.hybrid
+package ai.accurecode.client.ui.md.hybrid
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey

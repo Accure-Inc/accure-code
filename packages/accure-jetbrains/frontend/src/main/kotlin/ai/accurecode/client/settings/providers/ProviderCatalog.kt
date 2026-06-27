@@ -1,9 +1,9 @@
-package ai.kilocode.client.settings.providers
+package ai.accurecode.client.settings.providers
 
-import ai.kilocode.rpc.dto.ProviderAuthMethodDto
-import ai.kilocode.rpc.dto.ProviderSettingsDto
-import ai.kilocode.rpc.dto.ProviderSettingsProviderDto
-import ai.kilocode.client.plugin.KiloBundle
+import ai.accurecode.rpc.dto.ProviderAuthMethodDto
+import ai.accurecode.rpc.dto.ProviderSettingsDto
+import ai.accurecode.rpc.dto.ProviderSettingsProviderDto
+import ai.accurecode.client.plugin.AccureBundle
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.util.IconLoader
 import com.intellij.util.ui.JBUI
@@ -15,11 +15,11 @@ import javax.swing.Icon
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-internal const val KILO_PROVIDER_ID = "kilo"
+internal const val ACCURECODE_PROVIDER_ID = "accure"
 internal const val CUSTOM_PROVIDER_PACKAGE = "@ai-sdk/openai-compatible"
 
 private val popularIds = listOf(
-    KILO_PROVIDER_ID,
+    ACCURECODE_PROVIDER_ID,
     "anthropic",
     "deepseek",
     "openai",
@@ -37,7 +37,7 @@ internal fun popularProviderIndex(provider: ProviderSettingsProviderDto): Int =
 
 internal fun providerDescription(provider: ProviderSettingsProviderDto): String {
     provider.description?.takeIf { it.isNotBlank() }?.let { return it }
-    provider.metadata?.noteKey?.let { key -> KiloBundle.optional(key)?.let { return it } }
+    provider.metadata?.noteKey?.let { key -> AccureBundle.optional(key)?.let { return it } }
     return ""
 }
 

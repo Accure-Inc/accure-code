@@ -1,12 +1,12 @@
-package ai.kilocode.backend.provider
+package ai.accurecode.backend.provider
 
-import ai.kilocode.backend.app.KiloAppState
-import ai.kilocode.backend.app.KiloBackendAppService
-import ai.kilocode.backend.testing.FakeCliServer
-import ai.kilocode.backend.testing.MockCliServer
-import ai.kilocode.backend.testing.TestLog
-import ai.kilocode.rpc.dto.ProviderDisconnectDto
-import ai.kilocode.rpc.dto.ProviderEnableDto
+import ai.accurecode.backend.app.AccureAppState
+import ai.accurecode.backend.app.AccureBackendAppService
+import ai.accurecode.backend.testing.FakeCliServer
+import ai.accurecode.backend.testing.MockCliServer
+import ai.accurecode.backend.testing.TestLog
+import ai.accurecode.rpc.dto.ProviderDisconnectDto
+import ai.accurecode.rpc.dto.ProviderEnableDto
 import kotlinx.coroutines.async
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +27,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class KiloBackendProviderSettingsManagerTest {
+class AccureBackendProviderSettingsManagerTest {
 
     private val mock = MockCliServer()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -192,22 +192,22 @@ class KiloBackendProviderSettingsManagerTest {
     }
 
     @Test
-    fun `disconnecting kilo gateway returns error without logout`() = runBlocking {
+    fun `disconnecting accure gateway returns error without logout`() = runBlocking {
         mock.providers = """{
-            "all":[{"id":"kilo","name":"Kilo Gateway","source":"custom","models":{}}],
+            "all":[{"id":"accure","name":"Accure Gateway","source":"custom","models":{}}],
             "default":{},
-            "connected":["kilo"],
+            "connected":["accure"],
             "failed":[]
         }""".trimIndent()
         val manager = manager()
 
         mock.resetCounts()
-        val result = manager.disconnect(ProviderDisconnectDto("/test", "kilo"))
+        val result = manager.disconnect(ProviderDisconnectDto("/test", "accure"))
 
-        assertEquals("Kilo Gateway cannot be disconnected from provider settings.", result.error)
+        assertEquals("Accure Gateway cannot be disconnected from provider settings.", result.error)
         assertFalse(result.profileCleared)
         assertNull(mock.lastAuthDeletePath)
-        assertEquals(0, mock.requestCount("/auth/kilo"))
+        assertEquals(0, mock.requestCount("/auth/accure"))
         assertEquals(0, mock.requestCount("/global/dispose"))
     }
 
@@ -220,7 +220,7 @@ class KiloBackendProviderSettingsManagerTest {
             "failed":[]
         }""".trimIndent()
         val app = app()
-        val manager = KiloBackendProviderSettingsManager(app)
+        val manager = AccureBackendProviderSettingsManager(app)
         assertTrue(mock.awaitSseConnection())
         val gate = CountDownLatch(1)
         mock.responseGate = gate
@@ -228,7 +228,7 @@ class KiloBackendProviderSettingsManagerTest {
         try {
             mock.pushEvent("global.disposed", "{}")
             withTimeout(5_000) {
-                app.appState.first { it is KiloAppState.Loading }
+                app.appState.first { it is AccureAppState.Loading }
             }
 
             val state = async { manager.state("/test") }
@@ -258,7 +258,7 @@ class KiloBackendProviderSettingsManagerTest {
 
     @Test
     fun `awaitReady fails fast when disconnected`() = runBlocking {
-        val app = KiloBackendAppService.create(scope, FakeCliServer(mock), TestLog())
+        val app = AccureBackendAppService.create(scope, FakeCliServer(mock), TestLog())
 
         val elapsed = measureTimeMillis {
             assertFailsWith<IllegalStateException> {
@@ -269,15 +269,15 @@ class KiloBackendProviderSettingsManagerTest {
         assertTrue(elapsed < 500, "awaitReady should fail fast when disconnected, elapsed=${elapsed}ms")
     }
 
-    private suspend fun manager(): KiloBackendProviderSettingsManager {
-        return KiloBackendProviderSettingsManager(app())
+    private suspend fun manager(): AccureBackendProviderSettingsManager {
+        return AccureBackendProviderSettingsManager(app())
     }
 
-    private suspend fun app(): KiloBackendAppService {
-        val app = KiloBackendAppService.create(scope, FakeCliServer(mock), TestLog())
+    private suspend fun app(): AccureBackendAppService {
+        val app = AccureBackendAppService.create(scope, FakeCliServer(mock), TestLog())
         app.connect()
         withTimeout(10_000) {
-            app.appState.first { it is KiloAppState.Ready }
+            app.appState.first { it is AccureAppState.Ready }
         }
         return app
     }

@@ -1,19 +1,19 @@
 import { type Component, createSignal, createMemo, Show, createEffect, on } from "solid-js"
 import type { VirtualizerHandle } from "virtua/solid"
-import { Diff } from "@kilocode/accure-ui/diff"
-import { Accordion } from "@kilocode/accure-ui/accordion"
-import { StickyAccordionHeader } from "@kilocode/accure-ui/sticky-accordion-header"
-import { FileIcon } from "@kilocode/accure-ui/file-icon"
-import { DiffChanges } from "@kilocode/accure-ui/diff-changes"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { Button } from "@kilocode/accure-ui/button"
-import { RadioGroup } from "@kilocode/accure-ui/radio-group"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
-import { Spinner } from "@kilocode/accure-ui/spinner"
-import { Tooltip, TooltipKeybind } from "@kilocode/accure-ui/tooltip"
+import { Diff } from "@accurecode/accure-ui/diff"
+import { Accordion } from "@accurecode/accure-ui/accordion"
+import { StickyAccordionHeader } from "@accurecode/accure-ui/sticky-accordion-header"
+import { FileIcon } from "@accurecode/accure-ui/file-icon"
+import { DiffChanges } from "@accurecode/accure-ui/diff-changes"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { Button } from "@accurecode/accure-ui/button"
+import { RadioGroup } from "@accurecode/accure-ui/radio-group"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
+import { Spinner } from "@accurecode/accure-ui/spinner"
+import { Tooltip, TooltipKeybind } from "@accurecode/accure-ui/tooltip"
 import type { DiffLineAnnotation, AnnotationSide, SelectedLineRange } from "@pierre/diffs"
 import type { WorktreeFileDiff } from "../src/types/messages"
-import { KILO_FILE_PATH_MIME } from "../src/utils/path-mentions"
+import { ACCURECODE_FILE_PATH_MIME } from "../src/utils/path-mentions"
 import { useLanguage } from "../src/context/language"
 import { useVSCode } from "../src/context/vscode"
 import { useServer } from "../src/context/server"
@@ -587,7 +587,7 @@ export const DiffPanel: Component<DiffPanelProps> = (props) => {
                             data-slot="session-review-file-info"
                             draggable={true}
                             onDragStart={(e: DragEvent) => {
-                              e.dataTransfer?.setData(KILO_FILE_PATH_MIME, diff.file)
+                              e.dataTransfer?.setData(ACCURECODE_FILE_PATH_MIME, diff.file)
                               e.dataTransfer?.setData("text/plain", diff.file)
                               e.stopPropagation()
                             }}

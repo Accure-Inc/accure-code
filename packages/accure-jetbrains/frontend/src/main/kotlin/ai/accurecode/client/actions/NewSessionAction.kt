@@ -1,16 +1,16 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.SessionManager
-import ai.kilocode.client.telemetry.Telemetry
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.SessionManager
+import ai.accurecode.client.telemetry.Telemetry
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAware
 
 class NewSessionAction : AnAction(
-    KiloBundle.message("action.Kilo.NewSession.text"),
-    KiloBundle.message("action.Kilo.NewSession.description"),
+    AccureBundle.message("action.Accure.NewSession.text"),
+    AccureBundle.message("action.Accure.NewSession.description"),
     AllIcons.General.Add,
 ), DumbAware {
     override fun actionPerformed(e: AnActionEvent) {

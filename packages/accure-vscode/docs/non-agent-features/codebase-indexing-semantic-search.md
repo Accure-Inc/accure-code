@@ -10,8 +10,8 @@
 - Multiple embedding providers and storage backends
 - Integration with existing CLI grep/glob for hybrid search
 
-## Primary Implementation Anchors (kilocode-legacy)
+## Primary Implementation Anchors (accurecode-legacy)
 
-These exist in the [kilocode-legacy](https://github.com/Kilo-Org/kilocode-legacy) repo, not in this extension:
+These exist in the [accurecode-legacy](https://github.com/Accure-Inc/accure-code-legacy) repo, not in this extension:
 
 - `src/services/code-index/`

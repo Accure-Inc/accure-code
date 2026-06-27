@@ -1,7 +1,7 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
-import ai.kilocode.backend.cli.KiloBackendHttpClients
-import ai.kilocode.backend.testing.MockCliServer
+import ai.accurecode.backend.cli.AccureBackendHttpClients
+import ai.accurecode.backend.testing.MockCliServer
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import kotlin.test.Test
@@ -18,12 +18,12 @@ class LegacyMigrationHttpBackendTest {
     private fun withServer(block: (MockCliServer, LegacyMigrationHttpBackend) -> Unit) {
         val server = MockCliServer()
         val port = server.start()
-        val client = KiloBackendHttpClients.api(server.password)
+        val client = AccureBackendHttpClients.api(server.password)
         val backend = LegacyMigrationHttpBackend(client, "http://127.0.0.1:$port")
         try {
             block(server, backend)
         } finally {
-            KiloBackendHttpClients.shutdown(client)
+            AccureBackendHttpClients.shutdown(client)
             server.close()
         }
     }
@@ -85,7 +85,7 @@ class LegacyMigrationHttpBackendTest {
     // -----------------------------------------------------------------------
 
     @Test
-    fun `importProject posts to kilocode session-import project endpoint`() {
+    fun `importProject posts to accurecode session-import project endpoint`() {
         withServer { server, backend ->
             val project = buildJsonObject {
                 put("id", "prj_test")
@@ -102,7 +102,7 @@ class LegacyMigrationHttpBackendTest {
     }
 
     @Test
-    fun `importSession posts to kilocode session-import session endpoint`() {
+    fun `importSession posts to accurecode session-import session endpoint`() {
         withServer { _, backend ->
             val session = buildJsonObject {
                 put("id", "ses_migrated_abcdef")

@@ -1,13 +1,13 @@
-package ai.kilocode.client.session.views.todo
+package ai.accurecode.client.session.views.todo
 
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.model.toolKind
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.views.base.PrimarySessionPartView
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.rpc.dto.TodoDto
-import ai.kilocode.rpc.dto.TodoViewDto
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.model.toolKind
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.views.base.PrimarySessionPartView
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.rpc.dto.TodoDto
+import ai.accurecode.rpc.dto.TodoViewDto
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import java.awt.BorderLayout
 import java.awt.Color

@@ -5,21 +5,21 @@ import type { VirtualizerHandle } from "virtua/solid"
 // see tests/unit/diff-viewer-css-arch.test.ts for the invariant.
 import "../agent-manager/agent-manager.css"
 import "../agent-manager/agent-manager-review.css"
-import { Diff } from "@kilocode/accure-ui/diff"
-import { Accordion } from "@kilocode/accure-ui/accordion"
-import { StickyAccordionHeader } from "@kilocode/accure-ui/sticky-accordion-header"
-import { FileIcon } from "@kilocode/accure-ui/file-icon"
-import { DiffChanges } from "@kilocode/accure-ui/diff-changes"
-import { RadioGroup } from "@kilocode/accure-ui/radio-group"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { Button } from "@kilocode/accure-ui/button"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
-import { Spinner } from "@kilocode/accure-ui/spinner"
-import { ResizeHandle } from "@kilocode/accure-ui/resize-handle"
-import { Tooltip, TooltipKeybind } from "@kilocode/accure-ui/tooltip"
+import { Diff } from "@accurecode/accure-ui/diff"
+import { Accordion } from "@accurecode/accure-ui/accordion"
+import { StickyAccordionHeader } from "@accurecode/accure-ui/sticky-accordion-header"
+import { FileIcon } from "@accurecode/accure-ui/file-icon"
+import { DiffChanges } from "@accurecode/accure-ui/diff-changes"
+import { RadioGroup } from "@accurecode/accure-ui/radio-group"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { Button } from "@accurecode/accure-ui/button"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
+import { Spinner } from "@accurecode/accure-ui/spinner"
+import { ResizeHandle } from "@accurecode/accure-ui/resize-handle"
+import { Tooltip, TooltipKeybind } from "@accurecode/accure-ui/tooltip"
 import type { DiffLineAnnotation, AnnotationSide, SelectedLineRange } from "@pierre/diffs"
 import type { WorktreeFileDiff } from "../src/types/messages"
-import { KILO_FILE_PATH_MIME } from "../src/utils/path-mentions"
+import { ACCURECODE_FILE_PATH_MIME } from "../src/utils/path-mentions"
 import { useLanguage } from "../src/context/language"
 import { useVSCode } from "../src/context/vscode"
 import { useServer } from "../src/context/server"
@@ -658,7 +658,7 @@ export const FullScreenDiffView: Component<FullScreenDiffViewProps> = (props) =>
                                 data-slot="session-review-file-info"
                                 draggable={true}
                                 onDragStart={(e: DragEvent) => {
-                                  e.dataTransfer?.setData(KILO_FILE_PATH_MIME, diff.file)
+                                  e.dataTransfer?.setData(ACCURECODE_FILE_PATH_MIME, diff.file)
                                   e.dataTransfer?.setData("text/plain", diff.file)
                                   e.stopPropagation()
                                 }}

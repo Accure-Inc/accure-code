@@ -1,5 +1,5 @@
 {
-  "name": "@kilocode/accure-console",
+  "name": "@accurecode/accure-console",
   "version": "7.3.50",
   "private": true,
   "type": "module",
@@ -11,8 +11,8 @@
     "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
-    "@kilocode/accure-web-ui": "workspace:*",
-    "@kilocode/sdk": "workspace:*",
+    "@accurecode/accure-web-ui": "workspace:*",
+    "@accurecode/sdk": "workspace:*",
     "@lottiefiles/dotlottie-web": "0.74.0",
     "@pierre/diffs": "catalog:",
     "@solidjs/router": "catalog:",

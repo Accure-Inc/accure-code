@@ -51,7 +51,7 @@ export type ToolResultMediaPart = Schema.Schema.Type<typeof ToolResultMediaPart>
 export const ToolResultContentPart = Schema.Union([TextPart, ToolResultMediaPart])
 export type ToolResultContentPart = Schema.Schema.Type<typeof ToolResultContentPart>
 
-// kilocode_change start - avoid circular inference rejected by Kilo's newer tsgo
+// accurecode_change start - avoid circular inference rejected by Accure's newer tsgo
 const toolResultValueSchema = Schema.Union([
   Schema.Struct({
     type: Schema.Literal("json"),
@@ -85,7 +85,7 @@ export const ToolResultValue = Object.assign(toolResultValueSchema, {
     return { type, value }
   },
 })
-// kilocode_change end
+// accurecode_change end
 
 export const ToolCallPart = Object.assign(
   Schema.Struct({

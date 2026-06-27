@@ -1,31 +1,31 @@
-package ai.kilocode.client.session
+package ai.accurecode.client.session
 
-import ai.kilocode.client.session.SessionRef
-import ai.kilocode.client.session.model.Permission
-import ai.kilocode.client.session.model.PermissionMeta
-import ai.kilocode.client.session.model.Question
-import ai.kilocode.client.session.model.QuestionItem
-import ai.kilocode.client.session.model.QuestionOption
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.session.ui.ConnectionPanel
-import ai.kilocode.client.session.ui.empty.EmptySessionPanel
-import ai.kilocode.client.session.ui.LoadingPanel
-import ai.kilocode.client.session.ui.SessionDropOverlay
-import ai.kilocode.client.session.ui.prompt.PromptPanel
-import ai.kilocode.client.session.ui.account.SessionAccountOverlay
-import ai.kilocode.client.session.ui.SessionMessageListPanel
-import ai.kilocode.client.session.ui.SessionRootPanel
-import ai.kilocode.client.session.ui.header.SessionHeaderPanel
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.controller.SessionControllerEvent
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ProfileDto
+import ai.accurecode.client.session.SessionRef
+import ai.accurecode.client.session.model.Permission
+import ai.accurecode.client.session.model.PermissionMeta
+import ai.accurecode.client.session.model.Question
+import ai.accurecode.client.session.model.QuestionItem
+import ai.accurecode.client.session.model.QuestionOption
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.session.ui.ConnectionPanel
+import ai.accurecode.client.session.ui.empty.EmptySessionPanel
+import ai.accurecode.client.session.ui.LoadingPanel
+import ai.accurecode.client.session.ui.SessionDropOverlay
+import ai.accurecode.client.session.ui.prompt.PromptPanel
+import ai.accurecode.client.session.ui.account.SessionAccountOverlay
+import ai.accurecode.client.session.ui.SessionMessageListPanel
+import ai.accurecode.client.session.ui.SessionRootPanel
+import ai.accurecode.client.session.ui.header.SessionHeaderPanel
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.controller.SessionControllerEvent
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ProfileDto
 import com.intellij.util.ui.JBUI
-import ai.kilocode.client.session.views.permission.PermissionView
-import ai.kilocode.client.session.views.question.QuestionView
-import ai.kilocode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.client.session.views.permission.PermissionView
+import ai.accurecode.client.session.views.question.QuestionView
+import ai.accurecode.rpc.dto.MessageWithPartsDto
 import com.intellij.ui.components.JBScrollPane
 import javax.swing.JLayeredPane
 
@@ -468,7 +468,7 @@ class SessionUiLayoutTest : SessionUiTestBase() {
     }
 
     fun `test account overlay shows after recents complete`() {
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = ProfileDto(email = "user@example.com"))
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = ProfileDto(email = "user@example.com"))
         rpc.recent.add(session("ses_1"))
         ui = newUi(displayMs = 1_000)
 
@@ -479,7 +479,7 @@ class SessionUiLayoutTest : SessionUiTestBase() {
     }
 
     fun `test account overlay hides after first prompt`() {
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = ProfileDto(email = "user@example.com"))
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = ProfileDto(email = "user@example.com"))
         rpc.recent.add(session("ses_1"))
         ui = newUi(displayMs = 1_000)
         settle()
@@ -504,7 +504,7 @@ class SessionUiLayoutTest : SessionUiTestBase() {
     }
 
     fun `test account overlay uses prompt panel top and right insets`() {
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = ProfileDto(email = "user@example.com"))
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = ProfileDto(email = "user@example.com"))
         rpc.recent.add(session("ses_1"))
         ui = newUi(displayMs = 1_000)
         settle()

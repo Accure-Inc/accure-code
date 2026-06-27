@@ -1,70 +1,70 @@
 <idea-plugin>
     <dependencies>
         <module name="intellij.platform.frontend"/>
-        <module name="kilo.jetbrains.shared"/>
+        <module name="accurecode.jetbrains.shared"/>
     </dependencies>
 
-    <resource-bundle>messages.KiloBundle</resource-bundle>
+    <resource-bundle>messages.AccureBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="ai.kilocode.client.migration.KiloMigrationService"/>
-        <applicationService serviceImplementation="ai.kilocode.client.autocomplete.KiloAutocompleteSettingsService"/>
-        <customPasteProvider implementation="ai.kilocode.client.session.ui.prompt.PromptAttachmentPasteProvider"/>
+        <applicationService serviceImplementation="ai.accurecode.client.migration.AccureMigrationService"/>
+        <applicationService serviceImplementation="ai.accurecode.client.autocomplete.AccureAutocompleteSettingsService"/>
+        <customPasteProvider implementation="ai.accurecode.client.session.ui.prompt.PromptAttachmentPasteProvider"/>
 
-        <notificationGroup id="Kilo Code"
+        <notificationGroup id="Accure Code"
                            displayType="BALLOON"
-                           bundle="messages.KiloBundle"
-                           key="notification.group.kilo"/>
+                           bundle="messages.AccureBundle"
+                           key="notification.group.accurecode"/>
 
-        <toolWindow id="Kilo Code"
+        <toolWindow id="Accure Code"
                     anchor="left"
-                    icon="/icons/kilo.svg"
-                    factoryClass="ai.kilocode.client.KiloToolWindowFactory"/>
+                    icon="/icons/accure.svg"
+                    factoryClass="ai.accurecode.client.AccureToolWindowFactory"/>
 
-        <fileEditorProvider id="KiloVfsEditor" implementation="ai.kilocode.client.vfs.KiloFileEditorProvider"/>
+        <fileEditorProvider id="AccureVfsEditor" implementation="ai.accurecode.client.vfs.AccureFileEditorProvider"/>
 
         <applicationConfigurable
                 parentId="tools"
-                id="ai.kilocode.jetbrains.settings"
-                instance="ai.kilocode.client.settings.KiloSettingsConfigurable"
-                bundle="messages.KiloBundle"
-                key="settings.kilo.displayName"/>
+                id="ai.accurecode.jetbrains.settings"
+                instance="ai.accurecode.client.settings.AccureSettingsConfigurable"
+                bundle="messages.AccureBundle"
+                key="settings.accurecode.displayName"/>
 
         <applicationConfigurable
-                parentId="ai.kilocode.jetbrains.settings"
-                id="ai.kilocode.jetbrains.settings.profile"
+                parentId="ai.accurecode.jetbrains.settings"
+                id="ai.accurecode.jetbrains.settings.profile"
                 groupWeight="2"
-                instance="ai.kilocode.client.settings.profile.UserProfileConfigurable"
-                bundle="messages.KiloBundle"
+                instance="ai.accurecode.client.settings.profile.UserProfileConfigurable"
+                bundle="messages.AccureBundle"
                 key="settings.profile.displayName"/>
 
         <applicationConfigurable
-                parentId="ai.kilocode.jetbrains.settings"
-                id="ai.kilocode.jetbrains.settings.models"
+                parentId="ai.accurecode.jetbrains.settings"
+                id="ai.accurecode.jetbrains.settings.models"
                 groupWeight="1"
-                instance="ai.kilocode.client.settings.models.ModelsConfigurable"
-                bundle="messages.KiloBundle"
+                instance="ai.accurecode.client.settings.models.ModelsConfigurable"
+                bundle="messages.AccureBundle"
                 key="settings.models.displayName"/>
 
         <applicationConfigurable
-                parentId="ai.kilocode.jetbrains.settings"
-                id="ai.kilocode.jetbrains.settings.providers"
+                parentId="ai.accurecode.jetbrains.settings"
+                id="ai.accurecode.jetbrains.settings.providers"
                 groupWeight="1"
-                instance="ai.kilocode.client.settings.providers.ProvidersConfigurable"
-                bundle="messages.KiloBundle"
+                instance="ai.accurecode.client.settings.providers.ProvidersConfigurable"
+                bundle="messages.AccureBundle"
                 key="settings.providers.displayName"/>
 
-        <registryKey key="kilo.session.condense"
+        <registryKey key="accure.session.condense"
                      description="Enable event condensing in the session update queue (merges redundant snapshots before model delivery)."
                      defaultValue="true"
                      restartRequired="false"
                      overrides="false"/>
-        <registryKey key="kilo.session.flushMs"
+        <registryKey key="accure.session.flushMs"
                      description="Session update queue flush cadence in milliseconds."
                      defaultValue="150"
                      restartRequired="false"
                      overrides="false"/>
-        <registryKey key="kilo.session.inactive.disposeTimeoutMs"
+        <registryKey key="accure.session.inactive.disposeTimeoutMs"
                      description="Milliseconds before hidden session UI is disposed after switching away."
                      defaultValue="180000"
                      restartRequired="false"
@@ -72,65 +72,65 @@
     </extensions>
 
     <applicationListeners>
-        <listener class="ai.kilocode.client.plugin.KiloFrontendDynamicPluginListener"
+        <listener class="ai.accurecode.client.plugin.AccureFrontendDynamicPluginListener"
                   topic="com.intellij.ide.plugins.DynamicPluginListener"/>
     </applicationListeners>
 
     <actions>
-        <action id="Kilo.Restart"
-                class="ai.kilocode.client.actions.RestartKiloAction"/>
+        <action id="Accure.Restart"
+                class="ai.accurecode.client.actions.RestartAccureAction"/>
 
-        <action id="Kilo.Reinstall"
-                class="ai.kilocode.client.actions.ReinstallKiloAction"/>
+        <action id="Accure.Reinstall"
+                class="ai.accurecode.client.actions.ReinstallAccureAction"/>
 
-        <action id="Kilo.OpenSettings"
-                class="ai.kilocode.client.actions.OpenSettingsAction"/>
+        <action id="Accure.OpenSettings"
+                class="ai.accurecode.client.actions.OpenSettingsAction"/>
 
-        <action id="Kilo.OpenLocalConfig"
-                class="ai.kilocode.client.actions.OpenLocalConfigAction"/>
+        <action id="Accure.OpenLocalConfig"
+                class="ai.accurecode.client.actions.OpenLocalConfigAction"/>
 
-        <action id="Kilo.OpenGlobalConfig"
-                class="ai.kilocode.client.actions.OpenGlobalConfigAction"/>
+        <action id="Accure.OpenGlobalConfig"
+                class="ai.accurecode.client.actions.OpenGlobalConfigAction"/>
 
-        <group id="Kilo.CliGroup" text="CLI" popup="true">
-            <reference ref="Kilo.Restart"/>
-            <reference ref="Kilo.Reinstall"/>
+        <group id="Accure.CliGroup" text="CLI" popup="true">
+            <reference ref="Accure.Restart"/>
+            <reference ref="Accure.Reinstall"/>
         </group>
 
-        <group id="Kilo.OpenConfigGroup" text="Config Files" popup="true">
-            <reference ref="Kilo.OpenLocalConfig"/>
-            <reference ref="Kilo.OpenGlobalConfig"/>
+        <group id="Accure.OpenConfigGroup" text="Config Files" popup="true">
+            <reference ref="Accure.OpenLocalConfig"/>
+            <reference ref="Accure.OpenGlobalConfig"/>
         </group>
 
-        <group id="Kilo.SettingsGroup">
-            <reference ref="Kilo.OpenSettings"/>
+        <group id="Accure.SettingsGroup">
+            <reference ref="Accure.OpenSettings"/>
             <separator/>
-            <reference ref="Kilo.OpenConfigGroup"/>
+            <reference ref="Accure.OpenConfigGroup"/>
             <separator/>
-            <reference ref="Kilo.CliGroup"/>
+            <reference ref="Accure.CliGroup"/>
         </group>
 
-        <action id="Kilo.Settings"
-                class="ai.kilocode.client.actions.KiloSettingsAction"
+        <action id="Accure.Settings"
+                class="ai.accurecode.client.actions.AccureSettingsAction"
                 icon="AllIcons.General.GearPlain"/>
 
-        <action id="Kilo.NewSession"
-                class="ai.kilocode.client.actions.NewSessionAction"/>
+        <action id="Accure.NewSession"
+                class="ai.accurecode.client.actions.NewSessionAction"/>
 
-        <action id="Kilo.History"
-                class="ai.kilocode.client.actions.HistoryAction"/>
+        <action id="Accure.History"
+                class="ai.accurecode.client.actions.HistoryAction"/>
 
-        <!-- Declarative toolbar group for the Kilo tool window title bar -->
-        <group id="Kilo.ToolWindowToolbar">
-            <reference ref="Kilo.NewSession"/>
-            <reference ref="Kilo.History"/>
-            <reference ref="Kilo.Settings"/>
+        <!-- Declarative toolbar group for the Accure tool window title bar -->
+        <group id="Accure.ToolWindowToolbar">
+            <reference ref="Accure.NewSession"/>
+            <reference ref="Accure.History"/>
+            <reference ref="Accure.Settings"/>
         </group>
 
-        <action id="Kilo.SendPrompt"
-                class="ai.kilocode.client.actions.SendPromptAction"
+        <action id="Accure.SendPrompt"
+                class="ai.accurecode.client.actions.SendPromptAction"
                 text="Send Prompt"
-                description="Send the current Kilo prompt">
+                description="Send the current Accure prompt">
             <keyboard-shortcut keymap="$default"
                                first-keystroke="ENTER"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+"
@@ -139,35 +139,35 @@
                                first-keystroke="control ENTER"/>
         </action>
 
-        <action id="Kilo.StopSession"
-                class="ai.kilocode.client.actions.StopSessionAction"
+        <action id="Accure.StopSession"
+                class="ai.accurecode.client.actions.StopSessionAction"
                 text="Stop Session"
-                description="Stop the current Kilo session">
+                description="Stop the current Accure session">
             <keyboard-shortcut keymap="$default"
                                first-keystroke="alt S"/>
         </action>
 
-        <action id="Kilo.Session.Open"
-                class="ai.kilocode.client.actions.OpenSessionAction">
+        <action id="Accure.Session.Open"
+                class="ai.accurecode.client.actions.OpenSessionAction">
             <keyboard-shortcut keymap="$default" first-keystroke="ENTER"/>
         </action>
 
-        <action id="Kilo.Session.Rename"
-                class="ai.kilocode.client.actions.RenameSessionAction"
+        <action id="Accure.Session.Rename"
+                class="ai.accurecode.client.actions.RenameSessionAction"
                 use-shortcut-of="RenameElement"/>
 
-        <action id="Kilo.Session.Delete"
-                class="ai.kilocode.client.actions.DeleteSessionAction"
+        <action id="Accure.Session.Delete"
+                class="ai.accurecode.client.actions.DeleteSessionAction"
                 use-shortcut-of="$Delete"/>
 
-        <group id="Kilo.History.ContextMenu">
-            <reference ref="Kilo.Session.Open"/>
+        <group id="Accure.History.ContextMenu">
+            <reference ref="Accure.Session.Open"/>
             <separator/>
-            <reference ref="Kilo.Session.Rename"/>
-            <reference ref="Kilo.Session.Delete"/>
+            <reference ref="Accure.Session.Rename"/>
+            <reference ref="Accure.Session.Delete"/>
         </group>
 
-        <group id="Kilo.Session.ContextMenu">
+        <group id="Accure.Session.ContextMenu">
             <reference ref="$Copy"/>
         </group>
     </actions>

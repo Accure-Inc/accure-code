@@ -7,7 +7,7 @@ type Toast = {
 }
 
 const toasts: Toast[] = []
-mock.module("@kilocode/accure-ui/toast", () => ({
+mock.module("@accurecode/accure-ui/toast", () => ({
   showToast: (toast: Toast) => toasts.push(toast),
 }))
 

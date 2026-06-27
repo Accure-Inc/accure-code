@@ -1,10 +1,10 @@
-/* Wraps upstream styles and adds Kilo overrides */
+/* Wraps upstream styles and adds Accure overrides */
 @import "@opencode-ai/ui/styles";
 
 /* Global design tokens, scrollbar, VS Code extension overrides */
 @import "./globals.css";
 
-/* Per-component Kilo overrides */
+/* Per-component Accure overrides */
 @import "../components/accordion.css";
 @import "../components/basic-tool.css";
 @import "../components/auto-approve-bar.css";

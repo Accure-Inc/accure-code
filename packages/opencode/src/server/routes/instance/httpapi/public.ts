@@ -1,8 +1,8 @@
 import { OpenApi } from "effect/unstable/httpapi"
-// kilocode_change start
-import { matchLegacyKiloOpenApi } from "@/kilocode/server/httpapi/public"
-import * as KiloServer from "@/kilocode/server/server"
-// kilocode_change end
+// accurecode_change start
+import { matchLegacyAccureOpenApi } from "@/accurecode/server/httpapi/public"
+import * as AccureServer from "@/accurecode/server/server"
+// accurecode_change end
 import { OpenCodeHttpApi } from "./api"
 import { QueryBooleanOpenApi } from "./groups/query"
 
@@ -64,11 +64,11 @@ const QueryParameterSchemas: Record<string, OpenApiSchema> = {
   "GET /experimental/session roots": QueryBooleanOpenApi,
   "GET /experimental/session archived": QueryBooleanOpenApi,
   "GET /find/file limit": { type: "integer", minimum: 1, maximum: 200 },
-  // kilocode_change start
+  // accurecode_change start
   "GET /experimental/session worktrees": { type: "boolean" },
-  "GET /kilo/cloud-sessions cursor": { type: "string" },
-  "GET /kilo/cloud-sessions limit": { type: "number" },
-  // kilocode_change end
+  "GET /accure/cloud-sessions cursor": { type: "string" },
+  "GET /accure/cloud-sessions limit": { type: "number" },
+  // accurecode_change end
   "GET /experimental/session cursor": { type: "number" },
   "GET /experimental/session limit": { type: "number" },
   "GET /session start": { type: "number" },
@@ -82,7 +82,7 @@ const QueryParameterSchemas: Record<string, OpenApiSchema> = {
   "GET /api/session/{sessionID}/message limit": { type: "number" },
 }
 
-// kilocode_change start
+// accurecode_change start
 const PathParameterSchemas: Record<string, OpenApiSchema> = {
   sessionID: { type: "string", pattern: "^ses.*" },
   messageID: { type: "string", pattern: "^msg.*" },
@@ -90,11 +90,11 @@ const PathParameterSchemas: Record<string, OpenApiSchema> = {
   permissionID: { type: "string", pattern: "^per.*" },
   ptyID: { type: "string", pattern: "^pty.*" },
 }
-// kilocode_change end
+// accurecode_change end
 
 const LegacyComponentDescriptions: Record<string, string> = {
   LogLevel: "Log level",
-  ServerConfig: "Server configuration for the kilo serve command", // kilocode_change
+  ServerConfig: "Server configuration for the accure serve command", // accurecode_change
   LayoutConfig: "@deprecated Always uses stretch layout.",
 }
 
@@ -191,7 +191,7 @@ function matchLegacyOpenApi(input: Record<string, unknown>) {
     }
   }
   deleteUnusedLegacyErrorComponents(spec)
-  matchLegacyKiloOpenApi(input) // kilocode_change
+  matchLegacyAccureOpenApi(input) // accurecode_change
   return input
 }
 
@@ -292,11 +292,11 @@ function applyLegacySchemaOverrides(spec: OpenApiSpec) {
   const model = schemas.ProviderConfig?.properties?.models?.additionalProperties
   const variants = typeof model === "object" ? model.properties?.variants?.additionalProperties : undefined
   if (variants && typeof variants === "object") variants.additionalProperties = {}
-  // kilocode_change start - preserve model reset sentinels in indexing config patches
+  // accurecode_change start - preserve model reset sentinels in indexing config patches
   const indexing = schemas.IndexingConfig?.properties
   if (indexing?.model) indexing.model = nullable(indexing.model)
   if (indexing?.dimension) indexing.dimension = nullable(indexing.dimension)
-  // kilocode_change end
+  // accurecode_change end
   const syncInfo = schemas.SyncEventSessionUpdated?.properties?.data?.properties?.info
   if (syncInfo?.properties) makePropertiesNullable(syncInfo.properties)
 }
@@ -537,7 +537,7 @@ function flattenOptions(options: OpenApiSchema[] | undefined): OpenApiSchema[] |
 function normalizeParameter(param: OpenApiParameter, route: string) {
   if (!param.schema || typeof param.schema !== "object") return
   if (param.in === "path") {
-    param.schema = pathParameterSchema(route, param.name) ?? stripOptionalNull(param.schema) // kilocode_change
+    param.schema = pathParameterSchema(route, param.name) ?? stripOptionalNull(param.schema) // accurecode_change
     return
   }
   if (param.in === "query") {
@@ -550,7 +550,7 @@ function normalizeParameter(param: OpenApiParameter, route: string) {
   param.schema = stripOptionalNull(param.schema)
 }
 
-// kilocode_change start
+// accurecode_change start
 function pathParameterSchema(route: string, name: string) {
   if (name in PathParameterSchemas) return PathParameterSchemas[name]
   if (name === "id" && route.startsWith("DELETE /experimental/workspace/")) return { type: "string", pattern: "^wrk.*" }
@@ -562,13 +562,13 @@ function pathParameterSchema(route: string, name: string) {
   if (name === "requestID" && route.startsWith("POST /network/")) return { type: "string", pattern: "^que.*" }
   return undefined
 }
-// kilocode_change end
+// accurecode_change end
 
 export const PublicApi = OpenCodeHttpApi.annotateMerge(
   OpenApi.annotations({
-    title: KiloServer.DOC_TITLE, // kilocode_change
+    title: AccureServer.DOC_TITLE, // accurecode_change
     version: "1.0.0",
-    description: KiloServer.DOC_DESCRIPTION, // kilocode_change
+    description: AccureServer.DOC_DESCRIPTION, // accurecode_change
     transform: matchLegacyOpenApi,
   }),
 )

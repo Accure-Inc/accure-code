@@ -1,8 +1,8 @@
 import { describe, expect, it } from "bun:test"
-import type { Config } from "@kilocode/sdk/v2/client"
+import type { Config } from "@accurecode/sdk/v2/client"
 
 // vscode mock is provided by the shared preload (tests/setup/vscode-mock.ts)
-const { KiloProvider } = await import("../../src/KiloProvider")
+const { AccureProvider } = await import("../../src/AccureProvider")
 
 type Internals = {
   connectionState: "connecting" | "connected" | "disconnected" | "error"
@@ -58,9 +58,9 @@ function createConnection() {
   }
 }
 
-describe("KiloProvider indexing refresh", () => {
+describe("AccureProvider indexing refresh", () => {
   it("reloadAfterAuthChange fetches config first, then indexing status", async () => {
-    const provider = new KiloProvider({} as never, {} as never)
+    const provider = new AccureProvider({} as never, {} as never)
     const internal = provider as unknown as Internals
     const calls: string[] = []
 
@@ -94,7 +94,7 @@ describe("KiloProvider indexing refresh", () => {
 
   it("handleUpdateConfig no longer eagerly fetches indexing status", async () => {
     const conn = createConnection()
-    const provider = new KiloProvider({} as never, conn.service as never)
+    const provider = new AccureProvider({} as never, conn.service as never)
     const internal = provider as unknown as Internals
 
     let indexing = 0
@@ -111,7 +111,7 @@ describe("KiloProvider indexing refresh", () => {
 
   it("refreshes providers when prompt-training model visibility changes", async () => {
     const conn = createConnection()
-    const provider = new KiloProvider({} as never, conn.service as never)
+    const provider = new AccureProvider({} as never, conn.service as never)
     const internal = provider as unknown as Internals
     let calls = 0
     internal.connectionState = "connected"
@@ -126,7 +126,7 @@ describe("KiloProvider indexing refresh", () => {
 
   it("passes scoped unset paths to the config overlay endpoint", async () => {
     const conn = createConnection()
-    const provider = new KiloProvider({} as never, conn.service as never)
+    const provider = new AccureProvider({} as never, conn.service as never)
     const internal = provider as unknown as Internals
     internal.connectionState = "connected"
 
@@ -152,7 +152,7 @@ describe("KiloProvider indexing refresh", () => {
   })
 
   it("fetchAndSendIndexingStatus uses current session directory header", async () => {
-    const worktree = "/repo/.kilo/.kilocode/worktrees/feature"
+    const worktree = "/repo/.accurecode/.accurecode/worktrees/feature"
     const calls: { input: RequestInfo | URL; init?: RequestInit }[] = []
     const original = globalThis.fetch
 
@@ -174,7 +174,7 @@ describe("KiloProvider indexing refresh", () => {
     }) as typeof fetch
 
     try {
-      const provider = new KiloProvider(
+      const provider = new AccureProvider(
         {} as never,
         {
           getClient: () => ({}) as never,
@@ -189,16 +189,16 @@ describe("KiloProvider indexing refresh", () => {
 
       expect(calls.length).toBe(1)
       const headers = new Headers(calls[0]?.init?.headers)
-      const auth = Buffer.from("kilo:secret").toString("base64")
+      const auth = Buffer.from("accure:secret").toString("base64")
       expect(headers.get("Authorization")).toBe(`Basic ${auth}`)
-      expect(headers.get("x-kilo-directory")).toBe(worktree)
+      expect(headers.get("x-accure-directory")).toBe(worktree)
     } finally {
       globalThis.fetch = original
     }
   })
 
   it("forwards indexing.status when directory only differs by Windows drive casing", () => {
-    const provider = new KiloProvider(
+    const provider = new AccureProvider(
       {} as never,
       {
         resolveEventSessionId: () => undefined,

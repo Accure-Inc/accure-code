@@ -1,17 +1,17 @@
 ---
-title: "KiloClaw Dashboard Reference"
-description: "Managing your KiloClaw instance from the dashboard"
+title: "AccureClaw Dashboard Reference"
+description: "Managing your AccureClaw instance from the dashboard"
 ---
 
-# KiloClaw Dashboard
+# AccureClaw Dashboard
 
-This page covers everything you can do from the KiloClaw dashboard. For getting started, see [KiloClaw Overview](/docs/kiloclaw/overview).
+This page covers everything you can do from the AccureClaw dashboard. For getting started, see [AccureClaw Overview](/docs/accureclaw/overview).
 
-{% image src="/docs/img/kiloclaw/dashboard.png" alt="Connect account screen" width="800" caption="The KiloClaw Dashboard" /%}
+{% image src="/docs/img/accureclaw/dashboard.png" alt="Connect account screen" width="800" caption="The AccureClaw Dashboard" /%}
 
 ## Personal and Organization Instances
 
-The dashboard controls are the same for personal and organization-scoped KiloClaw instances. Organization instances are selected from the organization context and are listed separately from your **Personal** instance. Availability depends on your organization membership and KiloClaw entitlement.
+The dashboard controls are the same for personal and organization-scoped AccureClaw instances. Organization instances are selected from the organization context and are listed separately from your **Personal** instance. Availability depends on your organization membership and AccureClaw entitlement.
 
 ## Instance Status
 
@@ -88,11 +88,11 @@ The specs of your instance, including number of CPUs, memory, and storage, are v
 
 Select a model from the dropdown and click **Save & Provision**. The API key is platform-managed and refreshes automatically when you save — you never need to enter one. The key has a 30-day expiry.
 
-For access to the full catalog of 335+ models, use the `/model` and `/models` commands in the [Control UI Chat](/docs/kiloclaw/control-ui#changing-models).
+For access to the full catalog of 335+ models, use the `/model` and `/models` commands in the [Control UI Chat](/docs/accureclaw/control-ui#changing-models).
 
 ### Channels
 
-Kilo Chat is always available as KiloClaw's first-party channel and does not need a token. You can also connect Telegram, Discord, and Slack by entering bot tokens in the Settings tab. See [Connecting Chat Platforms](/docs/kiloclaw/chat-platforms) for setup instructions.
+Accure Chat is always available as AccureClaw's first-party channel and does not need a token. You can also connect Telegram, Discord, and Slack by entering bot tokens in the Settings tab. See [Connecting Chat Platforms](/docs/accureclaw/chat-platforms) for setup instructions.
 
 {% callout type="info" %}
 After saving channel tokens, you need to **Redeploy** or **Restart OpenClaw** for the changes to take effect.
@@ -104,7 +104,7 @@ You can pin your instance to a specific OpenClaw version and variant from the Se
 
 Select a version and variant from the dropdowns and click **Save**. To return to automatic updates, clear the version pin and save.
 
-See [Version Pinning](/docs/kiloclaw/control-ui/version-pinning) for details.
+See [Version Pinning](/docs/accureclaw/control-ui/version-pinning) for details.
 
 ### Version Status Indicators
 
@@ -128,7 +128,7 @@ In **Settings > Danger Zone**, click **Restore Config**. This will:
 Your files, workspace, and persistent data are not affected. Only the OpenClaw configuration file is reset.
 
 > 💡 **Tip**
-> If your instance is in a crash loop and you can't access the Control UI, try **Restore Config** from the KiloClaw dashboard first before redeploying.
+> If your instance is in a crash loop and you can't access the Control UI, try **Restore Config** from the AccureClaw dashboard first before redeploying.
 
 {% callout type="warning" %}
 This action cannot be undone. Make sure you've saved any important changes to your configuration before restoring.
@@ -144,14 +144,14 @@ At the bottom of Settings:
 
 ## Accessing the Control UI
 
-When your instance is running you can access the [OpenClaw Control UI](/docs/kiloclaw/control-ui) — a browser-based dashboard for managing your agent, channels, sessions, exec approvals, and more:
+When your instance is running you can access the [OpenClaw Control UI](/docs/accureclaw/control-ui) — a browser-based dashboard for managing your agent, channels, sessions, exec approvals, and more:
 
 1. Click **Open** to launch the OpenClaw web interface in a new tab
 
-See the [Control UI reference](/docs/kiloclaw/control-ui) for a full overview of its capabilities.
+See the [Control UI reference](/docs/accureclaw/control-ui) for a full overview of its capabilities.
 
 {% callout type="warning" %}
-Do not use the **Update** feature in the OpenClaw Control UI to update KiloClaw. Use **Redeploy** from the KiloClaw Dashboard instead. Updating via the Control UI will not apply the correct KiloClaw platform image and may break your instance.
+Do not use the **Update** feature in the OpenClaw Control UI to update AccureClaw. Use **Redeploy** from the AccureClaw Dashboard instead. Updating via the Control UI will not apply the correct AccureClaw platform image and may break your instance.
 {% /callout %}
 
 ## Pairing Requests
@@ -161,11 +161,11 @@ When your instance is running, the dashboard shows any pending pairing requests.
 - Someone messages your bot on a third-party chat channel for the first time
 - A new browser or device connects to the Control UI
 
-You need to **approve** each request before the user or device can interact with your agent. See [Pairing Requests](/docs/kiloclaw/chat-platforms#pairing-requests) for details.
+You need to **approve** each request before the user or device can interact with your agent. See [Pairing Requests](/docs/accureclaw/chat-platforms#pairing-requests) for details.
 
 ## Changelog
 
-The dashboard shows recent KiloClaw platform updates. Each entry is tagged as a **feature** or **bugfix**, and some include a deploy hint:
+The dashboard shows recent AccureClaw platform updates. Each entry is tagged as a **feature** or **bugfix**, and some include a deploy hint:
 
 - **Redeploy Required** — You must redeploy for this change to take effect on your instance
 - **Redeploy Suggested** — Redeploying is recommended but not strictly necessary
@@ -195,8 +195,8 @@ Your storage is region-pinned — once your instance is created in a region (e.g
 
 ## Related
 
-- [KiloClaw Overview](/docs/kiloclaw/overview)
-- [OpenClaw Control UI](/docs/kiloclaw/control-ui)
-- [Connecting Chat Platforms](/docs/kiloclaw/chat-platforms)
-- [Troubleshooting](/docs/kiloclaw/troubleshooting)
-- [KiloClaw Pricing](/docs/kiloclaw/faq/pricing)
+- [AccureClaw Overview](/docs/accureclaw/overview)
+- [OpenClaw Control UI](/docs/accureclaw/control-ui)
+- [Connecting Chat Platforms](/docs/accureclaw/chat-platforms)
+- [Troubleshooting](/docs/accureclaw/troubleshooting)
+- [AccureClaw Pricing](/docs/accureclaw/faq/pricing)

@@ -1,5 +1,5 @@
 import { Cause, Duration, Effect, Layer, Schedule, Schema, Semaphore, Context } from "effect"
-import { Struct } from "effect" // kilocode_change
+import { Struct } from "effect" // accurecode_change
 import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process"
 import { formatPatch, structuredPatch } from "diff"
 import path from "path"
@@ -7,25 +7,25 @@ import { AppProcess } from "@opencode-ai/core/process"
 import { InstanceState } from "@/effect/instance-state"
 import { AppFileSystem } from "@opencode-ai/core/filesystem"
 import { Hash } from "@opencode-ai/core/util/hash"
-import { EffectFlock } from "@opencode-ai/core/util/effect-flock" // kilocode_change
+import { EffectFlock } from "@opencode-ai/core/util/effect-flock" // accurecode_change
 import { Config } from "@/config/config"
 import { Global } from "@opencode-ai/core/global"
 import * as Log from "@opencode-ai/core/util/log"
-// kilocode_change start
+// accurecode_change start
 import { Flag } from "@opencode-ai/core/flag/flag"
-import { DiffFull } from "../kilocode/snapshot/diff-full"
-import { KiloSnapshotTrack } from "../kilocode/snapshot/track"
-import { KiloSnapshotSeed } from "../kilocode/snapshot/seed"
-import { KiloSnapshotMaterialize } from "../kilocode/snapshot/materialize"
+import { DiffFull } from "../accurecode/snapshot/diff-full"
+import { AccureSnapshotTrack } from "../accurecode/snapshot/track"
+import { AccureSnapshotSeed } from "../accurecode/snapshot/seed"
+import { AccureSnapshotMaterialize } from "../accurecode/snapshot/materialize"
 import type { MessageID, SessionID } from "../session/schema"
 import { withStatics } from "@opencode-ai/core/schema"
 import { zod } from "@opencode-ai/core/effect-zod"
-// kilocode_change end
+// accurecode_change end
 
 export const Patch = Schema.Struct({
   hash: Schema.String,
   files: Schema.mutable(Schema.Array(Schema.String)),
-}).pipe(withStatics((s) => ({ zod: zod(s) }))) // kilocode_change
+}).pipe(withStatics((s) => ({ zod: zod(s) }))) // accurecode_change
 export type Patch = typeof Patch.Type
 
 export const FileDiff = Schema.Struct({
@@ -37,23 +37,23 @@ export const FileDiff = Schema.Struct({
   additions: Schema.Finite,
   deletions: Schema.Finite,
   status: Schema.optional(Schema.Literals(["added", "deleted", "modified"])),
-  // kilocode_change start
+  // accurecode_change start
 })
   .annotate({ identifier: "SnapshotFileDiff" })
   .pipe(withStatics((s) => ({ zod: zod(s) })))
-// kilocode_change end
+// accurecode_change end
 export type FileDiff = typeof FileDiff.Type
 
-// kilocode_change start - lightweight FileDiff without patch for session summaries
+// accurecode_change start - lightweight FileDiff without patch for session summaries
 export const SummaryFileDiff = FileDiff.mapFields(Struct.omit(["patch"]))
   .annotate({ identifier: "SnapshotSummaryFileDiff" })
   .pipe(withStatics((s) => ({ zod: zod(s) })))
 export type SummaryFileDiff = typeof SummaryFileDiff.Type
-// kilocode_change end
+// accurecode_change end
 
 const log = Log.create({ service: "snapshot" })
 const prune = "7.days"
-const retention = 7 * 24 * 60 * 60 * 1000 // kilocode_change
+const retention = 7 * 24 * 60 * 60 * 1000 // accurecode_change
 const limit = 2 * 1024 * 1024
 const core = ["-c", "core.longpaths=true", "-c", "core.symlinks=true"]
 const cfg = ["-c", "core.autocrlf=false", ...core]
@@ -64,20 +64,20 @@ interface GitResult {
   readonly stderr: string
 }
 
-export const MAX_DIFF_SIZE = 256 * 1024 // kilocode_change
+export const MAX_DIFF_SIZE = 256 * 1024 // accurecode_change
 
 type State = Omit<Interface, "init">
 
 export interface Interface {
   readonly init: () => Effect.Effect<void>
   readonly cleanup: () => Effect.Effect<void>
-  // kilocode_change start - pass prompt context and managed initialization policy
+  // accurecode_change start - pass prompt context and managed initialization policy
   readonly track: (opts?: {
     sessionID?: SessionID
     messageID?: MessageID
-    snapshotInitialization?: KiloSnapshotTrack.SnapshotInitialization
+    snapshotInitialization?: AccureSnapshotTrack.SnapshotInitialization
   }) => Effect.Effect<string | undefined>
-  // kilocode_change end
+  // accurecode_change end
   readonly patch: (hash: string) => Effect.Effect<Patch>
   readonly restore: (snapshot: string) => Effect.Effect<void>
   readonly revert: (patches: Patch[]) => Effect.Effect<void>
@@ -87,17 +87,17 @@ export interface Interface {
 
 export class Service extends Context.Service<Service, Interface>()("@opencode/Snapshot") {}
 
-// kilocode_change start
+// accurecode_change start
 type Requirements = AppFileSystem.Service | AppProcess.Service | Config.Service | EffectFlock.Service
 export const layer: Layer.Layer<Service, never, Requirements> =
-  // kilocode_change end
+  // accurecode_change end
   Layer.effect(
     Service,
     Effect.gen(function* () {
       const fs = yield* AppFileSystem.Service
       const appProcess = yield* AppProcess.Service
       const config = yield* Config.Service
-      const flock = yield* EffectFlock.Service // kilocode_change
+      const flock = yield* EffectFlock.Service // accurecode_change
       const locks = new Map<string, Semaphore.Semaphore>()
 
       const lock = (key: string) => {
@@ -180,14 +180,14 @@ export const layer: Layer.Layer<Service, never, Requirements> =
             )
           })
 
-          // kilocode_change start
+          // accurecode_change start
           const stage = Effect.fnUntraced(function* (
             files: string[],
             opts?: { env?: Record<string, string>; root?: boolean },
           ) {
-            // kilocode_change end
+            // accurecode_change end
             if (!files.length) return
-            // kilocode_change start
+            // accurecode_change start
             // A new root snapshot covers the full worktree, so a single pathspec avoids
             // quadratic matching against every tracked path in very large repositories.
             const cmd = opts?.root
@@ -199,7 +199,7 @@ export const layer: Layer.Layer<Service, never, Requirements> =
               env: opts?.env,
               stdin: opts?.root ? undefined : feed(files),
             })
-            // kilocode_change end
+            // accurecode_change end
             if (result.code === 0) return
             log.warn("failed to add snapshot files", {
               exitCode: result.code,
@@ -210,15 +210,15 @@ export const layer: Layer.Layer<Service, never, Requirements> =
           const exists = (file: string) => fs.exists(file).pipe(Effect.orDie)
           const read = (file: string) => fs.readFileString(file).pipe(Effect.catch(() => Effect.succeed("")))
           const remove = (file: string) => fs.remove(file).pipe(Effect.catch(() => Effect.void))
-          // kilocode_change start - serialize snapshot repositories across CLI and extension processes
+          // accurecode_change start - serialize snapshot repositories across CLI and extension processes
           const locked = <A, R>(fx: Effect.Effect<A, never, R>) =>
             lock(state.gitdir).withPermits(1)(flock.withLock(fx, `snapshot:${state.gitdir}`).pipe(Effect.orDie))
 
-          // kilocode_change end
+          // accurecode_change end
 
           const enabled = Effect.fnUntraced(function* () {
             if (state.vcs !== "git") return false
-            if (Flag.KILO_CLIENT === "acp") return false // kilocode_change - ACP clients do not support snapshots
+            if (Flag.ACCURECODE_CLIENT === "acp") return false // accurecode_change - ACP clients do not support snapshots
             return (yield* config.get()).snapshot !== false
           })
 
@@ -245,9 +245,9 @@ export const layer: Layer.Layer<Service, never, Requirements> =
             yield* fs.writeFileString(target, text ? `${text}\n` : "").pipe(Effect.orDie)
           })
 
-          // kilocode_change start
+          // accurecode_change start
           const add = Effect.fnUntraced(function* (opts?: { env?: Record<string, string>; root?: boolean }) {
-            // kilocode_change end
+            // accurecode_change end
             yield* sync()
             const [diff, other] = yield* Effect.all(
               [
@@ -309,7 +309,7 @@ export const layer: Layer.Layer<Service, never, Requirements> =
             const block = new Set(untracked.filter((item) => large.has(item)))
             yield* sync(Array.from(block))
             // Stage only the allowed candidate paths so snapshot updates stay scoped.
-            // kilocode_change start - initial seeded writes stay protected by the source pin
+            // accurecode_change start - initial seeded writes stay protected by the source pin
             yield* stage(
               allow.filter((item) => !block.has(item)),
               opts,
@@ -317,7 +317,7 @@ export const layer: Layer.Layer<Service, never, Requirements> =
           })
 
           const materialize = Effect.fnUntraced(function* () {
-            yield* locked(KiloSnapshotMaterialize.run({ gitdir: state.gitdir, git, fs }).pipe(Effect.orDie)).pipe(
+            yield* locked(AccureSnapshotMaterialize.run({ gitdir: state.gitdir, git, fs }).pipe(Effect.orDie)).pipe(
               Effect.timeout("5 minutes"),
               Effect.catchCause((cause) => {
                 log.error("snapshot materialization failed", { cause: Cause.pretty(cause) })
@@ -327,16 +327,16 @@ export const layer: Layer.Layer<Service, never, Requirements> =
               Effect.asVoid,
             )
           })
-          // kilocode_change end
+          // accurecode_change end
 
           const cleanup = Effect.fnUntraced(function* () {
             return yield* locked(
               Effect.gen(function* () {
                 if (!(yield* enabled())) return
                 if (!(yield* exists(state.gitdir))) return
-                // kilocode_change start - retain snapshots for the same seven-day window as object pruning
-                yield* KiloSnapshotMaterialize.prune({ gitdir: state.gitdir, git, fs }, Date.now() - retention)
-                // kilocode_change end
+                // accurecode_change start - retain snapshots for the same seven-day window as object pruning
+                yield* AccureSnapshotMaterialize.prune({ gitdir: state.gitdir, git, fs }, Date.now() - retention)
+                // accurecode_change end
                 const result = yield* git(args(["gc", `--prune=${prune}`]), { cwd: state.directory })
                 if (result.code !== 0) {
                   log.warn("cleanup failed", {
@@ -350,14 +350,14 @@ export const layer: Layer.Layer<Service, never, Requirements> =
             )
           })
 
-          // kilocode_change start
+          // accurecode_change start
           const track = Effect.fnUntraced(function* (opts?: Parameters<Interface["track"]>[0]) {
-            // kilocode_change end
+            // accurecode_change end
             return yield* locked(
               Effect.gen(function* () {
                 if (!(yield* enabled())) return
                 const existed = yield* exists(state.gitdir)
-                const seeded: { value?: KiloSnapshotSeed.Output } = {} // kilocode_change
+                const seeded: { value?: AccureSnapshotSeed.Output } = {} // accurecode_change
                 yield* fs.ensureDir(state.gitdir).pipe(Effect.orDie)
                 if (!existed) {
                   yield* git(["init"], {
@@ -367,8 +367,8 @@ export const layer: Layer.Layer<Service, never, Requirements> =
                   yield* git(["--git-dir", state.gitdir, "config", "core.longpaths", "true"])
                   yield* git(["--git-dir", state.gitdir, "config", "core.symlinks", "true"])
                   yield* git(["--git-dir", state.gitdir, "config", "core.fsmonitor", "false"])
-                  // kilocode_change start - seed all eligible new snapshots from the worktree index
-                  seeded.value = yield* KiloSnapshotSeed.seed({
+                  // accurecode_change start - seed all eligible new snapshots from the worktree index
+                  seeded.value = yield* AccureSnapshotSeed.seed({
                     dir: state.directory,
                     worktree: state.worktree,
                     gitdir: state.gitdir,
@@ -376,10 +376,10 @@ export const layer: Layer.Layer<Service, never, Requirements> =
                     git,
                     fs,
                   })
-                  // kilocode_change end
+                  // accurecode_change end
                   log.info("initialized")
                 }
-                // kilocode_change start - pin every snapshot before background materialization
+                // accurecode_change start - pin every snapshot before background materialization
                 const seed = seeded.value?.source
                 const env = seed
                   ? {
@@ -390,7 +390,7 @@ export const layer: Layer.Layer<Service, never, Requirements> =
                 yield* add({ env, root: !existed && state.directory === state.worktree })
                 if (
                   seed &&
-                  !(yield* KiloSnapshotMaterialize.localize({
+                  !(yield* AccureSnapshotMaterialize.localize({
                     gitdir: state.gitdir,
                     git,
                     fs,
@@ -404,16 +404,16 @@ export const layer: Layer.Layer<Service, never, Requirements> =
                 if (result.code !== 0 || !hash) return
                 if (
                   seed &&
-                  !(yield* KiloSnapshotMaterialize.localizeTrees(
+                  !(yield* AccureSnapshotMaterialize.localizeTrees(
                     { gitdir: state.gitdir, git, fs, staging: seed.staging },
                     hash,
                   ))
                 )
                   return
-                if (!(yield* KiloSnapshotMaterialize.pin({ gitdir: state.gitdir, git, fs }, hash))) return
+                if (!(yield* AccureSnapshotMaterialize.pin({ gitdir: state.gitdir, git, fs }, hash))) return
                 const alt = path.join(state.gitdir, "objects", "info", "alternates")
                 if (yield* exists(alt)) yield* materialize()
-                // kilocode_change end
+                // accurecode_change end
                 log.info("tracking", { hash, cwd: state.directory, git: state.gitdir })
                 return hash
               }),
@@ -425,12 +425,12 @@ export const layer: Layer.Layer<Service, never, Requirements> =
               Effect.gen(function* () {
                 yield* add()
                 const result = yield* git(
-                  // kilocode_change start
+                  // accurecode_change start
                   [
                     ...quote,
                     ...args(["diff", "--cached", "--no-ext-diff", "--no-renames", "--name-only", hash, "--", "."]),
                   ],
-                  // kilocode_change end
+                  // accurecode_change end
                   {
                     cwd: state.directory,
                   },
@@ -812,7 +812,7 @@ export const layer: Layer.Layer<Service, never, Requirements> =
                 const patch = (file: string, before: string, after: string) =>
                   formatPatch(structuredPatch(file, file, before, after, "", "", { context: Number.MAX_SAFE_INTEGER }))
 
-                // kilocode_change start - use git patches to avoid blocking the event loop on large diffs
+                // accurecode_change start - use git patches to avoid blocking the event loop on large diffs
                 for (let i = 0; i < rows.length; i += step) {
                   const run = rows.slice(i, i + step)
                   const patches = yield* DiffFull.batch(
@@ -832,7 +832,7 @@ export const layer: Layer.Layer<Service, never, Requirements> =
                   }
                 }
                 return result
-                // kilocode_change end
+                // accurecode_change end
 
                 for (let i = 0; i < rows.length; i += step) {
                   const run = rows.slice(i, i + step)
@@ -856,7 +856,7 @@ export const layer: Layer.Layer<Service, never, Requirements> =
             )
           })
 
-          yield* materialize() // kilocode_change - resume interrupted snapshot object materialization
+          yield* materialize() // accurecode_change - resume interrupted snapshot object materialization
 
           yield* cleanup().pipe(
             Effect.catchCause((cause) => {
@@ -872,11 +872,11 @@ export const layer: Layer.Layer<Service, never, Requirements> =
         }),
       )
 
-      // kilocode_change start - service-local state and cache avoid leaking across Snapshot layer instances
-      const trackState = KiloSnapshotTrack.makeState()
+      // accurecode_change start - service-local state and cache avoid leaking across Snapshot layer instances
+      const trackState = AccureSnapshotTrack.makeState()
       const cache = new Map<string, Promise<FileDiff[]>>()
       const max = 100
-      // kilocode_change end
+      // accurecode_change end
 
       return Service.of({
         init: Effect.fn("Snapshot.init")(function* () {
@@ -885,9 +885,9 @@ export const layer: Layer.Layer<Service, never, Requirements> =
         cleanup: Effect.fn("Snapshot.cleanup")(function* () {
           return yield* InstanceState.useEffect(state, (s) => s.cleanup())
         }),
-        // kilocode_change start - guard slow snapshots and surface progress to the active session
+        // accurecode_change start - guard slow snapshots and surface progress to the active session
         track: Effect.fn("Snapshot.track")(function* (opts) {
-          return yield* KiloSnapshotTrack.wrap({
+          return yield* AccureSnapshotTrack.wrap({
             inner: InstanceState.useEffect(state, (s) => s.track(opts)),
             state: trackState,
             snapshotInitialization: opts?.snapshotInitialization,
@@ -895,7 +895,7 @@ export const layer: Layer.Layer<Service, never, Requirements> =
             messageID: opts?.messageID,
           })
         }),
-        // kilocode_change end
+        // accurecode_change end
         patch: Effect.fn("Snapshot.patch")(function* (hash: string) {
           return yield* InstanceState.useEffect(state, (s) => s.patch(hash))
         }),
@@ -909,7 +909,7 @@ export const layer: Layer.Layer<Service, never, Requirements> =
           return yield* InstanceState.useEffect(state, (s) => s.diff(hash))
         }),
         diffFull: Effect.fn("Snapshot.diffFull")(function* (from: string, to: string) {
-          // kilocode_change start - cache full diffs at the service boundary
+          // accurecode_change start - cache full diffs at the service boundary
           if (from === to) return []
           const directory = yield* InstanceState.directory
           const key = `${directory}\0${from}:${to}`
@@ -928,7 +928,7 @@ export const layer: Layer.Layer<Service, never, Requirements> =
           )
           cache.set(key, pending)
           return yield* Effect.promise(() => pending)
-          // kilocode_change end
+          // accurecode_change end
         }),
       })
     }),
@@ -938,7 +938,7 @@ export const defaultLayer = layer.pipe(
   Layer.provide(AppProcess.defaultLayer),
   Layer.provide(AppFileSystem.defaultLayer),
   Layer.provide(Config.defaultLayer),
-  Layer.provide(EffectFlock.defaultLayer), // kilocode_change
+  Layer.provide(EffectFlock.defaultLayer), // accurecode_change
 )
 
 export * as Snapshot from "."

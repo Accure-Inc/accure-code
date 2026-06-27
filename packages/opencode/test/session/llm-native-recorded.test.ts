@@ -26,9 +26,9 @@ import { TestInstance } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
 
 const FIXTURES_DIR = path.join(import.meta.dir, "../fixtures/recordings")
-const KILO_FIXTURES_DIR = path.join(FIXTURES_DIR, "kilocode") // kilocode_change
+const ACCURECODE_FIXTURES_DIR = path.join(FIXTURES_DIR, "accurecode") // accurecode_change
 
-const zenURL = (connection: string) => `https://console.opencode.ai/proxy/connections/${connection}/v1` // kilocode_change
+const zenURL = (connection: string) => `https://console.opencode.ai/proxy/connections/${connection}/v1` // accurecode_change
 
 const replayOpenAIOAuth = {
   type: "oauth",
@@ -58,9 +58,9 @@ const cloneModel = (model: ModelsDev.Provider["models"][string]) => {
   const { experimental, ...rest } = cloned
   // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- The config schema accepts the same model shape except object-valued experimental metadata.
   if (typeof experimental === "boolean")
-    return cloned as NonNullable<NonNullable<NonNullable<Config.Info["provider"]>[string]>["models"]>[string] // kilocode_change
+    return cloned as NonNullable<NonNullable<NonNullable<Config.Info["provider"]>[string]>["models"]>[string] // accurecode_change
   // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- Dropping non-boolean experimental metadata makes the fixture model match config input.
-  return rest as NonNullable<NonNullable<NonNullable<Config.Info["provider"]>[string]>["models"]>[string] // kilocode_change
+  return rest as NonNullable<NonNullable<NonNullable<Config.Info["provider"]>[string]>["models"]>[string] // accurecode_change
 }
 
 const envValue = (...names: string[]) => names.map((name) => process.env[name]).find(Boolean)
@@ -77,7 +77,7 @@ const recordOpenAIOAuth = (() => {
 })()
 
 function decodeRecordOpenAIOAuth() {
-  const value = process.env.KILO_RECORD_OPENAI_AUTH
+  const value = process.env.ACCURECODE_RECORD_OPENAI_AUTH
   if (!value) return undefined
   try {
     const auth = Option.getOrUndefined(decodeAuth(JSON.parse(value)))
@@ -118,7 +118,7 @@ const RECORDED_SCENARIOS = [
     cassette: "session/native-openai-tool-loop",
     protocol: "openai-responses",
     tags: ["opencode", "native", "tool-loop"],
-    canRecord: () => Boolean(envValue("KILO_RECORD_OPENAI_API_KEY", "OPENAI_API_KEY")),
+    canRecord: () => Boolean(envValue("ACCURECODE_RECORD_OPENAI_API_KEY", "OPENAI_API_KEY")),
     config: (model) =>
       providerConfig({
         providerID: ProviderID.openai,
@@ -128,7 +128,7 @@ const RECORDED_SCENARIOS = [
         api: "https://api.openai.com/v1",
         model,
         options: {
-          apiKey: envValue("KILO_RECORD_OPENAI_API_KEY", "OPENAI_API_KEY") ?? "fixture-openai-key",
+          apiKey: envValue("ACCURECODE_RECORD_OPENAI_API_KEY", "OPENAI_API_KEY") ?? "fixture-openai-key",
           baseURL: "https://api.openai.com/v1",
         },
       }),
@@ -158,24 +158,24 @@ const RECORDED_SCENARIOS = [
   },
   {
     id: "opencode-proxy",
-    name: "OpenCode proxy", // kilocode_change
+    name: "OpenCode proxy", // accurecode_change
     providerID: ProviderID.opencode,
     modelID: "gpt-5.2-codex",
     cassette: "session/native-zen-tool-loop",
     protocol: "openai-responses",
     tags: ["opencode", "zen", "native", "tool-loop"],
-    canRecord: () => Boolean(process.env.KILO_RECORD_CONSOLE_TOKEN && process.env.KILO_RECORD_ZEN_ORG_ID),
+    canRecord: () => Boolean(process.env.ACCURECODE_RECORD_CONSOLE_TOKEN && process.env.ACCURECODE_RECORD_ZEN_ORG_ID),
     config: (model) =>
       providerConfig({
         providerID: ProviderID.opencode,
         name: "OpenCode Zen",
-        env: ["KILO_CONSOLE_TOKEN"],
+        env: ["ACCURECODE_CONSOLE_TOKEN"],
         npm: "@ai-sdk/openai-compatible",
-        api: zenURL(process.env.KILO_RECORD_ZEN_CONNECTION ?? "fixture"),
+        api: zenURL(process.env.ACCURECODE_RECORD_ZEN_CONNECTION ?? "fixture"),
         model,
         options: {
-          apiKey: process.env.KILO_RECORD_CONSOLE_TOKEN ?? "fixture-console-token",
-          headers: { "x-org-id": process.env.KILO_RECORD_ZEN_ORG_ID ?? "fixture-org" },
+          apiKey: process.env.ACCURECODE_RECORD_CONSOLE_TOKEN ?? "fixture-console-token",
+          headers: { "x-org-id": process.env.ACCURECODE_RECORD_ZEN_ORG_ID ?? "fixture-org" },
         },
       }),
   },
@@ -187,7 +187,7 @@ const RECORDED_SCENARIOS = [
     cassette: "session/native-anthropic-tool-loop",
     protocol: "anthropic-messages",
     tags: ["opencode", "native", "tool-loop"],
-    canRecord: () => Boolean(envValue("KILO_RECORD_ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY")),
+    canRecord: () => Boolean(envValue("ACCURECODE_RECORD_ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY")),
     config: (model) =>
       providerConfig({
         providerID: ProviderID.anthropic,
@@ -197,7 +197,7 @@ const RECORDED_SCENARIOS = [
         api: "https://api.anthropic.com/v1",
         model,
         options: {
-          apiKey: envValue("KILO_RECORD_ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY") ?? "fixture-anthropic-key",
+          apiKey: envValue("ACCURECODE_RECORD_ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY") ?? "fixture-anthropic-key",
           baseURL: "https://api.anthropic.com/v1",
         },
       }),
@@ -206,7 +206,7 @@ const RECORDED_SCENARIOS = [
 
 const shouldRecord = process.env.RECORD === "true"
 const selectedScenarios = new Set(
-  (envValue("KILO_RECORDED_SCENARIO", "RECORDED_PROVIDER") ?? "")
+  (envValue("ACCURECODE_RECORDED_SCENARIO", "RECORDED_PROVIDER") ?? "")
     .split(",")
     .map((item) => item.trim().toLowerCase())
     .filter(Boolean),
@@ -220,15 +220,15 @@ function isSelected(scenario: RecordedScenario) {
 }
 
 const canRun = (scenario: RecordedScenario) =>
-  // kilocode_change start
+  // accurecode_change start
   shouldRecord
     ? scenario.canRecord()
-    : HttpRecorder.hasCassetteSync(scenario.cassette, { directory: KILO_FIXTURES_DIR })
-  // kilocode_change end
+    : HttpRecorder.hasCassetteSync(scenario.cassette, { directory: ACCURECODE_FIXTURES_DIR })
+// accurecode_change end
 
 const recordError = (scenario: RecordedScenario) =>
   scenario.id === "openai-oauth"
-    ? "Set KILO_RECORD_OPENAI_AUTH to an OAuth auth JSON object in the recording environment."
+    ? "Set ACCURECODE_RECORD_OPENAI_AUTH to an OAuth auth JSON object in the recording environment."
     : `Missing recording credentials for ${scenario.name}.`
 
 const redactRecordedBody = (body: string) =>
@@ -308,7 +308,9 @@ function recordedNativeLLMLayer(scenario: RecordedScenario) {
       Layer.provide(Plugin.defaultLayer),
       Layer.provide(recordedClient),
       Layer.provide(
-        HttpRecorder.Cassette.fileSystem({ directory: KILO_FIXTURES_DIR }).pipe(Layer.provide(NodeFileSystem.layer)), // kilocode_change
+        HttpRecorder.Cassette.fileSystem({ directory: ACCURECODE_FIXTURES_DIR }).pipe(
+          Layer.provide(NodeFileSystem.layer),
+        ), // accurecode_change
       ),
       Layer.provide(RuntimeFlags.layer({ experimentalNativeLlm: true })),
     ),
@@ -319,7 +321,7 @@ const writeConfig = (directory: string, scenario: RecordedScenario, model: Model
   Effect.promise(() =>
     Bun.write(
       path.join(directory, "opencode.json"),
-      JSON.stringify({ $schema: "https://app.kilo.ai/config.json", ...scenario.config(model) }), // kilocode_change
+      JSON.stringify({ $schema: "https://app.accurecode.ai/config.json", ...scenario.config(model) }), // accurecode_change
     ),
   )
 

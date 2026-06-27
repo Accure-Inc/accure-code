@@ -1,31 +1,31 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.backend.rpc
+package ai.accurecode.backend.rpc
 
-import ai.kilocode.backend.provider.KiloBackendProviderSettingsManager
-import ai.kilocode.rpc.KiloProviderRpcApi
-import ai.kilocode.rpc.dto.CustomModelFetchDto
-import ai.kilocode.rpc.dto.CustomModelFetchResultDto
-import ai.kilocode.rpc.dto.CustomProviderSaveDto
-import ai.kilocode.rpc.dto.ProviderActionResultDto
-import ai.kilocode.rpc.dto.ProviderConnectDto
-import ai.kilocode.rpc.dto.ProviderDisconnectDto
-import ai.kilocode.rpc.dto.ProviderEnableDto
-import ai.kilocode.rpc.dto.ProviderOAuthAuthorizeDto
-import ai.kilocode.rpc.dto.ProviderOAuthCallbackDto
-import ai.kilocode.rpc.dto.ProviderOAuthReadyDto
-import ai.kilocode.rpc.dto.ProviderSettingsDto
+import ai.accurecode.backend.provider.AccureBackendProviderSettingsManager
+import ai.accurecode.rpc.AccureProviderRpcApi
+import ai.accurecode.rpc.dto.CustomModelFetchDto
+import ai.accurecode.rpc.dto.CustomModelFetchResultDto
+import ai.accurecode.rpc.dto.CustomProviderSaveDto
+import ai.accurecode.rpc.dto.ProviderActionResultDto
+import ai.accurecode.rpc.dto.ProviderConnectDto
+import ai.accurecode.rpc.dto.ProviderDisconnectDto
+import ai.accurecode.rpc.dto.ProviderEnableDto
+import ai.accurecode.rpc.dto.ProviderOAuthAuthorizeDto
+import ai.accurecode.rpc.dto.ProviderOAuthCallbackDto
+import ai.accurecode.rpc.dto.ProviderOAuthReadyDto
+import ai.accurecode.rpc.dto.ProviderSettingsDto
 import com.intellij.openapi.components.service
-import ai.kilocode.backend.app.KiloBackendAppService
-import ai.kilocode.log.KiloLog
+import ai.accurecode.backend.app.AccureBackendAppService
+import ai.accurecode.log.AccureLog
 
-internal class KiloProviderRpcApiImpl : KiloProviderRpcApi {
+internal class AccureProviderRpcApiImpl : AccureProviderRpcApi {
     companion object {
-        private val LOG = KiloLog.create(KiloProviderRpcApiImpl::class.java)
+        private val LOG = AccureLog.create(AccureProviderRpcApiImpl::class.java)
     }
 
-    private val manager: KiloBackendProviderSettingsManager
-        get() = KiloBackendProviderSettingsManager(service<KiloBackendAppService>())
+    private val manager: AccureBackendProviderSettingsManager
+        get() = AccureBackendProviderSettingsManager(service<AccureBackendAppService>())
 
     override suspend fun state(directory: String): ProviderSettingsDto = logged("state dir=$directory") { manager.state(directory) }
     override suspend fun connect(input: ProviderConnectDto): ProviderActionResultDto = logged("connect provider=${input.providerId}") { manager.connect(input) }

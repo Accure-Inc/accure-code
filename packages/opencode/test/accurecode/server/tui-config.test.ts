@@ -18,7 +18,7 @@ describe("TUI config routes", () => {
   test("gets effective project TUI config", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        const cfg = path.join(dir, ".kilo")
+        const cfg = path.join(dir, ".accurecode")
         await fs.mkdir(cfg, { recursive: true })
         await Bun.write(
           path.join(cfg, "tui.json"),
@@ -28,7 +28,7 @@ describe("TUI config routes", () => {
     })
 
     const response = await Server.Default().app.request("/tui/config", {
-      headers: { "x-kilo-directory": tmp.path },
+      headers: { "x-accure-directory": tmp.path },
     })
 
     expect(response.status).toBe(200)
@@ -47,7 +47,7 @@ describe("TUI config routes", () => {
     await using tmp = await tmpdir()
 
     const response = await Server.Default().app.request("/tui/keybinds", {
-      headers: { "x-kilo-directory": tmp.path },
+      headers: { "x-accure-directory": tmp.path },
     })
 
     expect(response.status).toBe(200)
@@ -72,7 +72,7 @@ describe("TUI config routes", () => {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
-        "x-kilo-directory": tmp.path,
+        "x-accure-directory": tmp.path,
       },
       body: JSON.stringify({ theme: "nord", title_icon: "emojis" }),
     })
@@ -82,14 +82,14 @@ describe("TUI config routes", () => {
     expect(body.theme).toBe("nord")
     expect(body.title_icon).toBe("emojis")
 
-    const saved = await Bun.file(path.join(tmp.path, ".kilo", "tui.json")).json()
+    const saved = await Bun.file(path.join(tmp.path, ".accurecode", "tui.json")).json()
     expect(saved).toEqual({ theme: "nord", title_icon: "emojis" })
   })
 
   test("patches attention config without dropping advanced notification settings", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        const cfg = path.join(dir, ".kilo")
+        const cfg = path.join(dir, ".accurecode")
         await fs.mkdir(cfg, { recursive: true })
         await Bun.write(
           path.join(cfg, "tui.json"),
@@ -112,7 +112,7 @@ describe("TUI config routes", () => {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
-        "x-kilo-directory": tmp.path,
+        "x-accure-directory": tmp.path,
       },
       body: JSON.stringify({
         attention: { enabled: true, notifications: false, sound: true, volume: 0.25 },
@@ -120,7 +120,7 @@ describe("TUI config routes", () => {
     })
 
     expect(response.status).toBe(200)
-    const saved = await Bun.file(path.join(tmp.path, ".kilo", "tui.json")).json()
+    const saved = await Bun.file(path.join(tmp.path, ".accurecode", "tui.json")).json()
     expect(saved).toEqual({
       attention: {
         enabled: true,
@@ -144,7 +144,7 @@ describe("TUI config routes", () => {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
-          "x-kilo-directory": tmp.path,
+          "x-accure-directory": tmp.path,
         },
         body: JSON.stringify({ keybinds: { app_exit: "ctrl+q" } }),
       })

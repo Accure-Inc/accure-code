@@ -12,10 +12,10 @@ import { useTuiConfig } from "./context/tui-config"
 import { TuiKeybind } from "./config/keybind"
 
 export const LEADER_TOKEN = "leader"
-export const KILO_BASE_MODE = "base"
+export const ACCURECODE_BASE_MODE = "base"
 export const COMMAND_PALETTE_COMMAND = "command.palette.show"
 
-const KILO_MODE_KEY = "opencode.mode"
+const ACCURECODE_MODE_KEY = "opencode.mode"
 
 export const OpencodeKeymapProvider = KeymapProvider
 export const useOpencodeKeymap = useKeymap
@@ -39,11 +39,11 @@ function isVisiblePaletteCommand(command: Command) {
 }
 
 export function createOpencodeModeStack(keymap: OpenTuiKeymap) {
-  keymap.setData(KILO_MODE_KEY, KILO_BASE_MODE)
+  keymap.setData(ACCURECODE_MODE_KEY, ACCURECODE_BASE_MODE)
 
   const offFields = keymap.registerLayerFields({
     mode(value, ctx) {
-      ctx.require(KILO_MODE_KEY, value)
+      ctx.require(ACCURECODE_MODE_KEY, value)
     },
   })
 
@@ -51,12 +51,12 @@ export function createOpencodeModeStack(keymap: OpenTuiKeymap) {
   let disposed = false
 
   const update = () => {
-    keymap.setData(KILO_MODE_KEY, stack.at(-1)?.mode ?? KILO_BASE_MODE)
+    keymap.setData(ACCURECODE_MODE_KEY, stack.at(-1)?.mode ?? ACCURECODE_BASE_MODE)
   }
 
   const stackApi = {
     current() {
-      return stack.at(-1)?.mode ?? KILO_BASE_MODE
+      return stack.at(-1)?.mode ?? ACCURECODE_BASE_MODE
     },
     push(mode: string) {
       if (disposed) return () => {}
@@ -78,7 +78,7 @@ export function createOpencodeModeStack(keymap: OpenTuiKeymap) {
       disposed = true
       stack.length = 0
       offFields()
-      keymap.setData(KILO_MODE_KEY, undefined)
+      keymap.setData(ACCURECODE_MODE_KEY, undefined)
       modeStacks.delete(keymap)
     },
   }
@@ -93,7 +93,7 @@ export function useOpencodeModeStack() {
 
 export function getOpencodeModeStack(keymap: OpenTuiKeymap) {
   const value = modeStacks.get(keymap)
-  if (!value) throw new Error("Kilo mode stack is not registered for this keymap") // kilocode_change
+  if (!value) throw new Error("Accure mode stack is not registered for this keymap") // accurecode_change
   return value
 }
 

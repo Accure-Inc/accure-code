@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { BusEvent } from "@/bus/bus-event"
 import { SessionID } from "@/session/schema"
 import { Schema } from "effect"
@@ -22,5 +22,5 @@ export const AgentManagerStart = Schema.Struct({
 export type AgentManagerStart = Schema.Schema.Type<typeof AgentManagerStart>
 
 export const AgentManagerEvent = {
-  Start: BusEvent.define("kilocode.agent_manager.start", AgentManagerStart),
+  Start: BusEvent.define("accurecode.agent_manager.start", AgentManagerStart),
 }

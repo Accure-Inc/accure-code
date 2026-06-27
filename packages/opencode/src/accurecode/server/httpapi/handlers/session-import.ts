@@ -1,7 +1,7 @@
 import { Effect } from "effect"
 import { HttpApiBuilder, HttpApiError } from "effect/unstable/httpapi"
-import { SessionImportService } from "@/kilocode/session-import/service"
-import { SessionImportType } from "@/kilocode/session-import/types"
+import { SessionImportService } from "@/accurecode/session-import/service"
+import { SessionImportType } from "@/accurecode/session-import/types"
 import { InstanceHttpApi } from "@/server/routes/instance/httpapi/api"
 
 export const sessionImportHandlers = HttpApiBuilder.group(InstanceHttpApi, "session-import", (handlers) =>

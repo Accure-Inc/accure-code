@@ -1,25 +1,25 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.backend.rpc
+package ai.accurecode.backend.rpc
 
-import ai.kilocode.backend.app.KiloAppState
-import ai.kilocode.backend.app.KiloBackendAppService
-import ai.kilocode.backend.app.LoadError
-import ai.kilocode.backend.cli.KiloCliDataParser
-import ai.kilocode.backend.cli.buildKiloCliEnv
-import ai.kilocode.backend.cli.KiloCliConfigPath
-import ai.kilocode.backend.workspace.AgentData
-import ai.kilocode.backend.workspace.AgentInfo
-import ai.kilocode.backend.workspace.KiloBackendWorkspaceManager
-import ai.kilocode.backend.workspace.KiloWorkspaceState
-import ai.kilocode.log.KiloLog
-import ai.kilocode.jetbrains.api.model.Agent
-import ai.kilocode.rpc.KiloWorkspaceRpcApi
-import ai.kilocode.rpc.dto.ConfigTargetDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.ModelsWorkspaceDto
-import ai.kilocode.rpc.dto.WorkspaceFileDto
+import ai.accurecode.backend.app.AccureAppState
+import ai.accurecode.backend.app.AccureBackendAppService
+import ai.accurecode.backend.app.LoadError
+import ai.accurecode.backend.cli.AccureCliDataParser
+import ai.accurecode.backend.cli.buildAccureCliEnv
+import ai.accurecode.backend.cli.AccureCliConfigPath
+import ai.accurecode.backend.workspace.AgentData
+import ai.accurecode.backend.workspace.AgentInfo
+import ai.accurecode.backend.workspace.AccureBackendWorkspaceManager
+import ai.accurecode.backend.workspace.AccureWorkspaceState
+import ai.accurecode.log.AccureLog
+import ai.accurecode.jetbrains.api.model.Agent
+import ai.accurecode.rpc.AccureWorkspaceRpcApi
+import ai.accurecode.rpc.dto.ConfigTargetDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.ModelsWorkspaceDto
+import ai.accurecode.rpc.dto.WorkspaceFileDto
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.service
@@ -49,29 +49,29 @@ import java.nio.file.Path
 import kotlin.coroutines.resume
 
 /**
- * Backend implementation of [KiloWorkspaceRpcApi].
+ * Backend implementation of [AccureWorkspaceRpcApi].
  *
- * Routes through the [KiloBackendWorkspaceManager] to get a workspace
+ * Routes through the [AccureBackendWorkspaceManager] to get a workspace
  * for the given directory. No [ProjectManager] dependency — any
  * directory (including worktrees) can get a workspace.
  */
-class KiloWorkspaceRpcApiImpl : KiloWorkspaceRpcApi {
+class AccureWorkspaceRpcApiImpl : AccureWorkspaceRpcApi {
     companion object {
-        private val LOG = KiloLog.create(KiloWorkspaceRpcApiImpl::class.java)
-        private const val SCHEMA = "https://app.kilo.ai/config.json"
-        private val MODERN = listOf("kilo.jsonc", "kilo.json")
+        private val LOG = AccureLog.create(AccureWorkspaceRpcApiImpl::class.java)
+        private const val SCHEMA = "https://app.accurecode.ai/config.json"
+        private val MODERN = listOf("accure.jsonc", "accure.json")
         private val LEGACY = listOf("opencode.jsonc", "opencode.json")
         private val GLOBAL = MODERN + LEGACY + "config.json"
-        private val LOCAL_DIRS = listOf(".kilo", ".kilocode", ".opencode")
+        private val LOCAL_DIRS = listOf(".accurecode", ".accurecode", ".opencode")
         private val CONFIG = """{
   "${'$'}schema": "$SCHEMA"
 }
 """
     }
 
-    private val app: KiloBackendAppService get() = service()
+    private val app: AccureBackendAppService get() = service()
 
-    private val manager: KiloBackendWorkspaceManager
+    private val manager: AccureBackendWorkspaceManager
         get() = app.workspaces
 
     override suspend fun resolveProjectDirectory(hint: String): String {
@@ -84,32 +84,32 @@ class KiloWorkspaceRpcApiImpl : KiloWorkspaceRpcApi {
 
     /**
      * Emits workspace state for [directory]. Waits for the app to
-     * reach [KiloAppState.Ready] before creating the workspace —
-     * until then, emits [KiloWorkspaceStatusDto.PENDING].
+     * reach [AccureAppState.Ready] before creating the workspace —
+     * until then, emits [AccureWorkspaceStatusDto.PENDING].
      *
      * When the app leaves Ready (e.g. during restart/reconnect),
      * the flow falls back to PENDING again and re-subscribes to
      * the new workspace once Ready returns.
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    override suspend fun state(directory: String): Flow<KiloWorkspaceStateDto> =
+    override suspend fun state(directory: String): Flow<AccureWorkspaceStateDto> =
         app.appState.flatMapLatest { state ->
-            if (state is KiloAppState.Ready) {
+            if (state is AccureAppState.Ready) {
                 manager.get(directory).state.map(::dto)
             } else {
-                flowOf(KiloWorkspaceStateDto(KiloWorkspaceStatusDto.PENDING))
+                flowOf(AccureWorkspaceStateDto(AccureWorkspaceStatusDto.PENDING))
             }
         }.distinctUntilChanged()
 
     override suspend fun reload(directory: String) {
-        if (app.appState.value !is KiloAppState.Ready) return
+        if (app.appState.value !is AccureAppState.Ready) return
         manager.get(directory).reload()
     }
 
     override suspend fun models(directory: String): ModelsWorkspaceDto {
         app.requireReady()
-        val api = app.api ?: throw IllegalStateException("Kilo API is unavailable")
-        val http = app.http ?: throw IllegalStateException("Kilo HTTP client is unavailable")
+        val api = app.api ?: throw IllegalStateException("Accure API is unavailable")
+        val http = app.http ?: throw IllegalStateException("Accure HTTP client is unavailable")
         val errors = mutableListOf<LoadError>()
 
         val prov = try {
@@ -124,7 +124,7 @@ class KiloWorkspaceRpcApiImpl : KiloWorkspaceRpcApi {
                     body
                 }
             }
-            KiloCliDataParser.parseProviders(raw)
+            AccureCliDataParser.parseProviders(raw)
         } catch (e: Exception) {
             LOG.warn("Models settings providers fetch failed for $directory: ${e.message}", e)
             errors.add(LoadError(resource = "providers", detail = e.message))
@@ -147,9 +147,9 @@ class KiloWorkspaceRpcApiImpl : KiloWorkspaceRpcApi {
         }
 
         return ModelsWorkspaceDto(
-            providers = prov?.let(KiloWorkspaceDtoMapper::providers),
-            agents = agents?.let(KiloWorkspaceDtoMapper::agents),
-            errors = errors.map(KiloWorkspaceDtoMapper::error),
+            providers = prov?.let(AccureWorkspaceDtoMapper::providers),
+            agents = agents?.let(AccureWorkspaceDtoMapper::agents),
+            errors = errors.map(AccureWorkspaceDtoMapper::error),
         )
     }
 
@@ -222,16 +222,16 @@ class KiloWorkspaceRpcApiImpl : KiloWorkspaceRpcApi {
         val found = dirs.asSequence()
             .flatMap { dir -> (MODERN + LEGACY).asSequence().map { name -> dir.resolve(name) } }
             .firstOrNull { Files.exists(it) }
-        return found ?: root.resolve(".kilo").resolve("kilo.jsonc")
+        return found ?: root.resolve(".accurecode").resolve("accure.jsonc")
     }
 
     private fun globalConfig(): Path {
-        val env = buildKiloCliEnv("config")
-        val root = KiloCliConfigPath.resolve(env).toPath().normalize()
+        val env = buildAccureCliEnv("config")
+        val root = AccureCliConfigPath.resolve(env).toPath().normalize()
         return GLOBAL.asSequence()
             .map { root.resolve(it) }
             .firstOrNull { Files.exists(it) }
-            ?: root.resolve("kilo.jsonc")
+            ?: root.resolve("accure.jsonc")
     }
 
     private fun target(path: Path): ConfigTargetDto {
@@ -286,24 +286,24 @@ class KiloWorkspaceRpcApiImpl : KiloWorkspaceRpcApi {
 
     // ------ mapping: domain model → DTO ------
 
-    private fun dto(state: KiloWorkspaceState): KiloWorkspaceStateDto =
+    private fun dto(state: AccureWorkspaceState): AccureWorkspaceStateDto =
         when (state) {
-            KiloWorkspaceState.Pending -> KiloWorkspaceStateDto(KiloWorkspaceStatusDto.PENDING)
-            is KiloWorkspaceState.Loading -> KiloWorkspaceStateDto(
-                status = KiloWorkspaceStatusDto.LOADING,
-                progress = KiloWorkspaceDtoMapper.progress(state.progress),
+            AccureWorkspaceState.Pending -> AccureWorkspaceStateDto(AccureWorkspaceStatusDto.PENDING)
+            is AccureWorkspaceState.Loading -> AccureWorkspaceStateDto(
+                status = AccureWorkspaceStatusDto.LOADING,
+                progress = AccureWorkspaceDtoMapper.progress(state.progress),
             )
-            is KiloWorkspaceState.Ready -> KiloWorkspaceStateDto(
-                status = KiloWorkspaceStatusDto.READY,
-                providers = KiloWorkspaceDtoMapper.providers(state.providers),
-                agents = KiloWorkspaceDtoMapper.agents(state.agents),
-                commands = state.commands.map(KiloWorkspaceDtoMapper::command),
-                skills = state.skills.map(KiloWorkspaceDtoMapper::skill),
+            is AccureWorkspaceState.Ready -> AccureWorkspaceStateDto(
+                status = AccureWorkspaceStatusDto.READY,
+                providers = AccureWorkspaceDtoMapper.providers(state.providers),
+                agents = AccureWorkspaceDtoMapper.agents(state.agents),
+                commands = state.commands.map(AccureWorkspaceDtoMapper::command),
+                skills = state.skills.map(AccureWorkspaceDtoMapper::skill),
             )
-            is KiloWorkspaceState.Error -> KiloWorkspaceStateDto(
-                status = KiloWorkspaceStatusDto.ERROR,
+            is AccureWorkspaceState.Error -> AccureWorkspaceStateDto(
+                status = AccureWorkspaceStatusDto.ERROR,
                 error = state.message,
-                errors = state.errors.map(KiloWorkspaceDtoMapper::error),
+                errors = state.errors.map(AccureWorkspaceDtoMapper::error),
             )
         }
 }

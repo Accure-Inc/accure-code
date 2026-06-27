@@ -1,12 +1,12 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.RoundedContentPanel
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.RoundedContentPanel
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
 import com.intellij.icons.AllIcons
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.IconUtil
@@ -21,8 +21,8 @@ import java.awt.Graphics
 import java.awt.Graphics2D
 
 class SessionDropOverlay : BorderLayoutPanel() {
-    private val title = KiloBundle.message("session.drop.files.title")
-    private val subtitle = KiloBundle.message("session.drop.files.subtitle")
+    private val title = AccureBundle.message("session.drop.files.title")
+    private val subtitle = AccureBundle.message("session.drop.files.subtitle")
     private val text = "$title $subtitle"
     private val card = Card()
     private var active = false

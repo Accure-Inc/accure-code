@@ -1,14 +1,14 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.QuestionInfoDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionStatusDto
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.QuestionInfoDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionStatusDto
 import kotlinx.coroutines.flow.flow
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -21,7 +21,7 @@ class ChatLoggingFlowTest : SessionControllerTestBase() {
             rpc.events
         }
         projectRpc.state.value = workspaceReady()
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         val m = controller()
         flush()
 

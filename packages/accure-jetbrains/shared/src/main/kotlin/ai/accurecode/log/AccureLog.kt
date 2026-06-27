@@ -1,6 +1,6 @@
-package ai.kilocode.log
+package ai.accurecode.log
 
-import ai.kilocode.KiloPlugin
+import ai.accurecode.AccurePlugin
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.diagnostic.Logger
@@ -18,28 +18,28 @@ import java.util.logging.Level
 import java.util.logging.LogRecord
 
 /**
- * Logging interface for the Kilo JetBrains plugin.
+ * Logging interface for the Accure JetBrains plugin.
  *
  * In normal (non-sandbox) mode, all output goes through IntelliJ's own [com.intellij.openapi.diagnostic.Logger],
  * which writes to the standard IDE log file.
  *
  * In sandbox mode (i.e. when running via `./gradlew runIde`, detected via the `idea.plugin.in.sandbox.mode`
- * system property), output is written only to a `kilo-dev.log` file inside the IDE log directory. RC plugin builds
- * write to both IntelliJ's log and `kilo-dev.log`.
+ * system property), output is written only to a `accure-dev.log` file inside the IDE log directory. RC plugin builds
+ * write to both IntelliJ's log and `accure-dev.log`.
  *
  * Usage:
  * ```kotlin
- * private val log = KiloLog.create(this::class.java)
+ * private val log = AccureLog.create(this::class.java)
  *
  * log.info("session started")
  * log.debug { "expensive: ${computeSomething()}" }  // lambda is only evaluated when debug is enabled
  * log.warn("unexpected state", exception)
  * ```
  *
- * The log level for the sandbox file can be controlled via the `kilo.dev.log.level` system property
+ * The log level for the sandbox file can be controlled via the `accurecode.dev.log.level` system property
  * (DEBUG, INFO, WARN, ERROR, OFF). Defaults to INFO.
  */
-interface KiloLog {
+interface AccureLog {
     val isDebugEnabled: Boolean
     fun debug(block: () -> String)
     fun info(msg: String)
@@ -47,16 +47,16 @@ interface KiloLog {
     fun error(msg: String, t: Throwable? = null)
 
     companion object {
-        fun create(cls: Class<*>): KiloLog {
+        fun create(cls: Class<*>): AccureLog {
             if (sandbox()) return FileLog(cls)
             val intellij = IntellijLog(cls)
-            if (!runCatching { KiloPlugin.isRc() }.getOrDefault(false)) return intellij
+            if (!runCatching { AccurePlugin.isRc() }.getOrDefault(false)) return intellij
             return CompositeLog(intellij, FileLog(cls))
         }
 
         fun sandbox(): Boolean = System.getProperty("idea.plugin.in.sandbox.mode", "false").toBoolean()
 
-        fun payload(log: KiloLog? = null): Map<String, String> = buildMap {
+        fun payload(log: AccureLog? = null): Map<String, String> = buildMap {
             put("platform", "jetbrains")
             put("client", "jetbrains")
             put("feature", "jetbrains-plugin")
@@ -66,7 +66,7 @@ interface KiloLog {
                 put("jetbrainsBuild", info.build.asString())
             }.onFailure { log?.info("Could not read ApplicationInfo for environment payload: ${it.message}") }
             runCatching {
-                val version = KiloPlugin.version()
+                val version = AccurePlugin.version()
                 if (version != null) {
                     put("pluginVersion", version)
                     put("appVersion", version)
@@ -76,7 +76,7 @@ interface KiloLog {
     }
 }
 
-internal class IntellijLog(cls: Class<*>) : KiloLog {
+internal class IntellijLog(cls: Class<*>) : AccureLog {
     private val delegate = Logger.getInstance(cls)
     override val isDebugEnabled: Boolean
         get() = delegate.isDebugEnabled
@@ -92,15 +92,15 @@ internal class IntellijLog(cls: Class<*>) : KiloLog {
     }
 }
 
-internal class FileLog(cls: Class<*>) : KiloLog {
+internal class FileLog(cls: Class<*>) : AccureLog {
     private val name = cls.name
 
     companion object {
         private val level: Level by lazy { resolveLevel() }
 
         private val root: java.util.logging.Logger by lazy {
-            val logger = java.util.logging.Logger.getLogger("ai.kilocode")
-            val payload = KiloLog.payload().entries.joinToString(" ") { "${it.key}=${it.value}" }
+            val logger = java.util.logging.Logger.getLogger("ai.accurecode")
+            val payload = AccureLog.payload().entries.joinToString(" ") { "${it.key}=${it.value}" }
             logger.addHandler(handler)
             logger.useParentHandlers = false
             logger.level = level
@@ -110,9 +110,9 @@ internal class FileLog(cls: Class<*>) : KiloLog {
 
         private val handler: FileHandler by lazy {
             val dir = resolveLogDir()
-            val path = dir.resolve("kilo-dev.log")
+            val path = dir.resolve("accure-dev.log")
             val h = FileHandler(path.toString(), true)
-            h.formatter = KiloFormatter()
+            h.formatter = AccureFormatter()
             h
         }
 
@@ -123,9 +123,9 @@ internal class FileLog(cls: Class<*>) : KiloLog {
             while (current.parent != null) {
                 val name = current.fileName.toString()
                 if (name.startsWith("log_run")) {
-                    side = if (name.lowercase().contains("frontend")) "kilo-frontend" else "kilo-backend"
+                    side = if (name.lowercase().contains("frontend")) "accure-frontend" else "accure-backend"
                 }
-                if (name == "kilo.jetbrains" && side != null) {
+                if (name == "accurecode.jetbrains" && side != null) {
                     val target = current.resolve(side)
                     Files.createDirectories(target)
                     return target
@@ -136,7 +136,7 @@ internal class FileLog(cls: Class<*>) : KiloLog {
         }
 
         private fun resolveLevel(): Level {
-            val prop = System.getProperty("kilo.dev.log.level") ?: return Level.INFO
+            val prop = System.getProperty("accurecode.dev.log.level") ?: return Level.INFO
             return when (prop.uppercase()) {
                 "DEBUG" -> Level.FINE
                 "INFO" -> Level.INFO
@@ -163,7 +163,7 @@ internal class FileLog(cls: Class<*>) : KiloLog {
     }
 }
 
-internal class KiloFormatter : Formatter() {
+internal class AccureFormatter : Formatter() {
     private val start = ManagementFactory.getRuntimeMXBean().startTime
     private val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss,SSS")
 
@@ -177,7 +177,7 @@ internal class KiloFormatter : Formatter() {
             Level.SEVERE -> "ERROR"
             else -> record.level.name
         }
-        val category = record.sourceClassName ?: record.loggerName ?: "kilo.dev"
+        val category = record.sourceClassName ?: record.loggerName ?: "accurecode.dev"
         val sb = StringBuilder()
         sb.append(fmt.format(time))
         sb.append(" [")
@@ -198,7 +198,7 @@ internal class KiloFormatter : Formatter() {
     }
 }
 
-internal class CompositeLog(vararg val delegates: KiloLog) : KiloLog {
+internal class CompositeLog(vararg val delegates: AccureLog) : AccureLog {
     override val isDebugEnabled: Boolean
         get() = delegates.any { it.isDebugEnabled }
     override fun debug(block: () -> String) {

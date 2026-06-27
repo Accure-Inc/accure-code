@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.ui.prompt
+package ai.accurecode.client.session.ui.prompt
 
 import com.intellij.ide.PasteProvider
 import com.intellij.ide.dnd.FileCopyPasteUtil
@@ -15,7 +15,7 @@ internal fun interface PromptAttachmentPasteHandler {
 }
 
 internal val PROMPT_ATTACHMENT_PASTE_HANDLER_KEY: Key<PromptAttachmentPasteHandler> =
-    Key.create("ai.kilocode.client.session.ui.prompt.PromptAttachmentPasteHandler")
+    Key.create("ai.accurecode.client.session.ui.prompt.PromptAttachmentPasteHandler")
 
 internal class PromptAttachmentPasteProvider : PasteProvider {
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT

@@ -69,7 +69,7 @@ const list = Provider.use.list()
 
 const paid = (providers: Record<string, { models: Record<string, { cost: { input: number } }> }>) => {
   const item = providers[ProviderID.make("opencode")]
-  if (!item) return 0 // kilocode_change - Kilo drops opencode provider without apiKey/auth
+  if (!item) return 0 // accurecode_change - Accure drops opencode provider without apiKey/auth
   return Object.values(item.models).filter((model) => model.cost.input > 0).length
 }
 
@@ -1114,9 +1114,9 @@ it.instance(
   Effect.gen(function* () {
     const providers = yield* list
     expect(providers[ProviderID.make("nvidia")].options.headers).toEqual({
-      "HTTP-Referer": "https://kilo.ai/", // kilocode_change
-      "X-Title": "Kilo Code", // kilocode_change
-      "X-BILLING-INVOKE-ORIGIN": "KiloCode", // kilocode_change
+      "HTTP-Referer": "https://accure.ai/", // accurecode_change
+      "X-Title": "Accure Code", // accurecode_change
+      "X-BILLING-INVOKE-ORIGIN": "AccureCode", // accurecode_change
     })
   }),
   { config: { provider: { nvidia: { options: { apiKey: "test-api-key" } } } } },
@@ -1127,9 +1127,9 @@ it.instance(
   Effect.gen(function* () {
     const providers = yield* list
     expect(providers[ProviderID.make("nvidia")].options.headers).toEqual({
-      "HTTP-Referer": "https://kilo.ai/", // kilocode_change
-      "X-Title": "Kilo Code", // kilocode_change
-      "X-BILLING-INVOKE-ORIGIN": "KiloCode", // kilocode_change
+      "HTTP-Referer": "https://accure.ai/", // accurecode_change
+      "X-Title": "Accure Code", // accurecode_change
+      "X-BILLING-INVOKE-ORIGIN": "AccureCode", // accurecode_change
     })
   }),
   { config: { provider: { nvidia: { options: { apiKey: "test-api-key", baseURL: "http://localhost:8000/v1" } } } } },
@@ -1700,7 +1700,7 @@ it.instance(
     const root = path.join(configDir, "plugin")
     yield* Effect.promise(() => mkdir(root, { recursive: true }))
     yield* Effect.promise(() => markPluginDependenciesReady(configDir))
-    yield* Effect.promise(() => markPluginDependenciesReady(Global.Path.config)) // kilocode_change
+    yield* Effect.promise(() => markPluginDependenciesReady(Global.Path.config)) // accurecode_change
     yield* Effect.promise(() =>
       Bun.write(
         path.join(root, "provider-filter.ts"),

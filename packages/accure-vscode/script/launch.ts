@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * Build the Kilo VS Code extension and launch it in a development host.
+ * Build the Accure VS Code extension and launch it in a development host.
  *
  * Usage:
  *   bun script/launch.ts [options]
@@ -218,7 +218,7 @@ async function compile() {
 
 function cleanEnv(input: NodeJS.ProcessEnv) {
   const env = { ...input, HOME: homedir().trim() }
-  for (const key of ["XDG_DATA_HOME", "XDG_CACHE_HOME", "XDG_CONFIG_HOME", "XDG_STATE_HOME", "KILO_TEST_HOME"]) {
+  for (const key of ["XDG_DATA_HOME", "XDG_CACHE_HOME", "XDG_CONFIG_HOME", "XDG_STATE_HOME", "ACCURECODE_TEST_HOME"]) {
     const value = env[key]
     if (value !== undefined) env[key] = value.trim()
   }

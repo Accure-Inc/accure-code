@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
-import { KiloProvider } from "./KiloProvider"
-import type { KiloConnectionService } from "./services/cli-backend"
+import { AccureProvider } from "./AccureProvider"
+import type { AccureConnectionService } from "./services/cli-backend"
 
 /**
  * Opens a read-only editor panel to view a sub-agent session.
@@ -8,16 +8,16 @@ import type { KiloConnectionService } from "./services/cli-backend"
  * Each child session ID maps to at most one panel — calling openPanel()
  * again with the same ID reveals the existing panel.
  *
- * Uses a full KiloProvider so the viewer has backend connectivity
+ * Uses a full AccureProvider so the viewer has backend connectivity
  * (messages, parts, SSE events) identical to the sidebar.
  */
 export class SubAgentViewerProvider implements vscode.Disposable {
   private panels = new Map<string, vscode.WebviewPanel>()
-  private providers = new Map<string, KiloProvider>()
+  private providers = new Map<string, AccureProvider>()
 
   constructor(
     private readonly extensionUri: vscode.Uri,
-    private readonly connectionService: KiloConnectionService,
+    private readonly connectionService: AccureConnectionService,
     private readonly context: vscode.ExtensionContext,
   ) {}
 
@@ -37,11 +37,11 @@ export class SubAgentViewerProvider implements vscode.Disposable {
     })
 
     panel.iconPath = {
-      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-light.svg"),
-      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-dark.svg"),
+      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "accure-light.svg"),
+      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "accure-dark.svg"),
     }
 
-    const provider = new KiloProvider(this.extensionUri, this.connectionService, this.context)
+    const provider = new AccureProvider(this.extensionUri, this.connectionService, this.context)
     // Start accepting this session's SSE events as soon as the panel subscribes.
     // Reasoning deltas are not persisted until the reasoning part finishes.
     provider.trackSession(sessionID)
@@ -62,10 +62,10 @@ export class SubAgentViewerProvider implements vscode.Disposable {
           .get({ sessionID }, { throwOnError: true })
           .then(({ data: session }) => provider.registerSession(session))
           .catch((err: unknown) => {
-            console.error("[Kilo New] SubAgentViewerProvider: Failed to load session metadata:", err)
+            console.error("[Accure New] SubAgentViewerProvider: Failed to load session metadata:", err)
           })
       } catch (err) {
-        console.error("[Kilo New] SubAgentViewerProvider: Failed to load session metadata:", err)
+        console.error("[Accure New] SubAgentViewerProvider: Failed to load session metadata:", err)
       }
     })
 
@@ -80,7 +80,7 @@ export class SubAgentViewerProvider implements vscode.Disposable {
     this.providers.set(sessionID, provider)
 
     panel.onDidDispose(() => {
-      console.log("[Kilo New] Sub-agent viewer panel disposed:", sessionID)
+      console.log("[Accure New] Sub-agent viewer panel disposed:", sessionID)
       closeDisposable.dispose()
       provider.dispose()
       this.panels.delete(sessionID)

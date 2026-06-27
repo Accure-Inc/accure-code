@@ -1,4 +1,4 @@
-import { BackgroundProcess } from "@/kilocode/background-process"
+import { BackgroundProcess } from "@/accurecode/background-process"
 import { Tool } from "@/tool/tool"
 import { AppFileSystem } from "@opencode-ai/core/filesystem"
 import { containsPath } from "@/project/instance-context"

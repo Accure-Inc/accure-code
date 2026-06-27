@@ -1,16 +1,16 @@
-import { AllowEverythingPermission } from "@/kilocode/permission/allow-everything" // kilocode_change
+import { AllowEverythingPermission } from "@/accurecode/permission/allow-everything" // accurecode_change
 import { Permission } from "@/permission"
 import { PermissionID } from "@/permission/schema"
-// kilocode_change start
+// accurecode_change start
 import { SessionID } from "@/session/schema"
 import { Effect, Schema } from "effect"
-// kilocode_change end
+// accurecode_change end
 import { HttpApiBuilder } from "effect/unstable/httpapi"
 import { InstanceHttpApi } from "../api"
 import { PermissionNotFoundError } from "../errors"
-// kilocode_change start
+// accurecode_change start
 import { AllowEverythingBody, SaveAlwaysRulesBody } from "../groups/permission"
-// kilocode_change end
+// accurecode_change end
 
 export const permissionHandlers = HttpApiBuilder.group(InstanceHttpApi, "permission", (handlers) =>
   Effect.gen(function* () {
@@ -26,7 +26,7 @@ export const permissionHandlers = HttpApiBuilder.group(InstanceHttpApi, "permiss
     }) {
       yield* svc
         .reply({
-          // kilocode_change
+          // accurecode_change
           requestID: ctx.params.requestID,
           reply: ctx.payload.reply,
           message: ctx.payload.message,
@@ -44,7 +44,7 @@ export const permissionHandlers = HttpApiBuilder.group(InstanceHttpApi, "permiss
       return true
     })
 
-    // kilocode_change start
+    // accurecode_change start
     const saveAlwaysRules = Effect.fn("PermissionHttpApi.saveAlwaysRules")(function* (ctx: {
       params: { requestID: PermissionID }
       payload: Schema.Schema.Type<typeof SaveAlwaysRulesBody>
@@ -83,6 +83,6 @@ export const permissionHandlers = HttpApiBuilder.group(InstanceHttpApi, "permiss
       .handle("reply", reply)
       .handle("saveAlwaysRules", saveAlwaysRules)
       .handle("allowEverything", allowEverything)
-    // kilocode_change end
+    // accurecode_change end
   }),
 )

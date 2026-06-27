@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
-import type { KiloClient, McpStatus } from "@kilocode/sdk/v2/client"
-import { getErrorMessage } from "../kilo-provider-utils"
+import type { AccureClient, McpStatus } from "@accurecode/sdk/v2/client"
+import { getErrorMessage } from "../accure-provider-utils"
 
 let lastMcpBrowserOpen: { url: string; at: number } | null = null
 
@@ -13,20 +13,20 @@ export function openMcpOAuthUrlOnce(url: string): void {
     (opened) => {
       if (opened) return
       void vscode.window.showErrorMessage(
-        "MCP sign-in failed to open the browser. Check the Kilo logs for the authentication URL.",
+        "MCP sign-in failed to open the browser. Check the Accure logs for the authentication URL.",
       )
     },
     (error) => {
-      console.error("[Kilo New] Failed to open MCP OAuth URL:", error)
+      console.error("[Accure New] Failed to open MCP OAuth URL:", error)
       void vscode.window.showErrorMessage(
-        "MCP sign-in failed to open the browser. Check the Kilo logs for the authentication URL.",
+        "MCP sign-in failed to open the browser. Check the Accure logs for the authentication URL.",
       )
     },
   )
 }
 
 export async function connectMcpServer(
-  client: KiloClient,
+  client: AccureClient,
   name: string,
   directory: string,
   refreshStatus: () => Promise<void>,
@@ -35,13 +35,13 @@ export async function connectMcpServer(
     await client.mcp.connect({ name, directory })
     await refreshStatus()
   } catch (error) {
-    console.error("[Kilo New] Failed to connect MCP:", name, error)
+    console.error("[Accure New] Failed to connect MCP:", name, error)
     await refreshStatus()
   }
 }
 
 export async function disconnectMcpServer(
-  client: KiloClient,
+  client: AccureClient,
   name: string,
   directory: string,
   refreshStatus: () => Promise<void>,
@@ -50,13 +50,13 @@ export async function disconnectMcpServer(
     await client.mcp.disconnect({ name, directory })
     await refreshStatus()
   } catch (error) {
-    console.error("[Kilo New] Failed to disconnect MCP:", name, error)
+    console.error("[Accure New] Failed to disconnect MCP:", name, error)
     await refreshStatus()
   }
 }
 
 export async function authenticateMcpServer(
-  client: KiloClient,
+  client: AccureClient,
   name: string,
   directory: string,
   refreshStatus: () => Promise<void>,
@@ -74,7 +74,7 @@ export async function authenticateMcpServer(
       vscode.window.showErrorMessage(status.error || "MCP server requires client registration in config")
     }
   } catch (error) {
-    console.error("[Kilo New] Failed to authenticate MCP:", name, error)
+    console.error("[Accure New] Failed to authenticate MCP:", name, error)
     vscode.window.showErrorMessage(getErrorMessage(error) || "MCP sign-in failed")
   } finally {
     await refreshStatus()

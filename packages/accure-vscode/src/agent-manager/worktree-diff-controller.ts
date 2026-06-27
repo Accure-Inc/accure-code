@@ -21,7 +21,7 @@ export interface WorktreeDiffControllerContext {
   getStateReady: () => Promise<void> | undefined
   /**
    * In-process diff paths deliberately bypass the SDK client to keep git spawns
-   * out of the Bun `kilo serve` process (see oven-sh/bun#18265).
+   * out of the Bun `accure serve` process (see oven-sh/bun#18265).
    */
   git: GitOps
   /** In-process diff summary (replaces client.worktree.diffSummary). */

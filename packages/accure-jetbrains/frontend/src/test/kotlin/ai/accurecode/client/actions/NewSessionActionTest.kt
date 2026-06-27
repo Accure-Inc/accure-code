@@ -1,7 +1,7 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.session.SessionManager
-import ai.kilocode.client.session.SessionRef
+import ai.accurecode.client.session.SessionManager
+import ai.accurecode.client.session.SessionRef
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.Presentation
@@ -21,7 +21,7 @@ class NewSessionActionTest : BasePlatformTestCase() {
         assertEquals(1, manager.created)
         assertTrue(event.presentation.isEnabled)
         assertEquals("New Session", action.templatePresentation.text)
-        assertEquals("Start a new Kilo session", action.templatePresentation.description)
+        assertEquals("Start a new Accure session", action.templatePresentation.description)
         assertNotNull(action.templatePresentation.icon)
     }
 

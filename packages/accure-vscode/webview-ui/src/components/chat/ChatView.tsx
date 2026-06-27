@@ -6,12 +6,12 @@
  */
 
 import { type Component, type JSX, Show, createEffect, createMemo, createSignal, onCleanup, onMount } from "solid-js"
-import { Button } from "@kilocode/accure-ui/button"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { Spinner } from "@kilocode/accure-ui/spinner"
-import { Tooltip } from "@kilocode/accure-ui/tooltip"
-import { showToast } from "@kilocode/accure-ui/toast"
-import { DropdownMenu } from "@kilocode/accure-ui/dropdown-menu"
+import { Button } from "@accurecode/accure-ui/button"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { Spinner } from "@accurecode/accure-ui/spinner"
+import { Tooltip } from "@accurecode/accure-ui/tooltip"
+import { showToast } from "@accurecode/accure-ui/toast"
+import { DropdownMenu } from "@accurecode/accure-ui/dropdown-menu"
 import { TaskHeader } from "./TaskHeader"
 import { MessageList } from "./MessageList"
 import { PromptInput } from "./PromptInput"

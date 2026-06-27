@@ -1,4 +1,4 @@
-import { createKiloClient, type Config as EffectiveConfig } from "@kilocode/sdk/v2/client"
+import { createAccureClient, type Config as EffectiveConfig } from "@accurecode/sdk/v2/client"
 import type {
   AgentBuilderPreviewResponse,
   AgentBuilderSaveResponse,
@@ -10,18 +10,18 @@ import type {
   FormatterStatusResponse,
   GlobalHealthResponse,
   GlobalEvent,
-  KiloEmbeddingModelCatalog,
-  KiloProfileResponse,
+  AccureEmbeddingModelCatalog,
+  AccureProfileResponse,
   LspStatusResponse,
   McpStatusResponse,
   Pty as PtyInfo,
   PermissionRequest,
-  Project as KiloProject,
+  Project as AccureProject,
   QuestionRequest,
   ProviderAuthAuthorization,
   ProviderAuthResponse,
   ProviderListResponse,
-  Session as KiloSession,
+  Session as AccureSession,
   SessionStatus,
   ToolIdsResponse,
   ToolListResponse,
@@ -31,7 +31,7 @@ import type {
   Worktree,
   WorktreeDiffItem,
   WorktreeListResponse,
-} from "@kilocode/sdk/v2/client"
+} from "@accurecode/sdk/v2/client"
 
 export type Scope = "global" | "project"
 
@@ -43,9 +43,9 @@ export type Query = {
 
 export type ProjectQuery = Pick<Query, "url" | "dir">
 
-export type KiloProfileData = KiloProfileResponse
+export type AccureProfileData = AccureProfileResponse
 
-export type ProjectItem = KiloProject
+export type ProjectItem = AccureProject
 export type RecentProjectItem = ProjectItem & {
   sessions: number
 }
@@ -67,7 +67,7 @@ export type ProjectDiffItem = WorktreeDiffItem
 export type ProjectPtyInfo = PtyInfo
 export type ProjectTerminalItem = ProjectPtyInfo & {
   directory: string
-  session?: KiloSession
+  session?: AccureSession
   sessionStatus?: SessionStatus
   attention?: "permission" | "question"
 }
@@ -124,7 +124,7 @@ type Hit = {
 
 const ports = Array.from({ length: 20 }, (_, index) => 4097 + index)
 const day = 24 * 60 * 60 * 1000
-const key = "kilo.config.server"
+const key = "accure.config.server"
 const discovery: { run?: Promise<string | undefined> } = {}
 
 const fetcher = window.fetch.bind(window) as typeof fetch
@@ -141,8 +141,8 @@ function decode(input: string) {
 
 function server(input: string) {
   const url = new URL(input)
-  const user = decode(url.username) || "kilo"
-  const pass = decode(url.password) || "kilo"
+  const user = decode(url.username) || "accure"
+  const pass = decode(url.password) || "accure"
   url.username = ""
   url.password = ""
   url.search = ""
@@ -155,7 +155,7 @@ function server(input: string) {
 
 function client(input: ProjectQuery) {
   const info = server(input.url)
-  return createKiloClient({
+  return createAccureClient({
     baseUrl: info.url,
     directory: value(input.dir),
     headers: {
@@ -262,7 +262,7 @@ function score(item: ProjectItem, dir: string) {
   }, -1)
 }
 
-function owner(items: ProjectItem[], session: Pick<KiloSession, "projectID" | "directory">) {
+function owner(items: ProjectItem[], session: Pick<AccureSession, "projectID" | "directory">) {
   const exact = items.find((item) => item.id === session.projectID)
   if (exact) return exact
   return items.reduce<{ item?: ProjectItem; score: number }>(
@@ -411,43 +411,43 @@ export async function load(input: Query): Promise<Snapshot> {
   }
 }
 
-export async function loadEmbeddingModels(input: Query): Promise<KiloEmbeddingModelCatalog> {
-  return demand("Kilo embedding models", await client(input).indexing.models())
+export async function loadEmbeddingModels(input: Query): Promise<AccureEmbeddingModelCatalog> {
+  return demand("Accure embedding models", await client(input).indexing.models())
 }
 
-export async function loadKiloProfile(input: ProjectQuery): Promise<KiloProfileData> {
+export async function loadAccureProfile(input: ProjectQuery): Promise<AccureProfileData> {
   const sdk = client(input)
-  const result = await sdk.kilo.profile(directory(input))
-  return demand("Kilo profile", result)
+  const result = await sdk.accure.profile(directory(input))
+  return demand("Accure profile", result)
 }
 
-export async function setKiloOrganization(input: ProjectQuery, organizationId: string | null) {
+export async function setAccureOrganization(input: ProjectQuery, organizationId: string | null) {
   const sdk = client(input)
-  const result = await sdk.kilo.organization.set({ ...directory(input), organizationId })
-  demand("Switch Kilo account", result)
+  const result = await sdk.accure.organization.set({ ...directory(input), organizationId })
+  demand("Switch Accure account", result)
   await sdk.global.dispose()
 }
 
-export async function logoutKilo(input: ProjectQuery) {
+export async function logoutAccure(input: ProjectQuery) {
   const sdk = client(input)
-  const result = await sdk.auth.remove({ providerID: "kilo" })
-  demand("Log out of Kilo", result)
+  const result = await sdk.auth.remove({ providerID: "accure" })
+  demand("Log out of Accure", result)
   await sdk.global.dispose()
 }
 
-export async function startKiloLogin(input: ProjectQuery): Promise<ProviderAuthAuthorization> {
+export async function startAccureLogin(input: ProjectQuery): Promise<ProviderAuthAuthorization> {
   const sdk = client(input)
-  const result = await sdk.provider.oauth.authorize({ ...directory(input), providerID: "kilo", method: 0 })
-  return demand("Start Kilo login", result)
+  const result = await sdk.provider.oauth.authorize({ ...directory(input), providerID: "accure", method: 0 })
+  return demand("Start Accure login", result)
 }
 
-export async function completeKiloLogin(input: ProjectQuery, signal?: AbortSignal) {
+export async function completeAccureLogin(input: ProjectQuery, signal?: AbortSignal) {
   const sdk = client(input)
   const result = await sdk.provider.oauth.callback(
-    { ...directory(input), providerID: "kilo", method: 0 },
+    { ...directory(input), providerID: "accure", method: 0 },
     signal ? { signal } : undefined,
   )
-  demand("Complete Kilo login", result)
+  demand("Complete Accure login", result)
   await sdk.global.dispose()
 }
 
@@ -539,7 +539,7 @@ export async function loadProjectTerminals(input: ProjectQuery, dir: string): Pr
   const status = statusResult ?? {}
   const permissions = pending(permissionResult ?? [])
   const questions = pending(questionResult ?? [])
-  const sessions = new Map<string, KiloSession>()
+  const sessions = new Map<string, AccureSession>()
 
   await Promise.all(
     rows.map(async (item) => {
@@ -616,9 +616,9 @@ export async function loadProjectDiffFile(input: Query, dir: string, file: strin
   return demand("Worktree diff file", result)
 }
 
-export async function createProjectPty(input: Query, dir: string, title = "Kilo session"): Promise<ProjectPtyInfo> {
+export async function createProjectPty(input: Query, dir: string, title = "Accure session"): Promise<ProjectPtyInfo> {
   const sdk = client({ url: input.url, dir })
-  const result = await sdk.pty.create({ directory: dir, command: "kilo", cwd: dir, title })
+  const result = await sdk.pty.create({ directory: dir, command: "accure", cwd: dir, title })
   return demand("Create terminal", result)
 }
 

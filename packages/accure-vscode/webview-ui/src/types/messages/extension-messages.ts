@@ -1,4 +1,4 @@
-import type { ProviderAuthAuthorization, ProviderAuthMethod } from "@kilocode/sdk/v2/client"
+import type { ProviderAuthAuthorization, ProviderAuthMethod } from "@accurecode/sdk/v2/client"
 import type { DiffSourceCapabilities, DiffSourceDescriptor } from "../../../../src/diff/sources/types"
 import type { PartBatch, PartRemove, PartUpdate } from "../../../../src/shared/stream-messages"
 import type { SessionMode } from "../../context/worktree-mode"
@@ -17,9 +17,9 @@ import type { PermissionRequest } from "./permissions"
 import type { QuestionRequest, SuggestionRequest, TodoItem } from "./questions"
 import type { ModelSelection, Provider, ProviderAuthState } from "./providers"
 import type { AgentInfo, SkillInfo, SlashCommandInfo } from "./agents"
-import type { BrowserSettings, Config, FeatureFlags, IndexingStatus, KiloEmbeddingModelCatalog } from "./config"
+import type { BrowserSettings, Config, FeatureFlags, IndexingStatus, AccureEmbeddingModelCatalog } from "./config"
 import type { WorkStyle, WorkStyleState } from "../../../../src/shared/work-style-presets"
-import type { KilocodeNotification, ProfileData } from "./profile"
+import type { AccurecodeNotification, ProfileData } from "./profile"
 import type {
   AgentManagerApplyWorktreeDiffConflict,
   AgentManagerApplyWorktreeDiffStatus,
@@ -239,8 +239,8 @@ export interface OpenCloudSessionMessage {
   sessionId: string
 }
 
-export interface SelectKiloModelMessage {
-  type: "selectKiloModel"
+export interface SelectAccureModelMessage {
+  type: "selectAccureModel"
   modelID?: string
   agent?: string
 }
@@ -314,9 +314,9 @@ export interface IndexingStatusLoadedMessage {
   status: IndexingStatus
 }
 
-export interface KiloEmbeddingModelsLoadedMessage {
-  type: "kiloEmbeddingModelsLoaded"
-  catalog: KiloEmbeddingModelCatalog
+export interface AccureEmbeddingModelsLoadedMessage {
+  type: "accureEmbeddingModelsLoaded"
+  catalog: AccureEmbeddingModelCatalog
 }
 
 export interface ProvidersLoadedMessage {
@@ -525,7 +525,7 @@ export interface WorkStyleApplyFailedMessage {
 
 export interface NotificationsLoadedMessage {
   type: "notificationsLoaded"
-  notifications: KilocodeNotification[]
+  notifications: AccurecodeNotification[]
   dismissedIds: string[]
 }
 
@@ -994,7 +994,7 @@ export type ExtensionMessage =
   | DeviceAuthCancelledMessage
   | NavigateMessage
   | IndexingStatusLoadedMessage
-  | KiloEmbeddingModelsLoadedMessage
+  | AccureEmbeddingModelsLoadedMessage
   | ProvidersLoadedMessage
   | AgentsLoadedMessage
   | SkillsLoadedMessage
@@ -1050,7 +1050,7 @@ export type ExtensionMessage =
   | CloudSessionImportedMessage
   | CloudSessionImportFailedMessage
   | OpenCloudSessionMessage
-  | SelectKiloModelMessage
+  | SelectAccureModelMessage
   | AgentManagerBranchesMessage
   | AgentManagerExternalWorktreesMessage
   | AgentManagerImportResultMessage

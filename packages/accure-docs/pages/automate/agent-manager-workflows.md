@@ -92,7 +92,7 @@ Sessions sharing a branch can see each other's commits, so write-heavy work on t
 ## Running and testing
 
 - **Worktree terminal** (`Cmd+/` / `Ctrl+/`) — rooted at the worktree directory, so all commands scope to that branch. Use it for one-off tests, `git status`, reproducing a bug by hand.
-- **Run script** — create `.kilo/run-script` (or `.ps1` / `.cmd` / `.bat` on Windows) and trigger it with `Cmd+E` / `Ctrl+E`. Runs in whichever worktree is selected. Gets `WORKTREE_PATH` and `REPO_PATH` in the environment.
+- **Run script** — create `.accurecode/run-script` (or `.ps1` / `.cmd` / `.bat` on Windows) and trigger it with `Cmd+E` / `Ctrl+E`. Runs in whichever worktree is selected. Gets `WORKTREE_PATH` and `REPO_PATH` in the environment.
 - **Open in its own VS Code window** — right-click a worktree and choose **Open in VS Code** for a full editor rooted at the worktree path.
 
 ### Parallel worktrees need non-shared state
@@ -128,7 +128,7 @@ For Docker Compose, do the same with `COMPOSE_PROJECT_NAME` so parallel worktree
 set -e
 
 name=$(basename "$WORKTREE_PATH" | tr -cd '[:alnum:]_-')
-export COMPOSE_PROJECT_NAME="kilo_${name}"
+export COMPOSE_PROJECT_NAME="accure_${name}"
 
 docker compose up
 ```
@@ -137,15 +137,15 @@ If your app or framework supports `PORT=0`, that can be even simpler for local-o
 
 ### Setup script and copied files
 
-Use `.kilo/setup-script` to make new worktrees runnable without manual setup. It runs after Kilo copies root-level `.env` and `.env.*` files, and before the agent starts in the new worktree.
+Use `.accurecode/setup-script` to make new worktrees runnable without manual setup. It runs after Accure copies root-level `.env` and `.env.*` files, and before the agent starts in the new worktree.
 
-Kilo's env copy is intentionally narrow:
+Accure's env copy is intentionally narrow:
 
 - It copies root-level plain files named `.env` or `.env.*`
 - It skips existing files instead of overwriting them
 - It does not copy nested env files, `.envrc`, `.environment`, `.env-cmdrc`, local certificates, local databases, or ignored tool-specific config
 
-Put the remaining project-specific setup in `.kilo/setup-script`, for example copying `apps/web/.env.local`, creating a per-worktree database, or installing dependencies. The setup script receives `WORKTREE_PATH` and `REPO_PATH` in the environment.
+Put the remaining project-specific setup in `.accurecode/setup-script`, for example copying `apps/web/.env.local`, creating a per-worktree database, or installing dependencies. The setup script receives `WORKTREE_PATH` and `REPO_PATH` in the environment.
 
 ## Reviewing changes
 
@@ -154,7 +154,7 @@ Layer review in before asking a teammate:
 - **Diff panel** (`Cmd+D`) — live diff against the parent branch. Drag filenames into the chat input for `@file` mentions. Inline-comment the lines you want revisited, then **Send to chat** to iterate.
 - **`/local-review-uncommitted`** — slash command, AI review of staged and unstaged changes in the worktree. Good as a last pass before committing.
 - **`/local-review`** — slash command, AI review of the whole branch vs. its base.
-- **`kilo review` in CI** — automated PR review. See [Code Reviews](/docs/automate/code-reviews/overview) for the setup.
+- **`accure review` in CI** — automated PR review. See [Code Reviews](/docs/automate/code-reviews/overview) for the setup.
 - **Human review** — push the branch from the session terminal and `gh pr create`. The PR badge appears on the worktree and stays in sync with CI and reviews.
 
 A typical sequence: self-review in the diff panel → `/local-review-uncommitted` → push → CI review → teammate review.

@@ -2,7 +2,7 @@ import * as path from "path"
 import os from "os"
 import { Filesystem } from "../util/filesystem"
 
-export namespace KilocodePaths {
+export namespace AccurecodePaths {
   const home = () => process.env.HOME || process.env.USERPROFILE || os.homedir()
 
   /**
@@ -29,22 +29,22 @@ export namespace KilocodePaths {
     }
   }
 
-  /** Global Kilo directories in user home: ~/.kilocode and ~/.kilo (legacy first, .kilo wins later) */
+  /** Global Accure directories in user home: ~/.accurecode and ~/.accurecode (legacy first, .accurecode wins later) */
   export function globalDirs(): string[] {
-    return [path.join(home(), ".kilocode"), path.join(home(), ".kilo")]
+    return [path.join(home(), ".accurecode"), path.join(home(), ".accurecode")]
   }
 
   /**
-   * Discover Kilo directories containing skills.
-   * Returns parent directories (.kilocode/ and .kilo/) for glob pattern "skills/[*]/SKILL.md".
+   * Discover Accure directories containing skills.
+   * Returns parent directories (.accurecode/ and .accurecode/) for glob pattern "skills/[*]/SKILL.md".
    *
-   * - Walks up from projectDir to worktreeRoot for .kilocode/ and .kilo/
-   * - Includes global ~/.kilocode/ and ~/.kilo/
+   * - Walks up from projectDir to worktreeRoot for .accurecode/ and .accurecode/
+   * - Includes global ~/.accurecode/ and ~/.accurecode/
    * - Includes VSCode extension global storage
    *
    * Does NOT copy/migrate skills - just provides paths for discovery.
    * Skills remain in their original locations and can be managed independently
-   * by the Kilo VSCode extension.
+   * by the Accure VSCode extension.
    */
   export async function skillDirectories(opts: {
     projectDir: string
@@ -54,7 +54,7 @@ export namespace KilocodePaths {
     const directories: string[] = []
 
     if (!opts.skipGlobalPaths) {
-      // 1. Global ~/.kilocode/ and ~/.kilo/ (loaded first so project-level overrides)
+      // 1. Global ~/.accurecode/ and ~/.accurecode/ (loaded first so project-level overrides)
       for (const global of globalDirs()) {
         const globalSkills = path.join(global, "skills")
         if (!(await Filesystem.isDir(globalSkills))) continue
@@ -69,11 +69,11 @@ export namespace KilocodePaths {
       }
     }
 
-    // 3. Walk up from project dir to worktree root for .kilocode/ and .kilo/
+    // 3. Walk up from project dir to worktree root for .accurecode/ and .accurecode/
     // Returns parent directories (not skills/) because
     // the glob pattern "skills/[*]/SKILL.md" is applied from the parent
     // Loaded last so project-level skills take precedence over global
-    for (const target of [".kilocode", ".kilo"] as const) {
+    for (const target of [".accurecode", ".accurecode"] as const) {
       const projectDirs = await Array.fromAsync(
         Filesystem.up({
           targets: [target],

@@ -1,5 +1,5 @@
-// kilocode_change start - use Kilo CLI branding
-// CLI entry point for `kilo run`.
+// accurecode_change start - use Accure CLI branding
+// CLI entry point for `accure run`.
 //
 // Handles three modes:
 //   1. Non-interactive (default): sends a single prompt, streams events to
@@ -7,8 +7,8 @@
 //   2. Interactive local (`--interactive`): boots the split-footer direct mode
 //      with an in-process server (no external HTTP).
 //   3. Interactive attach (`--interactive --attach`): connects to a running
-//      kilo server and runs interactive mode against it.
-// kilocode_change end
+//      accure server and runs interactive mode against it.
+// accurecode_change end
 //
 // Also supports `--command` for slash-command execution, `--format json` for
 // raw event streaming, `--continue` / `--session` for session resumption,
@@ -20,10 +20,10 @@ import { Effect } from "effect"
 import { UI } from "../ui"
 import { effectCmd } from "../effect-cmd"
 import { ServerAuth } from "@/server/auth"
-import { buildRunMessage } from "@/kilocode/cli/cmd/run-message" // kilocode_change
+import { buildRunMessage } from "@/accurecode/cli/cmd/run-message" // accurecode_change
 import { EOL } from "os"
 import { Filesystem } from "@/util/filesystem"
-import { createKiloClient, type KiloClient, type Session, type ToolPart } from "@kilocode/sdk/v2"
+import { createAccureClient, type AccureClient, type Session, type ToolPart } from "@accurecode/sdk/v2"
 import { Agent } from "@/agent/agent"
 import { Permission } from "@/permission"
 import { RuntimeFlags } from "@/effect/runtime-flags"
@@ -31,12 +31,12 @@ import { InstanceRef } from "@/effect/instance-ref"
 import { FormatError, FormatUnknownError } from "../error"
 import { INTERACTIVE_INPUT_ERROR, resolveInteractiveStdin } from "./run/runtime.stdin"
 import { event as normalizeEvent } from "./run/event"
-import { importCloudSession, validateCloudFork } from "@/kilocode/cloud-session" // kilocode_change
-import { KiloRunAuto } from "@/kilocode/cli/run-auto" // kilocode_change
-import { KiloRun, KiloRunDaemon } from "@/kilocode/cli/cmd/run" // kilocode_change
+import { importCloudSession, validateCloudFork } from "@/accurecode/cloud-session" // accurecode_change
+import { AccureRunAuto } from "@/accurecode/cli/run-auto" // accurecode_change
+import { AccureRun, AccureRunDaemon } from "@/accurecode/cli/cmd/run" // accurecode_change
 
 const runtimeTask = import("./run/runtime")
-type ModelInput = Parameters<KiloClient["session"]["prompt"]>[0]["model"]
+type ModelInput = Parameters<AccureClient["session"]["prompt"]>[0]["model"]
 
 function pick(value: string | undefined): ModelInput | undefined {
   if (!value) return undefined
@@ -134,7 +134,7 @@ async function toolError(part: ToolPart) {
 
 export const RunCommand = effectCmd({
   command: "run [message..]",
-  describe: "run kilo with a message", // kilocode_change
+  describe: "run accure with a message", // accurecode_change
   // --attach connects to a remote server (no local instance needed); the
   // default path runs an in-process server and needs the project instance.
   instance: (args) => !args.attach,
@@ -167,12 +167,12 @@ export const RunCommand = effectCmd({
         describe: "fork the session before continuing (requires --continue or --session)",
         type: "boolean",
       })
-      // kilocode_change start - support cloud fork in run command
+      // accurecode_change start - support cloud fork in run command
       .option("cloud-fork", {
         type: "boolean",
         describe: "fetch session from cloud and continue locally (use with --session)",
       })
-      // kilocode_change end
+      // accurecode_change end
       .option("share", {
         type: "boolean",
         describe: "share the session",
@@ -204,17 +204,17 @@ export const RunCommand = effectCmd({
       })
       .option("attach", {
         type: "string",
-        describe: "attach to a running kilo server (e.g., http://localhost:4096)",
+        describe: "attach to a running accure server (e.g., http://localhost:4096)",
       })
       .option("password", {
         alias: ["p"],
         type: "string",
-        describe: "basic auth password (defaults to KILO_SERVER_PASSWORD)",
+        describe: "basic auth password (defaults to ACCURECODE_SERVER_PASSWORD)",
       })
       .option("username", {
         alias: ["u"],
         type: "string",
-        describe: "basic auth username (defaults to KILO_SERVER_USERNAME or 'kilo')", // kilocode_change
+        describe: "basic auth username (defaults to ACCURECODE_SERVER_USERNAME or 'accure')", // accurecode_change
       })
       .option("dir", {
         type: "string",
@@ -252,13 +252,13 @@ export const RunCommand = effectCmd({
         describe: "auto-approve permissions that are not explicitly denied (dangerous!)",
         default: false,
       })
-      // kilocode_change start - auto approve tracked task sessions
+      // accurecode_change start - auto approve tracked task sessions
       .option("auto", {
         type: "boolean",
         describe: "auto-approve all permissions (for autonomous/pipeline usage)",
         default: false,
       })
-      // kilocode_change end
+      // accurecode_change end
       .option("demo", {
         type: "boolean",
         default: false,
@@ -283,7 +283,7 @@ export const RunCommand = effectCmd({
         throw error
       }
 
-      let message = buildRunMessage(args.message, args["--"]) // kilocode_change
+      let message = buildRunMessage(args.message, args["--"]) // accurecode_change
 
       if (args.interactive && args.command) {
         die("--interactive cannot be used with --command")
@@ -343,7 +343,7 @@ export const RunCommand = effectCmd({
         ? ServerAuth.headers({ password: args.password, username: args.username })
         : undefined
       const attachSDK = (dir?: string) => {
-        return createKiloClient({
+        return createAccureClient({
           baseUrl: args.attach!,
           directory: dir,
           headers: attachHeaders,
@@ -372,7 +372,7 @@ export const RunCommand = effectCmd({
         }
       }
 
-      // kilocode_change start - defer stdin until endpoint-backed commands are classified
+      // accurecode_change start - defer stdin until endpoint-backed commands are classified
       const input = { initial: undefined as string | undefined, loaded: false }
       async function loadInput() {
         if (input.loaded) return
@@ -384,14 +384,14 @@ export const RunCommand = effectCmd({
         UI.error("You must provide a message or a command")
         process.exit(1)
       }
-      // kilocode_change end
+      // accurecode_change end
 
       if (args.fork && !args.continue && !args.session) {
         UI.error("--fork requires --continue or --session")
         process.exit(1)
       }
 
-      // kilocode_change start - validate cloud session imports before local lookup
+      // accurecode_change start - validate cloud session imports before local lookup
       const cloudForkError = validateCloudFork({
         cloudFork: args["cloud-fork"],
         fork: args.fork,
@@ -402,7 +402,7 @@ export const RunCommand = effectCmd({
         UI.error(cloudForkError)
         process.exit(1)
       }
-      // kilocode_change end
+      // accurecode_change end
 
       const rules: Permission.Ruleset = args.interactive
         ? []
@@ -430,8 +430,8 @@ export const RunCommand = effectCmd({
         return message.slice(0, 50) + (message.length > 50 ? "..." : "")
       }
 
-      async function session(sdk: KiloClient): Promise<SessionInfo | undefined> {
-        // kilocode_change start - import cloud session before local lookup
+      async function session(sdk: AccureClient): Promise<SessionInfo | undefined> {
+        // accurecode_change start - import cloud session before local lookup
         if (args.session && args["cloud-fork"]) {
           const id = await importCloudSession(sdk, args.session).catch(() => undefined)
           if (!id) {
@@ -457,7 +457,7 @@ export const RunCommand = effectCmd({
             model: current.data.model,
           }
         }
-        // kilocode_change end
+        // accurecode_change end
 
         if (args.session) {
           const current = await sdk.session
@@ -542,7 +542,7 @@ export const RunCommand = effectCmd({
         }
       }
 
-      async function share(sdk: KiloClient, sessionID: string) {
+      async function share(sdk: AccureClient, sessionID: string) {
         const cfg = await sdk.config.get()
         if (!cfg.data) return
         if (cfg.data.share !== "auto" && !flags.autoShare && !args.share) return
@@ -558,7 +558,7 @@ export const RunCommand = effectCmd({
       }
 
       async function createFreshSession(
-        sdk: KiloClient,
+        sdk: AccureClient,
         input: { agent: string | undefined; model: ModelInput | undefined; variant: string | undefined },
       ): Promise<SessionInfo> {
         const result = await sdk.session.create({
@@ -585,7 +585,7 @@ export const RunCommand = effectCmd({
         }
       }
 
-      async function current(sdk: KiloClient): Promise<string> {
+      async function current(sdk: AccureClient): Promise<string> {
         if (!args.attach) {
           return directory ?? root
         }
@@ -628,7 +628,7 @@ export const RunCommand = effectCmd({
         return name
       }
 
-      async function attachAgent(sdk: KiloClient) {
+      async function attachAgent(sdk: AccureClient) {
         if (!args.agent) return undefined
         const name = args.agent
 
@@ -668,7 +668,7 @@ export const RunCommand = effectCmd({
         return name
       }
 
-      async function pickAgent(sdk: KiloClient) {
+      async function pickAgent(sdk: AccureClient) {
         if (!args.agent) return undefined
         if (args.attach) {
           return attachAgent(sdk)
@@ -677,15 +677,15 @@ export const RunCommand = effectCmd({
         return localAgent()
       }
 
-      async function execute(sdk: KiloClient) {
-        // kilocode_change start - preserve custom command precedence and avoid reading stdin for built-ins
+      async function execute(sdk: AccureClient) {
+        // accurecode_change start - preserve custom command precedence and avoid reading stdin for built-ins
         const deferred = Boolean(args.attach && args.session && !directory)
-        const initial = deferred ? undefined : await KiloRun.resolveBuiltin(sdk, args.command, directory)
+        const initial = deferred ? undefined : await AccureRun.resolveBuiltin(sdk, args.command, directory)
         if (!deferred) {
-          KiloRun.validateBuiltin({ command: initial, continue: args.continue, session: args.session })
+          AccureRun.validateBuiltin({ command: initial, continue: args.continue, session: args.session })
           if (!initial) await loadInput()
         }
-        // kilocode_change end
+        // accurecode_change end
 
         const sess = await session(sdk)
         if (!sess?.id) {
@@ -693,7 +693,7 @@ export const RunCommand = effectCmd({
           process.exit(1)
         }
         const sessionID = sess.id
-        const auto = KiloRunAuto.create(sessionID) // kilocode_change
+        const auto = AccureRunAuto.create(sessionID) // accurecode_change
 
         function emit(type: string, data: Record<string, unknown>) {
           if (args.format === "json") {
@@ -714,10 +714,10 @@ export const RunCommand = effectCmd({
         // to stdout/UI. `client` is passed explicitly because attach mode may
         // rebind the SDK to the session's directory after the subscription is
         // created, and replies issued from inside the loop must use that client.
-        async function loop(client: KiloClient, events: Awaited<ReturnType<typeof sdk.event.subscribe>>) {
+        async function loop(client: AccureClient, events: Awaited<ReturnType<typeof sdk.event.subscribe>>) {
           const toggles = new Map<string, boolean>()
-          const MAX_RETRIES = 3 // kilocode_change
-          let retries = 0 // kilocode_change
+          const MAX_RETRIES = 3 // accurecode_change
+          let retries = 0 // accurecode_change
           let error: string | undefined
 
           for await (const payload of events.stream) {
@@ -739,9 +739,9 @@ export const RunCommand = effectCmd({
 
             if (event.type === "message.part.updated") {
               const part = event.properties.part
-              // kilocode_change start - track Task child sessions for --auto permission replies
-              if (args.auto) KiloRunAuto.track(auto, part)
-              // kilocode_change end
+              // accurecode_change start - track Task child sessions for --auto permission replies
+              if (args.auto) AccureRunAuto.track(auto, part)
+              // accurecode_change end
               if (part.sessionID !== sessionID) continue
 
               if (part.type === "tool" && (part.state.status === "completed" || part.state.status === "error")) {
@@ -813,7 +813,7 @@ export const RunCommand = effectCmd({
               UI.error(err)
             }
 
-            // kilocode_change start - reset retry budget only after resumed work becomes busy
+            // accurecode_change start - reset retry budget only after resumed work becomes busy
             if (
               event.type === "session.status" &&
               event.properties.sessionID === sessionID &&
@@ -821,7 +821,7 @@ export const RunCommand = effectCmd({
             ) {
               retries = 0
             }
-            // kilocode_change end
+            // accurecode_change end
 
             if (
               event.type === "session.status" &&
@@ -833,16 +833,16 @@ export const RunCommand = effectCmd({
 
             if (event.type === "permission.asked") {
               const permission = event.properties
-              // kilocode_change start - approve root and tracked Task child permissions in auto mode
+              // accurecode_change start - approve root and tracked Task child permissions in auto mode
               if (args.auto) {
-                if (!KiloRunAuto.allowed(auto, permission.sessionID)) continue
+                if (!AccureRunAuto.allowed(auto, permission.sessionID)) continue
                 await client.permission.reply({
                   requestID: permission.id,
                   reply: "once",
                 })
                 continue
               }
-              // kilocode_change end
+              // accurecode_change end
 
               if (permission.sessionID !== sessionID) continue
 
@@ -864,7 +864,7 @@ export const RunCommand = effectCmd({
               }
             }
 
-            // kilocode_change start - bounded network retry handling
+            // accurecode_change start - bounded network retry handling
             if (event.type === "session.network.asked") {
               const request = event.properties
               if (request.sessionID !== sessionID) continue
@@ -881,19 +881,19 @@ export const RunCommand = effectCmd({
               await new Promise((resolve) => setTimeout(resolve, delay))
               await client.network.reply({ requestID: request.id })
             }
-            // kilocode_change end
+            // accurecode_change end
           }
           return error
         }
         const cwd = args.attach ? (directory ?? sess.directory ?? (await current(sdk))) : (directory ?? root)
         const client = args.attach ? attachSDK(cwd) : sdk
-        // kilocode_change start - classify deferred attach commands in the session directory
-        const builtin = deferred ? await KiloRun.resolveBuiltin(client, args.command, cwd) : initial
+        // accurecode_change start - classify deferred attach commands in the session directory
+        const builtin = deferred ? await AccureRun.resolveBuiltin(client, args.command, cwd) : initial
         if (deferred) {
-          KiloRun.validateBuiltin({ command: builtin, continue: args.continue, session: args.session })
+          AccureRun.validateBuiltin({ command: builtin, continue: args.continue, session: args.session })
           if (!builtin) await loadInput()
         }
-        // kilocode_change end
+        // accurecode_change end
 
         // Validate agent if specified
         const agent = await pickAgent(client)
@@ -907,16 +907,16 @@ export const RunCommand = effectCmd({
             process.exit(1)
           })
 
-          // kilocode_change start - handle built-in session commands
+          // accurecode_change start - handle built-in session commands
           if (builtin) {
-            const result = await KiloRun.runBuiltin(client, sessionID, builtin, args.model, sess.model, cwd)
+            const result = await AccureRun.runBuiltin(client, sessionID, builtin, args.model, sess.model, cwd)
             if (result.error) {
               if (!emit("error", { error: result.error })) UI.error(formatRunError(result.error))
               process.exitCode = 1
             }
             return
           }
-          // kilocode_change end
+          // accurecode_change end
 
           if (args.command) {
             const result = await client.session.command({
@@ -976,7 +976,7 @@ export const RunCommand = effectCmd({
       }
 
       if (args.interactive && !args.attach && !args.session && !args.continue) {
-        await loadInput() // kilocode_change - interactive local mode still consumes its initial input
+        await loadInput() // accurecode_change - interactive local mode still consumes its initial input
         const model = pick(args.model)
         const { runInteractiveLocalMode } = await runtimeTask
         const fetchFn = (async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -1013,15 +1013,15 @@ export const RunCommand = effectCmd({
         return await execute(sdk)
       }
 
-      if (await KiloRunDaemon.attach({ directory, execute })) return // kilocode_change
+      if (await AccureRunDaemon.attach({ directory, execute })) return // accurecode_change
 
       const fetchFn = (async (input: RequestInfo | URL, init?: RequestInit) => {
         const { Server } = await import("@/server/server")
         const request = new Request(input, init)
         return Server.Default().app.fetch(request)
       }) as typeof globalThis.fetch
-      const sdk = createKiloClient({
-        baseUrl: "http://kilo.internal",
+      const sdk = createAccureClient({
+        baseUrl: "http://accure.internal",
         fetch: fetchFn,
         directory,
       })

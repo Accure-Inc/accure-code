@@ -195,15 +195,15 @@ export interface OpenConfigFileRequest {
     noWorkspace: string
     openFailed: string
     sourceXdg: string
-    sourceHomeKilo: string
-    sourceHomeKilocode: string
+    sourceHomeAccure: string
+    sourceHomeAccurecode: string
     sourceHomeOpencode: string
     sourceEnvFile: string
     sourceEnvDir: string
     sourceEnvContent: string
-    sourceProjectKilo: string
+    sourceProjectAccure: string
     sourceProjectRoot: string
-    sourceProjectKilocode: string
+    sourceProjectAccurecode: string
     sourceProjectOpencode: string
   }
 }
@@ -430,8 +430,8 @@ export interface RequestIndexingStatusMessage {
   type: "requestIndexingStatus"
 }
 
-export interface RequestKiloEmbeddingModelsMessage {
-  type: "requestKiloEmbeddingModels"
+export interface RequestAccureEmbeddingModelsMessage {
+  type: "requestAccureEmbeddingModels"
 }
 
 export interface OpenSettingsTabRequest {
@@ -441,10 +441,10 @@ export interface OpenSettingsTabRequest {
 
 export interface UpdateConfigMessage {
   type: "updateConfig"
-  /** Global config patch written to ~/.config/kilo/kilo.json. */
+  /** Global config patch written to ~/.config/accure/accure.json. */
   config: Partial<Config>
   globalUnset?: string[][]
-  /** Project config patch written to the workspace's .kilo/kilo.jsonc or existing project config. */
+  /** Project config patch written to the workspace's .accurecode/accure.jsonc or existing project config. */
   projectConfig?: Partial<Config>
   projectUnset?: string[][]
 }
@@ -971,6 +971,21 @@ export interface SaveCustomProviderMessage {
   apiKeyChanged?: boolean
 }
 
+/**
+ * Saves arbitrary provider options to the global config without requiring the
+ * provider to be a "custom" provider (i.e., works for built-ins like amazon-bedrock).
+ * Optionally sets an API key via the auth store.
+ */
+export interface SaveProviderOptionsMessage {
+  type: "saveProviderOptions"
+  requestId: string
+  providerID: string
+  /** Options to merge into provider.options in global config */
+  options: Record<string, string>
+  /** If provided, store as the provider's API key */
+  apiKey?: string
+}
+
 export interface FetchCustomProviderModelsMessage {
   type: "fetchCustomProviderModels"
   requestId: string
@@ -1164,7 +1179,7 @@ export type WebviewMessage =
   | RequestConfigMessage
   | RequestGlobalConfigMessage
   | RequestIndexingStatusMessage
-  | RequestKiloEmbeddingModelsMessage
+  | RequestAccureEmbeddingModelsMessage
   | UpdateConfigMessage
   | OpenSettingsTabRequest
   | RequestNotificationSettingsMessage
@@ -1262,6 +1277,7 @@ export type WebviewMessage =
   | CompleteProviderOAuthMessage
   | DisconnectProviderMessage
   | SaveCustomProviderMessage
+  | SaveProviderOptionsMessage
   | FetchCustomProviderModelsMessage
   | PersistRecentsRequest
   | RequestRecentsMessage

@@ -1,37 +1,49 @@
 import { test, expect } from "bun:test"
 import { parseGitHubRemote } from "../../src/cli/cmd/github"
 
-// kilocode_change start: rebrand fixtures off upstream repo path
+// accurecode_change start: rebrand fixtures off upstream repo path
 test("parses https URL with .git suffix", () => {
-  expect(parseGitHubRemote("https://github.com/Kilo-Org/kilocode.git")).toEqual({
-    owner: "Kilo-Org",
-    repo: "kilocode",
+  expect(parseGitHubRemote("https://github.com/Accure-Inc/accure-code.git")).toEqual({
+    owner: "Accure-Org",
+    repo: "accurecode",
   })
 })
 
 test("parses https URL without .git suffix", () => {
-  expect(parseGitHubRemote("https://github.com/Kilo-Org/kilocode")).toEqual({ owner: "Kilo-Org", repo: "kilocode" })
+  expect(parseGitHubRemote("https://github.com/Accure-Inc/accure-code")).toEqual({
+    owner: "Accure-Org",
+    repo: "accurecode",
+  })
 })
 
 test("parses git@ URL with .git suffix", () => {
-  expect(parseGitHubRemote("git@github.com:Kilo-Org/kilocode.git")).toEqual({ owner: "Kilo-Org", repo: "kilocode" })
+  expect(parseGitHubRemote("git@github.com:Accure-Inc/accure-code.git")).toEqual({
+    owner: "Accure-Org",
+    repo: "accurecode",
+  })
 })
 
 test("parses git@ URL without .git suffix", () => {
-  expect(parseGitHubRemote("git@github.com:Kilo-Org/kilocode")).toEqual({ owner: "Kilo-Org", repo: "kilocode" })
+  expect(parseGitHubRemote("git@github.com:Accure-Inc/accure-code")).toEqual({
+    owner: "Accure-Org",
+    repo: "accurecode",
+  })
 })
 
 test("parses ssh:// URL with .git suffix", () => {
-  expect(parseGitHubRemote("ssh://git@github.com/Kilo-Org/kilocode.git")).toEqual({
-    owner: "Kilo-Org",
-    repo: "kilocode",
+  expect(parseGitHubRemote("ssh://git@github.com/Accure-Inc/accure-code.git")).toEqual({
+    owner: "Accure-Org",
+    repo: "accurecode",
   })
 })
 
 test("parses ssh:// URL without .git suffix", () => {
-  expect(parseGitHubRemote("ssh://git@github.com/Kilo-Org/kilocode")).toEqual({ owner: "Kilo-Org", repo: "kilocode" })
+  expect(parseGitHubRemote("ssh://git@github.com/Accure-Inc/accure-code")).toEqual({
+    owner: "Accure-Org",
+    repo: "accurecode",
+  })
 })
-// kilocode_change end
+// accurecode_change end
 
 test("parses git protocol URLs from package metadata", () => {
   expect(parseGitHubRemote("git://github.com/facebook/react.git")).toEqual({ owner: "facebook", repo: "react" })

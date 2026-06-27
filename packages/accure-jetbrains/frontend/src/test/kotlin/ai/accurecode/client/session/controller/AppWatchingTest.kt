@@ -1,9 +1,9 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.rpc.dto.ConfigWarningDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
+import ai.accurecode.rpc.dto.ConfigWarningDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
 
 class AppWatchingTest : SessionControllerTestBase() {
 
@@ -13,7 +13,7 @@ class AppWatchingTest : SessionControllerTestBase() {
         flush()
         events.clear()
 
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         flush()
 
         assertControllerEvents("AppChanged", events)
@@ -29,7 +29,7 @@ class AppWatchingTest : SessionControllerTestBase() {
     fun `test retry connection uses app retry when app is failed`() {
         val m = controller()
         val events = collect(m)
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.ERROR, error = "boom")
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.ERROR, error = "boom")
 
         flush()
         events.clear()
@@ -44,9 +44,9 @@ class AppWatchingTest : SessionControllerTestBase() {
     fun `test retry connection reloads workspace when app ready and workspace failed`() {
         val m = controller()
         val events = collect(m)
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
-        projectRpc.state.value = ai.kilocode.rpc.dto.KiloWorkspaceStateDto(
-            status = KiloWorkspaceStatusDto.ERROR,
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
+        projectRpc.state.value = ai.accurecode.rpc.dto.AccureWorkspaceStateDto(
+            status = AccureWorkspaceStatusDto.ERROR,
             error = "workspace fail",
         )
 
@@ -63,9 +63,9 @@ class AppWatchingTest : SessionControllerTestBase() {
     fun `test retry connection uses app retry when app has warnings`() {
         val m = controller()
         val events = collect(m)
-        appRpc.state.value = KiloAppStateDto(
-            status = KiloAppStatusDto.READY,
-            warnings = listOf(ConfigWarningDto(path = ".kilo/kilo.json", message = "Invalid JSON")),
+        appRpc.state.value = AccureAppStateDto(
+            status = AccureAppStatusDto.READY,
+            warnings = listOf(ConfigWarningDto(path = ".accurecode/accure.json", message = "Invalid JSON")),
         )
 
         flush()
@@ -81,7 +81,7 @@ class AppWatchingTest : SessionControllerTestBase() {
     fun `test retry connection immediately updates connection state`() {
         val m = controller()
         val states = collectStates(m)
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.ERROR, error = "boom")
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.ERROR, error = "boom")
         flush()
         states.clear()
 

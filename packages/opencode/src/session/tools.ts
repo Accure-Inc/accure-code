@@ -1,5 +1,5 @@
 import { Agent } from "@/agent/agent"
-import { KiloSessionPrompt } from "@/kilocode/session/prompt" // kilocode_change
+import { AccureSessionPrompt } from "@/accurecode/session/prompt" // accurecode_change
 import { Provider } from "@/provider/provider"
 import { ProviderTransform } from "@/provider/transform"
 import { MCP } from "@/mcp"
@@ -26,7 +26,7 @@ export const resolve = Effect.fn("SessionTools.resolve")(function* (input: {
   agent: Agent.Info
   model: Provider.Model
   session: Session.Info
-  processor: Pick<SessionProcessor.Handle, "message" | "metadata" | "completeToolCall"> // kilocode_change
+  processor: Pick<SessionProcessor.Handle, "message" | "metadata" | "completeToolCall"> // accurecode_change
   bypassAgentCheck: boolean
   messages: MessageV2.WithParts[]
   promptOps: TaskPromptOps
@@ -36,8 +36,8 @@ export const resolve = Effect.fn("SessionTools.resolve")(function* (input: {
   const run = yield* EffectBridge.make()
   const plugin = yield* Plugin.Service
   const permission = yield* Permission.Service
-  const agents = yield* Agent.Service // kilocode_change
-  const sessions = yield* Session.Service // kilocode_change
+  const agents = yield* Agent.Service // accurecode_change
+  const sessions = yield* Session.Service // accurecode_change
   const registry = yield* ToolRegistry.Service
   const mcp = yield* MCP.Service
   const truncate = yield* Truncate.Service
@@ -50,10 +50,10 @@ export const resolve = Effect.fn("SessionTools.resolve")(function* (input: {
     extra: { model: input.model, bypassAgentCheck: input.bypassAgentCheck, promptOps: input.promptOps },
     agent: input.agent.name,
     messages: input.messages,
-    metadata: (val) => input.processor.metadata(options.toolCallId, val), // kilocode_change
-    // kilocode_change start - resolve permissions at ask time so active tools see config edits
+    metadata: (val) => input.processor.metadata(options.toolCallId, val), // accurecode_change
+    // accurecode_change start - resolve permissions at ask time so active tools see config edits
     ask: (req) =>
-      KiloSessionPrompt.askPermission({
+      AccureSessionPrompt.askPermission({
         permission,
         agents,
         sessions,
@@ -65,7 +65,7 @@ export const resolve = Effect.fn("SessionTools.resolve")(function* (input: {
           tool: { messageID: input.processor.message.id, callID: options.toolCallId },
         },
       }).pipe(Effect.orDie),
-    // kilocode_change end
+    // accurecode_change end
   })
 
   for (const item of yield* registry.tools({

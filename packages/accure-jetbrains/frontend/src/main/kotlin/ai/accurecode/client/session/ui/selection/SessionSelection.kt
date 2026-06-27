@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.ui.selection
+package ai.accurecode.client.session.ui.selection
 
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
 import com.intellij.ide.TextCopyProvider
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionUpdateThread

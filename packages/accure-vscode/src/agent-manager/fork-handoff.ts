@@ -1,7 +1,7 @@
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 
 export interface ForkHandoffInput {
-  client: KiloClient
+  client: AccureClient
   sessionId: string
   directory?: string
 }
@@ -35,7 +35,7 @@ export async function recordForkHandoff(input: ForkHandoffInput): Promise<void> 
         synthetic: true,
       },
     ],
-  } as Parameters<KiloClient["session"]["promptAsync"]>[0]
+  } as Parameters<AccureClient["session"]["promptAsync"]>[0]
 
   await input.client.session.promptAsync(payload, { throwOnError: true })
 }

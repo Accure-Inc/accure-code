@@ -1,19 +1,19 @@
-// KiloClaw status sidebar — mirrors the CLI sidebar structure:
+// AccureClaw status sidebar — mirrors the CLI sidebar structure:
 // conversation title at top, then Bot Status, Context, Instance, Details.
 //
-// Ref: packages/opencode/src/kilocode/claw/sidebar.tsx
+// Ref: packages/opencode/src/accurecode/claw/sidebar.tsx
 
 import { Show, createMemo, createSignal } from "solid-js"
 import { useClaw } from "../context/claw"
-import { useKiloClawLanguage } from "../context/language"
+import { useAccureClawLanguage } from "../context/language"
 import { isEnterKeyCommitNotIme } from "../../src/utils/ime-enter"
 
 function dot(status: string | null | undefined): string {
-  if (!status) return "kiloclaw-dot-offline"
-  if (status === "running") return "kiloclaw-dot-online"
-  if (status === "starting" || status === "restarting") return "kiloclaw-dot-warning"
-  if (status === "destroying") return "kiloclaw-dot-error"
-  return "kiloclaw-dot-offline"
+  if (!status) return "accureclaw-dot-offline"
+  if (status === "running") return "accureclaw-dot-online"
+  if (status === "starting" || status === "restarting") return "accureclaw-dot-warning"
+  if (status === "destroying") return "accureclaw-dot-error"
+  return "accureclaw-dot-offline"
 }
 
 function uptime(started: string | null | undefined): string {
@@ -43,7 +43,7 @@ function formatTokens(n: number): string {
 
 export function StatusSidebar() {
   const claw = useClaw()
-  const { t } = useKiloClawLanguage()
+  const { t } = useAccureClawLanguage()
   const status = createMemo(() => claw.status())
   const ctx = createMemo(() => claw.conversationStatus())
 
@@ -58,8 +58,8 @@ export function StatusSidebar() {
 
   const conversationTitle = createMemo(() => {
     const conv = activeConversation()
-    if (!conv) return t("kiloClaw.conversations.new")
-    return conv.title ?? t("kiloClaw.conversations.untitled")
+    if (!conv) return t("accureClaw.conversations.new")
+    return conv.title ?? t("accureClaw.conversations.untitled")
   })
 
   const handleTitleClick = () => {
@@ -88,16 +88,16 @@ export function StatusSidebar() {
   }
 
   return (
-    <div class="kiloclaw-sidebar">
+    <div class="accureclaw-sidebar">
       {/* Conversation title (top, like the session route title) */}
       <Show when={claw.activeConversationId()}>
-        <div class="kiloclaw-sidebar-section">
+        <div class="accureclaw-sidebar-section">
           <Show
             when={!isRenamingTitle()}
             fallback={
               <input
                 autofocus
-                class="kiloclaw-sidebar-titleinput"
+                class="accureclaw-sidebar-titleinput"
                 value={renameTitleText()}
                 onInput={(e) => setRenameTitleText(e.currentTarget.value)}
                 onKeyDown={onTitleKeyDown}
@@ -108,9 +108,9 @@ export function StatusSidebar() {
           >
             <button
               type="button"
-              class="kiloclaw-sidebar-titlebtn"
+              class="accureclaw-sidebar-titlebtn"
               onClick={handleTitleClick}
-              title={t("kiloClaw.conversations.rename")}
+              title={t("accureClaw.conversations.rename")}
             >
               {conversationTitle()}
             </button>
@@ -120,11 +120,13 @@ export function StatusSidebar() {
 
       {/* Bot Status */}
       <Show when={claw.activeConversationId()}>
-        <div class="kiloclaw-sidebar-section">
-          <div class="kiloclaw-sidebar-label">{t("kiloClaw.sidebar.botStatus")}</div>
-          <div class="kiloclaw-sidebar-row">
-            <span class={`kiloclaw-dot ${claw.botStatus()?.online ? "kiloclaw-dot-online" : "kiloclaw-dot-offline"}`} />
-            <span>{claw.botStatus()?.online ? t("kiloClaw.chat.online") : t("kiloClaw.chat.offline")}</span>
+        <div class="accureclaw-sidebar-section">
+          <div class="accureclaw-sidebar-label">{t("accureClaw.sidebar.botStatus")}</div>
+          <div class="accureclaw-sidebar-row">
+            <span
+              class={`accureclaw-dot ${claw.botStatus()?.online ? "accureclaw-dot-online" : "accureclaw-dot-offline"}`}
+            />
+            <span>{claw.botStatus()?.online ? t("accureClaw.chat.online") : t("accureClaw.chat.offline")}</span>
           </div>
         </div>
       </Show>
@@ -132,30 +134,30 @@ export function StatusSidebar() {
       {/* Context window usage */}
       <Show when={ctx()}>
         {(c) => (
-          <div class="kiloclaw-sidebar-section">
-            <div class="kiloclaw-sidebar-label">{t("kiloClaw.sidebar.context")}</div>
+          <div class="accureclaw-sidebar-section">
+            <div class="accureclaw-sidebar-label">{t("accureClaw.sidebar.context")}</div>
             <Show when={c().contextWindow > 0}>
-              <div class="kiloclaw-sidebar-detail">
-                <span class="kiloclaw-sidebar-muted">{t("kiloClaw.sidebar.used")}</span>
+              <div class="accureclaw-sidebar-detail">
+                <span class="accureclaw-sidebar-muted">{t("accureClaw.sidebar.used")}</span>
                 <span>{Math.min(100, Math.round((c().contextTokens / c().contextWindow) * 100))}%</span>
               </div>
             </Show>
-            <div class="kiloclaw-sidebar-detail">
-              <span class="kiloclaw-sidebar-muted">{t("kiloClaw.sidebar.tokens")}</span>
+            <div class="accureclaw-sidebar-detail">
+              <span class="accureclaw-sidebar-muted">{t("accureClaw.sidebar.tokens")}</span>
               <span>
                 {formatTokens(c().contextTokens)} / {formatTokens(c().contextWindow)}
               </span>
             </div>
             <Show when={c().model}>
-              <div class="kiloclaw-sidebar-detail">
-                <span class="kiloclaw-sidebar-muted">{t("kiloClaw.sidebar.model")}</span>
-                <span class="kiloclaw-sidebar-value-truncate">{c().model}</span>
+              <div class="accureclaw-sidebar-detail">
+                <span class="accureclaw-sidebar-muted">{t("accureClaw.sidebar.model")}</span>
+                <span class="accureclaw-sidebar-value-truncate">{c().model}</span>
               </div>
             </Show>
             <Show when={c().provider}>
-              <div class="kiloclaw-sidebar-detail">
-                <span class="kiloclaw-sidebar-muted">{t("kiloClaw.sidebar.provider")}</span>
-                <span class="kiloclaw-sidebar-value-truncate">{c().provider}</span>
+              <div class="accureclaw-sidebar-detail">
+                <span class="accureclaw-sidebar-muted">{t("accureClaw.sidebar.provider")}</span>
+                <span class="accureclaw-sidebar-value-truncate">{c().provider}</span>
               </div>
             </Show>
           </div>
@@ -164,28 +166,28 @@ export function StatusSidebar() {
 
       {/* Instance status */}
       <Show when={status()}>
-        <div class="kiloclaw-sidebar-section">
-          <div class="kiloclaw-sidebar-label">{t("kiloClaw.sidebar.instance")}</div>
-          <div class="kiloclaw-sidebar-row">
-            <span class={`kiloclaw-dot ${dot(status()!.status)}`} />
+        <div class="accureclaw-sidebar-section">
+          <div class="accureclaw-sidebar-label">{t("accureClaw.sidebar.instance")}</div>
+          <div class="accureclaw-sidebar-row">
+            <span class={`accureclaw-dot ${dot(status()!.status)}`} />
             <span>
-              {capitalize(status()!.status, t("kiloClaw.sidebar.unknown"))}
+              {capitalize(status()!.status, t("accureClaw.sidebar.unknown"))}
               <Show when={status()!.status === "running"}>
-                <span class="kiloclaw-sidebar-muted"> {uptime(status()!.lastStartedAt)}</span>
+                <span class="accureclaw-sidebar-muted"> {uptime(status()!.lastStartedAt)}</span>
               </Show>
             </span>
           </div>
         </div>
 
         {/* Details */}
-        <div class="kiloclaw-sidebar-section">
-          <div class="kiloclaw-sidebar-label">{t("kiloClaw.sidebar.details")}</div>
-          <div class="kiloclaw-sidebar-detail">
-            <span class="kiloclaw-sidebar-muted">{t("kiloClaw.sidebar.region")}</span>
+        <div class="accureclaw-sidebar-section">
+          <div class="accureclaw-sidebar-label">{t("accureClaw.sidebar.details")}</div>
+          <div class="accureclaw-sidebar-detail">
+            <span class="accureclaw-sidebar-muted">{t("accureClaw.sidebar.region")}</span>
             <span>{status()!.flyRegion?.toUpperCase() ?? "\u2014"}</span>
           </div>
-          <div class="kiloclaw-sidebar-detail">
-            <span class="kiloclaw-sidebar-muted">{t("kiloClaw.sidebar.version")}</span>
+          <div class="accureclaw-sidebar-detail">
+            <span class="accureclaw-sidebar-muted">{t("accureClaw.sidebar.version")}</span>
             <span>{status()!.openclawVersion ?? "\u2014"}</span>
           </div>
           <Show
@@ -195,8 +197,8 @@ export function StatusSidebar() {
               (status()!.channelCount ?? 0) >= 1
             }
           >
-            <div class="kiloclaw-sidebar-detail">
-              <span class="kiloclaw-sidebar-muted">{t("kiloClaw.sidebar.channels")}</span>
+            <div class="accureclaw-sidebar-detail">
+              <span class="accureclaw-sidebar-muted">{t("accureClaw.sidebar.channels")}</span>
               <span>{status()!.channelCount}</span>
             </div>
           </Show>
@@ -204,8 +206,8 @@ export function StatusSidebar() {
       </Show>
 
       <Show when={!status()}>
-        <div class="kiloclaw-sidebar-section">
-          <span class="kiloclaw-sidebar-muted">{t("kiloClaw.sidebar.noData")}</span>
+        <div class="accureclaw-sidebar-section">
+          <span class="accureclaw-sidebar-muted">{t("accureClaw.sidebar.noData")}</span>
         </div>
       </Show>
     </div>

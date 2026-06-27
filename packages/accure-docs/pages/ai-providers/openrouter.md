@@ -1,10 +1,10 @@
 ---
-title: "Using OpenRouter with Kilo Code | Unified AI API"
-description: "Access hundreds of AI models through a single API by configuring OpenRouter in Kilo Code. Setup guide for VS Code and the CLI."
+title: "Using OpenRouter with Accure Code | Unified AI API"
+description: "Access hundreds of AI models through a single API by configuring OpenRouter in Accure Code. Setup guide for VS Code and the CLI."
 sidebar_label: OpenRouter
 ---
 
-# Using OpenRouter With Kilo Code
+# Using OpenRouter With Accure Code
 
 OpenRouter is an AI platform that provides access to a wide variety of language models from different providers, all through a single API. This can simplify setup and allow you to easily experiment with different models.
 
@@ -16,19 +16,19 @@ OpenRouter is an AI platform that provides access to a wide variety of language 
 2.  **Get an API Key:** Go to the [keys page](https://openrouter.ai/keys). You should see an API key listed. If not, create a new key.
 3.  **Copy the Key:** Copy the API key.
 
-## Configuration in Kilo Code
+## Configuration in Accure Code
 
 {% tabs %}
 {% tab label="VSCode" %}
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add OpenRouter and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `accure.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `accure.json` config file:
 
 **Environment variable:**
 
@@ -36,7 +36,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export OPENROUTER_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/accure/accure.json` or `./accure.json`):
 
 ```jsonc
 {
@@ -59,7 +59,7 @@ Then set your default model:
 {% /tab %}
 {% tab label="VSCode (Legacy)" %}
 
-1.  **Open Kilo Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Kilo Code panel.
+1.  **Open Accure Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Accure Code panel.
 2.  **Select Provider:** Choose "OpenRouter" from the "API Provider" dropdown.
 3.  **Enter API Key:** Paste your OpenRouter API key into the "OpenRouter API Key" field.
 4.  **Select Model:** Choose your desired model from the "Model" dropdown.
@@ -75,7 +75,7 @@ OpenRouter provides an [optional "middle-out" message transform](https://openrou
 {% tabs %}
 {% tab label="VSCode & CLI" %}
 
-The middle-out transform is not exposed as a dedicated UI control in the VS Code extension. To enable it, set `transforms` on the model's `options` in your `kilo.json` config file. Anything under `options` is forwarded verbatim to the OpenRouter AI SDK as `providerOptions.openrouter`:
+The middle-out transform is not exposed as a dedicated UI control in the VS Code extension. To enable it, set `transforms` on the model's `options` in your `accure.json` config file. Anything under `options` is forwarded verbatim to the OpenRouter AI SDK as `providerOptions.openrouter`:
 
 ```jsonc
 {
@@ -96,7 +96,7 @@ The middle-out transform is not exposed as a dedicated UI control in the VS Code
 {% /tab %}
 {% tab label="VSCode (Legacy)" %}
 
-The legacy extension does not expose a control for the middle-out transform, and it does not read configuration from `kilo.json`. To use this option, switch to the new VS Code extension or the CLI.
+The legacy extension does not expose a control for the middle-out transform, and it does not read configuration from `accure.json`. To use this option, switch to the new VS Code extension or the CLI.
 
 {% /tab %}
 {% /tabs %}
@@ -108,7 +108,7 @@ OpenRouter can route to many different inference providers. This can be controll
 {% tabs %}
 {% tab label="VSCode & CLI" %}
 
-Provider routing is not exposed as dedicated UI controls in the VS Code extension. To configure it, set OpenRouter's `provider` routing fields under the model's `options` in your `kilo.json` config file. Everything under `options` is forwarded to the OpenRouter AI SDK as `providerOptions.openrouter`, so any field from the [OpenRouter provider routing docs](https://openrouter.ai/docs/features/provider-routing) can be used.
+Provider routing is not exposed as dedicated UI controls in the VS Code extension. To configure it, set OpenRouter's `provider` routing fields under the model's `options` in your `accure.json` config file. Everything under `options` is forwarded to the OpenRouter AI SDK as `providerOptions.openrouter`, so any field from the [OpenRouter provider routing docs](https://openrouter.ai/docs/features/provider-routing) can be used.
 
 ```jsonc
 {

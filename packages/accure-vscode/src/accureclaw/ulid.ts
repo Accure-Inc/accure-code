@@ -2,7 +2,7 @@
  * Minimal ULID generator for the extension host.
  *
  * Produces a 26-character Crockford Base32 identifier: 10 time chars
- * followed by 16 random chars. The kilo-chat worker validates clientId
+ * followed by 16 random chars. The accure-chat worker validates clientId
  * as a ULID, so `generateClientId` must emit only Crockford-legal
  * characters — `toString(36)` is NOT safe because base36 includes
  * I, L, O, and U which are excluded from Crockford Base32.

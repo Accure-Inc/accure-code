@@ -1,14 +1,14 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { Effect, Schema } from "effect"
 import { EffectBridge } from "../effect/bridge"
 import * as Tool from "./tool"
 import { Git } from "../git"
-import { Instance } from "../kilocode/instance"
+import { Instance } from "../accurecode/instance"
 import { Locale } from "../util/locale"
-import { Filesystem } from "../util/filesystem" // kilocode_change
-import { WorktreeFamily } from "../kilocode/worktree-family" // kilocode_change
-import { Session } from "../session/session" // kilocode_change
-import { SessionID } from "../session/schema" // kilocode_change
+import { Filesystem } from "../util/filesystem" // accurecode_change
+import { WorktreeFamily } from "../accurecode/worktree-family" // accurecode_change
+import { Session } from "../session/session" // accurecode_change
+import { SessionID } from "../session/schema" // accurecode_change
 import DESCRIPTION from "./recall.txt"
 
 const Parameters = Schema.Struct({
@@ -27,10 +27,10 @@ const Parameters = Schema.Struct({
 })
 
 export const RecallTool = Tool.define(
-  "kilo_local_recall",
+  "accure_local_recall",
   Effect.gen(function* () {
     const git = yield* Git.Service
-    const sessions = yield* Session.Service // kilocode_change
+    const sessions = yield* Session.Service // accurecode_change
     return {
       description: DESCRIPTION,
       parameters: Parameters,
@@ -67,8 +67,8 @@ async function search(
   })
 
   const limit = Math.min(params.limit ?? 20, 50)
-  const dirs = await bridge.promise(WorktreeFamily.list().pipe(Effect.provideService(Git.Service, git))) // kilocode_change
-  const { Session } = await import("../session/session") // kilocode_change
+  const dirs = await bridge.promise(WorktreeFamily.list().pipe(Effect.provideService(Git.Service, git))) // accurecode_change
+  const { Session } = await import("../session/session") // accurecode_change
 
   const results: Array<{
     id: string
@@ -78,8 +78,8 @@ async function search(
   }> = []
 
   for (const session of Session.listGlobal({
-    projectID: Instance.project.id, // kilocode_change
-    directories: dirs, // kilocode_change
+    projectID: Instance.project.id, // accurecode_change
+    directories: dirs, // accurecode_change
     search: params.query,
     roots: true,
     limit,
@@ -123,15 +123,15 @@ async function read(
   const session = await bridge.promise(sessions.get(SessionID.make(params.sessionID))).catch(() => {
     throw new Error(`Session "${params.sessionID}" not found. Use search mode first to find valid session IDs.`)
   })
-  const dirs = await bridge.promise(WorktreeFamily.list().pipe(Effect.provideService(Git.Service, git))) // kilocode_change
-  // kilocode_change start
+  const dirs = await bridge.promise(WorktreeFamily.list().pipe(Effect.provideService(Git.Service, git))) // accurecode_change
+  // accurecode_change start
   const dir = Filesystem.resolve(session.directory)
   if (!dirs.some((root) => Filesystem.contains(root, dir))) {
     throw new Error(
       `Session "${params.sessionID}" belongs to a different workspace and cannot be read from this directory.`,
     )
   }
-  // kilocode_change end
+  // accurecode_change end
 
   const cross = session.projectID !== Instance.project.id
   if (cross) {

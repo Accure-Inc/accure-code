@@ -1,7 +1,7 @@
 import { Config } from "@/config/config"
 import { ConfigPlugin } from "@/config/plugin"
-import { KilocodeKeybinds } from "@/kilocode/tui/keybinds"
-import { KiloTitleIcon } from "@/kilocode/cli/cmd/tui/title-icon"
+import { AccurecodeKeybinds } from "@/accurecode/tui/keybinds"
+import { AccureTitleIcon } from "@/accurecode/cli/cmd/tui/title-icon"
 import { Authorization } from "@/server/routes/instance/httpapi/middleware/authorization"
 import { InstanceContextMiddleware } from "@/server/routes/instance/httpapi/middleware/instance-context"
 import {
@@ -109,7 +109,7 @@ const TuiConfigShape = {
   keybinds: Schema.optional(Schema.Record(Schema.String, Schema.String)),
   plugin: Schema.optional(Schema.Array(ConfigPlugin.Spec)),
   plugin_enabled: Schema.optional(Schema.Record(Schema.String, Schema.Boolean)),
-  title_icon: Schema.optional(KiloTitleIcon.Value),
+  title_icon: Schema.optional(AccureTitleIcon.Value),
   scroll_speed: Schema.optional(Schema.Number),
   scroll_acceleration: Schema.optional(Schema.Struct({ enabled: Schema.Boolean })),
   diff_style: Schema.optional(Schema.Literals(["auto", "stacked"])),
@@ -125,7 +125,7 @@ const TuiConfigShape = {
 }
 export const TuiConfigResponse = Schema.Struct(TuiConfigShape).annotate({ identifier: "TuiConfigGetResponse" })
 export const TuiConfigPatch = Schema.Struct(TuiConfigShape)
-export const TuiKeybindListResponse = Schema.Struct({ keybinds: Schema.Array(KilocodeKeybinds.Info) }).annotate({
+export const TuiKeybindListResponse = Schema.Struct({ keybinds: Schema.Array(AccurecodeKeybinds.Info) }).annotate({
   identifier: "TuiKeybindListResponse",
 })
 
@@ -193,7 +193,7 @@ export const ConfigConsoleApi = HttpApi.make("config-console")
           OpenApi.annotations({
             identifier: "config.rules",
             summary: "Get project rules",
-            description: "List project instruction files used by Kilo and return their current contents.",
+            description: "List project instruction files used by Accure and return their current contents.",
           }),
         ),
         HttpApiEndpoint.put("rulesUpdate", ConfigConsolePaths.rules, {
@@ -225,7 +225,7 @@ export const ConfigConsoleApi = HttpApi.make("config-console")
           OpenApi.annotations({
             identifier: "config.modelStateUpdate",
             summary: "Update model state",
-            description: "Patch TUI-compatible model selections shared with Kilo Console.",
+            description: "Patch TUI-compatible model selections shared with Accure Console.",
           }),
         ),
         HttpApiEndpoint.get("tuiConfigGet", ConfigConsolePaths.tuiConfig, {
@@ -262,15 +262,15 @@ export const ConfigConsoleApi = HttpApi.make("config-console")
           }),
         ),
       )
-      .annotateMerge(OpenApi.annotations({ title: "config-console", description: "Kilo Console config routes." }))
+      .annotateMerge(OpenApi.annotations({ title: "config-console", description: "Accure Console config routes." }))
       .middleware(InstanceContextMiddleware)
       .middleware(WorkspaceRoutingMiddleware)
       .middleware(Authorization),
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "accure HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Accure HttpApi surface.",
     }),
   )

@@ -1,4 +1,4 @@
-package ai.kilocode.client.vfs
+package ai.accurecode.client.vfs
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
@@ -8,12 +8,12 @@ import com.intellij.openapi.project.Project
 import com.intellij.util.concurrency.annotations.RequiresEdt
 
 @Service(Service.Level.PROJECT)
-class KiloVfsManager(private val project: Project) {
+class AccureVfsManager(private val project: Project) {
     @RequiresEdt
     fun open(kind: String, params: Map<String, String> = emptyMap(), focus: Boolean = true): Boolean {
         val file = file(kind, params) ?: return false
         if (ApplicationManager.getApplication().isUnitTestMode) {
-            file.putUserData(FileEditorProvider.KEY, KiloFileEditorProvider())
+            file.putUserData(FileEditorProvider.KEY, AccureFileEditorProvider())
         }
         FileEditorManager.getInstance(project).openFile(file, focus)
         return true
@@ -23,7 +23,7 @@ class KiloVfsManager(private val project: Project) {
     fun close(kind: String, params: Map<String, String> = emptyMap()) {
         val file = file(kind, params) ?: return
         FileEditorManager.getInstance(project).closeFile(file)
-        KiloVirtualFileSystem.getInstance().release(file.path)
+        AccureVirtualFileSystem.getInstance().release(file.path)
     }
 
     @RequiresEdt
@@ -32,9 +32,9 @@ class KiloVfsManager(private val project: Project) {
         FileEditorManager.getInstance(project).updateFilePresentation(file)
     }
 
-    private fun file(kind: String, params: Map<String, String>): KiloVirtualFile? {
-        val path = KiloPath(kind, params)
-        val fs = KiloVirtualFileSystem.getInstance()
-        return fs.refreshAndFindFileByPath(fs.getPath(path)) as? KiloVirtualFile
+    private fun file(kind: String, params: Map<String, String>): AccureVirtualFile? {
+        val path = AccurePath(kind, params)
+        val fs = AccureVirtualFileSystem.getInstance()
+        return fs.refreshAndFindFileByPath(fs.getPath(path)) as? AccureVirtualFile
     }
 }

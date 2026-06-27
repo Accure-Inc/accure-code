@@ -10,7 +10,7 @@ body.vscode-high-contrast-light {
   .scroll-to-bottom-button,
   .feedback-button,
   .startup-error-retry,
-  .kilo-notifications-nav-btn,
+  .accurecode-notifications-nav-btn,
   .image-attachment-remove,
   .prompt-review-chip-remove,
   [data-slot="question-progress-nav"],
@@ -51,7 +51,7 @@ body.vscode-high-contrast-light {
   }
 
   /* Notification card */
-  .kilo-notifications-card {
+  .accurecode-notifications-card {
     border: 1px solid var(--vscode-contrastBorder, transparent);
   }
 
@@ -109,7 +109,7 @@ body.vscode-high-contrast-light {
   .scroll-to-bottom-button:focus-visible,
   .feedback-button:focus-visible,
   .recent-session-item:focus-visible,
-  .kilo-notifications-nav-btn:focus-visible {
+  .accurecode-notifications-nav-btn:focus-visible {
     outline: 1px solid var(--vscode-contrastActiveBorder, var(--vscode-focusBorder));
     outline-offset: -1px;
   }

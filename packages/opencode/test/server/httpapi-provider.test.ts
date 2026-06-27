@@ -7,7 +7,7 @@ import * as Log from "@opencode-ai/core/util/log"
 import { resetDatabase } from "../fixture/db"
 import { TestInstance } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
-import { preparePluginDependencies } from "../kilocode/plugin-dependencies" // kilocode_change
+import { preparePluginDependencies } from "../accurecode/plugin-dependencies" // accurecode_change
 
 void Log.init({ print: false })
 
@@ -119,7 +119,7 @@ function requestCallback(input: {
 function writeProviderAuthPlugin(dir: string) {
   return Effect.gen(function* () {
     const fs = yield* AppFileSystem.Service
-    yield* Effect.promise(() => preparePluginDependencies(dir)) // kilocode_change
+    yield* Effect.promise(() => preparePluginDependencies(dir)) // accurecode_change
 
     yield* fs.writeWithDirs(
       path.join(dir, ".opencode", "plugin", "provider-oauth-parity.ts"),
@@ -154,7 +154,7 @@ function writeProviderAuthPlugin(dir: string) {
 function writeProviderAuthValidationPlugin(dir: string) {
   return Effect.gen(function* () {
     const fs = yield* AppFileSystem.Service
-    yield* Effect.promise(() => preparePluginDependencies(dir)) // kilocode_change
+    yield* Effect.promise(() => preparePluginDependencies(dir)) // accurecode_change
 
     yield* fs.writeWithDirs(
       path.join(dir, ".opencode", "plugin", "provider-oauth-validation.ts"),
@@ -196,7 +196,7 @@ function writeProviderAuthValidationPlugin(dir: string) {
 function writeFunctionOptionsPlugin(dir: string) {
   return Effect.gen(function* () {
     const fs = yield* AppFileSystem.Service
-    yield* Effect.promise(() => preparePluginDependencies(dir)) // kilocode_change
+    yield* Effect.promise(() => preparePluginDependencies(dir)) // accurecode_change
 
     yield* fs.writeWithDirs(
       path.join(dir, ".opencode", "plugin", "provider-function-options.ts"),
@@ -228,7 +228,7 @@ function writeFunctionOptionsPlugin(dir: string) {
 function writeProviderModelsMutationPlugin(dir: string) {
   return Effect.gen(function* () {
     const fs = yield* AppFileSystem.Service
-    yield* Effect.promise(() => preparePluginDependencies(dir)) // kilocode_change
+    yield* Effect.promise(() => preparePluginDependencies(dir)) // accurecode_change
 
     yield* fs.writeWithDirs(
       path.join(dir, ".opencode", "plugin", "provider-models-mutation.ts"),
@@ -280,7 +280,7 @@ describe("provider HttpApi", () => {
       const instance = yield* TestInstance
       const response = yield* Effect.promise(() =>
         Promise.resolve(
-          app().request("/api/provider/missing", { headers: { "x-kilo-directory": instance.directory } }),
+          app().request("/api/provider/missing", { headers: { "x-accure-directory": instance.directory } }),
         ),
       )
 
@@ -299,7 +299,7 @@ describe("provider HttpApi", () => {
     Effect.gen(function* () {
       const instance = yield* TestInstance
       yield* writeProviderAuthPlugin(instance.directory)
-      const headers = { "x-kilo-directory": instance.directory, "content-type": "application/json" }
+      const headers = { "x-accure-directory": instance.directory, "content-type": "application/json" }
       const server = app()
 
       const api = yield* requestAuthorize({
@@ -340,7 +340,7 @@ describe("provider HttpApi", () => {
         providerID: "test-oauth-validation",
         method: 0,
         inputs: { token: "nope" },
-        headers: { "x-kilo-directory": instance.directory, "content-type": "application/json" },
+        headers: { "x-accure-directory": instance.directory, "content-type": "application/json" },
       })
 
       expect(response.status).toBe(400)
@@ -361,7 +361,7 @@ describe("provider HttpApi", () => {
         app: app(),
         providerID,
         method: 0,
-        headers: { "x-kilo-directory": instance.directory, "content-type": "application/json" },
+        headers: { "x-accure-directory": instance.directory, "content-type": "application/json" },
       })
 
       expect(response.status).toBe(400)
@@ -380,12 +380,12 @@ describe("provider HttpApi", () => {
       const instance = yield* TestInstance
       yield* writeFunctionOptionsPlugin(instance.directory)
       yield* setEnvScoped(
-        "KILO_AUTH_CONTENT",
+        "ACCURECODE_AUTH_CONTENT",
         JSON.stringify({
           google: { type: "oauth", refresh: "dummy", access: "dummy", expires: 9999999999999 },
         }),
       )
-      const headers = { "x-kilo-directory": instance.directory }
+      const headers = { "x-accure-directory": instance.directory }
       const providerResponse = yield* Effect.promise(() => Promise.resolve(app().request("/provider", { headers })))
       const configResponse = yield* Effect.promise(() =>
         Promise.resolve(app().request("/config/providers", { headers })),
@@ -410,7 +410,7 @@ describe("provider HttpApi", () => {
       const instance = yield* TestInstance
       yield* writeProviderModelsMutationPlugin(instance.directory)
 
-      const headers = { "x-kilo-directory": instance.directory }
+      const headers = { "x-accure-directory": instance.directory }
       const providerResponse = yield* Effect.promise(() => Promise.resolve(app().request("/provider", { headers })))
       const configResponse = yield* Effect.promise(() =>
         Promise.resolve(app().request("/config/providers", { headers })),

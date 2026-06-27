@@ -1,8 +1,8 @@
-package ai.kilocode.client.settings.base
+package ai.accurecode.client.settings.base
 
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.ui.layout.StackAxis
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.ui.layout.StackAxis
 import com.intellij.ui.TitledSeparator
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.UIUtil

@@ -25,7 +25,7 @@ function app() {
 function request(path: string, directory: string, init: RequestInit = {}) {
   return Effect.promise(() => {
     const headers = new Headers(init.headers)
-    headers.set("x-kilo-directory", directory)
+    headers.set("x-accure-directory", directory)
     return Promise.resolve(app().request(path, { ...init, headers }))
   })
 }
@@ -271,7 +271,7 @@ describe("experimental HttpApi", () => {
           Effect.gen(function* () {
             const listed = yield* request(ExperimentalPaths.worktree, tmp.directory)
             expect(listed.status).toBe(200)
-            expect(yield* json(listed)).toContainEqual({ directory: info.directory, managed: true }) // kilocode_change
+            expect(yield* json(listed)).toContainEqual({ directory: info.directory, managed: true }) // accurecode_change
 
             const reset = yield* request(ExperimentalPaths.worktreeReset, tmp.directory, {
               method: "POST",

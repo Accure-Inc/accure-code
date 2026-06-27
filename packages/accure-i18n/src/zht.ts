@@ -1,17 +1,17 @@
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1": "Kilo Gateway 為您提供一組精選的可靠優化模型，專為編碼代理設計。",
-  "provider.connect.kiloGateway.line2": "只需一個 API 金鑰，您就可以使用 Claude、GPT、Gemini、GLM 等模型。",
-  "provider.connect.kiloGateway.visit.prefix": "訪問 ",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": " 獲取您的 API 金鑰。",
-  "provider.connect.kiloGateway.byok.prefix": "如需更多使用統計資訊，請",
-  "provider.connect.kiloGateway.byok.link": "透過 Kilo's Gateway 進行 BYOK",
-  "provider.connect.kiloGateway.byok.suffix": "。",
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1": "Accure Gateway 為您提供一組精選的可靠優化模型，專為編碼代理設計。",
+  "provider.connect.accureGateway.line2": "只需一個 API 金鑰，您就可以使用 Claude、GPT、Gemini、GLM 等模型。",
+  "provider.connect.accureGateway.visit.prefix": "訪問 ",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": " 獲取您的 API 金鑰。",
+  "provider.connect.accureGateway.byok.prefix": "如需更多使用統計資訊，請",
+  "provider.connect.accureGateway.byok.link": "透過 Accure's Gateway 進行 BYOK",
+  "provider.connect.accureGateway.byok.suffix": "。",
 
   // Provider settings translations
   "settings.providers.group.recommended": "推薦",
-  "settings.providers.note.kilo": "存取 500+ AI 模型",
+  "settings.providers.note.accurecode": "存取 500+ AI 模型",
   "settings.providers.note.opencode": "精選模型，包括 Claude、GPT、Gemini 等",
   "settings.providers.note.anthropic": "直接存取 Claude 模型，包括 Pro 和 Max",
   "settings.providers.note.deepseek": "用於推理和程式設計工作的 DeepSeek 模型",
@@ -97,7 +97,7 @@ export const dict = {
   "snapshot.slowRepo.answer.continue.description": "等待快照完成。初始快照建立後，後續回合會很快。",
   "snapshot.slowRepo.answer.disable": "為此專案停用",
   "snapshot.slowRepo.answer.disable.description":
-    "關閉本專案的 Kilo 快照。你將失去對 Kilo 變更的撤銷/重做，但 git 仍會追蹤所有內容。",
+    "關閉本專案的 Accure 快照。你將失去對 Accure 變更的撤銷/重做，但 git 仍會追蹤所有內容。",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "在差異檢視器中開啟",

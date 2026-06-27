@@ -1,4 +1,4 @@
-import type { TuiDialogSelectOption, TuiPluginApi, TuiRouteDefinition, TuiSlotProps } from "@kilocode/plugin/tui"
+import type { TuiDialogSelectOption, TuiPluginApi, TuiRouteDefinition, TuiSlotProps } from "@accurecode/plugin/tui"
 import type { useEvent } from "@tui/context/event"
 import type { useRoute } from "@tui/context/route"
 import type { useSDK } from "@tui/context/sdk"
@@ -95,9 +95,9 @@ function routeCurrent(route: ReturnType<typeof useRoute>): TuiPluginApi["route"]
     }
   }
 
-  // kilocode_change start
-  if (route.data.type === "kiloclaw") return { name: "kiloclaw" }
-  // kilocode_change end
+  // accurecode_change start
+  if (route.data.type === "accureclaw") return { name: "accureclaw" }
+  // accurecode_change end
 
   return {
     name: route.data.id,
@@ -163,11 +163,11 @@ function stateApi(sync: ReturnType<typeof useSync>): TuiPluginApi["state"] {
       todo(sessionID) {
         return sync.data.todo[sessionID] ?? []
       },
-      // kilocode_change start
+      // accurecode_change start
       processes(sessionID) {
         return sync.data.background_process[sessionID] ?? []
       },
-      // kilocode_change end
+      // accurecode_change end
       messages(sessionID) {
         return sync.data.message[sessionID] ?? []
       },

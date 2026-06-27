@@ -18,7 +18,7 @@ import { NodePath } from "@effect/platform-node"
 import { AppFileSystem } from "@opencode-ai/core/filesystem"
 import { AppProcess } from "@opencode-ai/core/process"
 import { InstanceState } from "@/effect/instance-state"
-import { WorktreeCleanup } from "@/kilocode/worktree-cleanup" // kilocode_change
+import { WorktreeCleanup } from "@/accurecode/worktree-cleanup" // accurecode_change
 
 const log = Log.create({ service: "worktree" })
 
@@ -376,7 +376,7 @@ export const layer: Layer.Layer<
       )
     }
 
-    // kilocode_change start - use Kilo cleanup helper for slow Windows handle release
+    // accurecode_change start - use Accure cleanup helper for slow Windows handle release
     function cleanDirectory(target: string) {
       return Effect.tryPromise({
         try: () => WorktreeCleanup.removeDirectory(target),
@@ -384,7 +384,7 @@ export const layer: Layer.Layer<
           new RemoveFailedError({ message: errorMessage(error) || "Failed to remove git worktree directory" }),
       })
     }
-    // kilocode_change end
+    // accurecode_change end
 
     const remove = Effect.fn("Worktree.remove")(function* (input: RemoveInput) {
       const ctx = yield* InstanceState.context
@@ -416,7 +416,7 @@ export const layer: Layer.Layer<
         target: entry.path,
         git,
         stop: stopFsmonitor,
-      }) // kilocode_change
+      }) // accurecode_change
       if (removed.code !== 0) {
         const next = yield* git(["worktree", "list", "--porcelain"], { cwd: ctx.worktree })
         if (next.code !== 0) {

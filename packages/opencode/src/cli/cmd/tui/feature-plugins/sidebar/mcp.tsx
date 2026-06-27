@@ -1,4 +1,4 @@
-import type { TuiPlugin, TuiPluginApi } from "@kilocode/plugin/tui"
+import type { TuiPlugin, TuiPluginApi } from "@accurecode/plugin/tui"
 import type { InternalTuiPlugin } from "../../plugin/internal"
 import { createMemo, For, Match, Show, Switch, createSignal } from "solid-js"
 

@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.ui.prompt
+package ai.accurecode.client.session.ui.prompt
 
 interface SendPromptContext {
     val isSendEnabled: Boolean

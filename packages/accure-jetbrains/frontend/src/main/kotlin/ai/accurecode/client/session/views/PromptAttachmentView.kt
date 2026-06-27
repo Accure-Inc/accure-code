@@ -1,13 +1,13 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.FileAttachment
-import ai.kilocode.client.session.ui.attachment.AttachmentCard
-import ai.kilocode.client.session.ui.attachment.AttachmentCardItem
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.base.PartView
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.Stack
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.FileAttachment
+import ai.accurecode.client.session.ui.attachment.AttachmentCard
+import ai.accurecode.client.session.ui.attachment.AttachmentCardItem
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.base.PartView
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.Stack
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import com.intellij.util.ui.JBUI

@@ -1,43 +1,43 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider"
 import type { Provider as SDK } from "ai"
-import type { KiloProviderOptions } from "./types.js"
+import type { AccureProviderOptions } from "./types.js"
 import { getApiKey } from "./auth/token.js"
-import { buildKiloHeaders, getDefaultHeaders } from "./headers.js"
+import { buildAccureHeaders, getDefaultHeaders } from "./headers.js"
 import { ANONYMOUS_API_KEY } from "./api/constants.js"
-import { resolveKiloOpenRouterBaseUrl } from "./api/url.js"
+import { resolveAccureOpenRouterBaseUrl } from "./api/url.js"
 import { buildRequestHeaders } from "./provider.js"
 
 /**
- * Debug version of createKilo with extensive logging
+ * Debug version of createAccure with extensive logging
  */
-export function createKiloDebug(options: KiloProviderOptions = {}): SDK {
-  console.log("\n🔍 [KILO DEBUG] Creating Kilo Provider")
-  console.log("📋 [KILO DEBUG] Options received:", JSON.stringify(options, null, 2))
+export function createAccureDebug(options: AccureProviderOptions = {}): SDK {
+  console.log("\n🔍 [ACCURE DEBUG] Creating Accure Provider")
+  console.log("📋 [ACCURE DEBUG] Options received:", JSON.stringify(options, null, 2))
 
   // Get API key from options or environment
   const apiKey = getApiKey(options)
-  console.log("🔑 [KILO DEBUG] API Key extracted:")
-  console.log("  - Source:", options.kilocodeToken ? "kilocodeToken" : options.apiKey ? "apiKey" : "none")
+  console.log("🔑 [ACCURE DEBUG] API Key extracted:")
+  console.log("  - Source:", options.accurecodeToken ? "accurecodeToken" : options.apiKey ? "apiKey" : "none")
   console.log("  - Value:", apiKey ? `${apiKey.substring(0, 8)}...${apiKey.substring(apiKey.length - 8)}` : "MISSING!")
 
-  const openRouterUrl = resolveKiloOpenRouterBaseUrl({ baseURL: options.baseURL, token: apiKey })
-  console.log("🔗 [KILO DEBUG] OpenRouter URL:", openRouterUrl)
+  const openRouterUrl = resolveAccureOpenRouterBaseUrl({ baseURL: options.baseURL, token: apiKey })
+  console.log("🔗 [ACCURE DEBUG] OpenRouter URL:", openRouterUrl)
 
   // Merge custom headers with defaults
   const customHeaders = {
     ...getDefaultHeaders(),
-    ...buildKiloHeaders(undefined, {
-      kilocodeOrganizationId: options.kilocodeOrganizationId,
-      kilocodeTesterWarningsDisabledUntil: undefined,
+    ...buildAccureHeaders(undefined, {
+      accurecodeOrganizationId: options.accurecodeOrganizationId,
+      accurecodeTesterWarningsDisabledUntil: undefined,
     }),
     ...options.headers,
   }
-  console.log("📝 [KILO DEBUG] Custom headers:", JSON.stringify(customHeaders, null, 2))
+  console.log("📝 [ACCURE DEBUG] Custom headers:", JSON.stringify(customHeaders, null, 2))
 
   // Create custom fetch wrapper to add dynamic headers
   const originalFetch = options.fetch ?? fetch
   const wrappedFetch = async (input: string | URL | Request, init?: RequestInit) => {
-    console.log("\n🚀 [KILO DEBUG] Making request:")
+    console.log("\n🚀 [ACCURE DEBUG] Making request:")
     console.log("  - URL:", String(input))
     console.log("  - Method:", init?.method || "GET")
 
@@ -85,9 +85,9 @@ export function createKiloDebug(options: KiloProviderOptions = {}): SDK {
     return response
   }
 
-  console.log("✅ [KILO DEBUG] Creating OpenRouter provider with configuration\n")
+  console.log("✅ [ACCURE DEBUG] Creating OpenRouter provider with configuration\n")
 
-  // Create OpenRouter provider with KiloCode configuration
+  // Create OpenRouter provider with AccureCode configuration
   return createOpenRouter({
     baseURL: openRouterUrl,
     apiKey: apiKey ?? ANONYMOUS_API_KEY,

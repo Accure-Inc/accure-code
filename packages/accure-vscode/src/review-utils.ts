@@ -20,7 +20,7 @@ export function openFileInEditor(
   line?: number,
   column?: number,
   viewColumn: vscode.ViewColumn = vscode.ViewColumn.Beside,
-  prefix = "Kilo",
+  prefix = "Accure",
 ): void {
   const uri = vscode.Uri.file(filePath)
   const options: vscode.TextDocumentShowOptions = { viewColumn, preview: true }
@@ -33,7 +33,7 @@ export function openFileInEditor(
 
   void vscode.commands
     .executeCommand("vscode.open", uri, options)
-    .then(undefined, (err) => console.error(`[Kilo New] ${prefix}: Failed to open file:`, uri.fsPath, err))
+    .then(undefined, (err) => console.error(`[Accure New] ${prefix}: Failed to open file:`, uri.fsPath, err))
 }
 
 export function openWorkspaceRelativeFile(relativePath: string, line?: number, column?: number): void {

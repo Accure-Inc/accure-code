@@ -1,43 +1,43 @@
-package ai.kilocode.client.settings
+package ai.accurecode.client.settings
 
-import ai.kilocode.client.settings.models.ModelsConfigurable
-import ai.kilocode.client.settings.profile.UserProfileConfigurable
+import ai.accurecode.client.settings.models.ModelsConfigurable
+import ai.accurecode.client.settings.profile.UserProfileConfigurable
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 
-class KiloSettingsSelectionTest : BasePlatformTestCase() {
+class AccureSettingsSelectionTest : BasePlatformTestCase() {
 
     override fun tearDown() {
         try {
-            PropertiesComponent.getInstance(project).unsetValue(KiloSettingsSelection.SELECTED_CONFIGURABLE_KEY)
+            PropertiesComponent.getInstance(project).unsetValue(AccureSettingsSelection.SELECTED_CONFIGURABLE_KEY)
         } finally {
             super.tearDown()
         }
     }
 
     fun `test falls back to profile when no last settings page exists`() {
-        assertEquals(UserProfileConfigurable.ID, KiloSettingsSelection.target(project))
+        assertEquals(UserProfileConfigurable.ID, AccureSettingsSelection.target(project))
     }
 
-    fun `test falls back to profile when last page is not kilo`() {
+    fun `test falls back to profile when last page is not accure`() {
         select("preferences.lookFeel")
 
-        assertEquals(UserProfileConfigurable.ID, KiloSettingsSelection.target(project))
+        assertEquals(UserProfileConfigurable.ID, AccureSettingsSelection.target(project))
     }
 
-    fun `test keeps last kilo root page`() {
-        select(KiloSettingsConfigurable.ID)
+    fun `test keeps last accure root page`() {
+        select(AccureSettingsConfigurable.ID)
 
-        assertEquals(KiloSettingsConfigurable.ID, KiloSettingsSelection.target(project))
+        assertEquals(AccureSettingsConfigurable.ID, AccureSettingsSelection.target(project))
     }
 
-    fun `test keeps last kilo child page`() {
+    fun `test keeps last accure child page`() {
         select(ModelsConfigurable.ID)
 
-        assertEquals(ModelsConfigurable.ID, KiloSettingsSelection.target(project))
+        assertEquals(ModelsConfigurable.ID, AccureSettingsSelection.target(project))
     }
 
     private fun select(id: String) {
-        PropertiesComponent.getInstance(project).setValue(KiloSettingsSelection.SELECTED_CONFIGURABLE_KEY, id)
+        PropertiesComponent.getInstance(project).setValue(AccureSettingsSelection.SELECTED_CONFIGURABLE_KEY, id)
     }
 }

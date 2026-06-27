@@ -1,19 +1,19 @@
 /**
- * TUI-specific helper functions for Kilo Gateway integration
+ * TUI-specific helper functions for Accure Gateway integration
  *
  * This module provides utilities that are consumed by the TUI layer
  * to implement organization selection, profile display, and team management.
  */
 
-import type { KilocodeProfile, KilocodeBalance, Organization } from "../types.js"
+import type { AccurecodeProfile, AccurecodeBalance, Organization } from "../types.js"
 
 /**
  * Format profile information for display
  * Used by TUI to show profile in dialogs
  */
 export function formatProfileInfo(
-  profile: KilocodeProfile,
-  balance: KilocodeBalance | null,
+  profile: AccurecodeProfile,
+  balance: AccurecodeBalance | null,
   currentOrgId?: string,
 ): string {
   let content = ""
@@ -42,8 +42,8 @@ export function formatProfileInfo(
 
   // Add usage details link
   const usageUrl = currentOrgId
-    ? `https://app.kilo.ai/organizations/${currentOrgId}/usage-details`
-    : "https://app.kilo.ai/usage"
+    ? `https://app.accurecode.ai/organizations/${currentOrgId}/usage-details`
+    : "https://app.accurecode.ai/usage"
   content += `\nUsage Details: ${usageUrl}`
 
   return content

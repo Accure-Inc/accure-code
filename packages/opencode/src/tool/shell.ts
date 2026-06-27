@@ -18,8 +18,8 @@ import { ShellID } from "./shell/id"
 
 import * as Truncate from "./truncate"
 import { Plugin } from "@/plugin"
-import { normalizeUrls } from "@/kilocode/util/url" // kilocode_change
-import { CommandTimeout } from "@/kilocode/command-timeout" // kilocode_change
+import { normalizeUrls } from "@/accurecode/util/url" // accurecode_change
+import { CommandTimeout } from "@/accurecode/command-timeout" // accurecode_change
 import { ChildProcess } from "effect/unstable/process"
 import { ChildProcessSpawner } from "effect/unstable/process/ChildProcessSpawner"
 import { ShellPrompt, type Parameters } from "./shell/prompt"
@@ -51,9 +51,9 @@ const FILES = new Set([
   "new-item",
   "rename-item",
 ])
-// kilocode_change start
+// accurecode_change start
 const READ = new Set(["cat", "get-content"])
-// kilocode_change end
+// accurecode_change end
 const CMD_FILES = new Set([
   "copy",
   "del",
@@ -76,15 +76,15 @@ type Part = {
   text: string
 }
 
-// kilocode_change start
+// accurecode_change start
 type Access = "read" | "unknown"
-// kilocode_change end
+// accurecode_change end
 
 type Scan = {
   dirs: Set<string>
   patterns: Set<string>
   always: Set<string>
-  access: Access // kilocode_change
+  access: Access // accurecode_change
 }
 
 type Chunk = {
@@ -133,13 +133,13 @@ function source(node: Node) {
   return (node.parent?.type === "redirected_statement" ? node.parent.text : node.text).trim()
 }
 
-// kilocode_change start
+// accurecode_change start
 function access(cmd: string, node: Node): Access {
   if (!READ.has(cmd)) return "unknown"
   if (node.parent?.type === "redirected_statement") return "unknown"
   return "read"
 }
-// kilocode_change end
+// accurecode_change end
 
 function commands(node: Node) {
   return node.descendantsOfType("command").filter((child): child is Node => Boolean(child))
@@ -285,9 +285,9 @@ const ask = Effect.fn("ShellTool.ask")(function* (
   ctx: Tool.Context,
   scan: Scan,
   command: string,
-  description?: string, // kilocode_change
+  description?: string, // accurecode_change
 ) {
-  // kilocode_change
+  // accurecode_change
   if (scan.dirs.size > 0) {
     const globs = Array.from(scan.dirs).map((dir) => {
       if (process.platform === "win32") return AppFileSystem.normalizePathPattern(path.join(dir, "*"))
@@ -297,7 +297,7 @@ const ask = Effect.fn("ShellTool.ask")(function* (
       permission: "external_directory",
       patterns: globs,
       always: globs,
-      metadata: scan.access === "read" ? { command, access: "read", ...(description ? { description } : {}) } : {}, // kilocode_change
+      metadata: scan.access === "read" ? { command, access: "read", ...(description ? { description } : {}) } : {}, // accurecode_change
     })
   }
 
@@ -306,15 +306,15 @@ const ask = Effect.fn("ShellTool.ask")(function* (
     permission: ShellID.ToolID,
     patterns: Array.from(scan.patterns),
     always: Array.from(scan.always),
-    metadata: { command: normalizeUrls(command), ...(description ? { description } : {}) }, // kilocode_change
+    metadata: { command: normalizeUrls(command), ...(description ? { description } : {}) }, // accurecode_change
   })
 })
 
 function cmd(shell: string, command: string, cwd: string, env: NodeJS.ProcessEnv) {
   if (process.platform === "win32" && Shell.ps(shell)) {
-    // kilocode_change start - encoded PowerShell args
+    // accurecode_change start - encoded PowerShell args
     return ChildProcess.make(shell, Shell.args(shell, command, cwd), {
-      // kilocode_change end
+      // accurecode_change end
       cwd,
       env,
       stdin: "ignore",
@@ -408,33 +408,33 @@ export const ShellTool = Tool.define(
         dirs: new Set<string>(),
         patterns: new Set<string>(),
         always: new Set<string>(),
-        access: "read", // kilocode_change
+        access: "read", // accurecode_change
       }
       const shellKind = ShellID.toKind(Shell.name(shell))
 
-      const nodes = commands(root) // kilocode_change
-      if (root.descendantsOfType("file_redirect").length > 0) scan.access = "unknown" // kilocode_change
-      // kilocode_change start
+      const nodes = commands(root) // accurecode_change
+      if (root.descendantsOfType("file_redirect").length > 0) scan.access = "unknown" // accurecode_change
+      // accurecode_change start
       if (nodes.some((node) => !READ.has((ps ? parts(node)[0]?.text.toLowerCase() : parts(node)[0]?.text) ?? ""))) {
         scan.access = "unknown"
       }
-      // kilocode_change end
+      // accurecode_change end
 
       for (const node of nodes) {
-        // kilocode_change
+        // accurecode_change
         const command = parts(node)
         const tokens = command.map((item) => item.text)
         const cmd = ps || shellKind === "cmd" ? tokens[0]?.toLowerCase() : tokens[0]
 
         if (cmd && (FILES.has(cmd) || (shellKind === "cmd" && CMD_FILES.has(cmd)))) {
-          const kind = access(cmd, node) // kilocode_change
+          const kind = access(cmd, node) // accurecode_change
           for (const arg of pathArgs(command, ps, shellKind === "cmd")) {
             const resolved = yield* argPath(arg, cwd, ps, shell)
             log.info("resolved path", { arg, resolved })
             if (!resolved || containsPath(resolved, instance)) continue
             const dir = (yield* fs.isDir(resolved)) ? resolved : path.dirname(resolved)
             scan.dirs.add(dir)
-            if (kind !== "read") scan.access = "unknown" // kilocode_change
+            if (kind !== "read") scan.access = "unknown" // accurecode_change
           }
         }
 
@@ -575,7 +575,7 @@ export const ShellTool = Tool.define(
             return Effect.sync(() => ctx.abort.removeEventListener("abort", handler))
           })
 
-          const timeout = Effect.sleep(`${CommandTimeout.duration(input.timeout)} millis`) // kilocode_change
+          const timeout = Effect.sleep(`${CommandTimeout.duration(input.timeout)} millis`) // accurecode_change
 
           const exit = yield* Effect.raceAll([
             handle.exitCode.pipe(Effect.map((code) => ({ kind: "exit" as const, code }))),
@@ -598,12 +598,12 @@ export const ShellTool = Tool.define(
 
       const meta: string[] = []
       if (expired) {
-        // kilocode_change start
+        // accurecode_change start
         meta.push(
           CommandTimeout.message(input.timeout, "shell tool terminated command") ??
             `shell tool terminated command after exceeding timeout ${input.timeout} ms. If this command is expected to take longer and is not waiting for interactive input, retry with a larger timeout value in milliseconds.`,
         )
-        // kilocode_change end
+        // accurecode_change end
       }
       if (aborted) meta.push("User aborted the command")
       const raw = list.map((item) => item.text).join("")
@@ -657,7 +657,7 @@ export const ShellTool = Tool.define(
               if (params.timeout !== undefined && params.timeout < 0) {
                 throw new Error(`Invalid timeout value: ${params.timeout}. Timeout must be a positive number.`)
               }
-              const timeout = CommandTimeout.clamp(params.timeout ?? defaultTimeout).timeout // kilocode_change
+              const timeout = CommandTimeout.clamp(params.timeout ?? defaultTimeout).timeout // accurecode_change
               const ps = Shell.ps(shell)
               yield* Effect.scoped(
                 Effect.gen(function* () {
@@ -665,13 +665,13 @@ export const ShellTool = Tool.define(
                     Effect.sync(() => tree.delete()),
                   )
                   const scan = yield* collect(tree.rootNode, cwd, ps, shell, instanceCtx)
-                  // kilocode_change start
+                  // accurecode_change start
                   if (!containsPath(cwd, instanceCtx)) {
                     scan.dirs.add(cwd)
                     scan.access = "unknown"
                   }
-                  // kilocode_change end
-                  yield* ask(ctx, scan, params.command, params.description) // kilocode_change
+                  // accurecode_change end
+                  yield* ask(ctx, scan, params.command, params.description) // accurecode_change
                 }),
               )
 
@@ -682,7 +682,7 @@ export const ShellTool = Tool.define(
                   cwd,
                   env: yield* shellEnv(ctx, cwd),
                   timeout,
-                  description: params.description ?? params.command, // kilocode_change
+                  description: params.description ?? params.command, // accurecode_change
                 },
                 ctx,
               )

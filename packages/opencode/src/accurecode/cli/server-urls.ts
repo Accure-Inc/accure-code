@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { isIP } from "net"
 import { networkInterfaces } from "os"
 

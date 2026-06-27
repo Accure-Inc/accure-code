@@ -1,14 +1,14 @@
-package ai.kilocode.backend.workspace
+package ai.accurecode.backend.workspace
 
-import ai.kilocode.backend.app.KiloBackendSessionManager
-import ai.kilocode.backend.app.LoadError
-import ai.kilocode.backend.app.SseEvent
-import ai.kilocode.backend.cli.KiloCliDataParser
-import ai.kilocode.log.KiloLog
-import ai.kilocode.jetbrains.api.client.DefaultApi
-import ai.kilocode.jetbrains.api.model.Agent
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionListDto
+import ai.accurecode.backend.app.AccureBackendSessionManager
+import ai.accurecode.backend.app.LoadError
+import ai.accurecode.backend.app.SseEvent
+import ai.accurecode.backend.cli.AccureCliDataParser
+import ai.accurecode.log.AccureLog
+import ai.accurecode.jetbrains.api.client.DefaultApi
+import ai.accurecode.jetbrains.api.model.Agent
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionListDto
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -29,30 +29,30 @@ import java.util.concurrent.atomic.AtomicReference
  * (providers, agents, commands, skills) and session access.
  *
  * **Not an IntelliJ service** — a plain class created by
- * [KiloBackendWorkspaceManager] for each directory. Receives a
+ * [AccureBackendWorkspaceManager] for each directory. Receives a
  * pre-connected [DefaultApi] — no null checks needed.
  *
- * Session operations delegate to [KiloBackendSessionManager] with
+ * Session operations delegate to [AccureBackendSessionManager] with
  * this workspace's [directory], so the frontend only needs one
  * object per directory.
  */
-class KiloBackendWorkspace(
+class AccureBackendWorkspace(
     val directory: String,
     private val cs: CoroutineScope,
     private val api: DefaultApi,
     private val http: OkHttpClient,
     private val port: Int,
     private val events: SharedFlow<SseEvent>,
-    private val sessions: KiloBackendSessionManager,
-    private val log: KiloLog,
+    private val sessions: AccureBackendSessionManager,
+    private val log: AccureLog,
 ) {
     companion object {
         private const val MAX_RETRIES = 3
         private const val RETRY_DELAY_MS = 1000L
     }
 
-    private val _state = MutableStateFlow<KiloWorkspaceState>(KiloWorkspaceState.Pending)
-    val state: StateFlow<KiloWorkspaceState> = _state.asStateFlow()
+    private val _state = MutableStateFlow<AccureWorkspaceState>(AccureWorkspaceState.Pending)
+    val state: StateFlow<AccureWorkspaceState> = _state.asStateFlow()
 
     private var loader: Job? = null
     private var eventWatcher: Job? = null
@@ -65,8 +65,8 @@ class KiloBackendWorkspace(
             eventWatcher?.cancel()
             loader = cs.launch {
             log.info("Loading workspace data for $directory")
-            val progress = AtomicReference(KiloWorkspaceLoadProgress())
-            _state.value = KiloWorkspaceState.Loading(progress.get())
+            val progress = AtomicReference(AccureWorkspaceLoadProgress())
+            _state.value = AccureWorkspaceState.Loading(progress.get())
 
             var prov: ProviderData? = null
             var ag: AgentData? = null
@@ -82,7 +82,7 @@ class KiloBackendWorkspace(
                         if (result.value != null) {
                             prov = result.value
                             progress.updateAndGet { it.copy(providers = true) }
-                                .also { _state.value = KiloWorkspaceState.Loading(it) }
+                                .also { _state.value = AccureWorkspaceState.Loading(it) }
                         } else {
                             val err = result.error ?: LoadError(resource = "providers")
                             synchronized(errors) { errors.add(err) }
@@ -95,7 +95,7 @@ class KiloBackendWorkspace(
                         if (result.value != null) {
                             ag = result.value
                             progress.updateAndGet { it.copy(agents = true) }
-                                .also { _state.value = KiloWorkspaceState.Loading(it) }
+                                .also { _state.value = AccureWorkspaceState.Loading(it) }
                         } else {
                             val err = result.error ?: LoadError(resource = "agents")
                             synchronized(errors) { errors.add(err) }
@@ -108,7 +108,7 @@ class KiloBackendWorkspace(
                         if (result.value != null) {
                             cmd = result.value
                             progress.updateAndGet { it.copy(commands = true) }
-                                .also { _state.value = KiloWorkspaceState.Loading(it) }
+                                .also { _state.value = AccureWorkspaceState.Loading(it) }
                         } else {
                             val err = result.error ?: LoadError(resource = "commands")
                             synchronized(errors) { errors.add(err) }
@@ -121,7 +121,7 @@ class KiloBackendWorkspace(
                         if (result.value != null) {
                             sk = result.value
                             progress.updateAndGet { it.copy(skills = true) }
-                                .also { _state.value = KiloWorkspaceState.Loading(it) }
+                                .also { _state.value = AccureWorkspaceState.Loading(it) }
                         } else {
                             val err = result.error ?: LoadError(resource = "skills")
                             synchronized(errors) { errors.add(err) }
@@ -131,7 +131,7 @@ class KiloBackendWorkspace(
                 }
 
                 ensureActive()
-                _state.value = KiloWorkspaceState.Ready(
+                _state.value = AccureWorkspaceState.Ready(
                     providers = prov!!,
                     agents = ag!!,
                     commands = cmd!!,
@@ -162,7 +162,7 @@ class KiloBackendWorkspace(
             loader?.cancel()
             eventWatcher?.cancel()
         }
-        _state.value = KiloWorkspaceState.Pending
+        _state.value = AccureWorkspaceState.Pending
     }
 
     // ------ session access (delegates to session manager) ------
@@ -207,7 +207,7 @@ class KiloBackendWorkspace(
 
     private fun fetchProviders(): FetchResult<ProviderData> =
         try {
-            FetchResult.ok(KiloCliDataParser.parseProviders(fetch("/provider?directory=${encode(directory)}")))
+            FetchResult.ok(AccureCliDataParser.parseProviders(fetch("/provider?directory=${encode(directory)}")))
         } catch (e: Exception) {
             log.warn("Providers fetch failed: ${e.message}", e)
             FetchResult.fail("providers", e)
@@ -230,7 +230,7 @@ class KiloBackendWorkspace(
 
     private fun fetchCommands(): FetchResult<List<CommandInfo>> =
         try {
-            FetchResult.ok(KiloCliDataParser.parseCommands(fetch("/command?directory=${encode(directory)}")))
+            FetchResult.ok(AccureCliDataParser.parseCommands(fetch("/command?directory=${encode(directory)}")))
         } catch (e: Exception) {
             log.warn("Commands fetch failed: ${e.message}", e)
             FetchResult.fail("commands", e)
@@ -292,7 +292,7 @@ class KiloBackendWorkspace(
 
     private fun setWorkspaceError(message: String, errors: List<LoadError>) {
         log.warn("Workspace error [$directory]: $message")
-        _state.value = KiloWorkspaceState.Error(message, errors)
+        _state.value = AccureWorkspaceState.Error(message, errors)
     }
 
     private data class FetchResult<T>(val value: T?, val error: LoadError?) {

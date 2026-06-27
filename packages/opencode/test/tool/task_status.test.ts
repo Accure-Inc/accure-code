@@ -92,7 +92,7 @@ describe("tool.task_status", () => {
     }),
   )
 
-  // kilocode_change start - task status cannot inspect another session's child
+  // accurecode_change start - task status cannot inspect another session's child
   it.instance("rejects cross-session task inspection", () =>
     Effect.gen(function* () {
       const sessions = yield* Session.Service
@@ -120,5 +120,5 @@ describe("tool.task_status", () => {
       expect(exit._tag).toBe("Failure")
     }),
   )
-  // kilocode_change end
+  // accurecode_change end
 })

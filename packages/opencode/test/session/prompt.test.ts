@@ -1,9 +1,9 @@
 import { NodeFileSystem } from "@effect/platform-node"
 import { FetchHttpClient } from "effect/unstable/http"
-// kilocode_change start
+// accurecode_change start
 import { expect, spyOn } from "bun:test"
-import { Telemetry } from "@kilocode/accure-telemetry"
-// kilocode_change end
+import { Telemetry } from "@accurecode/accure-telemetry"
+// accurecode_change end
 import { Cause, Deferred, Duration, Effect, Exit, Fiber, Layer } from "effect"
 import path from "path"
 import { fileURLToPath, pathToFileURL } from "url"
@@ -36,7 +36,7 @@ import { SessionProcessor } from "../../src/session/processor"
 import { SessionPrompt } from "../../src/session/prompt"
 import { SessionRevert } from "../../src/session/revert"
 import { SessionRunState } from "../../src/session/run-state"
-import { Suggestion } from "../../src/kilocode/suggestion" // kilocode_change - accept suggestion in telemetry test
+import { Suggestion } from "../../src/accurecode/suggestion" // accurecode_change - accept suggestion in telemetry test
 import { MessageID, PartID, SessionID } from "../../src/session/schema"
 import { SessionStatus } from "../../src/session/status"
 import { SessionV2 } from "../../src/v2/session"
@@ -311,7 +311,7 @@ const ensureDir = Effect.fn("test.ensureDir")(function* (dir: string) {
 const writeConfig = Effect.fn("test.writeConfig")(function* (dir: string, config: Partial<Config.Info>) {
   yield* writeText(
     path.join(dir, "opencode.json"),
-    JSON.stringify({ $schema: "https://app.kilo.ai/config.json", ...config }), // kilocode_change
+    JSON.stringify({ $schema: "https://app.accurecode.ai/config.json", ...config }), // accurecode_change
   )
 })
 
@@ -486,7 +486,7 @@ it.instance("loop calls LLM and returns assistant message", () =>
   }),
 )
 
-// kilocode_change start - replacement prompts unblock pending Question service requests
+// accurecode_change start - replacement prompts unblock pending Question service requests
 noLLMServer.instance(
   "new prompt dismisses a pending question",
   () =>
@@ -529,9 +529,9 @@ noLLMServer.instance(
     }),
   { config: cfg },
 )
-// kilocode_change end
+// accurecode_change end
 
-// kilocode_change start - cover user image normalization before persistence
+// accurecode_change start - cover user image normalization before persistence
 noLLMServer.instance(
   "normalizes user data images before persistence",
   () =>
@@ -641,7 +641,7 @@ noLLMServer.instance(
     }),
   { config: cfg },
 )
-// kilocode_change end
+// accurecode_change end
 
 noLLMServer.instance(
   "prompt emits v2 prompted and synthetic events",
@@ -950,7 +950,7 @@ it.instance(
       const tool = yield* pollWithTimeout(
         Effect.gen(function* () {
           const msgs = yield* MessageV2.filterCompactedEffect(chat.id)
-          const assistant = msgs.findLast((item) => item.info.role === "assistant" && item.info.agent === "code") // kilocode_change
+          const assistant = msgs.findLast((item) => item.info.role === "assistant" && item.info.agent === "code") // accurecode_change
           const tool = assistant?.parts.find(
             (part): part is MessageV2.ToolPart => part.type === "tool" && part.tool === "task",
           )
@@ -970,7 +970,7 @@ it.instance(
   10_000,
 )
 
-// kilocode_change start - child task failures stay tool errors so the parent can recover
+// accurecode_change start - child task failures stay tool errors so the parent can recover
 it.instance(
   "failed task tool preserves metadata and lets the parent follow up",
   () =>
@@ -1013,12 +1013,12 @@ it.instance(
     }),
   10_000,
 )
-// kilocode_change end
+// accurecode_change end
 
 it.instance(
   "loop sets status to busy then idle",
   () =>
-    // kilocode_change start - hold the model response instead of cancelling an infinite stream
+    // accurecode_change start - hold the model response instead of cancelling an infinite stream
     Effect.gen(function* () {
       const { llm } = yield* useServerConfig(providerCfg)
       const gate = yield* Deferred.make<void>()
@@ -1038,8 +1038,8 @@ it.instance(
       yield* Fiber.await(fiber)
       expect((yield* status.get(chat.id)).type).toBe("idle")
     }),
-  // kilocode_change end
-  10_000, // kilocode_change
+  // accurecode_change end
+  10_000, // accurecode_change
 )
 
 // Cancel semantics
@@ -1067,12 +1067,12 @@ it.instance(
         expect(exit.value.info.role).toBe("assistant")
       }
     }),
-  10_000, // kilocode_change - Windows CI can take longer to cancel the live loop
+  10_000, // accurecode_change - Windows CI can take longer to cancel the live loop
 )
 
-// kilocode_change start
+// accurecode_change start
 unix(
-  // kilocode_change end
+  // accurecode_change end
   "cancel records MessageAbortedError on interrupted process",
   () =>
     Effect.gen(function* () {
@@ -1234,7 +1234,7 @@ noLLMServer.instance(
   30_000,
 )
 
-// kilocode_change start - handleSubtask propagates child session cost to wrapper (#6321)
+// accurecode_change start - handleSubtask propagates child session cost to wrapper (#6321)
 it.instance(
   "handleSubtask propagates subagent cost to wrapper message",
   () =>
@@ -1293,7 +1293,7 @@ it.instance(
     }),
   30_000,
 )
-// kilocode_change end
+// accurecode_change end
 
 it.instance(
   "cancel propagates from slash command subtask to child session",
@@ -1344,7 +1344,7 @@ it.instance(
       const a = yield* prompt.loop({ sessionID: chat.id }).pipe(Effect.forkChild)
       yield* llm.wait(1)
       const b = yield* prompt.loop({ sessionID: chat.id }).pipe(Effect.forkChild)
-      yield* Effect.yieldNow // kilocode_change - let the queued caller join without a wall-clock race
+      yield* Effect.yieldNow // accurecode_change - let the queued caller join without a wall-clock race
 
       yield* prompt.cancel(chat.id)
       const [exitA, exitB] = yield* Effect.all([Fiber.await(a), Fiber.await(b)])
@@ -1355,7 +1355,7 @@ it.instance(
       }
     }),
   { git: true },
-  10_000, // kilocode_change - Windows CI can take longer to cancel queued live loops
+  10_000, // accurecode_change - Windows CI can take longer to cancel queued live loops
 )
 
 // Queue semantics
@@ -1378,7 +1378,7 @@ noLLMServer.instance("concurrent loop callers get same result", () =>
 it.instance(
   "concurrent loop callers all receive same error result",
   () =>
-    // kilocode_change start - gate the failing stream so both callers join the same run
+    // accurecode_change start - gate the failing stream so both callers join the same run
     Effect.gen(function* () {
       const { llm } = yield* useServerConfig(providerCfg)
       const gate = yield* Deferred.make<void>()
@@ -1392,7 +1392,7 @@ it.instance(
       const a = yield* prompt.loop({ sessionID: chat.id }).pipe(Effect.forkChild)
       yield* llm.wait(1)
       const b = yield* prompt.loop({ sessionID: chat.id }).pipe(Effect.forkChild)
-      yield* Effect.yieldNow // kilocode_change - let the queued caller join without a wall-clock race
+      yield* Effect.yieldNow // accurecode_change - let the queued caller join without a wall-clock race
       yield* Deferred.succeed(gate, void 0)
 
       const [ea, eb] = yield* Effect.all([Fiber.await(a), Fiber.await(b)])
@@ -1402,8 +1402,8 @@ it.instance(
       expect(ea.value.info.id).toBe(eb.value.info.id)
       expect(ea.value.info.role).toBe("assistant")
     }),
-  // kilocode_change end
-  10_000, // kilocode_change
+  // accurecode_change end
+  10_000, // accurecode_change
 )
 
 it.instance(
@@ -1500,7 +1500,7 @@ it.instance(
       yield* prompt.cancel(chat.id)
       yield* Fiber.await(fiber)
     }),
-  10_000, // kilocode_change
+  10_000, // accurecode_change
 )
 
 noLLMServer.instance("assertNotBusy succeeds when idle", () =>
@@ -1540,7 +1540,7 @@ it.instance(
       yield* prompt.cancel(chat.id)
       yield* Fiber.await(fiber)
     }),
-  10_000, // kilocode_change - Windows CI can take longer to enter and cancel the live loop
+  10_000, // accurecode_change - Windows CI can take longer to enter and cancel the live loop
 )
 
 unixNoLLMServer(
@@ -1638,7 +1638,7 @@ unixNoLLMServer(
   { config: cfg },
 )
 
-// kilocode_change start - verify shell v2 events correlate with the persisted tool part
+// accurecode_change start - verify shell v2 events correlate with the persisted tool part
 unixNoLLMServer(
   "shell correlates the persisted tool part with its completed v2 record",
   () =>
@@ -1667,7 +1667,7 @@ unixNoLLMServer(
     }),
   { config: cfg },
 )
-// kilocode_change end
+// accurecode_change end
 
 unixNoLLMServer(
   "shell lists files from the project directory",
@@ -1765,7 +1765,7 @@ it.instance(
       yield* waitForBusy(chat.id)
 
       const loop = yield* prompt.loop({ sessionID: chat.id }).pipe(Effect.forkChild)
-      yield* Effect.yieldNow // kilocode_change - give the queued loop a scheduler turn instead of a wall-clock window
+      yield* Effect.yieldNow // accurecode_change - give the queued loop a scheduler turn instead of a wall-clock window
 
       expect(yield* llm.calls).toBe(0)
 
@@ -1780,7 +1780,7 @@ it.instance(
       expect(yield* llm.calls).toBe(1)
     }),
   { git: true },
-  30_000, // kilocode_change - Windows CI process startup can exceed 3s
+  30_000, // accurecode_change - Windows CI process startup can exceed 3s
 )
 
 it.instance(
@@ -1803,7 +1803,7 @@ it.instance(
 
       const a = yield* prompt.loop({ sessionID: chat.id }).pipe(Effect.forkChild)
       const b = yield* prompt.loop({ sessionID: chat.id }).pipe(Effect.forkChild)
-      yield* Effect.yieldNow // kilocode_change - give the queued loops a scheduler turn instead of a wall-clock window
+      yield* Effect.yieldNow // accurecode_change - give the queued loops a scheduler turn instead of a wall-clock window
 
       expect(yield* llm.calls).toBe(0)
 
@@ -1819,7 +1819,7 @@ it.instance(
       expect(yield* llm.calls).toBe(1)
     }),
   { git: true },
-  30_000, // kilocode_change - Windows CI process startup can exceed 3s
+  30_000, // accurecode_change - Windows CI process startup can exceed 3s
 )
 
 unix(
@@ -1962,7 +1962,7 @@ unix(
 
       const run = yield* prompt.loop({ sessionID: chat.id }).pipe(Effect.forkChild)
       yield* llm.wait(1)
-      // kilocode_change start
+      // accurecode_change start
       yield* pollWithTimeout(
         sessions.messages({ sessionID: chat.id }).pipe(
           Effect.map((msgs) => {
@@ -1975,7 +1975,7 @@ unix(
         ),
         "timed out waiting for large bash output",
       )
-      // kilocode_change end
+      // accurecode_change end
       yield* prompt.cancel(chat.id)
 
       const exit = yield* Fiber.await(run)
@@ -2005,7 +2005,7 @@ unixNoLLMServer(
       yield* waitForBusy(chat.id)
 
       const loop = yield* prompt.loop({ sessionID: chat.id }).pipe(Effect.forkChild)
-      yield* Effect.yieldNow // kilocode_change - give the queued loop a scheduler turn before cancelling
+      yield* Effect.yieldNow // accurecode_change - give the queued loop a scheduler turn before cancelling
 
       yield* prompt.cancel(chat.id)
 
@@ -2262,7 +2262,7 @@ noLLMServer.instance(
         [path.join(docs, "README.md"), path.join(docs, "guide")].sort(),
       )
       expect(guide?.mime).toBe("application/x-directory")
-      expect(agents.map((agent) => agent.name)).toEqual(["code"]) // kilocode_change
+      expect(agents.map((agent) => agent.name)).toEqual(["code"]) // accurecode_change
     }),
   {
     config: {
@@ -2479,7 +2479,7 @@ it.instance(
         expect(last.info.error?.name).toBe("MessageAbortedError")
       }
     }),
-  10_000, // kilocode_change
+  10_000, // accurecode_change
 )
 
 // Agent variant
@@ -2553,7 +2553,7 @@ noLLMServer.instance(
   },
 )
 
-// kilocode_change start - /review subtask path tags child completions for telemetry
+// accurecode_change start - /review subtask path tags child completions for telemetry
 it.instance(
   "review command marks child completions with review telemetry",
   () =>
@@ -2637,7 +2637,7 @@ it.instance(
     }),
   30_000,
 )
-// kilocode_change end
+// accurecode_change end
 
 // Agent / command resolution errors
 
@@ -2691,7 +2691,7 @@ noLLMServer.instance(
         const err = Cause.squash(exit.cause)
         expect(NamedError.Unknown.isInstance(err)).toBe(true)
         if (NamedError.Unknown.isInstance(err)) {
-          expect(err.data.message).toContain("code") // kilocode_change - "build" renamed to "code"
+          expect(err.data.message).toContain("code") // accurecode_change - "build" renamed to "code"
         }
       }
     }),

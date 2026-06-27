@@ -18,11 +18,11 @@ import { WorktreeModeProvider } from "../context/worktree-mode"
 import { SidebarSearchMenu } from "../../agent-manager/SidebarSearchMenu"
 import { SidebarToggleButton } from "../../agent-manager/SidebarToggleButton"
 import type { SidebarSearchItem } from "../../agent-manager/sidebar-search"
-import { Button } from "@kilocode/accure-ui/button"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { TooltipKeybind } from "@kilocode/accure-ui/tooltip"
-import { ContextMenu } from "@kilocode/accure-ui/context-menu"
+import { Button } from "@accurecode/accure-ui/button"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { TooltipKeybind } from "@accurecode/accure-ui/tooltip"
+import { ContextMenu } from "@accurecode/accure-ui/context-menu"
 import { createSignal, onCleanup, onMount, type JSX } from "solid-js"
 import type { WorktreeFileDiff, WorktreeState, WorktreeGitStats, PRStatus } from "../types/messages"
 import type { ReviewComment } from "../../diff-viewer/review-comments"
@@ -160,7 +160,7 @@ const chatMessages = [
     createdAt: new Date(chatTime + 1000).toISOString(),
     time: { created: chatTime + 1000, completed: chatTime + 5000 },
     modelID: "anthropic/claude-sonnet-4-6",
-    providerID: "kilo",
+    providerID: "accure",
     mode: "default",
     agent: "code",
     path: { cwd: "/project", root: "/project" },

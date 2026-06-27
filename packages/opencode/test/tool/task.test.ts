@@ -8,12 +8,12 @@ import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { Session } from "@/session/session"
 import { MessageV2 } from "../../src/session/message-v2"
 import type { SessionPrompt } from "../../src/session/prompt"
-import { MessageID, PartID, SessionID } from "../../src/session/schema" // kilocode_change - SessionID used by cost propagation tests
+import { MessageID, PartID, SessionID } from "../../src/session/schema" // accurecode_change - SessionID used by cost propagation tests
 import { SessionRunState } from "@/session/run-state"
 import { SessionStatus } from "@/session/status"
 import { ModelID, ProviderID } from "../../src/provider/schema"
-import { Provider } from "../../src/provider/provider" // kilocode_change
-import { KiloSession } from "../../src/kilocode/session" // kilocode_change
+import { Provider } from "../../src/provider/provider" // accurecode_change
+import { AccureSession } from "../../src/accurecode/session" // accurecode_change
 import { TaskTool, type TaskPromptOps } from "../../src/tool/task"
 import { Truncate } from "@/tool/truncate"
 import { ToolRegistry } from "@/tool/registry"
@@ -41,7 +41,7 @@ const layer = (flags: Partial<RuntimeFlags.Info> = {}) =>
     SessionRunState.defaultLayer,
     SessionStatus.defaultLayer,
     Truncate.defaultLayer,
-    Provider.defaultLayer, // kilocode_change
+    Provider.defaultLayer, // accurecode_change
     ToolRegistry.defaultLayer,
     RuntimeFlags.layer(flags),
   )
@@ -86,7 +86,7 @@ const seed = Effect.fn("TaskToolTest.seed")(function* (title = "Pinned") {
   return { chat, assistant }
 })
 
-// kilocode_change start - stub signature + prompt body extended to persist assistant cost for propagation tests
+// accurecode_change start - stub signature + prompt body extended to persist assistant cost for propagation tests
 function stubOps(opts?: {
   onPrompt?: (input: SessionPrompt.PromptInput) => void
   text?: string
@@ -108,7 +108,7 @@ function stubOps(opts?: {
     loop: (input) => Effect.succeed(reply({ sessionID: input.sessionID, parts: [] }, opts?.text ?? "done")),
   }
 }
-// kilocode_change end
+// accurecode_change end
 
 function reply(input: SessionPrompt.PromptInput, text: string): MessageV2.WithParts {
   const id = MessageID.ascending()
@@ -256,14 +256,14 @@ describe("tool.task", () => {
     }),
   )
 
-  // kilocode_change start - resumed children rebuild parent platform attribution after restart
+  // accurecode_change start - resumed children rebuild parent platform attribution after restart
   it.instance("execute preserves platform attribution when resuming a task", () =>
     Effect.gen(function* () {
       const sessions = yield* Session.Service
       const { chat, assistant } = yield* seed()
-      KiloSession.setPlatformOverride(chat.id, "agent-manager")
+      AccureSession.setPlatformOverride(chat.id, "agent-manager")
       const child = yield* sessions.create({ parentID: chat.id, title: "Existing child" })
-      KiloSession.clearPlatformOverride(child.id)
+      AccureSession.clearPlatformOverride(child.id)
       const tool = yield* TaskTool
       const def = yield* tool.init()
 
@@ -286,11 +286,11 @@ describe("tool.task", () => {
         },
       )
 
-      expect(KiloSession.resolvePlatform(child.id)).toBe("agent-manager")
-      expect(KiloSession.resolveRoot(child.id)).toBe(chat.id)
+      expect(AccureSession.resolvePlatform(child.id)).toBe("agent-manager")
+      expect(AccureSession.resolveRoot(child.id)).toBe(chat.id)
     }),
   )
-  // kilocode_change end
+  // accurecode_change end
 
   it.instance("execute asks by default and skips checks when bypassed", () =>
     Effect.gen(function* () {
@@ -457,7 +457,7 @@ describe("tool.task", () => {
 
         const child = yield* sessions.get(result.metadata.sessionId)
         expect(child.parentID).toBe(chat.id)
-        // kilocode_change start — use arrayContaining: Kilo appends inherited caller restrictions
+        // accurecode_change start — use arrayContaining: Accure appends inherited caller restrictions
         expect(child.permission).toEqual(
           expect.arrayContaining([
             {
@@ -482,11 +482,11 @@ describe("tool.task", () => {
             },
           ]),
         )
-        // kilocode_change end
+        // accurecode_change end
         expect(seen?.tools).toEqual({
-          question: false, // kilocode_change - subagents cannot prompt the user directly
+          question: false, // accurecode_change - subagents cannot prompt the user directly
           todowrite: false,
-          task: false, // kilocode_change - Kilo disallows nested subagents
+          task: false, // accurecode_change - Accure disallows nested subagents
           bash: false,
           read: false,
         })
@@ -503,13 +503,13 @@ describe("tool.task", () => {
         },
         experimental: {
           primary_tools: ["bash", "read"],
-          openTelemetry: true, // kilocode_change
+          openTelemetry: true, // accurecode_change
         },
       },
     },
   )
 
-  // kilocode_change start - terminal child assistant errors fail the task tool boundary
+  // accurecode_change start - terminal child assistant errors fail the task tool boundary
   it.instance("execute fails when child prompt returns assistant error", () =>
     Effect.gen(function* () {
       const { chat, assistant } = yield* seed()
@@ -556,7 +556,7 @@ describe("tool.task", () => {
       expect(Exit.isFailure(exit)).toBe(true)
     }),
   )
-  // kilocode_change end
+  // accurecode_change end
   it.instance("rejects background execution when the experiment is disabled", () =>
     Effect.gen(function* () {
       const { chat, assistant } = yield* seed()
@@ -626,7 +626,7 @@ describe("tool.task", () => {
     }),
   )
 
-  // kilocode_change start - completed background tasks propagate their invocation cost delta
+  // accurecode_change start - completed background tasks propagate their invocation cost delta
   background.instance("background tasks propagate child cost to the parent", () =>
     Effect.gen(function* () {
       const jobs = yield* BackgroundJob.Service
@@ -659,7 +659,7 @@ describe("tool.task", () => {
       expect(parent.info.role === "assistant" ? parent.info.cost : 0).toBeCloseTo(0.2, 6)
     }),
   )
-  // kilocode_change end
+  // accurecode_change end
 
   background.instance("background tasks complete through the background job service", () =>
     Effect.gen(function* () {
@@ -900,7 +900,7 @@ describe("tool.task", () => {
   )
 })
 
-// kilocode_change start - subagent cost propagation coverage (#6321)
+// accurecode_change start - subagent cost propagation coverage (#6321)
 const assistantCost = Effect.fn("TaskToolTest.assistantCost")(function* (sessionID: string) {
   const sessions = yield* Session.Service
   const msgs = yield* sessions.messages({ sessionID: SessionID.make(sessionID) })
@@ -1110,4 +1110,4 @@ describe("tool.task cost propagation", () => {
     ),
   )
 })
-// kilocode_change end
+// accurecode_change end

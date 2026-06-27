@@ -1,4 +1,4 @@
-import { RemoteProtocol } from "@/kilo-sessions/remote-protocol"
+import { RemoteProtocol } from "@/accure-sessions/remote-protocol"
 
 export namespace RemoteWS {
   export type SessionInfo = RemoteProtocol.SessionInfo

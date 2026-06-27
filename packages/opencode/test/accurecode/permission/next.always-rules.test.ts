@@ -24,7 +24,7 @@ const it = testEffect(env)
 
 afterAll(async () => {
   const dir = Global.Path.config
-  for (const file of ["kilo.jsonc", "kilo.json", "config.json", "opencode.json", "opencode.jsonc"]) {
+  for (const file of ["accure.jsonc", "accure.json", "config.json", "opencode.json", "opencode.jsonc"]) {
     await fs.rm(path.join(dir, file), { force: true }).catch(() => {})
   }
   await Effect.runPromise(
@@ -734,30 +734,30 @@ describe("saveAlwaysRules", () => {
           id: PermissionID.make("permission_saved_always"),
           sessionID: SessionID.make("session_saved_always"),
           permission: "bash",
-          patterns: ["kilo-permission-8353 test"],
-          metadata: { rules: ["kilo-permission-8353 *", "kilo-permission-8353 test"] },
-          always: ["kilo-permission-8353 *", "kilo-permission-8353 test"],
+          patterns: ["accure-permission-8353 test"],
+          metadata: { rules: ["accure-permission-8353 *", "accure-permission-8353 test"] },
+          always: ["accure-permission-8353 *", "accure-permission-8353 test"],
           ruleset: [],
         }).pipe(Effect.forkScoped)
 
         yield* waitForPending(1)
         yield* saveAlwaysRules({
           requestID: PermissionID.make("permission_saved_always"),
-          approvedAlways: ["kilo-permission-8353 test"],
+          approvedAlways: ["accure-permission-8353 test"],
         })
         yield* reply({ requestID: PermissionID.make("permission_saved_always"), reply: "always" })
         yield* Fiber.join(fiber)
 
         const config = yield* Config.Service
         const cfg = yield* config.get()
-        expect(cfg.permission?.bash).toMatchObject({ "kilo-permission-8353 test": "allow" })
-        expect(cfg.permission?.bash).not.toMatchObject({ "kilo-permission-8353 *": "allow" })
+        expect(cfg.permission?.bash).toMatchObject({ "accure-permission-8353 test": "allow" })
+        expect(cfg.permission?.bash).not.toMatchObject({ "accure-permission-8353 *": "allow" })
 
         const broad = yield* ask({
           id: PermissionID.make("permission_saved_always_broad"),
           sessionID: SessionID.make("session_saved_always"),
           permission: "bash",
-          patterns: ["kilo-permission-8353 install"],
+          patterns: ["accure-permission-8353 install"],
           metadata: {},
           always: [],
           ruleset: [],

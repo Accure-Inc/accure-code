@@ -1,14 +1,14 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.rpc.dto.AgentDto
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.ModelDto
-import ai.kilocode.rpc.dto.ProviderDto
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.rpc.dto.AgentDto
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.ModelDto
+import ai.accurecode.rpc.dto.ProviderDto
 
 class HistoryLoadingTest : SessionControllerTestBase() {
 
@@ -85,7 +85,7 @@ class HistoryLoadingTest : SessionControllerTestBase() {
     }
 
     fun `test loaded history derives agent from latest message`() {
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, config = ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, config = ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady(agents = agents(), default = "plan")
         rpc.history.add(MessageWithPartsDto(msg("msg1", "ses_test", "user").copy(agent = "plan", time = MessageTimeDto(1.0)), emptyList()))
         rpc.history.add(MessageWithPartsDto(msg("msg2", "ses_test", "assistant").copy(agent = "code", time = MessageTimeDto(2.0)), emptyList()))
@@ -97,14 +97,14 @@ class HistoryLoadingTest : SessionControllerTestBase() {
     }
 
     fun `test loaded history derives model from latest user message`() {
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, config = ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, config = ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady(
             agents = agents(),
             default = "plan",
             providers = listOf(
                 ProviderDto(
-                    id = "kilo",
-                    name = "Kilo",
+                    id = "accure",
+                    name = "Accure",
                     models = mapOf("gpt-5" to ModelDto(id = "gpt-5", name = "GPT-5")),
                 ),
                 ProviderDto(
@@ -113,8 +113,8 @@ class HistoryLoadingTest : SessionControllerTestBase() {
                     models = mapOf("claude" to ModelDto(id = "claude", name = "Claude")),
                 ),
             ),
-            connected = listOf("kilo", "anthropic"),
-            defaults = mapOf("plan" to "kilo/gpt-5", "code" to "kilo/gpt-5"),
+            connected = listOf("accure", "anthropic"),
+            defaults = mapOf("plan" to "accure/gpt-5", "code" to "accure/gpt-5"),
         )
         rpc.history.add(MessageWithPartsDto(msg("msg1", "ses_test", "user").copy(
             agent = "code",
@@ -132,7 +132,7 @@ class HistoryLoadingTest : SessionControllerTestBase() {
     }
 
     fun `test empty loaded history keeps workspace default agent`() {
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, config = ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, config = ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady(agents = agents(), default = "plan")
 
         val c = controller("ses_test")

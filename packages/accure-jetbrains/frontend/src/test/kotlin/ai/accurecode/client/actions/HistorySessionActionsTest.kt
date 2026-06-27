@@ -1,24 +1,24 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.SessionManager
-import ai.kilocode.client.session.SessionRef
-import ai.kilocode.client.session.history.CloudHistoryItem
-import ai.kilocode.client.session.history.HistoryController
-import ai.kilocode.client.session.history.HistoryDataKeys
-import ai.kilocode.client.session.history.HistorySelection
-import ai.kilocode.client.session.history.HistorySource
-import ai.kilocode.client.session.history.LocalHistoryItem
-import ai.kilocode.client.testing.FakeSessionRpcApi
-import ai.kilocode.client.testing.FakeWorkspaceRpcApi
-import ai.kilocode.rpc.dto.CloudSessionDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionTimeDto
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.SessionManager
+import ai.accurecode.client.session.SessionRef
+import ai.accurecode.client.session.history.CloudHistoryItem
+import ai.accurecode.client.session.history.HistoryController
+import ai.accurecode.client.session.history.HistoryDataKeys
+import ai.accurecode.client.session.history.HistorySelection
+import ai.accurecode.client.session.history.HistorySource
+import ai.accurecode.client.session.history.LocalHistoryItem
+import ai.accurecode.client.testing.FakeSessionRpcApi
+import ai.accurecode.client.testing.FakeWorkspaceRpcApi
+import ai.accurecode.rpc.dto.CloudSessionDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionTimeDto
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -39,7 +39,7 @@ import kotlinx.coroutines.withTimeout
 class HistorySessionActionsTest : BasePlatformTestCase() {
     private lateinit var scope: CoroutineScope
     private lateinit var rpc: FakeSessionRpcApi
-    private lateinit var sessions: KiloSessionService
+    private lateinit var sessions: AccureSessionService
     private lateinit var workspace: Workspace
     private lateinit var controller: HistoryController
     private lateinit var manager: FakeManager
@@ -51,9 +51,9 @@ class HistorySessionActionsTest : BasePlatformTestCase() {
         super.setUp()
         scope = CoroutineScope(SupervisorJob())
         rpc = FakeSessionRpcApi()
-        sessions = KiloSessionService(project, scope, rpc)
-        val workspaces = KiloWorkspaceService(scope, FakeWorkspaceRpcApi().also {
-            it.state.value = KiloWorkspaceStateDto(status = KiloWorkspaceStatusDto.READY)
+        sessions = AccureSessionService(project, scope, rpc)
+        val workspaces = AccureWorkspaceService(scope, FakeWorkspaceRpcApi().also {
+            it.state.value = AccureWorkspaceStateDto(status = AccureWorkspaceStatusDto.READY)
         })
         workspace = workspaces.workspace("/test")
         controller = HistoryController(sessions, workspace, scope, deleted = { deleteCount++ })
@@ -355,7 +355,7 @@ class HistorySessionActionsTest : BasePlatformTestCase() {
         action.actionPerformed(event)
         flush()
 
-        assertEquals(listOf(KiloBundle.message("history.untitled")), prompts)
+        assertEquals(listOf(AccureBundle.message("history.untitled")), prompts)
         assertTrue(rpc.renames.isEmpty())
     }
 
@@ -405,19 +405,19 @@ class HistorySessionActionsTest : BasePlatformTestCase() {
     }
 
     fun `test frontend descriptor registers history actions`() {
-        val xml = javaClass.classLoader.getResourceAsStream("kilo.jetbrains.frontend.xml")
+        val xml = javaClass.classLoader.getResourceAsStream("accurecode.jetbrains.frontend.xml")
             ?.bufferedReader()
             ?.use { it.readText() }
             ?: error("missing frontend descriptor")
 
-        assertTrue(xml.contains("id=\"Kilo.Session.Open\""))
-        assertTrue(xml.contains("id=\"Kilo.Session.Rename\""))
-        assertTrue(xml.contains("id=\"Kilo.Session.Delete\""))
-        assertTrue(xml.contains("id=\"Kilo.History.ContextMenu\""))
-        assertTrue(xml.contains("id=\"Kilo.Session.ContextMenu\""))
-        assertTrue(xml.contains("ref=\"Kilo.Session.Open\""))
-        assertTrue(xml.contains("ref=\"Kilo.Session.Rename\""))
-        assertTrue(xml.contains("ref=\"Kilo.Session.Delete\""))
+        assertTrue(xml.contains("id=\"Accure.Session.Open\""))
+        assertTrue(xml.contains("id=\"Accure.Session.Rename\""))
+        assertTrue(xml.contains("id=\"Accure.Session.Delete\""))
+        assertTrue(xml.contains("id=\"Accure.History.ContextMenu\""))
+        assertTrue(xml.contains("id=\"Accure.Session.ContextMenu\""))
+        assertTrue(xml.contains("ref=\"Accure.Session.Open\""))
+        assertTrue(xml.contains("ref=\"Accure.Session.Rename\""))
+        assertTrue(xml.contains("ref=\"Accure.Session.Delete\""))
         assertTrue(xml.contains("ref=\"${'$'}Copy\""))
     }
 

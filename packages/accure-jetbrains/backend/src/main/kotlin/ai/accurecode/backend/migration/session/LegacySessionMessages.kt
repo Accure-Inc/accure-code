@@ -1,9 +1,9 @@
-package ai.kilocode.backend.migration.session
+package ai.accurecode.backend.migration.session
 
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import ai.kilocode.backend.migration.LegacyHistoryItem
+import ai.accurecode.backend.migration.LegacyHistoryItem
 
 /**
  * Message conversion for legacy conversation history.

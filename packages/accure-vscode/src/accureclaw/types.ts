@@ -1,21 +1,21 @@
 /**
- * KiloClaw VS Code extension message types.
+ * AccureClaw VS Code extension message types.
  *
  * Defines the postMessage protocol between the extension host (Node.js)
- * and the KiloClaw webview (SolidJS). The extension host owns all network
- * connections (Kilo Chat HTTP + event-service WebSocket) and relays data
+ * and the AccureClaw webview (SolidJS). The extension host owns all network
+ * connections (Accure Chat HTTP + event-service WebSocket) and relays data
  * to the webview.
  *
- * SYNC: Shared types are mirrored in webview-ui/kiloclaw/lib/types.ts —
+ * SYNC: Shared types are mirrored in webview-ui/accureclaw/lib/types.ts —
  * keep both in sync.
  */
 
-// ── Instance status (KiloClaw worker) ───────────────────────────────
+// ── Instance status (AccureClaw worker) ───────────────────────────────
 
 export type ClawStatus = {
   // `recovering` and `restoring` are transitional states the worker reports
   // while bringing an instance back from an unexpected stop or a snapshot
-  // restore (cloud: `services/kiloclaw/src/index.ts`).
+  // restore (cloud: `services/accureclaw/src/index.ts`).
   status:
     | "provisioned"
     | "starting"
@@ -38,17 +38,17 @@ export type ClawStatus = {
   botName?: string | null
 }
 
-// ── Kilo Chat token envelope (gateway response) ─────────────────────
+// ── Accure Chat token envelope (gateway response) ─────────────────────
 
 export type ChatToken = {
   token: string
   expiresAt: string // ISO timestamp
-  kiloChatUrl: string
+  accureChatUrl: string
   eventServiceUrl: string
 }
 
-// ── Kilo Chat content blocks ────────────────────────────────────────
-// Mirrors `@kilocode/kilo-chat` schemas. See cloud/packages/accure-chat/src/schemas.ts.
+// ── Accure Chat content blocks ────────────────────────────────────────
+// Mirrors `@accurecode/accure-chat` schemas. See cloud/packages/accure-chat/src/schemas.ts.
 
 export type ExecApprovalDecision = "allow-once" | "allow-always" | "deny"
 
@@ -73,7 +73,7 @@ export type ActionsBlock = {
 
 export type ContentBlock = TextBlock | ActionsBlock
 
-// ── Kilo Chat reactions ─────────────────────────────────────────────
+// ── Accure Chat reactions ─────────────────────────────────────────────
 
 export type ReactionSummary = {
   emoji: string
@@ -81,7 +81,7 @@ export type ReactionSummary = {
   memberIds: string[]
 }
 
-// ── Kilo Chat message ───────────────────────────────────────────────
+// ── Accure Chat message ───────────────────────────────────────────────
 
 export type Message = {
   id: string
@@ -133,8 +133,8 @@ export type ConversationStatusRecord = {
   updatedAt: number
 }
 
-// ── Typed Kilo Chat events (server → client) ───────────────────────
-// Event names mirror `@kilocode/kilo-chat/events`.
+// ── Typed Accure Chat events (server → client) ───────────────────────
+// Event names mirror `@accurecode/accure-chat/events`.
 
 /**
  * Snapshot of the message that was replied to. Server includes this on
@@ -209,7 +209,7 @@ export type ConversationStatusEvent = {
   at: number
 }
 
-export type KiloChatEventMap = {
+export type AccureChatEventMap = {
   "message.created": MessageCreatedEvent
   "message.updated": MessageUpdatedEvent
   "message.deleted": MessageDeletedEvent
@@ -229,7 +229,7 @@ export type KiloChatEventMap = {
   "conversation.status": ConversationStatusEvent
 }
 
-export type KiloChatEventName = keyof KiloChatEventMap
+export type AccureChatEventName = keyof AccureChatEventMap
 
 // ── Webview ↔ extension state ───────────────────────────────────────
 
@@ -237,7 +237,7 @@ export type TypingMember = { memberId: string; at: number }
 
 // Full state snapshot pushed to the webview
 // Every phase carries `locale` so the webview can resolve translations immediately.
-export type KiloClawState =
+export type AccureClawState =
   | { phase: "loading"; locale: string }
   | { phase: "noInstance"; locale: string }
   | { phase: "needsUpgrade"; locale: string }
@@ -260,51 +260,51 @@ export type KiloClawState =
 
 // ── Messages: Webview → Extension Host ──────────────────────────────
 
-export type KiloClawInMessage =
-  | { type: "kiloclaw.ready" }
-  | { type: "kiloclaw.openExternal"; url: string }
-  | { type: "kiloclaw.selectConversation"; conversationId: string }
-  | { type: "kiloclaw.createConversation"; title?: string }
-  | { type: "kiloclaw.renameConversation"; conversationId: string; title: string }
-  | { type: "kiloclaw.leaveConversation"; conversationId: string }
-  | { type: "kiloclaw.loadMoreConversations" }
+export type AccureClawInMessage =
+  | { type: "accureclaw.ready" }
+  | { type: "accureclaw.openExternal"; url: string }
+  | { type: "accureclaw.selectConversation"; conversationId: string }
+  | { type: "accureclaw.createConversation"; title?: string }
+  | { type: "accureclaw.renameConversation"; conversationId: string; title: string }
+  | { type: "accureclaw.leaveConversation"; conversationId: string }
+  | { type: "accureclaw.loadMoreConversations" }
   | {
-      type: "kiloclaw.sendMessage"
+      type: "accureclaw.sendMessage"
       conversationId: string
       content: ContentBlock[]
       inReplyToMessageId?: string
     }
-  | { type: "kiloclaw.editMessage"; conversationId: string; messageId: string; content: ContentBlock[] }
-  | { type: "kiloclaw.deleteMessage"; conversationId: string; messageId: string }
-  | { type: "kiloclaw.loadMoreMessages"; conversationId: string; before: string }
-  | { type: "kiloclaw.addReaction"; conversationId: string; messageId: string; emoji: string }
-  | { type: "kiloclaw.removeReaction"; conversationId: string; messageId: string; emoji: string }
+  | { type: "accureclaw.editMessage"; conversationId: string; messageId: string; content: ContentBlock[] }
+  | { type: "accureclaw.deleteMessage"; conversationId: string; messageId: string }
+  | { type: "accureclaw.loadMoreMessages"; conversationId: string; before: string }
+  | { type: "accureclaw.addReaction"; conversationId: string; messageId: string; emoji: string }
+  | { type: "accureclaw.removeReaction"; conversationId: string; messageId: string; emoji: string }
   | {
-      type: "kiloclaw.executeAction"
+      type: "accureclaw.executeAction"
       conversationId: string
       messageId: string
       groupId: string
       value: ExecApprovalDecision
     }
-  | { type: "kiloclaw.sendTyping"; conversationId: string }
-  | { type: "kiloclaw.sendTypingStop"; conversationId: string }
-  | { type: "kiloclaw.markRead"; conversationId: string }
+  | { type: "accureclaw.sendTyping"; conversationId: string }
+  | { type: "accureclaw.sendTypingStop"; conversationId: string }
+  | { type: "accureclaw.markRead"; conversationId: string }
 
 // ── Messages: Extension Host → Webview ──────────────────────────────
 
-export type KiloClawOutMessage =
-  | { type: "kiloclaw.state"; state: KiloClawState }
-  | { type: "kiloclaw.status"; data: ClawStatus | null }
-  | { type: "kiloclaw.locale"; locale: string }
-  | { type: "kiloclaw.error"; error: string }
-  | { type: "kiloclaw.conversations"; conversations: ConversationListItem[]; hasMore: boolean; replace: boolean }
-  | { type: "kiloclaw.activeConversation"; conversationId: string | null }
-  | { type: "kiloclaw.messages"; conversationId: string; messages: Message[]; hasMore: boolean; replace: boolean }
-  | { type: "kiloclaw.messageOptimistic"; conversationId: string; message: Message }
-  | { type: "kiloclaw.messageReplaced"; conversationId: string; pendingId: string; message: Message }
-  | { type: "kiloclaw.messageRemoved"; conversationId: string; messageId: string }
-  | { type: "kiloclaw.botStatus"; status: BotStatusRecord | null }
-  | { type: "kiloclaw.conversationStatus"; status: ConversationStatusRecord | null }
-  | { type: "kiloclaw.typing"; conversationId: string; memberId: string }
-  | { type: "kiloclaw.typingStop"; conversationId: string; memberId: string }
+export type AccureClawOutMessage =
+  | { type: "accureclaw.state"; state: AccureClawState }
+  | { type: "accureclaw.status"; data: ClawStatus | null }
+  | { type: "accureclaw.locale"; locale: string }
+  | { type: "accureclaw.error"; error: string }
+  | { type: "accureclaw.conversations"; conversations: ConversationListItem[]; hasMore: boolean; replace: boolean }
+  | { type: "accureclaw.activeConversation"; conversationId: string | null }
+  | { type: "accureclaw.messages"; conversationId: string; messages: Message[]; hasMore: boolean; replace: boolean }
+  | { type: "accureclaw.messageOptimistic"; conversationId: string; message: Message }
+  | { type: "accureclaw.messageReplaced"; conversationId: string; pendingId: string; message: Message }
+  | { type: "accureclaw.messageRemoved"; conversationId: string; messageId: string }
+  | { type: "accureclaw.botStatus"; status: BotStatusRecord | null }
+  | { type: "accureclaw.conversationStatus"; status: ConversationStatusRecord | null }
+  | { type: "accureclaw.typing"; conversationId: string; memberId: string }
+  | { type: "accureclaw.typingStop"; conversationId: string; memberId: string }
   | { type: "fontSizeChanged"; fontSize: number }

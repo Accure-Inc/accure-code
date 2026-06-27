@@ -1,21 +1,21 @@
-// kilocode_change - new file
+// accurecode_change - new file
 
 /**
  * Event Service WebSocket client for the TUI.
  *
- * Minimal inline port of `@kilocode/event-service` (cloud monorepo).
+ * Minimal inline port of `@accurecode/event-service` (cloud monorepo).
  * Connects via a two-step ticket flow:
  *   1. POST `/connect-ticket` with `Authorization: Bearer <JWT>` to mint a
  *      single-use ticket (30 s TTL).
  *   2. Open WebSocket to `/connect?ticket=<ticket>` with subprotocol
- *      `kilo.events.v1`.
+ *      `accure.events.v1`.
  *
  * Uses the global `WebSocket` constructor (Bun, Node 22+, browsers).
  */
 
-import type { KiloChatEventMap, KiloChatEventName } from "./types"
+import type { AccureChatEventMap, AccureChatEventName } from "./types"
 
-const WS_SUBPROTOCOL = "kilo.events.v1"
+const WS_SUBPROTOCOL = "accure.events.v1"
 const HANDSHAKE_TIMEOUT_MS = 10_000
 const PING_INTERVAL_MS = 15_000
 const TICKET_FETCH_TIMEOUT_MS = 10_000
@@ -149,9 +149,12 @@ export class EventServiceClient {
     }
   }
 
-  on<N extends KiloChatEventName>(event: N, handler: (ctx: string, payload: KiloChatEventMap[N]) => void): () => void {
+  on<N extends AccureChatEventName>(
+    event: N,
+    handler: (ctx: string, payload: AccureChatEventMap[N]) => void,
+  ): () => void {
     const set = this.eventHandlers.get(event) ?? new Set<EventHandler>()
-    const wrapped: EventHandler = (ctx, payload) => handler(ctx, payload as KiloChatEventMap[N])
+    const wrapped: EventHandler = (ctx, payload) => handler(ctx, payload as AccureChatEventMap[N])
     set.add(wrapped)
     this.eventHandlers.set(event, set)
     return () => {
@@ -334,7 +337,7 @@ export class EventServiceClient {
       return
     }
     if (m.type === "error") {
-      console.warn("[Kilo] event-service server error", m)
+      console.warn("[Accure] event-service server error", m)
     }
   }
 

@@ -1,9 +1,9 @@
 import { describe, it, expect } from "bun:test"
 
 // vscode mock is provided by the shared preload (tests/setup/vscode-mock.ts)
-const { KiloCodeActionProvider } = await import("../../src/services/code-actions/code-action-provider")
+const { AccureCodeActionProvider } = await import("../../src/services/code-actions/code-action-provider")
 
-const provider = new KiloCodeActionProvider()
+const provider = new AccureCodeActionProvider()
 
 function makeRange(isEmpty: boolean) {
   return { isEmpty }
@@ -13,7 +13,7 @@ function makeContext(diagnosticCount: number) {
   return { diagnostics: Array.from({ length: diagnosticCount }) }
 }
 
-describe("KiloCodeActionProvider", () => {
+describe("AccureCodeActionProvider", () => {
   describe("provideCodeActions", () => {
     it("returns empty array when range is empty", () => {
       const result = provider.provideCodeActions({} as never, makeRange(true) as never, makeContext(0) as never)

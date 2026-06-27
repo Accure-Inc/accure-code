@@ -1,12 +1,12 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.Text
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.views.base.PartView
-import ai.kilocode.client.ui.md.MdView
-import ai.kilocode.client.ui.md.MdViewFactory
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.Text
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.views.base.PartView
+import ai.accurecode.client.ui.md.MdView
+import ai.accurecode.client.ui.md.MdViewFactory
 import com.intellij.openapi.util.Disposer
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import java.awt.BorderLayout

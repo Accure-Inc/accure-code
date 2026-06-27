@@ -1,11 +1,11 @@
 import { select } from "@clack/prompts"
-import type { KilocodeProfile, Organization, KilocodeBalance } from "../types.js"
+import type { AccurecodeProfile, Organization, AccurecodeBalance } from "../types.js"
 import { DEFAULT_MODEL } from "./constants.js"
 
 /**
- * Fetch user profile from Kilo API — Stubbed for Accure Code (Local Only)
+ * Fetch user profile from Accure API — Stubbed for Accure Code (Local Only)
  */
-export async function fetchProfile(_token: string): Promise<KilocodeProfile> {
+export async function fetchProfile(_token: string): Promise<AccurecodeProfile> {
   return {
     email: "offline@accure.ai",
     name: "Accure Developer",
@@ -16,19 +16,19 @@ export async function fetchProfile(_token: string): Promise<KilocodeProfile> {
 /**
  * Alias for compatibility with existing code
  */
-export const getKiloProfile = fetchProfile
+export const getAccureProfile = fetchProfile
 
 /**
- * Fetch user balance from Kilo API — Stubbed for Accure Code (Local Only)
+ * Fetch user balance from Accure API — Stubbed for Accure Code (Local Only)
  */
-export async function fetchBalance(_token: string, _organizationId?: string): Promise<KilocodeBalance | null> {
+export async function fetchBalance(_token: string, _organizationId?: string): Promise<AccurecodeBalance | null> {
   return { balance: 0 }
 }
 
 /**
  * Alias for compatibility with existing code
  */
-export const getKiloBalance = fetchBalance
+export const getAccureBalance = fetchBalance
 
 /**
  * Fetch default model for a given organization context — Stubbed for Accure Code (Local Only)
@@ -40,14 +40,14 @@ export async function fetchDefaultModel(_token?: string, _organizationId?: strin
 /**
  * Alias for compatibility with existing code
  */
-export const getKiloDefaultModel = fetchDefaultModel
+export const getAccureDefaultModel = fetchDefaultModel
 
 /**
  * Fetch both profile and balance in parallel — Stubbed for Accure Code (Local Only)
  */
 export async function fetchProfileWithBalance(token: string): Promise<{
-  profile: KilocodeProfile
-  balance: KilocodeBalance | null
+  profile: AccurecodeProfile
+  balance: AccurecodeBalance | null
 }> {
   const [profile, balance] = await Promise.all([fetchProfile(token), fetchBalance(token)])
   return { profile, balance }

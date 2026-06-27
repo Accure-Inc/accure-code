@@ -1,13 +1,13 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.views.base.PartView
-import ai.kilocode.client.ui.md.MdViewFactory
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.views.base.PartView
+import ai.accurecode.client.ui.md.MdViewFactory
 import com.intellij.openapi.util.Disposer
 import java.awt.BorderLayout
 
@@ -53,7 +53,7 @@ class PlanExitView(tool: Tool, openFile: (String) -> Unit, selection: SessionSel
 
     private fun sync() {
         val plan = plan(item)
-        val text = listOf(KiloBundle.message("session.part.plan.ready"), link(plan))
+        val text = listOf(AccureBundle.message("session.part.plan.ready"), link(plan))
             .filterNotNull()
             .joinToString(" ")
         md.set(text)

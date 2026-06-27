@@ -3,7 +3,7 @@ import { DEFAULT_THEMES } from "../theme/default-themes"
 import { resolveThemeVariant, themeToCss } from "@opencode-ai/ui/theme/resolve"
 import { VSCODE_THEMES } from "./vscode-themes"
 
-const STYLE_ID = "storybook-kilo-theme"
+const STYLE_ID = "storybook-accure-theme"
 const VSCODE_STYLE_ID = "storybook-vscode-theme"
 
 function getOrCreateStyle(id: string): HTMLStyleElement {
@@ -15,7 +15,7 @@ function getOrCreateStyle(id: string): HTMLStyleElement {
   return el
 }
 
-export function applyKiloTheme(themeId: string, colorScheme: "light" | "dark") {
+export function applyAccureTheme(themeId: string, colorScheme: "light" | "dark") {
   const theme = DEFAULT_THEMES[themeId]
   if (!theme) return
 
@@ -70,7 +70,7 @@ export interface ThemeDecoratorProps {
 
 export function ThemeDecorator(props: ThemeDecoratorProps): JSX.Element {
   createEffect(() => {
-    applyKiloTheme(props.theme, props.colorScheme)
+    applyAccureTheme(props.theme, props.colorScheme)
   })
   return <props.Story />
 }

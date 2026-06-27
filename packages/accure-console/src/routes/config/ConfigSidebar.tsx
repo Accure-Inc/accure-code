@@ -1,6 +1,6 @@
 import { A, useLocation, useParams } from "@solidjs/router"
 import { createMemo, For } from "solid-js"
-import { Icon } from "@kilocode/accure-web-ui/icon"
+import { Icon } from "@accurecode/accure-web-ui/icon"
 import { configNav, type ConfigGroup, type ConfigNode } from "./sections"
 import { friendly } from "../../shared/utils"
 import { settings, strip } from "../../shared/navigation"

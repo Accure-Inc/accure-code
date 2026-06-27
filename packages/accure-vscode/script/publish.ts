@@ -4,7 +4,7 @@ import { join } from "node:path"
 import { existsSync } from "node:fs"
 import { Script } from "@opencode-ai/script"
 
-const prerelease = process.env.KILO_PRE_RELEASE === "true"
+const prerelease = process.env.ACCURECODE_PRE_RELEASE === "true"
 
 console.log(`Publishing VSCode extension for ${prerelease ? "pre-release" : "release"}: v${Script.version}`)
 

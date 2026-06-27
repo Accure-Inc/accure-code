@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test"
 import { Database } from "../../src/storage/db"
-import { SessionImportService } from "../../src/kilocode/session-import/service"
+import { SessionImportService } from "../../src/accurecode/session-import/service"
 import { resetDatabase } from "../fixture/db"
 import { tmpdir } from "../fixture/fixture"
 

@@ -16,27 +16,27 @@ const expectedBunVersionRange = `^${expectedBunVersion}`
 if (!semver.satisfies(process.versions.bun, expectedBunVersionRange)) {
   throw new Error(`This script requires bun@${expectedBunVersionRange}, but you are using bun@${process.versions.bun}`)
 }
-// kilocode_change start
+// accurecode_change start
 const env = {
-  KILO_CHANNEL: process.env["KILO_CHANNEL"],
-  KILO_BUMP: process.env["KILO_BUMP"],
-  KILO_VERSION: process.env["KILO_VERSION"],
-  KILO_RELEASE: process.env["KILO_RELEASE"],
-  KILO_PRE_RELEASE: process.env["KILO_PRE_RELEASE"],
+  ACCURECODE_CHANNEL: process.env["ACCURECODE_CHANNEL"],
+  ACCURECODE_BUMP: process.env["ACCURECODE_BUMP"],
+  ACCURECODE_VERSION: process.env["ACCURECODE_VERSION"],
+  ACCURECODE_RELEASE: process.env["ACCURECODE_RELEASE"],
+  ACCURECODE_PRE_RELEASE: process.env["ACCURECODE_PRE_RELEASE"],
 }
-// kilocode_change end
+// accurecode_change end
 const CHANNEL = await (async () => {
-  if (env.KILO_CHANNEL) return env.KILO_CHANNEL // kilocode_change
-  // kilocode_change start - publish to "rc" channel for pre-releases
-  if (env.KILO_PRE_RELEASE === "true") return "rc"
-  // kilocode_change end
-  if (env.KILO_BUMP) return "latest" // kilocode_change
-  if (env.KILO_VERSION && !env.KILO_VERSION.startsWith("0.0.0-")) return "latest" // kilocode_change
-  return await $`git branch --show-current`.text().then((x) => x.trim().replace(/[^0-9A-Za-z-]/g, "-")) // kilocode_change
+  if (env.ACCURECODE_CHANNEL) return env.ACCURECODE_CHANNEL // accurecode_change
+  // accurecode_change start - publish to "rc" channel for pre-releases
+  if (env.ACCURECODE_PRE_RELEASE === "true") return "rc"
+  // accurecode_change end
+  if (env.ACCURECODE_BUMP) return "latest" // accurecode_change
+  if (env.ACCURECODE_VERSION && !env.ACCURECODE_VERSION.startsWith("0.0.0-")) return "latest" // accurecode_change
+  return await $`git branch --show-current`.text().then((x) => x.trim().replace(/[^0-9A-Za-z-]/g, "-")) // accurecode_change
 })()
 const IS_PREVIEW = CHANNEL !== "latest"
 
-// kilocode_change start - shared helpers for version computation
+// accurecode_change start - shared helpers for version computation
 function parseVersion(input: string) {
   const match = input.trim().match(/^v?(\d+)\.(\d+)\.(\d+)$/)
   if (!match) return
@@ -58,7 +58,7 @@ function compareVersion(
 }
 
 async function fetchLatest() {
-  const data: any = await fetch("https://registry.npmjs.org/@kilocode/cli/latest").then((res) => {
+  const data: any = await fetch("https://registry.npmjs.org/@accurecode/cli/latest").then((res) => {
     if (!res.ok) throw new Error(res.statusText)
     return res.json()
   })
@@ -87,29 +87,29 @@ function bumpVersion(current: string, type: string) {
   if (type === "minor") return `${version.major}.${version.minor + 1}.0`
   return `${version.major}.${version.minor}.${version.patch + 1}`
 }
-// kilocode_change end
+// accurecode_change end
 
 const VERSION = await (async () => {
-  if (env.KILO_VERSION) return env.KILO_VERSION
+  if (env.ACCURECODE_VERSION) return env.ACCURECODE_VERSION
   if (IS_PREVIEW) {
-    // kilocode_change start - rc releases use plain semver required by VS Code Marketplace
-    if (env.KILO_BUMP && env.KILO_PRE_RELEASE === "true") {
+    // accurecode_change start - rc releases use plain semver required by VS Code Marketplace
+    if (env.ACCURECODE_BUMP && env.ACCURECODE_PRE_RELEASE === "true") {
       const current = await fetchHighest()
-      return bumpVersion(current, env.KILO_BUMP.toLowerCase())
+      return bumpVersion(current, env.ACCURECODE_BUMP.toLowerCase())
     }
-    // kilocode_change end
+    // accurecode_change end
     return `0.0.0-${CHANNEL}-${new Date().toISOString().slice(0, 16).replace(/[-:T]/g, "")}`
   }
-  const version = await fetchHighest() // kilocode_change
-  return bumpVersion(version, env.KILO_BUMP?.toLowerCase() ?? "patch") // kilocode_change
+  const version = await fetchHighest() // accurecode_change
+  return bumpVersion(version, env.ACCURECODE_BUMP?.toLowerCase() ?? "patch") // accurecode_change
 })()
 
-// kilocode_change start
+// accurecode_change start
 const team = [
   "actions-user",
-  "kilo-maintainer[bot]",
-  "kiloconnect[bot]",
-  "kiloconnect-lite[bot]",
+  "accure-maintainer[bot]",
+  "accureconnect[bot]",
+  "accureconnect-lite[bot]",
   "alexkgold",
   "arimesser",
   "arkadiykondrashov",
@@ -123,7 +123,7 @@ const team = [
   "DScdng",
   "emilieschario",
   "eshurakov",
-  "Helix-Kilo",
+  "Helix-Accure",
   "iscekic",
   "jeanduplessis",
   "jobrietbergen",
@@ -131,13 +131,13 @@ const team = [
   "johnnyeric",
   "alex-alecu",
   "imanolmzd-svg",
-  "kilocode-bot",
-  "kilo-code-bot",
-  "kilo-code-bot[bot]",
+  "accurecode-bot",
+  "accure-code-bot",
+  "accure-code-bot[bot]",
   "kirillk",
   "lambertjosh",
   "LigiaZ",
-  "marius-kilocode",
+  "marius-accurecode",
   "markijbema",
   "olearycrew",
   "pandemicsyn",
@@ -147,7 +147,7 @@ const team = [
   "suhailkc2025",
   "Sureshkumars",
 ]
-// kilocode_change end
+// accurecode_change end
 
 export const Script = {
   get channel() {
@@ -160,10 +160,10 @@ export const Script = {
     return IS_PREVIEW
   },
   get release(): boolean {
-    return !!env.KILO_RELEASE
+    return !!env.ACCURECODE_RELEASE
   },
   get team() {
     return team
   },
 }
-console.log(`kilo script`, JSON.stringify(Script, null, 2)) // kilocode_change
+console.log(`accure script`, JSON.stringify(Script, null, 2)) // accurecode_change

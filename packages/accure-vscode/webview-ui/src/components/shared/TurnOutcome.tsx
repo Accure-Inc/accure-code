@@ -1,4 +1,4 @@
-import { Card } from "@kilocode/accure-ui/card"
+import { Card } from "@accurecode/accure-ui/card"
 import { type Component, Show, createMemo } from "solid-js"
 import { useSession } from "../../context/session"
 import { terminal, type TerminalState } from "../../context/session-outcome"

@@ -1,11 +1,11 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.backend.cli.KiloBackendHttpClients
-import ai.kilocode.backend.cli.KiloCliDataParser
-import ai.kilocode.backend.cli.CliServer
-import ai.kilocode.log.ChatLogSummary
-import ai.kilocode.log.KiloLog
-import ai.kilocode.jetbrains.api.client.DefaultApi
+import ai.accurecode.backend.cli.AccureBackendHttpClients
+import ai.accurecode.backend.cli.AccureCliDataParser
+import ai.accurecode.backend.cli.CliServer
+import ai.accurecode.log.ChatLogSummary
+import ai.accurecode.log.AccureLog
+import ai.accurecode.jetbrains.api.client.DefaultApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
@@ -51,17 +51,17 @@ data class SseEvent(val type: String, val data: String)
  * The generated [DefaultApi] is configured with [apiClient] and exposed via [api]
  * for typed access to all CLI server endpoints.
  *
- * Concurrency is handled by the owning [KiloBackendAppService] — `connect`,
+ * Concurrency is handled by the owning [AccureBackendAppService] — `connect`,
  * `restart`, and `reinstall` are called under its mutex. Internal reconnect
  * attempts delegate back to the owner via [onReconnect].
  *
- * Not a service — owned and instantiated by [KiloBackendAppService].
+ * Not a service — owned and instantiated by [AccureBackendAppService].
  */
-class KiloConnectionService(
+class AccureConnectionService(
   private val cs: CoroutineScope,
   private val server: CliServer,
   private val onReconnect: () -> Unit,
-  private val log: KiloLog,
+  private val log: AccureLog,
   private val appLoadTimeoutMs: Long,
 ) {
 
@@ -69,13 +69,13 @@ class KiloConnectionService(
       cs: CoroutineScope,
       server: CliServer,
       onReconnect: () -> Unit,
-    ) : this(cs, server, onReconnect, KiloLog.create(KiloConnectionService::class.java), 30_000L)
+    ) : this(cs, server, onReconnect, AccureLog.create(AccureConnectionService::class.java), 30_000L)
 
     constructor(
       cs: CoroutineScope,
       server: CliServer,
       onReconnect: () -> Unit,
-      log: KiloLog,
+      log: AccureLog,
     ) : this(cs, server, onReconnect, log, 30_000L)
 
     companion object {
@@ -122,7 +122,7 @@ class KiloConnectionService(
     /**
      * Open a connection to the CLI server.
      *
-     * Called under [KiloBackendAppService]'s mutex — no internal guard needed.
+     * Called under [AccureBackendAppService]'s mutex — no internal guard needed.
      */
     suspend fun connect() {
         open()
@@ -131,7 +131,7 @@ class KiloConnectionService(
     /**
      * Kill the CLI process and restart it. Tears down all connections first.
      *
-     * Called under [KiloBackendAppService]'s mutex.
+     * Called under [AccureBackendAppService]'s mutex.
      */
     suspend fun restart() {
         log.info("restart: initiated — tearing down current connection")
@@ -144,7 +144,7 @@ class KiloConnectionService(
     /**
      * Kill the CLI process, re-extract the binary from JAR, and restart.
      *
-     * Called under [KiloBackendAppService]'s mutex.
+     * Called under [AccureBackendAppService]'s mutex.
      */
     suspend fun reinstall() {
         log.info("reinstall: initiated — tearing down current connection")
@@ -198,9 +198,9 @@ class KiloConnectionService(
         password = ready.password
 
         // Create dual OkHttp clients (bundled — no IntelliJ platform deps)
-        val ac = KiloBackendHttpClients.api(password)
-        val lc = KiloBackendHttpClients.appLoad(password, appLoadTimeoutMs)
-        val hc = KiloBackendHttpClients.health(password)
+        val ac = AccureBackendHttpClients.api(password)
+        val lc = AccureBackendHttpClients.appLoad(password, appLoadTimeoutMs)
+        val hc = AccureBackendHttpClients.health(password)
         apiClient = ac
         appLoadClient = lc
         healthClient = hc
@@ -250,7 +250,7 @@ class KiloConnectionService(
             synchronized(lock) {
                 if (disposed) return@synchronized
                 lastEvent.set(System.currentTimeMillis())
-                val kind = type ?: KiloCliDataParser.extractEventType(data)
+                val kind = type ?: AccureCliDataParser.extractEventType(data)
                 log.debug { "evt=$kind bytes=${data.length} hasId=${id != null} ${ChatLogSummary.body(data)}" }
                 val result = queue.trySend(SseEvent(type = kind, data = data))
                 if (result.isFailure && !disposed) {
@@ -285,7 +285,7 @@ class KiloConnectionService(
     /**
      * Schedule a reconnect attempt. If the CLI process is still alive,
      * just reconnect SSE. Otherwise, delegate to [onReconnect] which
-     * goes through [KiloBackendAppService]'s mutex for a full restart.
+     * goes through [AccureBackendAppService]'s mutex for a full restart.
      */
     private fun scheduleReconnect() {
         if (disposed) return
@@ -365,11 +365,11 @@ class KiloConnectionService(
     private fun close() {
         api = null
         appLoadApi = null
-        apiClient?.let { KiloBackendHttpClients.shutdown(it) }
+        apiClient?.let { AccureBackendHttpClients.shutdown(it) }
         apiClient = null
-        appLoadClient?.let { KiloBackendHttpClients.shutdown(it) }
+        appLoadClient?.let { AccureBackendHttpClients.shutdown(it) }
         appLoadClient = null
-        healthClient?.let { KiloBackendHttpClients.shutdown(it) }
+        healthClient?.let { AccureBackendHttpClients.shutdown(it) }
         healthClient = null
     }
 
@@ -389,6 +389,6 @@ class KiloConnectionService(
         queue.close()
         close()
         _state.value = ConnectionState.Disconnected
-        log.info("KiloConnectionService disposed")
+        log.info("AccureConnectionService disposed")
     }
 }

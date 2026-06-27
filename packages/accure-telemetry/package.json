@@ -1,10 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "@kilocode/accure-telemetry",
+  "name": "@accurecode/accure-telemetry",
   "version": "7.3.50",
   "type": "module",
   "license": "MIT",
-  "description": "Telemetry for Kilo CLI - PostHog analytics integration",
+  "description": "Telemetry for Accure CLI - PostHog analytics integration",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -17,7 +17,7 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@kilocode/accure-gateway": "workspace:*"
+    "@accurecode/accure-gateway": "workspace:*"
   },
   "devDependencies": {
     "@tsconfig/bun": "catalog:",

@@ -1,20 +1,20 @@
 /**
- * Cloud session handlers — extracted from KiloProvider.
+ * Cloud session handlers — extracted from AccureProvider.
  *
  * Manages fetching cloud sessions, previewing them, and the "import + send"
  * flow that clones a cloud session locally on first message. No vscode dependency.
  */
 
-import type { KiloClient, Session, TextPartInput, FilePartInput } from "@kilocode/sdk/v2/client"
+import type { AccureClient, Session, TextPartInput, FilePartInput } from "@accurecode/sdk/v2/client"
 import type { CloudSessionData, EditorContext } from "../../services/cli-backend/types"
-import { getErrorMessage, sessionToWebview, mapCloudSessionMessageToWebviewMessage } from "../../kilo-provider-utils"
+import { getErrorMessage, sessionToWebview, mapCloudSessionMessageToWebviewMessage } from "../../accure-provider-utils"
 import type { MessageFile } from "../message-files"
 import { reviewMetadata, type ReviewMessageData } from "../../shared/review-comments"
 
 const TIMEOUT = 30_000
 
 export interface CloudSessionContext {
-  readonly client: KiloClient | null
+  readonly client: AccureClient | null
   currentSession: Session | null
   readonly trackedSessionIds: Set<string>
   readonly connectionService: {
@@ -41,7 +41,7 @@ export async function handleRequestCloudSessions(
   }
 
   try {
-    const result = await ctx.client.kilo.cloudSessions({
+    const result = await ctx.client.accure.cloudSessions({
       cursor: message.cursor,
       limit: message.limit,
       gitUrl: message.gitUrl,
@@ -53,7 +53,7 @@ export async function handleRequestCloudSessions(
       nextCursor: result.data?.nextCursor ?? null,
     })
   } catch (error) {
-    console.error("[Kilo New] KiloProvider: Failed to fetch cloud sessions:", error)
+    console.error("[Accure New] AccureProvider: Failed to fetch cloud sessions:", error)
     ctx.postMessage({
       type: "error",
       message: error instanceof Error ? error.message : "Failed to fetch cloud sessions",
@@ -76,7 +76,10 @@ export async function handleRequestCloudSessionData(ctx: CloudSessionContext, se
   }
 
   try {
-    const result = await ctx.client.kilo.cloud.session.get({ id: sessionId }, { signal: AbortSignal.timeout(TIMEOUT) })
+    const result = await ctx.client.accure.cloud.session.get(
+      { id: sessionId },
+      { signal: AbortSignal.timeout(TIMEOUT) },
+    )
     const data = result.data as CloudSessionData | undefined
     if (!data) {
       ctx.postMessage({
@@ -96,7 +99,7 @@ export async function handleRequestCloudSessionData(ctx: CloudSessionContext, se
       messages,
     })
   } catch (err) {
-    console.error("[Kilo New] Failed to load cloud session data:", err)
+    console.error("[Accure New] Failed to load cloud session data:", err)
     ctx.postMessage({
       type: "cloudSessionImportFailed",
       cloudSessionId: sessionId,
@@ -139,7 +142,7 @@ export async function handleImportAndSend(
   // Step 1: Import the cloud session with fresh IDs
   let session: Session | undefined
   try {
-    const result = await ctx.client.kilo.cloud.session.import(
+    const result = await ctx.client.accure.cloud.session.import(
       {
         sessionId: cloudSessionId,
         directory: dir,
@@ -148,7 +151,7 @@ export async function handleImportAndSend(
     )
     session = result.data as Session | undefined
   } catch (error) {
-    console.error("[Kilo New] KiloProvider: ❌ Cloud session import failed:", error)
+    console.error("[Accure New] AccureProvider: ❌ Cloud session import failed:", error)
     ctx.postMessage({
       type: "cloudSessionImportFailed",
       cloudSessionId,
@@ -233,7 +236,7 @@ export async function handleImportAndSend(
       )
     })
   } catch (err) {
-    console.error("[Kilo New] Failed to send message after cloud import:", err)
+    console.error("[Accure New] Failed to send message after cloud import:", err)
     ctx.postMessage({
       type: "sendMessageFailed",
       error: err instanceof Error ? err.message : "Failed to send message after import",

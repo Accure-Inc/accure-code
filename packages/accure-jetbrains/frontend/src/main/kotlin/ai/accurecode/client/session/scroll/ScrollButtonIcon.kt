@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.scroll
+package ai.accurecode.client.session.scroll
 
 import com.intellij.openapi.util.IconLoader
 import javax.swing.Icon

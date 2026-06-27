@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "@kilocode/accure-gateway",
+  "name": "@accurecode/accure-gateway",
   "version": "7.3.50",
   "type": "module",
   "license": "MIT",
-  "description": "Unified Kilo Gateway package for OpenCode - authentication, provider, and API integration",
+  "description": "Unified Accure Gateway package for OpenCode - authentication, provider, and API integration",
   "keywords": [
-    "kilo",
-    "kilocode",
+    "accure",
+    "accurecode",
     "opencode",
     "auth",
     "plugin",
@@ -32,7 +32,7 @@
     "test:ci": "mkdir -p .artifacts/unit && bun test test --reporter=junit --reporter-outfile=.artifacts/unit/junit.xml"
   },
   "dependencies": {
-    "@kilocode/plugin": "workspace:*",
+    "@accurecode/plugin": "workspace:*",
     "@ai-sdk/alibaba": "1.0.17",
     "@ai-sdk/anthropic": "3.0.71",
     "@ai-sdk/openai": "3.0.53",

@@ -1,8 +1,8 @@
 /**
- * Parse KiloCode URL from token
+ * Parse AccureCode URL from token
  * Some tokens contain encoded base URL information
  */
-export function getKiloUrlFromToken(defaultUrl: string, token: string): string {
+export function getAccureUrlFromToken(defaultUrl: string, token: string): string {
   // If token contains URL information, extract it
   if (!token) return defaultUrl
 
@@ -17,9 +17,9 @@ export function getKiloUrlFromToken(defaultUrl: string, token: string): string {
 }
 
 /**
- * Validate KiloCode token format
+ * Validate AccureCode token format
  */
-export function isValidKilocodeToken(token: string): boolean {
+export function isValidAccurecodeToken(token: string): boolean {
   if (!token || typeof token !== "string") return false
 
   // Basic validation - adjust based on actual token requirements
@@ -29,6 +29,6 @@ export function isValidKilocodeToken(token: string): boolean {
 /**
  * Get API key from options or environment
  */
-export function getApiKey(options: { kilocodeToken?: string; apiKey?: string }): string | undefined {
-  return options.kilocodeToken ?? options.apiKey
+export function getApiKey(options: { accurecodeToken?: string; apiKey?: string }): string | undefined {
+  return options.accurecodeToken ?? options.apiKey
 }

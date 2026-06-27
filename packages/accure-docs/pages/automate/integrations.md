@@ -1,11 +1,11 @@
 ---
 title: "Integrations"
-description: "Overview of Kilo Code integrations"
+description: "Overview of Accure Code integrations"
 ---
 
-# Kilo Code Integrations
+# Accure Code Integrations
 
-Kilo Integrations lets you connect GitHub or GitLab for repository workflows and DoltHub for Dolt-versioned data. Once connected, Kilo can access authorized resources securely, enabling features like **Code Reviews**, **Cloud Agents**, **Kilo Deploy**, and data workflows through **Kilo Connect**.
+Accure Integrations lets you connect GitHub or GitLab for repository workflows and DoltHub for Dolt-versioned data. Once connected, Accure can access authorized resources securely, enabling features like **Code Reviews**, **Cloud Agents**, **Accure Deploy**, and data workflows through **Accure Connect**.
 
 ## Supported Platforms
 
@@ -17,17 +17,17 @@ Kilo Integrations lets you connect GitHub or GitLab for repository workflows and
 
 ## What You Can Do With Integrations
 
-- **Connect GitHub, GitLab, or DoltHub to Kilo Code** in a few clicks
-- **Enable advanced features** like Cloud Agents, Code Reviews, and Kilo Deploy
-- **Authorize GitHub or GitLab repository access** so Kilo can analyze and work with your code
-- **Query Dolt-versioned data** from your workspace through Kilo Connect
+- **Connect GitHub, GitLab, or DoltHub to Accure Code** in a few clicks
+- **Enable advanced features** like Cloud Agents, Code Reviews, and Accure Deploy
+- **Authorize GitHub or GitLab repository access** so Accure can analyze and work with your code
+- **Query Dolt-versioned data** from your workspace through Accure Connect
 
 ## Prerequisites
 
 Before connecting:
 
 - You must have a **GitHub** or **GitLab** account.
-- For GitHub: You need permission to install GitHub Apps for the repositories you want Kilo to access.
+- For GitHub: You need permission to install GitHub Apps for the repositories you want Accure to access.
 - For GitLab: You need **Maintainer** role (or higher) on the projects you want to connect.
 - For DoltHub: You need a DoltHub account to authorize the OAuth connection.
 - (Optional) If you're connecting an organization, you must be an admin or have app installation permissions.
@@ -38,17 +38,17 @@ Before connecting:
 
 ### 1. Open the Integrations Page
 
-Go to your **Personal** or **Organization Dashboard**, and navigate to the [Integrations](https://app.kilo.ai/integrations) tab.
+Go to your **Personal** or **Organization Dashboard**, and navigate to the [Integrations](https://app.accurecode.ai/integrations) tab.
 
 ### 2. Start the Connection Flow
 
 1. Click **Configure** on the GitHub panel.
-2. You'll be redirected to GitHub to authorize the **KiloConnect** App.
+2. You'll be redirected to GitHub to authorize the **AccureConnect** App.
 3. Select the GitHub account or organization you want to connect.
 
 ### 3. Choose Repository Access
 
-GitHub will ask which repositories you want Kilo to access:
+GitHub will ask which repositories you want Accure to access:
 
 - **All repositories** (recommended if you plan to use Cloud Agents or Deploy across multiple projects)
 - **Only selected repositories** (choose specific repos)
@@ -59,9 +59,9 @@ Click **Install & Authorize** to continue.
 
 Once approved:
 
-- You'll return to the Kilo Integrations page.
+- You'll return to the Accure Integrations page.
 - GitHub will show a **Connected** status.
-- Your Kilo workspace can now access GitHub repositories securely.
+- Your Accure workspace can now access GitHub repositories securely.
 
 ---
 
@@ -73,11 +73,11 @@ You can connect GitLab using **OAuth** or a **Personal Access Token (PAT)**. Bot
 {% tab label="OAuth (GitLab.com)" %}
 
 1. Go to the **Integrations** page:
-   - **Personal**: [app.kilo.ai/integrations/gitlab](https://app.kilo.ai/integrations/gitlab)
+   - **Personal**: [app.accurecode.ai/integrations/gitlab](https://app.accurecode.ai/integrations/gitlab)
    - **Organization**: Your organization → Integrations → GitLab
 2. Click **Connect GitLab**
 3. Authorize the application on GitLab
-4. You'll be redirected back to Kilo with the connection active
+4. You'll be redirected back to Accure with the connection active
 
 {% /tab %}
 {% tab label="OAuth (Self-Hosted)" %}
@@ -86,12 +86,12 @@ For self-hosted GitLab instances using OAuth, you need to register an OAuth appl
 
 1. In your GitLab instance, go to **Admin Area → Applications** (or **User Settings → Applications**)
 2. Create a new application:
-   - **Name**: `Kilo Code`
-   - **Redirect URI**: `https://app.kilo.ai/api/integrations/gitlab/callback`
+   - **Name**: `Accure Code`
+   - **Redirect URI**: `https://app.accurecode.ai/api/integrations/gitlab/callback`
    - **Scopes**: `api`, `read_user`, `read_repository`, `write_repository`
    - **Confidential**: Yes
 3. Copy the **Application ID** and **Secret**
-4. In Kilo, go to the GitLab integration page
+4. In Accure, go to the GitLab integration page
 5. Enter your **Instance URL**, **Client ID**, and **Client Secret**
 6. Click **Connect** and authorize
 
@@ -101,11 +101,11 @@ For self-hosted GitLab instances using OAuth, you need to register an OAuth appl
 1. In GitLab, go to **User Settings → Access Tokens**
 2. Create a token with the `api` scope
 3. Copy the token
-4. In Kilo, go to the GitLab integration page
+4. In Accure, go to the GitLab integration page
 5. Paste the token (and enter your Instance URL for self-hosted)
 6. Click **Connect**
 
-> PAT tokens cannot be refreshed automatically. When your token expires, create a new one in GitLab and reconnect in Kilo.
+> PAT tokens cannot be refreshed automatically. When your token expires, create a new one in GitLab and reconnect in Accure.
 
 {% /tab %}
 {% /tabs %}
@@ -114,14 +114,14 @@ For self-hosted GitLab instances using OAuth, you need to register an OAuth appl
 
 ## Connecting DoltHub
 
-DoltHub is available through [Kilo Connect](/docs/code-with-ai/platforms/kilo-connect) for teams that work with Dolt-versioned data.
+DoltHub is available through [Accure Connect](/docs/code-with-ai/platforms/accure-connect) for teams that work with Dolt-versioned data.
 
 1. Go to the **Integrations** page:
-   - **Personal**: [app.kilo.ai/integrations/dolthub](https://app.kilo.ai/integrations/dolthub)
+   - **Personal**: [app.accurecode.ai/integrations/dolthub](https://app.accurecode.ai/integrations/dolthub)
    - **Organization**: Your organization → Integrations → DoltHub
 2. Click **Connect DoltHub**.
 3. Authorize the connection with DoltHub.
-4. Return to Kilo and confirm DoltHub shows a **Connected** status.
+4. Return to Accure and confirm DoltHub shows a **Connected** status.
 
 To remove the connection, click **Disconnect** from the DoltHub integration page.
 
@@ -129,11 +129,11 @@ To remove the connection, click **Disconnect** from the DoltHub integration page
 
 ## What Happens After Connecting
 
-Once your integrations are connected, the following features are enabled in Kilo:
+Once your integrations are connected, the following features are enabled in Accure:
 
 ### Cloud Agents
 
-- Run Kilo Code in the cloud from any device
+- Run Accure Code in the cloud from any device
 - Auto-create branches and push work continuously
 - Work from anywhere while keeping your repo in sync
 
@@ -143,9 +143,9 @@ Once your integrations are connected, the following features are enabled in Kilo
 - Consistent feedback based on your team's standards
 - See the [Code Reviews guide](/docs/automate/code-reviews/overview) for setup
 
-### Kilo Deploy
+### Accure Deploy
 
-- Deploy Next.js 14 & 15 apps directly from Kilo
+- Deploy Next.js 14 & 15 apps directly from Accure
 - Trigger rebuilds automatically on push
 - Manage deployment logs and history
 
@@ -167,7 +167,7 @@ Once your integrations are connected, the following features are enabled in Kilo
 From the **Integrations** page, click "Manage on GitHub" to:
 
 - View the GitHub account you connected
-- Update which repositories Kilo has access to
+- Update which repositories Accure has access to
 - Disconnect GitHub entirely
 - Reauthorize the app if permissions change
 
@@ -178,14 +178,14 @@ From the **Integrations** page:
 - Click **Disconnect** to remove the GitLab connection
 - Your tokens are cleared, but webhook configuration is preserved so reconnecting restores your setup
 
-> Disconnecting from Kilo does not revoke OAuth tokens on GitLab's side. You can manually revoke them from **GitLab → User Settings → Applications → Authorized Applications**.
+> Disconnecting from Accure does not revoke OAuth tokens on GitLab's side. You can manually revoke them from **GitLab → User Settings → Applications → Authorized Applications**.
 
 ### DoltHub
 
 From the **Integrations** page, open DoltHub to:
 
 - View the connected status
-- Disconnect DoltHub from Kilo
+- Disconnect DoltHub from Accure
 
 ---
 
@@ -194,7 +194,7 @@ From the **Integrations** page, open DoltHub to:
 ### GitHub
 
 **"I don't see my repositories."**
-Ensure the KiloConnect App is installed for the correct GitHub org and that repo access includes the repositories you need.
+Ensure the AccureConnect App is installed for the correct GitHub org and that repo access includes the repositories you need.
 
 **"My organization blocks third-party apps."**
 You may need an admin to approve installing GitHub Apps.
@@ -213,11 +213,11 @@ You need **Maintainer role** on the GitLab project for webhook and bot token cre
 **"Token expired."**
 
 - **OAuth**: Tokens refresh automatically. If refresh fails, reconnect from the integration page.
-- **PAT**: Create a new token in GitLab and reconnect in Kilo.
+- **PAT**: Create a new token in GitLab and reconnect in Accure.
 
 **"Self-hosted connection issues."**
 
 - Verify your instance URL is accessible from the internet
 - Ensure HTTPS is configured
 - Check that OAuth application scopes include all required scopes
-- Verify the redirect URI matches: `https://app.kilo.ai/api/integrations/gitlab/callback`
+- Verify the redirect URI matches: `https://app.accurecode.ai/api/integrations/gitlab/callback`

@@ -64,7 +64,7 @@ const put = Effect.fn("ReadDirectoryTest.put")(function* (p: string, content: st
   yield* fs.writeWithDirs(p, content)
 })
 
-describe("kilocode directory reads", () => {
+describe("accurecode directory reads", () => {
   it.live("includes top-level file contents for directory reads", () =>
     Effect.gen(function* () {
       const dir = yield* tmpdirScoped()
@@ -82,7 +82,7 @@ describe("kilocode directory reads", () => {
     }),
   )
 
-  it.live("skips content inlining without the kilo flag", () =>
+  it.live("skips content inlining without the accure flag", () =>
     Effect.gen(function* () {
       const dir = yield* tmpdirScoped()
       yield* put(path.join(dir, "folder", "a.txt"), "alpha")

@@ -1,17 +1,17 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.Centerizer
 import java.awt.BorderLayout
 import javax.swing.JPanel
 
 class LoadingPanel : JPanel(BorderLayout()), SessionEditorStyleTarget {
-    private val label = JBLabel(KiloBundle.message("session.empty.loading"))
+    private val label = JBLabel(AccureBundle.message("session.empty.loading"))
 
     init {
         isOpaque = false
@@ -22,17 +22,17 @@ class LoadingPanel : JPanel(BorderLayout()), SessionEditorStyleTarget {
     fun setState(state: SessionState) {
         when (state) {
             is SessionState.Retry -> {
-                label.text = state.message.ifBlank { KiloBundle.message("session.status.retry") }
+                label.text = state.message.ifBlank { AccureBundle.message("session.status.retry") }
                 label.foreground = UiStyle.Colors.warningLabelForeground()
             }
 
             is SessionState.Offline -> {
-                label.text = state.message.ifBlank { KiloBundle.message("session.status.offline") }
+                label.text = state.message.ifBlank { AccureBundle.message("session.status.offline") }
                 label.foreground = UiStyle.Colors.errorLabelForeground()
             }
 
             else -> {
-                label.text = KiloBundle.message("session.empty.loading")
+                label.text = AccureBundle.message("session.empty.loading")
                 label.foreground = UiStyle.Colors.weak()
             }
         }

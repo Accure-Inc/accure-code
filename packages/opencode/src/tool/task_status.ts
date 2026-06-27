@@ -112,7 +112,7 @@ export const TaskStatusTool = Tool.define(
       ctx: Tool.Context,
     ) {
       if (!flags.experimentalBackgroundSubagents) {
-        return yield* Effect.fail(new Error("task_status requires KILO_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true"))
+        return yield* Effect.fail(new Error("task_status requires ACCURECODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true"))
       }
 
       const session = yield* sessions.get(params.task_id).pipe(Effect.catchCause(() => Effect.succeed(undefined)))
@@ -131,13 +131,13 @@ export const TaskStatusTool = Tool.define(
           }),
         }
       }
-      // kilocode_change start - task status follows the same direct-child ownership boundary as task resume
+      // accurecode_change start - task status follows the same direct-child ownership boundary as task resume
       if (session.parentID !== ctx.sessionID) {
         return yield* Effect.fail(
           new Error(`Cannot inspect task ${params.task_id}: not a child of the current session`),
         )
       }
-      // kilocode_change end
+      // accurecode_change end
 
       const waited =
         params.wait === true

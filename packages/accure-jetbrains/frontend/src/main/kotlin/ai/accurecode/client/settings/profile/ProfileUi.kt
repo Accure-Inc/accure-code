@@ -1,14 +1,14 @@
-package ai.kilocode.client.settings.profile
+package ai.accurecode.client.settings.profile
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.telemetry.Telemetry
-import ai.kilocode.client.util.UiTimerSource
-import ai.kilocode.client.util.UiTimers
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.ProfileStatusDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.telemetry.Telemetry
+import ai.accurecode.client.util.UiTimerSource
+import ai.accurecode.client.util.UiTimers
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.ProfileStatusDto
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.EDT
@@ -26,7 +26,7 @@ import java.awt.CardLayout
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-internal const val DASHBOARD_URL = "https://app.kilo.ai/profile"
+internal const val DASHBOARD_URL = "https://app.accurecode.ai/profile"
 
 internal val edt = Dispatchers.EDT + ModalityState.any().asContextElement()
 
@@ -40,9 +40,9 @@ private enum class Card { LOGGED_OUT, LOGGED_IN }
  */
 internal class ProfileUi(
     profile: ProfileDto?,
-    status: KiloAppStatusDto,
+    status: AccureAppStatusDto,
     private val cs: CoroutineScope,
-    private val app: KiloAppService = service(),
+    private val app: AccureAppService = service(),
     private val browse: (String) -> Unit = { BrowserUtil.browse(it) },
     private val timers: UiTimerSource = UiTimers,
 ) : JPanel(BorderLayout()) {
@@ -90,12 +90,12 @@ internal class ProfileUi(
      * Update from a full app state snapshot.
      *
      * A null profile is only treated as transient (keep the logged-in card without updating
-     * account content) when [KiloAppStateDto.progress]`.profile` is [ProfileStatusDto.PENDING],
+     * account content) when [AccureAppStateDto.progress]`.profile` is [ProfileStatusDto.PENDING],
      * meaning a switch or initial load is still in flight. Any other null (no progress,
      * NOT_LOGGED_IN, etc.) clears the profile and shows the logged-out card.
      */
     @RequiresEdt
-    fun update(state: KiloAppStateDto) {
+    fun update(state: AccureAppStateDto) {
         checkEdt()
         this.status = state.status
         val transient = state.profile == null && state.progress?.profile == ProfileStatusDto.PENDING
@@ -118,7 +118,7 @@ internal class ProfileUi(
      * so this branch is not reachable in production — it exists for transient-null tests.
      */
     @RequiresEdt
-    fun update(profile: ProfileDto?, status: KiloAppStatusDto) {
+    fun update(profile: ProfileDto?, status: AccureAppStatusDto) {
         checkEdt()
         this.status = status
         val transient = profile == null && prof != null
@@ -153,11 +153,11 @@ internal class ProfileUi(
         val p = prof
         // When loading/connecting and already showing the logged-in card, stay on it to
         // avoid focus loss during reconnects, initial loads, and org switches.
-        val transientLoad = s == KiloAppStatusDto.CONNECTING || s == KiloAppStatusDto.LOADING || s == KiloAppStatusDto.MIGRATION_REQUIRED
+        val transientLoad = s == AccureAppStatusDto.CONNECTING || s == AccureAppStatusDto.LOADING || s == AccureAppStatusDto.MIGRATION_REQUIRED
         if (transientLoad && shown == Card.LOGGED_IN) return Card.LOGGED_IN
         return when {
-            s == KiloAppStatusDto.DISCONNECTED || transientLoad -> Card.LOGGED_OUT
-            s == KiloAppStatusDto.ERROR -> Card.LOGGED_OUT
+            s == AccureAppStatusDto.DISCONNECTED || transientLoad -> Card.LOGGED_OUT
+            s == AccureAppStatusDto.ERROR -> Card.LOGGED_OUT
             p == null -> Card.LOGGED_OUT
             else -> Card.LOGGED_IN
         }
@@ -171,7 +171,7 @@ internal class ProfileUi(
 
     /**
      * Invalidate any pending login flows and dispose the logged-out UI timer.
-     * Called from [ai.kilocode.client.settings.profile.UserProfileConfigurable.disposeUIResources].
+     * Called from [ai.accurecode.client.settings.profile.UserProfileConfigurable.disposeUIResources].
      */
     @RequiresEdt
     fun dispose() {
@@ -296,14 +296,14 @@ private val HTML_MARKERS = listOf("<!doctype html", "<html", "<head", "<body")
 private val HTTP_STATUS_RE = Regex("""(?:^|\s)([45]\d{2})(?:\s|$)""")
 
 internal fun compactLoginError(e: Exception): String {
-    val msg = e.message?.trim() ?: return KiloBundle.message("profile.login.failed")
+    val msg = e.message?.trim() ?: return AccureBundle.message("profile.login.failed")
     val lower = msg.lowercase()
     if (HTML_MARKERS.any { lower.contains(it) }) {
         val status = HTTP_STATUS_RE.find(msg)?.groupValues?.getOrNull(1)
-        return if (status != null) "${KiloBundle.message("profile.login.failed")} ($status)"
-        else KiloBundle.message("profile.login.failed")
+        return if (status != null) "${AccureBundle.message("profile.login.failed")} ($status)"
+        else AccureBundle.message("profile.login.failed")
     }
     val norm = msg.replace(Regex("\\s+"), " ")
     val summary = norm.take(180)
-    return if (summary.isNotBlank()) summary else KiloBundle.message("profile.login.failed")
+    return if (summary.isNotBlank()) summary else AccureBundle.message("profile.login.failed")
 }

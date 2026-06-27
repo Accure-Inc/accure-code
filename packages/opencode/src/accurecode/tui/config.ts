@@ -8,13 +8,13 @@ import { ConfigParse } from "@/config/parse"
 import { CurrentWorkingDirectory } from "@/cli/cmd/tui/config/cwd"
 import { TuiConfig } from "@/cli/cmd/tui/config/tui"
 import { TuiInfo } from "@/cli/cmd/tui/config/tui-schema"
-import { KilocodeKeybinds } from "./keybinds"
+import { AccurecodeKeybinds } from "./keybinds"
 import { Filesystem } from "@/util/filesystem"
 import { isRecord } from "@/util/record"
 import { GlobalBus } from "@/bus/global"
 import { Event } from "@/server/event"
 
-export namespace KilocodeTuiConfig {
+export namespace AccurecodeTuiConfig {
   export const Scope = z.enum(["project", "global"])
   export type Scope = z.infer<typeof Scope>
 
@@ -23,7 +23,7 @@ export namespace KilocodeTuiConfig {
   export type Editable = Omit<Patch, "keybinds"> & { keybinds?: Record<string, string> }
 
   const files = ["tui.jsonc", "tui.json"] as const
-  const dirs = [".kilo", ".kilocode", ".opencode"] as const
+  const dirs = [".accurecode", ".accurecode", ".opencode"] as const
 
   export async function get(input: { directory: string }) {
     const cfg = await Effect.runPromise(
@@ -78,7 +78,7 @@ export namespace KilocodeTuiConfig {
 
     const roots = await Filesystem.findUp([...files], input.directory, input.worktree)
     if (roots[0]) return roots[0]
-    return path.join(input.directory, ".kilo", "tui.json")
+    return path.join(input.directory, ".accurecode", "tui.json")
   }
 
   async function read(file: string) {
@@ -116,7 +116,7 @@ export namespace KilocodeTuiConfig {
     const result = { ...config } as Record<string, unknown>
     delete result.plugin_origins
     const keybinds: Record<string, string> = defaults
-      ? Object.fromEntries(KilocodeKeybinds.list().map((item) => [item.id, item.default]))
+      ? Object.fromEntries(AccurecodeKeybinds.list().map((item) => [item.id, item.default]))
       : {}
     for (const [key, value] of Object.entries(config.keybinds ?? {})) {
       if (typeof value === "string") keybinds[key] = value

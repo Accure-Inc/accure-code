@@ -1,19 +1,19 @@
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1":
-    "Kilo Gateway, kodlama ajanları için optimize edilmiş güvenilir modellere erişim sağlar.",
-  "provider.connect.kiloGateway.line2":
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1":
+    "Accure Gateway, kodlama ajanları için optimize edilmiş güvenilir modellere erişim sağlar.",
+  "provider.connect.accureGateway.line2":
     "Tek bir API anahtarıyla Claude, GPT, Gemini, GLM ve daha fazlası gibi modellere erişebilirsiniz.",
-  "provider.connect.kiloGateway.visit.prefix": "API anahtarınızı almak için ",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": " adresini ziyaret edin.",
-  "provider.connect.kiloGateway.byok.prefix": "Daha fazla kullanım istatistiği için ",
-  "provider.connect.kiloGateway.byok.link": "Kilo's Gateway üzerinden BYOK",
-  "provider.connect.kiloGateway.byok.suffix": " kullanın.",
+  "provider.connect.accureGateway.visit.prefix": "API anahtarınızı almak için ",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": " adresini ziyaret edin.",
+  "provider.connect.accureGateway.byok.prefix": "Daha fazla kullanım istatistiği için ",
+  "provider.connect.accureGateway.byok.link": "Accure's Gateway üzerinden BYOK",
+  "provider.connect.accureGateway.byok.suffix": " kullanın.",
 
   // Provider settings translations
   "settings.providers.group.recommended": "Önerilen",
-  "settings.providers.note.kilo": "500+ AI modeline erişim",
+  "settings.providers.note.accurecode": "500+ AI modeline erişim",
   "settings.providers.note.opencode": "Claude, GPT, Gemini ve daha fazlasını içeren seçilmiş modeller",
   "settings.providers.note.anthropic": "Pro ve Max dahil Claude modellerine doğrudan erişim",
   "settings.providers.note.deepseek": "Akıl yürütme ve kodlama görevleri için DeepSeek modelleri",
@@ -102,7 +102,7 @@ export const dict = {
     "Anlık görüntü tamamlanana kadar bekleyin. İlk anlık görüntü oluşturulduktan sonra sonraki turlar hızlıdır.",
   "snapshot.slowRepo.answer.disable": "Bu proje için devre dışı bırak",
   "snapshot.slowRepo.answer.disable.description":
-    "Bu proje için Kilo anlık görüntülerini kapat. Kilo değişiklikleri için geri alma/yeniden yapmayı kaybedersiniz, ancak git her şeyi izlemeye devam eder.",
+    "Bu proje için Accure anlık görüntülerini kapat. Accure değişiklikleri için geri alma/yeniden yapmayı kaybedersiniz, ancak git her şeyi izlemeye devam eder.",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "Fark Görüntüleyicide Aç",

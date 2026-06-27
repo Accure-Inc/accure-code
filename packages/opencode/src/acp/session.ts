@@ -1,15 +1,15 @@
 import { RequestError, type McpServer } from "@agentclientprotocol/sdk"
 import type { ACPSessionState } from "./types"
 import * as Log from "@opencode-ai/core/util/log"
-import type { KiloClient } from "@kilocode/sdk/v2"
+import type { AccureClient } from "@accurecode/sdk/v2"
 
 const log = Log.create({ service: "acp-session-manager" })
 
 export class ACPSessionManager {
   private sessions = new Map<string, ACPSessionState>()
-  private sdk: KiloClient
+  private sdk: AccureClient
 
-  constructor(sdk: KiloClient) {
+  constructor(sdk: AccureClient) {
     this.sdk = sdk
   }
 

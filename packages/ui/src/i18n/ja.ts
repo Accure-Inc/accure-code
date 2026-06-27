@@ -53,7 +53,7 @@ export const dict = {
 
   "dialog.usageExceeded.freeTier.title": "無料制限に達しました",
   "dialog.usageExceeded.freeTier.description":
-    "Kilo Go にサブスクライブして、最高のオープンソースモデルに安定してアクセスできます。月額 $5 から。",
+    "Accure Go にサブスクライブして、最高のオープンソースモデルに安定してアクセスできます。月額 $5 から。",
   "dialog.usageExceeded.freeTier.actionLabel": "サブスクライブ",
   "dialog.usageExceeded.accountRateLimit.title": "Go の制限に達しました",
   "dialog.usageExceeded.accountRateLimit.description":
@@ -104,7 +104,7 @@ export const dict = {
   "ui.textField.copied": "コピーしました",
 
   "ui.imagePreview.alt": "画像プレビュー",
-  // kilocode_change start
+  // accurecode_change start
   "ui.mermaid.rendering": "Mermaid 図をレンダリング中...",
   "ui.mermaid.renderError": "Mermaid のレンダリングに失敗しました: {{message}}",
   "ui.mermaid.errorDefault": "Mermaid 図をレンダリングできません。",
@@ -115,7 +115,7 @@ export const dict = {
   "ui.mermaid.copyPng": "PNG をコピー",
   "ui.mermaid.downloadSvg": "SVG をダウンロード",
   "ui.mermaid.downloadPng": "PNG をダウンロード",
-  // kilocode_change end
+  // accurecode_change end
   "ui.scrollView.ariaLabel": "スクロール可能なコンテンツ",
 
   "ui.tool.read": "読み込み",

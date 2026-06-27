@@ -2,16 +2,16 @@ import { Deferred, Effect } from "effect"
 import { InstanceState } from "@/effect/instance-state"
 import * as Log from "@opencode-ai/core/util/log"
 import { SessionID } from "@/session/schema"
-import { KiloSessionPromptQueue } from "@/kilocode/session/prompt-queue"
+import { AccureSessionPromptQueue } from "@/accurecode/session/prompt-queue"
 
 /**
- * Kilo-specific helpers for the shared `@/question` module.
+ * Accure-specific helpers for the shared `@/question` module.
  *
  * Extracted here so the upstream file keeps just the import, an Interface entry
  * for `dismissAll`, and one-liner calls at the use sites — minimising the
  * surface area that conflicts with upstream.
  */
-export namespace KiloQuestion {
+export namespace AccureQuestion {
   const log = Log.create({ service: "question" })
 
   /** Minimal entry shape both helpers need; matches `PendingEntry` in `@/question`. */
@@ -55,7 +55,7 @@ export namespace KiloQuestion {
    */
   export const guardFollowup = <E>(sessionID: SessionID, makeError: () => E) =>
     Effect.gen(function* () {
-      if (!KiloSessionPromptQueue.hasFollowup(sessionID)) return
+      if (!AccureSessionPromptQueue.hasFollowup(sessionID)) return
       log.info("auto-dismissed — followup queued", { sessionID })
       return yield* Effect.fail(makeError())
     })

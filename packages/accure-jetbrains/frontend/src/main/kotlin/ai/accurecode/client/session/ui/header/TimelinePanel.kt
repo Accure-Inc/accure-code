@@ -1,15 +1,15 @@
-package ai.kilocode.client.session.ui.header
+package ai.accurecode.client.session.ui.header
 
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.Compaction
-import ai.kilocode.client.session.model.Reasoning
-import ai.kilocode.client.session.model.StepFinish
-import ai.kilocode.client.session.model.Text
-import ai.kilocode.client.session.model.TimelineItem
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.model.ToolKind
-import ai.kilocode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.Compaction
+import ai.accurecode.client.session.model.Reasoning
+import ai.accurecode.client.session.model.StepFinish
+import ai.accurecode.client.session.model.Text
+import ai.accurecode.client.session.model.TimelineItem
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.model.ToolKind
+import ai.accurecode.client.session.ui.style.SessionUiStyle
 import com.intellij.util.ui.JBUI
 import java.awt.Color
 import java.awt.Dimension

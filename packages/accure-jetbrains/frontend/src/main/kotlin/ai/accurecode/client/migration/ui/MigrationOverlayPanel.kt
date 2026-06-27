@@ -1,11 +1,11 @@
-package ai.kilocode.client.migration.ui
+package ai.accurecode.client.migration.ui
 
-import ai.kilocode.client.migration.MigrationUiSelections
-import ai.kilocode.client.migration.MigrationUiState
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
+import ai.accurecode.client.migration.MigrationUiSelections
+import ai.accurecode.client.migration.MigrationUiState
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
 import com.intellij.ui.components.JBPanel
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import java.awt.BorderLayout

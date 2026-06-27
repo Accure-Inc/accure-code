@@ -22,7 +22,7 @@ import { SessionStatus } from "../../src/session/status"
 import { SessionSummary } from "../../src/session/summary"
 import { Snapshot } from "../../src/snapshot"
 import * as Log from "@opencode-ai/core/util/log"
-import { SessionNetwork } from "../../src/session/network" // kilocode_change
+import { SessionNetwork } from "../../src/session/network" // accurecode_change
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { provideTmpdirServer } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
@@ -197,7 +197,7 @@ const env = Layer.mergeAll(
 )
 
 const it = testEffect(env)
-// kilocode_change start - exercise non-default output token ceilings in the processor
+// accurecode_change start - exercise non-default output token ceilings in the processor
 const capped = testEffect(
   Layer.mergeAll(
     TestLLMServer.layer,
@@ -209,7 +209,7 @@ const capped = testEffect(
     ),
   ),
 )
-// kilocode_change end
+// accurecode_change end
 
 const boot = Effect.fn("test.boot")(function* () {
   const processors = yield* SessionProcessor.Service
@@ -397,7 +397,7 @@ it.live("session.processor effect tests stop after token overflow requests compa
   ),
 )
 
-// kilocode_change start - configured output ceiling must reach finish-step overflow accounting
+// accurecode_change start - configured output ceiling must reach finish-step overflow accounting
 capped.live("session.processor respects the configured output token ceiling", () =>
   provideTmpdirServer(
     ({ dir, llm }) =>
@@ -437,7 +437,7 @@ capped.live("session.processor respects the configured output token ceiling", ()
     { git: true, config: (url) => providerCfg(url) },
   ),
 )
-// kilocode_change end
+// accurecode_change end
 
 it.live("session.processor effect tests capture reasoning from http mock", () =>
   provideTmpdirServer(
@@ -492,11 +492,11 @@ it.live("session.processor effect tests reset reasoning state across retries", (
     ({ dir, llm }) =>
       Effect.gen(function* () {
         const { processors, session, provider } = yield* boot()
-        // kilocode_change start — auto-reply to network reconnection prompts triggered by reset()
+        // accurecode_change start — auto-reply to network reconnection prompts triggered by reset()
         const offAsk = Bus.subscribe(SessionNetwork.Event.Asked, (event) => {
           void SessionNetwork.reply({ requestID: event.properties.id })
         })
-        // kilocode_change end
+        // accurecode_change end
 
         yield* llm.push(reply().reason("one").reset(), reply().reason("two").stop())
 
@@ -534,7 +534,7 @@ it.live("session.processor effect tests reset reasoning state across retries", (
         expect(yield* llm.calls).toBe(2)
         expect(reasoning.some((part) => part.text === "two")).toBe(true)
         expect(reasoning.some((part) => part.text === "onetwo")).toBe(false)
-        offAsk() // kilocode_change — cleanup subscriber
+        offAsk() // accurecode_change — cleanup subscriber
       }),
     { config: (url) => providerCfg(url) },
   ),

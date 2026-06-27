@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 import { createRoot } from "solid-js"
 import { affectsTerminalFont, resolveTerminalFont } from "../../src/agent-manager/terminal-font"
 import { TerminalRouter } from "../../src/agent-manager/terminal-routing"
@@ -49,7 +49,7 @@ describe("Agent Manager terminal font", () => {
         remove: async () => ({ data: true }),
         update: async () => ({ data: true }),
       },
-    } as unknown as KiloClient
+    } as unknown as AccureClient
     const message = new Promise<AgentManagerOutMessage>((resolve) => {
       const router = new TerminalRouter({
         getClient: () => client,

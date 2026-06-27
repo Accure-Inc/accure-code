@@ -1,11 +1,11 @@
-package ai.kilocode.backend.testing
+package ai.accurecode.backend.testing
 
-import ai.kilocode.log.KiloLog
+import ai.accurecode.log.AccureLog
 
 /**
  * Test logger that captures messages for assertions and prints to stdout.
  */
-class TestLog : KiloLog {
+class TestLog : AccureLog {
     private val items = mutableListOf<String>()
     private val lock = Object()
     val messages: List<String>

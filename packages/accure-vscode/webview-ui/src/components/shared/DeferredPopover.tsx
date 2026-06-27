@@ -1,7 +1,7 @@
 import { createEffect, createSignal, onCleanup, splitProps, type ValidComponent } from "solid-js"
-import { Popover as Base, type PopoverProps } from "@kilocode/accure-ui/popover"
+import { Popover as Base, type PopoverProps } from "@accurecode/accure-ui/popover"
 
-export type { PopoverProps } from "@kilocode/accure-ui/popover"
+export type { PopoverProps } from "@accurecode/accure-ui/popover"
 
 export interface DeferredPopoverProps<T extends ValidComponent = "div"> extends PopoverProps<T> {
   deferDismiss?: boolean

@@ -19,14 +19,14 @@ describe("config resilience", () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "agent", "skip.md"),
+          path.join(dir, ".accurecode", "agent", "skip.md"),
           `---
 mode: "banana"
 ---
 Broken agent prompt`,
         )
         await Filesystem.write(
-          path.join(dir, ".kilo", "agent", "keep.md"),
+          path.join(dir, ".accurecode", "agent", "keep.md"),
           `---
 model: test/model
 ---
@@ -54,7 +54,7 @@ Valid agent prompt`,
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "agent", "skip.md"),
+          path.join(dir, ".accurecode", "agent", "skip.md"),
           `---
 mode: "banana"
 ---
@@ -78,14 +78,14 @@ Broken agent prompt`,
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "command", "skip.md"),
+          path.join(dir, ".accurecode", "command", "skip.md"),
           `---
 subtask: "banana"
 ---
 Broken command template`,
         )
         await Filesystem.write(
-          path.join(dir, ".kilo", "command", "keep.md"),
+          path.join(dir, ".accurecode", "command", "keep.md"),
           `---
 description: Valid command
 ---
@@ -112,7 +112,7 @@ Valid command template`,
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "command", "skip.md"),
+          path.join(dir, ".accurecode", "command", "skip.md"),
           `---
 subtask: "banana"
 ---
@@ -136,7 +136,7 @@ Broken command template`,
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "agent", "broken.md"),
+          path.join(dir, ".accurecode", "agent", "broken.md"),
           `---
 mode: "banana"
 ---
@@ -160,7 +160,7 @@ Broken agent`,
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "command", "broken.md"),
+          path.join(dir, ".accurecode", "command", "broken.md"),
           `---
 subtask: "banana"
 ---
@@ -180,10 +180,10 @@ Broken command`,
     })
   })
 
-  test("collects warnings for invalid JSON in .kilo directory config", async () => {
+  test("collects warnings for invalid JSON in .accurecode directory config", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        await Filesystem.write(path.join(dir, ".kilo", "kilo.json"), "{ not valid json !!!")
+        await Filesystem.write(path.join(dir, ".accurecode", "accure.json"), "{ not valid json !!!")
       },
     })
 
@@ -196,15 +196,15 @@ Broken command`,
         // Config loading should not crash
         expect(cfg).toBeDefined()
         // Warning should reference the bad file
-        expect(warns.some((w) => w.path.includes("kilo.json") && w.message.includes("not valid JSON"))).toBe(true)
+        expect(warns.some((w) => w.path.includes("accure.json") && w.message.includes("not valid JSON"))).toBe(true)
       },
     })
   })
 
-  test("collects warnings for invalid schema in .kilo directory config", async () => {
+  test("collects warnings for invalid schema in .accurecode directory config", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        await Filesystem.write(path.join(dir, ".kilo", "kilo.json"), JSON.stringify({ unknownField: true }))
+        await Filesystem.write(path.join(dir, ".accurecode", "accure.json"), JSON.stringify({ unknownField: true }))
       },
     })
 
@@ -215,7 +215,7 @@ Broken command`,
         const warns = await warnings()
 
         expect(cfg).toBeDefined()
-        expect(warns.some((w) => w.path.includes("kilo.json") && w.message.includes("invalid"))).toBe(true)
+        expect(warns.some((w) => w.path.includes("accure.json") && w.message.includes("invalid"))).toBe(true)
       },
     })
   })

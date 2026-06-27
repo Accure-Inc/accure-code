@@ -1,10 +1,10 @@
-package ai.kilocode.client.settings.base
+package ai.accurecode.client.settings.base
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.testing.FakeAppRpcApi
-import ai.kilocode.client.testing.FakeWorkspaceRpcApi
-import ai.kilocode.rpc.dto.KiloAppStateDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.testing.FakeAppRpcApi
+import ai.accurecode.client.testing.FakeWorkspaceRpcApi
+import ai.accurecode.rpc.dto.AccureAppStateDto
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.util.ui.UIUtil
@@ -20,16 +20,16 @@ import javax.swing.text.JTextComponent
 class BaseSettingsUiTest : BasePlatformTestCase() {
     private lateinit var scope: CoroutineScope
     private lateinit var appScope: CoroutineScope
-    private lateinit var app: KiloAppService
-    private lateinit var workspaces: KiloWorkspaceService
+    private lateinit var app: AccureAppService
+    private lateinit var workspaces: AccureWorkspaceService
     private var panel: FakePanel? = null
 
     override fun setUp() {
         super.setUp()
         scope = CoroutineScope(SupervisorJob())
         appScope = CoroutineScope(SupervisorJob())
-        app = KiloAppService(appScope, FakeAppRpcApi())
-        workspaces = KiloWorkspaceService(appScope, FakeWorkspaceRpcApi())
+        app = AccureAppService(appScope, FakeAppRpcApi())
+        workspaces = AccureWorkspaceService(appScope, FakeWorkspaceRpcApi())
     }
 
     override fun tearDown() {
@@ -137,7 +137,7 @@ class BaseSettingsUiTest : BasePlatformTestCase() {
 
         edt { view.banner(true) }
 
-        edt { assertTrue(text(view).contains("Sign in to Kilo Code")) }
+        edt { assertTrue(text(view).contains("Sign in to Accure Code")) }
     }
 
     fun `test login banner can be disabled`() {
@@ -145,7 +145,7 @@ class BaseSettingsUiTest : BasePlatformTestCase() {
 
         edt { view.banner(true) }
 
-        edt { assertFalse(text(view).contains("Sign in to Kilo Code")) }
+        edt { assertFalse(text(view).contains("Sign in to Accure Code")) }
     }
 
     private fun create(login: Boolean = true): FakePanel {
@@ -193,8 +193,8 @@ class BaseSettingsUiTest : BasePlatformTestCase() {
 
     private class FakePanel(
         cs: CoroutineScope,
-        app: KiloAppService,
-        workspaces: KiloWorkspaceService,
+        app: AccureAppService,
+        workspaces: AccureWorkspaceService,
         login: Boolean,
     ) : BaseSettingsUi<FakeContent, Draft, Change, Draft, Unit>(cs, Draft("old"), app, workspaces, loginBanner = login) {
         private val callbacks = mutableListOf<(Draft?) -> Unit>()
@@ -223,7 +223,7 @@ class BaseSettingsUiTest : BasePlatformTestCase() {
 
         override fun base(result: Draft): Draft = result
 
-        override fun draft(state: KiloAppStateDto): Draft = draft
+        override fun draft(state: AccureAppStateDto): Draft = draft
 
         override suspend fun loadWorkspace(root: String) = Unit
 

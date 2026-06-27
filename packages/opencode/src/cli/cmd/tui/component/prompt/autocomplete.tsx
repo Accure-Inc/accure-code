@@ -14,7 +14,7 @@ import { useTuiConfig } from "../../context/tui-config"
 import { useTheme, selectedForeground } from "@tui/context/theme"
 import { SplitBorder } from "@tui/component/border"
 import { useTerminalDimensions } from "@opentui/solid"
-import { slashDisplay } from "@/kilocode/cli/cmd/command-display" // kilocode_change
+import { slashDisplay } from "@/accurecode/cli/cmd/command-display" // accurecode_change
 import { Locale } from "@/util/locale"
 import type { PromptInfo } from "./history"
 import { useFrecency } from "./frecency"
@@ -57,10 +57,10 @@ function extractLineRange(input: string) {
 
 export type AutocompleteRef = {
   onInput: (value: string) => void
-  // kilocode_change start - validate cursor moves and close overlays without mutating draft text
+  // accurecode_change start - validate cursor moves and close overlays without mutating draft text
   onCursorChange: () => void
   dismiss: () => void
-  // kilocode_change end
+  // accurecode_change end
   visible: false | "@" | "/"
 }
 
@@ -552,7 +552,7 @@ export function Autocomplete(props: {
     const results: AutocompleteOption[] = [...slashes()]
 
     for (const serverCommand of sync.data.command) {
-      // kilocode_change start - preserve suffixes like :skill when inserting selected slash commands
+      // accurecode_change start - preserve suffixes like :skill when inserting selected slash commands
       const display = slashDisplay(serverCommand)
       results.push({
         display,
@@ -565,7 +565,7 @@ export function Autocomplete(props: {
           props.input().cursorOffset = Bun.stringWidth(newText)
         },
       })
-      // kilocode_change end
+      // accurecode_change end
     }
 
     results.sort((a, b) => a.display.localeCompare(b.display))
@@ -739,7 +739,7 @@ export function Autocomplete(props: {
         "prompt.autocomplete.select",
         "prompt.autocomplete.complete",
       ]),
-      // kilocode_change start - close stale suggestions while allowing normal cursor movement
+      // accurecode_change start - close stale suggestions while allowing normal cursor movement
       {
         key: "right",
         fallthrough: true,
@@ -747,7 +747,7 @@ export function Autocomplete(props: {
           if (props.input().cursorOffset <= store.index) dismiss()
         },
       },
-      // kilocode_change end
+      // accurecode_change end
     ],
   }))
 
@@ -758,13 +758,13 @@ export function Autocomplete(props: {
     })
   }
 
-  // kilocode_change start - keep slash text intact when overlays hide the prompt,
+  // accurecode_change start - keep slash text intact when overlays hide the prompt,
   // but still allow normal autocomplete dismissal to clean it up.
   function dismiss() {
     if (!store.visible) return
     setStore("visible", false)
   }
-  // kilocode_change end
+  // accurecode_change end
 
   function hide() {
     const text = props.input().plainText
@@ -792,11 +792,11 @@ export function Autocomplete(props: {
       get visible() {
         return store.visible
       },
-      // kilocode_change start
+      // accurecode_change start
       dismiss() {
         dismiss()
       },
-      // kilocode_change end
+      // accurecode_change end
       onInput(value) {
         if (store.visible) {
           if (
@@ -830,7 +830,7 @@ export function Autocomplete(props: {
           setStore("index", idx)
         }
       },
-      // kilocode_change start - dismiss stale popup after cursor leaves active filter region
+      // accurecode_change start - dismiss stale popup after cursor leaves active filter region
       onCursorChange() {
         if (!store.visible) return
         const cursor = props.input().cursorOffset
@@ -843,7 +843,7 @@ export function Autocomplete(props: {
           hide()
         }
       },
-      // kilocode_change end
+      // accurecode_change end
     })
   })
 

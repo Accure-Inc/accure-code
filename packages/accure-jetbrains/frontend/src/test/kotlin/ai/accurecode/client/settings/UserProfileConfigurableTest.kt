@@ -1,16 +1,16 @@
-package ai.kilocode.client.settings
+package ai.accurecode.client.settings
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.settings.profile.ProfileUi
-import ai.kilocode.client.testing.FakeAppRpcApi
-import ai.kilocode.rpc.dto.DeviceAuthDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.LoadProgressDto
-import ai.kilocode.rpc.dto.ProfileBalanceDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.ProfileOrganizationDto
-import ai.kilocode.rpc.dto.ProfileStatusDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.settings.profile.ProfileUi
+import ai.accurecode.client.testing.FakeAppRpcApi
+import ai.accurecode.rpc.dto.DeviceAuthDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.LoadProgressDto
+import ai.accurecode.rpc.dto.ProfileBalanceDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.ProfileOrganizationDto
+import ai.accurecode.rpc.dto.ProfileStatusDto
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.ui.SimpleColoredComponent
@@ -40,7 +40,7 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
 
     private lateinit var scope: CoroutineScope
     private lateinit var rpc: FakeAppRpcApi
-    private lateinit var app: KiloAppService
+    private lateinit var app: AccureAppService
     private lateinit var panel: ProfileUi
     private val urls = mutableListOf<String>()
 
@@ -48,12 +48,12 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         super.setUp()
         scope = CoroutineScope(SupervisorJob())
         rpc = FakeAppRpcApi()
-        app = KiloAppService(scope, rpc)
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        app = AccureAppService(scope, rpc)
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         edt {
             panel = ProfileUi(
                 profile = null,
-                status = KiloAppStatusDto.READY,
+                status = AccureAppStatusDto.READY,
                 cs = scope,
                 app = app,
                 browse = { urls.add(it) },
@@ -74,7 +74,7 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
 
         edt {
             assertTrue(text(panel).contains("Not logged in"))
-            buttons(panel).first { it.text == "Login with Kilo Code" }.doClick()
+            buttons(panel).first { it.text == "Login with Accure Code" }.doClick()
         }
         flush()
 
@@ -84,14 +84,14 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
             assertTrue(t, t.contains("alice@test.com"))
             assertTrue(buttons(panel).any { it.text == "Log Out" })
         }
-        assertEquals(listOf("https://auth.kilo.ai/device"), urls)
+        assertEquals(listOf("https://auth.accurecode.ai/device"), urls)
     }
 
     fun `test logout updates profile UI`() {
         val profile = ProfileDto(email = "alice@test.com", name = "Alice")
         rpc.fakeProfile = profile
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = profile)
-        edt { panel.update(profile, KiloAppStatusDto.READY) }
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = profile)
+        edt { panel.update(profile, AccureAppStatusDto.READY) }
 
         edt {
             assertTrue(buttons(panel).any { it.text == "Log Out" })
@@ -102,7 +102,7 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         edt {
             val t = text(panel)
             assertTrue(t, t.contains("Not logged in"))
-            assertTrue(buttons(panel).any { it.text == "Login with Kilo Code" })
+            assertTrue(buttons(panel).any { it.text == "Login with Accure Code" })
         }
     }
 
@@ -117,8 +117,8 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         val org = personal.copy(balance = ProfileBalanceDto(25.0), currentOrgId = "org_1")
         rpc.fakeProfile = personal
         rpc.orgProfiles["org_1"] = org
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = personal)
-        edt { panel.update(personal, KiloAppStatusDto.READY) }
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = personal)
+        edt { panel.update(personal, AccureAppStatusDto.READY) }
 
         edt {
             val t = text(panel)
@@ -144,8 +144,8 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
             organizations = listOf(ProfileOrganizationDto(id = "org_1", name = "Acme", role = "MEMBER")),
             balance = ProfileBalanceDto(10.0),
         )
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = profile)
-        edt { panel.update(profile, KiloAppStatusDto.READY) }
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = profile)
+        edt { panel.update(profile, AccureAppStatusDto.READY) }
 
         edt {
             val t = text(panel)
@@ -161,7 +161,7 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
 
             panel.setSize(800, 600)
             layout(panel)
-            val logo = labelsByName(panel, "kilo.profile.logo.loggedIn").single()
+            val logo = labelsByName(panel, "accure.profile.logo.loggedIn").single()
             val name = labels(panel).first { it.text == "Alice" }
             val logoLoc = SwingUtilities.convertPoint(logo.parent, logo.location, panel)
             val nameLoc = SwingUtilities.convertPoint(name.parent, name.location, panel)
@@ -187,8 +187,8 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         )
         val updated = profile.copy(balance = ProfileBalanceDto(25.0))
         rpc.fakeProfile = profile
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = profile)
-        edt { panel.update(profile, KiloAppStatusDto.READY) }
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = profile)
+        edt { panel.update(profile, AccureAppStatusDto.READY) }
 
         edt {
             assertTrue(text(panel).contains("\$10.00"))
@@ -209,22 +209,22 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
 
     fun `test logged out update retains login button`() {
         edt {
-            val btn = buttons(panel).first { it.text == "Login with Kilo Code" }
-            panel.update(null, KiloAppStatusDto.READY)
-            val btn2 = buttons(panel).first { it.text == "Login with Kilo Code" }
+            val btn = buttons(panel).first { it.text == "Login with Accure Code" }
+            panel.update(null, AccureAppStatusDto.READY)
+            val btn2 = buttons(panel).first { it.text == "Login with Accure Code" }
             assertSame(btn, btn2)
         }
     }
 
-    fun `test logged out profile shows kilo icon above login content`() {
+    fun `test logged out profile shows accure icon above login content`() {
         edt {
-            panel.update(null, KiloAppStatusDto.READY)
+            panel.update(null, AccureAppStatusDto.READY)
             panel.setSize(800, 600)
             layout(panel)
 
-            val logo = labelsByName(panel, "kilo.profile.logo.loggedOut").single()
+            val logo = labelsByName(panel, "accure.profile.logo.loggedOut").single()
             val label = labels(panel).first { it.text == "Not logged in" }
-            val btn = buttons(panel).first { it.text == "Login with Kilo Code" }
+            val btn = buttons(panel).first { it.text == "Login with Accure Code" }
             val logoLoc = SwingUtilities.convertPoint(logo.parent, logo.location, panel)
             val labelLoc = SwingUtilities.convertPoint(label.parent, label.location, panel)
             val btnLoc = SwingUtilities.convertPoint(btn.parent, btn.location, panel)
@@ -242,9 +242,9 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         val alice = ProfileDto(email = "alice@test.com", name = "Alice")
         val bob = ProfileDto(email = "bob@test.com", name = "Bob")
         edt {
-            panel.update(alice, KiloAppStatusDto.READY)
+            panel.update(alice, AccureAppStatusDto.READY)
             val lbl = labels(panel).first { it.text == "Alice" }
-            panel.update(bob, KiloAppStatusDto.READY)
+            panel.update(bob, AccureAppStatusDto.READY)
             val lbl2 = labels(panel).first { it.text == "Bob" }
             assertSame(lbl, lbl2)
         }
@@ -261,9 +261,9 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         val org = personal.copy(balance = ProfileBalanceDto(25.0), currentOrgId = "org_1")
         rpc.fakeProfile = personal
         rpc.orgProfiles["org_1"] = org
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = personal)
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = personal)
 
-        edt { panel.update(personal, KiloAppStatusDto.READY) }
+        edt { panel.update(personal, AccureAppStatusDto.READY) }
 
         val captured = edt { combos(panel).single() }
 
@@ -287,18 +287,18 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
             organizations = orgs,
             balance = ProfileBalanceDto(10.0),
         )
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = personal)
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = personal)
 
         // A transient null profile update with PENDING progress (e.g. mid-switch state from collector)
         // must keep the logged-in card visible and not reset combo selection.
-        val transientState = KiloAppStateDto(
-            status = KiloAppStatusDto.READY,
+        val transientState = AccureAppStateDto(
+            status = AccureAppStatusDto.READY,
             profile = null,
             progress = LoadProgressDto(profile = ProfileStatusDto.PENDING),
         )
 
         edt {
-            panel.update(personal, KiloAppStatusDto.READY)
+            panel.update(personal, AccureAppStatusDto.READY)
             // Simulate user switching org — sets selectedIndex to 1
             combos(panel).single().selectedIndex = 1
             // State-collector fires a transient null before RPC completes
@@ -317,17 +317,17 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         rpc.completeGate = CompletableDeferred()
 
         edt {
-            buttons(panel).first { it.text == "Login with Kilo Code" }.doClick()
+            buttons(panel).first { it.text == "Login with Accure Code" }.doClick()
         }
 
-        flushUntil { text(panel).contains("Sign in to Kilo Code") }
+        flushUntil { text(panel).contains("Sign in to Accure Code") }
 
         edt {
             val t = text(panel)
-            assertTrue(t, t.contains("Sign in to Kilo Code"))
+            assertTrue(t, t.contains("Sign in to Accure Code"))
             assertTrue(t, t.contains("Step 1:"))
             assertTrue(t, t.contains("Open this URL"))
-            assertTrue(t, t.contains("https://auth.kilo.ai/device"))
+            assertTrue(t, t.contains("https://auth.accurecode.ai/device"))
             assertTrue(t, t.contains("Open Browser"))
             assertTrue(t, t.contains("Step 2:"))
             assertTrue(t, t.contains("Enter this code"))
@@ -337,12 +337,12 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
 
         // QR label should have an icon
         edt {
-            val qr = labelsByName(panel, "kilo.login.qr").firstOrNull()
+            val qr = labelsByName(panel, "accure.login.qr").firstOrNull()
             assertNotNull(qr)
             assertNotNull(qr!!.icon)
         }
 
-        assertEquals(listOf("https://auth.kilo.ai/device"), urls)
+        assertEquals(listOf("https://auth.accurecode.ai/device"), urls)
 
         // Complete login
         edt { rpc.completeGate!!.complete(Unit) }
@@ -360,8 +360,8 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         rpc.fakeProfile = ProfileDto(email = "alice@test.com", name = "Alice")
         rpc.completeGate = CompletableDeferred()
 
-        edt { buttons(panel).first { it.text == "Login with Kilo Code" }.doClick() }
-        flushUntil { text(panel).contains("Sign in to Kilo Code") }
+        edt { buttons(panel).first { it.text == "Login with Accure Code" }.doClick() }
+        flushUntil { text(panel).contains("Sign in to Accure Code") }
 
         // Click Cancel
         edt { buttons(panel).first { it.text == "Cancel" }.doClick() }
@@ -370,7 +370,7 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         edt {
             val t = text(panel)
             assertTrue(t, t.contains("Not logged in"))
-            assertTrue(buttons(panel).any { it.text == "Login with Kilo Code" })
+            assertTrue(buttons(panel).any { it.text == "Login with Accure Code" })
         }
 
         // Now complete the gate — the stale result should be ignored
@@ -388,7 +388,7 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
     fun `test login failure shows retry`() {
         rpc.startError = IllegalStateException("HTTP 500 <!doctype html><body>Internal Server Error</body>")
 
-        edt { buttons(panel).first { it.text == "Login with Kilo Code" }.doClick() }
+        edt { buttons(panel).first { it.text == "Login with Accure Code" }.doClick() }
         flushUntil { text(panel).contains("Login failed") }
 
         edt {
@@ -402,17 +402,17 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         rpc.fakeProfile = ProfileDto(email = "alice@test.com", name = "Alice")
         rpc.completeGate = CompletableDeferred()
 
-        edt { buttons(panel).first { it.text == "Login with Kilo Code" }.doClick() }
-        flushUntil { text(panel).contains("Sign in to Kilo Code") }
+        edt { buttons(panel).first { it.text == "Login with Accure Code" }.doClick() }
+        flushUntil { text(panel).contains("Sign in to Accure Code") }
 
-        val qrBefore = edt { labelsByName(panel, "kilo.login.qr").firstOrNull() }
+        val qrBefore = edt { labelsByName(panel, "accure.login.qr").firstOrNull() }
         assertNotNull(qrBefore)
 
         // Force another sync call while still pending
-        edt { panel.update(null, KiloAppStatusDto.READY) }
+        edt { panel.update(null, AccureAppStatusDto.READY) }
         flush()
 
-        val qrAfter = edt { labelsByName(panel, "kilo.login.qr").firstOrNull() }
+        val qrAfter = edt { labelsByName(panel, "accure.login.qr").firstOrNull() }
         assertNotNull(qrAfter)
         assertSame(qrBefore, qrAfter)
 
@@ -424,8 +424,8 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         rpc.fakeProfile = ProfileDto(email = "alice@test.com", name = "Alice")
         rpc.completeGate = CompletableDeferred()
 
-        edt { buttons(panel).first { it.text == "Login with Kilo Code" }.doClick() }
-        flushUntil { text(panel).contains("Sign in to Kilo Code") }
+        edt { buttons(panel).first { it.text == "Login with Accure Code" }.doClick() }
+        flushUntil { text(panel).contains("Sign in to Accure Code") }
 
         edt {
             val t = text(panel)
@@ -444,11 +444,11 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         rpc.fakeProfile = ProfileDto(email = "alice@test.com", name = "Alice")
         rpc.completeGate = CompletableDeferred()
 
-        edt { buttons(panel).first { it.text == "Login with Kilo Code" }.doClick() }
-        flushUntil { text(panel).contains("Sign in to Kilo Code") }
+        edt { buttons(panel).first { it.text == "Login with Accure Code" }.doClick() }
+        flushUntil { text(panel).contains("Sign in to Accure Code") }
 
         edt {
-            val field = fieldsByName(panel, "kilo.login.url").firstOrNull()
+            val field = fieldsByName(panel, "accure.login.url").firstOrNull()
             assertNotNull("URL field not found", field)
             // Verify the field has focus/mouse listeners wired for selectAll
             assertTrue("URL field should have focus listeners", field!!.focusListeners.isNotEmpty())
@@ -465,11 +465,11 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
             name = "Alice",
             balance = ProfileBalanceDto(10.0),
         )
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = profile)
-        edt { panel.update(profile, KiloAppStatusDto.READY) }
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = profile)
+        edt { panel.update(profile, AccureAppStatusDto.READY) }
 
         edt {
-            val card = panelsByName(panel, "kilo.profile.balanceCard").firstOrNull()
+            val card = panelsByName(panel, "accure.profile.balanceCard").firstOrNull()
             assertNotNull("Balance card not found", card)
             assertFalse("Balance card should paint its own rounded background", card!!.isOpaque)
             assertNotNull("Balance card background should not be null", card.background)
@@ -482,11 +482,11 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         rpc.fakeProfile = ProfileDto(email = "alice@test.com", name = "Alice")
         rpc.completeGate = CompletableDeferred()
 
-        edt { buttons(panel).first { it.text == "Login with Kilo Code" }.doClick() }
-        flushUntil { text(panel).contains("Sign in to Kilo Code") }
+        edt { buttons(panel).first { it.text == "Login with Accure Code" }.doClick() }
+        flushUntil { text(panel).contains("Sign in to Accure Code") }
 
         edt {
-            val codePanel = panelsByName(panel, "kilo.login.codePanel").firstOrNull()
+            val codePanel = panelsByName(panel, "accure.login.codePanel").firstOrNull()
             assertNotNull("Code panel not found", codePanel)
             assertFalse("Code panel should paint its own rounded background", codePanel!!.isOpaque)
             assertNotNull("Code panel background should not be null", codePanel.background)
@@ -507,8 +507,8 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         val switched = personal.copy(balance = ProfileBalanceDto(25.0), currentOrgId = "org_1")
         rpc.fakeProfile = personal
         rpc.orgProfiles["org_1"] = switched
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = personal)
-        edt { panel.update(personal, KiloAppStatusDto.READY) }
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = personal)
+        edt { panel.update(personal, AccureAppStatusDto.READY) }
 
         val combo = edt { combos(panel).single() }
 
@@ -545,8 +545,8 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
             currentOrgId = "org_1",
             balance = ProfileBalanceDto(10.0),
         )
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = profile)
-        edt { panel.update(profile, KiloAppStatusDto.READY) }
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = profile)
+        edt { panel.update(profile, AccureAppStatusDto.READY) }
 
         val combo = edt { combos(panel).single() }
 
@@ -561,7 +561,7 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
 
         // Update with same orgs but different balance — model should not be rebuilt
         val updated = profile.copy(balance = ProfileBalanceDto(99.0))
-        edt { panel.update(updated, KiloAppStatusDto.READY) }
+        edt { panel.update(updated, AccureAppStatusDto.READY) }
 
         edt {
             assertEquals("removals should be 0 for unchanged org list", 0, removals)
@@ -583,8 +583,8 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
             currentOrgId = "org_1",
         )
         val profile2 = profile1.copy(organizations = orgs2, currentOrgId = "org_2")
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = profile1)
-        edt { panel.update(profile1, KiloAppStatusDto.READY) }
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = profile1)
+        edt { panel.update(profile1, AccureAppStatusDto.READY) }
 
         val combo = edt { combos(panel).single() }
         // Track that the model was never emptied (no removeAllElements-style full clear)
@@ -601,7 +601,7 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
             })
         }
 
-        edt { panel.update(profile2, KiloAppStatusDto.READY) }
+        edt { panel.update(profile2, AccureAppStatusDto.READY) }
 
         edt {
             val c = combos(panel).single()
@@ -628,9 +628,9 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
             organizations = orgs,
             currentOrgId = "org_1",
         )
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = profile)
-        edt { panel.update(profile, KiloAppStatusDto.READY) }
-        edt { panel.update(profile.copy(currentOrgId = "org_1"), KiloAppStatusDto.READY) }
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = profile)
+        edt { panel.update(profile, AccureAppStatusDto.READY) }
+        edt { panel.update(profile.copy(currentOrgId = "org_1"), AccureAppStatusDto.READY) }
         flush()
         assertTrue(rpc.orgSelections.isEmpty())
     }
@@ -643,11 +643,11 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
             organizations = orgs,
             balance = ProfileBalanceDto(10.0),
         )
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = profile)
-        edt { panel.update(profile, KiloAppStatusDto.READY) }
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = profile)
+        edt { panel.update(profile, AccureAppStatusDto.READY) }
 
         // Simulate reconnect: CONNECTING with null profile (CLI restarting)
-        edt { panel.update(null, KiloAppStatusDto.CONNECTING) }
+        edt { panel.update(null, AccureAppStatusDto.CONNECTING) }
 
         edt {
             val t = text(panel)
@@ -660,11 +660,11 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
 
     fun `test loading while logged in keeps logged-in card visible`() {
         val profile = ProfileDto(email = "alice@test.com", name = "Alice")
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = profile)
-        edt { panel.update(profile, KiloAppStatusDto.READY) }
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = profile)
+        edt { panel.update(profile, AccureAppStatusDto.READY) }
 
         // Simulate org switch in progress: LOADING with profile cleared
-        edt { panel.update(null, KiloAppStatusDto.LOADING) }
+        edt { panel.update(null, AccureAppStatusDto.LOADING) }
 
         edt {
             val t = text(panel)
@@ -682,12 +682,12 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
             currentOrgId = "org_1",
             balance = ProfileBalanceDto(10.0),
         )
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = profile)
-        edt { panel.update(profile, KiloAppStatusDto.READY) }
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = profile)
+        edt { panel.update(profile, AccureAppStatusDto.READY) }
 
         // Account switch: backend emits LOADING state with no profile yet
         // Must not throw NullPointerException on account.update(prof!!)
-        edt { panel.update(KiloAppStateDto(KiloAppStatusDto.LOADING)) }
+        edt { panel.update(AccureAppStateDto(AccureAppStatusDto.LOADING)) }
 
         edt {
             // Logged-in card stays, stale content still shown until new profile arrives
@@ -699,7 +699,7 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
 
         // Profile arrives — UI updates with new data
         val switched = profile.copy(currentOrgId = null, balance = ProfileBalanceDto(5.0))
-        edt { panel.update(switched, KiloAppStatusDto.READY) }
+        edt { panel.update(switched, AccureAppStatusDto.READY) }
 
         edt {
             assertTrue(text(panel).contains("\$5.00"))
@@ -715,13 +715,13 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
             currentOrgId = "org_1",
             balance = ProfileBalanceDto(10.0),
         )
-        app._state.value = KiloAppStateDto(KiloAppStatusDto.READY, profile = profile)
+        app._state.value = AccureAppStateDto(AccureAppStatusDto.READY, profile = profile)
         edt {
-            panel.update(profile, KiloAppStatusDto.READY)
+            panel.update(profile, AccureAppStatusDto.READY)
             combos(panel).single().selectedIndex = 1
         }
 
-        edt { panel.update(null, KiloAppStatusDto.CONNECTING) }
+        edt { panel.update(null, AccureAppStatusDto.CONNECTING) }
 
         edt {
             val t = text(panel)
@@ -738,7 +738,7 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
             organizations = orgs,
         )
         edt {
-            panel.update(profile, KiloAppStatusDto.READY)
+            panel.update(profile, AccureAppStatusDto.READY)
             val focus = panel.preferredFocus()
             assertTrue("preferred focus should be combo for logged-in with orgs", focus is javax.swing.JComboBox<*>)
         }
@@ -747,7 +747,7 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
     fun `test preferred focus for logged-out is login button`() {
         edt {
             val focus = panel.preferredFocus()
-            val loginBtn = buttons(panel).firstOrNull { it.text == "Login with Kilo Code" }
+            val loginBtn = buttons(panel).firstOrNull { it.text == "Login with Accure Code" }
             assertNotNull("login button not found", loginBtn)
             assertSame("preferred focus should be login button for logged-out", loginBtn, focus)
         }
@@ -757,8 +757,8 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         rpc.fakeProfile = ProfileDto(email = "stale@test.com", name = "Stale")
         rpc.completeGate = CompletableDeferred()
 
-        edt { buttons(panel).first { it.text == "Login with Kilo Code" }.doClick() }
-        flushUntil { text(panel).contains("Sign in to Kilo Code") }
+        edt { buttons(panel).first { it.text == "Login with Accure Code" }.doClick() }
+        flushUntil { text(panel).contains("Sign in to Accure Code") }
 
         // Dispose while login is in progress
         edt { panel.dispose() }
@@ -780,14 +780,14 @@ class UserProfileConfigurableTest : BasePlatformTestCase() {
         rpc.fakeProfile = ProfileDto(email = "alice@test.com", name = "Alice")
         rpc.completeGate = CompletableDeferred()
         // Set device auth response without a code
-        rpc.fakeDeviceAuth = DeviceAuthDto(code = null, verificationUrl = "https://auth.kilo.ai/device")
+        rpc.fakeDeviceAuth = DeviceAuthDto(code = null, verificationUrl = "https://auth.accurecode.ai/device")
 
-        edt { buttons(panel).first { it.text == "Login with Kilo Code" }.doClick() }
-        flushUntil { text(panel).contains("Sign in to Kilo Code") }
+        edt { buttons(panel).first { it.text == "Login with Accure Code" }.doClick() }
+        flushUntil { text(panel).contains("Sign in to Accure Code") }
 
         edt {
             // Code panel should be hidden when no code is provided
-            val codePanel = panelsByName(panel, "kilo.login.codePanel").firstOrNull()
+            val codePanel = panelsByName(panel, "accure.login.codePanel").firstOrNull()
             assertNotNull("Code panel should exist", codePanel)
             assertFalse("Code panel should be hidden when no code", codePanel!!.isVisible)
         }

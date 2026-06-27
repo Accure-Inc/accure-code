@@ -97,7 +97,7 @@ describe("migrateDefaultAutocompleteSettings", () => {
 
     expect(state.get("provider")?.globalValue).toBeUndefined()
     expect(state.get("model")?.globalValue).toBeUndefined()
-    expect(flag.get("kilo.autocomplete.defaultClearMigrationV1")).toBe(true)
+    expect(flag.get("accure.autocomplete.defaultClearMigrationV1")).toBe(true)
   })
 
   it("leaves an explicitly chosen non-default model untouched", async () => {
@@ -109,7 +109,7 @@ describe("migrateDefaultAutocompleteSettings", () => {
 
     expect(state.get("provider")?.globalValue).toBe("inception")
     expect(state.get("model")?.globalValue).toBe("mercury-edit-2")
-    expect(flag.get("kilo.autocomplete.defaultClearMigrationV1")).toBe(true)
+    expect(flag.get("accure.autocomplete.defaultClearMigrationV1")).toBe(true)
   })
 
   it("leaves a partial match untouched", async () => {
@@ -138,7 +138,7 @@ describe("migrateDefaultAutocompleteSettings", () => {
   it("only runs once per machine", async () => {
     setGlobal(state, "provider", DEFAULT_AUTOCOMPLETE_MODEL.providerID)
     setGlobal(state, "model", DEFAULT_AUTOCOMPLETE_MODEL.modelID)
-    const { context } = makeContext({ "kilo.autocomplete.defaultClearMigrationV1": true })
+    const { context } = makeContext({ "accure.autocomplete.defaultClearMigrationV1": true })
 
     await migrateDefaultAutocompleteSettings(context)
 
@@ -152,6 +152,6 @@ describe("migrateDefaultAutocompleteSettings", () => {
 
     await migrateDefaultAutocompleteSettings(context)
 
-    expect(flag.get("kilo.autocomplete.defaultClearMigrationV1")).toBe(true)
+    expect(flag.get("accure.autocomplete.defaultClearMigrationV1")).toBe(true)
   })
 })

@@ -1,56 +1,56 @@
-package ai.kilocode.client.session
+package ai.accurecode.client.session
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.migration.KiloMigrationService
-import ai.kilocode.client.migration.MigrationUiController
-import ai.kilocode.client.migration.MigrationUiState
-import ai.kilocode.client.migration.ui.MigrationOverlayPanel
-import ai.kilocode.client.session.model.FileAttachment
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.session.scroll.SessionScroll
-import ai.kilocode.client.session.ui.ConnectionPanel
-import ai.kilocode.client.session.ui.empty.EmptySessionPanel
-import ai.kilocode.client.session.ui.LoadingPanel
-import ai.kilocode.client.session.ui.ReasoningPicker
-import ai.kilocode.client.session.ui.mode.ModePicker
-import ai.kilocode.client.session.ui.model.ModelPicker
-import ai.kilocode.client.session.ui.prompt.PromptPanel
-import ai.kilocode.client.session.ui.account.SessionAccountOverlay
-import ai.kilocode.client.session.ui.SessionDropOverlay
-import ai.kilocode.client.session.ui.SessionRootPanel
-import ai.kilocode.client.session.ui.SessionMessageListPanel
-import ai.kilocode.client.session.ui.attachment.AttachmentEditorKind
-import ai.kilocode.client.session.ui.attachment.attachmentParams
-import ai.kilocode.client.session.ui.attachment.ensureAttachmentEditorKind
-import ai.kilocode.client.session.ui.attachment.isEmbeddedAttachment
-import ai.kilocode.client.session.ui.header.SessionHeaderPanel
-import ai.kilocode.client.session.ui.selection.SessionContextMenu
-import ai.kilocode.client.session.ui.selection.SessionHoverCopyOverlay
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.session.controller.EVENT_FLUSH_MS
-import ai.kilocode.client.session.controller.SessionController
-import ai.kilocode.client.session.controller.SessionControllerEvent
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.LoginRequiredView
-import ai.kilocode.client.session.views.permission.PermissionView
-import ai.kilocode.client.session.views.question.QuestionView
-import ai.kilocode.client.settings.profile.UserProfileConfigurable
-import ai.kilocode.client.telemetry.Telemetry
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.util.UiTimerSource
-import ai.kilocode.client.util.UiTimers
-import ai.kilocode.client.vfs.KiloVfsManager
-import ai.kilocode.log.ChatLogSummary
-import ai.kilocode.rpc.dto.PromptDto
-import ai.kilocode.rpc.dto.PromptPartDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.migration.AccureMigrationService
+import ai.accurecode.client.migration.MigrationUiController
+import ai.accurecode.client.migration.MigrationUiState
+import ai.accurecode.client.migration.ui.MigrationOverlayPanel
+import ai.accurecode.client.session.model.FileAttachment
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.session.scroll.SessionScroll
+import ai.accurecode.client.session.ui.ConnectionPanel
+import ai.accurecode.client.session.ui.empty.EmptySessionPanel
+import ai.accurecode.client.session.ui.LoadingPanel
+import ai.accurecode.client.session.ui.ReasoningPicker
+import ai.accurecode.client.session.ui.mode.ModePicker
+import ai.accurecode.client.session.ui.model.ModelPicker
+import ai.accurecode.client.session.ui.prompt.PromptPanel
+import ai.accurecode.client.session.ui.account.SessionAccountOverlay
+import ai.accurecode.client.session.ui.SessionDropOverlay
+import ai.accurecode.client.session.ui.SessionRootPanel
+import ai.accurecode.client.session.ui.SessionMessageListPanel
+import ai.accurecode.client.session.ui.attachment.AttachmentEditorKind
+import ai.accurecode.client.session.ui.attachment.attachmentParams
+import ai.accurecode.client.session.ui.attachment.ensureAttachmentEditorKind
+import ai.accurecode.client.session.ui.attachment.isEmbeddedAttachment
+import ai.accurecode.client.session.ui.header.SessionHeaderPanel
+import ai.accurecode.client.session.ui.selection.SessionContextMenu
+import ai.accurecode.client.session.ui.selection.SessionHoverCopyOverlay
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.session.controller.EVENT_FLUSH_MS
+import ai.accurecode.client.session.controller.SessionController
+import ai.accurecode.client.session.controller.SessionControllerEvent
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.LoginRequiredView
+import ai.accurecode.client.session.views.permission.PermissionView
+import ai.accurecode.client.session.views.question.QuestionView
+import ai.accurecode.client.settings.profile.UserProfileConfigurable
+import ai.accurecode.client.telemetry.Telemetry
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.util.UiTimerSource
+import ai.accurecode.client.util.UiTimers
+import ai.accurecode.client.vfs.AccureVfsManager
+import ai.accurecode.log.ChatLogSummary
+import ai.accurecode.rpc.dto.PromptDto
+import ai.accurecode.rpc.dto.PromptPartDto
 import com.intellij.util.ui.JBUI
-import ai.kilocode.log.KiloLog
+import ai.accurecode.log.AccureLog
 import com.intellij.ide.BrowserUtil
 import com.intellij.ide.TextCopyProvider
 import com.intellij.openapi.actionSystem.ActionUpdateThread
@@ -92,19 +92,19 @@ import javax.swing.UIManager
 class SessionUi(
     project: Project,
     workspace: Workspace,
-    sessions: KiloSessionService,
-    app: KiloAppService,
+    sessions: AccureSessionService,
+    app: AccureAppService,
     private val cs: CoroutineScope,
     ref: SessionRef? = null,
     displayMs: Long = SessionController.DISPLAY_DELAY_MS,
     private val manager: SessionManager? = null,
-    private val workspaces: KiloWorkspaceService = service(),
-    private val migration: MigrationUiController = service<KiloMigrationService>(),
+    private val workspaces: AccureWorkspaceService = service(),
+    private val migration: MigrationUiController = service<AccureMigrationService>(),
     private val timers: UiTimerSource = UiTimers,
 ) : JPanel(BorderLayout()), Disposable, SessionEditorStyleTarget, UiDataProvider {
 
     companion object {
-        private val LOG = KiloLog.create(SessionUi::class.java)
+        private val LOG = AccureLog.create(SessionUi::class.java)
         private const val HIDE_MS = 120
     }
 
@@ -116,7 +116,7 @@ class SessionUi(
     private var pending = false
     private var loaded: Boolean? = null
     private val flushMs =
-        Registry.intValue("kilo.session.flushMs", EVENT_FLUSH_MS.toInt())
+        Registry.intValue("accure.session.flushMs", EVENT_FLUSH_MS.toInt())
             .takeIf { it > 0 }
             ?.toLong()
             ?: EVENT_FLUSH_MS
@@ -130,7 +130,7 @@ class SessionUi(
         cs = cs,
         comp = this,
         flushMs = flushMs,
-        condense = Registry.`is`("kilo.session.condense", true),
+        condense = Registry.`is`("accure.session.condense", true),
         displayMs = displayMs,
         open = { item -> manager?.openSession(item) },
         beforeUpdate = { if (opening) false else scroll.atBottom() },
@@ -618,9 +618,9 @@ class SessionUi(
                 LOG.info("kind=attachment-open skipped=true reason=missing-session message=$messageId part=${item.id} name=${attachmentName(item)}")
                 return
             }
-            LOG.info("kind=attachment-open route=kilo-vfs session=$id message=$messageId part=${item.id} name=${attachmentName(item)}")
+            LOG.info("kind=attachment-open route=accure-vfs session=$id message=$messageId part=${item.id} name=${attachmentName(item)}")
             ensureAttachmentEditorKind()
-            project.service<KiloVfsManager>().open(
+            project.service<AccureVfsManager>().open(
                 AttachmentEditorKind.ID,
                 attachmentParams(id, messageId, item, attachmentName(item), workspace.directory),
             )
@@ -725,5 +725,5 @@ private fun questionPending(state: SessionState): Boolean {
     return state.question.items.none { it.planFollowup() }
 }
 
-private fun ai.kilocode.client.session.model.QuestionItem.planFollowup() =
+private fun ai.accurecode.client.session.model.QuestionItem.planFollowup() =
     questionKey == "plan.followup.question" || headerKey == "plan.followup.header"

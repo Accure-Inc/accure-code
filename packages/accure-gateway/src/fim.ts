@@ -1,4 +1,4 @@
-import { KILO_API_BASE } from "./api/constants.js"
+import { ACCURECODE_API_BASE } from "./api/constants.js"
 import { getAutocompleteModel, type DirectAutocompleteProviderID } from "./autocomplete.js"
 
 export { requestMistralFim } from "./mistral-fim-endpoint.js"
@@ -9,19 +9,19 @@ export const DIRECT_FIM_ENV: Record<DirectAutocompleteProviderID, string[]> = {
 }
 
 export type FimTarget =
-  | { provider: "kilo"; model: string; url: string }
+  | { provider: "accure"; model: string; url: string }
   | { provider: "inception"; model: string; url: string }
   | { provider: "mistral"; model: string }
 
-const KILO_FIM_URL = KILO_API_BASE + "/api/fim/completions"
+const ACCURECODE_FIM_URL = ACCURECODE_API_BASE + "/api/fim/completions"
 const INCEPTION_FIM_URL = "https://api.inceptionlabs.ai/v1/fim/completions"
 
-function kiloTarget(model?: string): FimTarget {
-  return { provider: "kilo", model: model ?? "mistralai/codestral-2501", url: KILO_FIM_URL }
+function accureTarget(model?: string): FimTarget {
+  return { provider: "accure", model: model ?? "mistralai/codestral-2501", url: ACCURECODE_FIM_URL }
 }
 
 export function resolveFimTarget(provider?: string, model?: string): FimTarget {
-  if (!provider || provider === "kilo") return kiloTarget(model)
+  if (!provider || provider === "accure") return accureTarget(model)
 
   const info = getAutocompleteModel(provider, model)
   if (info.directProvider === "mistral") {
@@ -30,5 +30,5 @@ export function resolveFimTarget(provider?: string, model?: string): FimTarget {
   if (info.directProvider === "inception") {
     return { provider: "inception", model: info.requestModel, url: INCEPTION_FIM_URL }
   }
-  return kiloTarget(model)
+  return accureTarget(model)
 }

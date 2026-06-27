@@ -263,7 +263,7 @@ function build(input: SplashWriterInput, kind: "entry" | "exit", ctx: Scrollback
       lines,
       body_left + label.length,
       top + 1,
-      `kilo run -i -s ${meta.session_id}`, // kilocode_change
+      `accure run -i -s ${meta.session_id}`, // accurecode_change
       right,
       undefined,
       TextAttributes.BOLD,

@@ -1,36 +1,36 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.plugin.KiloPluginSettings
-import ai.kilocode.client.session.model.PermissionFileDiff
-import ai.kilocode.client.session.model.PermissionMeta
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.session.SessionRef
-import ai.kilocode.rpc.dto.AgentDto
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.ModelDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PermissionAlwaysRulesDto
-import ai.kilocode.rpc.dto.PermissionFileDiffDto
-import ai.kilocode.rpc.dto.PermissionReplyDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.ProviderDto
-import ai.kilocode.rpc.dto.QuestionInfoDto
-import ai.kilocode.rpc.dto.QuestionOptionDto
-import ai.kilocode.rpc.dto.QuestionReplyDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.ToolRefDto
+import ai.accurecode.client.plugin.AccurePluginSettings
+import ai.accurecode.client.session.model.PermissionFileDiff
+import ai.accurecode.client.session.model.PermissionMeta
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.session.SessionRef
+import ai.accurecode.rpc.dto.AgentDto
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.ModelDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PermissionAlwaysRulesDto
+import ai.accurecode.rpc.dto.PermissionFileDiffDto
+import ai.accurecode.rpc.dto.PermissionReplyDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.ProviderDto
+import ai.accurecode.rpc.dto.QuestionInfoDto
+import ai.accurecode.rpc.dto.QuestionOptionDto
+import ai.accurecode.rpc.dto.QuestionReplyDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.ToolRefDto
 import java.util.concurrent.CopyOnWriteArrayList
 
 class PromptLifecycleTest : SessionControllerTestBase() {
 
     override fun setUp() {
         super.setUp()
-        edt { KiloPluginSettings.unsetAutoApprove() }
+        edt { AccurePluginSettings.unsetAutoApprove() }
     }
 
     override fun tearDown() {
         try {
-            edt { KiloPluginSettings.unsetAutoApprove() }
+            edt { AccurePluginSettings.unsetAutoApprove() }
         } finally {
             super.tearDown()
         }
@@ -61,7 +61,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
             state: RESPONDING
             metadata: kind=edit
 
-            [code] [kilo/gpt-5] [awaiting-permission]
+            [code] [accure/gpt-5] [awaiting-permission]
             """,
             m,
         )
@@ -75,7 +75,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [busy] [considering next steps]
+            [code] [accure/gpt-5] [busy] [considering next steps]
             """,
             m,
         )
@@ -96,7 +96,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
             multiple: false
             custom: true
 
-            [code] [kilo/gpt-5] [awaiting-question]
+            [code] [accure/gpt-5] [awaiting-question]
             """,
             m,
         )
@@ -110,7 +110,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [busy] [considering next steps]
+            [code] [accure/gpt-5] [busy] [considering next steps]
             """,
             m,
         )
@@ -124,7 +124,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m,
         )
@@ -151,7 +151,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
         assertEquals("once", rpc.permissionReplies[0].third.reply)
         assertSession(
             """
-            [code] [kilo/gpt-5] [busy] [considering next steps]
+            [code] [accure/gpt-5] [busy] [considering next steps]
             """,
             m,
         )
@@ -177,7 +177,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
             state: RESPONDING
             metadata: kind=edit
 
-            [code] [kilo/gpt-5] [awaiting-permission]
+            [code] [accure/gpt-5] [awaiting-permission]
             """,
             m,
         )
@@ -195,7 +195,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
         assertEquals("once", rpc.permissionReplies[0].third.reply)
         assertSession(
             """
-            [code] [kilo/gpt-5] [busy] [considering next steps]
+            [code] [accure/gpt-5] [busy] [considering next steps]
             """,
             m,
         )
@@ -214,10 +214,10 @@ class PromptLifecycleTest : SessionControllerTestBase() {
     }
 
     fun `test auto approve drains pending permissions during recovery`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         rpc.pendingPermissionList.add(permission("perm_pending"))
-        edt { KiloPluginSettings.setAutoApprove(true) }
+        edt { AccurePluginSettings.setAutoApprove(true) }
 
         val m = controller("ses_test")
         flush()
@@ -230,10 +230,10 @@ class PromptLifecycleTest : SessionControllerTestBase() {
     fun `test auto approve persists in properties`() {
         val (m, _, _) = prompted()
 
-        assertFalse(KiloPluginSettings.getAutoApprove())
+        assertFalse(AccurePluginSettings.getAutoApprove())
         edt { m.setAutoApprove(true) }
 
-        assertTrue(KiloPluginSettings.getAutoApprove())
+        assertTrue(AccurePluginSettings.getAutoApprove())
         assertTrue(m.autoApprove)
     }
 
@@ -309,14 +309,14 @@ class PromptLifecycleTest : SessionControllerTestBase() {
             multiple: false
             custom: true
 
-            [code] [kilo/gpt-5] [awaiting-question]
+            [code] [accure/gpt-5] [awaiting-question]
             """,
             m,
         )
     }
 
     fun `test continue here reflects CLI mode after canonical reply`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = planWorkspace()
         val m = controller()
         val events = collect(m)
@@ -375,7 +375,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
     fun `test start new session adopts matching created session from selected option`() {
         val opened = mutableListOf<SessionRef>()
         val m = controller(open = { opened.add(it) })
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         flush()
         edt { m.prompt("go") }
@@ -399,7 +399,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
     fun `test start new session reply text without selected option is ignored`() {
         val opened = mutableListOf<SessionRef>()
         val m = controller(open = { opened.add(it) })
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         flush()
         edt { m.prompt("go") }
@@ -421,7 +421,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
     fun `test unrelated session created is ignored`() {
         val opened = mutableListOf<SessionRef>()
         val m = controller(open = { opened.add(it) })
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         flush()
         edt { m.prompt("go") }
@@ -528,7 +528,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
             state: PENDING
             metadata: <none>
 
-            [code] [kilo/gpt-5] [awaiting-permission]
+            [code] [accure/gpt-5] [awaiting-permission]
             """,
             m,
         )
@@ -543,7 +543,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [busy] [considering next steps]
+            [code] [accure/gpt-5] [busy] [considering next steps]
             """,
             m,
         )
@@ -569,12 +569,12 @@ class PromptLifecycleTest : SessionControllerTestBase() {
 
         // Emit non-permission child events — they must not affect the root
         emit(ChatEventDto.TurnOpen("ses_child"), flush = false)
-        emit(ChatEventDto.SessionStatusChanged("ses_child", ai.kilocode.rpc.dto.SessionStatusDto("busy")), flush = false)
+        emit(ChatEventDto.SessionStatusChanged("ses_child", ai.accurecode.rpc.dto.SessionStatusDto("busy")), flush = false)
         emit(ChatEventDto.SessionIdle("ses_child"))
 
         assertEquals(initialState, m.model.state)
         // No extra model state events from child non-permission events
-        val stateEvents = modelEvents.filterIsInstance<ai.kilocode.client.session.model.SessionModelEvent.StateChanged>()
+        val stateEvents = modelEvents.filterIsInstance<ai.accurecode.client.session.model.SessionModelEvent.StateChanged>()
         assertTrue("Root state must not be changed by child non-permission events", stateEvents.isEmpty())
     }
 
@@ -659,8 +659,8 @@ class PromptLifecycleTest : SessionControllerTestBase() {
         default = "plan",
         providers = listOf(
             ProviderDto(
-                id = "kilo",
-                name = "Kilo",
+                id = "accure",
+                name = "Accure",
                 models = mapOf("gpt-5" to ModelDto(id = "gpt-5", name = "GPT-5")),
             ),
             ProviderDto(
@@ -669,7 +669,7 @@ class PromptLifecycleTest : SessionControllerTestBase() {
                 models = mapOf("claude" to ModelDto(id = "claude", name = "Claude")),
             ),
         ),
-        connected = listOf("kilo", "anthropic"),
-        defaults = mapOf("plan" to "kilo/gpt-5", "code" to "kilo/gpt-5"),
+        connected = listOf("accure", "anthropic"),
+        defaults = mapOf("plan" to "accure/gpt-5", "code" to "accure/gpt-5"),
     )
 }

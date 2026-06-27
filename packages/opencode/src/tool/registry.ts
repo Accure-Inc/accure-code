@@ -1,10 +1,10 @@
 import { PlanExitTool } from "./plan"
 import { Session } from "@/session/session"
 import { QuestionTool } from "./question"
-// kilocode_change start
-import { SuggestTool } from "../kilocode/suggestion/tool"
+// accurecode_change start
+import { SuggestTool } from "../accurecode/suggestion/tool"
 import { Command } from "@/command"
-// kilocode_change end
+// accurecode_change end
 import { ShellTool } from "./shell"
 import { EditTool } from "./edit"
 import { GlobTool } from "./glob"
@@ -19,7 +19,7 @@ import { InvalidTool } from "./invalid"
 import { SkillTool } from "./skill"
 import * as Tool from "./tool"
 import { Config } from "@/config/config"
-import { type ToolContext as PluginToolContext, type ToolDefinition } from "@kilocode/plugin"
+import { type ToolContext as PluginToolContext, type ToolDefinition } from "@accurecode/plugin"
 import type { JSONSchema7, JSONSchema7Definition } from "@ai-sdk/provider"
 import { Schema } from "effect"
 import z from "zod"
@@ -27,10 +27,10 @@ import { Plugin } from "../plugin"
 import { Provider } from "@/provider/provider"
 import { ProviderID, type ModelID } from "../provider/schema"
 import { WebSearchTool } from "./websearch"
-import { KiloToolRegistry } from "../kilocode/tool/registry" // kilocode_change
+import { AccureToolRegistry } from "../accurecode/tool/registry" // accurecode_change
 import { RepoCloneTool } from "./repo_clone"
 import { RepoOverviewTool } from "./repo_overview"
-import { Flag } from "@opencode-ai/core/flag/flag" // kilocode_change
+import { Flag } from "@opencode-ai/core/flag/flag" // accurecode_change
 import { RepositoryCache } from "@/reference/repository-cache"
 import * as Log from "@opencode-ai/core/util/log"
 import { LspTool } from "./lsp"
@@ -57,7 +57,7 @@ import { Agent } from "../agent/agent"
 import { Git } from "@/git"
 import { Skill } from "../skill"
 import { Permission } from "@/permission"
-import { SessionStatus } from "@/session/status" // kilocode_change
+import { SessionStatus } from "@/session/status" // accurecode_change
 import { Reference } from "@/reference/reference"
 import { BackgroundJob } from "@/background/job"
 import { RuntimeFlags } from "@/effect/runtime-flags"
@@ -66,9 +66,9 @@ const log = Log.create({ service: "tool.registry" })
 
 export function webSearchEnabled(
   providerID: ProviderID,
-  flags = { exa: Flag.KILO_ENABLE_EXA, parallel: Flag.KILO_ENABLE_PARALLEL },
+  flags = { exa: Flag.ACCURECODE_ENABLE_EXA, parallel: Flag.ACCURECODE_ENABLE_PARALLEL },
 ) {
-  return providerID === ProviderID.kilo || flags.exa || flags.parallel // kilocode_change
+  return providerID === ProviderID.accure || flags.exa || flags.parallel // accurecode_change
 }
 
 type TaskDef = Tool.InferDef<typeof TaskTool>
@@ -115,9 +115,9 @@ export const layer: Layer.Layer<
   | Ripgrep.Service
   | Format.Service
   | Truncate.Service
-  // kilocode_change start
+  // accurecode_change start
   | Command.Service
-  // kilocode_change end
+  // accurecode_change end
   | RuntimeFlags.Service
 > = Layer.effect(
   Service,
@@ -149,10 +149,10 @@ export const layer: Layer.Layer<
     const patchtool = yield* ApplyPatchTool
     const skilltool = yield* SkillTool
     const agent = yield* Agent.Service
-    // kilocode_change start
+    // accurecode_change start
     const suggesttool = yield* SuggestTool
-    const kiloToolInfos = yield* KiloToolRegistry.infos()
-    // kilocode_change end
+    const accureToolInfos = yield* AccureToolRegistry.infos()
+    // accurecode_change end
 
     const state = yield* InstanceState.make<State>(
       Effect.fn("ToolRegistry.state")(function* (ctx) {
@@ -239,12 +239,12 @@ export const layer: Layer.Layer<
           }
         }
 
-        // kilocode_change start
+        // accurecode_change start
         const cfg = yield* config.get()
         const global = yield* config.getGlobal()
-        const indexing = KiloToolRegistry.indexing(cfg, global)
-        // kilocode_change end
-        const questionEnabled = ["app", "cli", "desktop", "vscode"].includes(flags.client) || flags.enableQuestionTool // kilocode_change: add vscode client
+        const indexing = AccureToolRegistry.indexing(cfg, global)
+        // accurecode_change end
+        const questionEnabled = ["app", "cli", "desktop", "vscode"].includes(flags.client) || flags.enableQuestionTool // accurecode_change: add vscode client
 
         const tool = yield* Effect.all({
           invalid: Tool.init(invalid),
@@ -266,21 +266,21 @@ export const layer: Layer.Layer<
           question: Tool.init(question),
           lsp: Tool.init(lsptool),
           plan: Tool.init(plan),
-          suggest: Tool.init(suggesttool), // kilocode_change
+          suggest: Tool.init(suggesttool), // accurecode_change
         })
 
-        // kilocode_change start
-        const kilo = yield* KiloToolRegistry.build(kiloToolInfos, {
+        // accurecode_change start
+        const accure = yield* AccureToolRegistry.build(accureToolInfos, {
           agent: agents,
           truncate,
           indexing: indexing ?? false,
         })
-        // kilocode_change end
+        // accurecode_change end
 
         return {
           custom,
-          // kilocode_change start
-          builtin: KiloToolRegistry.describe(
+          // accurecode_change start
+          builtin: AccureToolRegistry.describe(
             [
               tool.invalid,
               ...(questionEnabled ? [tool.question] : []),
@@ -300,12 +300,12 @@ export const layer: Layer.Layer<
               tool.patch,
               tool.plan,
               ...(["cli", "vscode"].includes(flags.client) ? [tool.suggest] : []),
-              ...KiloToolRegistry.extra(kilo, cfg),
+              ...AccureToolRegistry.extra(accure, cfg),
               ...(flags.experimentalLspTool ? [tool.lsp] : []),
             ],
-            kilo,
+            accure,
           ),
-          // kilocode_change end
+          // accurecode_change end
           task: tool.task,
           read: tool.read,
         }
@@ -362,12 +362,12 @@ export const layer: Layer.Layer<
         }
 
         const usePatch =
-          // kilocode_change start
-          !!process.env["KILO_E2E_LLM_URL"] ||
+          // accurecode_change start
+          !!process.env["ACCURECODE_E2E_LLM_URL"] ||
           (input.modelID.includes("gpt-") && !input.modelID.includes("oss") && !input.modelID.includes("gpt-4"))
-        // kilocode_change end
+        // accurecode_change end
         if (tool.id === ApplyPatchTool.id) return usePatch
-        if (tool.id === EditTool.id) return !usePatch // kilocode_change
+        if (tool.id === EditTool.id) return !usePatch // accurecode_change
 
         return true
       })
@@ -439,9 +439,9 @@ export const defaultLayer = Layer.suspend(
         Layer.provide(Ripgrep.defaultLayer),
         Layer.provide(Truncate.defaultLayer),
       )
-      // kilocode_change start - provide Kilo-owned registry dependencies
+      // accurecode_change start - provide Accure-owned registry dependencies
       .pipe(Layer.provide(Command.defaultLayer), Layer.provide(RuntimeFlags.defaultLayer)),
-  // kilocode_change end
+  // accurecode_change end
 )
 
 function isZodType(value: unknown): value is z.ZodType {

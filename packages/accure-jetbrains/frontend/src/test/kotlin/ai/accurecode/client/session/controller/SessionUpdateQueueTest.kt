@@ -1,23 +1,23 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.DiffFileDto
-import ai.kilocode.rpc.dto.QuestionInfoDto
-import ai.kilocode.rpc.dto.QuestionOptionDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionStatusDto
-import ai.kilocode.rpc.dto.TodoDto
-import ai.kilocode.rpc.dto.ToolRefDto
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.DiffFileDto
+import ai.accurecode.rpc.dto.QuestionInfoDto
+import ai.accurecode.rpc.dto.QuestionOptionDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.TodoDto
+import ai.accurecode.rpc.dto.ToolRefDto
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class SessionUpdateQueueTest : SessionControllerTestBase() {
 
     fun `test hidden controller buffers until shown`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = 250L)
         val modelEvents = collectModelEvents(m)
@@ -44,7 +44,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test hidden controller applies question metadata without flushing transcript`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = 250L)
         val modelEvents = collectModelEvents(m)
@@ -70,7 +70,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test hidden controller applies session title metadata without show`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = 250L)
         flush()
@@ -84,7 +84,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test hidden controller consumes matching question reply metadata`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = 250L)
         val modelEvents = collectModelEvents(m)
@@ -104,7 +104,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test hidden controller condenses while hidden but does not flush`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = 250L)
         val modelEvents = collectModelEvents(m)
@@ -145,7 +145,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test hidden cadence does not flush until shown`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = 50L)
         val modelEvents = collectModelEvents(m)
@@ -171,7 +171,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test hidden controller flushes on show without new event`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = 250L)
         val modelEvents = collectModelEvents(m)
@@ -206,7 +206,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test buffered deltas coalesce into one model delta`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = Long.MAX_VALUE)
         val modelEvents = collectModelEvents(m)
@@ -236,7 +236,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test text snapshot covered delta is not duplicated`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = Long.MAX_VALUE)
         flush()
@@ -258,7 +258,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test pure text deltas preserve incidental overlap`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = Long.MAX_VALUE)
         flush()
@@ -280,7 +280,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test pure text deltas preserve split closing fence`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = Long.MAX_VALUE)
         flush()
@@ -306,7 +306,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test text snapshot covered prefix is trimmed from merged delta`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = Long.MAX_VALUE)
         flush()
@@ -329,7 +329,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test repeated snapshots then lagging merged delta is not duplicated`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = Long.MAX_VALUE)
         flush()
@@ -352,7 +352,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test multi round snapshot delta interleave stays single copy`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = Long.MAX_VALUE)
         flush()
@@ -383,7 +383,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test per token snapshot plus delta interleave does not double text or code`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = Long.MAX_VALUE)
         flush()
@@ -409,12 +409,12 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
             flush()
         }
 
-        val text = (m.model.message("msg1")!!.parts["prt1"] as ai.kilocode.client.session.model.Text).content.toString()
+        val text = (m.model.message("msg1")!!.parts["prt1"] as ai.accurecode.client.session.model.Text).content.toString()
         assertEquals(sb.toString(), text)
     }
 
     fun `test visible controller flushes after cadence`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = 50L)
         val modelEvents = collectModelEvents(m)
@@ -429,7 +429,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test buffered part updates for new part collapse to one content add`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = Long.MAX_VALUE)
         val modelEvents = collectModelEvents(m)
@@ -451,7 +451,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test buffered part updates for existing part collapse to one content update`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = Long.MAX_VALUE)
         val modelEvents = collectModelEvents(m)
@@ -475,7 +475,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test buffered same part tool updates keep only final busy text`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = Long.MAX_VALUE)
         val modelEvents = collectModelEvents(m)
@@ -499,7 +499,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test barrier prevents part update merge across turn close`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test", flushMs = Long.MAX_VALUE)
         val modelEvents = collectModelEvents(m)
@@ -527,7 +527,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun `test condensed and raw controller end with same final state on large corpus`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
 
         val events = corpus()
@@ -545,7 +545,7 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test update hooks run on EDT around queued model batch`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val order = mutableListOf<String>()
         lateinit var m: SessionController
@@ -576,9 +576,9 @@ class SessionUpdateQueueTest : SessionControllerTestBase() {
     }
 
     fun `test update hooks run on EDT around history and recovery`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
-        rpc.history.add(ai.kilocode.rpc.dto.MessageWithPartsDto(msg("msg1", "ses_test", "assistant"), emptyList()))
+        rpc.history.add(ai.accurecode.rpc.dto.MessageWithPartsDto(msg("msg1", "ses_test", "assistant"), emptyList()))
         rpc.statuses.value = mapOf("ses_test" to SessionStatusDto("busy"))
         val order = mutableListOf<String>()
         val m = controller(

@@ -2,7 +2,7 @@ import { describe, test, expect } from "bun:test"
 
 describe("worker entry", () => {
   test("processes a posted event end-to-end", async () => {
-    const worker = new Worker(new URL("../../../src/kilocode/session-export/worker.ts", import.meta.url))
+    const worker = new Worker(new URL("../../../src/accurecode/session-export/worker.ts", import.meta.url))
     const ready = new Promise<void>((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error("worker ready timeout")), 1_000)
       worker.onerror = (event) => {
@@ -36,7 +36,7 @@ describe("worker entry", () => {
         userMessageId: "u1",
         agent: "claude",
         modeId: "build",
-        model: { providerId: "kilo", modelId: "free-1", isFree: true },
+        model: { providerId: "accure", modelId: "free-1", isFree: true },
         input: { system: ["hi"], messages: [], tools: {}, permissions: [], params: {} },
         time: { created: 0 },
       },

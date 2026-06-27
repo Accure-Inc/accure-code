@@ -16,8 +16,8 @@ export class InstallationDetector {
   /**
    * Detect installed marketplace items.
    *
-   * Agents are detected from .kilo/agents/*.md files.
-   * MCP servers and modes are detected from kilo.json config files.
+   * Agents are detected from .accurecode/agents/*.md files.
+   * MCP servers and modes are detected from accure.json config files.
    * Skills come from the CLI backend (via GET /skill), which is the
    * authoritative source — it scans all skill directories.
    */
@@ -55,7 +55,7 @@ export class InstallationDetector {
       .map((s) => [s.name, { type: "skill" }])
   }
 
-  /** Scan .kilo/agents/*.md files to detect installed marketplace agents. */
+  /** Scan .accurecode/agents/*.md files to detect installed marketplace agents. */
   private async detectAgentFiles(scope: "project" | "global", workspace?: string): Promise<Entry[]> {
     const dir = this.paths.agentsDir(scope, workspace)
     try {
@@ -69,7 +69,7 @@ export class InstallationDetector {
     }
   }
 
-  /** Read mcp and agent entries from a kilo.json config file. */
+  /** Read mcp and agent entries from a accure.json config file. */
   private async detectFromConfig(filepath: string): Promise<Entry[]> {
     try {
       const content = await fs.readFile(filepath, "utf-8")

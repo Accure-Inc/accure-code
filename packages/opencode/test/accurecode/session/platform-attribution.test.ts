@@ -6,7 +6,7 @@ import { Bus } from "@/bus"
 import { Session as SessionNs } from "@/session/session"
 import { SessionPrompt } from "@/session/prompt"
 import { AppRuntime, type AppServices } from "../../../src/effect/app-runtime"
-import { KiloSession } from "../../../src/kilocode/session"
+import { AccureSession } from "../../../src/accurecode/session"
 import { provideTestInstance } from "../../fixture/fixture"
 import { MessageID, type SessionID } from "../../../src/session/schema"
 import { ModelID, ProviderID } from "../../../src/provider/schema"
@@ -65,11 +65,11 @@ describe("session platform attribution", () => {
       fn: async () => {
         const root = await create({ platform: "agent-manager" })
         const child = await create({ parentID: root.id, title: "child" })
-        const attr = KiloSession.attribution(child.id)
+        const attr = AccureSession.attribution(child.id)
 
-        expect(KiloSession.getPlatformOverride(root.id)).toBe("agent-manager")
-        expect(KiloSession.getPlatformOverride(child.id)).toBe("agent-manager")
-        expect(KiloSession.resolvePlatform(child.id)).toBe("agent-manager")
+        expect(AccureSession.getPlatformOverride(root.id)).toBe("agent-manager")
+        expect(AccureSession.getPlatformOverride(child.id)).toBe("agent-manager")
+        expect(AccureSession.resolvePlatform(child.id)).toBe("agent-manager")
         expect(attr.rootID).toBe(root.id)
         expect(attr.feature).toBe("agent-manager")
 
@@ -86,10 +86,10 @@ describe("session platform attribution", () => {
         const child = await create({ parentID: root.id, title: "child" })
         const leaf = await create({ parentID: child.id, title: "leaf" })
 
-        expect(KiloSession.resolveParent(root.id)).toBeUndefined()
-        expect(KiloSession.resolveParent(child.id)).toBe(root.id)
-        expect(KiloSession.resolveParent(leaf.id)).toBe(child.id)
-        expect(KiloSession.resolveRoot(leaf.id)).toBe(root.id)
+        expect(AccureSession.resolveParent(root.id)).toBeUndefined()
+        expect(AccureSession.resolveParent(child.id)).toBe(root.id)
+        expect(AccureSession.resolveParent(leaf.id)).toBe(child.id)
+        expect(AccureSession.resolveRoot(leaf.id)).toBe(root.id)
 
         await remove(root.id)
       },
@@ -103,13 +103,13 @@ describe("session platform attribution", () => {
         const root = await create({})
         const child = await create({ parentID: root.id, title: "child" })
         await seed(child.id)
-        KiloSession.clearPlatformOverride(child.id)
-        expect(KiloSession.resolveParent(child.id)).toBeUndefined()
+        AccureSession.clearPlatformOverride(child.id)
+        expect(AccureSession.resolveParent(child.id)).toBeUndefined()
 
         const closed = Promise.withResolvers<SessionID | undefined>()
         const unsubscribe = await run(
           Bus.Service.use((bus) =>
-            bus.subscribeCallback(KiloSession.Event.TurnClose, (event) => {
+            bus.subscribeCallback(AccureSession.Event.TurnClose, (event) => {
               if (event.properties.sessionID === child.id) closed.resolve(event.properties.parentID)
             }),
           ),

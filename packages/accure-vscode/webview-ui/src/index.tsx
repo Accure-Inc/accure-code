@@ -1,5 +1,5 @@
 /* @refresh reload */
-import "@kilocode/accure-ui/styles"
+import "@accurecode/accure-ui/styles"
 import { render } from "solid-js/web"
 import App from "./App"
 

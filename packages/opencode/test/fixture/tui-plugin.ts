@@ -1,4 +1,4 @@
-import { createKiloClient } from "@kilocode/sdk/v2"
+import { createAccureClient } from "@accurecode/sdk/v2"
 import { RGBA, type CliRenderer } from "@opentui/core"
 import type { HostPluginApi } from "../../src/cli/cmd/tui/plugin/slots"
 import { createTuiResolvedConfig } from "./tui-runtime"
@@ -127,7 +127,7 @@ export function createTuiPluginApi(opts: Opts = {}): HostPluginApi {
   const kv: Record<string, unknown> = {}
   const count = opts.count
   const ctrl = new AbortController()
-  const own = createKiloClient({
+  const own = createAccureClient({
     baseUrl: "http://localhost:4096",
   })
   const fallback = () => own
@@ -197,7 +197,7 @@ export function createTuiPluginApi(opts: Opts = {}): HostPluginApi {
       soundboard: {
         registerPack: (pack) => opts.attention?.soundboard?.registerPack?.(pack) ?? (() => {}),
         activate: (id, options) => opts.attention?.soundboard?.activate?.(id, options) ?? false,
-        current: () => opts.attention?.soundboard?.current?.() ?? "kilo.default", // kilocode_change
+        current: () => opts.attention?.soundboard?.current?.() ?? "accure.default", // accurecode_change
         list: () => opts.attention?.soundboard?.list?.() ?? [],
       },
     },
@@ -317,7 +317,7 @@ export function createTuiPluginApi(opts: Opts = {}): HostPluginApi {
         get: opts.state?.session?.get ?? (() => undefined),
         diff: opts.state?.session?.diff ?? (() => []),
         todo: opts.state?.session?.todo ?? (() => []),
-        processes: opts.state?.session?.processes ?? (() => []), // kilocode_change
+        processes: opts.state?.session?.processes ?? (() => []), // accurecode_change
         messages: opts.state?.session?.messages ?? (() => []),
         status: opts.state?.session?.status ?? (() => undefined),
         permission: opts.state?.session?.permission ?? (() => []),

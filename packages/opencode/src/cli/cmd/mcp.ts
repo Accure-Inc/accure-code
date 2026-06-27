@@ -16,7 +16,7 @@ import { InstallationVersion } from "@opencode-ai/core/installation/version"
 import path from "path"
 import { Global } from "@opencode-ai/core/global"
 import { modify, applyEdits } from "jsonc-parser"
-import { KilocodeMcpConfig } from "@/kilocode/cli/cmd/mcp" // kilocode_change
+import { AccurecodeMcpConfig } from "@/accurecode/cli/cmd/mcp" // accurecode_change
 import { Filesystem } from "@/util/filesystem"
 import { Bus } from "../../bus"
 import { Effect } from "effect"
@@ -119,7 +119,7 @@ export const McpListCommand = effectCmd({
 
     if (servers.length === 0) {
       prompts.log.warn("No MCP servers configured")
-      prompts.outro("Add servers with: kilo mcp add") // kilocode_change
+      prompts.outro("Add servers with: accure mcp add") // accurecode_change
       return
     }
 
@@ -187,7 +187,7 @@ export const McpAuthCommand = effectCmd({
 
     if (servers.length === 0) {
       prompts.log.warn("No OAuth-capable MCP servers configured")
-      prompts.log.info("Remote MCP servers support OAuth by default. Add a remote server in kilo.json:") // kilocode_change
+      prompts.log.info("Remote MCP servers support OAuth by default. Add a remote server in accure.json:") // accurecode_change
       prompts.log.info(`
   "mcp": {
     "my-server": {
@@ -397,21 +397,21 @@ export const McpLogoutCommand = effectCmd({
 })
 
 async function resolveConfigPath(baseDir: string, global = false) {
-  // kilocode_change start - prefer kilo.json/.kilo over opencode.json/.opencode
-  // Check for existing config files (prefer .jsonc over .json, check .kilo/ and .opencode/ subdirectory too)
+  // accurecode_change start - prefer accure.json/.accurecode over opencode.json/.opencode
+  // Check for existing config files (prefer .jsonc over .json, check .accurecode/ and .opencode/ subdirectory too)
   const candidates = [
-    path.join(baseDir, "kilo.json"),
-    path.join(baseDir, "kilo.jsonc"),
+    path.join(baseDir, "accure.json"),
+    path.join(baseDir, "accure.jsonc"),
     path.join(baseDir, "opencode.json"),
     path.join(baseDir, "opencode.jsonc"),
   ]
 
   if (!global) {
     candidates.push(
-      path.join(baseDir, ".kilo", "kilo.json"),
-      path.join(baseDir, ".kilo", "kilo.jsonc"),
-      path.join(baseDir, ".kilo", "opencode.json"),
-      path.join(baseDir, ".kilo", "opencode.jsonc"),
+      path.join(baseDir, ".accurecode", "accure.json"),
+      path.join(baseDir, ".accurecode", "accure.jsonc"),
+      path.join(baseDir, ".accurecode", "opencode.json"),
+      path.join(baseDir, ".accurecode", "opencode.jsonc"),
       path.join(baseDir, ".opencode", "opencode.json"),
       path.join(baseDir, ".opencode", "opencode.jsonc"),
     )
@@ -423,9 +423,9 @@ async function resolveConfigPath(baseDir: string, global = false) {
     }
   }
 
-  // Default to kilo.json if none exist
-  return path.join(baseDir, "kilo.json")
-  // kilocode_change end
+  // Default to accure.json if none exist
+  return path.join(baseDir, "accure.json")
+  // accurecode_change end
 }
 
 async function addMcpToConfig(name: string, mcpConfig: ConfigMCP.Info, configPath: string) {
@@ -438,7 +438,7 @@ async function addMcpToConfig(name: string, mcpConfig: ConfigMCP.Info, configPat
   const edits = modify(text, ["mcp", name], mcpConfig, {
     formattingOptions: { tabSize: 2, insertSpaces: true },
   })
-  const result = KilocodeMcpConfig.format(configPath, applyEdits(text, edits)) // kilocode_change
+  const result = AccurecodeMcpConfig.format(configPath, applyEdits(text, edits)) // accurecode_change
 
   await Filesystem.write(configPath, result)
 
@@ -512,7 +512,7 @@ export const McpAddCommand = effectCmd({
       if (type === "local") {
         const command = await prompts.text({
           message: "Enter command to run",
-          placeholder: "e.g., kilo x @modelcontextprotocol/server-filesystem", // kilocode_change
+          placeholder: "e.g., accure x @modelcontextprotocol/server-filesystem", // accurecode_change
           validate: (x) => (x && x.length > 0 ? undefined : "Required"),
         })
         if (prompts.isCancel(command)) throw new UI.CancelledError()
@@ -696,7 +696,7 @@ export const McpDebugCommand = effectCmd({
             params: {
               protocolVersion: "2024-11-05",
               capabilities: {},
-              clientInfo: { name: "kilo-debug", version: InstallationVersion }, // kilocode_change
+              clientInfo: { name: "accure-debug", version: InstallationVersion }, // accurecode_change
             },
             id: 1,
           }),
@@ -739,7 +739,7 @@ export const McpDebugCommand = effectCmd({
 
           try {
             const client = new Client({
-              name: "kilo-debug", // kilocode_change
+              name: "accure-debug", // accurecode_change
               version: InstallationVersion,
             })
             await client.connect(transport)

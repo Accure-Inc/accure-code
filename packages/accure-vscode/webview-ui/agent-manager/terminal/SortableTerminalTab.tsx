@@ -16,10 +16,10 @@ declare module "solid-js" {
 
 import { Component, Show } from "solid-js"
 import { createSortable } from "@thisbeyond/solid-dnd"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { TooltipKeybind } from "@kilocode/accure-ui/tooltip"
-import { ContextMenu } from "@kilocode/accure-ui/context-menu"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { TooltipKeybind } from "@accurecode/accure-ui/tooltip"
+import { ContextMenu } from "@accurecode/accure-ui/context-menu"
 import { useLanguage } from "../../src/context/language"
 import { parseBindingTokens } from "../keybind-tokens"
 

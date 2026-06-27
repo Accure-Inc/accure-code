@@ -1,7 +1,7 @@
-package ai.kilocode.client.session.ui.prompt
+package ai.accurecode.client.session.ui.prompt
 
-import ai.kilocode.client.session.ui.editor.SessionEditorTextField
-import ai.kilocode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.editor.SessionEditorTextField
+import ai.accurecode.client.session.ui.selection.SessionSelection
 import com.intellij.openapi.project.Project
 
 internal class PromptEditorTextField(

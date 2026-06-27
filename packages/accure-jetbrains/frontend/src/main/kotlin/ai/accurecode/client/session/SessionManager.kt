@@ -1,13 +1,13 @@
-package ai.kilocode.client.session
+package ai.accurecode.client.session
 
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.rpc.dto.SessionDto
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.rpc.dto.SessionDto
 import com.intellij.openapi.actionSystem.DataKey
 
 interface SessionManager {
     companion object {
-        val KEY = DataKey.create<SessionManager>("ai.kilocode.client.session.SessionManager")
-        val WORKSPACE_KEY = DataKey.create<Workspace>("ai.kilocode.client.session.Workspace")
+        val KEY = DataKey.create<SessionManager>("ai.accurecode.client.session.SessionManager")
+        val WORKSPACE_KEY = DataKey.create<Workspace>("ai.accurecode.client.session.Workspace")
     }
 
     fun newSession()

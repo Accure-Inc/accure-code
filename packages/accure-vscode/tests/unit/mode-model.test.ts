@@ -8,14 +8,14 @@ describe("modelPatch", () => {
   })
 
   it("keeps current variant when next model supports it", () => {
-    expect(modelPatch("kilo", "anthropic/claude-sonnet-4-6", ["low", "high"], "high")).toEqual({
-      model: "kilo/anthropic/claude-sonnet-4-6",
+    expect(modelPatch("accure", "anthropic/claude-sonnet-4-6", ["low", "high"], "high")).toEqual({
+      model: "accure/anthropic/claude-sonnet-4-6",
     })
   })
 
   it("clears stale variant when next model does not support it", () => {
-    expect(modelPatch("kilo", "anthropic/claude-sonnet-4-6", ["low", "medium"], "high")).toEqual({
-      model: "kilo/anthropic/claude-sonnet-4-6",
+    expect(modelPatch("accure", "anthropic/claude-sonnet-4-6", ["low", "medium"], "high")).toEqual({
+      model: "accure/anthropic/claude-sonnet-4-6",
       variant: null,
     })
   })

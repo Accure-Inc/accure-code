@@ -1,7 +1,7 @@
-package ai.kilocode.client.settings
+package ai.accurecode.client.settings
 
-import ai.kilocode.client.settings.profile.UserProfileConfigurable
-import ai.kilocode.client.settings.models.ModelsConfigurable
+import ai.accurecode.client.settings.profile.UserProfileConfigurable
+import ai.accurecode.client.settings.models.ModelsConfigurable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.SearchableConfigurable
@@ -11,37 +11,37 @@ import java.awt.Container
 import javax.swing.AbstractButton
 
 @Suppress("UnstableApiUsage")
-class KiloSettingsConfigurableTest : BasePlatformTestCase() {
+class AccureSettingsConfigurableTest : BasePlatformTestCase() {
 
     fun `test id matches xml registration`() {
-        val cfg = KiloSettingsConfigurable()
-        assertEquals("ai.kilocode.jetbrains.settings", cfg.id)
+        val cfg = AccureSettingsConfigurable()
+        assertEquals("ai.accurecode.jetbrains.settings", cfg.id)
     }
 
     fun `test child profile id matches xml registration`() {
         // Verify the constants used in XML registrations are stable
-        assertEquals("ai.kilocode.jetbrains.settings.profile", UserProfileConfigurable.ID)
+        assertEquals("ai.accurecode.jetbrains.settings.profile", UserProfileConfigurable.ID)
     }
 
     fun `test child models id matches xml registration`() {
-        assertEquals("ai.kilocode.jetbrains.settings.models", ModelsConfigurable.ID)
+        assertEquals("ai.accurecode.jetbrains.settings.models", ModelsConfigurable.ID)
     }
 
     fun `test root implements SearchableConfigurable but not Parent`() {
         // Root should be SearchableConfigurable so it can be found by ID,
         // but NOT SearchableConfigurable.Parent to avoid duplicating XML-registered child configurables.
-        val cfg = KiloSettingsConfigurable()
+        val cfg = AccureSettingsConfigurable()
         assertTrue("must implement SearchableConfigurable", cfg is SearchableConfigurable)
         // Verify at the class level that it does not extend Parent
-        val interfaces = KiloSettingsConfigurable::class.java.interfaces
+        val interfaces = AccureSettingsConfigurable::class.java.interfaces
         assertFalse(
-            "KiloSettingsConfigurable must not implement SearchableConfigurable.Parent",
+            "AccureSettingsConfigurable must not implement SearchableConfigurable.Parent",
             interfaces.any { it == SearchableConfigurable.Parent::class.java },
         )
     }
 
     fun `test createComponent contains description text`() {
-        val cfg = KiloSettingsConfigurable()
+        val cfg = AccureSettingsConfigurable()
         edt {
             val panel = cfg.createComponent()
             assertNotNull(panel)
@@ -51,7 +51,7 @@ class KiloSettingsConfigurableTest : BasePlatformTestCase() {
     }
 
     fun `test createComponent contains User Profile link`() {
-        val cfg = KiloSettingsConfigurable()
+        val cfg = AccureSettingsConfigurable()
         edt {
             val panel = cfg.createComponent()
             val links = links(panel as Container)
@@ -64,7 +64,7 @@ class KiloSettingsConfigurableTest : BasePlatformTestCase() {
     }
 
     fun `test createComponent contains Models link`() {
-        val cfg = KiloSettingsConfigurable()
+        val cfg = AccureSettingsConfigurable()
         edt {
             val panel = cfg.createComponent()
             val links = links(panel as Container)
@@ -73,7 +73,7 @@ class KiloSettingsConfigurableTest : BasePlatformTestCase() {
     }
 
     fun `test profile link appears before models link`() {
-        val cfg = KiloSettingsConfigurable()
+        val cfg = AccureSettingsConfigurable()
         edt {
             val panel = cfg.createComponent()
             val labels = links(panel as Container).map { it.text }
@@ -83,7 +83,7 @@ class KiloSettingsConfigurableTest : BasePlatformTestCase() {
 
     fun `test open invokes select with child found by id`() {
         // Verify that open() uses the correct ID constant to navigate
-        val cfg = KiloSettingsConfigurable()
+        val cfg = AccureSettingsConfigurable()
         val selected = mutableListOf<Configurable>()
         val profile = UserProfileConfigurable()
 
@@ -98,12 +98,12 @@ class KiloSettingsConfigurableTest : BasePlatformTestCase() {
             UserProfileConfigurable.ID,
         )
         // The real navigation is integration-tested; here we verify the constant round-trip.
-        assertEquals("ai.kilocode.jetbrains.settings.profile", UserProfileConfigurable.ID)
-        assertEquals("ai.kilocode.jetbrains.settings.profile", profile.id)
+        assertEquals("ai.accurecode.jetbrains.settings.profile", UserProfileConfigurable.ID)
+        assertEquals("ai.accurecode.jetbrains.settings.profile", profile.id)
     }
 
     fun `test isModified always false`() {
-        assertFalse(KiloSettingsConfigurable().isModified)
+        assertFalse(AccureSettingsConfigurable().isModified)
     }
 
     // -- helpers --

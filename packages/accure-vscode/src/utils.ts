@@ -20,14 +20,14 @@ export function getWebviewFontSize(): number {
 
 function fontStyle(): string {
   const base = getWebviewFontSize()
-  const vars = SIZES.map((size) => `--kilo-font-size-${size}: ${(base * size) / 13}px;`).join("\n      ")
+  const vars = SIZES.map((size) => `--accure-font-size-${size}: ${(base * size) / 13}px;`).join("\n      ")
   return `:root {
       ${vars}
-      --kilo-font-scale: ${base / 13};
-      --font-size-x-small: var(--kilo-font-size-10);
-      --font-size-small: var(--kilo-font-size-11);
-      --font-size-base: var(--kilo-font-size-13);
-      --font-size-large: var(--kilo-font-size-16);
+      --accure-font-scale: ${base / 13};
+      --font-size-x-small: var(--accure-font-size-10);
+      --font-size-small: var(--accure-font-size-11);
+      --font-size-base: var(--accure-font-size-13);
+      --font-size-large: var(--accure-font-size-16);
     }`
 }
 
@@ -82,7 +82,7 @@ export function buildWebviewHtml(
 </head>
 <body>
   <div id="root"></div>
-  <script nonce="${nonce}">window.ICONS_BASE_URI = "${opts.iconsBaseUri}"; window.KILO_SHIKI_WORKER_URI = "${opts.workerUri}";</script>
+  <script nonce="${nonce}">window.ICONS_BASE_URI = "${opts.iconsBaseUri}"; window.ACCURECODE_SHIKI_WORKER_URI = "${opts.workerUri}";</script>
   <script nonce="${nonce}" src="${opts.scriptUri}"></script>
 </body>
 </html>`

@@ -24,7 +24,7 @@ async function commit(message: string) {
 }
 
 beforeEach(async () => {
-  dir = await mkdtemp(join(tmpdir(), "kilo-upstream-git-"))
+  dir = await mkdtemp(join(tmpdir(), "accure-upstream-git-"))
   process.chdir(dir)
   await $`git init -b upstream`.quiet()
   await $`git config user.name Test`.quiet()
@@ -46,8 +46,8 @@ test("finds previous compatibility commit for transformed base", async () => {
 
   await $`git checkout -b main ${old}`.quiet()
   await $`git tag v1.0.0 ${old}`.quiet()
-  await Bun.write("brand.txt", "kilo A\n")
-  const prior = await commit("refactor: kilo compat for v1.0.0")
+  await Bun.write("brand.txt", "accure A\n")
+  const prior = await commit("refactor: accure compat for v1.0.0")
 
   const found = await findLatestCompatCommit("main", target)
   expect(found?.commit).toBe(prior)
@@ -55,10 +55,10 @@ test("finds previous compatibility commit for transformed base", async () => {
 
   await $`git checkout ${target}`.quiet()
   await $`git checkout -b opencode-v1.0.1`.quiet()
-  await Bun.write("brand.txt", "kilo B\n")
+  await Bun.write("brand.txt", "accure B\n")
   await $`git add -A`.quiet()
   const tree = await writeTree()
-  const next = await createCommit(tree, "refactor: kilo compat for v1.0.1", prior)
+  const next = await createCommit(tree, "refactor: accure compat for v1.0.1", prior)
   await updateBranch("opencode-v1.0.1", next)
   const base = (await $`git merge-base main opencode-v1.0.1`.text()).trim()
   expect(base).toBe(prior)
@@ -95,10 +95,10 @@ test("finds previous compatibility commit when upstream tags diverge", async () 
   await $`git tag v1.14.31 ${target}`.quiet()
 
   await $`git checkout -b main ${old}`.quiet()
-  await Bun.write("brand.txt", "kilo 1.4.9\n")
-  const ancient = await commit("refactor: kilo compat for v1.4.9")
-  await Bun.write("brand.txt", "kilo 1.14.30\n")
-  const prior = await commit("refactor: kilo compat for v1.14.30")
+  await Bun.write("brand.txt", "accure 1.4.9\n")
+  const ancient = await commit("refactor: accure compat for v1.4.9")
+  await Bun.write("brand.txt", "accure 1.14.30\n")
+  const prior = await commit("refactor: accure compat for v1.14.30")
 
   expect(await isAncestor(side, target)).toBe(false)
   expect(await isAncestor(old, target)).toBe(true)

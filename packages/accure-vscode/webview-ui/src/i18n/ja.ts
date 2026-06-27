@@ -113,7 +113,7 @@ export const dict = {
   "dialog.model.expand": "展開",
   "dialog.model.collapse": "折りたたむ",
 
-  "dialog.model.unpaid.freeModels.title": "Kiloが提供する無料モデル",
+  "dialog.model.unpaid.freeModels.title": "Accureが提供する無料モデル",
   "dialog.model.unpaid.addMore.title": "人気のプロバイダーからモデルを追加",
 
   "dialog.provider.viewAll": "さらにプロバイダーを表示",
@@ -126,7 +126,7 @@ export const dict = {
   "provider.connect.status.waiting": "認証を待機中...",
   "provider.connect.status.failed": "認証に失敗しました: {{error}}",
   "provider.connect.apiKey.description":
-    "{{provider}}のAPIキーを入力してアカウントを接続し、Kiloで{{provider}}モデルを使用します。",
+    "{{provider}}のAPIキーを入力してアカウントを接続し、Accureで{{provider}}モデルを使用します。",
   "provider.connect.apiKey.description.local":
     "Connect to your local {{provider}} server. Leave the API key empty if the server does not require one (default for localhost).",
   "provider.connect.atomicChat.description":
@@ -155,7 +155,7 @@ export const dict = {
   "provider.connect.oauth.code.visit.prefix": " ",
   "provider.connect.oauth.code.visit.link": "このリンク",
   "provider.connect.oauth.code.visit.suffix":
-    " にアクセスして認証コードを取得し、アカウントを接続してKiloで{{provider}}モデルを使用してください。",
+    " にアクセスして認証コードを取得し、アカウントを接続してAccureで{{provider}}モデルを使用してください。",
   "provider.connect.oauth.code.label": "{{method}} 認証コード",
   "provider.connect.oauth.code.placeholder": "認証コード",
   "provider.connect.oauth.code.required": "認証コードが必要です",
@@ -163,7 +163,7 @@ export const dict = {
   "provider.connect.oauth.auto.visit.prefix": " ",
   "provider.connect.oauth.auto.visit.link": "このリンク",
   "provider.connect.oauth.auto.visit.suffix":
-    " にアクセスし、以下のコードを入力してアカウントを接続し、Kiloで{{provider}}モデルを使用してください。",
+    " にアクセスし、以下のコードを入力してアカウントを接続し、Accureで{{provider}}モデルを使用してください。",
   "provider.connect.oauth.auto.confirmationCode": "確認コード",
   "provider.connect.toast.connected.title": "{{provider}}が接続されました",
   "provider.connect.toast.connected.description": "{{provider}}モデルが使用可能になりました。",
@@ -285,12 +285,12 @@ export const dict = {
     "「プロンプトを強化」ボタンは、追加コンテキスト、説明、または言い換えを提供することで、リクエストを改善します。ここにリクエストを入力し、ボタンを再度クリックして動作を確認してください。",
   "prompt.action.indexing": "インデックス設定",
 
-  "speechToText.tooltip.start": "Kilo Gatewayで音声入力を開始",
+  "speechToText.tooltip.start": "Accure Gatewayで音声入力を開始",
   "speechToText.tooltip.stop": "音声キャプチャを停止",
   "speechToText.tooltip.transcribing": "文字起こし中... クリックしてキャンセル。",
   "speechToText.tooltip.error": "音声入力に失敗しました。クリックしてクリア。",
   "speechToText.error.title": "音声入力に失敗しました",
-  "speechToText.error.loginRequired": "音声入力を使用するにはKiloにサインインしてください。",
+  "speechToText.error.loginRequired": "音声入力を使用するにはAccureにサインインしてください。",
   "speechToText.error.permission": "マイクの許可が拒否されました。",
   "speechToText.error.microphone": "マイクを起動できませんでした。",
   "speechToText.error.recording": "録音に失敗しました。",
@@ -328,7 +328,7 @@ export const dict = {
   "dialog.directory.empty": "フォルダが見つかりません",
 
   "dialog.server.title": "サーバー",
-  "dialog.server.description": "このアプリが接続するKiloサーバーを切り替えます。",
+  "dialog.server.description": "このアプリが接続するAccureサーバーを切り替えます。",
   "dialog.server.search.placeholder": "サーバーを検索",
   "dialog.server.empty": "サーバーはまだありません",
   "dialog.server.add.title": "サーバーを追加",
@@ -454,7 +454,7 @@ export const dict = {
   "toast.session.listFailed.title": "{{project}}のセッション読み込みに失敗しました",
 
   "toast.update.title": "アップデートが利用可能です",
-  "toast.update.description": "Kiloの新しいバージョン ({{version}}) がインストール可能です。",
+  "toast.update.description": "Accureの新しいバージョン ({{version}}) がインストール可能です。",
   "toast.update.action.installRestart": "インストールして再起動",
   "toast.update.action.notYet": "今はしない",
 
@@ -465,7 +465,7 @@ export const dict = {
   "error.page.action.checking": "確認中...",
   "error.page.action.checkUpdates": "アップデートを確認",
   "error.page.action.updateTo": "{{version}}にアップデート",
-  "error.page.report.prefix": "このエラーをKiloチームに報告してください: ",
+  "error.page.report.prefix": "このエラーをAccureチームに報告してください: ",
   "error.page.report.discord": "Discord",
   "error.page.version": "バージョン: {{version}}",
 
@@ -499,7 +499,7 @@ export const dict = {
   "error.chain.didYouMean": "もしかして: {{suggestions}}",
   "error.chain.modelNotFound": "モデルが見つかりません: {{provider}}/{{model}}",
   "error.chain.checkConfig": "config (opencode.json) のプロバイダー/モデル名を確認してください",
-  "error.chain.mcpFailed": 'MCPサーバー "{{name}}" が失敗しました。注意: KiloはまだMCP認証をサポートしていません。',
+  "error.chain.mcpFailed": 'MCPサーバー "{{name}}" が失敗しました。注意: AccureはまだMCP認証をサポートしていません。',
   "error.chain.providerAuthFailed": "プロバイダー認証に失敗しました ({{provider}}): {{message}}",
   "error.chain.providerInitFailed":
     'プロバイダー "{{provider}}" の初期化に失敗しました。認証情報と設定を確認してください。',
@@ -674,12 +674,12 @@ export const dict = {
   "sidebar.workspaces.enable": "ワークスペースを有効化",
   "sidebar.workspaces.disable": "ワークスペースを無効化",
   "sidebar.gettingStarted.title": "はじめに",
-  "sidebar.gettingStarted.line1": "Kiloには無料モデルが含まれているため、すぐに開始できます。",
+  "sidebar.gettingStarted.line1": "Accureには無料モデルが含まれているため、すぐに開始できます。",
   "sidebar.gettingStarted.line2": "プロバイダーを接続して、Claude、GPT、Geminiなどのモデルを使用できます。",
   "sidebar.project.recentSessions": "最近のセッション",
   "sidebar.project.viewAllSessions": "すべてのセッションを表示",
 
-  "app.name.desktop": "Kilo Desktop",
+  "app.name.desktop": "Accure Desktop",
   "settings.section.desktop": "デスクトップ",
   "settings.section.server": "サーバー",
   "settings.tab.general": "一般",
@@ -691,11 +691,11 @@ export const dict = {
   "settings.general.section.sounds": "効果音",
 
   "settings.general.row.language.title": "言語",
-  "settings.general.row.language.description": "Kiloの表示言語を変更します",
+  "settings.general.row.language.description": "Accureの表示言語を変更します",
   "settings.general.row.appearance.title": "外観",
-  "settings.general.row.appearance.description": "デバイスでのKiloの表示をカスタマイズします",
+  "settings.general.row.appearance.description": "デバイスでのAccureの表示をカスタマイズします",
   "settings.general.row.theme.title": "テーマ",
-  "settings.general.row.theme.description": "Kiloのテーマをカスタマイズします。",
+  "settings.general.row.theme.description": "Accureのテーマをカスタマイズします。",
   "settings.general.row.font.title": "フォント",
   "settings.general.row.font.description": "コードブロックで使用する等幅フォントをカスタマイズします",
 
@@ -703,13 +703,13 @@ export const dict = {
   "settings.general.row.releaseNotes.description": "アップデート後に「新機能」ポップアップを表示",
 
   "settings.updates.row.startup.title": "起動時にアップデートを確認",
-  "settings.updates.row.startup.description": "Kilo の起動時に自動でアップデートを確認します",
+  "settings.updates.row.startup.description": "Accure の起動時に自動でアップデートを確認します",
   "settings.updates.row.check.title": "アップデートを確認",
   "settings.updates.row.check.description": "手動でアップデートを確認し、利用可能ならインストールします",
   "settings.updates.action.checkNow": "今すぐ確認",
   "settings.updates.action.checking": "確認中...",
   "settings.updates.toast.latest.title": "最新です",
-  "settings.updates.toast.latest.description": "Kilo は最新バージョンです。",
+  "settings.updates.toast.latest.description": "Accure は最新バージョンです。",
 
   "font.option.ibmPlexMono": "IBM Plex Mono",
   "font.option.cascadiaCode": "Cascadia Code",
@@ -801,10 +801,10 @@ export const dict = {
   "settings.indexing.model.description": "選択したプロバイダーのデフォルト埋め込みモデルを上書きします。",
   "settings.indexing.model.title": "埋め込みモデル",
   "settings.indexing.provider.description": "セマンティック検索用の埋め込みを生成するプロバイダーを選択します。",
-  "settings.indexing.kiloModel.title": "Kiloモデルプリセット",
-  "settings.indexing.kiloModel.description": "サポートされているKiloホスト型埋め込みモデルを選択します。",
-  "settings.indexing.kiloSignIn.title": "Kiloへのサインインが必要です",
-  "settings.indexing.kiloSignIn.description": "ホスト型埋め込みを使用するにはKiloにサインインしてください。",
+  "settings.indexing.accureModel.title": "Accureモデルプリセット",
+  "settings.indexing.accureModel.description": "サポートされているAccureホスト型埋め込みモデルを選択します。",
+  "settings.indexing.accureSignIn.title": "Accureへのサインインが必要です",
+  "settings.indexing.accureSignIn.description": "ホスト型埋め込みを使用するにはAccureにサインインしてください。",
   "settings.indexing.provider.title": "埋め込みプロバイダー",
   "settings.indexing.providerField.description": "プロバイダー固有の接続設定。",
   "settings.indexing.qdrantApiKey.description": "QdrantインスタンスのオプションのAPIキー。",
@@ -839,7 +839,7 @@ export const dict = {
   "settings.providers.title": "プロバイダー",
   "settings.providers.description": "プロバイダー設定はここで構成できます。",
   "settings.providers.betaNotice":
-    "現在、設定画面で設定できるのはKilo Gatewayプロバイダーのみです。他のプロバイダーの設定については、ベータ期間中にまもなく対応予定です。それまでの間は、CLIまたは設定ファイルを使用してプロバイダーを設定できます。私たちはKiloをオープンに保ち、ロックインのない状態を維持することをお約束します。",
+    "現在、設定画面で設定できるのはAccure Gatewayプロバイダーのみです。他のプロバイダーの設定については、ベータ期間中にまもなく対応予定です。それまでの間は、CLIまたは設定ファイルを使用してプロバイダーを設定できます。私たちはAccureをオープンに保ち、ロックインのない状態を維持することをお約束します。",
   "settings.providers.section.connected": "接続済みプロバイダー",
   "settings.providers.connected.empty": "接続済みプロバイダーはありません",
   "settings.providers.section.popular": "人気のプロバイダー",
@@ -860,7 +860,7 @@ export const dict = {
     "task-tool サブエージェントのデフォルトモデルと推論の労力。呼び出し元のエージェントのモデルを継承する場合は未設定のままにしてください。",
   "settings.models.hidePromptTraining.title": "プロンプトを学習に使用するモデルを非表示",
   "settings.models.hidePromptTraining.description":
-    "プロバイダーがプロンプトを学習に使用する可能性のある Kilo Gateway モデルを非表示にします。",
+    "プロバイダーがプロンプトを学習に使用する可能性のある Accure Gateway モデルを非表示にします。",
   "settings.providers.modeModels": "モードごとのモデル",
   "settings.providers.custom.note": "Base URL でカスタムプロバイダーを追加します。",
   "settings.providers.modeModels.description":
@@ -963,21 +963,22 @@ export const dict = {
   "settings.config.status.loadedLegacy": "旧構成を読み込み済み",
   "settings.config.status.notLoaded": "読み込まれていません",
   "settings.config.status.create": "見つかりません - このファイルを作成する",
-  "settings.config.title": "{{scope}}のKilo構成ファイルを開く",
+  "settings.config.title": "{{scope}}のAccure構成ファイルを開く",
   "settings.config.placeholder":
     "構成ファイルは順番にマージされます。読み込み済みとしてマークされているファイルが現在設定に影響しています。",
-  "settings.config.noWorkspace": "ローカルのKilo構成ファイルを編集するには、ワークスペースフォルダーを開いてください。",
-  "settings.config.openFailed": "{{scope}}のKilo構成ファイルを開けませんでした: {{message}}",
+  "settings.config.noWorkspace":
+    "ローカルのAccure構成ファイルを編集するには、ワークスペースフォルダーを開いてください。",
+  "settings.config.openFailed": "{{scope}}のAccure構成ファイルを開けませんでした: {{message}}",
   "settings.config.source.xdg": "XDGグローバル構成",
-  "settings.config.source.homeKilo": "Homeの.kilo構成",
-  "settings.config.source.homeKilocode": "Homeの.kilocode構成",
+  "settings.config.source.homeAccure": "Homeの.accurecode構成",
+  "settings.config.source.homeAccurecode": "Homeの.accurecode構成",
   "settings.config.source.homeOpencode": "Homeの.opencode構成",
-  "settings.config.source.envFile": "KILO_CONFIG環境ファイル",
-  "settings.config.source.envDir": "KILO_CONFIG_DIR",
+  "settings.config.source.envFile": "ACCURECODE_CONFIG環境ファイル",
+  "settings.config.source.envDir": "ACCURECODE_CONFIG_DIR",
   "settings.config.source.envContent": "インライン環境構成",
-  "settings.config.source.projectKilo": "プロジェクトの.kilo構成",
+  "settings.config.source.projectAccure": "プロジェクトの.accurecode構成",
   "settings.config.source.projectRoot": "プロジェクトルート構成",
-  "settings.config.source.projectKilocode": "旧.kilocode構成",
+  "settings.config.source.projectAccurecode": "旧.accurecode構成",
   "settings.config.source.projectOpencode": "旧.opencode構成",
   "settings.models.title": "モデル",
   "settings.models.description": "モデル設定はここで構成できます。",
@@ -1050,7 +1051,7 @@ export const dict = {
   "feedback.dialog.github": "GitHubで問題を報告する",
   "feedback.dialog.discord": "Discordコミュニティに参加する",
   "feedback.dialog.support": "カスタマーサポート",
-  "workStyle.onboarding.welcome": "Kiloへようこそ",
+  "workStyle.onboarding.welcome": "Accureへようこそ",
   "workStyle.onboarding.title": "希望する作業スタイルを選択",
   "workStyle.onboarding.description":
     "権限、推論ブロック、ターミナル出力、コンテキストタイムラインの初期設定を行います。適用されるのは一度だけで、すでにカスタマイズした設定は変更されません。",
@@ -1065,7 +1066,7 @@ export const dict = {
   "workStyle.choice.visibility": "表示",
   "workStyle.choice.human-in-the-loop.eyebrow": "人間による確認",
   "workStyle.choice.human-in-the-loop.title": "まず確認",
-  "workStyle.choice.human-in-the-loop.description": "Kiloは作業中に一時停止し、計画を表示します。",
+  "workStyle.choice.human-in-the-loop.description": "Accureは作業中に一時停止し、計画を表示します。",
   "workStyle.choice.human-in-the-loop.permissions": "ファイルの編集やコマンドの実行前に許可を求めます。",
   "workStyle.choice.human-in-the-loop.bash": "すべてのターミナルコマンド実行時に許可を求める",
   "workStyle.choice.human-in-the-loop.visibility": "推論を含む会話の詳細をすべて表示します。",
@@ -1076,7 +1077,7 @@ export const dict = {
   "workStyle.choice.autonomous.bash": "ワークスペース内で承認なしにターミナルコマンドを実行できます。",
   "workStyle.choice.autonomous.visibility": "詳細は展開するまで折りたたまれたままです。",
   "session.cloud.import.title": "クラウドからインポート",
-  "session.cloud.import.placeholder": "セッションID、URL、またはkilo importコマンド",
+  "session.cloud.import.placeholder": "セッションID、URL、またはaccure importコマンド",
   "session.cloud.import.button": "インポート",
   "session.cloud.import.invalid": "セッションIDの形式が無効です",
   "session.cloud.import.legacy":
@@ -1154,7 +1155,7 @@ export const dict = {
 
   "settings.experimental.title": "実験的機能",
   "settings.language.title": "言語",
-  "settings.aboutKiloCode.title": "Accure Codeについて",
+  "settings.aboutAccureCode.title": "Accure Codeについて",
 
   "session.messages.empty": "下にメッセージを入力して会話を始めましょう。",
   "session.messages.welcome":
@@ -1201,43 +1202,44 @@ export const dict = {
   "time.thisMonth": "今月",
   "time.older": "それ以前",
 
-  "settings.aboutKiloCode.status.connected": "接続済み",
-  "settings.aboutKiloCode.status.connecting": "接続中...",
-  "settings.aboutKiloCode.status.disconnected": "切断",
-  "settings.aboutKiloCode.status.error": "エラー",
-  "settings.aboutKiloCode.cliServer": "CLIサーバー",
-  "settings.aboutKiloCode.status.label": "ステータス：",
-  "settings.aboutKiloCode.port.label": "ポート：",
-  "settings.aboutKiloCode.versionInfo": "バージョン情報",
-  "settings.aboutKiloCode.version.label": "バージョン：",
-  "settings.aboutKiloCode.extensionName": "Accure Code拡張機能",
-  "settings.aboutKiloCode.community": "コミュニティとサポート",
-  "settings.aboutKiloCode.feedback.prefix": "ご質問やフィードバックがありましたら、お気軽にissueを作成してください",
-  "settings.aboutKiloCode.feedback.or": "または",
-  "settings.aboutKiloCode.support.prefix":
+  "settings.aboutAccureCode.status.connected": "接続済み",
+  "settings.aboutAccureCode.status.connecting": "接続中...",
+  "settings.aboutAccureCode.status.disconnected": "切断",
+  "settings.aboutAccureCode.status.error": "エラー",
+  "settings.aboutAccureCode.cliServer": "CLIサーバー",
+  "settings.aboutAccureCode.status.label": "ステータス：",
+  "settings.aboutAccureCode.port.label": "ポート：",
+  "settings.aboutAccureCode.versionInfo": "バージョン情報",
+  "settings.aboutAccureCode.version.label": "バージョン：",
+  "settings.aboutAccureCode.extensionName": "Accure Code拡張機能",
+  "settings.aboutAccureCode.community": "コミュニティとサポート",
+  "settings.aboutAccureCode.feedback.prefix": "ご質問やフィードバックがありましたら、お気軽にissueを作成してください",
+  "settings.aboutAccureCode.feedback.or": "または",
+  "settings.aboutAccureCode.support.prefix":
     "請求やアカウントに関するご質問は、カスタマーサポートまでお問い合わせください",
-  "settings.aboutKiloCode.resetSettings.title": "設定をリセット",
-  "settings.aboutKiloCode.resetSettings.description":
+  "settings.aboutAccureCode.resetSettings.title": "設定をリセット",
+  "settings.aboutAccureCode.resetSettings.description":
     "これはVS Code拡張機能固有の設定のみをデフォルト値にリセットします。モードや自動承認ルールなど、CLIと共有される設定はCLI設定ファイルに保存されており、リセットされません。",
-  "settings.aboutKiloCode.resetSettings.button": "すべての設定をリセット",
-  "settings.aboutKiloCode.settingsTransfer.title": "設定の移行",
-  "settings.aboutKiloCode.settingsTransfer.description":
+  "settings.aboutAccureCode.resetSettings.button": "すべての設定をリセット",
+  "settings.aboutAccureCode.settingsTransfer.title": "設定の移行",
+  "settings.aboutAccureCode.settingsTransfer.description":
     "VS Code インスタンス間で設定を転送するには、エクスポートまたはインポートしてください。",
-  "settings.aboutKiloCode.exportSettings": "エクスポート",
-  "settings.aboutKiloCode.importSettings": "インポート",
-  "settings.aboutKiloCode.importSettings.invalidJson":
+  "settings.aboutAccureCode.exportSettings": "エクスポート",
+  "settings.aboutAccureCode.importSettings": "インポート",
+  "settings.aboutAccureCode.importSettings.invalidJson":
     "無効な JSON ファイルです。有効な設定ファイルを選択してください。",
-  "settings.aboutKiloCode.importSettings.invalidConfig": "ファイルに有効な Kilo の設定が含まれていません。",
-  "settings.aboutKiloCode.importSettings.tooLarge": "ファイルが大きすぎます。設定ファイルは 1 MB 以下にしてください。",
-  "settings.aboutKiloCode.importSettings.newerVersion":
-    "このファイルはより新しいバージョンの Kilo からエクスポートされたものです。一部の設定が無視される場合があります。",
-  "settings.aboutKiloCode.importSettings.success":
+  "settings.aboutAccureCode.importSettings.invalidConfig": "ファイルに有効な Accure の設定が含まれていません。",
+  "settings.aboutAccureCode.importSettings.tooLarge":
+    "ファイルが大きすぎます。設定ファイルは 1 MB 以下にしてください。",
+  "settings.aboutAccureCode.importSettings.newerVersion":
+    "このファイルはより新しいバージョンの Accure からエクスポートされたものです。一部の設定が無視される場合があります。",
+  "settings.aboutAccureCode.importSettings.success":
     "設定をインポートしました。上記の変更内容を確認してから、保存をクリックしてください。",
 
-  "settings.aboutKiloCode.telemetry.title": "テレメトリ",
-  "settings.aboutKiloCode.telemetry.description":
+  "settings.aboutAccureCode.telemetry.title": "テレメトリ",
+  "settings.aboutAccureCode.telemetry.description":
     "テレメトリは VS Code の組み込みテレメトリ設定によって制御されます。無効にするには、設定 > テレメトリ > Telemetry Level に移動して「off」に設定してください。変更を適用するには、VS Code を再起動してください。",
-  "settings.aboutKiloCode.telemetry.openSettings": "テレメトリ設定を開く",
+  "settings.aboutAccureCode.telemetry.openSettings": "テレメトリ設定を開く",
 
   "settings.agentBehaviour.subtab.agents": "エージェント",
   "settings.agentBehaviour.subtab.mcpServers": "MCPサーバー",
@@ -1306,18 +1308,18 @@ export const dict = {
   "settings.experimental.codebaseSearch.description": "コードベース全体でAIによる自然言語検索を有効にする",
   "settings.experimental.speechToText.title": "音声認識",
   "settings.experimental.speechToText.description":
-    "Kilo Gateway経由でKiloアカウントを使用して、プロンプトフィールドでの音声入力を有効にします。",
+    "Accure Gateway経由でAccureアカウントを使用して、プロンプトフィールドでの音声入力を有効にします。",
   "settings.models.speechToText.disabledDescription":
-    "Speech to Text を使用するには、Kilo プロバイダーを有効にしてサインインしてください。現在、Speech to Text は Kilo Gateway でのみサポートされています。",
+    "Speech to Text を使用するには、Accure プロバイダーを有効にしてサインインしてください。現在、Speech to Text は Accure Gateway でのみサポートされています。",
   "settings.models.speechToTextModel.title": "音声認識モデル",
-  "settings.models.speechToTextModel.description": "音声入力に使用するKilo Gateway文字起こしモデルを選択します。",
+  "settings.models.speechToTextModel.description": "音声入力に使用するAccure Gateway文字起こしモデルを選択します。",
   "settings.experimental.continueOnDeny.title": "拒否時に続行",
   "settings.experimental.continueOnDeny.description": "権限が拒否された場合にエージェントループを続行",
   "settings.experimental.mcpTimeout.title": "MCPタイムアウト（ミリ秒）",
   "settings.experimental.mcpTimeout.description": "MCPサーバーリクエストのタイムアウト（ミリ秒）",
   "settings.experimental.remote.title": "Remote コントロール",
   "settings.experimental.remote.description":
-    "Kilo Cloud 経由でのセッションの Remote コントロールを有効にします。これはこのマシンの CLI にも影響します。",
+    "Accure Cloud 経由でのセッションの Remote コントロールを有効にします。これはこのマシンの CLI にも影響します。",
   "settings.experimental.remote.current": "現在の状態:",
   "settings.experimental.remote.startup": "起動時の自動有効化:",
   "settings.experimental.remote.active": "アクティブ",
@@ -1430,14 +1432,14 @@ export const dict = {
   "settings.agentBehaviour.claudeCompat.heading": "Claude Code 互換性",
   "settings.agentBehaviour.claudeCompat.title": "Claude Code ファイルを読み込む",
   "settings.agentBehaviour.claudeCompat.description":
-    "Claude Code の設定ディレクトリから CLAUDE.md のインストラクションとスキルをセッションに読み込みます。Kilo に Claude Code のインストラクションとスキルを使用させる場合は、これを有効にしてください。再起動が必要です。",
+    "Claude Code の設定ディレクトリから CLAUDE.md のインストラクションとスキルをセッションに読み込みます。Accure に Claude Code のインストラクションとスキルを使用させる場合は、これを有効にしてください。再起動が必要です。",
   "settings.agentBehaviour.mcpDetail.command": "コマンド",
   "settings.agentBehaviour.mcpDetail.args": "引数",
   "settings.agentBehaviour.mcpDetail.env": "環境",
   "settings.agentBehaviour.mcpDetail.disabled": "このサーバーは無効です。",
   "settings.agentBehaviour.mcpBrowseMarketplace": "マーケットプレイスを閲覧",
   "settings.agentBehaviour.mcpEmpty":
-    "MCPサーバーが設定されていません。kilo.jsoncでMCPサーバーを追加するか、エージェントに追加を依頼してください。",
+    "MCPサーバーが設定されていません。accure.jsoncでMCPサーバーを追加するか、エージェントに追加を依頼してください。",
   "settings.agentBehaviour.workflowsPlaceholder":
     "ワークフローはワークスペース内のワークフローファイルを通じて管理されます。",
   "settings.agentBehaviour.workflows.description":
@@ -1506,7 +1508,7 @@ export const dict = {
   "settings.display.username.title": "ユーザー名",
   "settings.display.username.description": "会話に表示されるカスタムユーザー名",
   "settings.display.fontSize.title": "フォントサイズ",
-  "settings.display.fontSize.description": "VS Code とは独立して Kilo webview UI のフォントサイズを調整します。",
+  "settings.display.fontSize.description": "VS Code とは独立して Accure webview UI のフォントサイズを調整します。",
   "settings.display.reasoningAutoCollapse.title": "推論を自動で折りたたむ",
   "settings.display.reasoningAutoCollapse.description":
     "エージェントが推論の書き込みを終えた後に推論ブロックを自動で折りたたみます。手動で折りたたむまでは推論を展開したままにするには、オフのままにしてください。",
@@ -1540,11 +1542,11 @@ export const dict = {
 
   // legacy-migration start
   "settings.legacyMigration.link": "レガシーバージョンからの移行",
-  "settings.aboutKiloCode.legacyMigration.title": "レガシー移行",
-  "settings.aboutKiloCode.legacyMigration.description":
+  "settings.aboutAccureCode.legacyMigration.title": "レガシー移行",
+  "settings.aboutAccureCode.legacyMigration.description":
     "プロバイダーのAPIキーやデフォルトモデルなど、以前にインストールしたAccure Codeから設定を移行します。",
-  "settings.aboutKiloCode.rooImport.description": "インストールしたRoo Codeから会話履歴を移行します。",
-  "settings.aboutKiloCode.rooImport.button": "Roo Codeからセッションをインポート",
+  "settings.aboutAccureCode.rooImport.description": "インストールしたRoo Codeから会話履歴を移行します。",
+  "settings.aboutAccureCode.rooImport.button": "Roo Codeからセッションをインポート",
 
   // Screen 1 — What's New
   "migration.whatsNew.title": "Accure Codeの新機能",
@@ -1559,7 +1561,7 @@ export const dict = {
     "複数のエージェントを並列実行するための統合インターフェース。それぞれ独自のワークツリー上で動作し、進捗の確認、コンテキストの切り替え、変更のレビューを一箇所で行えます。",
   "migration.whatsNew.features.foundation.title": "共通基盤",
   "migration.whatsNew.features.foundation.detail":
-    "すべてのKilo製品で共有される小さく効率的なコア。どのような作業スタイルでも馴染みのある体験を提供します。",
+    "すべてのAccure製品で共有される小さく効率的なコア。どのような作業スタイルでも馴染みのある体験を提供します。",
   "migration.whatsNew.blogLink": "完全なアナウンスを読む",
   "migration.whatsNew.docsLink": "新機能とよくある質問",
   "migration.whatsNew.continue": "続行",
@@ -1658,7 +1660,7 @@ export const dict = {
     "作業ツリーで変更されたがまだステージングされていないファイルと、追跡されていない（新しい）ファイル。",
   "diffViewer.source.session.label": "セッション",
   "diffViewer.source.session.tooltip":
-    "現在のセッション中に Kilo が変更したファイル。ターンごとのスナップショットに基づきます。新しいセッションを開始するとリセットされます。",
+    "現在のセッション中に Accure が変更したファイル。ターンごとのスナップショットに基づきます。新しいセッションを開始するとリセットされます。",
   "diffViewer.group.session": "セッション",
   "diffViewer.group.git": "Git",
   "diffViewer.notice.snapshotsDisabled":

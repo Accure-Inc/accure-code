@@ -1,9 +1,9 @@
-// KiloClaw conversation sidebar — mirrors the web UI in
-// cloud/apps/web/src/app/(app)/claw/kilo-chat/components/ConversationList.tsx
+// AccureClaw conversation sidebar — mirrors the web UI in
+// cloud/apps/web/src/app/(app)/claw/accure-chat/components/ConversationList.tsx
 
 import { For, Show, createMemo, createSignal, onCleanup, onMount } from "solid-js"
 import { useClaw } from "../context/claw"
-import { useKiloClawLanguage } from "../context/language"
+import { useAccureClawLanguage } from "../context/language"
 import type { ConversationListItem } from "../lib/types"
 import { isEnterKeyCommitNotIme } from "../../src/utils/ime-enter"
 
@@ -41,14 +41,14 @@ function groupConversations(convs: ConversationListItem[], labels: Record<string
 
 export function ConversationList() {
   const claw = useClaw()
-  const { t } = useKiloClawLanguage()
+  const { t } = useAccureClawLanguage()
 
   const groups = createMemo(() =>
     groupConversations(claw.conversations(), {
-      today: t("kiloClaw.conversations.groupToday"),
-      yesterday: t("kiloClaw.conversations.groupYesterday"),
-      week: t("kiloClaw.conversations.groupThisWeek"),
-      older: t("kiloClaw.conversations.groupOlder"),
+      today: t("accureClaw.conversations.groupToday"),
+      yesterday: t("accureClaw.conversations.groupYesterday"),
+      week: t("accureClaw.conversations.groupThisWeek"),
+      older: t("accureClaw.conversations.groupOlder"),
     }),
   )
 
@@ -66,28 +66,28 @@ export function ConversationList() {
   onCleanup(() => scrollEl?.removeEventListener("scroll", onScroll))
 
   return (
-    <div class="kiloclaw-convlist">
-      <div class="kiloclaw-convlist-header">
-        <span class="kiloclaw-convlist-title">{t("kiloClaw.conversations.title")}</span>
+    <div class="accureclaw-convlist">
+      <div class="accureclaw-convlist-header">
+        <span class="accureclaw-convlist-title">{t("accureClaw.conversations.title")}</span>
         <button
           type="button"
-          class="kiloclaw-iconbtn"
+          class="accureclaw-iconbtn"
           onClick={() => claw.createConversation()}
-          aria-label={t("kiloClaw.conversations.new")}
-          title={t("kiloClaw.conversations.new")}
+          aria-label={t("accureClaw.conversations.new")}
+          title={t("accureClaw.conversations.new")}
         >
           +
         </button>
       </div>
-      <div class="kiloclaw-convlist-scroll" ref={scrollEl}>
+      <div class="accureclaw-convlist-scroll" ref={scrollEl}>
         <Show
           when={claw.conversations().length > 0}
-          fallback={<div class="kiloclaw-convlist-empty">{t("kiloClaw.conversations.empty")}</div>}
+          fallback={<div class="accureclaw-convlist-empty">{t("accureClaw.conversations.empty")}</div>}
         >
           <For each={groups()}>
             {(group) => (
-              <div class="kiloclaw-convlist-group">
-                <div class="kiloclaw-convlist-grouplabel">{group.label}</div>
+              <div class="accureclaw-convlist-group">
+                <div class="accureclaw-convlist-grouplabel">{group.label}</div>
                 <For each={group.items}>{(conv) => <ConversationItem conversation={conv} />}</For>
               </div>
             )}
@@ -100,7 +100,7 @@ export function ConversationList() {
 
 function ConversationItem(props: { conversation: ConversationListItem }) {
   const claw = useClaw()
-  const { t } = useKiloClawLanguage()
+  const { t } = useAccureClawLanguage()
   const [isRenaming, setIsRenaming] = createSignal(false)
   const [renameText, setRenameText] = createSignal("")
   let inputEl: HTMLInputElement | undefined
@@ -144,7 +144,7 @@ function ConversationItem(props: { conversation: ConversationListItem }) {
 
   return (
     <div
-      class={`kiloclaw-convitem ${isActive() ? "kiloclaw-convitem-active" : ""}`}
+      class={`accureclaw-convitem ${isActive() ? "accureclaw-convitem-active" : ""}`}
       onClick={() => {
         if (isRenaming()) return
         claw.selectConversation(props.conversation.conversationId)
@@ -157,7 +157,7 @@ function ConversationItem(props: { conversation: ConversationListItem }) {
         fallback={
           <input
             ref={inputEl}
-            class="kiloclaw-convitem-renameinput"
+            class="accureclaw-convitem-renameinput"
             value={renameText()}
             onInput={(e) => setRenameText(e.currentTarget.value)}
             onKeyDown={onKey}
@@ -167,29 +167,29 @@ function ConversationItem(props: { conversation: ConversationListItem }) {
           />
         }
       >
-        <span class="kiloclaw-convitem-title">
+        <span class="accureclaw-convitem-title">
           <Show when={isUnread()}>
-            <span class="kiloclaw-convitem-unread" aria-hidden="true" />
+            <span class="accureclaw-convitem-unread" aria-hidden="true" />
           </Show>
-          {props.conversation.title ?? t("kiloClaw.conversations.untitled")}
+          {props.conversation.title ?? t("accureClaw.conversations.untitled")}
         </span>
       </Show>
-      <div class="kiloclaw-convitem-actions" onClick={(e) => e.stopPropagation()}>
+      <div class="accureclaw-convitem-actions" onClick={(e) => e.stopPropagation()}>
         <button
           type="button"
-          class="kiloclaw-iconbtn-sm"
+          class="accureclaw-iconbtn-sm"
           onClick={startRename}
-          title={t("kiloClaw.conversations.rename")}
-          aria-label={t("kiloClaw.conversations.rename")}
+          title={t("accureClaw.conversations.rename")}
+          aria-label={t("accureClaw.conversations.rename")}
         >
           ✎
         </button>
         <button
           type="button"
-          class="kiloclaw-iconbtn-sm kiloclaw-iconbtn-danger"
+          class="accureclaw-iconbtn-sm accureclaw-iconbtn-danger"
           onClick={() => claw.leaveConversation(props.conversation.conversationId)}
-          title={t("kiloClaw.conversations.leave")}
-          aria-label={t("kiloClaw.conversations.leave")}
+          title={t("accureClaw.conversations.leave")}
+          aria-label={t("accureClaw.conversations.leave")}
         >
           ×
         </button>

@@ -1,12 +1,12 @@
 ---
 title: "Deploy & Secure"
-description: "Deploy applications and manage security with Kilo Code"
+description: "Deploy applications and manage security with Accure Code"
 ---
 
 # {% $markdoc.frontmatter.title %}
 
 {% callout type="generic" %}
-Deploy your applications directly from Kilo Code and manage security with AI-powered reviews and scans.
+Deploy your applications directly from Accure Code and manage security with AI-powered reviews and scans.
 {% /callout %}
 
 ## Deploy

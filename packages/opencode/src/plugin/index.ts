@@ -4,11 +4,11 @@ import type {
   Plugin as PluginInstance,
   PluginModule,
   WorkspaceAdapter as PluginWorkspaceAdapter,
-} from "@kilocode/plugin"
+} from "@accurecode/plugin"
 import { Config } from "@/config/config"
 import { Bus } from "../bus"
 import * as Log from "@opencode-ai/core/util/log"
-import { createKiloClient } from "@kilocode/sdk"
+import { createAccureClient } from "@accurecode/sdk"
 import { ServerAuth } from "@/server/auth"
 import { CodexAuthPlugin } from "./codex"
 import { Session } from "@/session/session"
@@ -26,8 +26,8 @@ import { InstanceState } from "@/effect/instance-state"
 import { errorMessage } from "@/util/error"
 import { PluginLoader } from "./loader"
 import { parsePluginSpecifier, readPluginId, readV1Plugin, resolvePluginId } from "./shared"
-import { KiloAuthPlugin } from "@kilocode/accure-gateway" // kilocode_change
-import { AtomicChatPlugin } from "@kilocode/plugin-atomic-chat" // kilocode_change
+import { AccureAuthPlugin } from "@accurecode/accure-gateway" // accurecode_change
+import { AtomicChatPlugin } from "@accurecode/plugin-atomic-chat" // accurecode_change
 import { registerAdapter } from "@/control-plane/adapters"
 import type { WorkspaceAdapter } from "@/control-plane/types"
 import { RuntimeFlags } from "@/effect/runtime-flags"
@@ -60,13 +60,13 @@ export interface Interface {
 export class Service extends Context.Service<Service, Interface>()("@opencode/Plugin") {}
 
 // Built-in plugins that are directly imported (not installed from npm)
-// kilocode_change start
+// accurecode_change start
 const INTERNAL_PLUGINS: PluginInstance[] = [
-  KiloAuthPlugin,
+  AccureAuthPlugin,
   AtomicChatPlugin,
   CodexAuthPlugin,
   CopilotAuthPlugin,
-  // kilocode_change - external auth plugins ship against @opencode-ai/plugin; bridge to our @kilocode/plugin types
+  // accurecode_change - external auth plugins ship against @opencode-ai/plugin; bridge to our @accurecode/plugin types
   GitlabAuthPlugin as unknown as PluginInstance,
   PoeAuthPlugin as unknown as PluginInstance,
   CloudflareWorkersAuthPlugin,
@@ -75,7 +75,7 @@ const INTERNAL_PLUGINS: PluginInstance[] = [
   DigitalOceanAuthPlugin,
   XaiAuthPlugin,
 ]
-// kilocode_change end
+// accurecode_change end
 
 function isServerPlugin(value: unknown): value is PluginInstance {
   return typeof value === "function"
@@ -96,8 +96,8 @@ function getLegacyPlugins(mod: Record<string, unknown>) {
     if (seen.has(entry)) continue
     seen.add(entry)
     const plugin = getServerPlugin(entry)
-    // kilocode_change: skip named exports (e.g. constants from @kilocode/plugin-atomic-chat)
-    if (!plugin) continue // kilocode_change
+    // accurecode_change: skip named exports (e.g. constants from @accurecode/plugin-atomic-chat)
+    if (!plugin) continue // accurecode_change
     result.push(plugin)
   }
 
@@ -135,7 +135,7 @@ export const layer = Layer.effect(
 
         const { Server } = yield* Effect.promise(() => import("../server/server"))
 
-        const client = createKiloClient({
+        const client = createAccureClient({
           baseUrl: "http://localhost:4096",
           directory: ctx.directory,
           headers: ServerAuth.headers(),

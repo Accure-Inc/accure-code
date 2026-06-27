@@ -3,7 +3,7 @@ import {
   handleImportAndSend,
   handleRequestCloudSessionData,
   type CloudSessionContext,
-} from "../../src/kilo-provider/handlers/cloud-session"
+} from "../../src/accure-provider/handlers/cloud-session"
 
 function stalled(options?: { signal?: AbortSignal }) {
   return new Promise<never>((_resolve, reject) => {
@@ -14,7 +14,7 @@ function stalled(options?: { signal?: AbortSignal }) {
 function context(sent: unknown[]) {
   return {
     client: {
-      kilo: {
+      accure: {
         cloud: {
           session: {
             get: (_params: { id: string }, options?: { signal?: AbortSignal }) => stalled(options),

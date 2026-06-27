@@ -21,7 +21,7 @@ import {
 } from "./inline-utils"
 import { FimPromptBuilder } from "./FillInTheMiddle"
 import { hasValidCredentials } from "../fim"
-import type { KiloConnectionService } from "../../cli-backend"
+import type { AccureConnectionService } from "../../cli-backend"
 import { getAutocompleteModelById } from "../../../shared/autocomplete-models"
 import { ContextRetrievalService } from "../continuedev/core/autocomplete/context/ContextRetrievalService"
 import { VsCodeIde } from "../continuedev/core/vscode-test-harness/src/VSCodeIde"
@@ -108,7 +108,7 @@ export class AutocompleteInlineCompletionProvider implements vscode.InlineComple
   private pendingRequests: PendingRequest[] = []
   private fimPromptBuilder: FimPromptBuilder
   private contextProvider: AutocompleteContextProvider
-  private connectionService: KiloConnectionService
+  private connectionService: AccureConnectionService
   private costTrackingCallback: CostTrackingCallback
   private getSettings: () => AutocompleteServiceSettings | null
   public readonly recentlyVisitedRangesService: RecentlyVisitedRangesService
@@ -137,7 +137,7 @@ export class AutocompleteInlineCompletionProvider implements vscode.InlineComple
   constructor(
     context: vscode.ExtensionContext,
     modelId: string,
-    connectionService: KiloConnectionService,
+    connectionService: AccureConnectionService,
     costTrackingCallback: CostTrackingCallback,
     getSettings: () => AutocompleteServiceSettings | null,
     workspacePath: string,
@@ -659,7 +659,7 @@ export class AutocompleteInlineCompletionProvider implements vscode.InlineComple
   private async hasBalance(): Promise<boolean> {
     try {
       const client = await this.connectionService.getClientAsync()
-      const result = await client.kilo.profile().catch(() => null)
+      const result = await client.accure.profile().catch(() => null)
       return (result?.data?.balance?.balance ?? 0) > 0
     } catch {
       return false

@@ -1,7 +1,7 @@
 /**
- * Kilo Gateway Commands for TUI
+ * Accure Gateway Commands for TUI
  *
- * Provides /profile and /teams commands that are only visible when connected to Kilo Gateway.
+ * Provides /profile and /teams commands that are only visible when connected to Accure Gateway.
  */
 
 import { createMemo } from "solid-js"
@@ -11,10 +11,10 @@ import { useRoute } from "@tui/context/route"
 import { useDialog } from "@tui/ui/dialog"
 import { useToast } from "@tui/ui/toast"
 import { DialogAlert } from "@tui/ui/dialog-alert"
-import type { Organization } from "@kilocode/accure-gateway"
+import type { Organization } from "@accurecode/accure-gateway"
 import type { ClawStatus } from "./claw/types.js"
-import { DialogKiloTeamSelect } from "./components/dialog-kilo-team-select.js"
-import { DialogKiloProfile } from "./components/dialog-kilo-profile.js"
+import { DialogAccureTeamSelect } from "./components/dialog-accure-team-select.js"
+import { DialogAccureProfile } from "./components/dialog-accure-profile.js"
 import { DialogClawSetup } from "./components/dialog-claw-setup.js"
 import { DialogClawUpgrade } from "./components/dialog-claw-upgrade.js"
 import { DialogIndexing } from "./components/dialog-indexing.js"
@@ -25,41 +25,41 @@ type UseSDK = any
 type SDK = any
 
 /**
- * Register all Kilo Gateway commands
+ * Register all Accure Gateway commands
  * Call this from a component inside the TUI app
  *
  * @param useSDK - OpenCode's useSDK hook (passed from TUI context)
  */
-export function registerKiloCommands(useSDK: () => UseSDK) {
+export function registerAccureCommands(useSDK: () => UseSDK) {
   const sync = useSync()
   const route = useRoute()
   const dialog = useDialog()
   const sdk = useSDK()
   const toast = useToast()
 
-  // Only show Kilo commands when connected to Kilo Gateway
-  const isKiloConnected = createMemo(() => {
-    return sync.data.provider_next.connected.includes("kilo")
+  // Only show Accure commands when connected to Accure Gateway
+  const isAccureConnected = createMemo(() => {
+    return sync.data.provider_next.connected.includes("accure")
   })
   const indexing = createMemo(() => indexingEnabled(sync.data.config))
 
   useBindings(() => ({
     commands: [
-      // /kiloclaw command
+      // /accureclaw command
       {
-        name: "kilo.claw",
-        title: "KiloClaw",
-        desc: "Open KiloClaw chat & dashboard",
-        category: "Kilo",
-        slashName: "kiloclaw",
+        name: "accure.claw",
+        title: "AccureClaw",
+        desc: "Open AccureClaw chat & dashboard",
+        category: "Accure",
+        slashName: "accureclaw",
         slashAliases: ["claw"],
-        enabled: isKiloConnected(),
-        hidden: !isKiloConnected(),
+        enabled: isAccureConnected(),
+        hidden: !isAccureConnected(),
         run: async () => {
           // Fetch profile (for org context) and instance status in parallel
           const [profileRes, res] = await Promise.all([
-            sdk.client.kilo.profile().catch(() => null),
-            sdk.client.kilo.claw.status().catch(() => null),
+            sdk.client.accurecode.profile().catch(() => null),
+            sdk.client.accurecode.claw.status().catch(() => null),
           ])
           const orgId = profileRes?.data?.currentOrgId ?? null
           const status = res?.data as ClawStatus | undefined
@@ -71,7 +71,7 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
           }
 
           // Instance exists — check for chat credentials
-          const creds = await sdk.client.kilo.claw.chatCredentials().catch(() => null)
+          const creds = await sdk.client.accurecode.claw.chatCredentials().catch(() => null)
 
           if (!creds?.data || creds.error) {
             // Instance exists but no chat credentials — needs upgrade
@@ -80,7 +80,7 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
           }
 
           // Everything ready — navigate to full-screen chat view
-          route.navigate({ type: "kiloclaw" })
+          route.navigate({ type: "accureclaw" })
           dialog.clear()
         },
       },
@@ -90,10 +90,10 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
         name: "remote.toggle",
         title: "Toggle remote",
         desc: "Enable or disable remote session relay",
-        category: "Kilo",
+        category: "Accure",
         slashName: "remote",
-        enabled: isKiloConnected(),
-        hidden: !isKiloConnected(),
+        enabled: isAccureConnected(),
+        hidden: !isAccureConnected(),
         run: async () => {
           try {
             const current = await sdk.client.remote.status()
@@ -126,24 +126,24 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
 
       // /profile command
       {
-        name: "kilo.profile",
+        name: "accure.profile",
         title: "Profile",
-        desc: "View your Kilo Gateway profile",
-        category: "Kilo",
+        desc: "View your Accure Gateway profile",
+        category: "Accure",
         slashName: "profile",
         slashAliases: ["me", "whoami"],
-        enabled: isKiloConnected(),
-        hidden: !isKiloConnected(),
+        enabled: isAccureConnected(),
+        hidden: !isAccureConnected(),
         run: async () => {
           try {
             // Fetch profile and balance using server endpoint
-            const response = await sdk.client.kilo.profile()
+            const response = await sdk.client.accurecode.profile()
 
             if (response.error || !response.data) {
               dialog.replace(() => (
                 <DialogAlert
                   title="Error"
-                  message="Failed to fetch profile. Please ensure you're authenticated with Kilo Gateway."
+                  message="Failed to fetch profile. Please ensure you're authenticated with Accure Gateway."
                 />
               ))
               return
@@ -152,7 +152,9 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
             const { profile, balance, currentOrgId } = response.data
 
             // Show profile dialog with clickable usage link
-            dialog.replace(() => <DialogKiloProfile profile={profile} balance={balance} currentOrgId={currentOrgId} />)
+            dialog.replace(() => (
+              <DialogAccureProfile profile={profile} balance={balance} currentOrgId={currentOrgId} />
+            ))
           } catch (error) {
             dialog.replace(() => <DialogAlert title="Error" message={`Failed to fetch profile: ${error}`} />)
           }
@@ -162,10 +164,10 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
       ...(indexing()
         ? [
             {
-              name: "kilo.indexing",
+              name: "accure.indexing",
               title: "Indexing",
               desc: "Configure codebase indexing",
-              category: "Kilo",
+              category: "Accure",
               slashName: "indexing",
               slashAliases: ["index", "embedding"],
               run: () => {
@@ -177,24 +179,24 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
 
       // /teams command
       {
-        name: "kilo.teams",
+        name: "accure.teams",
         title: "Teams",
-        desc: "Switch between Kilo Gateway teams",
-        category: "Kilo",
+        desc: "Switch between Accure Gateway teams",
+        category: "Accure",
         slashName: "teams",
         slashAliases: ["team", "org", "orgs"],
-        enabled: isKiloConnected(),
-        hidden: !isKiloConnected(),
+        enabled: isAccureConnected(),
+        hidden: !isAccureConnected(),
         run: async () => {
           try {
             // Fetch profile to get organizations
-            const response = await sdk.client.kilo.profile()
+            const response = await sdk.client.accurecode.profile()
 
             if (response.error || !response.data) {
               dialog.replace(() => (
                 <DialogAlert
                   title="Error"
-                  message="Failed to fetch teams. Please ensure you're authenticated with Kilo Gateway."
+                  message="Failed to fetch teams. Please ensure you're authenticated with Accure Gateway."
                 />
               ))
               return
@@ -206,7 +208,7 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
               dialog.replace(() => (
                 <DialogAlert
                   title="No Teams Available"
-                  message="You're not a member of any teams.\nVisit https://app.kilo.ai to create or join a team."
+                  message="You're not a member of any teams.\nVisit https://app.accurecode.ai to create or join a team."
                 />
               ))
               return
@@ -214,13 +216,13 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
 
             // Show team selection dialog
             dialog.replace(() => (
-              <DialogKiloTeamSelect
+              <DialogAccureTeamSelect
                 organizations={profile.organizations!}
                 currentOrgId={currentOrgId}
                 onSelect={async (orgId) => {
                   try {
                     // Switch to team immediately using server endpoint
-                    await sdk.client.kilo.organization.set({
+                    await sdk.client.accurecode.organization.set({
                       organizationId: orgId,
                     })
 

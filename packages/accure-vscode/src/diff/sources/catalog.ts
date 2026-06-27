@@ -1,5 +1,5 @@
 import * as vscode from "vscode"
-import type { KiloConnectionService } from "../../services/cli-backend"
+import type { AccureConnectionService } from "../../services/cli-backend"
 import { GitOps } from "../../agent-manager/GitOps"
 import { resolveLocalDiffTarget } from "../shared/target"
 import { appendOutput, getWorkspaceRoot } from "../../review-utils"
@@ -68,7 +68,7 @@ export class DiffSourceCatalog implements vscode.Disposable {
   private branchGit: GitOps | undefined
   private branchOutput: vscode.OutputChannel | undefined
 
-  constructor(private readonly connection: KiloConnectionService) {}
+  constructor(private readonly connection: AccureConnectionService) {}
 
   listAvailable(ctx: PanelContext): DiffSourceDescriptor[] {
     if (ctx.hidePicker) return []
@@ -151,7 +151,7 @@ export class DiffSourceCatalog implements vscode.Disposable {
 
   private ensureBranchGit(): GitOps {
     if (this.branchGit) return this.branchGit
-    this.branchOutput = vscode.window.createOutputChannel("Kilo Diff: Branches")
+    this.branchOutput = vscode.window.createOutputChannel("Accure Diff: Branches")
     this.branchGit = new GitOps({ log: this.branchLog })
     return this.branchGit
   }

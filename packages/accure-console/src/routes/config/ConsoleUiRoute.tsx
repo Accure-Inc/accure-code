@@ -1,7 +1,7 @@
 import { Show } from "solid-js"
-import { Button } from "@kilocode/accure-web-ui/button"
-import { Card } from "@kilocode/accure-web-ui/card"
-import { Spinner } from "@kilocode/accure-web-ui/spinner"
+import { Button } from "@accurecode/accure-web-ui/button"
+import { Card } from "@accurecode/accure-web-ui/card"
+import { Spinner } from "@accurecode/accure-web-ui/spinner"
 import { CustomSelect, type SelectOption } from "../../components/CustomSelect"
 import { ConfigPage } from "./ConfigPage"
 import {
@@ -22,7 +22,7 @@ export function ConsoleUiRoute() {
   return (
     <ConfigPage
       title="Console UI"
-      description="Configure the local Kilo Console interface. These preferences are saved in your user config."
+      description="Configure the local Accure Console interface. These preferences are saved in your user config."
       actions={
         <>
           <Show when={state.configured()}>

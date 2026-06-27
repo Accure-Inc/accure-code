@@ -1,12 +1,12 @@
 import type * as vscode from "vscode"
-import type { KiloConnectionService } from "../services/cli-backend"
+import type { AccureConnectionService } from "../services/cli-backend"
 import { removeMarketplaceItemFromAllScopes, type MarketplaceRemoveContext } from "../services/marketplace/actions"
 import { MarketplaceInstaller } from "../services/marketplace/installer"
 import { MarketplacePaths } from "../services/marketplace/paths"
 import type { MarketplaceItemRef } from "../services/marketplace/types"
 
 export interface RemoveConfigItemContext {
-  connection: KiloConnectionService
+  connection: AccureConnectionService
   project: () => string | undefined
   directory: () => string
   refresh: () => Promise<void>

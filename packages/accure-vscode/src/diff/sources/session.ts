@@ -1,6 +1,6 @@
 import { createHash } from "crypto"
-import type { SnapshotFileDiff } from "@kilocode/sdk/v2/client"
-import { normalize, text } from "@kilocode/accure-ui/session-diff"
+import type { SnapshotFileDiff } from "@accurecode/sdk/v2/client"
+import { normalize, text } from "@accurecode/accure-ui/session-diff"
 import { encodeImageSide, imageMime } from "../shared/image"
 import type { DiffFile } from "../types"
 import type { DiffSource, DiffSourceDescriptor, DiffSourceFetch } from "./types"

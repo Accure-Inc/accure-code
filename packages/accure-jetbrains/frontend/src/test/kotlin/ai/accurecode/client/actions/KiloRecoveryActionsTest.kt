@@ -1,12 +1,12 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.session.SessionManager
-import ai.kilocode.client.testing.FakeWorkspaceRpcApi
-import ai.kilocode.rpc.dto.ConfigTargetDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.session.SessionManager
+import ai.accurecode.client.testing.FakeWorkspaceRpcApi
+import ai.accurecode.rpc.dto.ConfigTargetDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -22,7 +22,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Suppress("UnstableApiUsage")
-class KiloRecoveryActionsTest : BasePlatformTestCase() {
+class AccureRecoveryActionsTest : BasePlatformTestCase() {
     private lateinit var scope: CoroutineScope
     private lateinit var rpc: FakeWorkspaceRpcApi
 
@@ -31,8 +31,8 @@ class KiloRecoveryActionsTest : BasePlatformTestCase() {
         scope = CoroutineScope(SupervisorJob())
         rpc = FakeWorkspaceRpcApi()
         ApplicationManager.getApplication().replaceService(
-            KiloWorkspaceService::class.java,
-            KiloWorkspaceService(scope, rpc),
+            AccureWorkspaceService::class.java,
+            AccureWorkspaceService(scope, rpc),
             testRootDisposable,
         )
     }
@@ -46,7 +46,7 @@ class KiloRecoveryActionsTest : BasePlatformTestCase() {
     }
 
     fun `test restart action stays enabled for all app states`() {
-        val action = RestartKiloAction()
+        val action = RestartAccureAction()
         val event = event(action)
 
         update(action, event)
@@ -55,7 +55,7 @@ class KiloRecoveryActionsTest : BasePlatformTestCase() {
     }
 
     fun `test reinstall action stays enabled for all app states`() {
-        val action = ReinstallKiloAction()
+        val action = ReinstallAccureAction()
         val event = event(action)
 
         update(action, event)
@@ -64,74 +64,74 @@ class KiloRecoveryActionsTest : BasePlatformTestCase() {
     }
 
     fun `test cli group has visible menu text`() {
-        val xml = requireNotNull(javaClass.classLoader.getResourceAsStream("kilo.jetbrains.frontend.xml"))
+        val xml = requireNotNull(javaClass.classLoader.getResourceAsStream("accurecode.jetbrains.frontend.xml"))
             .bufferedReader()
             .use { it.readText() }
 
-        assertTrue(xml.contains("<group id=\"Kilo.CliGroup\" text=\"CLI\" popup=\"true\">"))
-        assertTrue(xml.contains("<reference ref=\"Kilo.Restart\"/>"))
-        assertTrue(xml.contains("<reference ref=\"Kilo.Reinstall\"/>"))
-        assertTrue(xml.contains("<group id=\"Kilo.OpenConfigGroup\" text=\"Config Files\" popup=\"true\">"))
-        assertTrue(xml.contains("<reference ref=\"Kilo.OpenConfigGroup\"/>"))
-        assertFalse(xml.contains("<action id=\"Kilo.ShowProfile\""))
-        assertFalse(xml.contains("<reference ref=\"Kilo.ShowProfile\"/>"))
+        assertTrue(xml.contains("<group id=\"Accure.CliGroup\" text=\"CLI\" popup=\"true\">"))
+        assertTrue(xml.contains("<reference ref=\"Accure.Restart\"/>"))
+        assertTrue(xml.contains("<reference ref=\"Accure.Reinstall\"/>"))
+        assertTrue(xml.contains("<group id=\"Accure.OpenConfigGroup\" text=\"Config Files\" popup=\"true\">"))
+        assertTrue(xml.contains("<reference ref=\"Accure.OpenConfigGroup\"/>"))
+        assertFalse(xml.contains("<action id=\"Accure.ShowProfile\""))
+        assertFalse(xml.contains("<reference ref=\"Accure.ShowProfile\"/>"))
     }
 
     fun `test local config action says open when target exists`() {
-        rpc.localConfigPath = "/test/.kilo/kilo.jsonc"
-        rpc.localConfigDisplayPath = "~/.kilo/kilo.jsonc"
+        rpc.localConfigPath = "/test/.accurecode/accure.jsonc"
+        rpc.localConfigDisplayPath = "~/.accurecode/accure.jsonc"
         rpc.localConfigExists = true
-        service().localConfig["/test"] = ConfigTargetDto("/test/.kilo/kilo.jsonc", "~/.kilo/kilo.jsonc", true)
+        service().localConfig["/test"] = ConfigTargetDto("/test/.accurecode/accure.jsonc", "~/.accurecode/accure.jsonc", true)
         val action = OpenLocalConfigAction()
         val event = event(action, workspace = workspace("/test"))
 
         update(action, event)
 
         assertTrue(event.presentation.isEnabled)
-        assertEquals("Open: local ~/.kilo/kilo.jsonc", event.presentation.text)
+        assertEquals("Open: local ~/.accurecode/accure.jsonc", event.presentation.text)
         assertEquals(0, rpc.localConfigPathCalls)
     }
 
     fun `test local config action says create when target is missing`() {
-        rpc.localConfigPath = "/test/.kilo/kilo.jsonc"
-        rpc.localConfigDisplayPath = "~/.kilo/kilo.jsonc"
+        rpc.localConfigPath = "/test/.accurecode/accure.jsonc"
+        rpc.localConfigDisplayPath = "~/.accurecode/accure.jsonc"
         rpc.localConfigExists = false
-        service().localConfig["/test"] = ConfigTargetDto("/test/.kilo/kilo.jsonc", "~/.kilo/kilo.jsonc", false)
+        service().localConfig["/test"] = ConfigTargetDto("/test/.accurecode/accure.jsonc", "~/.accurecode/accure.jsonc", false)
         val action = OpenLocalConfigAction()
         val event = event(action, workspace = workspace("/test"))
 
         update(action, event)
 
         assertTrue(event.presentation.isEnabled)
-        assertEquals("Create: local ~/.kilo/kilo.jsonc", event.presentation.text)
+        assertEquals("Create: local ~/.accurecode/accure.jsonc", event.presentation.text)
         assertEquals(0, rpc.localConfigPathCalls)
     }
 
     fun `test global config action says open when target exists`() {
-        rpc.globalConfigPath = "/config/kilo.jsonc"
-        rpc.globalConfigDisplayPath = "~/.config/kilo/kilo.jsonc"
+        rpc.globalConfigPath = "/config/accure.jsonc"
+        rpc.globalConfigDisplayPath = "~/.config/accure/accure.jsonc"
         rpc.globalConfigExists = true
-        cacheGlobal(ConfigTargetDto("/config/kilo.jsonc", "~/.config/kilo/kilo.jsonc", true))
+        cacheGlobal(ConfigTargetDto("/config/accure.jsonc", "~/.config/accure/accure.jsonc", true))
         val action = OpenGlobalConfigAction()
         val event = event(action)
 
         update(action, event)
 
-        assertEquals("Open: global ~/.config/kilo/kilo.jsonc", event.presentation.text)
+        assertEquals("Open: global ~/.config/accure/accure.jsonc", event.presentation.text)
         assertEquals(0, rpc.globalConfigPathCalls)
     }
 
     fun `test global config action says create when target is missing`() {
-        rpc.globalConfigPath = "/config/kilo.jsonc"
-        rpc.globalConfigDisplayPath = "~/.config/kilo/kilo.jsonc"
+        rpc.globalConfigPath = "/config/accure.jsonc"
+        rpc.globalConfigDisplayPath = "~/.config/accure/accure.jsonc"
         rpc.globalConfigExists = false
-        cacheGlobal(ConfigTargetDto("/config/kilo.jsonc", "~/.config/kilo/kilo.jsonc", false))
+        cacheGlobal(ConfigTargetDto("/config/accure.jsonc", "~/.config/accure/accure.jsonc", false))
         val action = OpenGlobalConfigAction()
         val event = event(action)
 
         update(action, event)
 
-        assertEquals("Create: global ~/.config/kilo/kilo.jsonc", event.presentation.text)
+        assertEquals("Create: global ~/.config/accure/accure.jsonc", event.presentation.text)
         assertEquals(0, rpc.globalConfigPathCalls)
     }
 
@@ -157,10 +157,10 @@ class KiloRecoveryActionsTest : BasePlatformTestCase() {
         }.get()
     }
 
-    private fun service(): KiloWorkspaceService = ApplicationManager.getApplication().getService(KiloWorkspaceService::class.java)
+    private fun service(): AccureWorkspaceService = ApplicationManager.getApplication().getService(AccureWorkspaceService::class.java)
 
     private fun cacheGlobal(target: ConfigTargetDto) {
-        val field = KiloWorkspaceService::class.java.getDeclaredField("globalConfig")
+        val field = AccureWorkspaceService::class.java.getDeclaredField("globalConfig")
         field.isAccessible = true
         field.set(service(), target)
     }
@@ -178,7 +178,7 @@ class KiloRecoveryActionsTest : BasePlatformTestCase() {
     private fun workspace(dir: String): Workspace {
         return Workspace(
             dir,
-            MutableStateFlow(KiloWorkspaceStateDto(KiloWorkspaceStatusDto.READY)),
+            MutableStateFlow(AccureWorkspaceStateDto(AccureWorkspaceStatusDto.READY)),
             reload = {},
         )
     }

@@ -1,11 +1,11 @@
-package ai.kilocode
+package ai.accurecode
 
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.extensions.PluginDescriptor
 import com.intellij.openapi.extensions.PluginId
 
-object KiloPlugin {
-    const val ID = "ai.kilocode.jetbrains"
+object AccurePlugin {
+    const val ID = "ai.accurecode.jetbrains"
 
     val id: PluginId = PluginId.getId(ID)
 

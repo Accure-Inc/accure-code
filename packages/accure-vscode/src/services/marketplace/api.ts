@@ -1,7 +1,7 @@
 import { parse as parseYaml } from "yaml"
 import type { MarketplaceItem, McpMarketplaceItem, AgentMarketplaceItem, SkillMarketplaceItem, RawSkill } from "./types"
 
-const BASE_URL = "https://api.kilo.ai/api/marketplace"
+const BASE_URL = "https://api.accurecode.ai/api/marketplace"
 const CACHE_TTL = 300_000
 const MAX_RETRIES = 3
 const TIMEOUT = 10_000

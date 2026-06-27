@@ -1,11 +1,11 @@
-package ai.kilocode.client.settings.auth
+package ai.accurecode.client.settings.auth
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.ui.HoverIcon
-import ai.kilocode.client.ui.RoundedContentPanel
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.util.UiTimerSource
-import ai.kilocode.client.util.UiTimers
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.ui.HoverIcon
+import ai.accurecode.client.ui.RoundedContentPanel
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.util.UiTimerSource
+import ai.accurecode.client.util.UiTimers
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.ui.popup.Balloon
@@ -66,22 +66,22 @@ internal class DeviceOAuthPanel(
     val qrLabel = JBLabel().apply {
         horizontalAlignment = SwingConstants.CENTER
         name = "$prefix.qr"
-        accessibleContext.accessibleName = KiloBundle.message("profile.login.qr")
+        accessibleContext.accessibleName = AccureBundle.message("profile.login.qr")
         accessibleContext.accessibleDescription = copy.qrDescription
     }
 
-    private val openBtn = JButton(KiloBundle.message("profile.login.openBrowser"))
-    private val cancelBtn = JButton(KiloBundle.message("profile.login.cancel")).also { it.addActionListener { cancel() } }
+    private val openBtn = JButton(AccureBundle.message("profile.login.openBrowser"))
+    private val cancelBtn = JButton(AccureBundle.message("profile.login.cancel")).also { it.addActionListener { cancel() } }
     private val copyUrlBtn = HoverIcon().apply {
         icon = AllIcons.Actions.Copy
-        toolTipText = KiloBundle.message("profile.login.copyUrl")
+        toolTipText = AccureBundle.message("profile.login.copyUrl")
     }
     private val codePanel = RoundedContentPanel(UiStyle.Gap.sm(), UiStyle.Gap.md()).apply {
         name = "$prefix.codePanel"
         addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
                 val c = code ?: return
-                copyToClipboard(c, KiloBundle.message("profile.login.codeCopied"), this@DeviceOAuthPanel)
+                copyToClipboard(c, AccureBundle.message("profile.login.codeCopied"), this@DeviceOAuthPanel)
             }
         })
     }
@@ -89,11 +89,11 @@ internal class DeviceOAuthPanel(
         horizontalAlignment = SwingConstants.CENTER
         font = UiStyle.Fonts.large()
     }
-    private val codeHint = JBLabel(KiloBundle.message("profile.login.clickToCopy")).apply {
+    private val codeHint = JBLabel(AccureBundle.message("profile.login.clickToCopy")).apply {
         foreground = UiStyle.Colors.weak()
         horizontalAlignment = SwingConstants.CENTER
     }
-    private val waitIcon = AsyncProcessIcon("KiloOAuth")
+    private val waitIcon = AsyncProcessIcon("AccureOAuth")
     private val waitLabel = JBLabel().apply {
         foreground = UiStyle.Colors.weak()
     }
@@ -117,10 +117,10 @@ internal class DeviceOAuthPanel(
             font = UiStyle.Fonts.heading()
             horizontalAlignment = SwingConstants.CENTER
         }, gbc(row++))
-        add(stepLabel(KiloBundle.message("profile.login.step.one"), KiloBundle.message("profile.login.step.url")), gbc(row++, UiStyle.Gap.md()))
+        add(stepLabel(AccureBundle.message("profile.login.step.one"), AccureBundle.message("profile.login.step.url")), gbc(row++, UiStyle.Gap.md()))
         add(urlRow(), gbc(row++, UiStyle.Gap.sm()))
         add(qrLabel, gbc(row++, UiStyle.Gap.md()).centered())
-        val s2 = stepLabel(KiloBundle.message("profile.login.step.two"), KiloBundle.message("profile.login.step.code"))
+        val s2 = stepLabel(AccureBundle.message("profile.login.step.two"), AccureBundle.message("profile.login.step.code"))
         step2 = s2
         add(s2, gbc(row++, UiStyle.Gap.md()))
         add(codePanel, gbc(row++, UiStyle.Gap.sm()))
@@ -158,7 +158,7 @@ internal class DeviceOAuthPanel(
             openBtn.actionListeners.toList().forEach { openBtn.removeActionListener(it) }
             openBtn.addActionListener { browse(info.url) }
             copyUrlBtn.actionListeners.toList().forEach { copyUrlBtn.removeActionListener(it) }
-            copyUrlBtn.addActionListener { copyToClipboard(info.url, KiloBundle.message("profile.login.urlCopied"), copyUrlBtn) }
+            copyUrlBtn.addActionListener { copyToClipboard(info.url, AccureBundle.message("profile.login.urlCopied"), copyUrlBtn) }
             qrLabel.icon = try {
                 QrCode.icon(info.url, JBUI.scale(160))
             } catch (_: Exception) {
@@ -188,7 +188,7 @@ internal class DeviceOAuthPanel(
         val remain = (expires - elapsed).coerceAtLeast(0)
         val min = remain / 60
         val sec = remain % 60
-        waitLabel.text = KiloBundle.message("profile.login.waitingTimed", "$min:${sec.toString().padStart(2, '0')}")
+        waitLabel.text = AccureBundle.message("profile.login.waitingTimed", "$min:${sec.toString().padStart(2, '0')}")
     }
 
     private fun gbc(y: Int, top: Int = 0) = GridBagConstraints().apply {

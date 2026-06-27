@@ -5,7 +5,7 @@ import { AgentSideConnection, ndJsonStream } from "@agentclientprotocol/sdk"
 import { ACP } from "@/acp/agent"
 import { Server } from "@/server/server"
 import { ServerAuth } from "@/server/auth"
-import { createKiloClient } from "@kilocode/sdk/v2"
+import { createAccureClient } from "@accurecode/sdk/v2"
 import { withNetworkOptions, resolveNetworkOptions } from "../network"
 
 const log = Log.create({ service: "acp-command" })
@@ -21,11 +21,11 @@ export const AcpCommand = effectCmd({
     })
   },
   handler: Effect.fn("Cli.acp")(function* (args) {
-    process.env.KILO_CLIENT = "acp"
+    process.env.ACCURECODE_CLIENT = "acp"
     const opts = yield* resolveNetworkOptions(args)
     const server = yield* Effect.promise(() => Server.listen(opts))
 
-    const sdk = createKiloClient({
+    const sdk = createAccureClient({
       baseUrl: `http://${server.hostname}:${server.port}`,
       headers: ServerAuth.headers(),
     })

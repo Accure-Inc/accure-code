@@ -1,20 +1,20 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.session.model.SessionModel
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.session.model.FileAttachment
-import ai.kilocode.client.session.model.ToolCallRef
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.LoginRequiredView
-import ai.kilocode.client.session.views.MessageView
-import ai.kilocode.client.session.views.permission.PermissionView
-import ai.kilocode.client.session.views.question.QuestionView
-import ai.kilocode.client.session.views.TurnView
-import ai.kilocode.client.session.views.base.PartView
+import ai.accurecode.client.session.model.SessionModel
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.session.model.FileAttachment
+import ai.accurecode.client.session.model.ToolCallRef
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.LoginRequiredView
+import ai.accurecode.client.session.views.MessageView
+import ai.accurecode.client.session.views.permission.PermissionView
+import ai.accurecode.client.session.views.question.QuestionView
+import ai.accurecode.client.session.views.TurnView
+import ai.accurecode.client.session.views.base.PartView
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
 import com.intellij.util.ui.JBUI
@@ -54,7 +54,7 @@ class SessionMessageListPanel(
     private val openFile: (String) -> Unit,
     private val openUrl: (String) -> Unit = {},
     private val selection: SessionSelection? = null,
-    private val openAttachment: (String, FileAttachment) -> Unit = { _, item -> ai.kilocode.client.session.views.AttachmentView.openDefault(item, openFile, openUrl) },
+    private val openAttachment: (String, FileAttachment) -> Unit = { _, item -> ai.accurecode.client.session.views.AttachmentView.openDefault(item, openFile, openUrl) },
     private val repo: String? = null,
     private val resize: ((JComponent, () -> Unit) -> Unit)? = null,
 ) : SessionLayoutPanel(
@@ -192,7 +192,7 @@ class SessionMessageListPanel(
 
     // ------ private event handlers ------
 
-    private fun onTurnAdded(turn: ai.kilocode.client.session.model.Turn) {
+    private fun onTurnAdded(turn: ai.accurecode.client.session.model.Turn) {
         val tv = TurnView(turn.id, openFile, style, openUrl, selection, openAttachment, resize, repo, ::hover)
         turnViews[turn.id] = tv
         for (msgId in turn.messageIds) {
@@ -206,7 +206,7 @@ class SessionMessageListPanel(
         refresh()
     }
 
-    private fun onTurnUpdated(turn: ai.kilocode.client.session.model.Turn) {
+    private fun onTurnUpdated(turn: ai.accurecode.client.session.model.Turn) {
         val tv = turnViews[turn.id] ?: return
         val prev = tv.messageIds().toSet()
         val next = turn.messageIds

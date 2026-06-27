@@ -1,12 +1,12 @@
-import { createKiloClient, type KiloClient } from "@kilocode/sdk/v2"
+import { createAccureClient, type AccureClient } from "@accurecode/sdk/v2"
 import { UI } from "@/cli/ui"
-import { DaemonClient } from "@/kilocode/daemon/client"
-import { isBuiltinCommand, type BuiltinCommand } from "@/kilocode/session/builtin-commands"
+import { DaemonClient } from "@/accurecode/daemon/client"
+import { isBuiltinCommand, type BuiltinCommand } from "@/accurecode/session/builtin-commands"
 import { Provider } from "@/provider/provider"
 import { Filesystem } from "@/util/filesystem"
 
-export namespace KiloRun {
-  export async function resolveBuiltin(sdk: KiloClient, command?: string, directory?: string) {
+export namespace AccureRun {
+  export async function resolveBuiltin(sdk: AccureClient, command?: string, directory?: string) {
     if (!isBuiltinCommand(command)) return
     const result = await sdk.command.list({ directory })
     if (result.error) return
@@ -22,7 +22,7 @@ export namespace KiloRun {
   }
 
   export async function runBuiltin(
-    sdk: KiloClient,
+    sdk: AccureClient,
     sessionID: string,
     command: BuiltinCommand,
     model?: string,
@@ -48,17 +48,17 @@ export namespace KiloRun {
   }
 }
 
-export namespace KiloRunDaemon {
+export namespace AccureRunDaemon {
   export type Input = {
     directory?: string
-    execute: (client: KiloClient) => Promise<void>
+    execute: (client: AccureClient) => Promise<void>
   }
 
   export async function attach(input: Input) {
     const daemon = await DaemonClient.maybe()
     if (!daemon) return false
     const dir = input.directory ?? Filesystem.resolve(process.cwd())
-    const client = createKiloClient({ baseUrl: daemon.url, directory: dir, headers: daemon.headers })
+    const client = createAccureClient({ baseUrl: daemon.url, directory: dir, headers: daemon.headers })
     await input.execute(client)
     return true
   }

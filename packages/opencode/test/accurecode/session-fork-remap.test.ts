@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { Effect } from "effect"
-import { createKiloClient } from "@kilocode/sdk/v2/client"
+import { createAccureClient } from "@accurecode/sdk/v2/client"
 import { provideTestInstance } from "../fixture/fixture"
 import { Server } from "../../src/server/server"
 import { Session } from "../../src/session/session"
@@ -159,7 +159,7 @@ describe("Session.fork task detachment", () => {
           await sessions.updatePart(taskPart({ messageID: assistant, sessionID: parent.id, childSessionID: child.id }))
           const before = await sessions.list()
 
-          const client = createKiloClient({
+          const client = createAccureClient({
             baseUrl: "http://localhost",
             directory: tmp.path,
             fetch: ((request: Request) => Server.Default().app.fetch(request)) as unknown as typeof fetch,
@@ -306,8 +306,8 @@ describe("Session.fork task detachment", () => {
   test(
     "preserves workspace sync event sequencing in the atomic copy",
     async () => {
-      const flag = Flag.KILO_EXPERIMENTAL_WORKSPACES
-      Flag.KILO_EXPERIMENTAL_WORKSPACES = true
+      const flag = Flag.ACCURECODE_EXPERIMENTAL_WORKSPACES
+      Flag.ACCURECODE_EXPERIMENTAL_WORKSPACES = true
       try {
         await using tmp = await tmpdir({ git: true })
         await provideTestInstance({
@@ -349,7 +349,7 @@ describe("Session.fork task detachment", () => {
           },
         })
       } finally {
-        Flag.KILO_EXPERIMENTAL_WORKSPACES = flag
+        Flag.ACCURECODE_EXPERIMENTAL_WORKSPACES = flag
       }
     },
     { timeout: 30000 },

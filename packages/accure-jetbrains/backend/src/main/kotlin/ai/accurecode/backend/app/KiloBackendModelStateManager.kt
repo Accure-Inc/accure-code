@@ -1,12 +1,12 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.backend.cli.KiloCliDataParser
-import ai.kilocode.log.KiloLog
-import ai.kilocode.rpc.dto.ModelFavoriteUpdateDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.ModelSelectionUpdateDto
-import ai.kilocode.rpc.dto.ModelStateDto
-import ai.kilocode.rpc.dto.ModelVariantUpdateDto
+import ai.accurecode.backend.cli.AccureCliDataParser
+import ai.accurecode.log.AccureLog
+import ai.accurecode.rpc.dto.ModelFavoriteUpdateDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.ModelSelectionUpdateDto
+import ai.accurecode.rpc.dto.ModelStateDto
+import ai.accurecode.rpc.dto.ModelVariantUpdateDto
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import okhttp3.OkHttpClient
@@ -18,11 +18,11 @@ import kotlin.io.path.exists
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
 
-class KiloBackendModelStateManager(
-    private val log: KiloLog,
+class AccureBackendModelStateManager(
+    private val log: AccureLog,
 ) {
     companion object {
-        private val DEFAULT_DIR = Path.of(System.getProperty("user.home"), ".local", "state", "kilo")
+        private val DEFAULT_DIR = Path.of(System.getProperty("user.home"), ".local", "state", "accure")
     }
 
     private val mutex = Mutex()
@@ -44,13 +44,13 @@ class KiloBackendModelStateManager(
     }
 
     suspend fun state(): ModelStateDto = mutex.withLock {
-        KiloCliDataParser.parseModelState(read().orEmpty())
+        AccureCliDataParser.parseModelState(read().orEmpty())
     }
 
     suspend fun favorite(update: ModelFavoriteUpdateDto): ModelStateDto = mutex.withLock {
         val raw = read()
         val key = update.providerID to update.modelID
-        val state = KiloCliDataParser.parseModelState(raw.orEmpty())
+        val state = AccureCliDataParser.parseModelState(raw.orEmpty())
         val current = state.favorite
         val exists = current.any { it.providerID to it.modelID == key }
         val next = when (update.action) {
@@ -59,32 +59,32 @@ class KiloBackendModelStateManager(
             else -> current
         }
         val updated = state.copy(favorite = next)
-        write(KiloCliDataParser.buildModelStateJson(raw, updated))
+        write(AccureCliDataParser.buildModelStateJson(raw, updated))
         updated
     }
 
     suspend fun selection(update: ModelSelectionUpdateDto): ModelStateDto = mutex.withLock {
         val raw = read()
-        val state = KiloCliDataParser.parseModelState(raw.orEmpty())
+        val state = AccureCliDataParser.parseModelState(raw.orEmpty())
         val next = state.model + (update.agent to ModelSelectionDto(update.providerID, update.modelID))
         val updated = state.copy(model = next)
-        write(KiloCliDataParser.buildModelStateJson(raw, updated))
+        write(AccureCliDataParser.buildModelStateJson(raw, updated))
         updated
     }
 
     suspend fun clear(agent: String): ModelStateDto = mutex.withLock {
         val raw = read()
-        val state = KiloCliDataParser.parseModelState(raw.orEmpty())
+        val state = AccureCliDataParser.parseModelState(raw.orEmpty())
         val updated = state.copy(model = state.model - agent)
-        write(KiloCliDataParser.buildModelStateJson(raw, updated))
+        write(AccureCliDataParser.buildModelStateJson(raw, updated))
         updated
     }
 
     suspend fun variant(update: ModelVariantUpdateDto): ModelStateDto = mutex.withLock {
         val raw = read()
-        val state = KiloCliDataParser.parseModelState(raw.orEmpty())
+        val state = AccureCliDataParser.parseModelState(raw.orEmpty())
         val updated = state.copy(variant = state.variant + (update.key to update.value))
-        write(KiloCliDataParser.buildModelStateJson(raw, updated))
+        write(AccureCliDataParser.buildModelStateJson(raw, updated))
         updated
     }
 
@@ -117,7 +117,7 @@ class KiloBackendModelStateManager(
                     return null
                 }
                 val raw = response.body?.string() ?: return null
-                val dir = KiloCliDataParser.parsePathState(raw)?.let(Path::of) ?: DEFAULT_DIR
+                val dir = AccureCliDataParser.parsePathState(raw)?.let(Path::of) ?: DEFAULT_DIR
                 Files.createDirectories(dir)
                 dir.resolve("model.json").also { file = it }
             }

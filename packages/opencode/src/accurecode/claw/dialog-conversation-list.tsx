@@ -1,5 +1,5 @@
 /**
- * Conversation selector for the KiloClaw chat.
+ * Conversation selector for the AccureClaw chat.
  *
  * Mirrors the session-list dialog (`cli/cmd/tui/component/dialog-session-list.tsx`):
  *   - DialogSelect-backed list, grouped by date bucket
@@ -59,7 +59,7 @@ export function DialogConversationList(props: Props) {
 
   return (
     <DialogSelect
-      title="KiloClaw Conversations"
+      title="AccureClaw Conversations"
       options={options()}
       current={props.chat.activeConversationId() ?? undefined}
       onMove={() => setToDelete(undefined)}
@@ -113,7 +113,7 @@ export function DialogConversationList(props: Props) {
           },
         },
         {
-          command: "kiloclaw.conversation.new",
+          command: "accureclaw.conversation.new",
           title: "new",
           side: "right",
           onTrigger: async () => {
@@ -122,7 +122,7 @@ export function DialogConversationList(props: Props) {
           },
         },
       ]}
-      bindings={[{ key: "ctrl+n", cmd: "kiloclaw.conversation.new" }]}
+      bindings={[{ key: "ctrl+n", cmd: "accureclaw.conversation.new" }]}
     />
   )
 }

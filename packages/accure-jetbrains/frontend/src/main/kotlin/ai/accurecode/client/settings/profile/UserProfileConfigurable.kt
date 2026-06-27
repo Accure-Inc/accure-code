@@ -1,8 +1,8 @@
-package ai.kilocode.client.settings.profile
+package ai.accurecode.client.settings.profile
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.settings.base.KiloReadyConfigurable
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.settings.base.AccureReadyConfigurable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.components.service
@@ -15,15 +15,15 @@ import kotlinx.coroutines.withContext
 import javax.swing.JComponent
 
 /**
- * Settings panel for Kilo user profile.
+ * Settings panel for Accure user profile.
  *
- * Located at Settings -> Tools -> Kilo -> User Profile.
+ * Located at Settings -> Tools -> Accure -> User Profile.
  *
  * Shows login / logout, current balance, personal/org account selector,
- * and a link to the Kilo dashboard. This is a status/action panel — it
+ * and a link to the Accure dashboard. This is a status/action panel — it
  * has no persistent settings, so [isModified] always returns false.
  */
-class UserProfileConfigurable : KiloReadyConfigurable() {
+class UserProfileConfigurable : AccureReadyConfigurable() {
 
     private var ui: ProfileUi? = null
     private var watchJob: Job? = null
@@ -31,7 +31,7 @@ class UserProfileConfigurable : KiloReadyConfigurable() {
 
     override fun getId(): String = ID
 
-    override fun getDisplayName(): String = KiloBundle.message("settings.profile.displayName")
+    override fun getDisplayName(): String = AccureBundle.message("settings.profile.displayName")
 
     override fun preferredReady(): JComponent? = ui?.preferredFocus()
 
@@ -65,12 +65,12 @@ class UserProfileConfigurable : KiloReadyConfigurable() {
     }
 
     private fun buildPanel(cs: CoroutineScope): ProfileUi {
-        val app = service<KiloAppService>()
+        val app = service<AccureAppService>()
         return ProfileUi(app.state.value.profile, app.state.value.status, cs)
     }
 
     private fun startWatching(cs: CoroutineScope, panel: ProfileUi) {
-        val app = service<KiloAppService>()
+        val app = service<AccureAppService>()
         watchJob = cs.launch {
             app.state.collect { state ->
                 withContext(edt) {
@@ -91,7 +91,7 @@ class UserProfileConfigurable : KiloReadyConfigurable() {
     }
 
     companion object {
-        const val ID = "ai.kilocode.jetbrains.settings.profile"
-        const val FOCUS_ACCOUNT_COMBO = "kilo.profile.account.combo"
+        const val ID = "ai.accurecode.jetbrains.settings.profile"
+        const val FOCUS_ACCOUNT_COMBO = "accure.profile.account.combo"
     }
 }

@@ -12,7 +12,7 @@ import { testEffect } from "../lib/effect"
 
 void Log.init({ print: false })
 
-const originalWorkspaces = Flag.KILO_EXPERIMENTAL_WORKSPACES
+const originalWorkspaces = Flag.ACCURECODE_EXPERIMENTAL_WORKSPACES
 const context = Context.empty() as Context.Context<unknown>
 const it = testEffect(Session.defaultLayer)
 
@@ -22,7 +22,7 @@ function app() {
 
 afterEach(async () => {
   mock.restore()
-  Flag.KILO_EXPERIMENTAL_WORKSPACES = originalWorkspaces
+  Flag.ACCURECODE_EXPERIMENTAL_WORKSPACES = originalWorkspaces
   await disposeAllInstances()
   await resetDatabase()
 })
@@ -32,9 +32,9 @@ describe("sync HttpApi", () => {
     "serves sync routes",
     () =>
       Effect.gen(function* () {
-        Flag.KILO_EXPERIMENTAL_WORKSPACES = true
+        Flag.ACCURECODE_EXPERIMENTAL_WORKSPACES = true
         const tmp = yield* TestInstance
-        const headers = { "x-kilo-directory": tmp.directory, "content-type": "application/json" }
+        const headers = { "x-accure-directory": tmp.directory, "content-type": "application/json" }
         const info = spyOn(Log.create({ service: "server.sync" }), "info")
         const session = yield* Session.use.create({ title: "sync" })
 
@@ -96,7 +96,7 @@ describe("sync HttpApi", () => {
     () =>
       Effect.gen(function* () {
         const tmp = yield* TestInstance
-        const headers = { "x-kilo-directory": tmp.directory, "content-type": "application/json" }
+        const headers = { "x-accure-directory": tmp.directory, "content-type": "application/json" }
         const cases = [
           {
             path: SyncPaths.history,
@@ -147,7 +147,7 @@ describe("sync HttpApi", () => {
           HttpApiApp.webHandler().handler(
             new Request(`http://localhost${SyncPaths.history}`, {
               method: "POST",
-              headers: { "x-kilo-directory": tmp.directory, "content-type": "application/json" },
+              headers: { "x-accure-directory": tmp.directory, "content-type": "application/json" },
               body: JSON.stringify({ aggregate: -1 }),
             }),
             context,

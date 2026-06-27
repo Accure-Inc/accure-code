@@ -1,4 +1,4 @@
-import type { AuthOAuthResult, Hooks } from "@kilocode/plugin"
+import type { AuthOAuthResult, Hooks } from "@accurecode/plugin"
 import { serviceUse } from "@/effect/service-use"
 import { Auth } from "@/auth"
 import { InstanceState } from "@/effect/instance-state"
@@ -7,10 +7,10 @@ import { Plugin } from "../plugin"
 import { ProviderID } from "./schema"
 import { Array as Arr, Effect, Layer, Record, Result, Context, Schema } from "effect"
 
-// kilocode_change start
-import { Telemetry } from "@kilocode/accure-telemetry"
+// accurecode_change start
+import { Telemetry } from "@accurecode/accure-telemetry"
 import { ModelCache } from "./model-cache"
-// kilocode_change end
+// accurecode_change end
 
 const When = Schema.Struct({
   key: Schema.String,
@@ -110,14 +110,14 @@ export class Service extends Context.Service<Service, Interface>()("@opencode/Pr
 
 export const use = serviceUse(Service)
 
-// kilocode_change start
+// accurecode_change start
 export const layer: Layer.Layer<Service, never, Auth.Service | Plugin.Service | ModelCache.Service> = Layer.effect(
   Service,
   Effect.gen(function* () {
     const auth = yield* Auth.Service
     const plugin = yield* Plugin.Service
     const cache = yield* ModelCache.Service
-    // kilocode_change end
+    // accurecode_change end
     const state = yield* InstanceState.make<State>(
       Effect.fn("ProviderAuth.state")(function* () {
         const plugins = yield* plugin.list()
@@ -224,8 +224,8 @@ export const layer: Layer.Layer<Service, never, Auth.Service | Plugin.Service | 
         })
       }
 
-      // kilocode_change start - Update telemetry identity on Kilo auth
-      if (input.providerID === "kilo") {
+      // accurecode_change start - Update telemetry identity on Accure auth
+      if (input.providerID === "accure") {
         const info = yield* auth.get(input.providerID)
         if (info) {
           const token = info.type === "oauth" ? info.access : info.type === "api" ? info.key : null
@@ -235,14 +235,14 @@ export const layer: Layer.Layer<Service, never, Auth.Service | Plugin.Service | 
       }
       Telemetry.trackAuthSuccess(input.providerID)
       yield* cache.clear(input.providerID)
-      // kilocode_change end
+      // accurecode_change end
     })
 
     return Service.of({ methods, authorize, callback })
   }),
 )
 
-// kilocode_change start
+// accurecode_change start
 export const defaultLayer = Layer.suspend(() =>
   layer.pipe(
     Layer.provide(Auth.defaultLayer),
@@ -250,6 +250,6 @@ export const defaultLayer = Layer.suspend(() =>
     Layer.provide(ModelCache.defaultLayer),
   ),
 )
-// kilocode_change end
+// accurecode_change end
 
 export * as ProviderAuth from "./auth"

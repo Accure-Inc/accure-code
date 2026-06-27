@@ -1,12 +1,12 @@
 import { describe, test, expect } from "bun:test"
 import path from "path"
-import { generateHelp, generateCommandTable } from "../../src/kilocode/help"
+import { generateHelp, generateCommandTable } from "../../src/accurecode/help"
 import { AcpCommand } from "../../src/cli/cmd/acp"
 import { McpCommand } from "../../src/cli/cmd/mcp"
 import { RunCommand } from "../../src/cli/cmd/run"
 import { GenerateCommand } from "../../src/cli/cmd/generate"
 import { DebugCommand } from "../../src/cli/cmd/debug"
-import { ProvidersCommand } from "../../src/cli/cmd/providers" // kilocode_change — upstream renamed auth → providers
+import { ProvidersCommand } from "../../src/cli/cmd/providers" // accurecode_change — upstream renamed auth → providers
 import { AgentCommand } from "../../src/cli/cmd/agent"
 import { UpgradeCommand } from "../../src/cli/cmd/upgrade"
 import { UninstallCommand } from "../../src/cli/cmd/uninstall"
@@ -22,23 +22,23 @@ import { RemoteCommand } from "../../src/cli/cmd/remote"
 import { ConfigCommand as ConfigCLICommand } from "../../src/cli/cmd/config"
 import { PluginCommand } from "../../src/cli/cmd/plug"
 import { DbCommand } from "../../src/cli/cmd/db"
-import { HelpCommand } from "../../src/kilocode/help-command"
-import { ProfileCommand } from "../../src/kilocode/cli/cmd/profile"
-import { DaemonCommand } from "../../src/kilocode/cli/cmd/daemon"
-import { KiloConsoleCommand } from "../../src/kilocode/cli/cmd/console"
+import { HelpCommand } from "../../src/accurecode/help-command"
+import { ProfileCommand } from "../../src/accurecode/cli/cmd/profile"
+import { DaemonCommand } from "../../src/accurecode/cli/cmd/daemon"
+import { AccureConsoleCommand } from "../../src/accurecode/cli/cmd/console"
 
 // Stand-in for TuiThreadCommand — the real one imports @opentui/solid which
 // doesn't resolve in the test environment. Only command/describe matter here.
 const TuiStub = {
   command: "$0 [project]",
-  describe: "start kilo tui",
+  describe: "start accure tui",
   handler() {},
 }
 
 // Stand-in for AttachCommand — same reason as TuiStub above.
 const AttachStub = {
   command: "attach <url>",
-  describe: "attach to a running kilo server",
+  describe: "attach to a running accure server",
   handler() {},
 }
 
@@ -75,28 +75,28 @@ const commands = [
   PluginCommand,
   ProfileCommand,
   DaemonCommand,
-  KiloConsoleCommand,
+  AccureConsoleCommand,
   HelpCommand,
   CompletionStub,
 ] as any[]
 
-describe("kilo help --all (markdown)", () => {
+describe("accure help --all (markdown)", () => {
   test("contains ## heading for each known top-level command", async () => {
     const output = await generateHelp({ all: true, format: "md", commands })
     for (const cmd of ["run", "auth", "debug", "mcp", "session", "agent", "profile"]) {
-      expect(output).toContain(`## kilo ${cmd}`)
+      expect(output).toContain(`## accure ${cmd}`)
     }
   })
 
   test("contains headings for nested subcommands", async () => {
     const output = await generateHelp({ all: true, format: "md", commands })
-    expect(output).toContain("kilo auth login")
-    expect(output).toContain("kilo auth logout")
-    expect(output).toContain("kilo debug config")
+    expect(output).toContain("accure auth login")
+    expect(output).toContain("accure auth logout")
+    expect(output).toContain("accure debug config")
   })
 })
 
-describe("kilo help --all (text)", () => {
+describe("accure help --all (text)", () => {
   test("does NOT contain Markdown ## headings or triple-backtick fences", async () => {
     const output = await generateHelp({ all: true, format: "text", commands })
     expect(output).not.toMatch(/^##\s/m)
@@ -106,35 +106,35 @@ describe("kilo help --all (text)", () => {
   test("still contains each command name", async () => {
     const output = await generateHelp({ all: true, format: "text", commands })
     for (const cmd of ["run", "auth", "debug", "mcp", "session", "agent", "profile"]) {
-      expect(output).toContain(`kilo ${cmd}`)
+      expect(output).toContain(`accure ${cmd}`)
     }
   })
 })
 
-describe("kilo help <command>", () => {
-  test("kilo help auth contains auth subcommand headings", async () => {
+describe("accure help <command>", () => {
+  test("accure help auth contains auth subcommand headings", async () => {
     const output = await generateHelp({ command: "auth", format: "md", commands })
-    expect(output).toContain("kilo auth login")
-    expect(output).toContain("kilo auth logout")
-    expect(output).toContain("kilo auth list")
+    expect(output).toContain("accure auth login")
+    expect(output).toContain("accure auth logout")
+    expect(output).toContain("accure auth list")
   })
 
-  test("kilo help auth does NOT contain run or debug headings", async () => {
+  test("accure help auth does NOT contain run or debug headings", async () => {
     const output = await generateHelp({ command: "auth", format: "md", commands })
-    expect(output).not.toContain("## kilo run")
-    expect(output).not.toContain("## kilo debug")
+    expect(output).not.toContain("## accure run")
+    expect(output).not.toContain("## accure debug")
   })
 
   test("documents console stop and foreground mode", async () => {
     const output = await generateHelp({ command: "console", format: "md", commands })
-    expect(output).toContain("kilo console stop")
+    expect(output).toContain("accure console stop")
     expect(output).toContain("--foreground")
     expect(output).toContain("-f")
   })
 
   test("documents daemon foreground mode", async () => {
     const output = await generateHelp({ command: "daemon", format: "md", commands })
-    expect(output).toContain("kilo daemon start")
+    expect(output).toContain("accure daemon start")
     expect(output).toContain("--foreground")
     expect(output).toContain("-f")
   })
@@ -146,7 +146,7 @@ describe("edge cases", () => {
     expect(/\x1b\[/.test(output)).toBe(false)
   })
 
-  test("kilo help nonexistent throws unknown command error", async () => {
+  test("accure help nonexistent throws unknown command error", async () => {
     await expect(generateHelp({ command: "nonexistent", commands })).rejects.toThrow("unknown command")
   })
 })
@@ -160,13 +160,13 @@ describe("generateCommandTable", () => {
   test("contains rows for known commands", async () => {
     const output = await generateCommandTable({ commands })
     for (const name of ["run", "auth", "debug", "mcp"]) {
-      expect(output).toContain(`kilo ${name}`)
+      expect(output).toContain(`accure ${name}`)
     }
   })
 
-  test("default command appears as kilo [project], not $0", async () => {
+  test("default command appears as accure [project], not $0", async () => {
     const output = await generateCommandTable({ commands })
-    expect(output).toContain("`kilo [project]`")
+    expect(output).toContain("`accure [project]`")
     expect(output).not.toContain("$0")
   })
 
@@ -177,47 +177,47 @@ describe("generateCommandTable", () => {
 
   test("skips commands with no describe", async () => {
     const output = await generateCommandTable({ commands })
-    expect(output).not.toContain("`kilo generate`")
+    expect(output).not.toContain("`accure generate`")
   })
 
-  test("contains kilo completion row", async () => {
+  test("contains accure completion row", async () => {
     const output = await generateCommandTable({ commands })
-    expect(output).toContain("`kilo completion`")
+    expect(output).toContain("`accure completion`")
   })
 
-  test("contains kilo help row", async () => {
+  test("contains accure help row", async () => {
     const output = await generateCommandTable({ commands })
-    expect(output).toContain("`kilo help")
+    expect(output).toContain("`accure help")
   })
 })
 
-describe("Kilo CLI customizations are wired into index.ts", () => {
+describe("Accure CLI customizations are wired into index.ts", () => {
   const file = (rel: string) => Bun.file(path.resolve(import.meta.dir, rel)).text()
   const INDEX = "../../src/index.ts"
-  const SETUP = "../../src/kilocode/cli/setup.ts"
-  const BARREL = "../../src/kilocode/commands.ts"
+  const SETUP = "../../src/accurecode/cli/setup.ts"
+  const BARREL = "../../src/accurecode/commands.ts"
 
-  test("CLI is branded `kilo`, not `opencode`", async () => {
+  test("CLI is branded `accure`, not `opencode`", async () => {
     const index = await file(INDEX)
-    expect(index).toContain('.scriptName("kilo")')
+    expect(index).toContain('.scriptName("accure")')
     expect(index).not.toContain('.scriptName("opencode")')
   })
 
-  test("index.ts invokes the KiloCli integration points", async () => {
-    // These thin call-sites are the only wiring between upstream index.ts and the Kilo
-    // customizations in setup.ts. If a future upstream merge drops them, every Kilo command
+  test("index.ts invokes the AccureCli integration points", async () => {
+    // These thin call-sites are the only wiring between upstream index.ts and the Accure
+    // customizations in setup.ts. If a future upstream merge drops them, every Accure command
     // and the telemetry/lifecycle hooks silently disappear, exactly the regression this guards.
     const index = await file(INDEX)
-    expect(index).toContain("KiloCli.register(")
-    expect(index).toContain("KiloCli.bootstrap(")
-    expect(index).toContain("KiloCli.shutdown(")
+    expect(index).toContain("AccureCli.register(")
+    expect(index).toContain("AccureCli.bootstrap(")
+    expect(index).toContain("AccureCli.shutdown(")
   })
 
-  test("registers the local Kilo Console instead of the upstream account console", async () => {
+  test("registers the local Accure Console instead of the upstream account console", async () => {
     const index = await file(INDEX)
     const setup = await file(SETUP)
     const barrel = await file(BARREL)
-    expect(setup).toContain("KiloConsoleCommand")
+    expect(setup).toContain("AccureConsoleCommand")
     expect(index).not.toContain(".command(ConsoleCommand)")
     expect(barrel).not.toContain('from "../cli/cmd/account"')
   })

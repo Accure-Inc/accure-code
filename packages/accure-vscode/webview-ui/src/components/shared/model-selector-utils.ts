@@ -1,17 +1,17 @@
 import type { ModelSelection } from "../../types/messages"
 import type { EnrichedModel } from "../../context/provider"
 import {
-  KILO_PROVIDER_ID as KILO_GATEWAY_ID,
+  ACCURECODE_PROVIDER_ID as ACCURECODE_GATEWAY_ID,
   PROVIDER_PRIORITY as PROVIDER_ORDER,
   providerOrderIndex,
 } from "../../../../src/shared/provider-model"
 
-export { KILO_GATEWAY_ID, PROVIDER_ORDER }
+export { ACCURECODE_GATEWAY_ID, PROVIDER_ORDER }
 
-export const KILO_AUTO_SMALL_IDS = new Set(["kilo-auto/small", "auto-small"])
+export const ACCURECODE_AUTO_SMALL_IDS = new Set(["accure-auto/small", "auto-small"])
 
 export function isSmall(model: Pick<EnrichedModel, "providerID" | "id">): boolean {
-  return model.providerID === KILO_GATEWAY_ID && KILO_AUTO_SMALL_IDS.has(model.id)
+  return model.providerID === ACCURECODE_GATEWAY_ID && ACCURECODE_AUTO_SMALL_IDS.has(model.id)
 }
 
 export function providerSortKey(providerID: string, order: readonly string[] = PROVIDER_ORDER): number {
@@ -36,7 +36,7 @@ export function freeDataLabel(_free: string, data: string): string {
 
 // Strips trailing "(free)" parenthesized suffix from model display names, e.g.
 // "Llama 3 (free)" → "Llama 3". A separate "Free" label/tag is rendered
-// elsewhere, so preserve bare trailing "Free" words (e.g. "Kilo Auto Free").
+// elsewhere, so preserve bare trailing "Free" words (e.g. "Accure Auto Free").
 export function sanitizeName(name: string): string {
   return name.replace(/[\s:_-]*\(free\)\s*$/i, "").trim()
 }
@@ -45,7 +45,7 @@ export function stripSubProviderPrefix(name: string): string {
   const colon = name.indexOf(": ")
   if (colon < 0) return name
   const prefix = name.slice(0, colon)
-  if (prefix.toLowerCase() === KILO_GATEWAY_ID) return name
+  if (prefix.toLowerCase() === ACCURECODE_GATEWAY_ID) return name
   return name.slice(colon + 2)
 }
 
@@ -60,12 +60,12 @@ export function buildTriggerLabel(
   labels: { select: string; noProviders: string; notSet: string },
 ): string {
   if (resolvedName) {
-    if (providerID === KILO_GATEWAY_ID) return stripSubProviderPrefix(resolvedName)
+    if (providerID === ACCURECODE_GATEWAY_ID) return stripSubProviderPrefix(resolvedName)
     if (providerName) return `${providerName} / ${resolvedName}`
     return resolvedName
   }
   if (raw?.providerID && raw?.modelID) {
-    return raw.providerID === KILO_GATEWAY_ID ? raw.modelID : `${raw.providerID} / ${raw.modelID}`
+    return raw.providerID === ACCURECODE_GATEWAY_ID ? raw.modelID : `${raw.providerID} / ${raw.modelID}`
   }
   if (allowClear) return clearLabel || labels.notSet
   return hasProviders ? labels.select : labels.noProviders

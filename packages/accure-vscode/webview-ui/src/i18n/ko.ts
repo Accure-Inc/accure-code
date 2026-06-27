@@ -117,7 +117,7 @@ export const dict = {
   "dialog.model.expand": "펼치기",
   "dialog.model.collapse": "접기",
 
-  "dialog.model.unpaid.freeModels.title": "Kilo에서 제공하는 무료 모델",
+  "dialog.model.unpaid.freeModels.title": "Accure에서 제공하는 무료 모델",
   "dialog.model.unpaid.addMore.title": "인기 공급자의 모델 추가",
 
   "dialog.provider.viewAll": "더 많은 공급자 보기",
@@ -130,7 +130,7 @@ export const dict = {
   "provider.connect.status.waiting": "인증 대기 중...",
   "provider.connect.status.failed": "인증 실패: {{error}}",
   "provider.connect.apiKey.description":
-    "{{provider}} API 키를 입력하여 계정을 연결하고 Kilo에서 {{provider}} 모델을 사용하세요.",
+    "{{provider}} API 키를 입력하여 계정을 연결하고 Accure에서 {{provider}} 모델을 사용하세요.",
   "provider.connect.apiKey.description.local":
     "Connect to your local {{provider}} server. Leave the API key empty if the server does not require one (default for localhost).",
   "provider.connect.atomicChat.description":
@@ -159,7 +159,7 @@ export const dict = {
   "provider.connect.oauth.code.visit.prefix": "",
   "provider.connect.oauth.code.visit.link": "이 링크",
   "provider.connect.oauth.code.visit.suffix":
-    "를 방문하여 인증 코드를 받아 계정을 연결하고 Kilo에서 {{provider}} 모델을 사용하세요.",
+    "를 방문하여 인증 코드를 받아 계정을 연결하고 Accure에서 {{provider}} 모델을 사용하세요.",
   "provider.connect.oauth.code.label": "{{method}} 인증 코드",
   "provider.connect.oauth.code.placeholder": "인증 코드",
   "provider.connect.oauth.code.required": "인증 코드가 필요합니다",
@@ -167,7 +167,7 @@ export const dict = {
   "provider.connect.oauth.auto.visit.prefix": "",
   "provider.connect.oauth.auto.visit.link": "이 링크",
   "provider.connect.oauth.auto.visit.suffix":
-    "를 방문하고 아래 코드를 입력하여 계정을 연결하고 Kilo에서 {{provider}} 모델을 사용하세요.",
+    "를 방문하고 아래 코드를 입력하여 계정을 연결하고 Accure에서 {{provider}} 모델을 사용하세요.",
   "provider.connect.oauth.auto.confirmationCode": "확인 코드",
   "provider.connect.toast.connected.title": "{{provider}} 연결됨",
   "provider.connect.toast.connected.description": "이제 {{provider}} 모델을 사용할 수 있습니다.",
@@ -287,12 +287,12 @@ export const dict = {
   "prompt.action.enhanceDescription":
     "'프롬프트 향상' 버튼은 추가 컨텍스트, 명확화 또는 재구성을 제공하여 요청을 개선합니다. 여기에 요청을 입력한 다음 버튼을 다시 클릭하여 작동 방식을 확인해보세요.",
 
-  "speechToText.tooltip.start": "Kilo Gateway로 음성 입력 시작",
+  "speechToText.tooltip.start": "Accure Gateway로 음성 입력 시작",
   "speechToText.tooltip.stop": "음성 캡처 중지",
   "speechToText.tooltip.transcribing": "변환 중... 취소하려면 클릭하세요.",
   "speechToText.tooltip.error": "음성 입력에 실패했습니다. 지우려면 클릭하세요.",
   "speechToText.error.title": "음성 입력 실패",
-  "speechToText.error.loginRequired": "음성 입력을 사용하려면 Kilo에 로그인하세요.",
+  "speechToText.error.loginRequired": "음성 입력을 사용하려면 Accure에 로그인하세요.",
   "speechToText.error.permission": "마이크 권한이 거부되었습니다.",
   "speechToText.error.microphone": "마이크를 시작할 수 없습니다.",
   "speechToText.error.recording": "녹음에 실패했습니다.",
@@ -330,7 +330,7 @@ export const dict = {
   "dialog.directory.empty": "폴더 없음",
 
   "dialog.server.title": "서버",
-  "dialog.server.description": "이 앱이 연결할 Kilo 서버를 전환합니다.",
+  "dialog.server.description": "이 앱이 연결할 Accure 서버를 전환합니다.",
   "dialog.server.search.placeholder": "서버 검색",
   "dialog.server.empty": "서버 없음",
   "dialog.server.add.title": "서버 추가",
@@ -456,7 +456,7 @@ export const dict = {
   "toast.session.listFailed.title": "{{project}}에 대한 세션을 로드하지 못했습니다",
 
   "toast.update.title": "업데이트 가능",
-  "toast.update.description": "Kilo의 새 버전({{version}})을 설치할 수 있습니다.",
+  "toast.update.description": "Accure의 새 버전({{version}})을 설치할 수 있습니다.",
   "toast.update.action.installRestart": "설치 및 다시 시작",
   "toast.update.action.notYet": "나중에",
 
@@ -467,7 +467,7 @@ export const dict = {
   "error.page.action.checking": "확인 중...",
   "error.page.action.checkUpdates": "업데이트 확인",
   "error.page.action.updateTo": "{{version}} 버전으로 업데이트",
-  "error.page.report.prefix": "이 오류를 Kilo 팀에 제보해 주세요: ",
+  "error.page.report.prefix": "이 오류를 Accure 팀에 제보해 주세요: ",
   "error.page.report.discord": "Discord",
   "error.page.version": "버전: {{version}}",
 
@@ -501,7 +501,7 @@ export const dict = {
   "error.chain.didYouMean": "혹시 {{suggestions}}을(를) 의미하셨나요?",
   "error.chain.modelNotFound": "모델을 찾을 수 없음: {{provider}}/{{model}}",
   "error.chain.checkConfig": "구성(opencode.json)의 공급자/모델 이름을 확인하세요",
-  "error.chain.mcpFailed": 'MCP 서버 "{{name}}" 실패. 참고: Kilo는 아직 MCP 인증을 지원하지 않습니다.',
+  "error.chain.mcpFailed": 'MCP 서버 "{{name}}" 실패. 참고: Accure는 아직 MCP 인증을 지원하지 않습니다.',
   "error.chain.providerAuthFailed": "공급자 인증 실패 ({{provider}}): {{message}}",
   "error.chain.providerInitFailed": '공급자 "{{provider}}" 초기화 실패. 자격 증명과 구성을 확인하세요.',
   "error.chain.configJsonInvalid": "{{path}}의 구성 파일이 유효한 JSON(C)가 아닙니다",
@@ -672,12 +672,12 @@ export const dict = {
   "sidebar.workspaces.enable": "작업 공간 활성화",
   "sidebar.workspaces.disable": "작업 공간 비활성화",
   "sidebar.gettingStarted.title": "시작하기",
-  "sidebar.gettingStarted.line1": "Kilo에는 무료 모델이 포함되어 있어 즉시 시작할 수 있습니다.",
+  "sidebar.gettingStarted.line1": "Accure에는 무료 모델이 포함되어 있어 즉시 시작할 수 있습니다.",
   "sidebar.gettingStarted.line2": "Claude, GPT, Gemini 등을 포함한 모델을 사용하려면 공급자를 연결하세요.",
   "sidebar.project.recentSessions": "최근 세션",
   "sidebar.project.viewAllSessions": "모든 세션 보기",
 
-  "app.name.desktop": "Kilo Desktop",
+  "app.name.desktop": "Accure Desktop",
   "settings.section.desktop": "데스크톱",
   "settings.section.server": "서버",
   "settings.tab.general": "일반",
@@ -689,11 +689,11 @@ export const dict = {
   "settings.general.section.sounds": "효과음",
 
   "settings.general.row.language.title": "언어",
-  "settings.general.row.language.description": "Kilo 표시 언어 변경",
+  "settings.general.row.language.description": "Accure 표시 언어 변경",
   "settings.general.row.appearance.title": "모양",
-  "settings.general.row.appearance.description": "기기에서 Kilo가 보이는 방식 사용자 지정",
+  "settings.general.row.appearance.description": "기기에서 Accure가 보이는 방식 사용자 지정",
   "settings.general.row.theme.title": "테마",
-  "settings.general.row.theme.description": "Kilo 테마 사용자 지정",
+  "settings.general.row.theme.description": "Accure 테마 사용자 지정",
   "settings.general.row.font.title": "글꼴",
   "settings.general.row.font.description": "코드 블록에 사용되는 고정폭 글꼴 사용자 지정",
 
@@ -701,13 +701,13 @@ export const dict = {
   "settings.general.row.releaseNotes.description": "업데이트 후 '새 소식' 팝업 표시",
 
   "settings.updates.row.startup.title": "시작 시 업데이트 확인",
-  "settings.updates.row.startup.description": "Kilo를 실행할 때 업데이트를 자동으로 확인합니다",
+  "settings.updates.row.startup.description": "Accure를 실행할 때 업데이트를 자동으로 확인합니다",
   "settings.updates.row.check.title": "업데이트 확인",
   "settings.updates.row.check.description": "업데이트를 수동으로 확인하고, 사용 가능하면 설치합니다",
   "settings.updates.action.checkNow": "지금 확인",
   "settings.updates.action.checking": "확인 중...",
   "settings.updates.toast.latest.title": "최신 상태입니다",
-  "settings.updates.toast.latest.description": "현재 최신 버전의 Kilo를 사용 중입니다.",
+  "settings.updates.toast.latest.description": "현재 최신 버전의 Accure를 사용 중입니다.",
 
   "font.option.ibmPlexMono": "IBM Plex Mono",
   "font.option.cascadiaCode": "Cascadia Code",
@@ -801,7 +801,7 @@ export const dict = {
   "settings.providers.title": "공급자",
   "settings.providers.description": "공급자 설정은 여기서 구성할 수 있습니다.",
   "settings.providers.betaNotice":
-    "현재 설정 인터페이스에서는 Kilo Gateway 제공자만 설정할 수 있습니다. 다른 제공자 설정에 대한 지원은 베타 기간 동안 곧 제공될 예정입니다. 그동안에는 CLI 또는 설정 파일을 사용하여 제공자를 설정할 수 있습니다. 우리는 종속(lock-in) 없이 Kilo를 개방적으로 유지하기 위해 최선을 다하고 있습니다.",
+    "현재 설정 인터페이스에서는 Accure Gateway 제공자만 설정할 수 있습니다. 다른 제공자 설정에 대한 지원은 베타 기간 동안 곧 제공될 예정입니다. 그동안에는 CLI 또는 설정 파일을 사용하여 제공자를 설정할 수 있습니다. 우리는 종속(lock-in) 없이 Accure를 개방적으로 유지하기 위해 최선을 다하고 있습니다.",
   "settings.providers.section.connected": "연결된 공급자",
   "settings.providers.connected.empty": "연결된 공급자 없음",
   "settings.providers.section.popular": "인기 공급자",
@@ -822,7 +822,7 @@ export const dict = {
     "task-tool 하위 에이전트의 기본 모델 및 추론 수준입니다. 호출하는 에이전트의 모델을 상속하려면 비워 두세요.",
   "settings.models.hidePromptTraining.title": "프롬프트를 학습에 사용하는 모델 숨기기",
   "settings.models.hidePromptTraining.description":
-    "제공업체가 사용자의 프롬프트를 학습에 사용할 수 있는 Kilo Gateway 모델을 숨깁니다.",
+    "제공업체가 사용자의 프롬프트를 학습에 사용할 수 있는 Accure Gateway 모델을 숨깁니다.",
   "settings.providers.modeModels": "모드별 모델",
   "settings.providers.custom.note": "Base URL로 사용자 정의 공급자를 추가합니다.",
   "settings.providers.modeModels.description":
@@ -925,21 +925,21 @@ export const dict = {
   "settings.config.status.loadedLegacy": "레거시 구성 로드됨",
   "settings.config.status.notLoaded": "로드되지 않음",
   "settings.config.status.create": "찾을 수 없음 - 이 파일 만들기",
-  "settings.config.title": "{{scope}} Kilo 구성 파일 열기",
+  "settings.config.title": "{{scope}} Accure 구성 파일 열기",
   "settings.config.placeholder":
     "구성 파일은 순서대로 병합됩니다. 로드됨으로 표시된 파일이 현재 설정에 영향을 미칩니다.",
-  "settings.config.noWorkspace": "로컬 Kilo 구성 파일을 편집하려면 작업 영역 폴더를 엽니다.",
-  "settings.config.openFailed": "{{scope}} Kilo 구성 파일을 열지 못했습니다: {{message}}",
+  "settings.config.noWorkspace": "로컬 Accure 구성 파일을 편집하려면 작업 영역 폴더를 엽니다.",
+  "settings.config.openFailed": "{{scope}} Accure 구성 파일을 열지 못했습니다: {{message}}",
   "settings.config.source.xdg": "XDG 글로벌 구성",
-  "settings.config.source.homeKilo": "Home .kilo 구성",
-  "settings.config.source.homeKilocode": "Home .kilocode 구성",
+  "settings.config.source.homeAccure": "Home .accurecode 구성",
+  "settings.config.source.homeAccurecode": "Home .accurecode 구성",
   "settings.config.source.homeOpencode": "Home .opencode 구성",
-  "settings.config.source.envFile": "KILO_CONFIG 환경 파일",
-  "settings.config.source.envDir": "KILO_CONFIG_DIR",
+  "settings.config.source.envFile": "ACCURECODE_CONFIG 환경 파일",
+  "settings.config.source.envDir": "ACCURECODE_CONFIG_DIR",
   "settings.config.source.envContent": "인라인 환경 구성",
-  "settings.config.source.projectKilo": "프로젝트 .kilo 구성",
+  "settings.config.source.projectAccure": "프로젝트 .accurecode 구성",
   "settings.config.source.projectRoot": "프로젝트 루트 구성",
-  "settings.config.source.projectKilocode": "레거시 .kilocode 구성",
+  "settings.config.source.projectAccurecode": "레거시 .accurecode 구성",
   "settings.config.source.projectOpencode": "레거시 .opencode 구성",
   "settings.models.title": "모델",
   "settings.models.description": "모델 설정은 여기서 구성할 수 있습니다.",
@@ -1012,7 +1012,7 @@ export const dict = {
   "feedback.dialog.github": "GitHub에 이슈 보고하기",
   "feedback.dialog.discord": "Discord 커뮤니티 참여하기",
   "feedback.dialog.support": "고객 지원",
-  "workStyle.onboarding.welcome": "Kilo에 오신 것을 환영합니다",
+  "workStyle.onboarding.welcome": "Accure에 오신 것을 환영합니다",
   "workStyle.onboarding.title": "원하는 작업 방식을 선택하세요",
   "workStyle.onboarding.description":
     "권한, 추론 블록, 터미널 출력 및 컨텍스트 타임라인의 초기 기본값을 설정합니다. 한 번만 적용되며 이미 사용자 지정한 설정은 건너뜁니다.",
@@ -1027,7 +1027,7 @@ export const dict = {
   "workStyle.choice.visibility": "표시",
   "workStyle.choice.human-in-the-loop.eyebrow": "사용자 검토 포함",
   "workStyle.choice.human-in-the-loop.title": "먼저 검토",
-  "workStyle.choice.human-in-the-loop.description": "Kilo가 작업 중에 잠시 멈추고 계획을 보여줍니다.",
+  "workStyle.choice.human-in-the-loop.description": "Accure가 작업 중에 잠시 멈추고 계획을 보여줍니다.",
   "workStyle.choice.human-in-the-loop.permissions": "파일을 편집하거나 명령을 실행하기 전에 권한을 요청합니다.",
   "workStyle.choice.human-in-the-loop.bash": "모든 터미널 명령 실행 시 권한 요청",
   "workStyle.choice.human-in-the-loop.visibility": "추론을 포함한 전체 대화 세부 정보를 표시합니다.",
@@ -1038,7 +1038,7 @@ export const dict = {
   "workStyle.choice.autonomous.bash": "승인 없이 작업 공간에서 터미널 명령을 실행할 수 있습니다.",
   "workStyle.choice.autonomous.visibility": "세부 정보는 펼칠 때까지 접힌 상태로 유지됩니다.",
   "session.cloud.import.title": "클라우드에서 가져오기",
-  "session.cloud.import.placeholder": "세션 ID, URL 또는 kilo import 명령어",
+  "session.cloud.import.placeholder": "세션 ID, URL 또는 accure import 명령어",
   "session.cloud.import.button": "가져오기",
   "session.cloud.import.invalid": "잘못된 세션 ID 형식입니다",
   "session.cloud.import.legacy": "이전 버전의 세션으로 보이며 더 이상 지원되지 않습니다.",
@@ -1115,7 +1115,7 @@ export const dict = {
 
   "settings.experimental.title": "실험적",
   "settings.language.title": "언어",
-  "settings.aboutKiloCode.title": "Accure Code 정보",
+  "settings.aboutAccureCode.title": "Accure Code 정보",
 
   "prompt.action.indexing": "인덱싱 설정",
   "settings.indexing.dimension.description": "비워두면 모델에서 임베딩 차원을 자동으로 감지합니다.",
@@ -1136,10 +1136,10 @@ export const dict = {
   "settings.indexing.model.description": "선택한 공급자의 기본 임베딩 모델을 재정의합니다.",
   "settings.indexing.model.title": "임베딩 모델",
   "settings.indexing.provider.description": "의미 검색을 위한 임베딩 생성에 사용할 공급자를 선택하세요.",
-  "settings.indexing.kiloModel.title": "Kilo 모델 프리셋",
-  "settings.indexing.kiloModel.description": "지원되는 Kilo 호스팅 임베딩 모델을 선택하세요.",
-  "settings.indexing.kiloSignIn.title": "Kilo 로그인이 필요합니다",
-  "settings.indexing.kiloSignIn.description": "호스팅 임베딩을 사용하려면 Kilo에 로그인하세요.",
+  "settings.indexing.accureModel.title": "Accure 모델 프리셋",
+  "settings.indexing.accureModel.description": "지원되는 Accure 호스팅 임베딩 모델을 선택하세요.",
+  "settings.indexing.accureSignIn.title": "Accure 로그인이 필요합니다",
+  "settings.indexing.accureSignIn.description": "호스팅 임베딩을 사용하려면 Accure에 로그인하세요.",
   "settings.indexing.provider.title": "임베딩 공급자",
   "settings.indexing.providerField.description": "공급자별 연결 설정.",
   "settings.indexing.qdrantApiKey.description": "Qdrant 인스턴스에 대한 선택적 API 키입니다.",
@@ -1198,41 +1198,42 @@ export const dict = {
   "time.thisMonth": "이번 달",
   "time.older": "이전",
 
-  "settings.aboutKiloCode.status.connected": "연결됨",
-  "settings.aboutKiloCode.status.connecting": "연결 중...",
-  "settings.aboutKiloCode.status.disconnected": "연결 끊김",
-  "settings.aboutKiloCode.status.error": "오류",
-  "settings.aboutKiloCode.cliServer": "CLI 서버",
-  "settings.aboutKiloCode.status.label": "상태:",
-  "settings.aboutKiloCode.port.label": "포트:",
-  "settings.aboutKiloCode.versionInfo": "버전 정보",
-  "settings.aboutKiloCode.version.label": "버전:",
-  "settings.aboutKiloCode.extensionName": "Accure Code 확장 프로그램",
-  "settings.aboutKiloCode.community": "커뮤니티 및 지원",
-  "settings.aboutKiloCode.feedback.prefix": "질문이나 피드백이 있으시면 다음에서 이슈를 열어주세요",
-  "settings.aboutKiloCode.feedback.or": "또는",
-  "settings.aboutKiloCode.support.prefix": "결제 또는 계정 관련 문의는 고객 지원팀에 문의하세요",
-  "settings.aboutKiloCode.resetSettings.title": "설정 초기화",
-  "settings.aboutKiloCode.resetSettings.description":
+  "settings.aboutAccureCode.status.connected": "연결됨",
+  "settings.aboutAccureCode.status.connecting": "연결 중...",
+  "settings.aboutAccureCode.status.disconnected": "연결 끊김",
+  "settings.aboutAccureCode.status.error": "오류",
+  "settings.aboutAccureCode.cliServer": "CLI 서버",
+  "settings.aboutAccureCode.status.label": "상태:",
+  "settings.aboutAccureCode.port.label": "포트:",
+  "settings.aboutAccureCode.versionInfo": "버전 정보",
+  "settings.aboutAccureCode.version.label": "버전:",
+  "settings.aboutAccureCode.extensionName": "Accure Code 확장 프로그램",
+  "settings.aboutAccureCode.community": "커뮤니티 및 지원",
+  "settings.aboutAccureCode.feedback.prefix": "질문이나 피드백이 있으시면 다음에서 이슈를 열어주세요",
+  "settings.aboutAccureCode.feedback.or": "또는",
+  "settings.aboutAccureCode.support.prefix": "결제 또는 계정 관련 문의는 고객 지원팀에 문의하세요",
+  "settings.aboutAccureCode.resetSettings.title": "설정 초기화",
+  "settings.aboutAccureCode.resetSettings.description":
     "이 기능은 VS Code 확장 프로그램 전용 설정만 기본값으로 초기화합니다. 모드 및 자동 승인 규칙과 같이 CLI와 공유되는 설정은 CLI 구성에 저장되며 초기화되지 않습니다.",
-  "settings.aboutKiloCode.resetSettings.button": "모든 설정 초기화",
-  "settings.aboutKiloCode.settingsTransfer.title": "설정 이전",
-  "settings.aboutKiloCode.settingsTransfer.description":
+  "settings.aboutAccureCode.resetSettings.button": "모든 설정 초기화",
+  "settings.aboutAccureCode.settingsTransfer.title": "설정 이전",
+  "settings.aboutAccureCode.settingsTransfer.description":
     "VS Code 인스턴스 간에 설정을 전송하려면 내보내기 또는 가져오기하세요.",
-  "settings.aboutKiloCode.exportSettings": "내보내기",
-  "settings.aboutKiloCode.importSettings": "가져오기",
-  "settings.aboutKiloCode.importSettings.invalidJson":
+  "settings.aboutAccureCode.exportSettings": "내보내기",
+  "settings.aboutAccureCode.importSettings": "가져오기",
+  "settings.aboutAccureCode.importSettings.invalidJson":
     "유효하지 않은 JSON 파일입니다. 올바른 설정 파일을 선택해 주세요.",
-  "settings.aboutKiloCode.importSettings.invalidConfig": "파일에 유효한 Kilo 설정이 포함되어 있지 않습니다.",
-  "settings.aboutKiloCode.importSettings.tooLarge": "파일이 너무 큽니다. 설정 파일은 1 MB 이하여야 합니다.",
-  "settings.aboutKiloCode.importSettings.newerVersion":
-    "이 파일은 더 최신 버전의 Kilo에서 내보낸 것입니다. 일부 설정이 무시될 수 있습니다.",
-  "settings.aboutKiloCode.importSettings.success": "설정을 가져왔습니다. 위의 변경 사항을 확인한 후 저장을 클릭하세요.",
+  "settings.aboutAccureCode.importSettings.invalidConfig": "파일에 유효한 Accure 설정이 포함되어 있지 않습니다.",
+  "settings.aboutAccureCode.importSettings.tooLarge": "파일이 너무 큽니다. 설정 파일은 1 MB 이하여야 합니다.",
+  "settings.aboutAccureCode.importSettings.newerVersion":
+    "이 파일은 더 최신 버전의 Accure에서 내보낸 것입니다. 일부 설정이 무시될 수 있습니다.",
+  "settings.aboutAccureCode.importSettings.success":
+    "설정을 가져왔습니다. 위의 변경 사항을 확인한 후 저장을 클릭하세요.",
 
-  "settings.aboutKiloCode.telemetry.title": "원격 측정",
-  "settings.aboutKiloCode.telemetry.description":
+  "settings.aboutAccureCode.telemetry.title": "원격 측정",
+  "settings.aboutAccureCode.telemetry.description":
     '원격 측정은 VS Code에 내장된 원격 측정 설정으로 제어됩니다. 비활성화하려면 설정 > 원격 측정 > 원격 측정 수준으로 이동하여 "off"로 설정하세요. 변경 사항을 적용하려면 VS Code를 다시 시작하세요.',
-  "settings.aboutKiloCode.telemetry.openSettings": "원격 측정 설정 열기",
+  "settings.aboutAccureCode.telemetry.openSettings": "원격 측정 설정 열기",
 
   "settings.agentBehaviour.subtab.agents": "에이전트",
   "settings.agentBehaviour.subtab.mcpServers": "MCP 서버",
@@ -1300,18 +1301,18 @@ export const dict = {
   "settings.experimental.codebaseSearch.description": "코드베이스 전체에서 AI 기반 자연어 검색 활성화",
   "settings.experimental.speechToText.title": "음성 텍스트 변환",
   "settings.experimental.speechToText.description":
-    "Kilo Gateway를 통해 Kilo 계정을 사용하여 프롬프트 필드에서 음성 입력을 활성화합니다.",
+    "Accure Gateway를 통해 Accure 계정을 사용하여 프롬프트 필드에서 음성 입력을 활성화합니다.",
   "settings.models.speechToText.disabledDescription":
-    "Speech to Text를 사용하려면 Kilo 제공자를 활성화하고 로그인하세요. 현재 Speech to Text는 Kilo Gateway에서만 지원됩니다.",
+    "Speech to Text를 사용하려면 Accure 제공자를 활성화하고 로그인하세요. 현재 Speech to Text는 Accure Gateway에서만 지원됩니다.",
   "settings.models.speechToTextModel.title": "음성 텍스트 변환 모델",
-  "settings.models.speechToTextModel.description": "음성 입력에 사용할 Kilo Gateway 변환 모델을 선택하세요.",
+  "settings.models.speechToTextModel.description": "음성 입력에 사용할 Accure Gateway 변환 모델을 선택하세요.",
   "settings.experimental.continueOnDeny.title": "거부 시 계속",
   "settings.experimental.continueOnDeny.description": "권한이 거부되면 에이전트 루프 계속",
   "settings.experimental.mcpTimeout.title": "MCP 타임아웃 (ms)",
   "settings.experimental.mcpTimeout.description": "MCP 서버 요청의 타임아웃 시간 (밀리초)",
   "settings.experimental.remote.title": "Remote 제어",
   "settings.experimental.remote.description":
-    "Kilo Cloud를 통한 세션의 Remote 제어를 활성화합니다. 이는 이 컴퓨터의 CLI에도 영향을 미칩니다.",
+    "Accure Cloud를 통한 세션의 Remote 제어를 활성화합니다. 이는 이 컴퓨터의 CLI에도 영향을 미칩니다.",
   "settings.experimental.remote.current": "현재 상태:",
   "settings.experimental.remote.startup": "시작 시 자동 활성화:",
   "settings.experimental.remote.active": "활성",
@@ -1421,14 +1422,14 @@ export const dict = {
   "settings.agentBehaviour.claudeCompat.heading": "Claude Code 호환성",
   "settings.agentBehaviour.claudeCompat.title": "Claude Code 파일 로드",
   "settings.agentBehaviour.claudeCompat.description":
-    "Claude Code 설정 디렉터리에서 세션으로 CLAUDE.md 지침 및 스킬을 로드합니다. Kilo가 Claude Code 지침 및 스킬을 사용하게 하려면 활성화하세요. 다시 시작해야 합니다.",
+    "Claude Code 설정 디렉터리에서 세션으로 CLAUDE.md 지침 및 스킬을 로드합니다. Accure가 Claude Code 지침 및 스킬을 사용하게 하려면 활성화하세요. 다시 시작해야 합니다.",
   "settings.agentBehaviour.mcpDetail.command": "명령어",
   "settings.agentBehaviour.mcpDetail.args": "인수",
   "settings.agentBehaviour.mcpDetail.env": "환경",
   "settings.agentBehaviour.mcpDetail.disabled": "이 서버는 비활성화되어 있습니다.",
   "settings.agentBehaviour.mcpBrowseMarketplace": "마켓플레이스 둘러보기",
   "settings.agentBehaviour.mcpEmpty":
-    "MCP 서버가 구성되지 않았습니다. kilo.jsonc에서 MCP 서버를 추가하거나 에이전트에게 추가를 요청하세요.",
+    "MCP 서버가 구성되지 않았습니다. accure.jsonc에서 MCP 서버를 추가하거나 에이전트에게 추가를 요청하세요.",
   "settings.agentBehaviour.workflowsPlaceholder": "워크플로우는 워크스페이스의 워크플로우 파일을 통해 관리됩니다.",
   "settings.agentBehaviour.workflows.description":
     "워크플로우는 구성에서 정의된 사용자 정의 슬래시 명령입니다. 채팅에서 /command-name을 입력하여 실행합니다. 명령은 opencode.json의 'command' 섹션에서 구성됩니다.",
@@ -1491,7 +1492,7 @@ export const dict = {
   "settings.display.username.title": "사용자 이름",
   "settings.display.username.description": "대화에 표시되는 사용자 정의 사용자 이름",
   "settings.display.fontSize.title": "글꼴 크기",
-  "settings.display.fontSize.description": "VS Code와 독립적으로 Kilo webview UI 글꼴 크기를 조정합니다.",
+  "settings.display.fontSize.description": "VS Code와 독립적으로 Accure webview UI 글꼴 크기를 조정합니다.",
   "settings.display.reasoningAutoCollapse.title": "추론 자동 접기",
   "settings.display.reasoningAutoCollapse.description":
     "에이전트가 추론 작성을 마친 뒤 추론 블록을 자동으로 접습니다. 수동으로 접기 전까지 추론을 펼친 상태로 두려면 끄세요.",
@@ -1524,11 +1525,11 @@ export const dict = {
 
   // legacy-migration start
   "settings.legacyMigration.link": "레거시 버전에서 마이그레이션",
-  "settings.aboutKiloCode.legacyMigration.title": "레거시 마이그레이션",
-  "settings.aboutKiloCode.legacyMigration.description":
+  "settings.aboutAccureCode.legacyMigration.title": "레거시 마이그레이션",
+  "settings.aboutAccureCode.legacyMigration.description":
     "공급자 API 키 및 기본 모델을 포함하여 이전 Accure Code 설치에서 설정을 마이그레이션합니다.",
-  "settings.aboutKiloCode.rooImport.description": "Roo Code 설치에서 대화 기록을 가져옵니다.",
-  "settings.aboutKiloCode.rooImport.button": "Roo Code에서 세션 가져오기",
+  "settings.aboutAccureCode.rooImport.description": "Roo Code 설치에서 대화 기록을 가져옵니다.",
+  "settings.aboutAccureCode.rooImport.button": "Roo Code에서 세션 가져오기",
 
   // Screen 1 — What's New
   "migration.whatsNew.title": "Accure Code의 새로운 기능",
@@ -1543,7 +1544,7 @@ export const dict = {
     "여러 에이전트를 각자의 작업 트리에서 병렬로 실행할 수 있는 통합 인터페이스 — 진행 상황 모니터링, 컨텍스트 전환, 변경 사항 검토를 한 곳에서 수행합니다.",
   "migration.whatsNew.features.foundation.title": "공유 기반",
   "migration.whatsNew.features.foundation.detail":
-    "모든 Kilo 제품에 걸쳐 하나의 작고 효율적인 코어. 어떤 방식으로 작업하든 익숙한 경험을 제공합니다.",
+    "모든 Accure 제품에 걸쳐 하나의 작고 효율적인 코어. 어떤 방식으로 작업하든 익숙한 경험을 제공합니다.",
   "migration.whatsNew.blogLink": "전체 공지 읽기",
   "migration.whatsNew.docsLink": "새로운 기능 및 자주 묻는 질문",
   "migration.whatsNew.continue": "계속",
@@ -1642,7 +1643,7 @@ export const dict = {
     "작업 트리에서 수정되었지만 아직 스테이징되지 않은 파일과 추적되지 않는(새) 파일입니다.",
   "diffViewer.source.session.label": "세션",
   "diffViewer.source.session.tooltip":
-    "현재 세션 동안 Kilo가 변경한 파일로, 턴별 스냅샷을 기반으로 합니다. 새 세션을 시작하면 초기화됩니다.",
+    "현재 세션 동안 Accure가 변경한 파일로, 턴별 스냅샷을 기반으로 합니다. 새 세션을 시작하면 초기화됩니다.",
   "diffViewer.group.session": "세션",
   "diffViewer.group.git": "Git",
   "diffViewer.notice.snapshotsDisabled":

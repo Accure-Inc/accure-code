@@ -86,13 +86,13 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
 
     const configUpdate = Effect.fn("GlobalHttpApi.configUpdate")(function* (ctx) {
       const result = yield* config.updateGlobal(ctx.payload)
-      // kilocode_change start
+      // accurecode_change start
       if (result.changed) {
         yield* bridge.run(
           disposeAllInstancesAndEmitGlobalDisposed({ swallowErrors: true }).pipe(Effect.catchCause(() => Effect.void)),
         )
       }
-      // kilocode_change end
+      // accurecode_change end
       return result.info
     })
 

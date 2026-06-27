@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { Permission } from "@/permission"
 import { NamedError } from "@opencode-ai/core/util/error"
 import { Glob } from "@opencode-ai/core/util/glob"
@@ -168,7 +168,7 @@ function askEditGuard() {
 function planEditRules(worktree: string) {
   return {
     "*": "deny" as const,
-    [path.join(".kilo", "plans", "*.md")]: "allow" as const,
+    [path.join(".accurecode", "plans", "*.md")]: "allow" as const,
     [path.join("plans", "*.md")]: "allow" as const,
     [path.join(".plans", "*.md")]: "allow" as const,
     [path.join(".opencode", "plans", "*.md")]: "allow" as const,
@@ -220,13 +220,13 @@ export function getMcpRules(cfg: Config.Info): Record<string, "allow" | "ask" | 
   return rules
 }
 
-export interface KiloData {
+export interface AccureData {
   mcpRules: Record<string, "allow" | "ask" | "deny">
   defaultsPatch: Permission.Ruleset
 }
 
-// Prepare kilo-specific data derived from config. Call once per state initialization.
-export function prepare(cfg: Config.Info): KiloData {
+// Prepare accure-specific data derived from config. Call once per state initialization.
+export function prepare(cfg: Config.Info): AccureData {
   const mcpRules = getMcpRules(cfg)
   const defaultsPatch = Permission.fromConfig({ bash, recall: "ask" })
   return { mcpRules, defaultsPatch }
@@ -299,9 +299,9 @@ export function telemetryOptions(_cfg: Config.Info) {
   return { isEnabled: false as const }
 }
 
-// Patch the base agents map in-place with all kilo-specific changes:
+// Patch the base agents map in-place with all accure-specific changes:
 // - Rename build → code
-// - Patch plan with readOnlyBash, mcpRules, .kilo paths
+// - Patch plan with readOnlyBash, mcpRules, .accurecode paths
 // - Patch explore with codebase_search and conditional prompt
 // - Patch appropriate agents with semantic_search
 // - Add debug, orchestrator, ask agents
@@ -330,7 +330,7 @@ export function patchAgents(
   defaults: Permission.Ruleset,
   user: Permission.Ruleset,
   cfg: Config.Info,
-  kilo: KiloData,
+  accure: AccureData,
   worktree: string,
   whitelistedDirs: string[],
 ) {
@@ -356,7 +356,7 @@ export function patchAgents(
       description: "Plan mode. Can only edit plan files; all other filesystem mutations are denied.",
       permission: Permission.merge(
         defaults,
-        planGuard(worktree, kilo.mcpRules),
+        planGuard(worktree, accure.mcpRules),
         user,
         planEditGuard(worktree),
         denies(user),
@@ -410,7 +410,7 @@ export function patchAgents(
       defaults,
       Permission.fromConfig({
         question: "allow",
-        suggest: "allow", // kilocode_change
+        suggest: "allow", // accurecode_change
         plan_enter: "allow",
         semantic_search: "allow",
       }),
@@ -436,7 +436,7 @@ export function patchAgents(
         list: "allow",
         question: "allow",
         skill: "allow",
-        suggest: "allow", // kilocode_change
+        suggest: "allow", // accurecode_change
         task: "allow",
         todoread: "allow",
         todowrite: "allow",
@@ -464,7 +464,7 @@ export function patchAgents(
     description: "Get answers and explanations without making changes to the codebase.",
     prompt: PROMPT_ASK,
     options: {},
-    permission: Permission.merge(defaults, askGuard(kilo.mcpRules), user, askEditGuard(), denies(user)),
+    permission: Permission.merge(defaults, askGuard(accure.mcpRules), user, askEditGuard(), denies(user)),
     mode: "primary",
     native: true,
   }
@@ -474,7 +474,8 @@ export function patchAgents(
     name: "accureiqx_app_builder",
     displayName: "AccureIQx App Builder",
     description: "Design, configure, and orchestrate expert AI panels and workflows in the AccureIQx workspace.",
-    prompt: "You are AccureIQx App Builder, a specialized agentic assistant for designing, configuring, and assembling expert AI panels and workflows on the AccureIQx platform. You help developers write custom tools, configure Milvus schemas, set instruction hierarchies, and integrate EUCG context registries. Perform structured operations, edit configuration manifests, execute validation tests, and ensure correct routing settings.",
+    prompt:
+      "You are AccureIQx App Builder, a specialized agentic assistant for designing, configuring, and assembling expert AI panels and workflows on the AccureIQx platform. You help developers write custom tools, configure Milvus schemas, set instruction hierarchies, and integrate EUCG context registries. Perform structured operations, edit configuration manifests, execute validation tests, and ensure correct routing settings.",
     options: {},
     permission: Permission.merge(
       defaults,
@@ -495,7 +496,8 @@ export function patchAgents(
     name: "accureiqx_debug",
     displayName: "AccureIQx Debug",
     description: "Diagnose database drifts, OIDC authentication failures, and runtime pod/SSE stream anomalies.",
-    prompt: "You are AccureIQx Debug, an expert debugging agent specialized in finding root causes for platform issues like SSE streaming disconnects, keycloak/OIDC login failures, MongoDB/Postgres persistence drift, and container sandbox crashes. Check log tables, systematic stack traces, environment variables, database mappings, and offer targeted fixes.",
+    prompt:
+      "You are AccureIQx Debug, an expert debugging agent specialized in finding root causes for platform issues like SSE streaming disconnects, keycloak/OIDC login failures, MongoDB/Postgres persistence drift, and container sandbox crashes. Check log tables, systematic stack traces, environment variables, database mappings, and offer targeted fixes.",
     options: {},
     permission: Permission.merge(
       defaults,
@@ -521,9 +523,9 @@ export const RemoveError = NamedError.create("AgentRemoveError", {
 
 /**
  * Remove a custom agent by deleting its markdown source file and/or
- * removing it from legacy .kilocodemodes YAML files.
+ * removing it from legacy .accurecodemodes YAML files.
  * Scans all config directories for agent/mode .md files matching the name,
- * then also checks the .kilocodemodes files the ModesMigrator reads.
+ * then also checks the .accurecodemodes files the ModesMigrator reads.
  */
 export async function remove(input: { name: string; agent?: AgentInfo; dirs: string[]; directory: string }) {
   if (!input.agent) throw new RemoveError({ name: input.name, message: "agent not found" })
@@ -552,17 +554,17 @@ export async function remove(input: { name: string; agent?: AgentInfo; dirs: str
     }
   }
 
-  // 2. Remove from legacy .kilocodemodes YAML files (read by ModesMigrator)
-  const { ModesMigrator } = await import("@/kilocode/modes-migrator")
-  const { KilocodePaths } = await import("@/kilocode/paths")
+  // 2. Remove from legacy .accurecodemodes YAML files (read by ModesMigrator)
+  const { ModesMigrator } = await import("@/accurecode/modes-migrator")
+  const { AccurecodePaths } = await import("@/accurecode/paths")
   const os = await import("os")
   const matter = (await import("gray-matter")).default
   const home = os.default.homedir()
   const modesFiles = [
-    path.join(KilocodePaths.vscodeGlobalStorage(), "settings", "custom_modes.yaml"),
-    path.join(home, ".kilocode", "cli", "global", "settings", "custom_modes.yaml"),
-    path.join(home, ".kilocodemodes"),
-    path.join(input.directory, ".kilocodemodes"),
+    path.join(AccurecodePaths.vscodeGlobalStorage(), "settings", "custom_modes.yaml"),
+    path.join(home, ".accurecode", "cli", "global", "settings", "custom_modes.yaml"),
+    path.join(home, ".accurecodemodes"),
+    path.join(input.directory, ".accurecodemodes"),
   ]
 
   for (const file of modesFiles) {

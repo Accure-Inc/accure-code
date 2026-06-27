@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.model
+package ai.accurecode.client.session.model
 
-import ai.kilocode.rpc.dto.DiffFileDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.TodoDto
+import ai.accurecode.rpc.dto.DiffFileDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.TodoDto
 
 /**
  * Change events fired by [SessionModel].

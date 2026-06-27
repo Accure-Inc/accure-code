@@ -4,9 +4,9 @@ import {
   formatIndexingLabel,
   indexingTone,
 } from "../../webview-ui/src/context/indexing-utils"
-import { mapSSEEventToWebviewMessage } from "../../src/kilo-provider-utils"
+import { mapSSEEventToWebviewMessage } from "../../src/accure-provider-utils"
 import { configFeatures } from "../../src/features"
-import type { EventIndexingStatus, IndexingStatus } from "@kilocode/sdk/v2/client"
+import type { EventIndexingStatus, IndexingStatus } from "@accurecode/sdk/v2/client"
 
 function makeStatus(overrides: Partial<IndexingStatus> = {}): IndexingStatus {
   return {
@@ -92,16 +92,16 @@ describe("indexing feature detection", () => {
   it("detects supported indexing plugin specifiers", () => {
     expect(configFeatures({ plugin: ["accure-indexing"] }).indexing).toBe(true)
     expect(configFeatures({ plugin: ["accure-indexing@1.2.3"] }).indexing).toBe(true)
-    expect(configFeatures({ plugin: ["@kilocode/accure-indexing"] }).indexing).toBe(true)
-    expect(configFeatures({ plugin: ["@kilocode/accure-indexing@1.2.3"] }).indexing).toBe(true)
+    expect(configFeatures({ plugin: ["@accurecode/accure-indexing"] }).indexing).toBe(true)
+    expect(configFeatures({ plugin: ["@accurecode/accure-indexing@1.2.3"] }).indexing).toBe(true)
     expect(configFeatures({ plugin: ["file:///tmp/.opencode/plugin/accure-indexing.js"] }).indexing).toBe(true)
-    expect(configFeatures({ plugin: ["file:///tmp/node_modules/@kilocode/accure-indexing/index.js"] }).indexing).toBe(
+    expect(configFeatures({ plugin: ["file:///tmp/node_modules/@accurecode/accure-indexing/index.js"] }).indexing).toBe(
       true,
     )
   })
 
   it("ignores unrelated plugin lists", () => {
-    expect(configFeatures({ plugin: ["@kilocode/accure-gateway"] }).indexing).toBe(false)
+    expect(configFeatures({ plugin: ["@accurecode/accure-gateway"] }).indexing).toBe(false)
     expect(configFeatures({ plugin: ["file:///tmp/.opencode/plugin/index.js"] }).indexing).toBe(false)
     expect(configFeatures({}).indexing).toBe(false)
   })

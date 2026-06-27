@@ -1,18 +1,18 @@
-package ai.kilocode.client.settings.providers
+package ai.accurecode.client.settings.providers
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.settings.base.KiloReadyConfigurable
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.settings.base.AccureReadyConfigurable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import kotlinx.coroutines.CoroutineScope
 import javax.swing.JComponent
 
-class ProvidersConfigurable : KiloReadyConfigurable() {
+class ProvidersConfigurable : AccureReadyConfigurable() {
     private var ui: ProvidersSettingsUi? = null
 
     override fun getId(): String = ID
-    override fun getDisplayName(): String = KiloBundle.message("settings.providers.displayName")
+    override fun getDisplayName(): String = AccureBundle.message("settings.providers.displayName")
 
     @RequiresEdt
     override fun createReadyComponent(cs: CoroutineScope): JComponent {
@@ -44,6 +44,6 @@ class ProvidersConfigurable : KiloReadyConfigurable() {
     }
 
     companion object {
-        const val ID = "ai.kilocode.jetbrains.settings.providers"
+        const val ID = "ai.accurecode.jetbrains.settings.providers"
     }
 }

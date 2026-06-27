@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { KILO_API_BASE, MODELS_FETCH_TIMEOUT_MS } from "./constants.js"
+import { ACCURECODE_API_BASE, MODELS_FETCH_TIMEOUT_MS } from "./constants.js"
 import { getDefaultHeaders } from "../headers.js"
 
 /**
@@ -54,7 +54,7 @@ export function clearModesCache() {
 }
 
 /**
- * Fetch custom modes for an organization from the Kilo Cloud API.
+ * Fetch custom modes for an organization from the Accure Cloud API.
  *
  * @param token - Bearer authentication token
  * @param organizationId - Organization UUID
@@ -67,7 +67,7 @@ export async function fetchOrganizationModes(token: string, organizationId: stri
   }
 
   try {
-    const url = `${KILO_API_BASE}/api/organizations/${encodeURIComponent(organizationId)}/modes`
+    const url = `${ACCURECODE_API_BASE}/api/organizations/${encodeURIComponent(organizationId)}/modes`
     const response = await fetch(url, {
       headers: {
         ...getDefaultHeaders(),
@@ -91,7 +91,7 @@ export async function fetchOrganizationModes(token: string, organizationId: stri
     cache.set(organizationId, { modes, timestamp: Date.now() })
     return modes
   } catch (err) {
-    console.warn("[Kilo Gateway] Error fetching organization modes:", err)
+    console.warn("[Accure Gateway] Error fetching organization modes:", err)
     return []
   }
 }

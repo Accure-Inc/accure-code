@@ -43,7 +43,7 @@ export async function startSpeechCapture(input: Input): Promise<boolean> {
   starting = input.requestId
   try {
     const bin = await findFFmpeg()
-    const file = path.join(os.tmpdir(), `kilo-stt-${process.pid}-${Date.now()}.wav`)
+    const file = path.join(os.tmpdir(), `accure-stt-${process.pid}-${Date.now()}.wav`)
     const state = await startWithArgs(bin, file, input, await inputArgSets(bin))
     return !state.stopped
   } finally {
@@ -61,7 +61,7 @@ export async function stopSpeechCapture(requestId: string): Promise<Audio> {
   const size = await stat(state.file)
     .then((info) => info.size)
     .catch((err: unknown) => {
-      console.warn("[Kilo New] Failed to stat speech recording", err)
+      console.warn("[Accure New] Failed to stat speech recording", err)
       return 0
     })
 
@@ -231,7 +231,7 @@ function requireActive(requestId: string): Recording {
 
 async function findFFmpeg(): Promise<string> {
   const paths = [
-    process.env.KILO_FFMPEG_PATH,
+    process.env.ACCURECODE_FFMPEG_PATH,
     process.env.FFMPEG_PATH,
     bundledPath(),
     ...platformPaths(),
@@ -245,11 +245,13 @@ async function findFFmpeg(): Promise<string> {
       await exec(bin, ["-version"], { timeout: 3000 })
       return bin
     } catch (err) {
-      console.warn(`[Kilo New] FFmpeg candidate failed: ${bin}`, err)
+      console.warn(`[Accure New] FFmpeg candidate failed: ${bin}`, err)
     }
   }
 
-  throw new Error("Speech input needs the bundled FFmpeg helper, but it was not found. Rebuild or reinstall Accure Code.")
+  throw new Error(
+    "Speech input needs the bundled FFmpeg helper, but it was not found. Rebuild or reinstall Accure Code.",
+  )
 }
 
 function bundledPath(): string {
@@ -278,7 +280,7 @@ function platformPaths(): string[] {
 async function inputArgSets(bin: string): Promise<Args[]> {
   if (process.platform === "darwin") return [{ input: ["-f", "avfoundation", "-i", ":default"] }]
   if (process.platform === "linux") {
-    const device = process.env.KILO_FFMPEG_AUDIO_DEVICE
+    const device = process.env.ACCURECODE_FFMPEG_AUDIO_DEVICE
     if (device)
       return [
         { pipe: ["--target", device, "--format", "s16", "--rate", "16000", "--channels", "1", "-"], input: [] },
@@ -296,7 +298,7 @@ async function inputArgSets(bin: string): Promise<Args[]> {
 }
 
 async function windowsInputArgSets(bin: string): Promise<Args[]> {
-  const configured = process.env.KILO_FFMPEG_AUDIO_DEVICE
+  const configured = process.env.ACCURECODE_FFMPEG_AUDIO_DEVICE
   if (configured) return [{ input: ["-f", "dshow", "-i", `audio=${configured}`] }]
 
   const devices = await listDshowAudioDevices(bin)
@@ -362,6 +364,6 @@ export function cleanOutput(raw: string): string {
 
 async function removeFile(file: string): Promise<void> {
   await unlink(file).catch((err: unknown) => {
-    console.warn("[Kilo New] Failed to remove speech recording", err)
+    console.warn("[Accure New] Failed to remove speech recording", err)
   })
 }

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { KilocodeMcpConfig } from "@/kilocode/cli/cmd/mcp"
+import { AccurecodeMcpConfig } from "@/accurecode/cli/cmd/mcp"
 
 const added = `{
   "permission": {
@@ -14,9 +14,9 @@ const added = `{
   },
 }`
 
-describe("KilocodeMcpConfig.format", () => {
-  test("writes strict JSON for kilo.json", () => {
-    const output = KilocodeMcpConfig.format("/tmp/kilo.json", added)
+describe("AccurecodeMcpConfig.format", () => {
+  test("writes strict JSON for accure.json", () => {
+    const output = AccurecodeMcpConfig.format("/tmp/accure.json", added)
 
     expect(JSON.parse(output)).toEqual({
       permission: { bash: "allow" },
@@ -31,7 +31,7 @@ describe("KilocodeMcpConfig.format", () => {
     expect(output).not.toEndWith(",\n}")
   })
 
-  test("preserves JSONC formatting for kilo.jsonc", () => {
-    expect(KilocodeMcpConfig.format("/tmp/kilo.jsonc", added)).toBe(added)
+  test("preserves JSONC formatting for accure.jsonc", () => {
+    expect(AccurecodeMcpConfig.format("/tmp/accure.jsonc", added)).toBe(added)
   })
 })

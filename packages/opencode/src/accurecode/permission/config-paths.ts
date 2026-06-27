@@ -1,13 +1,13 @@
 import path from "path"
 import { Global } from "@opencode-ai/core/global"
-import { KilocodePaths } from "@/kilocode/paths"
+import { AccurecodePaths } from "@/accurecode/paths"
 
 export namespace ConfigProtection {
   /**
    * Config directory prefixes (relative paths, forward-slash normalized).
-   * Matches .kilo/, .kilocode/, .opencode/ at any depth within the project.
+   * Matches .accurecode/, .accurecode/, .opencode/ at any depth within the project.
    */
-  const CONFIG_DIRS = [".kilo/", ".kilocode/", ".opencode/"]
+  const CONFIG_DIRS = [".accurecode/", ".accurecode/", ".opencode/"]
 
   /**
    * Subdirectories under CONFIG_DIRS that are NOT config files (e.g. plan files).
@@ -19,7 +19,7 @@ export namespace ConfigProtection {
    * Root-level config files that must be protected.
    * Matched only when the relative path has no directory component.
    */
-  const CONFIG_ROOT_FILES = new Set(["kilo.json", "kilo.jsonc", "opencode.json", "opencode.jsonc", "AGENTS.md"])
+  const CONFIG_ROOT_FILES = new Set(["accure.json", "accure.jsonc", "opencode.json", "opencode.jsonc", "AGENTS.md"])
 
   /** Metadata key used to signal the UI to hide the "Allow always" option. */
   export const DISABLE_ALWAYS_KEY = "disableAlways" as const
@@ -37,8 +37,8 @@ export namespace ConfigProtection {
   export function isRelative(pattern: string): boolean {
     const normalized = normalize(pattern)
     for (const dir of CONFIG_DIRS) {
-      const bare = dir.slice(0, -1) // e.g. ".kilo"
-      // Match at root (e.g. ".kilo/foo") or nested (e.g. "packages/sub/.kilo/foo")
+      const bare = dir.slice(0, -1) // e.g. ".accurecode"
+      // Match at root (e.g. ".accurecode/foo") or nested (e.g. "packages/sub/.accurecode/foo")
       if (normalized === bare || normalized.endsWith("/" + bare)) return true
       if (normalized.startsWith(dir)) {
         if (excluded(normalized.slice(dir.length))) continue
@@ -67,7 +67,10 @@ export namespace ConfigProtection {
 
   function configs(): string[] {
     return Array.from(
-      new Set([Global.Path.config, process.env.XDG_CONFIG_HOME ? path.join(process.env.XDG_CONFIG_HOME, "kilo") : ""]),
+      new Set([
+        Global.Path.config,
+        process.env.XDG_CONFIG_HOME ? path.join(process.env.XDG_CONFIG_HOME, "accure") : "",
+      ]),
     ).filter(Boolean)
   }
 
@@ -75,10 +78,10 @@ export namespace ConfigProtection {
     if (process.platform !== "win32") return false
     return keys(p).some(
       (key) =>
-        key.endsWith("/config/kilo") ||
-        key.includes("/config/kilo/") ||
-        key.endsWith("/.config/kilo") ||
-        key.includes("/.config/kilo/"),
+        key.endsWith("/config/accure") ||
+        key.includes("/config/accure/") ||
+        key.endsWith("/.config/accure") ||
+        key.includes("/.config/accure/"),
     )
   }
 
@@ -94,13 +97,13 @@ export namespace ConfigProtection {
   export function isAbsolute(filepath: string): boolean {
     if (fallback(filepath)) return true
 
-    // ~/.config/kilo/ (XDG config)
+    // ~/.config/accure/ (XDG config)
     for (const dir of configs()) {
       if (within(filepath, dir)) return true
     }
 
-    // ~/.kilo/ and ~/.kilocode/ (legacy global dirs)
-    for (const dir of KilocodePaths.globalDirs()) {
+    // ~/.accurecode/ and ~/.accurecode/ (legacy global dirs)
+    for (const dir of AccurecodePaths.globalDirs()) {
       if (within(filepath, dir)) return true
     }
 

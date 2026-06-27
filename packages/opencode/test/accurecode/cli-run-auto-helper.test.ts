@@ -1,15 +1,15 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { describe, expect, test } from "bun:test"
-import { KiloRunAuto } from "../../src/kilocode/cli/run-auto"
+import { AccureRunAuto } from "../../src/accurecode/cli/run-auto"
 
-describe("KiloRunAuto", () => {
+describe("AccureRunAuto", () => {
   test("tracks task child sessions without allowing unrelated sessions", () => {
-    const state = KiloRunAuto.create("ses_root")
+    const state = AccureRunAuto.create("ses_root")
 
-    expect(KiloRunAuto.allowed(state, "ses_root")).toBe(true)
-    expect(KiloRunAuto.allowed(state, "ses_child")).toBe(false)
+    expect(AccureRunAuto.allowed(state, "ses_root")).toBe(true)
+    expect(AccureRunAuto.allowed(state, "ses_child")).toBe(false)
 
-    KiloRunAuto.track(state, {
+    AccureRunAuto.track(state, {
       type: "tool",
       tool: "task",
       sessionID: "ses_root",
@@ -20,14 +20,14 @@ describe("KiloRunAuto", () => {
       },
     })
 
-    expect(KiloRunAuto.allowed(state, "ses_child")).toBe(true)
-    expect(KiloRunAuto.allowed(state, "ses_other")).toBe(false)
+    expect(AccureRunAuto.allowed(state, "ses_child")).toBe(true)
+    expect(AccureRunAuto.allowed(state, "ses_other")).toBe(false)
   })
 
   test("ignores malformed or non-root task metadata", () => {
-    const state = KiloRunAuto.create("ses_root")
+    const state = AccureRunAuto.create("ses_root")
 
-    KiloRunAuto.track(state, {
+    AccureRunAuto.track(state, {
       type: "tool",
       tool: "task",
       sessionID: "ses_root",
@@ -37,7 +37,7 @@ describe("KiloRunAuto", () => {
         },
       },
     })
-    KiloRunAuto.track(state, {
+    AccureRunAuto.track(state, {
       type: "tool",
       tool: "task",
       sessionID: "ses_other",
@@ -47,13 +47,13 @@ describe("KiloRunAuto", () => {
         },
       },
     })
-    KiloRunAuto.track(state, {
+    AccureRunAuto.track(state, {
       type: "text",
       sessionID: "ses_root",
       state: {},
     })
 
-    expect(KiloRunAuto.allowed(state, "ses_wrong")).toBe(false)
-    expect(KiloRunAuto.allowed(state, "")).toBe(false)
+    expect(AccureRunAuto.allowed(state, "ses_wrong")).toBe(false)
+    expect(AccureRunAuto.allowed(state, "")).toBe(false)
   })
 })

@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.ui.attachment
+package ai.accurecode.client.session.ui.attachment
 
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.fileTypes.FileTypeManager

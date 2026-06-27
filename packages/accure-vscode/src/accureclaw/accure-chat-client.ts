@@ -1,10 +1,10 @@
 /**
- * HTTP client for the kilo-chat Cloudflare Worker.
+ * HTTP client for the accure-chat Cloudflare Worker.
  *
- * Minimal inline port of `@kilocode/kilo-chat/client` (cloud monorepo) tailored
+ * Minimal inline port of `@accurecode/accure-chat/client` (cloud monorepo) tailored
  * to what the VS Code extension needs: conversation list + details, message
  * CRUD, reactions, typing, and action execution. No zod runtime validation —
- * the kilo-chat worker is the source of truth and validates at its edge.
+ * the accure-chat worker is the source of truth and validates at its edge.
  */
 
 import type {
@@ -17,19 +17,19 @@ import type {
   Message,
 } from "./types"
 
-export type KiloChatClientConfig = {
+export type AccureChatClientConfig = {
   baseUrl: string
   getToken: () => Promise<string>
   onUnauthorized?: () => void
 }
 
-export class KiloChatApiError extends Error {
+export class AccureChatApiError extends Error {
   constructor(
     public readonly status: number,
     public readonly body: unknown,
   ) {
-    super(`KiloChat request failed: ${status}${formatBodyDetail(body)}`)
-    this.name = "KiloChatApiError"
+    super(`AccureChat request failed: ${status}${formatBodyDetail(body)}`)
+    this.name = "AccureChatApiError"
   }
 }
 
@@ -61,13 +61,13 @@ type HttpOpts = {
 // server-assigned ULID than a later send.
 type SendQueue = Map<string, Promise<unknown>>
 
-export class KiloChatClient {
+export class AccureChatClient {
   private readonly baseUrl: string
   private readonly getToken: () => Promise<string>
   private readonly onUnauthorized: (() => void) | undefined
   private readonly sendQueues: SendQueue = new Map()
 
-  constructor(config: KiloChatClientConfig) {
+  constructor(config: AccureChatClientConfig) {
     this.baseUrl = config.baseUrl.replace(/\/$/, "")
     this.getToken = config.getToken
     this.onUnauthorized = config.onUnauthorized
@@ -257,7 +257,7 @@ export class KiloChatClient {
     if (!res.ok) {
       if (res.status === 401 || res.status === 403) this.onUnauthorized?.()
       const body: unknown = await res.json().catch(() => null)
-      throw new KiloChatApiError(res.status, body)
+      throw new AccureChatApiError(res.status, body)
     }
 
     if (res.status === 204) return undefined as unknown as T

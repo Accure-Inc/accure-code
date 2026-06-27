@@ -2,13 +2,13 @@
 
 ## Goal
 Improve JetBrains session UI icon consistency and reduce accidental header interactions:
-- Use Kilo/VS Code-aligned session icons in session views.
+- Use Accure/VS Code-aligned session icons in session views.
 - Fix the reasoning header icon.
 - Normalize session part collapse/expand chevrons so collapsed/expanded states do not jump between differently sized glyphs.
 - Move the session-details toggle away from compaction and place it before the session title.
 
 ## Findings
-- Session view icons are centralized in `packages/accure-jetbrains/frontend/src/main/kotlin/ai/kilocode/client/session/views/SessionViewIcons.kt` and loaded from `frontend/src/main/resources/icons/views/*.svg`.
+- Session view icons are centralized in `packages/accure-jetbrains/frontend/src/main/kotlin/ai/accurecode/client/session/views/SessionViewIcons.kt` and loaded from `frontend/src/main/resources/icons/views/*.svg`.
 - The JetBrains `views` SVGs already mirror the shared VS Code/UI icon paths from `packages/ui/src/components/icon.tsx` for the audited names, including `brain`, `chevron-down`, `chevron-right`, `checklist`, `console`, `warning`, etc.
 - The reasoning view currently renders `SessionViewIcons.eye` in `ReasoningView.kt`; VS Code/shared UI uses the `brain` icon for reasoning/thinking surfaces, and `SessionViewIcons.brain` already exists.
 - Standard collapsible session parts use `SessionViewIcons.chevronDown` when expanded and `SessionViewIcons.chevronRight` when collapsed in `AbstractSessionPartView.kt`; `QuestionResultView.kt` repeats this pattern manually. The down/right SVG paths have different visual extents.
@@ -16,8 +16,8 @@ Improve JetBrains session UI icon consistency and reduce accidental header inter
 
 ## Implementation Steps
 1. **Keep icon sources aligned with VS Code/shared UI**
-   - Treat `packages/ui/src/components/icon.tsx` as the source for Kilo web/session glyph shapes.
-   - Re-check `SessionViewIcons.kt` entries against available JetBrains assets; only update or add SVGs if a session view uses a Kilo icon missing from `frontend/src/main/resources/icons/views/`.
+   - Treat `packages/ui/src/components/icon.tsx` as the source for Accure web/session glyph shapes.
+   - Re-check `SessionViewIcons.kt` entries against available JetBrains assets; only update or add SVGs if a session view uses a Accure icon missing from `frontend/src/main/resources/icons/views/`.
    - Preserve JetBrains SVG theming rules: no `currentColor`; use literal palette colors and dark variants where assets are added or changed.
 
 2. **Fix reasoning icon**
@@ -26,7 +26,7 @@ Improve JetBrains session UI icon consistency and reduce accidental header inter
 
 3. **Normalize collapse/expand chevrons for session parts**
    - Stop using the mixed `chevronRight`/`chevronDown` pair for collapsible session content.
-   - Use a single base Kilo chevron glyph for both states, matching the current custom chevron used by the session header (`/icons/chevron-down.svg` / equivalent `SessionViewIcons.chevronDown`).
+   - Use a single base Accure chevron glyph for both states, matching the current custom chevron used by the session header (`/icons/chevron-down.svg` / equivalent `SessionViewIcons.chevronDown`).
    - Add a shared rotated icon for the opposite state instead of switching to a differently sized right-facing asset. Prefer a small reusable helper or centralized icon field rather than importing header-specific UI into session views.
    - Update `AbstractSessionPartView.kt` and `QuestionResultView.kt` to use the normalized chevron pair.
    - Leave `QuestionView.kt` navigation chevrons alone unless auditing shows they are being used for collapse/expand; those are previous/next controls, not expand/collapse controls.
@@ -54,7 +54,7 @@ Improve JetBrains session UI icon consistency and reduce accidental header inter
 
 6. **Verification**
    - Run the smallest relevant JetBrains checks from `packages/accure-jetbrains/`:
-     - `./gradlew test --tests "ai.kilocode.client.session.views.ReasoningViewTest" --tests "ai.kilocode.client.session.views.base.AbstractSessionPartViewTest" --tests "ai.kilocode.client.session.views.QuestionResultViewTest" --tests "ai.kilocode.client.session.ui.header.SessionHeaderPanelTest"`
+     - `./gradlew test --tests "ai.accurecode.client.session.views.ReasoningViewTest" --tests "ai.accurecode.client.session.views.base.AbstractSessionPartViewTest" --tests "ai.accurecode.client.session.views.QuestionResultViewTest" --tests "ai.accurecode.client.session.ui.header.SessionHeaderPanelTest"`
      - `./gradlew typecheck`
    - If the filtered Gradle test syntax is not accepted by the project, run `./gradlew test` from `packages/accure-jetbrains/` instead.
 

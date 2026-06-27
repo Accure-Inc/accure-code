@@ -1,13 +1,13 @@
-package ai.kilocode.client.session.views.tool
+package ai.accurecode.client.session.views.tool
 
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.base.SecondarySessionPartView
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.base.SecondarySessionPartView
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.openapi.actionSystem.DataSink
 import com.intellij.openapi.actionSystem.UiDataProvider
 import com.intellij.openapi.util.Disposer

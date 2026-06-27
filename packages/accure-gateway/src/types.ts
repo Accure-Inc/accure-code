@@ -23,13 +23,13 @@ export interface Organization {
   role: string
 }
 
-export interface KilocodeProfile {
+export interface AccurecodeProfile {
   email: string
   name?: string
   organizations?: Organization[]
 }
 
-export interface KilocodeBalance {
+export interface AccurecodeBalance {
   balance: number
 }
 
@@ -50,23 +50,23 @@ export interface PollResult<T> {
 // ============================================================================
 
 /**
- * Options for creating a Kilo provider instance
+ * Options for creating a Accure provider instance
  */
-export interface KiloProviderOptions {
+export interface AccureProviderOptions {
   /**
-   * KiloCode authentication token
+   * AccureCode authentication token
    */
-  kilocodeToken?: string
+  accurecodeToken?: string
 
   /**
    * Organization ID for multi-tenant setups
    */
-  kilocodeOrganizationId?: string
+  accurecodeOrganizationId?: string
 
   /**
    * Model ID to use (e.g., "anthropic/claude-sonnet-4")
    */
-  kilocodeModel?: string
+  accurecodeModel?: string
 
   /**
    * Specific OpenRouter provider to use
@@ -74,9 +74,9 @@ export interface KiloProviderOptions {
   openRouterSpecificProvider?: string
 
   /**
-   * Base URL for the KiloCode API
-   * Can be overridden by KILO_API_URL environment variable
-   * @default "https://api.kilo.ai"
+   * Base URL for the AccureCode API
+   * Can be overridden by ACCURECODE_API_URL environment variable
+   * @default "https://api.accurecode.ai"
    */
   baseURL?: string
 
@@ -86,7 +86,7 @@ export interface KiloProviderOptions {
   headers?: Record<string, string>
 
   /**
-   * API key (alternative to kilocodeToken)
+   * API key (alternative to accurecodeToken)
    */
   apiKey?: string
 
@@ -114,7 +114,7 @@ export interface KiloProviderOptions {
 /**
  * Metadata for API requests
  */
-export interface KiloMetadata {
+export interface AccureMetadata {
   /**
    * Task ID for tracking
    */
@@ -164,7 +164,7 @@ export interface ProviderInfo {
   models: Record<string, any>
 }
 
-export type KiloProvider = Provider & {
+export type AccureProvider = Provider & {
   alibaba(modelId: string): LanguageModel
   anthropic(modelId: string): LanguageModel
   mistral(modelId: string): LanguageModel

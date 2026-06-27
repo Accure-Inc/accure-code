@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
-import { abortSession, SessionAbort } from "../../src/kilo-provider/abort"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
+import { abortSession, SessionAbort } from "../../src/accure-provider/abort"
 
 function client(calls: unknown[], fail = false) {
   return {
@@ -11,7 +11,7 @@ function client(calls: unknown[], fail = false) {
         return { data: true }
       },
     },
-  } as unknown as KiloClient
+  } as unknown as AccureClient
 }
 
 describe("SessionAbort", () => {

@@ -6,20 +6,20 @@ import {
 import { DEFAULT_SPEECH_TO_TEXT_MODEL } from "../../src/speech-to-text/models"
 
 describe("speech-to-text availability", () => {
-  it("shows speech input for stored Kilo credentials", () => {
-    expect(canUseSpeechToText({}, { kilo: "oauth" })).toBe(true)
-    expect(canUseSpeechToText({}, { kilo: "api" })).toBe(true)
+  it("shows speech input for stored Accure credentials", () => {
+    expect(canUseSpeechToText({}, { accure: "oauth" })).toBe(true)
+    expect(canUseSpeechToText({}, { accure: "api" })).toBe(true)
   })
 
-  it("hides speech input without usable Kilo credentials", () => {
+  it("hides speech input without usable Accure credentials", () => {
     expect(canUseSpeechToText({}, {})).toBe(false)
-    expect(canUseSpeechToText({}, { kilo: "wellknown" })).toBe(false)
+    expect(canUseSpeechToText({}, { accure: "wellknown" })).toBe(false)
   })
 
   it("honors enabled and disabled provider configuration", () => {
-    expect(canUseSpeechToText({ disabled_providers: ["kilo"] }, { kilo: "oauth" })).toBe(false)
-    expect(canUseSpeechToText({ enabled_providers: ["openai"] }, { kilo: "oauth" })).toBe(false)
-    expect(canUseSpeechToText({ enabled_providers: ["kilo"] }, { kilo: "oauth" })).toBe(true)
+    expect(canUseSpeechToText({ disabled_providers: ["accure"] }, { accure: "oauth" })).toBe(false)
+    expect(canUseSpeechToText({ enabled_providers: ["openai"] }, { accure: "oauth" })).toBe(false)
+    expect(canUseSpeechToText({ enabled_providers: ["accure"] }, { accure: "oauth" })).toBe(true)
   })
 
   it("normalizes configured and unknown transcription models", () => {

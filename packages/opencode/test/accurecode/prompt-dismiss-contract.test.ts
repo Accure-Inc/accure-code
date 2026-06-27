@@ -1,9 +1,9 @@
 /**
- * Contract test for prompt.ts Kilo-specific invariants.
+ * Contract test for prompt.ts Accure-specific invariants.
  *
- * prompt.ts is a shared upstream file. The Kilo-specific "new prompt unblocks
+ * prompt.ts is a shared upstream file. The Accure-specific "new prompt unblocks
  * pending suggestions/questions then enqueues without cancelling the in-flight
- * stream" behaviour lives inside a kilocode_change block. An upstream merge
+ * stream" behaviour lives inside a accurecode_change block. An upstream merge
  * that restructures the prompt handling could silently remove these calls —
  * this test catches that.
  */
@@ -14,10 +14,10 @@ import path from "node:path"
 
 const PROMPT_FILE = path.resolve(import.meta.dir, "../../src/session/prompt.ts")
 
-describe("prompt.ts Kilo-specific invariants", () => {
-  test("imports Suggestion from kilocode/suggestion", () => {
+describe("prompt.ts Accure-specific invariants", () => {
+  test("imports Suggestion from accurecode/suggestion", () => {
     const content = fs.readFileSync(PROMPT_FILE, "utf-8")
-    expect(content).toMatch(/import\s*\{[^}]*Suggestion[^}]*\}\s*from\s*["']@\/kilocode\/suggestion["']/)
+    expect(content).toMatch(/import\s*\{[^}]*Suggestion[^}]*\}\s*from\s*["']@\/accurecode\/suggestion["']/)
   })
 
   test("imports Question from the question module", () => {
@@ -34,15 +34,15 @@ describe("prompt.ts Kilo-specific invariants", () => {
     const content = fs.readFileSync(PROMPT_FILE, "utf-8")
     // dismissAll for both suggestions and questions must precede the enqueue so
     // an in-flight handle.process blocked on a pending tool prompt can return.
-    // Critically, the block must NOT call state.cancel or KiloSessionPromptQueue.reserve —
+    // Critically, the block must NOT call state.cancel or AccureSessionPromptQueue.reserve —
     // either of those would abort the running streamText mid-tokens, which was
     // the #9332 regression. Order: dismissAll(Suggestion), question.dismissAll, enqueue.
     const block = content.match(
-      /kilocode_change start[^\n]*unblock tools[\s\S]*?Suggestion\.dismissAll[\s\S]*?question\.dismissAll[\s\S]*?KiloSessionPromptQueue\.enqueue/,
+      /accurecode_change start[^\n]*unblock tools[\s\S]*?Suggestion\.dismissAll[\s\S]*?question\.dismissAll[\s\S]*?AccureSessionPromptQueue\.enqueue/,
     )
     expect(block).not.toBeNull()
     expect(content).not.toMatch(/state\.cancel\(input\.sessionID\)/)
-    expect(content).not.toMatch(/KiloSessionPromptQueue\.reserve/)
+    expect(content).not.toMatch(/AccureSessionPromptQueue\.reserve/)
   })
 
   test("runLoop breaks out between LLM steps when a newer prompt was enqueued", () => {
@@ -50,6 +50,6 @@ describe("prompt.ts Kilo-specific invariants", () => {
     // hasFollowup has to be checked inside runLoop so the current handle.process
     // finishes naturally (tokens + inline tool calls) and the next LLM step is
     // skipped when a follow-up is already queued.
-    expect(content).toContain("KiloSessionPromptQueue.hasFollowup(sessionID)")
+    expect(content).toContain("AccureSessionPromptQueue.hasFollowup(sessionID)")
   })
 })

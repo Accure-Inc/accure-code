@@ -1,18 +1,18 @@
 ---
 name: release-jetbrains
-description: Use when releasing the Kilo JetBrains plugin -- resolve a version ("next rc" or explicit), run the prepare workflow, edit and commit a filtered human-readable changelog on the release PR, then watch publish to completion.
+description: Use when releasing the Accure JetBrains plugin -- resolve a version ("next rc" or explicit), run the prepare workflow, edit and commit a filtered human-readable changelog on the release PR, then watch publish to completion.
 ---
 
 # JetBrains Release
 
-Use this skill when releasing the Kilo JetBrains plugin.
+Use this skill when releasing the Accure JetBrains plugin.
 
 This skill drives the existing JetBrains release workflows. It must not move, delete, or recreate JetBrains release tags. It must always confirm the resolved version with the user before dispatching the prepare workflow because the prepare workflow creates an immutable `jetbrains/v<version>` tag.
 
 ## Preconditions
 
 - Run from the repository root.
-- `gh` must be authenticated for `Kilo-Org/kilocode` with permission to dispatch workflows, read PRs, and write contents. Merge permission is only required if the user asks the skill to merge the release PR automatically.
+- `gh` must be authenticated for `Accure-Inc/accure-code` with permission to dispatch workflows, read PRs, and write contents. Merge permission is only required if the user asks the skill to merge the release PR automatically.
 - Check auth with `gh auth status`. For GitHub CLI OAuth, refresh common release scopes with `gh auth refresh -s repo -s workflow`; `repo` covers private-repo contents and PR operations, and `workflow` allows workflow dispatch. If using a fine-grained token instead, grant repository permissions for Actions read/write, Contents read/write, and Pull requests read/write. Merging still requires normal repository collaborator permission or a token/user allowed by branch protection.
 - Reference `packages/accure-jetbrains/RELEASING.md` for manual recovery rules.
 - Do not locally check out the generated release branch. The helper scripts update the release branch through GitHub to avoid disturbing the current worktree.
@@ -22,7 +22,7 @@ This skill drives the existing JetBrains release workflows. It must not move, de
 Resolve the user's version request:
 
 ```bash
-bun .kilo/skills/release-jetbrains/script/resolve-version.ts --spec "next rc"
+bun .accurecode/skills/release-jetbrains/script/resolve-version.ts --spec "next rc"
 ```
 
 Accepted specs:
@@ -41,13 +41,13 @@ Show the resolved `version`, `kind`, and default `fromTagDefault` to the user an
 After confirmation, dispatch and watch the prepare workflow:
 
 ```bash
-bun .kilo/skills/release-jetbrains/script/dispatch-prepare.ts --kind rc --version 7.0.1-rc.7
+bun .accurecode/skills/release-jetbrains/script/dispatch-prepare.ts --kind rc --version 7.0.1-rc.7
 ```
 
 Pass a generous Bash timeout, such as `1800000` ms, because the script blocks on `gh run watch --exit-status`. If the shell times out but the workflow is still running, re-attach with:
 
 ```bash
-bun .kilo/skills/release-jetbrains/script/dispatch-prepare.ts --kind rc --version 7.0.1-rc.7 --run-id <run-id>
+bun .accurecode/skills/release-jetbrains/script/dispatch-prepare.ts --kind rc --version 7.0.1-rc.7 --run-id <run-id>
 ```
 
 The script prints `prNumber`, `prUrl`, `runUrl`, and `branch` on success. Immediately show the `prUrl` to the user so they can open the release PR without asking for it later.
@@ -88,8 +88,8 @@ Include source context in an HTML comment so it is easy to edit but not shipped:
 
 ```markdown
 <!-- CONTEXT - deleted automatically on commit. Source PRs in range:
-- #1234 feat(jetbrains): ... https://github.com/Kilo-Org/kilocode/pull/1234
-- #1235 fix(cli): ... https://github.com/Kilo-Org/kilocode/pull/1235
+- #1234 feat(jetbrains): ... https://github.com/Accure-Inc/accure-code/pull/1234
+- #1235 fix(cli): ... https://github.com/Accure-Inc/accure-code/pull/1235
 -->
 ```
 
@@ -100,7 +100,7 @@ Ask the user to edit the file and confirm when done.
 After the user confirms the draft is ready, strip the `<!-- CONTEXT ... -->` block into a temporary cleaned file, then commit the cleaned section to the release branch:
 
 ```bash
-bun .kilo/skills/release-jetbrains/script/update-changelog.ts --version 7.0.1-rc.7 --file /path/to/clean-section.md
+bun .accurecode/skills/release-jetbrains/script/update-changelog.ts --version 7.0.1-rc.7 --file /path/to/clean-section.md
 ```
 
 The script updates `packages/accure-jetbrains/CHANGELOG.md` on `jetbrains/release/v<version>` through the GitHub contents API and commits with:
@@ -112,7 +112,7 @@ docs(jetbrains): edit changelog for v<version>
 If `update-changelog.ts` fails with `gh: Not Found (HTTP 404)`, verify the release branch and changelog path with:
 
 ```bash
-gh api "repos/Kilo-Org/kilocode/contents/packages/accure-jetbrains/CHANGELOG.md?ref=jetbrains/release/v<version>"
+gh api "repos/Accure-Inc/accure-code/contents/packages/accure-jetbrains/CHANGELOG.md?ref=jetbrains/release/v<version>"
 ```
 
 Then either fix and retry the helper, or perform the equivalent contents API update using `ref` in the query string.
@@ -140,25 +140,25 @@ gh run watch <run-id> --exit-status
 By default, have the user merge the release PR manually in GitHub, then watch the publish workflow:
 
 ```bash
-bun .kilo/skills/release-jetbrains/script/watch-publish.ts --pr <number> --version 7.0.1-rc.7
+bun .accurecode/skills/release-jetbrains/script/watch-publish.ts --pr <number> --version 7.0.1-rc.7
 ```
 
 Only merge automatically when the user explicitly asks for it and `gh` has merge permission:
 
 ```bash
-bun .kilo/skills/release-jetbrains/script/watch-publish.ts --pr <number> --version 7.0.1-rc.7 --merge
+bun .accurecode/skills/release-jetbrains/script/watch-publish.ts --pr <number> --version 7.0.1-rc.7 --merge
 ```
 
 Pass a generous Bash timeout, such as `1800000` ms. If the shell times out, re-attach with:
 
 ```bash
-bun .kilo/skills/release-jetbrains/script/watch-publish.ts --pr <number> --version 7.0.1-rc.7 --run-id <run-id>
+bun .accurecode/skills/release-jetbrains/script/watch-publish.ts --pr <number> --version 7.0.1-rc.7 --run-id <run-id>
 ```
 
 If `watch-publish.ts --merge` reports that the PR is already merged, or a transient GitHub API `5xx` interrupts publish-run discovery, rerun without `--merge`:
 
 ```bash
-bun .kilo/skills/release-jetbrains/script/watch-publish.ts --pr <number> --version <version>
+bun .accurecode/skills/release-jetbrains/script/watch-publish.ts --pr <number> --version <version>
 ```
 
 Report the Marketplace channel and GitHub Release URL. RC versions publish to the `eap` channel; stable versions publish to the default Marketplace channel.

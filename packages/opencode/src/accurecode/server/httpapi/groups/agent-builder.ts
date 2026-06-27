@@ -73,15 +73,15 @@ export const AgentBuilderApi = HttpApi.make("agent-builder")
           }),
         ),
       )
-      .annotateMerge(OpenApi.annotations({ title: "agent-builder", description: "Kilo agent builder routes." }))
+      .annotateMerge(OpenApi.annotations({ title: "agent-builder", description: "Accure agent builder routes." }))
       .middleware(InstanceContextMiddleware)
       .middleware(WorkspaceRoutingMiddleware)
       .middleware(Authorization),
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "accure HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Accure HttpApi surface.",
     }),
   )

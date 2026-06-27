@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test"
 import { build } from "esbuild"
 import { fileURLToPath } from "node:url"
 
-const source = fileURLToPath(new URL("../../ui/src/kilocode/markdown-incremental-dom.ts", import.meta.url))
+const source = fileURLToPath(new URL("../../ui/src/accurecode/markdown-incremental-dom.ts", import.meta.url))
 const bundle = await build({
   stdin: {
     contents: `

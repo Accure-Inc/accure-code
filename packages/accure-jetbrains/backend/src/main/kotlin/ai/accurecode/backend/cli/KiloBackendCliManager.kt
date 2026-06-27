@@ -1,8 +1,8 @@
-package ai.kilocode.backend.cli
+package ai.accurecode.backend.cli
 
-import ai.kilocode.KiloPlugin
-import ai.kilocode.backend.dev.KiloDevMode
-import ai.kilocode.log.KiloLog
+import ai.accurecode.AccurePlugin
+import ai.accurecode.backend.dev.AccureDevMode
+import ai.accurecode.log.AccureLog
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.util.SystemInfo
@@ -18,18 +18,18 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 /**
- * Manages the Kilo CLI binary lifecycle.
+ * Manages the Accure CLI binary lifecycle.
  *
  * Extracts the bundled CLI from JAR resources into IntelliJ's system directory,
- * spawns `kilo serve --port 0`, and exposes the result as [State].
+ * spawns `accure serve --port 0`, and exposes the result as [State].
  *
- * Concurrency is handled by the owning [KiloBackendAppService] — all public
+ * Concurrency is handled by the owning [AccureBackendAppService] — all public
  * methods except [exited] are called under its mutex. [exited] is called from
- * [KiloConnectionService]'s IO dispatcher and is thread-safe via the stale-ref
+ * [AccureConnectionService]'s IO dispatcher and is thread-safe via the stale-ref
  * guard and volatile [process] field.
  */
-class KiloBackendCliManager(
-    private val log: KiloLog = KiloLog.create(KiloBackendCliManager::class.java),
+class AccureBackendCliManager(
+    private val log: AccureLog = AccureLog.create(AccureBackendCliManager::class.java),
 ) : CliServer {
 
     companion object {
@@ -86,8 +86,8 @@ class KiloBackendCliManager(
 
     private fun extractCli(): File {
         val platform = platform()
-        val exe = if (SystemInfo.isWindows) "kilo.exe" else "kilo"
-        val target = File(PathManager.getSystemPath(), "kilo/bin/$exe")
+        val exe = if (SystemInfo.isWindows) "accure.exe" else "accure"
+        val target = File(PathManager.getSystemPath(), "accure/bin/$exe")
 
         if (forceExtract) {
             log.info("Force re-extracting CLI resources under ${target.parentFile.absolutePath}")
@@ -129,7 +129,7 @@ class KiloBackendCliManager(
 
     // Must be called from a background thread — devStorageEnv() performs blocking I/O (mkdirs).
     internal fun buildEnv(pwd: String, base: Map<String, String> = System.getenv()): Map<String, String> =
-        buildKiloCliEnv(pwd, base, log)
+        buildAccureCliEnv(pwd, base, log)
 
     private suspend fun spawn(cli: File): CliServer.State =
         withContext(Dispatchers.IO) {
@@ -144,7 +144,7 @@ class KiloBackendCliManager(
             builder.redirectErrorStream(false)
 
             log.info("Starting CLI: ${cmd.joinToString(" ")}")
-            log.info("CLI env: KILO_CLIENT=jetbrains KILO_PLATFORM=jetbrains KILO_APP_NAME=kilo-code")
+            log.info("CLI env: ACCURECODE_CLIENT=jetbrains ACCURECODE_PLATFORM=jetbrains ACCURECODE_APP_NAME=accure-code")
             val proc = try {
                 builder.start()
             } catch (e: Exception) {
@@ -168,8 +168,8 @@ class KiloBackendCliManager(
                 }.onFailure { err ->
                     if (proc.isAlive && closing !== proc) log.warn("CLI stderr reader failed", err)
                 }
-            }, "kilo-cli-stderr").apply { isDaemon = true; start() }
-            this@KiloBackendCliManager.stderr = err
+            }, "accure-cli-stderr").apply { isDaemon = true; start() }
+            this@AccureBackendCliManager.stderr = err
 
             BufferedReader(InputStreamReader(proc.inputStream)).use { reader ->
                 for (line in reader.lineSequence()) {
@@ -189,7 +189,7 @@ class KiloBackendCliManager(
             val details = synchronized(stderr) { stderr.toString().trim() }
             process = null
             uninstall()
-            this@KiloBackendCliManager.stderr = null
+            this@AccureBackendCliManager.stderr = null
             log.warn("CLI process exited with code $code before announcing a port: $details")
             CliServer.State.Error(
                 message = "CLI process exited with code $code before announcing a port",
@@ -224,7 +224,7 @@ class KiloBackendCliManager(
         val next = Thread({
             log.info("Shutdown hook — killing CLI process tree (pid ${proc.pid()})")
             kill(proc, "Shutdown hook", wait = false)
-        }, "kilo-cli-shutdown")
+        }, "accure-cli-shutdown")
         val ok = runCatching { Runtime.getRuntime().addShutdownHook(next) }
         if (ok.isFailure) {
             log.warn("Failed to install CLI shutdown hook", ok.exceptionOrNull())
@@ -288,46 +288,46 @@ class KiloBackendCliManager(
 private const val DEFAULT_CONFIG = """{"permission":{"edit":"ask","bash":"ask"}}"""
 
 // Must be called from a background thread — devStorageEnv() performs blocking I/O (mkdirs).
-internal fun buildKiloCliEnv(
+internal fun buildAccureCliEnv(
     pwd: String,
     base: Map<String, String> = System.getenv(),
-    log: KiloLog = KiloLog.create(KiloBackendCliManager::class.java),
+    log: AccureLog = AccureLog.create(AccureBackendCliManager::class.java),
 ): Map<String, String> = buildMap {
     putAll(base)
-    put("KILO_SERVER_PASSWORD", pwd)
-    put("KILO_CLIENT", "jetbrains")
-    put("KILO_ENABLE_QUESTION_TOOL", "true")
-    put("KILO_PLATFORM", "jetbrains")
-    put("KILO_APP_NAME", "kilo-code")
-    put("KILO_TELEMETRY_LEVEL", if (KiloDevMode.enabled()) "off" else "all")
-    put("KILO_DISABLE_CLAUDE_CODE", "true")
-    put("KILOCODE_FEATURE", "jetbrains-plugin")
-    putIfAbsent("KILO_CONFIG_CONTENT", DEFAULT_CONFIG)
+    put("ACCURECODE_SERVER_PASSWORD", pwd)
+    put("ACCURECODE_CLIENT", "jetbrains")
+    put("ACCURECODE_ENABLE_QUESTION_TOOL", "true")
+    put("ACCURECODE_PLATFORM", "jetbrains")
+    put("ACCURECODE_APP_NAME", "accure-code")
+    put("ACCURECODE_TELEMETRY_LEVEL", if (AccureDevMode.enabled()) "off" else "all")
+    put("ACCURECODE_DISABLE_CLAUDE_CODE", "true")
+    put("ACCURECODE_FEATURE", "jetbrains-plugin")
+    putIfAbsent("ACCURECODE_CONFIG_CONTENT", DEFAULT_CONFIG)
     ideEnv(log).forEach { entry -> put(entry.key, entry.value) }
     devStorageEnv(log)?.forEach { entry -> put(entry.key, entry.value) }
 }
 
-private fun ideEnv(log: KiloLog): Map<String, String> = buildMap {
+private fun ideEnv(log: AccureLog): Map<String, String> = buildMap {
     runCatching {
         val info = ApplicationInfo.getInstance()
         val name = info.fullApplicationName
         val build = info.build.asString()
-        put("KILO_EDITOR_NAME", name)
-        put("KILOCODE_EDITOR_NAME", "$name $build")
+        put("ACCURECODE_EDITOR_NAME", name)
+        put("ACCURECODE_EDITOR_NAME", "$name $build")
     }.onFailure { log.info("Could not read ApplicationInfo: ${it.message}") }
 
     runCatching {
-        val version = KiloPlugin.version()
-        if (version != null) put("KILO_APP_VERSION", version)
+        val version = AccurePlugin.version()
+        if (version != null) put("ACCURECODE_APP_VERSION", version)
     }.onFailure { log.info("Could not read plugin version: ${it.message}") }
 
     runCatching {
-        put("KILO_MACHINE_ID", machineId())
+        put("ACCURECODE_MACHINE_ID", machineId())
     }.onFailure { log.info("Could not read machine ID: ${it.message}") }
 }
 
 private fun machineId(): String {
-    val file = File(PathManager.getSystemPath(), "kilo/machine-id")
+    val file = File(PathManager.getSystemPath(), "accure/machine-id")
     if (file.exists()) return file.readText().trim()
     val id = UUID.randomUUID().toString()
     file.parentFile.mkdirs()
@@ -335,14 +335,14 @@ private fun machineId(): String {
     return id
 }
 
-private fun devStorageEnv(log: KiloLog): Map<String, String>? {
-    val enabled = System.getProperty("kilo.dev.storage.isolated", "false").toBoolean()
+private fun devStorageEnv(log: AccureLog): Map<String, String>? {
+    val enabled = System.getProperty("accurecode.dev.storage.isolated", "false").toBoolean()
     if (!enabled) return null
-    val root = System.getProperty("kilo.dev.worktree.root") ?: run {
-        log.warn("kilo.dev.storage.isolated=true but kilo.dev.worktree.root is not set; skipping dev storage isolation")
+    val root = System.getProperty("accurecode.dev.worktree.root") ?: run {
+        log.warn("accurecode.dev.storage.isolated=true but accurecode.dev.worktree.root is not set; skipping dev storage isolation")
         return null
     }
-    val dev = File(root, ".kilo-dev")
+    val dev = File(root, ".accurecode-dev")
     val data = File(dev, "data")
     val config = File(dev, "config")
     val state = File(dev, "state")

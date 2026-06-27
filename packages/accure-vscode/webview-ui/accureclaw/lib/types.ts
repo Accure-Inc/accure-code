@@ -1,16 +1,16 @@
 /**
- * KiloClaw webview types.
+ * AccureClaw webview types.
  *
  * Mirrors the extension host types for use in the SolidJS webview.
  * All data arrives via postMessage — no direct network access.
  *
- * SYNC: These types are mirrored from src/kiloclaw/types.ts — keep both in sync.
+ * SYNC: These types are mirrored from src/accureclaw/types.ts — keep both in sync.
  */
 
 // ── Instance status ─────────────────────────────────────────────────
 
 export type ClawStatus = {
-  // Mirrors src/kiloclaw/types.ts. `recovering` / `restoring` are transitional
+  // Mirrors src/accureclaw/types.ts. `recovering` / `restoring` are transitional
   // states the cloud worker reports when bringing an instance back online.
   status:
     | "provisioned"
@@ -34,7 +34,7 @@ export type ClawStatus = {
   botName?: string | null
 }
 
-// ── Kilo Chat content blocks ────────────────────────────────────────
+// ── Accure Chat content blocks ────────────────────────────────────────
 
 export type ExecApprovalDecision = "allow-once" | "allow-always" | "deny"
 
@@ -115,7 +115,7 @@ export type TypingMember = { memberId: string; at: number }
 
 // ── Webview state ──────────────────────────────────────────────────
 
-export type KiloClawState =
+export type AccureClawState =
   | { phase: "loading"; locale: string }
   | { phase: "noInstance"; locale: string }
   | { phase: "needsUpgrade"; locale: string }
@@ -138,23 +138,23 @@ export type KiloClawState =
 
 // ── Messages: Extension Host → Webview ──────────────────────────────
 
-export type KiloClawOutMessage =
-  | { type: "kiloclaw.state"; state: KiloClawState }
-  | { type: "kiloclaw.status"; data: ClawStatus | null }
-  | { type: "kiloclaw.locale"; locale: string }
-  | { type: "kiloclaw.error"; error: string }
-  | { type: "kiloclaw.conversations"; conversations: ConversationListItem[]; hasMore: boolean; replace: boolean }
-  | { type: "kiloclaw.activeConversation"; conversationId: string | null }
-  | { type: "kiloclaw.messages"; conversationId: string; messages: Message[]; hasMore: boolean; replace: boolean }
-  | { type: "kiloclaw.messageOptimistic"; conversationId: string; message: Message }
-  | { type: "kiloclaw.messageReplaced"; conversationId: string; pendingId: string; message: Message }
-  | { type: "kiloclaw.messageRemoved"; conversationId: string; messageId: string }
-  | { type: "kiloclaw.botStatus"; status: BotStatusRecord | null }
-  | { type: "kiloclaw.conversationStatus"; status: ConversationStatusRecord | null }
-  | { type: "kiloclaw.typing"; conversationId: string; memberId: string }
-  | { type: "kiloclaw.typingStop"; conversationId: string; memberId: string }
+export type AccureClawOutMessage =
+  | { type: "accureclaw.state"; state: AccureClawState }
+  | { type: "accureclaw.status"; data: ClawStatus | null }
+  | { type: "accureclaw.locale"; locale: string }
+  | { type: "accureclaw.error"; error: string }
+  | { type: "accureclaw.conversations"; conversations: ConversationListItem[]; hasMore: boolean; replace: boolean }
+  | { type: "accureclaw.activeConversation"; conversationId: string | null }
+  | { type: "accureclaw.messages"; conversationId: string; messages: Message[]; hasMore: boolean; replace: boolean }
+  | { type: "accureclaw.messageOptimistic"; conversationId: string; message: Message }
+  | { type: "accureclaw.messageReplaced"; conversationId: string; pendingId: string; message: Message }
+  | { type: "accureclaw.messageRemoved"; conversationId: string; messageId: string }
+  | { type: "accureclaw.botStatus"; status: BotStatusRecord | null }
+  | { type: "accureclaw.conversationStatus"; status: ConversationStatusRecord | null }
+  | { type: "accureclaw.typing"; conversationId: string; memberId: string }
+  | { type: "accureclaw.typingStop"; conversationId: string; memberId: string }
   | { type: "fontSizeChanged"; fontSize: number }
 
 // Note: messages sent from the webview to the extension host are typed in
-// src/kiloclaw/types.ts (KiloClawInMessage). The webview dispatches them
+// src/accureclaw/types.ts (AccureClawInMessage). The webview dispatches them
 // inline via vscode.postMessage and does not import the type.

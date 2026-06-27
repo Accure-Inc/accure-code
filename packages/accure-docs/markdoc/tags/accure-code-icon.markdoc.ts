@@ -1,7 +1,7 @@
-import { KiloCodeIcon } from "../../components"
+import { AccureCodeIcon } from "../../components"
 
-export const kiloCodeIcon = {
-  render: KiloCodeIcon,
+export const accureCodeIcon = {
+  render: AccureCodeIcon,
   selfClosing: true,
   attributes: {
     size: {

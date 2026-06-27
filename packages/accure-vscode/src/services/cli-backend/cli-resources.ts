@@ -19,7 +19,7 @@ export function treeSitterDirForExtension(root: string): string {
 }
 
 export function resolveTreeSitterEnv(root: string): Record<string, string> {
-  return { KILO_TREE_SITTER_WASM_DIR: treeSitterDirForExtension(root) }
+  return { ACCURECODE_TREE_SITTER_WASM_DIR: treeSitterDirForExtension(root) }
 }
 
 export function hasTreeSitterResources(file: string): boolean {

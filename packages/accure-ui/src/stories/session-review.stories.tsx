@@ -1,8 +1,8 @@
 /** @jsxImportSource solid-js */
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
 import { SessionReview } from "@opencode-ai/ui/session-review"
-import { FileComponentProvider } from "@kilocode/accure-ui/context/file"
-import { File } from "@kilocode/accure-ui/file"
+import { FileComponentProvider } from "@accurecode/accure-ui/context/file"
+import { File } from "@accurecode/accure-ui/file"
 
 const meta: Meta = {
   title: "Components/SessionReview",

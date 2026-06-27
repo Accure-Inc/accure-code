@@ -3,7 +3,7 @@ import { tmpdir } from "../fixture/fixture"
 import path from "path"
 import fs from "fs/promises"
 import { provideTestInstance } from "../fixture/fixture"
-import { getKiloProjectId } from "../../src/kilocode/project-id"
+import { getAccureProjectId } from "../../src/accurecode/project-id"
 
 describe("project-id", () => {
   describe("normalization", () => {
@@ -12,13 +12,13 @@ describe("project-id", () => {
         git: true,
         init: async (dir) => {
           // Set git origin to HTTPS URL
-          await Bun.$`git remote add origin https://github.com/Kilo-Org/handbook.git`.cwd(dir).quiet()
+          await Bun.$`git remote add origin https://github.com/Accure-Org/handbook.git`.cwd(dir).quiet()
         },
       })
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("handbook")
@@ -29,13 +29,13 @@ describe("project-id", () => {
         git: true,
         init: async (dir) => {
           // Set git origin to SSH URL
-          await Bun.$`git remote add origin git@github.com:Kilo-Org/handbook.git`.cwd(dir).quiet()
+          await Bun.$`git remote add origin git@github.com:Accure-Org/handbook.git`.cwd(dir).quiet()
         },
       })
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("handbook")
@@ -45,13 +45,13 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await Bun.$`git remote add origin https://github.com/Kilo-Org/handbook`.cwd(dir).quiet()
+          await Bun.$`git remote add origin https://github.com/Accure-Org/handbook`.cwd(dir).quiet()
         },
       })
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("handbook")
@@ -61,13 +61,13 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await Bun.$`git remote add origin ssh://git@github.com/Kilo-Org/handbook.git`.cwd(dir).quiet()
+          await Bun.$`git remote add origin ssh://git@github.com/Accure-Org/handbook.git`.cwd(dir).quiet()
         },
       })
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("handbook")
@@ -78,13 +78,13 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await Bun.$`git remote add origin https://github.com/Kilo-Org/${longName}.git`.cwd(dir).quiet()
+          await Bun.$`git remote add origin https://github.com/Accure-Org/${longName}.git`.cwd(dir).quiet()
         },
       })
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe(longName.slice(-100))
@@ -92,14 +92,14 @@ describe("project-id", () => {
   })
 
   describe("config file priority", () => {
-    test("uses project.id from .kilo/config.json", async () => {
+    test("uses project.id from .accurecode/config.json", async () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
           // Create config with project ID
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".accurecode", "config.json"),
             JSON.stringify({
               project: {
                 id: "my-custom-project",
@@ -108,25 +108,25 @@ describe("project-id", () => {
           )
 
           // Also set git origin - config should take priority
-          await Bun.$`git remote add origin https://github.com/Kilo-Org/handbook.git`.cwd(dir).quiet()
+          await Bun.$`git remote add origin https://github.com/Accure-Org/handbook.git`.cwd(dir).quiet()
         },
       })
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("my-custom-project")
     })
 
-    test("falls back to .kilocode/config.json when .kilo/config.json is absent", async () => {
+    test("falls back to .accurecode/config.json when .accurecode/config.json is absent", async () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilocode"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilocode", "config.json"),
+            path.join(dir, ".accurecode", "config.json"),
             JSON.stringify({
               project: {
                 id: "legacy-project",
@@ -138,21 +138,24 @@ describe("project-id", () => {
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("legacy-project")
     })
 
-    test("prefers .kilo/config.json over .kilocode/config.json", async () => {
+    test("prefers .accurecode/config.json over .accurecode/config.json", async () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
-          await Bun.write(path.join(dir, ".kilo", "config.json"), JSON.stringify({ project: { id: "new-project" } }))
-          await fs.mkdir(path.join(dir, ".kilocode"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilocode", "config.json"),
+            path.join(dir, ".accurecode", "config.json"),
+            JSON.stringify({ project: { id: "new-project" } }),
+          )
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
+          await Bun.write(
+            path.join(dir, ".accurecode", "config.json"),
             JSON.stringify({ project: { id: "old-project" } }),
           )
         },
@@ -160,7 +163,7 @@ describe("project-id", () => {
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("new-project")
@@ -170,12 +173,12 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".accurecode", "config.json"),
             JSON.stringify({
               project: {
-                id: "https://github.com/Kilo-Org/another-repo.git",
+                id: "https://github.com/Accure-Org/another-repo.git",
               },
             }),
           )
@@ -184,7 +187,7 @@ describe("project-id", () => {
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("another-repo")
@@ -194,9 +197,9 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".accurecode", "config.json"),
             JSON.stringify({
               project: {
                 managedIndexingEnabled: true,
@@ -204,13 +207,13 @@ describe("project-id", () => {
             }),
           )
 
-          await Bun.$`git remote add origin https://github.com/Kilo-Org/handbook.git`.cwd(dir).quiet()
+          await Bun.$`git remote add origin https://github.com/Accure-Org/handbook.git`.cwd(dir).quiet()
         },
       })
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("handbook")
@@ -220,9 +223,9 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".accurecode", "config.json"),
             JSON.stringify({
               project: {
                 id: "",
@@ -230,13 +233,13 @@ describe("project-id", () => {
             }),
           )
 
-          await Bun.$`git remote add origin https://github.com/Kilo-Org/handbook.git`.cwd(dir).quiet()
+          await Bun.$`git remote add origin https://github.com/Accure-Org/handbook.git`.cwd(dir).quiet()
         },
       })
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("handbook")
@@ -246,9 +249,9 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".accurecode", "config.json"),
             JSON.stringify({
               project: {
                 id: "  my-project\n",
@@ -260,7 +263,7 @@ describe("project-id", () => {
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("my-project")
@@ -270,9 +273,9 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".accurecode", "config.json"),
             JSON.stringify({
               project: {
                 id: "  \n\t  ",
@@ -280,13 +283,13 @@ describe("project-id", () => {
             }),
           )
 
-          await Bun.$`git remote add origin https://github.com/Kilo-Org/handbook.git`.cwd(dir).quiet()
+          await Bun.$`git remote add origin https://github.com/Accure-Org/handbook.git`.cwd(dir).quiet()
         },
       })
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("handbook")
@@ -299,7 +302,7 @@ describe("project-id", () => {
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBeUndefined()
@@ -310,7 +313,7 @@ describe("project-id", () => {
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBeUndefined()
@@ -320,16 +323,16 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
-          await Bun.write(path.join(dir, ".kilo", "config.json"), "{ invalid json")
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
+          await Bun.write(path.join(dir, ".accurecode", "config.json"), "{ invalid json")
 
-          await Bun.$`git remote add origin https://github.com/Kilo-Org/handbook.git`.cwd(dir).quiet()
+          await Bun.$`git remote add origin https://github.com/Accure-Org/handbook.git`.cwd(dir).quiet()
         },
       })
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       // Should fall back to git origin
@@ -340,9 +343,9 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".accurecode", "config.json"),
             JSON.stringify({
               project: {
                 id: 12345,
@@ -350,13 +353,13 @@ describe("project-id", () => {
             }),
           )
 
-          await Bun.$`git remote add origin https://github.com/Kilo-Org/handbook.git`.cwd(dir).quiet()
+          await Bun.$`git remote add origin https://github.com/Accure-Org/handbook.git`.cwd(dir).quiet()
         },
       })
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       // Should fall back to git origin
@@ -369,18 +372,18 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await Bun.$`git remote add origin https://github.com/Kilo-Org/handbook.git`.cwd(dir).quiet()
+          await Bun.$`git remote add origin https://github.com/Accure-Org/handbook.git`.cwd(dir).quiet()
         },
       })
 
       const id1 = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       const id2 = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id1).toBe(id2)
@@ -393,13 +396,13 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await Bun.$`git remote add origin https://github.com:443/Kilo-Org/handbook.git`.cwd(dir).quiet()
+          await Bun.$`git remote add origin https://github.com:443/Accure-Org/handbook.git`.cwd(dir).quiet()
         },
       })
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("handbook")
@@ -408,9 +411,9 @@ describe("project-id", () => {
     test("handles plain string project IDs from config", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".accurecode", "config.json"),
             JSON.stringify({
               project: {
                 id: "simple-name",
@@ -422,7 +425,7 @@ describe("project-id", () => {
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe("simple-name")
@@ -432,9 +435,9 @@ describe("project-id", () => {
       const longId = "x".repeat(150)
       await using tmp = await tmpdir({
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".accurecode", "config.json"),
             JSON.stringify({
               project: {
                 id: longId,
@@ -446,7 +449,7 @@ describe("project-id", () => {
 
       const id = await provideTestInstance({
         directory: tmp.path,
-        fn: () => getKiloProjectId(),
+        fn: () => getAccureProjectId(),
       })
 
       expect(id).toBe(longId.slice(-100))

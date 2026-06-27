@@ -1,6 +1,6 @@
-package ai.kilocode.client.app
+package ai.accurecode.client.app
 
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.StateFlow
  * workspace — a directory with its providers, agents, commands, skills.
  *
  * Immutable reference — [state] flows internally as the workspace loads.
- * Lifecycle managed by [KiloWorkspaceService].
+ * Lifecycle managed by [AccureWorkspaceService].
  */
 class Workspace(
     val directory: String,
-    val state: StateFlow<KiloWorkspaceStateDto>,
+    val state: StateFlow<AccureWorkspaceStateDto>,
     val reload: () -> Unit,
 )

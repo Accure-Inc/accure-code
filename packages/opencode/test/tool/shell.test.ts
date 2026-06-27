@@ -66,7 +66,7 @@ const ctx = {
   sessionID: SessionID.make("ses_test"),
   messageID: MessageID.make("msg_test"),
   callID: "",
-  agent: "code", // kilocode_change
+  agent: "code", // accurecode_change
   abort: AbortSignal.any([]),
   messages: [],
   metadata: () => Effect.void,
@@ -547,7 +547,7 @@ describe("tool.shell permissions", () => {
           item,
           Effect.acquireUseRelease(
             Effect.sync(() => {
-              const key = "KILO_TEST_MISSING"
+              const key = "ACCURECODE_TEST_MISSING"
               const prev = process.env[key]
               delete process.env[key]
               return { key, prev }
@@ -1018,10 +1018,10 @@ describe("tool.shell permissions", () => {
           yield* run({ command: "ls -la", description: "List" }, capture(requests))
           const bashReq = requests.find((r) => r.permission === "bash")
           expect(bashReq).toBeDefined()
-          // kilocode_change start — arity prefix produces "ls *" with space before wildcard
+          // accurecode_change start — arity prefix produces "ls *" with space before wildcard
           expect(bashReq!.always).toContain("ls *")
           expect(bashReq!.patterns).toContain("ls -la")
-          // kilocode_change end
+          // accurecode_change end
         }),
       )
     }),

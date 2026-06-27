@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.history
+package ai.accurecode.client.session.history
 
-import ai.kilocode.client.session.SessionActivityKind
+import ai.accurecode.client.session.SessionActivityKind
 import junit.framework.TestCase
 
 class HistoryActivitySnapshotTest : TestCase() {

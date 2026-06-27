@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { SystemPrompt } from "../../src/session/system"
-import { environmentDetails } from "../../src/kilocode/editor-context"
+import { environmentDetails } from "../../src/accurecode/editor-context"
 import { ProviderTest } from "../fake/provider"
 
 import PROMPT_ANTHROPIC from "../../src/session/prompt/anthropic.txt"
@@ -9,7 +9,7 @@ import PROMPT_BEAST from "../../src/session/prompt/beast.txt"
 import PROMPT_CODEX from "../../src/session/prompt/codex.txt"
 import PROMPT_GEMINI from "../../src/session/prompt/gemini.txt"
 import PROMPT_GPT from "../../src/session/prompt/gpt.txt"
-import PROMPT_GPT55 from "../../src/session/prompt/kilocode-gpt-5.5.txt"
+import PROMPT_GPT55 from "../../src/session/prompt/accurecode-gpt-5.5.txt"
 import PROMPT_LING from "../../src/session/prompt/ling.txt"
 import PROMPT_TRINITY from "../../src/session/prompt/trinity.txt"
 
@@ -130,13 +130,13 @@ describe("SystemPrompt.provider", () => {
 describe("environmentDetails", () => {
   test("includes cwd and worktree in dynamic context", () => {
     const result = environmentDetails({
-      directory: "/repo/.kilo/worktrees/feature",
-      worktree: "/repo/.kilo/worktrees/feature",
+      directory: "/repo/.accurecode/worktrees/feature",
+      worktree: "/repo/.accurecode/worktrees/feature",
       activeFile: "src/app.ts",
     })
 
-    expect(result).toContain("Working directory: /repo/.kilo/worktrees/feature")
-    expect(result).toContain("Workspace root folder: /repo/.kilo/worktrees/feature")
+    expect(result).toContain("Working directory: /repo/.accurecode/worktrees/feature")
+    expect(result).toContain("Workspace root folder: /repo/.accurecode/worktrees/feature")
     expect(result).toContain("Active file: src/app.ts")
   })
 })

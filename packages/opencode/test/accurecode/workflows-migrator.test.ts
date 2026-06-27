@@ -1,5 +1,5 @@
 import { test, expect, describe } from "bun:test"
-import { WorkflowsMigrator } from "../../src/kilocode/workflows-migrator"
+import { WorkflowsMigrator } from "../../src/accurecode/workflows-migrator"
 import { tmpdir } from "../fixture/fixture"
 import path from "path"
 
@@ -71,7 +71,7 @@ Actual description here.`
     test("discovers project workflows", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          const workflowsDir = path.join(dir, ".kilo", "workflows")
+          const workflowsDir = path.join(dir, ".accurecode", "workflows")
           await Bun.write(path.join(workflowsDir, "test-workflow.md"), "# Test\n\nDescription")
         },
       })
@@ -83,10 +83,10 @@ Actual description here.`
       expect(workflows[0].source).toBe("project")
     })
 
-    test("discovers workflows from legacy .kilocode/workflows/", async () => {
+    test("discovers workflows from legacy .accurecode/workflows/", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          const workflowsDir = path.join(dir, ".kilocode", "workflows")
+          const workflowsDir = path.join(dir, ".accurecode", "workflows")
           await Bun.write(path.join(workflowsDir, "legacy-workflow.md"), "# Legacy\n\nLegacy workflow")
         },
       })
@@ -109,7 +109,7 @@ Actual description here.`
     test("only discovers .md files", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          const workflowsDir = path.join(dir, ".kilo", "workflows")
+          const workflowsDir = path.join(dir, ".accurecode", "workflows")
           await Bun.write(path.join(workflowsDir, "workflow.md"), "# Workflow")
           await Bun.write(path.join(workflowsDir, "readme.txt"), "Not a workflow")
           await Bun.write(path.join(workflowsDir, "config.json"), "{}")
@@ -122,10 +122,10 @@ Actual description here.`
       expect(workflows[0].name).toBe("workflow")
     })
 
-    test("discovers global workflows from ~/.kilo/workflows/", async () => {
+    test("discovers global workflows from ~/.accurecode/workflows/", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          await Bun.write(path.join(dir, ".kilo", "workflows", "global.md"), "# Global\n\nGlobal workflow")
+          await Bun.write(path.join(dir, ".accurecode", "workflows", "global.md"), "# Global\n\nGlobal workflow")
           await Bun.write(path.join(dir, "repo", "README.md"), "repo")
         },
       })
@@ -133,19 +133,21 @@ Actual description here.`
       const workflows = await withHome(tmp.path, () => WorkflowsMigrator.discoverWorkflows(path.join(tmp.path, "repo")))
 
       expect(
-        workflows.some((w) => w.source === "global" && w.path.includes(path.join(".kilo", "workflows", "global.md"))),
+        workflows.some(
+          (w) => w.source === "global" && w.path.includes(path.join(".accurecode", "workflows", "global.md")),
+        ),
       ).toBe(true)
     })
 
     test("applies markdown substitutions to workflow content", async () => {
-      process.env.KILO_WORKFLOW_TEST = "env content"
+      process.env.ACCURECODE_WORKFLOW_TEST = "env content"
       await using tmp = await tmpdir({
         init: async (dir) => {
-          const workflowsDir = path.join(dir, ".kilo", "workflows")
+          const workflowsDir = path.join(dir, ".accurecode", "workflows")
           await Bun.write(path.join(dir, "guide.md"), "file content")
           await Bun.write(
             path.join(workflowsDir, "workflow.md"),
-            ["# Workflow", "", "{file:../../guide.md}", "{env:KILO_WORKFLOW_TEST}"].join("\n"),
+            ["# Workflow", "", "{file:../../guide.md}", "{env:ACCURECODE_WORKFLOW_TEST}"].join("\n"),
           )
         },
       })
@@ -156,14 +158,14 @@ Actual description here.`
         expect(workflows[0].content).toContain("file content")
         expect(workflows[0].content).toContain("env content")
       } finally {
-        delete process.env.KILO_WORKFLOW_TEST
+        delete process.env.ACCURECODE_WORKFLOW_TEST
       }
     })
   })
 
   describe("convertToCommand", () => {
     test("converts workflow to command format", () => {
-      const workflow: WorkflowsMigrator.KilocodeWorkflow = {
+      const workflow: WorkflowsMigrator.AccurecodeWorkflow = {
         name: "code-review",
         path: "/path/to/code-review.md",
         content: "# Code Review\n\nReview the code changes.\n\n## Steps\n\n1. Check",
@@ -177,7 +179,7 @@ Actual description here.`
     })
 
     test("uses fallback description when none found", () => {
-      const workflow: WorkflowsMigrator.KilocodeWorkflow = {
+      const workflow: WorkflowsMigrator.AccurecodeWorkflow = {
         name: "simple",
         path: "/path/to/simple.md",
         content: "# Simple",
@@ -194,7 +196,7 @@ Actual description here.`
     test("migrates project workflows to commands", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          const workflowsDir = path.join(dir, ".kilo", "workflows")
+          const workflowsDir = path.join(dir, ".accurecode", "workflows")
           await Bun.write(
             path.join(workflowsDir, "code-review.md"),
             "# Code Review\n\nPerform a code review.\n\n## Steps\n\n1. Review",
@@ -222,7 +224,7 @@ Actual description here.`
     test("migrates multiple workflows", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          const workflowsDir = path.join(dir, ".kilo", "workflows")
+          const workflowsDir = path.join(dir, ".accurecode", "workflows")
           await Bun.write(path.join(workflowsDir, "review.md"), "# Review\n\nReview code")
           await Bun.write(path.join(workflowsDir, "deploy.md"), "# Deploy\n\nDeploy app")
         },
@@ -243,7 +245,7 @@ Actual description here.`
           await Bun.write(path.join(globalDir, "shared.md"), "# Shared\n\nGlobal version")
 
           // Create project workflows
-          const projectDir = path.join(dir, ".kilo", "workflows")
+          const projectDir = path.join(dir, ".accurecode", "workflows")
           await Bun.write(path.join(projectDir, "shared.md"), "# Shared\n\nProject version")
 
           return globalDir

@@ -3,7 +3,7 @@ import { createMemo, For, Match, Show, Switch } from "solid-js"
 import { Portal, useRenderer, useTerminalDimensions, type JSX } from "@opentui/solid"
 import type { TextareaRenderable } from "@opentui/core"
 import { useTheme, selectedForeground } from "../../context/theme"
-import type { PermissionRequest } from "@kilocode/sdk/v2"
+import type { PermissionRequest } from "@accurecode/sdk/v2"
 import { useSDK } from "../../context/sdk"
 import { SplitBorder } from "../../component/border"
 import { useSync } from "../../context/sync"
@@ -15,12 +15,12 @@ import { ShellID } from "@/tool/shell/id"
 import { webSearchProviderLabel } from "@/tool/websearch"
 import { getScrollAcceleration } from "../../util/scroll"
 import { useTuiConfig } from "../../context/tui-config"
-// kilocode_change start
-import { ConfigProtection } from "@/kilocode/permission/config-paths"
-import { splitDiffHunks } from "@/kilocode/tui/diff"
-import { normalizeUrls } from "@/kilocode/util/url"
-// kilocode_change end
-import { KILO_BASE_MODE, useBindings, useCommandShortcut } from "../../keymap"
+// accurecode_change start
+import { ConfigProtection } from "@/accurecode/permission/config-paths"
+import { splitDiffHunks } from "@/accurecode/tui/diff"
+import { normalizeUrls } from "@/accurecode/util/url"
+// accurecode_change end
+import { ACCURECODE_BASE_MODE, useBindings, useCommandShortcut } from "../../keymap"
 import { usePathFormatter } from "../../context/path-format"
 
 type PermissionStage = "permission" | "always" | "reject"
@@ -51,7 +51,7 @@ function EditBody(props: { request: PermissionRequest }) {
 
   const ft = createMemo(() => filetype(filepath()))
   const scrollAcceleration = createMemo(() => getScrollAcceleration(config))
-  const hunks = createMemo(() => splitDiffHunks(diff())) // kilocode_change
+  const hunks = createMemo(() => splitDiffHunks(diff())) // accurecode_change
 
   return (
     <box flexDirection="column" gap={1}>
@@ -66,7 +66,7 @@ function EditBody(props: { request: PermissionRequest }) {
             },
           }}
         >
-          {/* kilocode_change start */}
+          {/* accurecode_change start */}
           <box flexDirection="column">
             <For each={hunks()}>
               {(hunk, i) => (
@@ -97,7 +97,7 @@ function EditBody(props: { request: PermissionRequest }) {
               )}
             </For>
           </box>
-          {/* kilocode_change end */}
+          {/* accurecode_change end */}
         </scrollbox>
       </Show>
       <Show when={!diff()}>
@@ -163,12 +163,12 @@ export function PermissionPrompt(props: { request: PermissionRequest }) {
           body={
             <Switch>
               <Match when={props.request.always.length === 1 && props.request.always[0] === "*"}>
-                {/* kilocode_change */}
+                {/* accurecode_change */}
                 <TextBody title={"This will allow " + props.request.permission + " permanently."} />
               </Match>
               <Match when={true}>
                 <box paddingLeft={1} gap={1}>
-                  {/* kilocode_change */}
+                  {/* accurecode_change */}
                   <text fg={theme.textMuted}>This will allow the following patterns permanently</text>
                   <box>
                     <For each={props.request.always}>
@@ -291,7 +291,7 @@ export function PermissionPrompt(props: { request: PermissionRequest }) {
             }
 
             if (permission === ShellID.ToolID) {
-              // kilocode_change start
+              // accurecode_change start
               const meta = props.request.metadata ?? {}
               const desc =
                 typeof data.description === "string" && data.description
@@ -304,7 +304,7 @@ export function PermissionPrompt(props: { request: PermissionRequest }) {
               const command = normalizeUrls(
                 typeof data.command === "string" ? data.command : typeof meta.command === "string" ? meta.command : "",
               )
-              // kilocode_change end
+              // accurecode_change end
               return {
                 icon: "#",
                 title,
@@ -335,7 +335,7 @@ export function PermissionPrompt(props: { request: PermissionRequest }) {
             }
 
             if (permission === "webfetch") {
-              const url = normalizeUrls(typeof data.url === "string" ? data.url : "") // kilocode_change
+              const url = normalizeUrls(typeof data.url === "string" ? data.url : "") // accurecode_change
               return {
                 icon: "%",
                 title: `WebFetch ${url}`,
@@ -429,28 +429,28 @@ export function PermissionPrompt(props: { request: PermissionRequest }) {
                 </text>
                 <text fg={theme.text}>{current.title}</text>
               </box>
-              {/* kilocode_change start - explain config file edits always require approval */}
+              {/* accurecode_change start - explain config file edits always require approval */}
               <Show when={props.request.metadata?.[ConfigProtection.DISABLE_ALWAYS_KEY]}>
                 <box paddingLeft={4} flexShrink={0}>
                   <text fg={theme.textMuted}>Config file edits always require approval</text>
                 </box>
               </Show>
-              {/* kilocode_change end */}
+              {/* accurecode_change end */}
             </box>
           )
 
-          // kilocode_change start — hide "Always allow" for config file edits
+          // accurecode_change start — hide "Always allow" for config file edits
           const options: Record<string, string> = props.request.metadata?.[ConfigProtection.DISABLE_ALWAYS_KEY]
             ? { once: "Allow once", reject: "Reject" }
             : { once: "Allow once", always: "Allow always", reject: "Reject" }
-          // kilocode_change end
+          // accurecode_change end
 
           const body = (
             <Prompt
               title="Permission required"
               header={header()}
               body={current.body}
-              /* kilocode_change */ options={options}
+              /* accurecode_change */ options={options}
               escapeKey="reject"
               fullscreen
               onSelect={(option) => {
@@ -493,7 +493,7 @@ function RejectPrompt(props: { onConfirm: (message: string) => void; onCancel: (
   const dimensions = useTerminalDimensions()
   const narrow = createMemo(() => dimensions().width < 80)
   useBindings(() => ({
-    mode: KILO_BASE_MODE,
+    mode: ACCURECODE_BASE_MODE,
     commands: [
       {
         name: "app.exit",
@@ -529,7 +529,7 @@ function RejectPrompt(props: { onConfirm: (message: string) => void; onCancel: (
           <text fg={theme.text}>Reject permission</text>
         </box>
         <box paddingLeft={1}>
-          <text fg={theme.textMuted}>Tell Kilo what to do differently</text>
+          <text fg={theme.textMuted}>Tell Accure what to do differently</text>
         </box>
       </box>
       <box
@@ -588,7 +588,7 @@ function Prompt<const T extends Record<string, string>>(props: {
   const fullscreenHint = useCommandShortcut("permission.prompt.fullscreen")
 
   useBindings(() => ({
-    mode: KILO_BASE_MODE,
+    mode: ACCURECODE_BASE_MODE,
     commands: [
       {
         name: "app.exit",

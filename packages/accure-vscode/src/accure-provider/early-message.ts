@@ -1,14 +1,14 @@
 import { routeSuggestionWebviewMessage } from "./handlers/suggestion"
 import * as ModelState from "./model-state"
 import { routeInputToolMessage } from "../services/input-tools"
-import type { KiloConnectionService } from "../services/cli-backend/connection-service"
+import type { AccureConnectionService } from "../services/cli-backend/connection-service"
 import type { SuggestionContext } from "./handlers/suggestion"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 
 type Ctx = {
   question: SuggestionContext
-  client: KiloClient | null
-  connection: KiloConnectionService
+  client: AccureClient | null
+  connection: AccureConnectionService
   dir: string
   post: (msg: unknown) => void
   exportTranscript: (sessionID: string) => Promise<void>

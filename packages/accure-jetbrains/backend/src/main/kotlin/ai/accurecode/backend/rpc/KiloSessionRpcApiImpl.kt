@@ -1,57 +1,57 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.backend.rpc
+package ai.accurecode.backend.rpc
 
-import ai.kilocode.backend.app.KiloBackendAppService
-import ai.kilocode.backend.app.KiloBackendChatManager
-import ai.kilocode.backend.app.KiloBackendSessionManager
-import ai.kilocode.backend.workspace.KiloBackendWorkspaceManager
-import ai.kilocode.log.ChatLogSummary
-import ai.kilocode.rpc.KiloSessionRpcApi
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.CloudSessionListDto
-import ai.kilocode.rpc.dto.ConfigUpdateDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.PermissionAlwaysRulesDto
-import ai.kilocode.rpc.dto.PermissionReplyDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PromptDto
-import ai.kilocode.rpc.dto.QuestionReplyDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionListDto
-import ai.kilocode.rpc.dto.SessionStatusDto
+import ai.accurecode.backend.app.AccureBackendAppService
+import ai.accurecode.backend.app.AccureBackendChatManager
+import ai.accurecode.backend.app.AccureBackendSessionManager
+import ai.accurecode.backend.workspace.AccureBackendWorkspaceManager
+import ai.accurecode.log.ChatLogSummary
+import ai.accurecode.rpc.AccureSessionRpcApi
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.CloudSessionListDto
+import ai.accurecode.rpc.dto.ConfigUpdateDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.PermissionAlwaysRulesDto
+import ai.accurecode.rpc.dto.PermissionReplyDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PromptDto
+import ai.accurecode.rpc.dto.QuestionReplyDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionListDto
+import ai.accurecode.rpc.dto.SessionStatusDto
 import com.intellij.openapi.components.service
-import ai.kilocode.log.KiloLog
+import ai.accurecode.log.AccureLog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 
 /**
- * Backend implementation of [KiloSessionRpcApi].
+ * Backend implementation of [AccureSessionRpcApi].
  *
- * Session CRUD routes through the [KiloBackendWorkspaceManager] to
+ * Session CRUD routes through the [AccureBackendWorkspaceManager] to
  * get the correct workspace for a directory. Status tracking and
  * worktree directory management go directly to the
- * [KiloBackendSessionManager]. Chat operations delegate to
- * [KiloBackendChatManager].
+ * [AccureBackendSessionManager]. Chat operations delegate to
+ * [AccureBackendChatManager].
  */
-class KiloSessionRpcApiImpl : KiloSessionRpcApi {
+class AccureSessionRpcApiImpl : AccureSessionRpcApi {
     companion object {
-        private val LOG = KiloLog.create(KiloSessionRpcApiImpl::class.java)
+        private val LOG = AccureLog.create(AccureSessionRpcApiImpl::class.java)
     }
 
-    private val workspaces: KiloBackendWorkspaceManager
+    private val workspaces: AccureBackendWorkspaceManager
         get() = app.workspaces
 
-    private val sessions: KiloBackendSessionManager
+    private val sessions: AccureBackendSessionManager
         get() = app.sessions
 
-    private val chat: KiloBackendChatManager
+    private val chat: AccureBackendChatManager
         get() = app.chat
 
-    private val app: KiloBackendAppService
+    private val app: AccureBackendAppService
         get() = service()
 
     override suspend fun list(directory: String): SessionListDto =
@@ -78,7 +78,7 @@ class KiloSessionRpcApiImpl : KiloSessionRpcApi {
         workspaces.get(dir).deleteSession(id)
     }
 
-    override suspend fun rename(id: String, directory: String, title: String): ai.kilocode.rpc.dto.SessionDto {
+    override suspend fun rename(id: String, directory: String, title: String): ai.accurecode.rpc.dto.SessionDto {
         app.requireReady()
         val dir = sessions.getDirectory(id, directory)
         return sessions.rename(id, dir, title)

@@ -1,20 +1,20 @@
 ---
-title: "Kilo Code CLI: Run the AI Coding Agent from Your Terminal"
-description: "Using Kilo Code from the command line"
+title: "Accure Code CLI: Run the AI Coding Agent from Your Terminal"
+description: "Using Accure Code from the command line"
 platform: new
 ---
 
 {% callout type="warning" title="Version Notice" %}
-This documentation applies only to Kilo version 1.0 and later. Users running versions below 1.0 should upgrade before proceeding.
+This documentation applies only to Accure version 1.0 and later. Users running versions below 1.0 should upgrade before proceeding.
 {% /callout %}
 
-# Kilo Code CLI: AI Coding Agent in Your Terminal
+# Accure Code CLI: AI Coding Agent in Your Terminal
 
 Orchestrate agents from your terminal. Plan, debug, and code fast with keyboard-first navigation on the command line.
 
-The Kilo Code CLI uses the same underlying technology that powers the IDE extensions, so you can expect the same workflow to handle agentic coding tasks from start to finish.
+The Accure Code CLI uses the same underlying technology that powers the IDE extensions, so you can expect the same workflow to handle agentic coding tasks from start to finish.
 
-**Source code & issues (Kilo CLI 1.0):** [Kilo-Org/kilocode](https://github.com/Kilo-Org/kilocode) · [Report an issue](https://github.com/Kilo-Org/kilocode/issues)
+**Source code & issues (Accure CLI 1.0):** [Accure-Inc/accure-code](https://github.com/Accure-Inc/accure-code) · [Report an issue](https://github.com/Accure-Inc/accure-code/issues)
 
 ## Getting Started
 
@@ -22,37 +22,37 @@ The Kilo Code CLI uses the same underlying technology that powers the IDE extens
 
 {% partial file="install-cli.md" /%}
 
-Change directory to where you want to work and run kilo:
+Change directory to where you want to work and run accure:
 
 ```bash
 # Start the TUI
-kilo
+accure
 
 # Check the version
-kilo --version
+accure --version
 
 # Get help
-kilo --help
+accure --help
 ```
 
 ### First-Time Setup with `/connect`
 
-After installation, run `kilo` and use the `/connect` command to add your first provider credentials. This is the interactive way to configure API keys for model providers.
+After installation, run `accure` and use the `/connect` command to add your first provider credentials. This is the interactive way to configure API keys for model providers.
 
 ## Update
 
-Upgrade the Kilo CLI:
+Upgrade the Accure CLI:
 
-`kilo upgrade`
+`accure upgrade`
 
 Or use npm:
 
-`npm update -g @kilocode/cli`
+`npm update -g @accurecode/cli`
 
-## What you can do with Kilo Code CLI
+## What you can do with Accure Code CLI
 
 - **Plan and execute code changes without leaving your terminal.** Use your command line to make edits to your project without opening your IDE.
-- **Switch between hundreds of LLMs without constraints.** Other CLI tools only work with one model or curate opinionated lists. With Kilo, you can switch models without booting up another tool.
+- **Switch between hundreds of LLMs without constraints.** Other CLI tools only work with one model or curate opinionated lists. With Accure, you can switch models without booting up another tool.
 - **Choose the right mode for the task in your workflow.** Select between Architect, Ask, Debug, Orchestrator, or custom agent modes.
 - **Automate tasks.** Get AI assistance writing shell scripts for tasks like renaming all of the files in a folder or transforming sizes for a set of images.
 - **Extend capabilities with skills.** Add domain expertise and repeatable workflows through [Agent Skills](#skills).
@@ -120,12 +120,12 @@ For detailed help on every command and subcommand, see the [CLI Command Referenc
 | `/editor` | - | Open external editor |
 | `/exit` | `/quit`, `/q` | Exit the app |
 
-#### Kilo Gateway Commands (when connected)
+#### Accure Gateway Commands (when connected)
 
 | Command | Aliases | Description |
 |---|---|---|
-| `/profile` | `/me`, `/whoami` | View your Kilo Gateway profile |
-| `/teams` | `/team`, `/org`, `/orgs` | Switch between Kilo Gateway teams |
+| `/profile` | `/me`, `/whoami` | View your Accure Gateway profile |
+| `/teams` | `/team`, `/org`, `/orgs` | Switch between Accure Gateway teams |
 | `/remote` | - | Toggle remote mode for Cloud Agent access |
 
 #### Built-in Commands
@@ -152,16 +152,16 @@ Review your code locally before pushing — catch issues early without waiting f
 Configuration is managed through:
 
 - `/connect` command for provider setup (interactive)
-- Config files in **`~/.config/kilo/`**: use **`kilo.jsonc`** for provider, model, permission, and **MCP** settings. Restart the CLI after editing. See [Using MCP in Kilo Code](/docs/automate/mcp/using-in-kilo-code) for MCP config format.
+- Config files in **`~/.config/accure/`**: use **`accure.jsonc`** for provider, model, permission, and **MCP** settings. Restart the CLI after editing. See [Using MCP in Accure Code](/docs/automate/mcp/using-in-accure-code) for MCP config format.
 - **`tui.jsonc`** for terminal UI settings such as notifications, sounds, themes, and keybindings
-- `kilo auth` for credential management
+- `accure auth` for credential management
 
 ## CLI Notifications and Sounds
 
 CLI attention alerts are disabled by default. Enable and configure them in either of these ways:
 
-- Run `kilo console`, open your project, then go to **Settings > CLI > Notifications**.
-- Edit the TUI configuration directly. Use `~/.config/kilo/tui.jsonc` (or `tui.json`) for global settings, or `.kilo/tui.json` (or `tui.jsonc`) for project settings.
+- Run `accure console`, open your project, then go to **Settings > CLI > Notifications**.
+- Edit the TUI configuration directly. Use `~/.config/accure/tui.jsonc` (or `tui.json`) for global settings, or `.accurecode/tui.json` (or `tui.jsonc`) for project settings.
 
 The Console exposes the attention, desktop notification, sound, and volume controls. The equivalent TUI configuration is:
 
@@ -201,11 +201,11 @@ To replace individual sounds, add file paths under `attention.sounds`:
 }
 ```
 
-Supported sound names are `default`, `question`, `permission`, `error`, `done`, and `subagent_done`. Relative paths are resolved from the directory containing the TUI configuration file. If an override cannot be loaded, Kilo falls back to the active sound pack and then the built-in `opencode.default` pack.
+Supported sound names are `default`, `question`, `permission`, `error`, `done`, and `subagent_done`. Relative paths are resolved from the directory containing the TUI configuration file. If an override cannot be loaded, Accure falls back to the active sound pack and then the built-in `opencode.default` pack.
 
 The `attention.sound_pack` setting selects a sound pack registered by a TUI plugin. Setting an arbitrary pack name does not install or load a pack. Per-event file overrides remain the simplest way to customize sounds without a plugin.
 
-There is no notification slash command or command-palette toggle. Use Kilo Console or `tui.json` / `tui.jsonc` so all attention behavior is controlled by the same configuration.
+There is no notification slash command or command-palette toggle. Use Accure Console or `tui.json` / `tui.jsonc` so all attention behavior is controlled by the same configuration.
 
 ## Slash Commands
 
@@ -217,7 +217,7 @@ The CLI's interactive mode supports slash commands for common operations. The ma
 
 ## Permissions
 
-Kilo Code uses the permission config to decide whether a given action should run automatically, prompt you, or be blocked.
+Accure Code uses the permission config to decide whether a given action should run automatically, prompt you, or be blocked.
 
 ### Actions
 
@@ -233,7 +233,7 @@ You can set permissions globally (with `*`), and override specific tools.
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.accurecode.ai/config.json",
   "permission": {
     "*": "ask",
     "bash": "allow",
@@ -246,7 +246,7 @@ You can also set all permissions at once:
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.accurecode.ai/config.json",
   "permission": "allow"
 }
 ```
@@ -257,7 +257,7 @@ For most permissions, you can use an object to apply different actions based on 
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.accurecode.ai/config.json",
   "permission": {
     "bash": {
       "*": "ask",
@@ -294,11 +294,11 @@ You can use `~` or `$HOME` at the start of a pattern to reference your home dire
 
 ### External Directories
 
-Use `external_directory` to allow tool calls that touch paths outside the working directory where Kilo was started. This applies to any tool that takes a path as input (for example `read`, `edit`, `glob`, `grep`, and many bash commands).
+Use `external_directory` to allow tool calls that touch paths outside the working directory where Accure was started. This applies to any tool that takes a path as input (for example `read`, `edit`, `glob`, `grep`, and many bash commands).
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.accurecode.ai/config.json",
   "permission": {
     "external_directory": {
       "~/projects/personal/**": "allow"
@@ -311,7 +311,7 @@ Any directory allowed here inherits the same defaults as the current workspace. 
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.accurecode.ai/config.json",
   "permission": {
     "external_directory": {
       "~/projects/personal/**": "allow"
@@ -329,13 +329,13 @@ In Ask and Plan modes, `external_directory` allow rules can still permit reads o
 
 ## Configuration
 
-The Kilo CLI is a fork of [OpenCode](https://opencode.ai) and supports the same configuration options. The CLI you install with `npm install -g @kilocode/cli` (Kilo CLI 1.0) is built from [Kilo-Org/kilocode](https://github.com/Kilo-Org/kilocode). For comprehensive configuration documentation, see the [OpenCode Config documentation](https://opencode.ai/docs/config).
+The Accure CLI is a fork of [OpenCode](https://opencode.ai) and supports the same configuration options. The CLI you install with `npm install -g @accurecode/cli` (Accure CLI 1.0) is built from [Accure-Inc/accure-code](https://github.com/Accure-Inc/accure-code). For comprehensive configuration documentation, see the [OpenCode Config documentation](https://opencode.ai/docs/config).
 
-### Config File Location (Kilo CLI 1.0)
+### Config File Location (Accure CLI 1.0)
 
 | Scope | Path |
 |---|---|
-| **Global** | `~/.config/kilo/opencode.json` or `opencode.jsonc` (Windows: config dir may vary; same filenames) |
+| **Global** | `~/.config/accure/opencode.json` or `opencode.jsonc` (Windows: config dir may vary; same filenames) |
 | **Project** | `./opencode.json` or `./.opencode/` in project root |
 
 Project-level configuration takes precedence over global settings.
@@ -344,7 +344,7 @@ Project-level configuration takes precedence over global settings.
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.accurecode.ai/config.json",
   "model": "anthropic/claude-sonnet-4-20250514",
   "provider": {
     "anthropic": {
@@ -401,7 +401,7 @@ The TUI gives `Ctrl+Z` to input undo on Windows because native Windows terminals
 
 #### Enabling Shift+Enter in Windows Terminal
 
-Some terminals don't send modifier keys with Enter by default. Windows Terminal requires a one-time configuration to forward `Shift+Enter` as an escape sequence that Kilo can read.
+Some terminals don't send modifier keys with Enter by default. Windows Terminal requires a one-time configuration to forward `Shift+Enter` as an escape sequence that Accure can read.
 
 Open your `settings.json` at:
 
@@ -434,11 +434,11 @@ Add this entry to the root-level `keybindings` array:
 ]
 ```
 
-Save the file and restart Windows Terminal or open a new tab. `Shift+Enter` will now insert a newline in the Kilo prompt instead of submitting the message.
+Save the file and restart Windows Terminal or open a new tab. `Shift+Enter` will now insert a newline in the Accure prompt instead of submitting the message.
 
 ### OpenTelemetry Export
 
-Kilo telemetry is enabled by default and can be disabled with `experimental.openTelemetry = false`:
+Accure telemetry is enabled by default and can be disabled with `experimental.openTelemetry = false`:
 
 ```jsonc
 {
@@ -470,9 +470,9 @@ For full details on all configuration options including compaction, file watcher
 
 ## Interactive Mode
 
-Interactive mode is the default mode when running Kilo Code without the `--auto` flag, designed to work interactively with a user through the console.
+Interactive mode is the default mode when running Accure Code without the `--auto` flag, designed to work interactively with a user through the console.
 
-In interactive mode Kilo Code will request approval for operations which have not been auto-approved, allowing the user to review and approve operations before they are executed, and optionally add them to the auto-approval list.
+In interactive mode Accure Code will request approval for operations which have not been auto-approved, allowing the user to review and approve operations before they are executed, and optionally add them to the auto-approval list.
 
 ### Interactive Command Approval
 
@@ -493,15 +493,15 @@ Selecting an "Always run" option will:
 2. Save the selected pattern as an `allow` rule under `permission.bash` in your global config
 3. Auto-approve future matching commands, including matching approvals already waiting in other open sessions
 
-Kilo only saves the pattern you select. Approving a specific command does not approve redirected variants or broader command patterns unless that broader option is shown and selected.
+Accure only saves the pattern you select. Approving a specific command does not approve redirected variants or broader command patterns unless that broader option is shown and selected.
 
 ## Autonomous Mode (Non-Interactive)
 
-Autonomous mode allows Kilo Code to run in automated environments like CI/CD pipelines without requiring user interaction.
+Autonomous mode allows Accure Code to run in automated environments like CI/CD pipelines without requiring user interaction.
 
 ```bash
 # Run in autonomous mode with a message
-kilo run --auto "Implement feature X"
+accure run --auto "Implement feature X"
 ```
 
 ### Autonomous Mode Behavior
@@ -535,9 +535,9 @@ This instructs the AI to proceed without user input.
 
 ```yaml
 # GitHub Actions example
-- name: Run Kilo Code
+- name: Run Accure Code
   run: |
-    kilo run "Implement the new feature" --auto
+    accure run "Implement the new feature" --auto
 ```
 
 ## Session Continuation
@@ -546,8 +546,8 @@ Resume your last conversation from the current workspace using the `--continue` 
 
 ```bash
 # Resume the most recent session from this workspace
-kilo --continue
-kilo -c
+accure --continue
+accure -c
 ```
 
 This feature:
@@ -562,13 +562,13 @@ This feature:
 
 ```bash
 # Start a session
-kilo
+accure
 # > "Create a REST API"
 # ... work on the task ...
 # Exit with /exit
 
 # Later, resume the same session
-kilo --continue
+accure --continue
 # Conversation history is restored, ready to continue
 ```
 
@@ -580,7 +580,7 @@ kilo --continue
 
 ## Remote Connections
 
-Remote Connections let you access your local CLI sessions from the Cloud Agents web interface. Requires [Kilo Gateway](/docs/gateway) connection.
+Remote Connections let you access your local CLI sessions from the Cloud Agents web interface. Requires [Accure Gateway](/docs/gateway) connection.
 
 ### Enabling Remote Mode
 
@@ -590,11 +590,11 @@ Remote Connections let you access your local CLI sessions from the Cloud Agents 
 /remote
 ```
 
-Requires connection to Kilo Gateway. The `/remote` command appears only when authenticated.
+Requires connection to Accure Gateway. The `/remote` command appears only when authenticated.
 
 **Enable by default:**
 
-Add to `~/.config/kilo/config.json`:
+Add to `~/.config/accure/config.json`:
 
 ```json
 {
@@ -604,29 +604,29 @@ Add to `~/.config/kilo/config.json`:
 
 ### Using Remote Mode
 
-Once enabled, start a CLI session and open [Cloud Agents](https://app.kilo.ai/cloud). Your local session appears in the dashboard. See [Cloud Agent Remote Connections](/docs/code-with-ai/platforms/cloud-agent#remote-connections) for details.
+Once enabled, start a CLI session and open [Cloud Agents](https://app.accurecode.ai/cloud). Your local session appears in the dashboard. See [Cloud Agent Remote Connections](/docs/code-with-ai/platforms/cloud-agent#remote-connections) for details.
 
 ### Requirements
 
-- Connection to Kilo Gateway
-- Same Kilo account on CLI and Cloud Agent
+- Connection to Accure Gateway
+- Same Accure account on CLI and Cloud Agent
 - CLI must remain running with internet connection
 
 {% callout type="warning" title="Security Warning" %}
-Anyone with access to your Kilo account can send messages to your computer when remote mode is enabled.
+Anyone with access to your Accure account can send messages to your computer when remote mode is enabled.
 {% /callout %}
 
 ## Environment Variable Overrides
 
 The CLI supports overriding config values with environment variables. The supported environment variables are:
 
-- `KILO_PROVIDER`: Override the active provider ID
-- For `kilocode` provider: `KILOCODE_<FIELD_NAME>` (e.g., `KILOCODE_MODEL` → `kilocodeModel`)
-- For other providers: `KILO_<FIELD_NAME>` (e.g., `KILO_API_KEY` → `apiKey`)
+- `ACCURECODE_PROVIDER`: Override the active provider ID
+- For `accurecode` provider: `ACCURECODE_<FIELD_NAME>` (e.g., `ACCURECODE_MODEL` → `accurecodeModel`)
+- For other providers: `ACCURE_<FIELD_NAME>` (e.g., `ACCURECODE_API_KEY` → `apiKey`)
 
 ## Using the CLI in an Organization
 
-If you belong to a Kilo organization (Team or Enterprise), you can route CLI requests through that organization. The process differs slightly between interactive and non-interactive usage.
+If you belong to a Accure organization (Team or Enterprise), you can route CLI requests through that organization. The process differs slightly between interactive and non-interactive usage.
 
 ### Interactive Usage
 
@@ -634,10 +634,10 @@ In an interactive CLI session, use the `/teams` command to select an organizatio
 
 Your selection is persisted locally so it carries over to future sessions.
 
-### Non-Interactive Usage (`kilo run`)
+### Non-Interactive Usage (`accure run`)
 
-There is no `--org` or `--team` flag on `kilo run`. Instead, the organization is determined from the following sources, in order of priority (highest first):
+There is no `--org` or `--team` flag on `accure run`. Instead, the organization is determined from the following sources, in order of priority (highest first):
 
-1. **`KILO_ORG_ID` environment variable** — Best for non-interactive and CI environments.
+1. **`ACCURECODE_ORG_ID` environment variable** — Best for non-interactive and CI environments.
 
 2. **`Persisted selection from the last `/teams` pick`** — If you've run an interactive session and selected an organization via `/teams`, that selection is stored in the CLI auth file and reused automatically.

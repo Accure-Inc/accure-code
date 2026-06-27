@@ -1,22 +1,22 @@
-package ai.kilocode.client.session.views.permission
+package ai.accurecode.client.session.views.permission
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.Permission
-import ai.kilocode.client.session.model.PermissionFileDiff
-import ai.kilocode.client.session.model.PermissionRequestState
-import ai.kilocode.client.session.ui.SessionView
-import ai.kilocode.client.session.views.base.BaseQuestionView
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.SessionViewIcons
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
-import ai.kilocode.rpc.dto.PermissionReplyDto
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.Permission
+import ai.accurecode.client.session.model.PermissionFileDiff
+import ai.accurecode.client.session.model.PermissionRequestState
+import ai.accurecode.client.session.ui.SessionView
+import ai.accurecode.client.session.views.base.BaseQuestionView
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.SessionViewIcons
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
+import ai.accurecode.rpc.dto.PermissionReplyDto
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.ColorUtil
@@ -36,9 +36,9 @@ import javax.swing.JPanel
 import javax.swing.text.html.StyleSheet
 
 /**
- * Transcript-style permission view — rendered inside [ai.kilocode.client.session.ui.SessionMessageListPanel]
+ * Transcript-style permission view — rendered inside [ai.accurecode.client.session.ui.SessionMessageListPanel]
  * at the end of the transcript when the session is in
- * [ai.kilocode.client.session.model.SessionState.AwaitingPermission].
+ * [ai.accurecode.client.session.model.SessionState.AwaitingPermission].
  *
  * Shows a compact row with action label and target as an inline code fragment, plus diff badges.
  */
@@ -67,11 +67,11 @@ class PermissionView(
         isOpaque = false
         isVisible = false
 
-        card.setHeaderIcon(SessionViewIcons.warning, KiloBundle.message("session.permission.title"))
+        card.setHeaderIcon(SessionViewIcons.warning, AccureBundle.message("session.permission.title"))
         card.setContent(body)
         card.setActions(listOf(
-            BaseQuestionView.Action(ID_DENY, KiloBundle.message("session.permission.deny"), primary = false) { decide("reject") },
-            BaseQuestionView.Action(ID_RUN, KiloBundle.message("session.permission.run"), primary = true) { decide("once") },
+            BaseQuestionView.Action(ID_DENY, AccureBundle.message("session.permission.deny"), primary = false) { decide("reject") },
+            BaseQuestionView.Action(ID_RUN, AccureBundle.message("session.permission.run"), primary = true) { decide("once") },
         ))
         addToCenter(card)
     }
@@ -80,7 +80,7 @@ class PermissionView(
     fun show(permission: Permission) {
         requestId = permission.id
 
-        card.setHeader(KiloBundle.message("session.permission.title"))
+        card.setHeader(AccureBundle.message("session.permission.title"))
 
         body.removeAll()
         disposeRegs()
@@ -203,9 +203,9 @@ class PermissionView(
     private fun addStateMessage(permission: Permission) {
         val msg = when (permission.state) {
             PermissionRequestState.ERROR ->
-                permission.message ?: KiloBundle.message("session.permission.error")
+                permission.message ?: AccureBundle.message("session.permission.error")
             PermissionRequestState.RESPONDING ->
-                KiloBundle.message("session.permission.responding")
+                AccureBundle.message("session.permission.responding")
             else -> null
         } ?: return
 
@@ -216,24 +216,24 @@ class PermissionView(
     }
 
     private fun toolLabel(tool: String): String = when (tool) {
-        "read" -> KiloBundle.message("session.permission.tool.read")
-        "edit" -> KiloBundle.message("session.permission.tool.edit")
-        "write" -> KiloBundle.message("session.permission.tool.write")
-        "patch" -> KiloBundle.message("session.permission.tool.patch")
-        "multiedit" -> KiloBundle.message("session.permission.tool.multiedit")
-        "glob" -> KiloBundle.message("session.permission.tool.glob")
-        "grep" -> KiloBundle.message("session.permission.tool.grep")
-        "list" -> KiloBundle.message("session.permission.tool.list")
-        "bash" -> KiloBundle.message("session.permission.tool.bash")
-        "external_directory" -> KiloBundle.message("session.permission.tool.external_directory")
-        "webfetch" -> KiloBundle.message("session.permission.tool.webfetch")
-        "websearch" -> KiloBundle.message("session.permission.tool.websearch")
-        "codesearch" -> KiloBundle.message("session.permission.tool.codesearch")
-        "todoread" -> KiloBundle.message("session.permission.tool.todoread")
-        "todowrite" -> KiloBundle.message("session.permission.tool.todowrite")
-        "task" -> KiloBundle.message("session.permission.tool.task")
-        "skill" -> KiloBundle.message("session.permission.tool.skill")
-        "lsp" -> KiloBundle.message("session.permission.tool.lsp")
+        "read" -> AccureBundle.message("session.permission.tool.read")
+        "edit" -> AccureBundle.message("session.permission.tool.edit")
+        "write" -> AccureBundle.message("session.permission.tool.write")
+        "patch" -> AccureBundle.message("session.permission.tool.patch")
+        "multiedit" -> AccureBundle.message("session.permission.tool.multiedit")
+        "glob" -> AccureBundle.message("session.permission.tool.glob")
+        "grep" -> AccureBundle.message("session.permission.tool.grep")
+        "list" -> AccureBundle.message("session.permission.tool.list")
+        "bash" -> AccureBundle.message("session.permission.tool.bash")
+        "external_directory" -> AccureBundle.message("session.permission.tool.external_directory")
+        "webfetch" -> AccureBundle.message("session.permission.tool.webfetch")
+        "websearch" -> AccureBundle.message("session.permission.tool.websearch")
+        "codesearch" -> AccureBundle.message("session.permission.tool.codesearch")
+        "todoread" -> AccureBundle.message("session.permission.tool.todoread")
+        "todowrite" -> AccureBundle.message("session.permission.tool.todowrite")
+        "task" -> AccureBundle.message("session.permission.tool.task")
+        "skill" -> AccureBundle.message("session.permission.tool.skill")
+        "lsp" -> AccureBundle.message("session.permission.tool.lsp")
         else -> tool
     }
 
@@ -257,8 +257,8 @@ class PermissionView(
     }
 
     // Test helpers
-    internal fun runButtonForTest() = buttons(card).first { it.text == KiloBundle.message("session.permission.run") }
-    internal fun denyButtonForTest() = buttons(card).first { it.text == KiloBundle.message("session.permission.deny") }
+    internal fun runButtonForTest() = buttons(card).first { it.text == AccureBundle.message("session.permission.run") }
+    internal fun denyButtonForTest() = buttons(card).first { it.text == AccureBundle.message("session.permission.deny") }
     internal fun codeLabelsForTest() = panes.toList()
     internal fun diffViewsForTest() = diffViews.toList()
     internal fun headerFontForTest() = textAreas(card).first { it.font.isBold }.font

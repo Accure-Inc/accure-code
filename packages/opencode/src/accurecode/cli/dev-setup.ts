@@ -8,12 +8,12 @@ import { UI } from "@/cli/ui"
 
 type Shell = "zsh" | "bash" | "fish" | "powershell"
 
-const MARKER_START = "# >>> kilodev launcher >>>"
-const MARKER_END = "# <<< kilodev launcher <<<"
+const MARKER_START = "# >>> accuredev launcher >>>"
+const MARKER_END = "# <<< accuredev launcher <<<"
 
 export const DevSetupCommand = cmd({
   command: "dev-setup",
-  describe: "install a `kilodev` shell alias for this checkout",
+  describe: "install a `accuredev` shell alias for this checkout",
   builder: (y) =>
     y
       .option("shell", {
@@ -73,7 +73,7 @@ export const DevSetupCommand = cmd({
     }
 
     UI.empty()
-    UI.println(`  ${B}Kilo CLI dev launcher setup${N}`)
+    UI.println(`  ${B}Accure CLI dev launcher setup${N}`)
     UI.empty()
     UI.println(`  ${D}Repo:${N}    ${repo}`)
     UI.println(`  ${D}Shell:${N}   ${shell}${args.shell ? "" : `  ${D}(detected from $SHELL)${N}`}`)
@@ -91,7 +91,7 @@ export const DevSetupCommand = cmd({
 
     const action = existing ? "update" : "install"
     UI.println(
-      `  ${action === "install" ? "This will add" : "This will replace"} one line so ${H}kilodev${N} runs this checkout from any directory:`,
+      `  ${action === "install" ? "This will add" : "This will replace"} one line so ${H}accuredev${N} runs this checkout from any directory:`,
     )
     UI.empty()
     UI.println(`      ${snippet}`)
@@ -120,7 +120,7 @@ export const DevSetupCommand = cmd({
   },
 })
 
-// Deprecated: kept so `kilo dev-alias` keeps working for scripts/docs.
+// Deprecated: kept so `accure dev-alias` keeps working for scripts/docs.
 export const DevAliasCommand = cmd({
   command: "dev-alias [shell]",
   describe: false as const,
@@ -195,12 +195,12 @@ function defaultRc(shell: Shell): string {
 }
 
 function aliasLine(shell: Shell, repo: string): string {
-  const sh = path.join(repo, "bin", "kilodev")
-  const bat = path.join(repo, "bin", "kilodev.cmd")
+  const sh = path.join(repo, "bin", "accuredev")
+  const bat = path.join(repo, "bin", "accuredev.cmd")
   const q = (s: string) => `'${s.replaceAll("'", `'\\''`)}'`
-  if (shell === "fish") return `alias kilodev ${q(sh)}`
-  if (shell === "powershell") return `function kilodev { & '${bat.replaceAll("'", "''")}' @args }`
-  return `alias kilodev=${q(sh)}`
+  if (shell === "fish") return `alias accuredev ${q(sh)}`
+  if (shell === "powershell") return `function accuredev { & '${bat.replaceAll("'", "''")}' @args }`
+  return `alias accuredev=${q(sh)}`
 }
 
 function reloadHint(shell: Shell, rc: string): string {
@@ -238,7 +238,7 @@ async function applyBlock(rc: string, snippet: string): Promise<{ created: boole
   await Bun.write(rc, replaceOrAppend(prev, block))
   if (!exists) return { created: true }
 
-  const backup = `${rc}.kilodev.bak.${stamp()}`
+  const backup = `${rc}.accuredev.bak.${stamp()}`
   await Bun.write(backup, prev)
   return { created: false, backup }
 }
@@ -286,7 +286,7 @@ function isBunfsPath(p: string): boolean {
 
 // Exported for test coverage.
 export async function detectRepo(): Promise<string> {
-  const hint = process.env.KILO_DEV_REPO
+  const hint = process.env.ACCURECODE_DEV_REPO
   if (hint) return hint
 
   const candidates: string[] = []
@@ -301,7 +301,7 @@ export async function detectRepo(): Promise<string> {
   if (meta && !isBunfsPath(meta)) candidates.push(path.dirname(meta))
 
   // process.execPath points at the binary itself; walk up from its directory.
-  // For a local build it's <repo>/packages/opencode/dist/<target>/bin/kilo, so
+  // For a local build it's <repo>/packages/opencode/dist/<target>/bin/accure, so
   // findRepoFrom eventually hits the repo's packages/opencode/package.json.
   if (process.execPath) candidates.push(path.dirname(process.execPath))
   candidates.push(process.cwd())
@@ -312,6 +312,6 @@ export async function detectRepo(): Promise<string> {
   }
 
   throw new Error(
-    "cannot locate kilocode source checkout; set KILO_DEV_REPO=/path/to/kilocode or run ./bin/kilodev dev-setup from the repo",
+    "cannot locate accurecode source checkout; set ACCURECODE_DEV_REPO=/path/to/accurecode or run ./bin/accuredev dev-setup from the repo",
   )
 }

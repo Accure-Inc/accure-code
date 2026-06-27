@@ -1,56 +1,56 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.backend.rpc
+package ai.accurecode.backend.rpc
 
-import ai.kilocode.backend.app.KiloAppState
-import ai.kilocode.backend.app.KiloBackendAppService
-import ai.kilocode.backend.telemetry.KiloBackendTelemetry
-import ai.kilocode.backend.app.ConfigWarning
-import ai.kilocode.backend.app.LoadError
-import ai.kilocode.backend.app.LoadProgress
-import ai.kilocode.backend.app.ProfileResult
-import ai.kilocode.jetbrains.api.model.AgentConfig
-import ai.kilocode.jetbrains.api.model.Config
-import ai.kilocode.jetbrains.api.model.ConfigAgent
-import ai.kilocode.jetbrains.api.model.KiloProfile200Response
-import ai.kilocode.rpc.dto.AgentConfigDto
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.ConfigPatchDto
-import ai.kilocode.rpc.KiloAppRpcApi
-import ai.kilocode.rpc.dto.ConfigWarningDto
-import ai.kilocode.rpc.dto.DeviceAuthDto
-import ai.kilocode.rpc.dto.HealthDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.LoadErrorDto
-import ai.kilocode.rpc.dto.LoadProgressDto
-import ai.kilocode.rpc.dto.ModelFavoriteUpdateDto
-import ai.kilocode.rpc.dto.ModelSelectionUpdateDto
-import ai.kilocode.rpc.dto.ModelStateDto
-import ai.kilocode.rpc.dto.ModelVariantUpdateDto
-import ai.kilocode.rpc.dto.ProfileBalanceDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.ProfileOrganizationDto
-import ai.kilocode.rpc.dto.ProfileStatusDto
-import ai.kilocode.rpc.dto.TelemetryCaptureDto
+import ai.accurecode.backend.app.AccureAppState
+import ai.accurecode.backend.app.AccureBackendAppService
+import ai.accurecode.backend.telemetry.AccureBackendTelemetry
+import ai.accurecode.backend.app.ConfigWarning
+import ai.accurecode.backend.app.LoadError
+import ai.accurecode.backend.app.LoadProgress
+import ai.accurecode.backend.app.ProfileResult
+import ai.accurecode.jetbrains.api.model.AgentConfig
+import ai.accurecode.jetbrains.api.model.Config
+import ai.accurecode.jetbrains.api.model.ConfigAgent
+import ai.accurecode.jetbrains.api.model.AccureProfile200Response
+import ai.accurecode.rpc.dto.AgentConfigDto
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.ConfigPatchDto
+import ai.accurecode.rpc.AccureAppRpcApi
+import ai.accurecode.rpc.dto.ConfigWarningDto
+import ai.accurecode.rpc.dto.DeviceAuthDto
+import ai.accurecode.rpc.dto.HealthDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.LoadErrorDto
+import ai.accurecode.rpc.dto.LoadProgressDto
+import ai.accurecode.rpc.dto.ModelFavoriteUpdateDto
+import ai.accurecode.rpc.dto.ModelSelectionUpdateDto
+import ai.accurecode.rpc.dto.ModelStateDto
+import ai.accurecode.rpc.dto.ModelVariantUpdateDto
+import ai.accurecode.rpc.dto.ProfileBalanceDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.ProfileOrganizationDto
+import ai.accurecode.rpc.dto.ProfileStatusDto
+import ai.accurecode.rpc.dto.TelemetryCaptureDto
 import com.intellij.openapi.components.service
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 /**
- * Backend implementation of [KiloAppRpcApi].
+ * Backend implementation of [AccureAppRpcApi].
  *
- * Delegates directly to the app-level [KiloBackendAppService] —
+ * Delegates directly to the app-level [AccureBackendAppService] —
  * no project resolution needed since all operations are app-scoped.
  */
-class KiloAppRpcApiImpl : KiloAppRpcApi {
+class AccureAppRpcApiImpl : AccureAppRpcApi {
 
-    private val app: KiloBackendAppService get() = service()
+    private val app: AccureBackendAppService get() = service()
 
     override suspend fun connect() = app.connect()
 
-    override suspend fun state(): Flow<KiloAppStateDto> =
+    override suspend fun state(): Flow<AccureAppStateDto> =
         app.appState.map(::dto).distinctUntilChanged()
 
     override suspend fun health(): HealthDto = app.health()
@@ -86,7 +86,7 @@ class KiloAppRpcApiImpl : KiloAppRpcApi {
         return app.models.variant(update)
     }
 
-    override suspend fun updateConfig(patch: ConfigPatchDto): KiloAppStateDto {
+    override suspend fun updateConfig(patch: ConfigPatchDto): AccureAppStateDto {
         app.requireReady()
         return appStateDto(app.updateConfig(patch))
     }
@@ -103,27 +103,27 @@ class KiloAppRpcApiImpl : KiloAppRpcApi {
         app.setOrganization(organizationId)?.let(::profileDto)
 
     override suspend fun captureTelemetry(capture: TelemetryCaptureDto) {
-        service<KiloBackendTelemetry>().capture(app.http, app.port, capture.event, capture.properties)
+        service<AccureBackendTelemetry>().capture(app.http, app.port, capture.event, capture.properties)
     }
 
-    private fun dto(state: KiloAppState): KiloAppStateDto =
+    private fun dto(state: AccureAppState): AccureAppStateDto =
         appStateDto(state)
 }
 
-internal fun appStateDto(state: KiloAppState): KiloAppStateDto =
+internal fun appStateDto(state: AccureAppState): AccureAppStateDto =
     when (state) {
-        KiloAppState.Disconnected -> KiloAppStateDto(KiloAppStatusDto.DISCONNECTED)
-        KiloAppState.Connecting -> KiloAppStateDto(KiloAppStatusDto.CONNECTING)
-        is KiloAppState.Loading -> KiloAppStateDto(
-            status = KiloAppStatusDto.LOADING,
+        AccureAppState.Disconnected -> AccureAppStateDto(AccureAppStatusDto.DISCONNECTED)
+        AccureAppState.Connecting -> AccureAppStateDto(AccureAppStatusDto.CONNECTING)
+        is AccureAppState.Loading -> AccureAppStateDto(
+            status = AccureAppStatusDto.LOADING,
             progress = progress(state.progress),
         )
-        is KiloAppState.MigrationRequired -> KiloAppStateDto(
-            status = KiloAppStatusDto.MIGRATION_REQUIRED,
+        is AccureAppState.MigrationRequired -> AccureAppStateDto(
+            status = AccureAppStatusDto.MIGRATION_REQUIRED,
             migration = MigrationRpcMapper.toDto(state.detection),
         )
-        is KiloAppState.Ready -> KiloAppStateDto(
-            status = KiloAppStatusDto.READY,
+        is AccureAppState.Ready -> AccureAppStateDto(
+            status = AccureAppStatusDto.READY,
             progress = LoadProgressDto(
                 config = true,
                 notifications = true,
@@ -134,14 +134,14 @@ internal fun appStateDto(state: KiloAppState): KiloAppStateDto =
             config = config(state.data.config),
             profile = state.data.profile?.let(::profileDto),
         )
-        is KiloAppState.Error -> KiloAppStateDto(
-            status = KiloAppStatusDto.ERROR,
+        is AccureAppState.Error -> AccureAppStateDto(
+            status = AccureAppStatusDto.ERROR,
             error = state.message,
             errors = state.errors.map(::error),
         )
     }
 
-internal fun profileDto(p: KiloProfile200Response): ProfileDto = ProfileDto(
+internal fun profileDto(p: AccureProfile200Response): ProfileDto = ProfileDto(
     email = p.profile.email,
     name = p.profile.name,
     organizations = p.profile.organizations.orEmpty().map { org ->

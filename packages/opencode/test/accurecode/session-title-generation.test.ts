@@ -3,16 +3,16 @@ import type { Model } from "@/provider/provider"
 import { ProviderTransform } from "@/provider/transform"
 import { ModelID, ProviderID } from "@/provider/schema"
 import { SessionID } from "@/session/schema"
-import { KiloSessionPrompt } from "@/kilocode/session/prompt"
+import { AccureSessionPrompt } from "@/accurecode/session/prompt"
 
 function model(id: string, reasoning = true): Model {
   return {
     id: ModelID.make(id),
-    providerID: ProviderID.make("kilo"),
+    providerID: ProviderID.make("accure"),
     api: {
       id,
-      url: "https://api.kilo.ai/api/openrouter",
-      npm: "@kilocode/accure-gateway",
+      url: "https://api.accurecode.ai/api/openrouter",
+      npm: "@accurecode/accure-gateway",
     },
     name: id,
     capabilities: {
@@ -35,7 +35,7 @@ function model(id: string, reasoning = true): Model {
 
 describe("session title generation", () => {
   test("uses an isolated task ID", () => {
-    expect(KiloSessionPrompt.titleID(SessionID.make("ses_test"))).toBe("title-ses_test")
+    expect(AccureSessionPrompt.titleID(SessionID.make("ses_test"))).toBe("title-ses_test")
   })
 
   test("uses the model default for reasoning-capable small models", () => {

@@ -1,6 +1,6 @@
 import type {
   AgentPart,
-  KiloClient,
+  AccureClient,
   Event,
   FilePart,
   LspStatus,
@@ -16,7 +16,7 @@ import type {
   BackgroundProcessInfo,
   TextPart,
   Config as SdkConfig,
-} from "@kilocode/sdk/v2"
+} from "@accurecode/sdk/v2"
 import type { CliRenderer, KeyEvent, RGBA, Renderable, SlotMode } from "@opentui/core"
 import type { Binding, Keymap } from "@opentui/keymap"
 import {
@@ -618,7 +618,7 @@ export type TuiPluginApi = {
   kv: TuiKV
   state: TuiState
   theme: TuiTheme
-  client: KiloClient
+  client: AccureClient
   event: TuiEventBus
   renderer: CliRenderer
   slots: TuiSlots

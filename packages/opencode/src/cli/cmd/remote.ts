@@ -1,7 +1,7 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { cmd } from "./cmd"
 import { bootstrap } from "../bootstrap"
-import { KiloSessions } from "@/kilo-sessions/kilo-sessions"
+import { AccureSessions } from "@/accure-sessions/accure-sessions"
 import { context } from "@/project/instance-context"
 import { InstanceRuntime } from "@/project/instance-runtime"
 
@@ -11,13 +11,13 @@ export const RemoteCommand = cmd({
   builder: (yargs) => yargs,
   handler: async () => {
     await bootstrap(process.cwd(), async () => {
-      await KiloSessions.enableRemote()
+      await AccureSessions.enableRemote()
       console.log("Remote connection enabled.")
 
       const abort = new AbortController()
       const shutdown = async () => {
         try {
-          KiloSessions.disableRemote()
+          AccureSessions.disableRemote()
           await InstanceRuntime.disposeInstance(context.use())
         } finally {
           abort.abort()

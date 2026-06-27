@@ -1,8 +1,8 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.history.HistoryDataKeys
-import ai.kilocode.client.session.SessionManager
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.history.HistoryDataKeys
+import ai.accurecode.client.session.SessionManager
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -15,7 +15,7 @@ class DeleteSessionAction : AnAction() {
         Messages.showYesNoDialog(
             project,
             msg,
-            KiloBundle.message("history.delete.confirm.title"),
+            AccureBundle.message("history.delete.confirm.title"),
             Messages.getWarningIcon(),
         ) == Messages.YES
     }
@@ -37,9 +37,9 @@ class DeleteSessionAction : AnAction() {
         if (items.isEmpty()) return
 
         val msg = if (items.size == 1)
-            KiloBundle.message("history.delete.confirm.message", ai.kilocode.client.session.history.title(items[0]))
+            AccureBundle.message("history.delete.confirm.message", ai.accurecode.client.session.history.title(items[0]))
         else
-            KiloBundle.message("history.delete.confirm.message.multiple", items.size)
+            AccureBundle.message("history.delete.confirm.message.multiple", items.size)
 
         controller.requestDelete(items.size)
         if (!confirm(e.project, msg)) {

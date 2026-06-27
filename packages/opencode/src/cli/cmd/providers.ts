@@ -11,7 +11,7 @@ import os from "os"
 import { Config } from "@/config/config"
 import { Global } from "@opencode-ai/core/global"
 import { Plugin } from "../../plugin"
-import type { Hooks } from "@kilocode/plugin"
+import type { Hooks } from "@accurecode/plugin"
 import { Process } from "@/util/process"
 import { errorMessage } from "@/util/error"
 import { text } from "node:stream/consumers"
@@ -236,10 +236,10 @@ export function resolvePluginProviders(input: {
 }
 
 export const ProvidersCommand = cmd({
-  // kilocode_change start - keep "auth" as primary command name
+  // accurecode_change start - keep "auth" as primary command name
   command: "auth",
   aliases: ["providers"],
-  // kilocode_change end
+  // accurecode_change end
   describe: "manage AI providers and credentials",
   builder: (yargs) =>
     yargs.command(ProvidersListCommand).command(ProvidersLoginCommand).command(ProvidersLogoutCommand).demandCommand(),
@@ -303,7 +303,7 @@ export const ProvidersLoginCommand = effectCmd({
   builder: (yargs) =>
     yargs
       .positional("url", {
-        describe: "kilo auth provider", // kilocode_change
+        describe: "accure auth provider", // accurecode_change
         type: "string",
       })
       .option("provider", {
@@ -367,9 +367,9 @@ export const ProvidersLoginCommand = effectCmd({
     }
     const hooks = yield* pluginSvc.list()
 
-    // kilocode_change start
+    // accurecode_change start
     const priority: Record<string, number> = {
-      kilo: 0,
+      accure: 0,
       anthropic: 2,
       "github-copilot": 3,
       openai: 4,
@@ -377,7 +377,7 @@ export const ProvidersLoginCommand = effectCmd({
       openrouter: 6,
       vercel: 7,
     }
-    // kilocode_change end
+    // accurecode_change end
     const pluginProviders = resolvePluginProviders({
       hooks,
       existingProviders: providers,
@@ -385,7 +385,7 @@ export const ProvidersLoginCommand = effectCmd({
       enabled,
       providerNames: Object.fromEntries(
         Object.entries(config.provider ?? {}).flatMap(([id, p]) => (p ? [[id, p.name]] : [])),
-      ), // kilocode_change
+      ), // accurecode_change
     })
     const options = [
       ...pipe(
@@ -399,8 +399,8 @@ export const ProvidersLoginCommand = effectCmd({
           label: x.name,
           value: x.id,
           hint: {
-            kilo: "recommended", // kilocode_change
-            openai: "ChatGPT login or API key", // kilocode_change
+            accure: "recommended", // accurecode_change
+            openai: "ChatGPT login or API key", // accurecode_change
           }[x.id],
         })),
       ),
@@ -416,10 +416,10 @@ export const ProvidersLoginCommand = effectCmd({
       const input = args.provider
       const byID = options.find((x) => x.value === input)
       const byName = options.find((x) => x.label.toLowerCase() === input.toLowerCase())
-      // kilocode_change start - accept codex as an alias for OpenAI ChatGPT auth
+      // accurecode_change start - accept codex as an alias for OpenAI ChatGPT auth
       const alias = input.toLowerCase() === "codex" ? options.find((x) => x.value === "openai") : undefined
       const match = byID ?? byName ?? alias
-      // kilocode_change end
+      // accurecode_change end
       if (!match) {
         return yield* fail(`Unknown provider "${input}"`)
       }
@@ -455,7 +455,7 @@ export const ProvidersLoginCommand = effectCmd({
       }
 
       yield* Prompt.log.warn(
-        `This only stores a credential for ${provider} - you will need configure it in kilo.json, check the docs for examples.`, // kilocode_change
+        `This only stores a credential for ${provider} - you will need configure it in accure.json, check the docs for examples.`, // accurecode_change
       )
     }
 
@@ -464,7 +464,7 @@ export const ProvidersLoginCommand = effectCmd({
         "Amazon Bedrock authentication priority:\n" +
           "  1. Bearer token (AWS_BEARER_TOKEN_BEDROCK or /connect)\n" +
           "  2. AWS credential chain (profile, access keys, IAM roles, EKS IRSA)\n\n" +
-          "Configure via kilo.json options (profile, region, endpoint) or\n" + // kilocode_change
+          "Configure via accure.json options (profile, region, endpoint) or\n" + // accurecode_change
           "AWS environment variables (AWS_PROFILE, AWS_REGION, AWS_ACCESS_KEY_ID, AWS_WEB_IDENTITY_TOKEN_FILE).",
       )
     }
@@ -475,7 +475,7 @@ export const ProvidersLoginCommand = effectCmd({
 
     if (["cloudflare", "cloudflare-ai-gateway"].includes(provider)) {
       yield* Prompt.log.info(
-        "Cloudflare AI Gateway can be configured with CLOUDFLARE_GATEWAY_ID, CLOUDFLARE_ACCOUNT_ID, and CLOUDFLARE_API_TOKEN environment variables. Read more: https://kilo.ai/docs/ai-providers/cloudflare", // kilocode_change
+        "Cloudflare AI Gateway can be configured with CLOUDFLARE_GATEWAY_ID, CLOUDFLARE_ACCOUNT_ID, and CLOUDFLARE_API_TOKEN environment variables. Read more: https://accure.ai/docs/ai-providers/cloudflare", // accurecode_change
       )
     }
 

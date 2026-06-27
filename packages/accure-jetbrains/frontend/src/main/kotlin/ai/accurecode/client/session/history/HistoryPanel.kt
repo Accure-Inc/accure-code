@@ -1,14 +1,14 @@
-package ai.kilocode.client.session.history
+package ai.accurecode.client.session.history
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.SessionManager
-import ai.kilocode.client.session.ui.LoadingPanel
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.HoverIcon
-import ai.kilocode.client.ui.iconButton
-import ai.kilocode.client.util.UiTimerSource
-import ai.kilocode.client.util.UiTimers
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.SessionManager
+import ai.accurecode.client.session.ui.LoadingPanel
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.HoverIcon
+import ai.accurecode.client.ui.iconButton
+import ai.accurecode.client.util.UiTimerSource
+import ai.accurecode.client.util.UiTimers
 import com.intellij.icons.AllIcons
 import com.intellij.ide.ui.LafManagerListener
 import com.intellij.openapi.application.ApplicationManager
@@ -68,7 +68,7 @@ class HistoryPanel(
     private val localList = localList()
     private val cloudList = cloudList()
     private val more = LoadMoreButton()
-    private val repoOnly = JBCheckBox(KiloBundle.message("history.cloud.repo.only"), true).apply {
+    private val repoOnly = JBCheckBox(AccureBundle.message("history.cloud.repo.only"), true).apply {
         isVisible = false
         border = JBUI.Borders.emptyLeft(UiStyle.Gap.lg())
         addActionListener { controller.applyRepoOnly(isSelected) }
@@ -79,10 +79,10 @@ class HistoryPanel(
     private val body = BorderLayoutPanel().apply { layout = cards }
     private val load = LoadingPanel()
     private val localInfo = TabInfo(localPanel)
-        .setText(KiloBundle.message("history.tab.local"))
+        .setText(AccureBundle.message("history.tab.local"))
         .setForeSideComponent(back())
     private val cloudInfo = TabInfo(cloudPanel)
-        .setText(KiloBundle.message("history.tab.cloud"))
+        .setText(AccureBundle.message("history.tab.cloud"))
         .setForeSideComponent(back())
     private var stale = false
     private val timer = timers.timer(ACTIVITY_MS) { syncActivity() }
@@ -162,7 +162,7 @@ class HistoryPanel(
     }
 
     private fun search(model: HistoryModel<out HistoryItem>) = SearchTextField(false).apply {
-        textEditor.emptyText.text = KiloBundle.message("history.search.placeholder")
+        textEditor.emptyText.text = AccureBundle.message("history.search.placeholder")
         textEditor.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(e: DocumentEvent) {
                 model.setFilter(text)
@@ -186,7 +186,7 @@ class HistoryPanel(
     }
 
     private fun back(): BorderLayoutPanel {
-        val label = KiloBundle.message("history.back")
+        val label = AccureBundle.message("history.back")
         val btn = HoverIcon().apply {
             icon = AllIcons.Actions.Back
             toolTipText = label
@@ -226,7 +226,7 @@ class HistoryPanel(
         isFocusable = true
         cellRenderer = LocalHistoryRenderer(controller.local, { snapshot.activity }, { snapshot.titles })
         cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-        emptyText.text = KiloBundle.message("history.empty")
+        emptyText.text = AccureBundle.message("history.empty")
         addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
                 val row = locationToIndex(e.point)
@@ -254,7 +254,7 @@ class HistoryPanel(
         isFocusable = true
         cellRenderer = CloudHistoryRenderer(controller.cloud) { snapshot.activity }
         cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-        emptyText.text = KiloBundle.message("history.empty")
+        emptyText.text = AccureBundle.message("history.empty")
         addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
                 if (e.clickCount == 2) selectedValue?.let(::activate)
@@ -321,9 +321,9 @@ class HistoryPanel(
     private fun <T : HistoryItem> syncList(list: JBList<T>, model: HistoryModel<T>) {
         list.setPaintBusy(model.loading)
         list.emptyText.text = when {
-            model.loading -> KiloBundle.message("history.loading")
+            model.loading -> AccureBundle.message("history.loading")
             model.error != null -> model.error.orEmpty()
-            else -> KiloBundle.message("history.empty")
+            else -> AccureBundle.message("history.empty")
         }
     }
 
@@ -347,7 +347,7 @@ class HistoryPanel(
     }
 
     private fun installContextMenu(list: JBList<out HistoryItem>) {
-        val group = ActionManager.getInstance().getAction("Kilo.History.ContextMenu")
+        val group = ActionManager.getInstance().getAction("Accure.History.ContextMenu")
         if (group is ActionGroup) {
             PopupHandler.installPopupMenu(list, group, ActionPlaces.POPUP)
         }
@@ -357,8 +357,8 @@ class HistoryPanel(
         if (controller.deleting(item)) return
         val result = com.intellij.openapi.ui.Messages.showYesNoDialog(
             this,
-            KiloBundle.message("history.delete.confirm.message", title(item)),
-            KiloBundle.message("history.delete.confirm.title"),
+            AccureBundle.message("history.delete.confirm.message", title(item)),
+            AccureBundle.message("history.delete.confirm.title"),
             com.intellij.openapi.ui.Messages.getWarningIcon(),
         )
         if (result != com.intellij.openapi.ui.Messages.YES) return
@@ -369,13 +369,13 @@ class HistoryPanel(
         val active = items.filter { !controller.deleting(it) }
         if (active.isEmpty()) return
         val msg = if (active.size == 1)
-            KiloBundle.message("history.delete.confirm.message", title(active[0]))
+            AccureBundle.message("history.delete.confirm.message", title(active[0]))
         else
-            KiloBundle.message("history.delete.confirm.message.multiple", active.size)
+            AccureBundle.message("history.delete.confirm.message.multiple", active.size)
         val result = com.intellij.openapi.ui.Messages.showYesNoDialog(
             this,
             msg,
-            KiloBundle.message("history.delete.confirm.title"),
+            AccureBundle.message("history.delete.confirm.title"),
             com.intellij.openapi.ui.Messages.getWarningIcon(),
         )
         if (result != com.intellij.openapi.ui.Messages.YES) return
@@ -506,7 +506,7 @@ class HistoryPanel(
         controller.onRepoOnlyChanged = null
     }
 
-    private class LoadMoreButton : JButton(KiloBundle.message("history.cloud.load.more")) {
+    private class LoadMoreButton : JButton(AccureBundle.message("history.cloud.load.more")) {
         private var over = false
 
         init {

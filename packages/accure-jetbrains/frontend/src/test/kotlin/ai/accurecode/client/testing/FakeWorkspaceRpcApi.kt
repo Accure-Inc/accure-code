@@ -1,35 +1,35 @@
-package ai.kilocode.client.testing
+package ai.accurecode.client.testing
 
-import ai.kilocode.rpc.KiloWorkspaceRpcApi
-import ai.kilocode.rpc.dto.ConfigTargetDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.ModelsWorkspaceDto
-import ai.kilocode.rpc.dto.WorkspaceFileDto
+import ai.accurecode.rpc.AccureWorkspaceRpcApi
+import ai.accurecode.rpc.dto.ConfigTargetDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.ModelsWorkspaceDto
+import ai.accurecode.rpc.dto.WorkspaceFileDto
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
- * Fake [KiloWorkspaceRpcApi] for testing.
+ * Fake [AccureWorkspaceRpcApi] for testing.
  *
  * Push workspace state changes via [state].
  * Directory resolution returns [directory].
  *
  * Every `suspend` method asserts it is NOT called on the EDT.
  */
-class FakeWorkspaceRpcApi : KiloWorkspaceRpcApi {
+class FakeWorkspaceRpcApi : AccureWorkspaceRpcApi {
 
     var directory = "/test"
-    val state = MutableStateFlow(KiloWorkspaceStateDto(KiloWorkspaceStatusDto.PENDING))
+    val state = MutableStateFlow(AccureWorkspaceStateDto(AccureWorkspaceStatusDto.PENDING))
     var reloads = 0
         private set
     var models = ModelsWorkspaceDto()
     var modelsGate: CompletableDeferred<Unit>? = null
     var fileMatches = emptyList<WorkspaceFileDto>()
     var openResult = true
-    var localConfigPath = "/test/.kilo/kilo.jsonc"
-    var globalConfigPath = "/config/kilo.jsonc"
+    var localConfigPath = "/test/.accurecode/accure.jsonc"
+    var globalConfigPath = "/config/accure.jsonc"
     var localConfigDisplayPath = localConfigPath
     var globalConfigDisplayPath = globalConfigPath
     var localConfigExists = true
@@ -48,7 +48,7 @@ class FakeWorkspaceRpcApi : KiloWorkspaceRpcApi {
         return directory
     }
 
-    override suspend fun state(directory: String): Flow<KiloWorkspaceStateDto> {
+    override suspend fun state(directory: String): Flow<AccureWorkspaceStateDto> {
         assertNotEdt("state")
         return state
     }

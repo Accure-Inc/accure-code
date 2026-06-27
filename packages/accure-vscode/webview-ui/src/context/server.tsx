@@ -57,7 +57,7 @@ export const ServerProvider: ParentComponent = (props) => {
     const unsubscribe = vscode.onMessage((message: ExtensionMessage) => {
       switch (message.type) {
         case "ready":
-          console.log("[Kilo New] Server ready:", message.serverInfo)
+          console.log("[Accure New] Server ready:", message.serverInfo)
           setServerInfo(message.serverInfo)
           if (message.extensionVersion) setExtensionVersion(message.extensionVersion)
           setConnectionState("connected")
@@ -83,7 +83,7 @@ export const ServerProvider: ParentComponent = (props) => {
           break
 
         case "connectionState":
-          console.log("[Kilo New] Connection state changed:", message.state)
+          console.log("[Accure New] Connection state changed:", message.state)
           setConnectionState(message.state)
           if (message.error) {
             setErrorMessage(message.userMessage ?? message.error)
@@ -95,18 +95,18 @@ export const ServerProvider: ParentComponent = (props) => {
           break
 
         case "error":
-          console.error("[Kilo New] Server error:", message.message)
+          console.error("[Accure New] Server error:", message.message)
           setErrorMessage(message.message)
           setErrorDetails(message.message)
           break
 
         case "profileData":
-          console.log("[Kilo New] Profile data:", message.data ? "received" : "null")
+          console.log("[Accure New] Profile data:", message.data ? "received" : "null")
           setProfileData(message.data)
           break
 
         case "deviceAuthStarted":
-          console.log("[Kilo New] Device auth started")
+          console.log("[Accure New] Device auth started")
           setDeviceAuth({
             status: "pending",
             code: message.code,
@@ -116,19 +116,19 @@ export const ServerProvider: ParentComponent = (props) => {
           break
 
         case "deviceAuthComplete":
-          console.log("[Kilo New] Device auth complete")
+          console.log("[Accure New] Device auth complete")
           setDeviceAuth({ status: "success" })
           // Reset to idle after a short delay
           setTimeout(() => setDeviceAuth(initialDeviceAuth), 1500)
           break
 
         case "deviceAuthFailed":
-          console.log("[Kilo New] Device auth failed:", message.error)
+          console.log("[Accure New] Device auth failed:", message.error)
           setDeviceAuth({ status: "error", error: message.error })
           break
 
         case "deviceAuthCancelled":
-          console.log("[Kilo New] Device auth cancelled")
+          console.log("[Accure New] Device auth cancelled")
           setDeviceAuth(initialDeviceAuth)
           break
       }
@@ -142,7 +142,7 @@ export const ServerProvider: ParentComponent = (props) => {
 
     // Let the extension know the webview has mounted and message handlers are registered.
     // Without this handshake, messages posted during a webview refresh can be lost.
-    console.log("[Kilo New] Webview ready")
+    console.log("[Accure New] Webview ready")
     vscode.postMessage({ type: "webviewReady" })
   })
 
@@ -158,7 +158,7 @@ export const ServerProvider: ParentComponent = (props) => {
   /**
    * Route any "Sign In" action through the Profile view so the user always
    * sees the device-auth UI (URL, QR, code, timer, cancel). Entry points
-   * outside the Profile page — e.g. the Kilo Gateway card in the Providers
+   * outside the Profile page — e.g. the Accure Gateway card in the Providers
    * settings tab, or the provider picker — must call this helper instead of
    * `startLogin()` directly. Otherwise the login flow runs silently and the
    * user has no way to see the code or cancel if the browser is dismissed.

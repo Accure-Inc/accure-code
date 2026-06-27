@@ -3,6 +3,46 @@
 import { client } from "./client.gen.js"
 import { buildClientParams, type Client, type Options as Options2, type TDataShape } from "./client/index.js"
 import type {
+  AccureAudioTranscriptionsErrors,
+  AccureAudioTranscriptionsResponses,
+  AccureAuthStatusErrors,
+  AccureAuthStatusResponses,
+  AccureClawChatCredentialsErrors,
+  AccureClawChatCredentialsResponses,
+  AccureClawStatusErrors,
+  AccureClawStatusResponses,
+  AccureCloudSessionGetErrors,
+  AccureCloudSessionGetResponses,
+  AccureCloudSessionImportErrors,
+  AccureCloudSessionImportResponses,
+  AccureCloudSessionsErrors,
+  AccureCloudSessionsResponses,
+  AccurecodeHeapSnapshotErrors,
+  AccurecodeHeapSnapshotResponses,
+  AccurecodeRemoveAgentErrors,
+  AccurecodeRemoveAgentResponses,
+  AccurecodeRemoveSkillErrors,
+  AccurecodeRemoveSkillResponses,
+  AccurecodeSessionImportMessageErrors,
+  AccurecodeSessionImportMessageResponses,
+  AccurecodeSessionImportPartErrors,
+  AccurecodeSessionImportPartResponses,
+  AccurecodeSessionImportProjectErrors,
+  AccurecodeSessionImportProjectResponses,
+  AccurecodeSessionImportSessionErrors,
+  AccurecodeSessionImportSessionResponses,
+  AccureEditErrors,
+  AccureEditResponses,
+  AccureFimErrors,
+  AccureFimResponses,
+  AccureModesErrors,
+  AccureModesResponses,
+  AccureNotificationsErrors,
+  AccureNotificationsResponses,
+  AccureOrganizationSetErrors,
+  AccureOrganizationSetResponses,
+  AccureProfileErrors,
+  AccureProfileResponses,
   AgentBuilderPreviewErrors,
   AgentBuilderPreviewResponses,
   AgentBuilderSaveErrors,
@@ -126,46 +166,6 @@ import type {
   IndexingWarningsResponses,
   InstanceDisposeErrors,
   InstanceDisposeResponses,
-  KiloAudioTranscriptionsErrors,
-  KiloAudioTranscriptionsResponses,
-  KiloAuthStatusErrors,
-  KiloAuthStatusResponses,
-  KiloClawChatCredentialsErrors,
-  KiloClawChatCredentialsResponses,
-  KiloClawStatusErrors,
-  KiloClawStatusResponses,
-  KiloCloudSessionGetErrors,
-  KiloCloudSessionGetResponses,
-  KiloCloudSessionImportErrors,
-  KiloCloudSessionImportResponses,
-  KiloCloudSessionsErrors,
-  KiloCloudSessionsResponses,
-  KilocodeHeapSnapshotErrors,
-  KilocodeHeapSnapshotResponses,
-  KilocodeRemoveAgentErrors,
-  KilocodeRemoveAgentResponses,
-  KilocodeRemoveSkillErrors,
-  KilocodeRemoveSkillResponses,
-  KilocodeSessionImportMessageErrors,
-  KilocodeSessionImportMessageResponses,
-  KilocodeSessionImportPartErrors,
-  KilocodeSessionImportPartResponses,
-  KilocodeSessionImportProjectErrors,
-  KilocodeSessionImportProjectResponses,
-  KilocodeSessionImportSessionErrors,
-  KilocodeSessionImportSessionResponses,
-  KiloEditErrors,
-  KiloEditResponses,
-  KiloFimErrors,
-  KiloFimResponses,
-  KiloModesErrors,
-  KiloModesResponses,
-  KiloNotificationsErrors,
-  KiloNotificationsResponses,
-  KiloOrganizationSetErrors,
-  KiloOrganizationSetResponses,
-  KiloProfileErrors,
-  KiloProfileResponses,
   LspStatusErrors,
   LspStatusResponses,
   McpAddErrors,
@@ -444,7 +444,7 @@ class HeyApiRegistry<T> {
   get(key?: string): T {
     const instance = this.instances.get(key ?? this.defaultKey)
     if (!instance) {
-      throw new Error(`No SDK client found. Create one with "new KiloClient()" to fix this error.`)
+      throw new Error(`No SDK client found. Create one with "new AccureClient()" to fix this error.`)
     }
     return instance
   }
@@ -559,7 +559,7 @@ export class App extends HeyApiClient {
   /**
    * List agents
    *
-   * Get a list of all available AI agents in the Kilo system.
+   * Get a list of all available AI agents in the Accure system.
    */
   public agents<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -589,7 +589,7 @@ export class App extends HeyApiClient {
   /**
    * List skills
    *
-   * Get a list of all available skills in the Kilo system.
+   * Get a list of all available skills in the Accure system.
    */
   public skills<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -621,7 +621,7 @@ export class Config extends HeyApiClient {
   /**
    * Get global configuration
    *
-   * Retrieve the current global Kilo configuration settings and preferences.
+   * Retrieve the current global Accure configuration settings and preferences.
    */
   public get<ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) {
     return (options?.client ?? this.client).get<GlobalConfigGetResponses, GlobalConfigGetErrors, ThrowOnError>({
@@ -633,7 +633,7 @@ export class Config extends HeyApiClient {
   /**
    * Update global configuration
    *
-   * Update global Kilo configuration settings and preferences.
+   * Update global Accure configuration settings and preferences.
    */
   public update<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -659,7 +659,7 @@ export class Global extends HeyApiClient {
   /**
    * Get health
    *
-   * Get health information about the Kilo server.
+   * Get health information about the Accure server.
    */
   public health<ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) {
     return (options?.client ?? this.client).get<GlobalHealthResponses, GlobalHealthErrors, ThrowOnError>({
@@ -671,7 +671,7 @@ export class Global extends HeyApiClient {
   /**
    * Get global events
    *
-   * Subscribe to global events from the Kilo system using server-sent events.
+   * Subscribe to global events from the Accure system using server-sent events.
    */
   public event<ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) {
     return (options?.client ?? this.client).sse.get<GlobalEventResponses, GlobalEventErrors, ThrowOnError>({
@@ -683,7 +683,7 @@ export class Global extends HeyApiClient {
   /**
    * Dispose instance
    *
-   * Clean up and dispose all Kilo instances, releasing all resources.
+   * Clean up and dispose all Accure instances, releasing all resources.
    */
   public dispose<ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) {
     return (options?.client ?? this.client).post<GlobalDisposeResponses, GlobalDisposeErrors, ThrowOnError>({
@@ -693,9 +693,9 @@ export class Global extends HeyApiClient {
   }
 
   /**
-   * Upgrade kilo
+   * Upgrade accure
    *
-   * Upgrade kilo to the specified version or latest if not specified.
+   * Upgrade accure to the specified version or latest if not specified.
    */
   public upgrade<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -758,7 +758,7 @@ export class Config2 extends HeyApiClient {
   /**
    * Get configuration
    *
-   * Retrieve the current Kilo configuration settings and preferences.
+   * Retrieve the current Accure configuration settings and preferences.
    */
   public get<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -788,7 +788,7 @@ export class Config2 extends HeyApiClient {
   /**
    * Update configuration
    *
-   * Update Kilo configuration settings and preferences.
+   * Update Accure configuration settings and preferences.
    */
   public update<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -1024,7 +1024,7 @@ export class Config2 extends HeyApiClient {
   /**
    * Get project rules
    *
-   * List project instruction files used by Kilo and return their current contents.
+   * List project instruction files used by Accure and return their current contents.
    */
   public rules<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -1125,7 +1125,7 @@ export class Config2 extends HeyApiClient {
   /**
    * Update model state
    *
-   * Patch TUI-compatible model selections shared with Kilo Console.
+   * Patch TUI-compatible model selections shared with Accure Console.
    */
   public modelStateUpdate<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -1239,7 +1239,7 @@ export class Console extends HeyApiClient {
   /**
    * Switch active Console org
    *
-   * Persist a new active Console account/org selection for the current local Kilo state.
+   * Persist a new active Console account/org selection for the current local Accure state.
    */
   public switchOrg<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -1280,7 +1280,7 @@ export class Session extends HeyApiClient {
   /**
    * List sessions
    *
-   * Get a list of all Kilo sessions across projects, sorted by most recently updated. Archived sessions are excluded by default.
+   * Get a list of all Accure sessions across projects, sorted by most recently updated. Archived sessions are excluded by default.
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -1768,7 +1768,7 @@ export class Worktree extends HeyApiClient {
   /**
    * List worktrees
    *
-   * List all git worktrees for the current project and whether Kilo manages them.
+   * List all git worktrees for the current project and whether Accure manages them.
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -2172,7 +2172,7 @@ export class Instance extends HeyApiClient {
   /**
    * Dispose instance
    *
-   * Clean up and dispose the current Kilo instance, releasing all resources.
+   * Clean up and dispose the current Accure instance, releasing all resources.
    */
   public dispose<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -2204,7 +2204,7 @@ export class Path extends HeyApiClient {
   /**
    * Get paths
    *
-   * Retrieve the current working directory and related path information for the Kilo instance.
+   * Retrieve the current working directory and related path information for the Accure instance.
    */
   public get<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -2406,7 +2406,7 @@ export class Command extends HeyApiClient {
   /**
    * List commands
    *
-   * Get a list of all available commands in the Kilo system.
+   * Get a list of all available commands in the Accure system.
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -2777,7 +2777,7 @@ export class Project extends HeyApiClient {
   /**
    * List all projects
    *
-   * Get a list of projects that have been opened with Kilo.
+   * Get a list of projects that have been opened with Accure.
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -2807,7 +2807,7 @@ export class Project extends HeyApiClient {
   /**
    * Get current project
    *
-   * Retrieve the currently active project that Kilo is working with.
+   * Retrieve the currently active project that Accure is working with.
    */
   public current<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -2951,7 +2951,7 @@ export class Pty extends HeyApiClient {
   /**
    * List PTY sessions
    *
-   * Get a list of all active pseudo-terminal (PTY) sessions managed by Kilo.
+   * Get a list of all active pseudo-terminal (PTY) sessions managed by Accure.
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -3674,7 +3674,7 @@ export class Session2 extends HeyApiClient {
   /**
    * List sessions
    *
-   * Get a list of all Kilo sessions, sorted by most recently updated.
+   * Get a list of all Accure sessions, sorted by most recently updated.
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -3716,7 +3716,7 @@ export class Session2 extends HeyApiClient {
   /**
    * Create session
    *
-   * Create a new Kilo session for interacting with AI assistants and managing conversations.
+   * Create a new Accure session for interacting with AI assistants and managing conversations.
    */
   public create<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -3831,7 +3831,7 @@ export class Session2 extends HeyApiClient {
   /**
    * Get session
    *
-   * Retrieve detailed information about a specific Kilo session.
+   * Retrieve detailed information about a specific Accure session.
    */
   public get<ThrowOnError extends boolean = false>(
     parameters: {
@@ -6352,9 +6352,9 @@ export class Indexing extends HeyApiClient {
   }
 
   /**
-   * List Kilo embedding models
+   * List Accure embedding models
    *
-   * Retrieve the embedding models available through the active Kilo account.
+   * Retrieve the embedding models available through the active Accure account.
    */
   public models<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6386,7 +6386,7 @@ export class Audio extends HeyApiClient {
   /**
    * Speech to text transcription
    *
-   * Proxy an audio transcription request to the Kilo Gateway
+   * Proxy an audio transcription request to the Accure Gateway
    */
   public transcriptions<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6420,11 +6420,11 @@ export class Audio extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      KiloAudioTranscriptionsResponses,
-      KiloAudioTranscriptionsErrors,
+      AccureAudioTranscriptionsResponses,
+      AccureAudioTranscriptionsErrors,
       ThrowOnError
     >({
-      url: "/kilo/audio/transcriptions",
+      url: "/accure/audio/transcriptions",
       ...options,
       ...params,
       headers: {
@@ -6438,9 +6438,9 @@ export class Audio extends HeyApiClient {
 
 export class Organization extends HeyApiClient {
   /**
-   * Update Kilo Gateway organization
+   * Update Accure Gateway organization
    *
-   * Switch to a different Kilo Gateway organization
+   * Switch to a different Accure Gateway organization
    */
   public set<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6462,26 +6462,28 @@ export class Organization extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).post<KiloOrganizationSetResponses, KiloOrganizationSetErrors, ThrowOnError>(
-      {
-        url: "/kilo/organization",
-        ...options,
-        ...params,
-        headers: {
-          "Content-Type": "application/json",
-          ...options?.headers,
-          ...params.headers,
-        },
+    return (options?.client ?? this.client).post<
+      AccureOrganizationSetResponses,
+      AccureOrganizationSetErrors,
+      ThrowOnError
+    >({
+      url: "/accure/organization",
+      ...options,
+      ...params,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+        ...params.headers,
       },
-    )
+    })
   }
 }
 
 export class Claw extends HeyApiClient {
   /**
-   * Get KiloClaw instance status
+   * Get AccureClaw instance status
    *
-   * Fetch the user's KiloClaw instance status via the KiloClaw worker
+   * Fetch the user's AccureClaw instance status via the AccureClaw worker
    */
   public status<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6501,17 +6503,17 @@ export class Claw extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<KiloClawStatusResponses, KiloClawStatusErrors, ThrowOnError>({
-      url: "/kilo/claw/status",
+    return (options?.client ?? this.client).get<AccureClawStatusResponses, AccureClawStatusErrors, ThrowOnError>({
+      url: "/accure/claw/status",
       ...options,
       ...params,
     })
   }
 
   /**
-   * Get KiloClaw chat credentials
+   * Get AccureClaw chat credentials
    *
-   * Returns the bearer token and endpoint URLs the client uses to talk to the Kilo Chat worker and the Event Service. The bearer is the user's existing long-lived Kilo JWT — kilo-chat and event-service both verify it directly with NEXTAUTH_SECRET, so no separate token mint is needed.
+   * Returns the bearer token and endpoint URLs the client uses to talk to the Accure Chat worker and the Event Service. The bearer is the user's existing long-lived Accure JWT — accure-chat and event-service both verify it directly with NEXTAUTH_SECRET, so no separate token mint is needed.
    */
   public chatCredentials<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6532,11 +6534,11 @@ export class Claw extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<
-      KiloClawChatCredentialsResponses,
-      KiloClawChatCredentialsErrors,
+      AccureClawChatCredentialsResponses,
+      AccureClawChatCredentialsErrors,
       ThrowOnError
     >({
-      url: "/kilo/claw/chat-credentials",
+      url: "/accure/claw/chat-credentials",
       ...options,
       ...params,
     })
@@ -6547,7 +6549,7 @@ export class Session4 extends HeyApiClient {
   /**
    * Get cloud session
    *
-   * Fetch full session data from the Kilo cloud for preview
+   * Fetch full session data from the Accure cloud for preview
    */
   public get<ThrowOnError extends boolean = false>(
     parameters: {
@@ -6569,8 +6571,12 @@ export class Session4 extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<KiloCloudSessionGetResponses, KiloCloudSessionGetErrors, ThrowOnError>({
-      url: "/kilo/cloud/session/{id}",
+    return (options?.client ?? this.client).get<
+      AccureCloudSessionGetResponses,
+      AccureCloudSessionGetErrors,
+      ThrowOnError
+    >({
+      url: "/accure/cloud/session/{id}",
       ...options,
       ...params,
     })
@@ -6602,11 +6608,11 @@ export class Session4 extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      KiloCloudSessionImportResponses,
-      KiloCloudSessionImportErrors,
+      AccureCloudSessionImportResponses,
+      AccureCloudSessionImportErrors,
       ThrowOnError
     >({
-      url: "/kilo/cloud/session/import",
+      url: "/accure/cloud/session/import",
       ...options,
       ...params,
       headers: {
@@ -6625,11 +6631,11 @@ export class Cloud extends HeyApiClient {
   }
 }
 
-export class Kilo extends HeyApiClient {
+export class Accure extends HeyApiClient {
   /**
-   * Get Kilo Gateway profile
+   * Get Accure Gateway profile
    *
-   * Fetch user profile and organizations from Kilo Gateway
+   * Fetch user profile and organizations from Accure Gateway
    */
   public profile<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6649,17 +6655,17 @@ export class Kilo extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<KiloProfileResponses, KiloProfileErrors, ThrowOnError>({
-      url: "/kilo/profile",
+    return (options?.client ?? this.client).get<AccureProfileResponses, AccureProfileErrors, ThrowOnError>({
+      url: "/accure/profile",
       ...options,
       ...params,
     })
   }
 
   /**
-   * Get Kilo authentication status
+   * Get Accure authentication status
    *
-   * Check whether a locally stored Kilo credential can authenticate Gateway requests
+   * Check whether a locally stored Accure credential can authenticate Gateway requests
    */
   public authStatus<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6679,8 +6685,8 @@ export class Kilo extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<KiloAuthStatusResponses, KiloAuthStatusErrors, ThrowOnError>({
-      url: "/kilo/auth-status",
+    return (options?.client ?? this.client).get<AccureAuthStatusResponses, AccureAuthStatusErrors, ThrowOnError>({
+      url: "/accure/auth-status",
       ...options,
       ...params,
     })
@@ -6709,8 +6715,8 @@ export class Kilo extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<KiloModesResponses, KiloModesErrors, ThrowOnError>({
-      url: "/kilo/modes",
+    return (options?.client ?? this.client).get<AccureModesResponses, AccureModesErrors, ThrowOnError>({
+      url: "/accure/modes",
       ...options,
       ...params,
     })
@@ -6719,7 +6725,7 @@ export class Kilo extends HeyApiClient {
   /**
    * FIM completion
    *
-   * Proxy a Fill-in-the-Middle completion request to the Kilo Gateway
+   * Proxy a Fill-in-the-Middle completion request to the Accure Gateway
    */
   public fim<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6751,8 +6757,8 @@ export class Kilo extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).sse.post<KiloFimResponses, KiloFimErrors, ThrowOnError>({
-      url: "/kilo/fim",
+    return (options?.client ?? this.client).sse.post<AccureFimResponses, AccureFimErrors, ThrowOnError>({
+      url: "/accure/fim",
       ...options,
       ...params,
       headers: {
@@ -6811,8 +6817,8 @@ export class Kilo extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).post<KiloEditResponses, KiloEditErrors, ThrowOnError>({
-      url: "/kilo/edit",
+    return (options?.client ?? this.client).post<AccureEditResponses, AccureEditErrors, ThrowOnError>({
+      url: "/accure/edit",
       ...options,
       ...params,
       headers: {
@@ -6824,9 +6830,9 @@ export class Kilo extends HeyApiClient {
   }
 
   /**
-   * Get Kilo notifications
+   * Get Accure notifications
    *
-   * Fetch notifications from Kilo Gateway for CLI display
+   * Fetch notifications from Accure Gateway for CLI display
    */
   public notifications<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6846,8 +6852,8 @@ export class Kilo extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<KiloNotificationsResponses, KiloNotificationsErrors, ThrowOnError>({
-      url: "/kilo/notifications",
+    return (options?.client ?? this.client).get<AccureNotificationsResponses, AccureNotificationsErrors, ThrowOnError>({
+      url: "/accure/notifications",
       ...options,
       ...params,
     })
@@ -6856,7 +6862,7 @@ export class Kilo extends HeyApiClient {
   /**
    * Get cloud sessions
    *
-   * Fetch cloud CLI sessions from Kilo API
+   * Fetch cloud CLI sessions from Accure API
    */
   public cloudSessions<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6882,8 +6888,8 @@ export class Kilo extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<KiloCloudSessionsResponses, KiloCloudSessionsErrors, ThrowOnError>({
-      url: "/kilo/cloud-sessions",
+    return (options?.client ?? this.client).get<AccureCloudSessionsResponses, AccureCloudSessionsErrors, ThrowOnError>({
+      url: "/accure/cloud-sessions",
       ...options,
       ...params,
     })
@@ -6935,11 +6941,11 @@ export class Heap extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      KilocodeHeapSnapshotResponses,
-      KilocodeHeapSnapshotErrors,
+      AccurecodeHeapSnapshotResponses,
+      AccurecodeHeapSnapshotErrors,
       ThrowOnError
     >({
-      url: "/kilocode/heap/snapshot",
+      url: "/accurecode/heap/snapshot",
       ...options,
       ...params,
     })
@@ -6995,11 +7001,11 @@ export class SessionImport extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      KilocodeSessionImportProjectResponses,
-      KilocodeSessionImportProjectErrors,
+      AccurecodeSessionImportProjectResponses,
+      AccurecodeSessionImportProjectErrors,
       ThrowOnError
     >({
-      url: "/kilocode/session-import/project",
+      url: "/accurecode/session-import/project",
       ...options,
       ...params,
       headers: {
@@ -7090,11 +7096,11 @@ export class SessionImport extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      KilocodeSessionImportSessionResponses,
-      KilocodeSessionImportSessionErrors,
+      AccurecodeSessionImportSessionResponses,
+      AccurecodeSessionImportSessionErrors,
       ThrowOnError
     >({
-      url: "/kilocode/session-import/session",
+      url: "/accurecode/session-import/session",
       ...options,
       ...params,
       headers: {
@@ -7182,11 +7188,11 @@ export class SessionImport extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      KilocodeSessionImportMessageResponses,
-      KilocodeSessionImportMessageErrors,
+      AccurecodeSessionImportMessageResponses,
+      AccurecodeSessionImportMessageErrors,
       ThrowOnError
     >({
-      url: "/kilocode/session-import/message",
+      url: "/accurecode/session-import/message",
       ...options,
       ...params,
       headers: {
@@ -7314,11 +7320,11 @@ export class SessionImport extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      KilocodeSessionImportPartResponses,
-      KilocodeSessionImportPartErrors,
+      AccurecodeSessionImportPartResponses,
+      AccurecodeSessionImportPartErrors,
       ThrowOnError
     >({
-      url: "/kilocode/session-import/part",
+      url: "/accurecode/session-import/part",
       ...options,
       ...params,
       headers: {
@@ -7330,7 +7336,7 @@ export class SessionImport extends HeyApiClient {
   }
 }
 
-export class Kilocode extends HeyApiClient {
+export class Accurecode extends HeyApiClient {
   /**
    * Remove a skill
    *
@@ -7356,18 +7362,20 @@ export class Kilocode extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).post<KilocodeRemoveSkillResponses, KilocodeRemoveSkillErrors, ThrowOnError>(
-      {
-        url: "/kilocode/skill/remove",
-        ...options,
-        ...params,
-        headers: {
-          "Content-Type": "application/json",
-          ...options?.headers,
-          ...params.headers,
-        },
+    return (options?.client ?? this.client).post<
+      AccurecodeRemoveSkillResponses,
+      AccurecodeRemoveSkillErrors,
+      ThrowOnError
+    >({
+      url: "/accurecode/skill/remove",
+      ...options,
+      ...params,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+        ...params.headers,
       },
-    )
+    })
   }
 
   /**
@@ -7395,18 +7403,20 @@ export class Kilocode extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).post<KilocodeRemoveAgentResponses, KilocodeRemoveAgentErrors, ThrowOnError>(
-      {
-        url: "/kilocode/agent/remove",
-        ...options,
-        ...params,
-        headers: {
-          "Content-Type": "application/json",
-          ...options?.headers,
-          ...params.headers,
-        },
+    return (options?.client ?? this.client).post<
+      AccurecodeRemoveAgentResponses,
+      AccurecodeRemoveAgentErrors,
+      ThrowOnError
+    >({
+      url: "/accurecode/agent/remove",
+      ...options,
+      ...params,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+        ...params.headers,
       },
-    )
+    })
   }
 
   private _heap?: Heap
@@ -7756,7 +7766,7 @@ export class Telemetry extends HeyApiClient {
   /**
    * Set PostHog telemetry enabled state
    *
-   * Update the PostHog client's opt-in/out state at runtime. The CLI reads KILO_TELEMETRY_LEVEL once at spawn — this route lets clients (e.g. the VS Code extension) propagate runtime telemetry consent changes.
+   * Update the PostHog client's opt-in/out state at runtime. The CLI reads ACCURECODE_TELEMETRY_LEVEL once at spawn — this route lets clients (e.g. the VS Code extension) propagate runtime telemetry consent changes.
    */
   public setEnabled<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -7793,12 +7803,12 @@ export class Telemetry extends HeyApiClient {
   }
 }
 
-export class KiloClient extends HeyApiClient {
-  public static readonly __registry = new HeyApiRegistry<KiloClient>()
+export class AccureClient extends HeyApiClient {
+  public static readonly __registry = new HeyApiRegistry<AccureClient>()
 
   constructor(args?: { client?: Client; key?: string }) {
     super(args)
-    KiloClient.__registry.set(this, args?.key)
+    AccureClient.__registry.set(this, args?.key)
   }
 
   private _auth?: Auth
@@ -7961,14 +7971,14 @@ export class KiloClient extends HeyApiClient {
     return (this._indexing ??= new Indexing({ client: this.client }))
   }
 
-  private _kilo?: Kilo
-  get kilo(): Kilo {
-    return (this._kilo ??= new Kilo({ client: this.client }))
+  private _accure?: Accure
+  get accure(): Accure {
+    return (this._accure ??= new Accure({ client: this.client }))
   }
 
-  private _kilocode?: Kilocode
-  get kilocode(): Kilocode {
-    return (this._kilocode ??= new Kilocode({ client: this.client }))
+  private _accurecode?: Accurecode
+  get accurecode(): Accurecode {
+    return (this._accurecode ??= new Accurecode({ client: this.client }))
   }
 
   private _network?: Network

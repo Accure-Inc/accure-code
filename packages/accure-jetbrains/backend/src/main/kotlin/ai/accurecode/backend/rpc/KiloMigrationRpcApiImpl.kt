@@ -1,23 +1,23 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.backend.rpc
+package ai.accurecode.backend.rpc
 
-import ai.kilocode.backend.app.KiloBackendAppService
-import ai.kilocode.backend.migration.KiloBackendLegacyMigrationStoreService
-import ai.kilocode.backend.migration.LegacyMigrationResultItem
-import ai.kilocode.backend.migration.LegacyMigrationSink
-import ai.kilocode.backend.migration.LegacyMigrationStatus
-import ai.kilocode.backend.migration.MigrationItemCategory
-import ai.kilocode.backend.migration.MigrationItemStatus
-import ai.kilocode.rpc.KiloMigrationRpcApi
-import ai.kilocode.rpc.dto.LegacyCleanupReportDto
-import ai.kilocode.rpc.dto.LegacyCleanupTargetsDto
-import ai.kilocode.rpc.dto.LegacyMigrationDetectionDto
-import ai.kilocode.rpc.dto.LegacyMigrationEventDto
-import ai.kilocode.rpc.dto.LegacyMigrationSelectionsDto
-import ai.kilocode.rpc.dto.LegacyMigrationStatusDto
-import ai.kilocode.backend.app.KiloBackendMigrationManager
-import ai.kilocode.log.KiloLog
+import ai.accurecode.backend.app.AccureBackendAppService
+import ai.accurecode.backend.migration.AccureBackendLegacyMigrationStoreService
+import ai.accurecode.backend.migration.LegacyMigrationResultItem
+import ai.accurecode.backend.migration.LegacyMigrationSink
+import ai.accurecode.backend.migration.LegacyMigrationStatus
+import ai.accurecode.backend.migration.MigrationItemCategory
+import ai.accurecode.backend.migration.MigrationItemStatus
+import ai.accurecode.rpc.AccureMigrationRpcApi
+import ai.accurecode.rpc.dto.LegacyCleanupReportDto
+import ai.accurecode.rpc.dto.LegacyCleanupTargetsDto
+import ai.accurecode.rpc.dto.LegacyMigrationDetectionDto
+import ai.accurecode.rpc.dto.LegacyMigrationEventDto
+import ai.accurecode.rpc.dto.LegacyMigrationSelectionsDto
+import ai.accurecode.rpc.dto.LegacyMigrationStatusDto
+import ai.accurecode.backend.app.AccureBackendMigrationManager
+import ai.accurecode.log.AccureLog
 import com.intellij.openapi.components.service
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.trySendBlocking
@@ -25,19 +25,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.withContext
 
-class KiloMigrationRpcApiImpl : KiloMigrationRpcApi {
+class AccureMigrationRpcApiImpl : AccureMigrationRpcApi {
 
     companion object {
-        private val LOG = KiloLog.create(KiloMigrationRpcApiImpl::class.java)
+        private val LOG = AccureLog.create(AccureMigrationRpcApiImpl::class.java)
     }
 
-    private val app: KiloBackendAppService get() = service()
-    private val storeService: KiloBackendLegacyMigrationStoreService get() = service()
+    private val app: AccureBackendAppService get() = service()
+    private val storeService: AccureBackendLegacyMigrationStoreService get() = service()
 
-    private fun manager(): KiloBackendMigrationManager {
+    private fun manager(): AccureBackendMigrationManager {
         val http = app.http ?: throw IllegalStateException("Not connected")
         val port = app.port
-        return KiloBackendMigrationManager(http, port)
+        return AccureBackendMigrationManager(http, port)
     }
 
     override suspend fun status(): LegacyMigrationStatusDto? {
@@ -64,11 +64,11 @@ class KiloMigrationRpcApiImpl : KiloMigrationRpcApi {
         return channelFlow {
             withContext(Dispatchers.IO) {
                 val sink = object : LegacyMigrationSink {
-                    override fun item(progress: ai.kilocode.backend.migration.LegacyMigrationItemProgress) {
+                    override fun item(progress: ai.accurecode.backend.migration.LegacyMigrationItemProgress) {
                         LOG.info("Migration RPC item: item=${progress.item} status=${progress.status} message=${progress.message}")
                         trySendBlocking(LegacyMigrationEventDto.Item(MigrationRpcMapper.toDto(progress)))
                     }
-                    override fun session(progress: ai.kilocode.backend.migration.LegacyMigrationSessionProgress) {
+                    override fun session(progress: ai.accurecode.backend.migration.LegacyMigrationSessionProgress) {
                         LOG.info("Migration RPC session: phase=${progress.phase} session=${progress.session?.id} error=${progress.error}")
                         trySendBlocking(LegacyMigrationEventDto.Session(MigrationRpcMapper.toDto(progress)))
                     }

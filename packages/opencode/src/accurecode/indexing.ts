@@ -1,12 +1,12 @@
 import z from "zod"
 import path from "path"
-import { type IndexingTelemetryEvent, type VectorStoreSearchResult } from "@kilocode/accure-indexing/engine"
-import { toIndexingConfigInput, type IndexingConfig } from "@kilocode/accure-indexing/config"
-import { hasIndexingPlugin } from "@kilocode/accure-indexing/detect"
-import { IndexingStatus, disabledIndexingStatus } from "@kilocode/accure-indexing/status"
-import { Telemetry } from "@kilocode/accure-telemetry"
-import { fetchKiloEmbeddingModelCatalog } from "@kilocode/accure-gateway"
-import { Instance } from "@/kilocode/instance"
+import { type IndexingTelemetryEvent, type VectorStoreSearchResult } from "@accurecode/accure-indexing/engine"
+import { toIndexingConfigInput, type IndexingConfig } from "@accurecode/accure-indexing/config"
+import { hasIndexingPlugin } from "@accurecode/accure-indexing/detect"
+import { IndexingStatus, disabledIndexingStatus } from "@accurecode/accure-indexing/status"
+import { Telemetry } from "@accurecode/accure-telemetry"
+import { fetchAccureEmbeddingModelCatalog } from "@accurecode/accure-gateway"
+import { Instance } from "@/accurecode/instance"
 import { Bus } from "@/bus"
 import { Config } from "@/config/config"
 import { AppRuntime } from "@/effect/app-runtime"
@@ -20,10 +20,10 @@ import { WorkspaceContext } from "@/control-plane/workspace-context"
 import { Event as IndexingEvent, Warning as IndexingWarningEvent } from "./indexing-event"
 import { indexingWarningKey, type IndexingWarning } from "./indexing-warning"
 import { IndexingWorker } from "./indexing-worker-client"
-import { LanceDBRuntime } from "./lancedb" // kilocode_change
-import { indexingWithKiloDefault, resolveKiloIndexingAuth, type KiloIndexingAuth } from "./indexing-auth" // kilocode_change
+import { LanceDBRuntime } from "./lancedb" // accurecode_change
+import { indexingWithAccureDefault, resolveAccureIndexingAuth, type AccureIndexingAuth } from "./indexing-auth" // accurecode_change
 
-const log = Log.create({ service: "kilocode-indexing" })
+const log = Log.create({ service: "accurecode-indexing" })
 const auth = makeRuntime(Auth.Service, Auth.defaultLayer)
 const missing = () => disabledIndexingStatus("Indexing plugin is not enabled for this workspace.")
 const noWorkspace = () =>
@@ -66,26 +66,26 @@ function pending(): z.infer<typeof IndexingStatus> {
   }
 }
 
-async function kiloAuth(cfg: Config.Info): Promise<KiloIndexingAuth> {
-  const info = await auth.runPromise((svc) => svc.get("kilo"))
-  return resolveKiloIndexingAuth({ config: cfg, auth: info })
+async function accureAuth(cfg: Config.Info): Promise<AccureIndexingAuth> {
+  const info = await auth.runPromise((svc) => svc.get("accure"))
+  return resolveAccureIndexingAuth({ config: cfg, auth: info })
 }
 
-function enrichKilo(input: ReturnType<typeof toIndexingConfigInput>, auth: KiloIndexingAuth) {
-  if (input.embedderProvider !== "kilo") return input
+function enrichAccure(input: ReturnType<typeof toIndexingConfigInput>, auth: AccureIndexingAuth) {
+  if (input.embedderProvider !== "accure") return input
 
   return {
     ...input,
-    kiloApiKey: input.kiloApiKey ?? auth.apiKey,
-    kiloBaseUrl: input.kiloBaseUrl ?? auth.baseUrl,
-    kiloOrganizationId: input.kiloOrganizationId ?? auth.organizationId,
+    accureApiKey: input.accureApiKey ?? auth.apiKey,
+    accureBaseUrl: input.accureBaseUrl ?? auth.baseUrl,
+    accureOrganizationId: input.accureOrganizationId ?? auth.organizationId,
   }
 }
 
-async function model(input: ReturnType<typeof toIndexingConfigInput>, auth: KiloIndexingAuth) {
-  if (input.embedderProvider !== "kilo") return input
+async function model(input: ReturnType<typeof toIndexingConfigInput>, auth: AccureIndexingAuth) {
+  if (input.embedderProvider !== "accure") return input
 
-  const catalog = await fetchKiloEmbeddingModelCatalog({ baseURL: auth.baseUrl, token: auth.apiKey })
+  const catalog = await fetchAccureEmbeddingModelCatalog({ baseURL: auth.baseUrl, token: auth.apiKey })
   const id = input.modelId ? (catalog.aliases[input.modelId] ?? input.modelId) : catalog.defaultModel
   const chosen = catalog.models.find((item) => item.id === id)
   const fallback = catalog.aliases[catalog.defaultModel] ?? catalog.defaultModel
@@ -93,13 +93,13 @@ async function model(input: ReturnType<typeof toIndexingConfigInput>, auth: Kilo
 
   if (!found) {
     if (input.modelId || input.modelDimension) {
-      log.warn("ignoring unsupported Kilo embedding model configuration", { model: input.modelId })
+      log.warn("ignoring unsupported Accure embedding model configuration", { model: input.modelId })
     }
     return { ...input, modelId: undefined, modelDimension: undefined }
   }
 
   if (input.modelId && !chosen) {
-    log.warn("using default Kilo embedding model instead of unsupported configuration", {
+    log.warn("using default Accure embedding model instead of unsupported configuration", {
       model: input.modelId,
       fallback: found.id,
     })
@@ -184,7 +184,7 @@ function trackTelemetry(event: IndexingTelemetryEvent): void {
   })
 }
 
-export namespace KiloIndexing {
+export namespace AccureIndexing {
   export const Status = IndexingStatus
   export type Status = z.infer<typeof Status>
 
@@ -244,7 +244,7 @@ export namespace KiloIndexing {
     const dir = Instance.directory
     const baseline = baselineDirectory(dir)
     const cfg = await AppRuntime.runPromise(Config.Service.use((svc) => svc.get()))
-    if (process.env["KILO_DISABLE_CODEBASE_INDEXING"] === "vscode-no-workspace") {
+    if (process.env["ACCURECODE_DISABLE_CODEBASE_INDEXING"] === "vscode-no-workspace") {
       return track(hit, await inert(() => noWorkspace()))
     }
     if (!hasIndexingPlugin(cfg.plugin)) {
@@ -253,11 +253,11 @@ export namespace KiloIndexing {
 
     log.info("initializing project indexing", { workspacePath: dir, baselineDirectory: baseline })
     const root = path.join(Global.Path.state, "indexing")
-    const auth = await kiloAuth(cfg)
+    const auth = await accureAuth(cfg)
     const globalConfig = await AppRuntime.runPromise(Config.Service.use((svc) => svc.getGlobal()))
     const global = globalConfig.indexing
-    const merged = indexingWithKiloDefault({ ...global, ...cfg.indexing }, auth)
-    const cfgInput = await model(enrichKilo(input(merged, global), auth), auth)
+    const merged = indexingWithAccureDefault({ ...global, ...cfg.indexing }, auth)
+    const cfgInput = await model(enrichAccure(input(merged, global), auth), auth)
     const workspaces = new Set<WorkspaceID | undefined>([WorkspaceContext.workspaceID])
     const box = { status: pending() }
     const warnings = new Map<string, IndexingWarning>()
@@ -471,14 +471,14 @@ export namespace KiloIndexing {
   export async function models() {
     try {
       const cfg = await AppRuntime.runPromise(Config.Service.use((svc) => svc.getGlobal()))
-      const auth = await kiloAuth(cfg)
-      const catalog = await fetchKiloEmbeddingModelCatalog({ baseURL: auth.baseUrl, token: auth.apiKey })
+      const auth = await accureAuth(cfg)
+      const catalog = await fetchAccureEmbeddingModelCatalog({ baseURL: auth.baseUrl, token: auth.apiKey })
       if (catalog.models.length > 0 || (!auth.baseUrl && !auth.apiKey)) return catalog
-      const fallback = await fetchKiloEmbeddingModelCatalog()
+      const fallback = await fetchAccureEmbeddingModelCatalog()
       return fallback.models.length > 0 ? fallback : catalog
     } catch (err) {
-      log.warn("falling back to public Kilo embedding model catalog", { err })
-      return fetchKiloEmbeddingModelCatalog()
+      log.warn("falling back to public Accure embedding model catalog", { err })
+      return fetchAccureEmbeddingModelCatalog()
     }
   }
 

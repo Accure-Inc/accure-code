@@ -16,7 +16,7 @@ import { ModelID, ProviderID } from "../../src/provider/schema"
 import { Provider } from "../../src/provider/provider"
 import { Permission } from "../../src/permission"
 import { TaskTool, type TaskPromptOps } from "../../src/tool/task"
-import { KiloSessionPrompt } from "../../src/kilocode/session/prompt"
+import { AccureSessionPrompt } from "../../src/accurecode/session/prompt"
 import { Truncate } from "../../src/tool/truncate"
 import { ToolRegistry } from "../../src/tool/registry"
 import { disposeAllInstances, provideTmpdirInstance } from "../fixture/fixture"
@@ -117,7 +117,7 @@ function stubOps(opts?: { onPrompt?: (input: SessionPrompt.PromptInput) => void 
   }
 }
 
-describe("Kilo task nesting", () => {
+describe("Accure task nesting", () => {
   it.live("allows primary agents to delegate one level to a subagent", () =>
     provideTmpdirInstance(() =>
       Effect.gen(function* () {
@@ -215,7 +215,7 @@ describe("Kilo task nesting", () => {
   )
 
   test("preserves inherited restrictions while refreshing prompt tool toggles", () => {
-    const permission = KiloSessionPrompt.mergeToolPermissions({
+    const permission = AccureSessionPrompt.mergeToolPermissions({
       existing: [
         { permission: "bash", pattern: "*", action: "deny" },
         { permission: "edit", pattern: "*", action: "deny" },
@@ -271,7 +271,7 @@ describe("Kilo task nesting", () => {
 
           const effective = Permission.merge(
             validator.permission,
-            KiloSessionPrompt.guardPermissions({ agent: validator, session: child }),
+            AccureSessionPrompt.guardPermissions({ agent: validator, session: child }),
           )
           expect(child.permission).not.toContainEqual({ permission: "bash", pattern: "*", action: "ask" })
           expect(child.permission).toContainEqual({ permission: "bash", pattern: "rm -rf *", action: "deny" })

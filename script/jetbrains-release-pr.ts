@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-// kilocode_change - new file
+// accurecode_change - new file
 
 import { $ } from "bun"
 import semver from "semver"
@@ -7,7 +7,7 @@ import { parseArgs } from "util"
 
 const props = new URL("../packages/accure-jetbrains/gradle.properties", import.meta.url).pathname
 const log = new URL("../packages/accure-jetbrains/CHANGELOG.md", import.meta.url).pathname
-const repo = process.env.GH_REPO ?? process.env.GITHUB_REPOSITORY ?? "Kilo-Org/kilocode"
+const repo = process.env.GH_REPO ?? process.env.GITHUB_REPOSITORY ?? "Accure-Inc/accure-code"
 
 const { values } = parseArgs({
   args: Bun.argv.slice(2),
@@ -207,9 +207,9 @@ function entries(notes: string) {
 
 async function writeprops(ver: string) {
   const current = await Bun.file(props).text()
-  const line = `kilo.jetbrains.version=${ver}`
-  const next = current.match(/^kilo\.jetbrains\.version=/m)
-    ? current.replace(/^kilo\.jetbrains\.version=.*$/m, line)
+  const line = `accurecode.jetbrains.version=${ver}`
+  const next = current.match(/^accure\.jetbrains\.version=/m)
+    ? current.replace(/^accure\.jetbrains\.version=.*$/m, line)
     : `${current.trim()}\n${line}\n`
   await Bun.write(props, next.endsWith("\n") ? next : `${next}\n`)
 }

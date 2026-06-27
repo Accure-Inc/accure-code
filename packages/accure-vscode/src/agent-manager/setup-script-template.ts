@@ -7,7 +7,7 @@ export const SETUP_SCRIPT_TEMPLATE = `#!/bin/sh
 #   WORKTREE_PATH  - Absolute path to the worktree directory
 #   REPO_PATH      - Absolute path to the main repository
 #
-# Kilo already copies root-level .env and .env.* files before this script runs.
+# Accure already copies root-level .env and .env.* files before this script runs.
 # Use this script for dependencies, nested env files, local config, databases,
 # certificates, or other project-specific setup that is not committed to git.
 #
@@ -52,7 +52,7 @@ export const SETUP_SCRIPT_TEMPLATE_POWERSHELL = `# Accure Code Worktree Setup Sc
 #   $env:WORKTREE_PATH  - Absolute path to the worktree directory
 #   $env:REPO_PATH      - Absolute path to the main repository
 #
-# Kilo already copies root-level .env and .env.* files before this script runs.
+# Accure already copies root-level .env and .env.* files before this script runs.
 # Use this script for dependencies, nested env files, local config, databases,
 # certificates, or other project-specific setup that is not committed to git.
 #

@@ -2,8 +2,8 @@
 
 import { type Component, For, Show, type JSXElement, type ParentProps } from "solid-js"
 import type { BranchInfo } from "../../types/messages"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { Spinner } from "@kilocode/accure-ui/spinner"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { Spinner } from "@accurecode/accure-ui/spinner"
 import { formatRelativeDate } from "../../utils/date"
 import { DeferredPopover } from "./DeferredPopover"
 

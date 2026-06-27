@@ -1,6 +1,6 @@
-package ai.kilocode.client.ui.md
+package ai.accurecode.client.ui.md
 
-import ai.kilocode.client.ui.md.hybrid.MdTerminal
+import ai.accurecode.client.ui.md.hybrid.MdTerminal
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 
 class MdTerminalTest : BasePlatformTestCase() {

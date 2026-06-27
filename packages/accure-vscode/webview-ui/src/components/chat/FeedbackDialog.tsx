@@ -1,20 +1,20 @@
 import { Component, JSX } from "solid-js"
-import { Dialog } from "@kilocode/accure-ui/dialog"
-import { Button } from "@kilocode/accure-ui/button"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { useDialog } from "@kilocode/accure-ui/context/dialog"
+import { Dialog } from "@accurecode/accure-ui/dialog"
+import { Button } from "@accurecode/accure-ui/button"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { useDialog } from "@accurecode/accure-ui/context/dialog"
 import { useVSCode } from "../../context/vscode"
 import { useLanguage } from "../../context/language"
 
-const GITHUB_ISSUES_URL = "https://github.com/Kilo-Org/kilocode/issues/new/choose"
-const DISCORD_URL = "https://kilo.ai/discord"
-const SUPPORT_URL = "https://kilo.ai/support"
+const GITHUB_ISSUES_URL = "https://github.com/Accure-Inc/accure-code/issues"
+const DISCUSSIONS_URL = "https://github.com/Accure-Inc/accure-code/discussions"
+const SUPPORT_URL = "https://accure.ai/contact/"
 
-const KiloLogo = (): JSX.Element => {
+const AccureLogo = (): JSX.Element => {
   const iconsBaseUri = (window as { ICONS_BASE_URI?: string }).ICONS_BASE_URI || ""
   const isLight =
     document.body.classList.contains("vscode-light") || document.body.classList.contains("vscode-high-contrast-light")
-  const iconFile = isLight ? "kilo-light.svg" : "kilo-dark.svg"
+  const iconFile = isLight ? "accure-light.svg" : "accure-dark.svg"
 
   return (
     <div class="feedback-dialog-logo">
@@ -36,15 +36,15 @@ export const FeedbackDialog: Component = () => {
   return (
     <Dialog title="" fit>
       <div class="feedback-dialog">
-        <KiloLogo />
+        <AccureLogo />
         <p class="feedback-dialog-message">{language.t("feedback.dialog.message")}</p>
         <div class="feedback-dialog-actions">
           <Button variant="primary" size="large" data-full-width="true" onClick={() => open(GITHUB_ISSUES_URL)}>
             <Icon name="github" size="small" />
             {language.t("feedback.dialog.github")}
           </Button>
-          <Button variant="secondary" size="large" data-full-width="true" onClick={() => open(DISCORD_URL)}>
-            <Icon name="discord" size="small" />
+          <Button variant="secondary" size="large" data-full-width="true" onClick={() => open(DISCUSSIONS_URL)}>
+            <Icon name="comment" size="small" />
             {language.t("feedback.dialog.discord")}
           </Button>
           <Button variant="secondary" size="large" data-full-width="true" onClick={() => open(SUPPORT_URL)}>

@@ -1,7 +1,7 @@
 # Extension View Doesn't Refresh on Restart/Update
 
 **Priority:** P1
-**Issue:** [#6086](https://github.com/Kilo-Org/kilocode/issues/6086)
+**Issue:** [#6086](https://github.com/Accure-Inc/accure-code/issues/6086)
 
 ## Remaining Work
 

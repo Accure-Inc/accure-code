@@ -5,14 +5,14 @@
 ## Remaining Work
 
 - Slash command input handling in chat (detect `/` prefix, show command list)
-- Project-level command discovery (scan `.kilocode/commands/` or similar)
+- Project-level command discovery (scan `.accurecode/commands/` or similar)
 - YAML frontmatter metadata support
 - Symlink-aware command discovery
 - VS Code command palette entry points
 - Wire to CLI's custom command system for execution
 
-## Primary Implementation Anchors (kilocode-legacy)
+## Primary Implementation Anchors (accurecode-legacy)
 
-These exist in the [kilocode-legacy](https://github.com/Kilo-Org/kilocode-legacy) repo, not in this extension:
+These exist in the [accurecode-legacy](https://github.com/Accure-Inc/accure-code-legacy) repo, not in this extension:
 
 - `src/services/command/`

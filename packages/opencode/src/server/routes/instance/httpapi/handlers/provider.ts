@@ -3,11 +3,11 @@ import { Config } from "@/config/config"
 import { ModelsDev } from "@opencode-ai/core/models-dev"
 import { Provider } from "@/provider/provider"
 import { ProviderID } from "@/provider/schema"
-import { mapValues, pickBy } from "remeda" // kilocode_change
-import { ModelCache } from "@/provider/model-cache" // kilocode_change
-import { disposeAllInstancesAfterProviderAuthCallback } from "@/kilocode/server/provider-auth-lifecycle" // kilocode_change
-import { providerMetadata } from "@/kilocode/provider/metadata" // kilocode_change
-import { filterPromptTrainingModels } from "@/kilocode/provider/model-filter" // kilocode_change
+import { mapValues, pickBy } from "remeda" // accurecode_change
+import { ModelCache } from "@/provider/model-cache" // accurecode_change
+import { disposeAllInstancesAfterProviderAuthCallback } from "@/accurecode/server/provider-auth-lifecycle" // accurecode_change
+import { providerMetadata } from "@/accurecode/provider/metadata" // accurecode_change
+import { filterPromptTrainingModels, filterBedrockModels } from "@/accurecode/provider/model-filter" // accurecode_change
 import { Effect, Schema } from "effect"
 import { HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
@@ -39,7 +39,7 @@ export const providerHandlers = HttpApiBuilder.group(InstanceHttpApi, "provider"
     const cfg = yield* Config.Service
     const provider = yield* Provider.Service
     const svc = yield* ProviderAuth.Service
-    const cache = yield* ModelCache.Service // kilocode_change
+    const cache = yield* ModelCache.Service // accurecode_change
 
     const list = Effect.fn("ProviderHttpApi.list")(function* () {
       const config = yield* cfg.get()
@@ -51,16 +51,16 @@ export const providerHandlers = HttpApiBuilder.group(InstanceHttpApi, "provider"
         if ((enabled ? enabled.has(key) : true) && !disabled.has(key)) filtered[key] = value
       }
       const connected = yield* provider.list()
-      // kilocode_change start
-      const providers = filterPromptTrainingModels(
+      // accurecode_change start
+      const providers = filterBedrockModels(filterPromptTrainingModels( // accurecode_change
         Object.assign(
           mapValues(filtered, (item) => Provider.fromModelsDevProvider(item)),
           connected,
         ),
         config.hide_prompt_training_models === true,
-      )
-      // kilocode_change end
-      // kilocode_change start
+      ))
+      // accurecode_change end
+      // accurecode_change start
       const failed = yield* cache.failedProviders()
       // Note: connected only contains providers with non-empty models after Provider.Service.list(),
       // so failed must be checked explicitly for providers whose fetch returned an error.
@@ -73,12 +73,12 @@ export const providerHandlers = HttpApiBuilder.group(InstanceHttpApi, "provider"
         all: Object.values(validProviders).map((item) => ({
           ...Provider.toPublicInfo(item),
           metadata: providerMetadata(item.id),
-        })), // kilocode_change
+        })), // accurecode_change
         default: Provider.defaultModelIDs(pickBy(validProviders, (item) => Object.keys(item.models).length > 0)),
         connected: Object.keys(connected),
         failed,
       }
-      // kilocode_change end
+      // accurecode_change end
     })
 
     const auth = Effect.fn("ProviderHttpApi.auth")(function* () {
@@ -124,7 +124,7 @@ export const providerHandlers = HttpApiBuilder.group(InstanceHttpApi, "provider"
           code: ctx.payload.code,
         }),
       )
-      yield* disposeAllInstancesAfterProviderAuthCallback() // kilocode_change
+      yield* disposeAllInstancesAfterProviderAuthCallback() // accurecode_change
       return true
     })
 

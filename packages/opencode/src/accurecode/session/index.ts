@@ -15,12 +15,12 @@ import * as Log from "@opencode-ai/core/util/log"
 import type { ProviderMetadata, Usage } from "@opencode-ai/llm"
 import type { Provider } from "@/provider/provider"
 import { zod as toZod } from "@opencode-ai/core/effect-zod"
-import { ENV_FEATURE } from "@kilocode/accure-gateway"
-import { fn } from "@/kilocode/fn"
+import { ENV_FEATURE } from "@accurecode/accure-gateway"
+import { fn } from "@/accurecode/fn"
 import path from "path"
 
-export namespace KiloSession {
-  const log = Log.create({ service: "session.kilo" })
+export namespace AccureSession {
+  const log = Log.create({ service: "session.accurecode" })
 
   // ---------------------------------------------------------------------------
   // Events
@@ -109,7 +109,7 @@ export namespace KiloSession {
 
   export function attribution(id: string): { rootID: string; feature?: string } {
     const rootID = resolveRoot(id)
-    const platform = resolvePlatform(rootID) ?? process.env["KILO_PLATFORM"]
+    const platform = resolvePlatform(rootID) ?? process.env["ACCURECODE_PLATFORM"]
     const feature = featureForPlatform(platform) ?? process.env[ENV_FEATURE]
     return { rootID, ...(feature ? { feature } : {}) }
   }
@@ -149,7 +149,7 @@ export namespace KiloSession {
   }
 
   // ---------------------------------------------------------------------------
-  // Provider-reported cost (Kilo / OpenRouter / Vercel AI Gateway)
+  // Provider-reported cost (Accure / OpenRouter / Vercel AI Gateway)
   // ---------------------------------------------------------------------------
 
   /**
@@ -157,7 +157,7 @@ export namespace KiloSession {
    *
    * Supports the following internal transports:
    *   1. OpenRouter chat completions  -> `metadata.openrouter.usage.cost`
-   *                                      (`costDetails.upstreamInferenceCost` for Kilo)
+   *                                      (`costDetails.upstreamInferenceCost` for Accure)
    *   2. Anthropic Messages or OpenAI Responses via OpenRouter
    *                                   -> `usage.providerMetadata.<provider>.cost_details`
    *      (native LLM usage retains the verbatim provider payload under its provider key,
@@ -167,7 +167,7 @@ export namespace KiloSession {
    *      gateway emits this in the SSE `provider_metadata` field, which the current AI SDK
    *      providers drop before they reach this layer)
    *
-   * Kilo does not charge end users a per-request fee, so for the Kilo provider the
+   * Accure does not charge end users a per-request fee, so for the Accure provider the
    * top-level `cost` field (the gateway/marketplace fee) would understate the user's
    * actual upstream spend. Always prefer the upstream/market cost when present.
    *
@@ -182,7 +182,7 @@ export namespace KiloSession {
     provider?: Provider.Info
     providerID: string
   }): number | undefined {
-    const isKilo = (input.provider?.id ?? input.providerID) === "kilo"
+    const isAccure = (input.provider?.id ?? input.providerID) === "accure"
 
     const num = (value: unknown): number | undefined => {
       if (value === undefined || value === null) return undefined
@@ -197,16 +197,16 @@ export namespace KiloSession {
     if (orUsage) {
       const upstream = num(orUsage.costDetails?.upstreamInferenceCost)
       const regular = num(orUsage.cost)
-      // Kilo doesn't charge a fee on top of the upstream inference cost, so for Kilo
+      // Accure doesn't charge a fee on top of the upstream inference cost, so for Accure
       // prefer the upstream cost (the user's true spend). For the OpenRouter provider
       // itself, the regular `cost` field is what the user is billed.
-      const cost = isKilo && upstream !== undefined ? upstream : regular
+      const cost = isAccure && upstream !== undefined ? upstream : regular
       if (cost !== undefined) return cost
     }
 
     // 2. Anthropic Messages or OpenAI Responses via OpenRouter. Native LLM usage keeps
     //    each provider's verbatim usage payload under `providerMetadata`, so OpenRouter's
-    //    upstream inference cost remains available with snake_case preserved. Kilo doesn't
+    //    upstream inference cost remains available with snake_case preserved. Accure doesn't
     //    charge end users a per-request fee, so only the upstream cost is meaningful here.
     const usage = input.usage?.providerMetadata
     const anthropic = usage?.["anthropic"]?.["cost_details"] as { upstream_inference_cost?: number } | undefined
@@ -218,7 +218,7 @@ export namespace KiloSession {
     if (upstream !== undefined) return upstream
 
     // 3. Anthropic Messages or OpenAI Responses via Vercel AI Gateway. `cost` is the
-    //    gateway fee that Kilo would pass through, but Kilo doesn't charge end users a
+    //    gateway fee that Accure would pass through, but Accure doesn't charge end users a
     //    per-request fee, so always use `marketCost` (the upstream provider's price).
     //    Values are emitted as strings on the wire.
     //
@@ -239,21 +239,21 @@ export namespace KiloSession {
 
   export function shareSession(id: SessionID) {
     return EffectBridge.fromPromise(async () => {
-      const { KiloSessions } = await import("@/kilo-sessions/kilo-sessions")
-      return KiloSessions.share(id)
+      const { AccureSessions } = await import("@/accure-sessions/accure-sessions")
+      return AccureSessions.share(id)
     }).pipe(Effect.catchCause((cause) => Effect.fail(Cause.squash(cause))))
   }
 
   export function unshareSession(id: SessionID) {
     return EffectBridge.fromPromise(async () => {
-      const { KiloSessions } = await import("@/kilo-sessions/kilo-sessions")
-      await KiloSessions.unshare(id)
+      const { AccureSessions } = await import("@/accure-sessions/accure-sessions")
+      await AccureSessions.unshare(id)
     }).pipe(Effect.catchCause((cause) => Effect.fail(Cause.squash(cause))))
   }
 
   export async function removeSession(id: string): Promise<void> {
-    const { KiloSessions } = await import("@/kilo-sessions/kilo-sessions")
-    await KiloSessions.remove(id).catch(() => {})
+    const { AccureSessions } = await import("@/accure-sessions/accure-sessions")
+    await AccureSessions.remove(id).catch(() => {})
   }
 
   export async function cleanup(id: string): Promise<void> {
@@ -369,7 +369,7 @@ export namespace KiloSession {
         if (!Filesystem.contains(root, dir)) continue
         const rel = path.relative(root, dir)
         const parts = rel.split(path.sep)
-        if ((parts[0] === ".kilo" || parts[0] === ".kilocode") && parts[1] === "worktrees" && parts[2]) {
+        if ((parts[0] === ".accurecode" || parts[0] === ".accurecode") && parts[1] === "worktrees" && parts[2]) {
           return path.join(root, parts[0], parts[1], parts[2])
         }
         return root
@@ -429,7 +429,7 @@ export namespace KiloSession {
   export const writer = _writer
 }
 
-export const kiloSessionFork = fn(
+export const accureSessionFork = fn(
   z.object({ sessionID: toZod(SessionID), messageID: toZod(MessageID).optional() }),
   async (input) => {
     const { AppRuntime } = await import("@/effect/app-runtime")

@@ -1,11 +1,11 @@
 ---
-title: Access MCP Resource Tool | Kilo Code Docs
-description: Learn how the access_mcp_resource tool retrieves data from Model Context Protocol servers to provide additional context for Kilo Code tasks.
+title: Access MCP Resource Tool | Accure Code Docs
+description: Learn how the access_mcp_resource tool retrieves data from Model Context Protocol servers to provide additional context for Accure Code tasks.
 ---
 
 # access_mcp_resource
 
-The `access_mcp_resource` tool retrieves data from resources exposed by connected Model Context Protocol (MCP) servers. It allows Kilo Code to access files, API responses, documentation, or system information that provides additional context for tasks.
+The `access_mcp_resource` tool retrieves data from resources exposed by connected Model Context Protocol (MCP) servers. It allows Accure Code to access files, API responses, documentation, or system information that provides additional context for tasks.
 
 ## Parameters
 
@@ -20,10 +20,10 @@ This tool connects to MCP servers and fetches data from their exposed resources.
 
 ## When is it used?
 
-- When Kilo Code needs additional context from external systems
-- When Kilo Code needs to access domain-specific data from specialized MCP servers
-- When Kilo Code needs to retrieve reference documentation hosted by MCP servers
-- When Kilo Code needs to integrate real-time data from external APIs via MCP
+- When Accure Code needs additional context from external systems
+- When Accure Code needs to access domain-specific data from specialized MCP servers
+- When Accure Code needs to retrieve reference documentation hosted by MCP servers
+- When Accure Code needs to integrate real-time data from external APIs via MCP
 
 ## Key Features
 
@@ -71,7 +71,7 @@ When the `access_mcp_resource` tool is invoked, it follows this process:
    - Receives a structured response with metadata and content arrays
    - Processes text content for display to the user
    - Handles image data specially for appropriate display
-   - Returns the processed resource data to Kilo Code for use in the current task
+   - Returns the processed resource data to Accure Code for use in the current task
 
 ## Resource Types
 
@@ -91,10 +91,10 @@ MCP servers can provide two main types of resources:
 
 ## Examples When Used
 
-- When helping with API development, Kilo Code retrieves endpoint specifications from MCP resources to ensure correct implementation.
-- When assisting with data visualization, Kilo Code accesses current data samples from connected MCP servers.
-- When working in specialized domains, Kilo Code retrieves technical documentation to provide accurate guidance.
-- When generating industry-specific code, Kilo Code references compliance requirements from documentation resources.
+- When helping with API development, Accure Code retrieves endpoint specifications from MCP resources to ensure correct implementation.
+- When assisting with data visualization, Accure Code accesses current data samples from connected MCP servers.
+- When working in specialized domains, Accure Code retrieves technical documentation to provide accurate guidance.
+- When generating industry-specific code, Accure Code references compliance requirements from documentation resources.
 
 ## Usage Examples
 

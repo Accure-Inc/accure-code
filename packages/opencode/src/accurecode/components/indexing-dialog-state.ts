@@ -1,5 +1,5 @@
-import { fetchKiloEmbeddingModelCatalog, resolveKiloGatewayBaseUrl } from "@kilocode/accure-gateway"
-import type { Config, IndexingConfig, KiloEmbeddingModelCatalog } from "@kilocode/sdk/v2"
+import { fetchAccureEmbeddingModelCatalog, resolveAccureGatewayBaseUrl } from "@accurecode/accure-gateway"
+import type { Config, IndexingConfig, AccureEmbeddingModelCatalog } from "@accurecode/sdk/v2"
 import * as Log from "@opencode-ai/core/util/log"
 import { createMemo, type Accessor } from "solid-js"
 
@@ -7,12 +7,12 @@ export type IndexingScope = "global" | "project"
 
 const log = Log.create({ service: "indexing-model-catalog" })
 
-export async function loadKiloEmbeddingModels(onError?: (message: string) => void) {
-  const endpoint = new URL("embedding-models", resolveKiloGatewayBaseUrl()).toString()
-  log.info("loading Kilo embedding model catalog", { endpoint })
-  const catalog = await fetchKiloEmbeddingModelCatalog({
+export async function loadAccureEmbeddingModels(onError?: (message: string) => void) {
+  const endpoint = new URL("embedding-models", resolveAccureGatewayBaseUrl()).toString()
+  log.info("loading Accure embedding model catalog", { endpoint })
+  const catalog = await fetchAccureEmbeddingModelCatalog({
     onError: (issue) => {
-      log.warn("failed to load Kilo embedding model catalog", {
+      log.warn("failed to load Accure embedding model catalog", {
         code: issue.code,
         status: issue.status,
         message: issue.message,
@@ -20,14 +20,14 @@ export async function loadKiloEmbeddingModels(onError?: (message: string) => voi
       onError?.(issue.message)
     },
   })
-  log.info("loaded Kilo embedding model catalog", {
+  log.info("loaded Accure embedding model catalog", {
     models: catalog.models.length,
     defaultModel: catalog.defaultModel || undefined,
   })
   return catalog
 }
 
-export function kiloModelOptions(catalog?: KiloEmbeddingModelCatalog) {
+export function accureModelOptions(catalog?: AccureEmbeddingModelCatalog) {
   if (!catalog) return [{ value: "", title: "Loading supported models..." }]
   if (catalog.models.length === 0) return [{ value: "", title: "No supported models available" }]
   return catalog.models.map((model) => ({
@@ -36,7 +36,7 @@ export function kiloModelOptions(catalog?: KiloEmbeddingModelCatalog) {
   }))
 }
 
-export function currentKiloModel(catalog: KiloEmbeddingModelCatalog | undefined, model?: string | null) {
+export function currentAccureModel(catalog: AccureEmbeddingModelCatalog | undefined, model?: string | null) {
   if (!catalog) return undefined
   const fallback = catalog.aliases[catalog.defaultModel] ?? catalog.defaultModel
   const current = model ? (catalog.aliases[model] ?? model) : fallback

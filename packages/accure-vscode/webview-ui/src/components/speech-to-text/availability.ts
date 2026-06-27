@@ -1,4 +1,4 @@
-import { KILO_PROVIDER_ID } from "../../../../src/shared/provider-model"
+import { ACCURECODE_PROVIDER_ID } from "../../../../src/shared/provider-model"
 import { getSpeechToTextModel } from "../../../../src/speech-to-text/models"
 
 type Cfg = {
@@ -12,9 +12,9 @@ type Cfg = {
 type AuthState = "api" | "oauth" | "wellknown"
 
 export function hasSpeechToTextAccess(cfg: Cfg, auth: Readonly<Record<string, AuthState>>): boolean {
-  const enabled = !cfg.enabled_providers || cfg.enabled_providers.includes(KILO_PROVIDER_ID)
-  const type = auth[KILO_PROVIDER_ID]
-  return enabled && !cfg.disabled_providers?.includes(KILO_PROVIDER_ID) && (type === "api" || type === "oauth")
+  const enabled = !cfg.enabled_providers || cfg.enabled_providers.includes(ACCURECODE_PROVIDER_ID)
+  const type = auth[ACCURECODE_PROVIDER_ID]
+  return enabled && !cfg.disabled_providers?.includes(ACCURECODE_PROVIDER_ID) && (type === "api" || type === "oauth")
 }
 
 export function canUseSpeechToText(cfg: Cfg, auth: Readonly<Record<string, AuthState>>): boolean {

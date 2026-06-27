@@ -26,7 +26,7 @@ export const AutomateNav: NavSection[] = [
     ],
   },
   {
-    title: "Extending Kilo",
+    title: "Extending Accure",
     links: [
       { href: "/automate/extending/local-models", children: "Local Models" },
       {
@@ -49,8 +49,8 @@ export const AutomateNav: NavSection[] = [
         subLinks: [
           { href: "/automate/mcp/overview", children: "MCP Overview" },
           {
-            href: "/automate/mcp/using-in-kilo-code",
-            children: "Using MCP in Kilo Code",
+            href: "/automate/mcp/using-in-accure-code",
+            children: "Using MCP in Accure Code",
           },
           { href: "/automate/mcp/using-in-cli", children: "Using MCP in CLI" },
           { href: "/automate/mcp/what-is-mcp", children: "What is MCP" },

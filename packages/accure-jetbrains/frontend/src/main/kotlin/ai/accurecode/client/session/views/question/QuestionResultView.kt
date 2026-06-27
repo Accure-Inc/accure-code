@@ -1,15 +1,15 @@
-package ai.kilocode.client.session.views.question
+package ai.accurecode.client.session.views.question
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.SessionViewIcons
-import ai.kilocode.client.session.views.base.PartView
-import ai.kilocode.client.session.views.tool.ToolView
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.SessionViewIcons
+import ai.accurecode.client.session.views.base.PartView
+import ai.accurecode.client.session.views.tool.ToolView
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.components.JBLabel
@@ -143,7 +143,7 @@ class QuestionResultView(tool: Tool, private val selection: SessionSelection? = 
 
     fun bodyText(): String = result.questions.mapIndexed { i, q ->
         val joined = result.answers.getOrNull(i)?.joinToString(", ").orEmpty()
-        listOf(q, joined.ifBlank { KiloBundle.message("session.question.review.notAnswered") }).joinToString("\n")
+        listOf(q, joined.ifBlank { AccureBundle.message("session.question.review.notAnswered") }).joinToString("\n")
     }.joinToString("\n")
 
     fun bodyCreated(): Boolean = pane != null
@@ -194,9 +194,9 @@ class QuestionResultView(tool: Tool, private val selection: SessionSelection? = 
     }
 
     private fun syncLabels() {
-        title.text = KiloBundle.message("session.question.result.title")
+        title.text = AccureBundle.message("session.question.result.title")
         val count = result.answers.count { it.isNotEmpty() }
-        sub.text = KiloBundle.message("session.question.result.answered", count)
+        sub.text = AccureBundle.message("session.question.result.answered", count)
         sub.foreground = UiStyle.Colors.weak()
     }
 
@@ -220,7 +220,7 @@ class QuestionResultView(tool: Tool, private val selection: SessionSelection? = 
 
             val joined = result.answers.getOrNull(i)?.joinToString(", ").orEmpty()
             val aText = makeText(
-                joined.ifBlank { KiloBundle.message("session.question.review.notAnswered") },
+                joined.ifBlank { AccureBundle.message("session.question.review.notAnswered") },
                 UiStyle.Colors.fg(),
                 true,
             )

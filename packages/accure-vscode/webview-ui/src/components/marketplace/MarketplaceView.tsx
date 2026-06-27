@@ -1,11 +1,11 @@
 import { createSignal, createMemo, createEffect, onCleanup, onMount, Show } from "solid-js"
-import { Tabs } from "@kilocode/accure-ui/tabs"
-import { Card } from "@kilocode/accure-ui/card"
-import { Button } from "@kilocode/accure-ui/button"
+import { Tabs } from "@accurecode/accure-ui/tabs"
+import { Card } from "@accurecode/accure-ui/card"
+import { Button } from "@accurecode/accure-ui/button"
 import { useVSCode } from "../../context/vscode"
 import { useServer } from "../../context/server"
 import { useLanguage } from "../../context/language"
-import { useDialog } from "@kilocode/accure-ui/context/dialog"
+import { useDialog } from "@accurecode/accure-ui/context/dialog"
 import type {
   MarketplaceItem,
   McpMarketplaceItem,

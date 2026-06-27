@@ -1,9 +1,9 @@
-// Tests the kilocode-specific patch module guarantees:
+// Tests the accurecode-specific patch module guarantees:
 // - Files retain their original encoding after an update (UTF-8 BOM, UTF-16,
 //   legacy single-byte, CJK).
 // - Plain UTF-8 files do not gain a spurious BOM.
 // - Moved files keep the original encoding at the new path.
-// These round-trip through the apply_patch tool so the Kilo encoding layer is
+// These round-trip through the apply_patch tool so the Accure encoding layer is
 // exercised with the upstream patch parser.
 
 import { afterEach, beforeEach, describe, expect, test } from "bun:test"
@@ -60,7 +60,7 @@ describe("Patch encoding preservation", () => {
   let dir: string
 
   beforeEach(async () => {
-    dir = await fs.mkdtemp(path.join(tmpdir(), "kilo-patch-"))
+    dir = await fs.mkdtemp(path.join(tmpdir(), "accure-patch-"))
   })
 
   afterEach(async () => {

@@ -1,40 +1,40 @@
-import { useTerminalDimensions } from "@opentui/solid" // kilocode_change
-import { createEffect, createMemo, createSignal, Show } from "solid-js" // kilocode_change
+import { useTerminalDimensions } from "@opentui/solid" // accurecode_change
+import { createEffect, createMemo, createSignal, Show } from "solid-js" // accurecode_change
 import { useLocal } from "@tui/context/local"
 import { useSync } from "@tui/context/sync"
-import { map, pipe, flatMap, entries, filter, sortBy, take, groupBy } from "remeda" // kilocode_change
+import { map, pipe, flatMap, entries, filter, sortBy, take, groupBy } from "remeda" // accurecode_change
 import { DialogSelect } from "@tui/ui/dialog-select"
 import { useDialog } from "@tui/ui/dialog"
 import { createDialogProviderOptions, DialogProvider } from "./dialog-provider"
 import { DialogVariant } from "./dialog-variant"
-import type { Model } from "@kilocode/sdk/v2" // kilocode_change
+import type { Model } from "@accurecode/sdk/v2" // accurecode_change
 import * as fuzzysort from "fuzzysort"
 import { useConnected } from "./use-connected"
-import { ModelInfoPanel } from "@/kilocode/components/model-info-panel" // kilocode_change
-import { FreeModelDisclosure } from "@/kilocode/components/free-model-disclosure" // kilocode_change
+import { ModelInfoPanel } from "@/accurecode/components/model-info-panel" // accurecode_change
+import { FreeModelDisclosure } from "@/accurecode/components/free-model-disclosure" // accurecode_change
 
 export function DialogModel(props: { providerID?: string }) {
   const local = useLocal()
   const sync = useSync()
   const dialog = useDialog()
   const [query, setQuery] = createSignal("")
-  const dimensions = useTerminalDimensions() // kilocode_change
+  const dimensions = useTerminalDimensions() // accurecode_change
 
   const connected = useConnected()
   const providers = createDialogProviderOptions()
-  // kilocode_change start
-  // Memoize anything that iterates all Kilo models to avoid calculating it for
-  // each Kilo model and tanking the UI at a couple hundred models
-  const kiloRank = createMemo(() => {
-    const provider = sync.data.provider.find((provider) => provider.id === "kilo")
+  // accurecode_change start
+  // Memoize anything that iterates all Accure models to avoid calculating it for
+  // each Accure model and tanking the UI at a couple hundred models
+  const accureRank = createMemo(() => {
+    const provider = sync.data.provider.find((provider) => provider.id === "accure")
     const models = provider?.models ?? {}
     return new Map(Object.entries(models).map(([id, info]) => [id, info.recommendedIndex ?? Infinity] as const))
   })
-  // kilocode_change end
+  // accurecode_change end
 
   const showExtra = createMemo(() => connected() && !props.providerID)
 
-  // kilocode_change start
+  // accurecode_change start
   const wide = createMemo(() => dimensions().width >= 108)
   const [preview, setPreview] = createSignal<{
     model: Model
@@ -65,22 +65,22 @@ export function DialogModel(props: { providerID?: string }) {
 
   const footer = (providerID: string, model: Model) => {
     const labels = [
-      providerID === "kilo" && FreeModelDisclosure.hasByok(model) ? FreeModelDisclosure.byok : undefined,
-      providerID === "kilo" && FreeModelDisclosure.collectsData(model) ? FreeModelDisclosure.label : undefined,
+      providerID === "accure" && FreeModelDisclosure.hasByok(model) ? FreeModelDisclosure.byok : undefined,
+      providerID === "accure" && FreeModelDisclosure.collectsData(model) ? FreeModelDisclosure.label : undefined,
       model.cost?.input === 0 && providerID === "opencode" ? "Free" : undefined,
     ].filter((label) => label !== undefined)
     return labels.length > 0 ? labels.join(" · ") : undefined
   }
-  // kilocode_change end
+  // accurecode_change end
 
   const options = createMemo(() => {
     const needle = query().trim()
-    // kilocode_change: removed showSections guard — sections are always built; empty ones are hidden naturally
+    // accurecode_change: removed showSections guard — sections are always built; empty ones are hidden naturally
     const favorites = connected() ? local.model.favorite() : []
     const recents = local.model.recent()
 
     function toOptions(items: typeof favorites, category: string) {
-      if (!showExtra()) return [] // kilocode_change
+      if (!showExtra()) return [] // accurecode_change
       return items.flatMap((item) => {
         const provider = sync.data.provider.find((x) => x.id === item.providerID)
         if (!provider) return []
@@ -94,9 +94,9 @@ export function DialogModel(props: { providerID?: string }) {
             description: provider.name,
             category,
             disabled: provider.id === "opencode" && model.id.includes("-nano"),
-            footer: footer(provider.id, model), // kilocode_change
+            footer: footer(provider.id, model), // accurecode_change
             onSelect: () => {
-              onSelect(provider.id, model.id) // kilocode_change
+              onSelect(provider.id, model.id) // accurecode_change
             },
           },
         ]
@@ -129,39 +129,39 @@ export function DialogModel(props: { providerID?: string }) {
             description: favorites.some((item) => item.providerID === provider.id && item.modelID === model)
               ? "(Favorite)"
               : undefined,
-            // kilocode_change start
+            // accurecode_change start
             category: connected()
-              ? provider.id === "kilo" && info.recommendedIndex !== undefined
+              ? provider.id === "accure" && info.recommendedIndex !== undefined
                 ? "Recommended"
                 : provider.name
               : undefined,
-            // kilocode_change end
+            // accurecode_change end
             disabled: provider.id === "opencode" && model.includes("-nano"),
-            footer: footer(provider.id, info), // kilocode_change
+            footer: footer(provider.id, info), // accurecode_change
             onSelect() {
-              onSelect(provider.id, model) // kilocode_change
+              onSelect(provider.id, model) // accurecode_change
             },
           })),
           filter((x) => {
-            // kilocode_change start - only dedupe favorites/recents when those sections are visible
+            // accurecode_change start - only dedupe favorites/recents when those sections are visible
             if (showExtra()) {
               if (favorites.some((item) => item.providerID === x.value.providerID && item.modelID === x.value.modelID))
                 return false
               if (recents.some((item) => item.providerID === x.value.providerID && item.modelID === x.value.modelID))
                 return false
             }
-            // kilocode_change end
+            // accurecode_change end
             return true
           }),
           sortBy(
-            // kilocode_change start - Sort within Recommended / Kilo Gateway
-            (x) => (x.value.providerID === "kilo" ? (kiloRank().get(x.value.modelID) ?? Infinity) : 0),
-            // kilocode_change end
-            // kilocode_change start - free model footers include Kilo disclosure labels
+            // accurecode_change start - Sort within Recommended / Accure Gateway
+            (x) => (x.value.providerID === "accure" ? (accureRank().get(x.value.modelID) ?? Infinity) : 0),
+            // accurecode_change end
+            // accurecode_change start - free model footers include Accure disclosure labels
             (x) => x.footer === undefined,
-            // kilocode_change end
-            (x) => x.title, // kilocode_change
-          ), // kilocode_change
+            // accurecode_change end
+            (x) => x.title, // accurecode_change
+          ), // accurecode_change
         ),
       ),
     )
@@ -177,7 +177,7 @@ export function DialogModel(props: { providerID?: string }) {
         )
       : []
 
-    // kilocode_change start - Filter per-section to preserve group headers while typing
+    // accurecode_change start - Filter per-section to preserve group headers while typing
     if (needle) {
       const rank = <U extends { title: string; category?: string }>(items: U[]) =>
         fuzzysort.go(needle, items, { keys: ["title", "category"] }).map((x) => x.obj)
@@ -190,7 +190,7 @@ export function DialogModel(props: { providerID?: string }) {
       )
       return [...rank(favoriteOptions), ...rank(recentOptions), ...rankedProviders, ...rank(popularProviders)]
     }
-    // kilocode_change end
+    // accurecode_change end
 
     return [...favoriteOptions, ...recentOptions, ...providerOptions, ...popularProviders]
   })
@@ -220,7 +220,7 @@ export function DialogModel(props: { providerID?: string }) {
     dialog.clear()
   }
 
-  // kilocode_change start
+  // accurecode_change start
   return (
     <box flexDirection="row">
       <box flexGrow={1} flexShrink={1}>
@@ -253,7 +253,7 @@ export function DialogModel(props: { providerID?: string }) {
             if (!next) return
             setPreview(next)
           }}
-          // kilocode_change: removed flat={true} to keep section headers visible while filtering
+          // accurecode_change: removed flat={true} to keep section headers visible while filtering
           skipFilter={true}
           title={title()}
           current={local.model.current()}
@@ -264,5 +264,5 @@ export function DialogModel(props: { providerID?: string }) {
       </Show>
     </box>
   )
-  // kilocode_change end
+  // accurecode_change end
 }

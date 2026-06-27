@@ -1,10 +1,10 @@
-// kilocode_change - new file
+// accurecode_change - new file
 
 /**
- * KiloClaw Kilo Chat client wrapper for the TUI.
+ * AccureClaw Accure Chat client wrapper for the TUI.
  *
  * Hosts the HTTP and WebSocket clients, exposes a multi-conversation API
- * (list/create/select/rename/delete), and translates Kilo Chat events for
+ * (list/create/select/rename/delete), and translates Accure Chat events for
  * the active conversation into the legacy `ChatMessage` shape that the
  * existing single-pane renderer consumes.
  *
@@ -28,7 +28,7 @@ import type {
   TypingEvent,
   TypingMember,
 } from "./types"
-import { KiloChatClient } from "./kilo-chat-client"
+import { AccureChatClient } from "./accure-chat-client"
 import { EventServiceClient } from "./event-service-client"
 import * as Log from "@opencode-ai/core/util/log"
 
@@ -139,8 +139,8 @@ export async function connect(input: ConnectInput): Promise<ClawChatClient> {
     url: input.envelope.eventServiceUrl,
     getToken: async () => input.envelope.token,
   })
-  const chat = new KiloChatClient({
-    baseUrl: input.envelope.kiloChatUrl,
+  const chat = new AccureChatClient({
+    baseUrl: input.envelope.accureChatUrl,
     getToken: async () => input.envelope.token,
   })
 
@@ -148,7 +148,7 @@ export async function connect(input: ConnectInput): Promise<ClawChatClient> {
   await events.connect()
 
   // Subscribe to sandbox-level context for conversation.* + bot.status events
-  const sandboxCtx = `/kiloclaw/${input.sandboxId}`
+  const sandboxCtx = `/accureclaw/${input.sandboxId}`
   events.subscribe([sandboxCtx])
 
   // Per-message sender cache so message.updated events know who the sender
@@ -248,7 +248,7 @@ export async function connect(input: ConnectInput): Promise<ClawChatClient> {
     activeStatus = null
     clearTyping()
     if (id) {
-      activeCtx = `/kiloclaw/${input.sandboxId}/${id}`
+      activeCtx = `/accureclaw/${input.sandboxId}/${id}`
       events.subscribe([activeCtx])
     }
     emit(activeListeners, activeId)

@@ -113,7 +113,7 @@ export const dict = {
   "dialog.model.expand": "Развернуть",
   "dialog.model.collapse": "Свернуть",
 
-  "dialog.model.unpaid.freeModels.title": "Бесплатные модели от Kilo",
+  "dialog.model.unpaid.freeModels.title": "Бесплатные модели от Accure",
   "dialog.model.unpaid.addMore.title": "Добавьте больше моделей от популярных провайдеров",
 
   "dialog.provider.viewAll": "Показать больше провайдеров",
@@ -126,7 +126,7 @@ export const dict = {
   "provider.connect.status.waiting": "Ожидание авторизации...",
   "provider.connect.status.failed": "Ошибка авторизации: {{error}}",
   "provider.connect.apiKey.description":
-    "Введите ваш API ключ {{provider}} для подключения аккаунта и использования моделей {{provider}} в Kilo.",
+    "Введите ваш API ключ {{provider}} для подключения аккаунта и использования моделей {{provider}} в Accure.",
   "provider.connect.apiKey.description.local":
     "Подключение к локальному серверу {{provider}}. Оставьте ключ пустым, если сервер его не требует (обычно для localhost).",
   "provider.connect.atomicChat.description":
@@ -156,7 +156,7 @@ export const dict = {
   "provider.connect.oauth.code.visit.prefix": "Посетите ",
   "provider.connect.oauth.code.visit.link": "эту ссылку",
   "provider.connect.oauth.code.visit.suffix":
-    " чтобы получить код авторизации для подключения аккаунта и использования моделей {{provider}} в Kilo.",
+    " чтобы получить код авторизации для подключения аккаунта и использования моделей {{provider}} в Accure.",
   "provider.connect.oauth.code.label": "{{method}} код авторизации",
   "provider.connect.oauth.code.placeholder": "Код авторизации",
   "provider.connect.oauth.code.required": "Код авторизации обязателен",
@@ -164,7 +164,7 @@ export const dict = {
   "provider.connect.oauth.auto.visit.prefix": "Посетите ",
   "provider.connect.oauth.auto.visit.link": "эту ссылку",
   "provider.connect.oauth.auto.visit.suffix":
-    " и введите код ниже для подключения аккаунта и использования моделей {{provider}} в Kilo.",
+    " и введите код ниже для подключения аккаунта и использования моделей {{provider}} в Accure.",
   "provider.connect.oauth.auto.confirmationCode": "Код подтверждения",
   "provider.connect.toast.connected.title": "{{provider}} подключён",
   "provider.connect.toast.connected.description": "Модели {{provider}} теперь доступны.",
@@ -286,12 +286,12 @@ export const dict = {
   "prompt.action.enhanceDescription":
     "Кнопка 'Улучшить запрос' помогает сделать ваш запрос лучше, предоставляя дополнительный контекст, уточнения или переформулировку. Попробуйте ввести запрос и снова нажать кнопку, чтобы увидеть, как это работает.",
 
-  "speechToText.tooltip.start": "Начать голосовой ввод с Kilo Gateway",
+  "speechToText.tooltip.start": "Начать голосовой ввод с Accure Gateway",
   "speechToText.tooltip.stop": "Остановить захват звука",
   "speechToText.tooltip.transcribing": "Распознавание... Нажмите для отмены.",
   "speechToText.tooltip.error": "Ошибка голосового ввода. Нажмите, чтобы очистить.",
   "speechToText.error.title": "Ошибка голосового ввода",
-  "speechToText.error.loginRequired": "Войдите в Kilo, чтобы использовать голосовой ввод.",
+  "speechToText.error.loginRequired": "Войдите в Accure, чтобы использовать голосовой ввод.",
   "speechToText.error.permission": "В доступе к микрофону отказано.",
   "speechToText.error.microphone": "Не удалось запустить микрофон.",
   "speechToText.error.recording": "Ошибка записи.",
@@ -329,7 +329,7 @@ export const dict = {
   "dialog.directory.empty": "Папки не найдены",
 
   "dialog.server.title": "Серверы",
-  "dialog.server.description": "Переключите сервер Kilo к которому подключается приложение.",
+  "dialog.server.description": "Переключите сервер Accure к которому подключается приложение.",
   "dialog.server.search.placeholder": "Поиск серверов",
   "dialog.server.empty": "Серверов пока нет",
   "dialog.server.add.title": "Добавить сервер",
@@ -457,7 +457,7 @@ export const dict = {
   "toast.session.listFailed.title": "Не удалось загрузить сессии для {{project}}",
 
   "toast.update.title": "Доступно обновление",
-  "toast.update.description": "Новая версия Kilo ({{version}}) доступна для установки.",
+  "toast.update.description": "Новая версия Accure ({{version}}) доступна для установки.",
   "toast.update.action.installRestart": "Установить и перезапустить",
   "toast.update.action.notYet": "Пока нет",
 
@@ -468,7 +468,7 @@ export const dict = {
   "error.page.action.checking": "Проверка...",
   "error.page.action.checkUpdates": "Проверить обновления",
   "error.page.action.updateTo": "Обновить до {{version}}",
-  "error.page.report.prefix": "Пожалуйста, сообщите об этой ошибке команде Kilo",
+  "error.page.report.prefix": "Пожалуйста, сообщите об этой ошибке команде Accure",
   "error.page.report.discord": "в Discord",
   "error.page.version": "Версия: {{version}}",
 
@@ -503,7 +503,7 @@ export const dict = {
   "error.chain.modelNotFound": "Модель не найдена: {{provider}}/{{model}}",
   "error.chain.checkConfig": "Проверьте названия провайдера/модели в конфиге (opencode.json)",
   "error.chain.mcpFailed":
-    'MCP сервер "{{name}}" завершился с ошибкой. Обратите внимание, что Kilo пока не поддерживает MCP авторизацию.',
+    'MCP сервер "{{name}}" завершился с ошибкой. Обратите внимание, что Accure пока не поддерживает MCP авторизацию.',
   "error.chain.providerAuthFailed": "Ошибка аутентификации провайдера ({{provider}}): {{message}}",
   "error.chain.providerInitFailed":
     'Не удалось инициализировать провайдера "{{provider}}". Проверьте учётные данные и конфигурацию.',
@@ -679,13 +679,13 @@ export const dict = {
   "sidebar.workspaces.enable": "Включить рабочие пространства",
   "sidebar.workspaces.disable": "Отключить рабочие пространства",
   "sidebar.gettingStarted.title": "Начало работы",
-  "sidebar.gettingStarted.line1": "Kilo включает бесплатные модели, чтобы вы могли начать сразу.",
+  "sidebar.gettingStarted.line1": "Accure включает бесплатные модели, чтобы вы могли начать сразу.",
   "sidebar.gettingStarted.line2":
     "Подключите любого провайдера для использования моделей, включая Claude, GPT, Gemini и др.",
   "sidebar.project.recentSessions": "Недавние сессии",
   "sidebar.project.viewAllSessions": "Посмотреть все сессии",
 
-  "app.name.desktop": "Kilo Desktop",
+  "app.name.desktop": "Accure Desktop",
   "settings.section.desktop": "Приложение",
   "settings.section.server": "Сервер",
   "settings.tab.general": "Основные",
@@ -697,11 +697,11 @@ export const dict = {
   "settings.general.section.sounds": "Звуковые эффекты",
 
   "settings.general.row.language.title": "Язык",
-  "settings.general.row.language.description": "Изменить язык отображения Kilo",
+  "settings.general.row.language.description": "Изменить язык отображения Accure",
   "settings.general.row.appearance.title": "Внешний вид",
-  "settings.general.row.appearance.description": "Настройте как Kilo выглядит на вашем устройстве",
+  "settings.general.row.appearance.description": "Настройте как Accure выглядит на вашем устройстве",
   "settings.general.row.theme.title": "Тема",
-  "settings.general.row.theme.description": "Настройте оформление Kilo.",
+  "settings.general.row.theme.description": "Настройте оформление Accure.",
   "settings.general.row.font.title": "Шрифт",
   "settings.general.row.font.description": "Настройте моноширинный шрифт для блоков кода",
 
@@ -709,13 +709,13 @@ export const dict = {
   "settings.general.row.releaseNotes.description": 'Показывать всплывающие окна "Что нового" после обновлений',
 
   "settings.updates.row.startup.title": "Проверять обновления при запуске",
-  "settings.updates.row.startup.description": "Автоматически проверять обновления при запуске Kilo",
+  "settings.updates.row.startup.description": "Автоматически проверять обновления при запуске Accure",
   "settings.updates.row.check.title": "Проверить обновления",
   "settings.updates.row.check.description": "Проверить обновления вручную и установить, если доступны",
   "settings.updates.action.checkNow": "Проверить сейчас",
   "settings.updates.action.checking": "Проверка...",
   "settings.updates.toast.latest.title": "У вас последняя версия",
-  "settings.updates.toast.latest.description": "Вы используете последнюю версию Kilo.",
+  "settings.updates.toast.latest.description": "Вы используете последнюю версию Accure.",
   "font.option.ibmPlexMono": "IBM Plex Mono",
   "font.option.cascadiaCode": "Cascadia Code",
   "font.option.firaCode": "Fira Code",
@@ -803,10 +803,10 @@ export const dict = {
   "settings.indexing.status.title": "Статус",
   "settings.indexing.provider.title": "Провайдер эмбеддингов",
   "settings.indexing.provider.description": "Выберите провайдера для генерации эмбеддингов при семантическом поиске.",
-  "settings.indexing.kiloModel.title": "Предустановка модели Kilo",
-  "settings.indexing.kiloModel.description": "Выберите поддерживаемую модель эмбеддингов, размещенную в Kilo.",
-  "settings.indexing.kiloSignIn.title": "Требуется вход в Kilo",
-  "settings.indexing.kiloSignIn.description": "Войдите в Kilo, чтобы использовать размещенные эмбеддинги.",
+  "settings.indexing.accureModel.title": "Предустановка модели Accure",
+  "settings.indexing.accureModel.description": "Выберите поддерживаемую модель эмбеддингов, размещенную в Accure.",
+  "settings.indexing.accureSignIn.title": "Требуется вход в Accure",
+  "settings.indexing.accureSignIn.description": "Войдите в Accure, чтобы использовать размещенные эмбеддинги.",
   "settings.indexing.model.title": "Модель эмбеддингов",
   "settings.indexing.model.description": "Переопределить модель эмбеддингов по умолчанию для выбранного провайдера.",
   "settings.indexing.dimension.title": "Размерность вектора",
@@ -847,7 +847,7 @@ export const dict = {
   "settings.providers.title": "Провайдеры",
   "settings.providers.description": "Настройки провайдеров будут доступны здесь.",
   "settings.providers.betaNotice":
-    "В настоящее время в интерфейсе настроек можно настроить только провайдер Kilo Gateway. Поддержка настройки других провайдеров скоро появится в период бета-тестирования. А пока вы можете настраивать провайдеров с помощью CLI или конфигурационного файла. Мы стремимся сохранить Kilo открытым — без привязки к поставщикам.",
+    "В настоящее время в интерфейсе настроек можно настроить только провайдер Accure Gateway. Поддержка настройки других провайдеров скоро появится в период бета-тестирования. А пока вы можете настраивать провайдеров с помощью CLI или конфигурационного файла. Мы стремимся сохранить Accure открытым — без привязки к поставщикам.",
   "settings.providers.section.connected": "Подключённые провайдеры",
   "settings.providers.connected.empty": "Нет подключённых провайдеров",
   "settings.providers.section.popular": "Популярные провайдеры",
@@ -868,7 +868,7 @@ export const dict = {
     "Модель по умолчанию и уровень рассуждения для субагентов task-tool. Оставьте пустым, чтобы унаследовать модель вызывающего агента.",
   "settings.models.hidePromptTraining.title": "Скрывать модели, обучающиеся на запросах",
   "settings.models.hidePromptTraining.description":
-    "Скрывать модели Kilo Gateway, поставщики которых могут использовать ваши запросы для обучения.",
+    "Скрывать модели Accure Gateway, поставщики которых могут использовать ваши запросы для обучения.",
   "settings.providers.modeModels": "Модель для режима",
   "settings.providers.custom.note": "Добавьте пользовательского провайдера по базовому URL.",
   "settings.providers.modeModels.description":
@@ -973,22 +973,22 @@ export const dict = {
   "settings.config.status.loadedLegacy": "загружена устаревшая конфигурация",
   "settings.config.status.notLoaded": "не загружено",
   "settings.config.status.create": "не найдено - создать этот файл",
-  "settings.config.title": "Открыть файл конфигурации Kilo ({{scope}})",
+  "settings.config.title": "Открыть файл конфигурации Accure ({{scope}})",
   "settings.config.placeholder":
     "Файлы конфигурации объединяются по порядку; файлы, отмеченные как загруженные, в данный момент влияют на настройки.",
   "settings.config.noWorkspace":
-    "Откройте папку рабочей области для редактирования локального файла конфигурации Kilo.",
-  "settings.config.openFailed": "Не удалось открыть файл конфигурации Kilo ({{scope}}): {{message}}",
+    "Откройте папку рабочей области для редактирования локального файла конфигурации Accure.",
+  "settings.config.openFailed": "Не удалось открыть файл конфигурации Accure ({{scope}}): {{message}}",
   "settings.config.source.xdg": "Глобальная конфигурация XDG",
-  "settings.config.source.homeKilo": "Конфигурация .kilo (Home)",
-  "settings.config.source.homeKilocode": "Конфигурация .kilocode (Home)",
+  "settings.config.source.homeAccure": "Конфигурация .accurecode (Home)",
+  "settings.config.source.homeAccurecode": "Конфигурация .accurecode (Home)",
   "settings.config.source.homeOpencode": "Конфигурация .opencode (Home)",
-  "settings.config.source.envFile": "Файл среды KILO_CONFIG",
-  "settings.config.source.envDir": "KILO_CONFIG_DIR",
+  "settings.config.source.envFile": "Файл среды ACCURECODE_CONFIG",
+  "settings.config.source.envDir": "ACCURECODE_CONFIG_DIR",
   "settings.config.source.envContent": "Встроенная конфигурация среды",
-  "settings.config.source.projectKilo": "Конфигурация .kilo проекта",
+  "settings.config.source.projectAccure": "Конфигурация .accurecode проекта",
   "settings.config.source.projectRoot": "Корневая конфигурация проекта",
-  "settings.config.source.projectKilocode": "Устаревшая конфигурация .kilocode",
+  "settings.config.source.projectAccurecode": "Устаревшая конфигурация .accurecode",
   "settings.config.source.projectOpencode": "Устаревшая конфигурация .opencode",
   "settings.models.title": "Модели",
   "settings.models.description": "Настройки моделей будут доступны здесь.",
@@ -1062,7 +1062,7 @@ export const dict = {
   "feedback.dialog.github": "Сообщить о проблеме на GitHub",
   "feedback.dialog.discord": "Присоединиться к нашему Discord",
   "feedback.dialog.support": "Служба поддержки",
-  "workStyle.onboarding.welcome": "Добро пожаловать в Kilo",
+  "workStyle.onboarding.welcome": "Добро пожаловать в Accure",
   "workStyle.onboarding.title": "Выберите, как вы хотите работать",
   "workStyle.onboarding.description":
     "Задаёт начальные значения разрешений, блоков рассуждений, вывода терминала и временной шкалы контекста. Применяется только один раз и не затрагивает уже изменённые вами настройки.",
@@ -1077,7 +1077,7 @@ export const dict = {
   "workStyle.choice.visibility": "Видимость",
   "workStyle.choice.human-in-the-loop.eyebrow": "Человек контролирует процесс",
   "workStyle.choice.human-in-the-loop.title": "Сначала проверка",
-  "workStyle.choice.human-in-the-loop.description": "Kilo приостанавливается и показывает свой план по ходу работы.",
+  "workStyle.choice.human-in-the-loop.description": "Accure приостанавливается и показывает свой план по ходу работы.",
   "workStyle.choice.human-in-the-loop.permissions":
     "Запрашивает разрешение перед редактированием файлов или выполнением команд.",
   "workStyle.choice.human-in-the-loop.bash": "Запрашивает разрешение на каждую команду терминала.",
@@ -1090,7 +1090,7 @@ export const dict = {
   "workStyle.choice.autonomous.bash": "Может выполнять команды терминала в рабочем пространстве без подтверждения.",
   "workStyle.choice.autonomous.visibility": "Детали остаются свёрнутыми, пока вы их не развернёте.",
   "session.cloud.import.title": "Импорт из облака",
-  "session.cloud.import.placeholder": "ID сессии, URL или команда kilo import",
+  "session.cloud.import.placeholder": "ID сессии, URL или команда accure import",
   "session.cloud.import.button": "Импортировать",
   "session.cloud.import.invalid": "Неверный формат ID сессии",
   "session.cloud.import.legacy": "Похоже, это устаревшая сессия, которая больше не поддерживается.",
@@ -1167,7 +1167,7 @@ export const dict = {
 
   "settings.experimental.title": "Экспериментальное",
   "settings.language.title": "Язык",
-  "settings.aboutKiloCode.title": "О Accure Code",
+  "settings.aboutAccureCode.title": "О Accure Code",
 
   "session.messages.empty": "Начните разговор, введя сообщение ниже.",
   "session.messages.welcome":
@@ -1214,41 +1214,41 @@ export const dict = {
   "time.thisMonth": "В этом месяце",
   "time.older": "Ранее",
 
-  "settings.aboutKiloCode.status.connected": "Подключено",
-  "settings.aboutKiloCode.status.connecting": "Подключение...",
-  "settings.aboutKiloCode.status.disconnected": "Отключено",
-  "settings.aboutKiloCode.status.error": "Ошибка",
-  "settings.aboutKiloCode.cliServer": "CLI-сервер",
-  "settings.aboutKiloCode.status.label": "Статус:",
-  "settings.aboutKiloCode.port.label": "Порт:",
-  "settings.aboutKiloCode.versionInfo": "Информация о версии",
-  "settings.aboutKiloCode.version.label": "Версия:",
-  "settings.aboutKiloCode.extensionName": "Расширение Accure Code",
-  "settings.aboutKiloCode.community": "Сообщество и поддержка",
-  "settings.aboutKiloCode.feedback.prefix": "Если у вас есть вопросы или отзывы, создайте issue на",
-  "settings.aboutKiloCode.feedback.or": "или",
-  "settings.aboutKiloCode.support.prefix": "По вопросам оплаты или аккаунта обращайтесь в службу поддержки по адресу",
-  "settings.aboutKiloCode.resetSettings.title": "Сброс настроек",
-  "settings.aboutKiloCode.resetSettings.description":
+  "settings.aboutAccureCode.status.connected": "Подключено",
+  "settings.aboutAccureCode.status.connecting": "Подключение...",
+  "settings.aboutAccureCode.status.disconnected": "Отключено",
+  "settings.aboutAccureCode.status.error": "Ошибка",
+  "settings.aboutAccureCode.cliServer": "CLI-сервер",
+  "settings.aboutAccureCode.status.label": "Статус:",
+  "settings.aboutAccureCode.port.label": "Порт:",
+  "settings.aboutAccureCode.versionInfo": "Информация о версии",
+  "settings.aboutAccureCode.version.label": "Версия:",
+  "settings.aboutAccureCode.extensionName": "Расширение Accure Code",
+  "settings.aboutAccureCode.community": "Сообщество и поддержка",
+  "settings.aboutAccureCode.feedback.prefix": "Если у вас есть вопросы или отзывы, создайте issue на",
+  "settings.aboutAccureCode.feedback.or": "или",
+  "settings.aboutAccureCode.support.prefix": "По вопросам оплаты или аккаунта обращайтесь в службу поддержки по адресу",
+  "settings.aboutAccureCode.resetSettings.title": "Сброс настроек",
+  "settings.aboutAccureCode.resetSettings.description":
     "Это сбрасывает только настройки, специфичные для расширения VS Code, до значений по умолчанию. Настройки, общие с CLI, такие как режимы и правила автоматического утверждения, хранятся в конфигурации CLI и не будут сброшены.",
-  "settings.aboutKiloCode.resetSettings.button": "Сбросить все настройки",
-  "settings.aboutKiloCode.settingsTransfer.title": "Перенос настроек",
-  "settings.aboutKiloCode.settingsTransfer.description":
+  "settings.aboutAccureCode.resetSettings.button": "Сбросить все настройки",
+  "settings.aboutAccureCode.settingsTransfer.title": "Перенос настроек",
+  "settings.aboutAccureCode.settingsTransfer.description":
     "Экспортируйте или импортируйте настройки для переноса между экземплярами VS Code.",
-  "settings.aboutKiloCode.exportSettings": "Экспорт",
-  "settings.aboutKiloCode.importSettings": "Импорт",
-  "settings.aboutKiloCode.importSettings.invalidJson": "Недопустимый файл JSON. Выберите корректный файл настроек.",
-  "settings.aboutKiloCode.importSettings.invalidConfig": "Файл не содержит допустимых настроек Kilo.",
-  "settings.aboutKiloCode.importSettings.tooLarge": "Файл слишком большой. Файлы настроек должны быть менее 1 MB.",
-  "settings.aboutKiloCode.importSettings.newerVersion":
-    "Этот файл был экспортирован из более новой версии Kilo. Некоторые настройки могут быть проигнорированы.",
-  "settings.aboutKiloCode.importSettings.success":
+  "settings.aboutAccureCode.exportSettings": "Экспорт",
+  "settings.aboutAccureCode.importSettings": "Импорт",
+  "settings.aboutAccureCode.importSettings.invalidJson": "Недопустимый файл JSON. Выберите корректный файл настроек.",
+  "settings.aboutAccureCode.importSettings.invalidConfig": "Файл не содержит допустимых настроек Accure.",
+  "settings.aboutAccureCode.importSettings.tooLarge": "Файл слишком большой. Файлы настроек должны быть менее 1 MB.",
+  "settings.aboutAccureCode.importSettings.newerVersion":
+    "Этот файл был экспортирован из более новой версии Accure. Некоторые настройки могут быть проигнорированы.",
+  "settings.aboutAccureCode.importSettings.success":
     "Настройки импортированы. Просмотрите изменения выше и нажмите «Сохранить».",
 
-  "settings.aboutKiloCode.telemetry.title": "Телеметрия",
-  "settings.aboutKiloCode.telemetry.description":
+  "settings.aboutAccureCode.telemetry.title": "Телеметрия",
+  "settings.aboutAccureCode.telemetry.description":
     'Телеметрия управляется встроенной настройкой телеметрии VS Code. Чтобы отключить её, перейдите в Настройки > Телеметрия > Уровень телеметрии и установите значение "off". Перезапустите VS Code, чтобы применить изменение.',
-  "settings.aboutKiloCode.telemetry.openSettings": "Открыть настройки телеметрии",
+  "settings.aboutAccureCode.telemetry.openSettings": "Открыть настройки телеметрии",
 
   "settings.agentBehaviour.subtab.agents": "Агенты",
   "settings.agentBehaviour.subtab.mcpServers": "MCP-серверы",
@@ -1317,18 +1317,18 @@ export const dict = {
   "settings.experimental.codebaseSearch.description": "Включить поиск на естественном языке с ИИ по всей кодовой базе",
   "settings.experimental.speechToText.title": "Речь в текст",
   "settings.experimental.speechToText.description":
-    "Включите голосовой ввод в полях запросов, используя вашу учетную запись Kilo через Kilo Gateway.",
+    "Включите голосовой ввод в полях запросов, используя вашу учетную запись Accure через Accure Gateway.",
   "settings.models.speechToText.disabledDescription":
-    "Включите провайдер Kilo и выполните вход, чтобы использовать Speech to Text. В настоящее время Speech to Text поддерживается только с Kilo Gateway.",
+    "Включите провайдер Accure и выполните вход, чтобы использовать Speech to Text. В настоящее время Speech to Text поддерживается только с Accure Gateway.",
   "settings.models.speechToTextModel.title": "Модель речи в текст",
-  "settings.models.speechToTextModel.description": "Выберите модель транскрипции Kilo Gateway для голосового ввода.",
+  "settings.models.speechToTextModel.description": "Выберите модель транскрипции Accure Gateway для голосового ввода.",
   "settings.experimental.continueOnDeny.title": "Продолжить при отказе",
   "settings.experimental.continueOnDeny.description": "Продолжить цикл агента при отказе в разрешении",
   "settings.experimental.mcpTimeout.title": "Таймаут MCP (мс)",
   "settings.experimental.mcpTimeout.description": "Таймаут запросов MCP-сервера в миллисекундах",
   "settings.experimental.remote.title": "Управление Remote",
   "settings.experimental.remote.description":
-    "Включите управление Remote сеансами через Kilo Cloud. Это также повлияет на CLI на этом компьютере.",
+    "Включите управление Remote сеансами через Accure Cloud. Это также повлияет на CLI на этом компьютере.",
   "settings.experimental.remote.current": "Текущее состояние:",
   "settings.experimental.remote.startup": "Автоматически включать при запуске:",
   "settings.experimental.remote.active": "Активно",
@@ -1441,14 +1441,14 @@ export const dict = {
   "settings.agentBehaviour.claudeCompat.heading": "Совместимость с Claude Code",
   "settings.agentBehaviour.claudeCompat.title": "Загружать файлы Claude Code",
   "settings.agentBehaviour.claudeCompat.description":
-    "Загружать инструкции CLAUDE.md и навыки из каталога конфигурации Claude Code в сессии. Включите эту опцию, если хотите, чтобы Kilo использовал ваши инструкции и навыки Claude Code. Требуется перезапуск.",
+    "Загружать инструкции CLAUDE.md и навыки из каталога конфигурации Claude Code в сессии. Включите эту опцию, если хотите, чтобы Accure использовал ваши инструкции и навыки Claude Code. Требуется перезапуск.",
   "settings.agentBehaviour.mcpDetail.command": "Команда",
   "settings.agentBehaviour.mcpDetail.args": "Аргументы",
   "settings.agentBehaviour.mcpDetail.env": "Окружение",
   "settings.agentBehaviour.mcpDetail.disabled": "Этот сервер отключён.",
   "settings.agentBehaviour.mcpBrowseMarketplace": "Обзор Marketplace",
   "settings.agentBehaviour.mcpEmpty":
-    "MCP-серверы не настроены. Добавьте MCP-серверы в kilo.jsonc или попросите агента добавить их.",
+    "MCP-серверы не настроены. Добавьте MCP-серверы в accure.jsonc или попросите агента добавить их.",
   "settings.agentBehaviour.workflowsPlaceholder": "Рабочие процессы управляются через файлы рабочих процессов.",
   "settings.agentBehaviour.workflows.description":
     "Рабочие процессы — это пользовательские слэш-команды, определённые в вашей конфигурации. Введите /command-name в чате, чтобы вызвать их. Команды настраиваются в opencode.json в разделе 'command'.",
@@ -1519,7 +1519,7 @@ export const dict = {
   "settings.display.username.title": "Имя пользователя",
   "settings.display.username.description": "Пользовательское имя в разговорах",
   "settings.display.fontSize.title": "Размер шрифта",
-  "settings.display.fontSize.description": "Настройте размер шрифта webview UI для Kilo независимо от VS Code.",
+  "settings.display.fontSize.description": "Настройте размер шрифта webview UI для Accure независимо от VS Code.",
   "settings.display.reasoningAutoCollapse.title": "Автоматически сворачивать рассуждение",
   "settings.display.reasoningAutoCollapse.description":
     "Сворачивает блоки рассуждения после того, как агент закончит их писать. Оставьте выключенным, чтобы рассуждение оставалось раскрытым, пока вы не свернете его вручную.",
@@ -1553,11 +1553,11 @@ export const dict = {
 
   // legacy-migration start
   "settings.legacyMigration.link": "Миграция с устаревшей версии",
-  "settings.aboutKiloCode.legacyMigration.title": "Миграция с устаревшей версии",
-  "settings.aboutKiloCode.legacyMigration.description":
+  "settings.aboutAccureCode.legacyMigration.title": "Миграция с устаревшей версии",
+  "settings.aboutAccureCode.legacyMigration.description":
     "Перенос настроек из предыдущей установки Accure Code, включая API-ключи провайдеров и модель по умолчанию.",
-  "settings.aboutKiloCode.rooImport.description": "Импорт истории переписки из установки Roo Code.",
-  "settings.aboutKiloCode.rooImport.button": "Импортировать сеансы из Roo Code",
+  "settings.aboutAccureCode.rooImport.description": "Импорт истории переписки из установки Roo Code.",
+  "settings.aboutAccureCode.rooImport.button": "Импортировать сеансы из Roo Code",
 
   // Screen 1 — What's New
   "migration.whatsNew.title": "Что нового в Accure Code",
@@ -1572,7 +1572,7 @@ export const dict = {
     "Единый интерфейс для запуска нескольких агентов параллельно, каждый в своём worktree — отслеживайте прогресс, переключайте контекст и просматривайте изменения в одном месте.",
   "migration.whatsNew.features.foundation.title": "Общая основа",
   "migration.whatsNew.features.foundation.detail":
-    "Одно компактное и эффективное ядро для всех продуктов Kilo. Знакомый опыт независимо от выбранного способа работы.",
+    "Одно компактное и эффективное ядро для всех продуктов Accure. Знакомый опыт независимо от выбранного способа работы.",
   "migration.whatsNew.blogLink": "Читать полный анонс",
   "migration.whatsNew.docsLink": "Что нового и часто задаваемые вопросы",
   "migration.whatsNew.continue": "Продолжить",
@@ -1671,7 +1671,7 @@ export const dict = {
     "Файлы, изменённые в рабочем дереве, но ещё не проиндексированные, плюс неотслеживаемые (новые) файлы.",
   "diffViewer.source.session.label": "Сессия",
   "diffViewer.source.session.tooltip":
-    "Файлы, изменённые Kilo в текущей сессии, на основе снимков по ходу. Сбрасывается при начале новой сессии.",
+    "Файлы, изменённые Accure в текущей сессии, на основе снимков по ходу. Сбрасывается при начале новой сессии.",
   "diffViewer.group.session": "Сессия",
   "diffViewer.group.git": "Git",
   "diffViewer.notice.snapshotsDisabled":

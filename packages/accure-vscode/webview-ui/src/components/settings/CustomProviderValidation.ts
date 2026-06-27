@@ -17,6 +17,9 @@ export type FormState = {
   models: ModelEntry[]
   headers: HeaderRow[]
   saving: boolean
+  accessKeyId?: string
+  secretAccessKey?: string
+  region?: string
 }
 
 export type FormErrors = {
@@ -25,6 +28,9 @@ export type FormErrors = {
   baseURL: string | undefined
   models: Array<{ id?: string; name?: string; variants?: Array<{ name?: string }> }>
   headers: Array<{ key?: string; value?: string }>
+  accessKeyId?: string
+  secretAccessKey?: string
+  region?: string
 }
 
 type ValidateArgs = {
@@ -47,7 +53,13 @@ type ValidateResult = {
       npm: CustomProviderPackage
       name: string
       env?: string[]
-      options: { baseURL: string; headers?: Record<string, string> }
+      options: {
+        baseURL?: string
+        headers?: Record<string, string>
+        accessKeyId?: string
+        secretAccessKey?: string
+        region?: string
+      }
       models: Record<string, unknown>
     }
   }
@@ -128,6 +140,36 @@ function resolveEnv(rawEnv: string | undefined, savedEnv: string[] | undefined) 
   return {}
 }
 
+function checkBedrockErrors(npm: string, accessKeyId?: string, secretAccessKey?: string) {
+  if (npm !== "@ai-sdk/amazon-bedrock") return {}
+  return {
+    accessKeyId: !accessKeyId?.trim() ? "AWS Access Key ID is required" : undefined,
+    secretAccessKey: !secretAccessKey?.trim() ? "AWS Secret Access Key is required" : undefined,
+  }
+}
+
+function getCustomProviderOptions(
+  npm: string,
+  baseURL: string,
+  accessKeyId?: string,
+  secretAccessKey?: string,
+  region?: string,
+  headers?: Record<string, string>,
+) {
+  const options: Record<string, any> = {}
+  if (npm === "@ai-sdk/amazon-bedrock") {
+    options.accessKeyId = accessKeyId?.trim() ?? ""
+    options.secretAccessKey = secretAccessKey?.trim() ?? ""
+    options.region = region?.trim() ?? "us-east-1"
+  } else {
+    options.baseURL = baseURL
+  }
+  if (headers && Object.keys(headers).length) {
+    options.headers = headers
+  }
+  return options
+}
+
 export function validateCustomProvider(input: ValidateArgs): ValidateResult {
   const providerID = input.form.providerID.trim()
   const name = input.form.name.trim()
@@ -148,11 +190,17 @@ export function validateCustomProvider(input: ValidateArgs): ValidateResult {
   )
 
   const nameError = !name ? input.t("provider.custom.error.name.required") : undefined
-  const urlError = !baseURL
-    ? input.t("provider.custom.error.baseURL.required")
-    : !/^https?:\/\//.test(baseURL)
-      ? input.t("provider.custom.error.baseURL.format")
-      : undefined
+  
+  const isBedrock = input.form.npm === "@ai-sdk/amazon-bedrock"
+  const urlError = isBedrock
+    ? undefined
+    : !baseURL
+      ? input.t("provider.custom.error.baseURL.required")
+      : !/^https?:\/\//.test(baseURL)
+        ? input.t("provider.custom.error.baseURL.format")
+        : undefined
+
+  const bedrockErrs = checkBedrockErrors(input.form.npm, input.form.accessKeyId, input.form.secretAccessKey)
 
   const seenModels = new Set<string>()
   const modelErrors = input.form.models.map((m) => checkModel(m, seenModels, input.t))
@@ -168,9 +216,11 @@ export function validateCustomProvider(input: ValidateArgs): ValidateResult {
     baseURL: urlError,
     models: modelErrors,
     headers: headerErrors,
+    accessKeyId: bedrockErrs.accessKeyId,
+    secretAccessKey: bedrockErrs.secretAccessKey,
   }
 
-  const ok = !idErr && !existsErr && !nameError && !urlError && modelsValid && headersValid
+  const ok = !idErr && !existsErr && !nameError && !urlError && !bedrockErrs.accessKeyId && !bedrockErrs.secretAccessKey && modelsValid && headersValid
   if (!ok) return { errors }
 
   const headers = Object.fromEntries(
@@ -180,10 +230,14 @@ export function validateCustomProvider(input: ValidateArgs): ValidateResult {
       .map((h) => [h.key, h.value]),
   )
 
-  const options = {
+  const options = getCustomProviderOptions(
+    input.form.npm,
     baseURL,
-    ...(Object.keys(headers).length ? { headers } : {}),
-  }
+    input.form.accessKeyId,
+    input.form.secretAccessKey,
+    input.form.region,
+    headers,
+  )
 
   return {
     errors,

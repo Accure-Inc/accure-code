@@ -1,6 +1,6 @@
 ---
 name: gh-issues
-description: Use when creating, triaging, or commenting on GitHub issues for the Kilo VS Code extension or JetBrains plugin via `gh`. Covers issue templates, project board assignment, title conventions, and required `gh` scopes.
+description: Use when creating, triaging, or commenting on GitHub issues for the Accure VS Code extension or JetBrains plugin via `gh`. Covers issue templates, project board assignment, title conventions, and required `gh` scopes.
 ---
 
 # GitHub Issues
@@ -30,8 +30,8 @@ Every new issue must land on the correct project board:
 
 | Surface | Project | URL |
 |---|---|---|
-| VS Code extension | `VS Code Extension` | https://github.com/orgs/Kilo-Org/projects/25 |
-| JetBrains plugin | `Jetbrains Plugin` | https://github.com/orgs/Kilo-Org/projects/39 |
+| VS Code extension | `VS Code Extension` | https://github.com/orgs/Accure-Org/projects/25 |
+| JetBrains plugin | `Jetbrains Plugin` | https://github.com/orgs/Accure-Org/projects/39 |
 
 Pass the project title to `gh issue create --project`.
 

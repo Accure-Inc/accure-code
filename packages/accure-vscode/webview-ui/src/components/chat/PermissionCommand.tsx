@@ -5,9 +5,9 @@
  */
 
 import { Component, createEffect, createSignal, onCleanup } from "solid-js"
-import { deferredHighlight } from "@kilocode/accure-ui/context/marked"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { Tooltip } from "@kilocode/accure-ui/tooltip"
+import { deferredHighlight } from "@accurecode/accure-ui/context/marked"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { Tooltip } from "@accurecode/accure-ui/tooltip"
 import { useLanguage } from "../../context/language"
 
 export const PermissionCommand: Component<{ command: string }> = (props) => {

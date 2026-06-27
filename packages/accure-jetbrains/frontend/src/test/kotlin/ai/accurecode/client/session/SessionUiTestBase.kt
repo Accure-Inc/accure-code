@@ -1,31 +1,31 @@
-package ai.kilocode.client.session
+package ai.accurecode.client.session
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.migration.FakeMigrationUiController
-import ai.kilocode.client.migration.MigrationUiController
-import ai.kilocode.client.session.ui.SessionRootPanel
-import ai.kilocode.client.session.ui.prompt.PromptPanel
-import ai.kilocode.client.session.controller.SessionController
-import ai.kilocode.client.testing.FakeAppRpcApi
-import ai.kilocode.client.testing.FakeSessionRpcApi
-import ai.kilocode.client.testing.FakeWorkspaceRpcApi
-import ai.kilocode.client.testing.TestCoroutines
-import ai.kilocode.client.session.SessionRef
-import ai.kilocode.client.session.scroll.SessionScroll
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionTimeDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.migration.FakeMigrationUiController
+import ai.accurecode.client.migration.MigrationUiController
+import ai.accurecode.client.session.ui.SessionRootPanel
+import ai.accurecode.client.session.ui.prompt.PromptPanel
+import ai.accurecode.client.session.controller.SessionController
+import ai.accurecode.client.testing.FakeAppRpcApi
+import ai.accurecode.client.testing.FakeSessionRpcApi
+import ai.accurecode.client.testing.FakeWorkspaceRpcApi
+import ai.accurecode.client.testing.TestCoroutines
+import ai.accurecode.client.session.SessionRef
+import ai.accurecode.client.session.scroll.SessionScroll
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionTimeDto
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.openapi.util.Disposer
 import com.intellij.util.ui.UIUtil
@@ -43,9 +43,9 @@ import javax.swing.JScrollBar
 abstract class SessionUiTestBase : BasePlatformTestCase() {
     private lateinit var coroutines: TestCoroutines
     protected lateinit var scope: CoroutineScope
-    protected lateinit var sessions: KiloSessionService
-    protected lateinit var app: KiloAppService
-    protected lateinit var workspaces: KiloWorkspaceService
+    protected lateinit var sessions: AccureSessionService
+    protected lateinit var app: AccureAppService
+    protected lateinit var workspaces: AccureWorkspaceService
     protected lateinit var rpc: FakeSessionRpcApi
     protected lateinit var appRpc: FakeAppRpcApi
     protected lateinit var workspace: Workspace
@@ -58,15 +58,15 @@ abstract class SessionUiTestBase : BasePlatformTestCase() {
 
         rpc = FakeSessionRpcApi()
         appRpc = FakeAppRpcApi().also {
-            it.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+            it.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         }
         val workspaceRpc = FakeWorkspaceRpcApi().also {
-            it.state.value = KiloWorkspaceStateDto(status = KiloWorkspaceStatusDto.READY)
+            it.state.value = AccureWorkspaceStateDto(status = AccureWorkspaceStatusDto.READY)
         }
 
-        sessions = KiloSessionService(project, scope, rpc)
-        app = KiloAppService(scope, appRpc)
-        workspaces = KiloWorkspaceService(scope, workspaceRpc)
+        sessions = AccureSessionService(project, scope, rpc)
+        app = AccureAppService(scope, appRpc)
+        workspaces = AccureWorkspaceService(scope, workspaceRpc)
         workspace = workspaces.workspace("/test")
 
         ui = newUi()

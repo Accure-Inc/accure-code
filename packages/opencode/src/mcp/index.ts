@@ -1,11 +1,11 @@
-// kilocode_change start
+// accurecode_change start
 // The MCP SDK only sets windowsHide:true in Electron (checks `'type' in process`).
 // Bun's process object lacks `type`, so stdio transports flash a CMD window on
 // every MCP server start. We patch it before the SDK is imported.
 if (process.platform === "win32" && !("type" in process)) {
-  Object.defineProperty(process, "type", { value: "kilo-bun", configurable: true })
+  Object.defineProperty(process, "type", { value: "accure-bun", configurable: true })
 }
-// kilocode_change end
+// accurecode_change end
 
 import { dynamicTool, type Tool, jsonSchema, type JSONSchema7 } from "ai"
 import { serviceUse } from "@/effect/service-use"
@@ -44,7 +44,7 @@ import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 const log = Log.create({ service: "mcp" })
 const DEFAULT_TIMEOUT = 30_000
 
-// kilocode_change start - inject --rm for Docker containers to prevent stopped container accumulation
+// accurecode_change start - inject --rm for Docker containers to prevent stopped container accumulation
 export function ensureDockerRm(cmd: string, args: string[]): string[] {
   const isDocker = cmd === "docker" || cmd === "podman"
   if (!isDocker) return args
@@ -56,7 +56,7 @@ export function ensureDockerRm(cmd: string, args: string[]): string[] {
   result.splice(runIdx + 1, 0, "--rm")
   return result
 }
-// kilocode_change end
+// accurecode_change end
 
 const TolerantListToolsResultSchema = ListToolsResultSchema.extend({
   tools: ToolSchema.omit({ outputSchema: true }).array(),
@@ -314,7 +314,7 @@ export const layer = Layer.effect(
         (t) =>
           Effect.tryPromise({
             try: () => {
-              const client = new Client({ name: "kilo", version: InstallationVersion }) // kilocode_change
+              const client = new Client({ name: "accure", version: InstallationVersion }) // accurecode_change
               return withTimeout(client.connect(t), timeout).then(() => client)
             },
             catch: (e) => (e instanceof Error ? e : new Error(String(e))),
@@ -409,7 +409,7 @@ export const layer = Layer.effect(
                 return bus
                   .publish(TuiEvent.ToastShow, {
                     title: "MCP Authentication Required",
-                    message: `Server "${key}" requires authentication. Run: kilo mcp auth ${key}`, // kilocode_change
+                    message: `Server "${key}" requires authentication. Run: accure mcp auth ${key}`, // accurecode_change
                     variant: "warning",
                     duration: 8000,
                   })
@@ -446,12 +446,12 @@ export const layer = Layer.effect(
       mcp: ConfigMCP.Info & { type: "local" },
     ) {
       const [cmd, ...args] = mcp.command
-      const finalArgs = ensureDockerRm(cmd, args) // kilocode_change
+      const finalArgs = ensureDockerRm(cmd, args) // accurecode_change
       const cwd = yield* InstanceState.directory
       const transport = new StdioClientTransport({
         stderr: "pipe",
         command: cmd,
-        args: finalArgs, // kilocode_change
+        args: finalArgs, // accurecode_change
         cwd,
         env: {
           ...process.env,
@@ -792,9 +792,9 @@ export const layer = Layer.effect(
       return mcpConfig
     })
 
-    // kilocode_change start - `opts?: { callback?: boolean }` parameter is Kilo-specific
+    // accurecode_change start - `opts?: { callback?: boolean }` parameter is Accure-specific
     const startAuth = Effect.fn("MCP.startAuth")(function* (mcpName: string, opts?: { callback?: boolean }) {
-      // kilocode_change end
+      // accurecode_change end
       const mcpConfig = yield* requireMcpConfig(mcpName)
       if (mcpConfig.type !== "remote") throw new Error(`MCP server ${mcpName} is not a remote server`)
       if (mcpConfig.oauth === false) throw new Error(`MCP server ${mcpName} has OAuth explicitly disabled`)
@@ -809,11 +809,11 @@ export const layer = Layer.effect(
         oauthConfig?.redirectUri ??
         (oauthConfig?.callbackPort ? `http://127.0.0.1:${oauthConfig.callbackPort}${OAUTH_CALLBACK_PATH}` : undefined)
 
-      // kilocode_change start - authenticate() defers binding the callback port until a redirect is needed
+      // accurecode_change start - authenticate() defers binding the callback port until a redirect is needed
       if (opts?.callback !== false) {
         yield* Effect.promise(() => McpOAuthCallback.ensureRunning(effectiveRedirectUri))
       }
-      // kilocode_change end
+      // accurecode_change end
 
       const oauthState = Array.from(crypto.getRandomValues(new Uint8Array(32)))
         .map((b) => b.toString(16).padStart(2, "0"))
@@ -841,7 +841,7 @@ export const layer = Layer.effect(
 
       return yield* Effect.tryPromise({
         try: () => {
-          const client = new Client({ name: "kilo", version: InstallationVersion }) // kilocode_change
+          const client = new Client({ name: "accure", version: InstallationVersion }) // accurecode_change
           return client
             .connect(transport)
             .then(() => ({ authorizationUrl: "", oauthState, client }) satisfies AuthResult)
@@ -859,7 +859,7 @@ export const layer = Layer.effect(
     })
 
     const authenticate = Effect.fn("MCP.authenticate")(function* (mcpName: string) {
-      const result = yield* startAuth(mcpName, { callback: false }) // kilocode_change
+      const result = yield* startAuth(mcpName, { callback: false }) // accurecode_change
       if (!result.authorizationUrl) {
         const client = "client" in result ? result.client : undefined
         const mcpConfig = yield* requireMcpConfig(mcpName).pipe(
@@ -879,7 +879,7 @@ export const layer = Layer.effect(
 
       log.info("opening browser for oauth", { mcpName, url: result.authorizationUrl, state: result.oauthState })
 
-      // kilocode_change start - bind only after redirect exists, and clean up if binding fails
+      // accurecode_change start - bind only after redirect exists, and clean up if binding fails
       const mcpConfig = yield* getMcpConfig(mcpName)
       if (!mcpConfig) return { status: "failed", error: "MCP config not found after auth" } as Status
       if (mcpConfig.type !== "remote")
@@ -905,7 +905,7 @@ export const layer = Layer.effect(
         yield* Effect.tryPromise(() => transport?.close() ?? Promise.resolve()).pipe(Effect.ignore)
         return { status: "failed", error: err.message } as Status
       }
-      // kilocode_change end
+      // accurecode_change end
 
       const callbackPromise = McpOAuthCallback.waitForCallback(result.oauthState, mcpName)
 

@@ -18,8 +18,8 @@ Improve JetBrains markdown output so assistant/user transcript markdown visually
 1. Expand JetBrains markdown style tokens.
    - Add internal fields to `MdStyle` for heading, strong, emphasis, inline code foreground, list marker, HR, table/header, and code block border colors.
    - Keep the public `MdView` override API stable unless a new external override is clearly needed.
-   - Compute defaults in `MdCommon.defaults(style)` from IntelliJ/editor theme sources and centralized Kilo semantic colors where no platform key matches.
-   - Use `JBColor.namedColor("Kilo.Markdown.*", fallback)` for Kilo-specific markdown palette fallbacks, so themes can override them and runtime code avoids scattered hardcoded colors.
+   - Compute defaults in `MdCommon.defaults(style)` from IntelliJ/editor theme sources and centralized Accure semantic colors where no platform key matches.
+   - Use `JBColor.namedColor("Accure.Markdown.*", fallback)` for Accure-specific markdown palette fallbacks, so themes can override them and runtime code avoids scattered hardcoded colors.
 
 2. Mirror VS Code markdown CSS in `MdCommon.rules()`.
    - Add root/body wrapping rules: max width behavior, break-word wrapping, base line-height, and first/last-child margin trimming where supported by `JBHtmlPane` CSS.
@@ -53,7 +53,7 @@ Improve JetBrains markdown output so assistant/user transcript markdown visually
    - Extend `MdViewTest` and/or `MdViewHybridTest` to assert `overrideSheet()` contains the new VS Code-equivalent rules for headings, strong/emphasis, links, inline code foreground, list/table/blockquote spacing, HR, and code block/table border separation.
    - Add component tests for code block pane styling: background, viewport background, border color, padding, scrollbar policy, and retained editor instance after `applyStyle()`.
    - Keep existing stress/leak tests green. Add a small stress assertion only if the implementation changes style application semantics.
-   - Add a changeset: `@kilocode/accure-jetbrains` patch with user-facing wording such as `Improve markdown readability in JetBrains chat transcripts.`
+   - Add a changeset: `@accurecode/accure-jetbrains` patch with user-facing wording such as `Improve markdown readability in JetBrains chat transcripts.`
 
 ## Verification
 
@@ -64,6 +64,6 @@ Improve JetBrains markdown output so assistant/user transcript markdown visually
 ## Constraints
 
 - Do not introduce JCEF, Compose, or Kotlin UI DSL.
-- Keep changes inside `packages/accure-jetbrains/` and `.changeset/` unless a shared Kilo UI source of truth is explicitly required.
-- No `kilocode_change` markers are needed for JetBrains or Kilo UI paths.
+- Keep changes inside `packages/accure-jetbrains/` and `.changeset/` unless a shared Accure UI source of truth is explicitly required.
+- No `accurecode_change` markers are needed for JetBrains or Accure UI paths.
 - Prefer IntelliJ theme APIs and centralized semantic tokens over scattered literal colors.

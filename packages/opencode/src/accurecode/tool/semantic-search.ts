@@ -1,8 +1,8 @@
 import { Effect, Schema } from "effect"
 import path from "path"
 import * as Tool from "@/tool/tool"
-import { KiloIndexing } from "@/kilocode/indexing"
-import { Instance } from "@/kilocode/instance"
+import { AccureIndexing } from "@/accurecode/indexing"
+import { Instance } from "@/accurecode/instance"
 
 import DESCRIPTION from "./semantic-search.txt"
 
@@ -53,7 +53,7 @@ export const SemanticSearchTool = Tool.define(
         })
 
         const prefix = normalizeSearchPath(params.path)
-        const matches = yield* Effect.promise(() => KiloIndexing.search(params.query, prefix))
+        const matches = yield* Effect.promise(() => AccureIndexing.search(params.query, prefix))
 
         const results = matches.flatMap<SearchResult>((item) => {
           const payload = item.payload

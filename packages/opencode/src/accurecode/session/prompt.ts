@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import path from "path"
 import fs from "fs/promises"
 import { StringDecoder } from "string_decoder"
@@ -7,23 +7,23 @@ import { SessionID, PartID } from "@/session/schema"
 import { MessageV2 } from "@/session/message-v2"
 import { Session } from "@/session/session"
 import { Agent } from "@/agent/agent"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/accurecode/instance"
 import type { SessionStatus } from "@/session/status"
 import { Flag } from "@opencode-ai/core/flag/flag"
-import { PlanFollowup } from "@/kilocode/plan-followup"
-import { PlanFile } from "@/kilocode/plan-file"
-import { KiloSession } from "@/kilocode/session"
-import { KiloSessionMessageOrder } from "@/kilocode/session/message-order"
+import { PlanFollowup } from "@/accurecode/plan-followup"
+import { PlanFile } from "@/accurecode/plan-file"
+import { AccureSession } from "@/accurecode/session"
+import { AccureSessionMessageOrder } from "@/accurecode/session/message-order"
 import { Permission } from "@/permission"
 import { Question } from "@/question"
-import { environmentDetails, type EditorContext } from "@/kilocode/editor-context"
+import { environmentDetails, type EditorContext } from "@/accurecode/editor-context"
 import { Identifier } from "@/id/id"
 import { Filesystem } from "@/util/filesystem"
 import { InstanceState } from "@/effect/instance-state"
-import NATIVE_PLAN_PROMPT from "@/kilocode/session/native-plan-prompt.txt"
+import NATIVE_PLAN_PROMPT from "@/accurecode/session/native-plan-prompt.txt"
 import CODE_SWITCH from "@/session/prompt/code-switch.txt"
 
-export namespace KiloSessionPrompt {
+export namespace AccureSessionPrompt {
   const modes = ["ask", "plan", "architect"]
 
   export function titleID(sessionID: SessionID) {
@@ -47,7 +47,7 @@ export namespace KiloSessionPrompt {
    */
   export function shouldAskPlanFollowup(input: { messages: MessageV2.WithParts[]; abort: AbortSignal }) {
     if (input.abort.aborted) return false
-    if (!["cli", "vscode", "jetbrains"].includes(Flag.KILO_CLIENT)) return false
+    if (!["cli", "vscode", "jetbrains"].includes(Flag.ACCURECODE_CLIENT)) return false
     const idx = input.messages.findLastIndex((m) => m.info.role === "user")
     return input.messages
       .slice(idx + 1)
@@ -90,7 +90,7 @@ export namespace KiloSessionPrompt {
     return PlanFollowup.abort(sessionID)
   }
 
-  export const recoverDanglingAssistant = Effect.fn("KiloSessionPrompt.recoverDanglingAssistant")(function* (input: {
+  export const recoverDanglingAssistant = Effect.fn("AccureSessionPrompt.recoverDanglingAssistant")(function* (input: {
     sessionID: SessionID
     status: Pick<SessionStatus.Interface, "get">
     sessions: Pick<Session.Interface, "messages" | "removeMessage">
@@ -110,7 +110,7 @@ export namespace KiloSessionPrompt {
     yield* input.sessions.removeMessage({ sessionID: input.sessionID, messageID: tail.info.id })
   })
 
-  export const recoverProviderFinishError = Effect.fn("KiloSessionPrompt.recoverProviderFinishError")(
+  export const recoverProviderFinishError = Effect.fn("AccureSessionPrompt.recoverProviderFinishError")(
     function* (input: {
       sessionID: SessionID
       status: Pick<SessionStatus.Interface, "get">
@@ -156,7 +156,7 @@ export namespace KiloSessionPrompt {
     return [...input.existing.filter((rule) => !names.has(rule.permission)), ...input.toggles]
   }
 
-  export const askPermission = Effect.fn("KiloSessionPrompt.askPermission")(function* (input: {
+  export const askPermission = Effect.fn("AccureSessionPrompt.askPermission")(function* (input: {
     permission: Pick<Permission.Interface, "ask">
     agents: Pick<Agent.Interface, "get">
     sessions: Pick<Session.Interface, "get">
@@ -250,7 +250,7 @@ export namespace KiloSessionPrompt {
   /**
    * Ensures the plan file directory exists. Pre-checks with `Filesystem.isDir`
    * because `fs.mkdir(recursive: true)` still throws `EEXIST` on Windows
-   * OneDrive ReparsePoint directories in some Node versions (kilocode#9755).
+   * OneDrive ReparsePoint directories in some Node versions (accurecode#9755).
    */
   export async function ensurePlanDir(dir: string) {
     if (await Filesystem.isDir(dir)) return
@@ -317,9 +317,9 @@ export namespace KiloSessionPrompt {
    */
   export function resolveCloseReason(input: {
     sessionID: string
-    closeReasons: Map<string, KiloSession.CloseReason>
+    closeReasons: Map<string, AccureSession.CloseReason>
     exit: Exit.Exit<any, any>
-  }): KiloSession.CloseReason {
+  }): AccureSession.CloseReason {
     const explicit = input.closeReasons.get(input.sessionID)
     input.closeReasons.delete(input.sessionID)
     if (explicit) return explicit
@@ -346,7 +346,7 @@ export namespace KiloSessionPrompt {
   export function guardCompactionAttempt(input: {
     sessionID: string
     attempts: number
-    closeReasons: Map<string, KiloSession.CloseReason>
+    closeReasons: Map<string, AccureSession.CloseReason>
     message?: MessageV2.Assistant
   }) {
     if (input.attempts < MAX_COMPACTION_ATTEMPTS) return { exhausted: false as const }
@@ -389,7 +389,7 @@ export namespace KiloSessionPrompt {
     const summary = msgs.reduce<{ msg: MessageV2.WithParts; index: number } | undefined>((latest, msg, index) => {
       const info = msg.info
       if (info.role !== "assistant" || info.summary !== true || !info.finish || info.error) return latest
-      if (!latest || KiloSessionMessageOrder.compare(msg, latest.msg, index, latest.index) > 0) return { msg, index }
+      if (!latest || AccureSessionMessageOrder.compare(msg, latest.msg, index, latest.index) > 0) return { msg, index }
       return latest
     }, undefined)
     if (!summary) return msgs

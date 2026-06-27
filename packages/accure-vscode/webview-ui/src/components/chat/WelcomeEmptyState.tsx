@@ -1,6 +1,6 @@
 import { type Component, For, Show } from "solid-js"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { useDialog } from "@kilocode/accure-ui/context/dialog"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { useDialog } from "@accurecode/accure-ui/context/dialog"
 import { useSession } from "../../context/session"
 import { useLanguage } from "../../context/language"
 import { recentSessions } from "../../context/session-utils"
@@ -12,11 +12,11 @@ interface WelcomeEmptyStateProps {
   onShowHistory?: () => void
 }
 
-export const KiloLogo = () => {
+export const AccureLogo = () => {
   const icons = (window as { ICONS_BASE_URI?: string }).ICONS_BASE_URI || ""
   const light =
     document.body.classList.contains("vscode-light") || document.body.classList.contains("vscode-high-contrast-light")
-  const file = light ? "kilo-light.svg" : "kilo-dark.svg"
+  const file = light ? "accure-light.svg" : "accure-dark.svg"
 
   return (
     <div class="accure-logo">
@@ -33,8 +33,8 @@ export const WelcomeEmptyState: Component<WelcomeEmptyStateProps> = (props) => {
 
   return (
     <div class="message-list-empty">
-      <KiloLogo />
-      <p class="kilo-about-text">{language.t("session.messages.welcome")}</p>
+      <AccureLogo />
+      <p class="accure-about-text">{language.t("session.messages.welcome")}</p>
       <Show when={recent().length > 0 && props.onSelectSession}>
         <div class="recent-sessions">
           <span class="recent-sessions-label">{language.t("session.recent")}</span>

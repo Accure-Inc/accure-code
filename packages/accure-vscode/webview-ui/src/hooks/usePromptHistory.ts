@@ -10,7 +10,7 @@ import { createSignal } from "solid-js"
 import type { Accessor } from "solid-js"
 
 export const MAX = 100
-const STORAGE_KEY = "kilo.prompt-history.v1"
+const STORAGE_KEY = "accure.prompt-history.v1"
 
 function load(): string[] {
   try {
@@ -20,7 +20,7 @@ function load(): string[] {
     if (!Array.isArray(parsed)) return []
     return parsed.filter((e): e is string => typeof e === "string").slice(0, MAX)
   } catch (err) {
-    console.warn("[Kilo New] prompt history load failed", err)
+    console.warn("[Accure New] prompt history load failed", err)
     return []
   }
 }
@@ -29,7 +29,7 @@ function save(items: string[]) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
   } catch (err) {
-    console.warn("[Kilo New] prompt history save failed", err)
+    console.warn("[Accure New] prompt history save failed", err)
   }
 }
 

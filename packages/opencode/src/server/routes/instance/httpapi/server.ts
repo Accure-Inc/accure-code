@@ -21,7 +21,7 @@ import { File } from "@/file"
 import { FileWatcher } from "@/file/watcher"
 import { Ripgrep } from "@/file/ripgrep"
 import { Format } from "@/format"
-import { Git } from "@/git" // kilocode_change
+import { Git } from "@/git" // accurecode_change
 import { RuntimeFlags } from "@/effect/runtime-flags"
 import { LSP } from "@/lsp/lsp"
 import { MCP } from "@/mcp"
@@ -32,7 +32,7 @@ import { Plugin } from "@/plugin"
 import { Project } from "@/project/project"
 import { ProviderAuth } from "@/provider/auth"
 import { ModelsDev } from "@opencode-ai/core/models-dev"
-import { ModelCache } from "@/provider/model-cache" // kilocode_change
+import { ModelCache } from "@/provider/model-cache" // accurecode_change
 import { Provider } from "@/provider/provider"
 import { Pty } from "@/pty"
 import { PtyTicket } from "@/pty/ticket"
@@ -50,7 +50,7 @@ import { ShareNext } from "@/share/share-next"
 import { EventV2Bridge } from "@/event-v2-bridge"
 import { Skill } from "@/skill"
 import { Snapshot } from "@/snapshot"
-import { Storage } from "@/storage/storage" // kilocode_change
+import { Storage } from "@/storage/storage" // accurecode_change
 import { SyncEvent } from "@/sync"
 import { ToolRegistry } from "@/tool/registry"
 import { lazy } from "@/util/lazy"
@@ -82,12 +82,12 @@ import { syncHandlers } from "./handlers/sync"
 import { tuiHandlers } from "./handlers/tui"
 import { v2Handlers } from "./handlers/v2"
 import { workspaceHandlers } from "./handlers/workspace"
-// kilocode_change start
+// accurecode_change start
 import {
-  provide as provideKiloHttpApiHandlers,
-  provideListener as provideKiloListenerRoutes,
-} from "@/kilocode/server/httpapi/server"
-// kilocode_change end
+  provide as provideAccureHttpApiHandlers,
+  provideListener as provideAccureListenerRoutes,
+} from "@/accurecode/server/httpapi/server"
+// accurecode_change end
 import { instanceContextLayer, instanceRouterMiddleware } from "./middleware/instance-context"
 import { workspaceRouterMiddleware, workspaceRoutingLayer } from "./middleware/workspace-routing"
 import { disposeMiddleware } from "./lifecycle"
@@ -148,7 +148,7 @@ const instanceApiRoutes = HttpApiBuilder.layer(InstanceHttpApi).pipe(
     tuiHandlers,
     workspaceHandlers,
   ]),
-  provideKiloHttpApiHandlers, // kilocode_change
+  provideAccureHttpApiHandlers, // accurecode_change
 )
 
 const rawInstanceRoutes = Layer.mergeAll(ptyConnectRoute).pipe(Layer.provide(instanceRouterLayer))
@@ -209,11 +209,11 @@ export function createRoutes(
       File.defaultLayer,
       FileWatcher.defaultLayer,
       Format.defaultLayer,
-      Git.defaultLayer, // kilocode_change
+      Git.defaultLayer, // accurecode_change
       LSP.defaultLayer,
       Installation.defaultLayer,
       MCP.defaultLayer,
-      ModelCache.defaultLayer, // kilocode_change
+      ModelCache.defaultLayer, // accurecode_change
       ModelsDev.defaultLayer,
       Permission.defaultLayer,
       Plugin.defaultLayer,
@@ -235,7 +235,7 @@ export function createRoutes(
       SessionSummary.defaultLayer,
       ShareNext.defaultLayer,
       Snapshot.defaultLayer,
-      Storage.defaultLayer, // kilocode_change
+      Storage.defaultLayer, // accurecode_change
       SyncEvent.defaultLayer,
       EventV2Bridge.defaultLayer,
       Skill.defaultLayer,
@@ -255,13 +255,13 @@ export function createRoutes(
   )
 }
 
-// kilocode_change start - keep listener routes local while application services come from AppRuntime
+// accurecode_change start - keep listener routes local while application services come from AppRuntime
 export function createListenerRoutes(corsOptions?: CorsOptions) {
   return Layer.mergeAll(rootApiRoutes, eventApiRoutes, instanceRoutes, docRoute, uiRoute).pipe(
-    provideKiloListenerRoutes(corsOptions),
+    provideAccureListenerRoutes(corsOptions),
   )
 }
-// kilocode_change end
+// accurecode_change end
 
 export const routes = createRoutes()
 

@@ -1,8 +1,8 @@
-package ai.kilocode.client.vfs
+package ai.accurecode.client.vfs
 
 import javax.swing.Icon
 
-interface KiloVirtualFileKind {
+interface AccureVirtualFileKind {
     val id: String
 
     fun title(params: Map<String, String>): String

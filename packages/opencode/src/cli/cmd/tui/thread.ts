@@ -10,36 +10,36 @@ import { errorMessage } from "@/util/error"
 import { withTimeout } from "@/util/timeout"
 import { withNetworkOptions, resolveNetworkOptionsNoConfig } from "@/cli/network"
 import { Filesystem } from "@/util/filesystem"
-import type { GlobalEvent } from "@kilocode/sdk/v2"
+import type { GlobalEvent } from "@accurecode/sdk/v2"
 import type { EventSource } from "./context/sdk"
 import { win32DisableProcessedInput, win32InstallCtrlCGuard } from "./win32"
-import { importCloudSession, validateCloudFork } from "@/kilocode/cloud-session" // kilocode_change
-import { createKiloClient } from "@kilocode/sdk/v2" // kilocode_change
+import { importCloudSession, validateCloudFork } from "@/accurecode/cloud-session" // accurecode_change
+import { createAccureClient } from "@accurecode/sdk/v2" // accurecode_change
 import { writeHeapSnapshot } from "v8"
 import { TuiConfig } from "./config/tui"
-import { KiloTuiThreadDaemon } from "@/kilocode/cli/cmd/tui/thread" // kilocode_change
+import { AccureTuiThreadDaemon } from "@/accurecode/cli/cmd/tui/thread" // accurecode_change
 import {
-  KILO_PROCESS_ROLE,
-  KILO_RUN_ID,
+  ACCURECODE_PROCESS_ROLE,
+  ACCURECODE_RUN_ID,
   ensureRunID,
   sanitizedProcessEnv,
 } from "@opencode-ai/core/util/opencode-process"
 import { validateSession } from "./validate-session"
 
 declare global {
-  const KILO_WORKER_PATH: string
+  const ACCURECODE_WORKER_PATH: string
 }
 
 type RpcClient = ReturnType<typeof Rpc.client<typeof rpc>>
 
-// kilocode_change start - lazy-load the TUI app after daemon attach in source mode
+// accurecode_change start - lazy-load the TUI app after daemon attach in source mode
 type TuiInput = Parameters<typeof import("./app").tui>[0]
 
 async function start(input: TuiInput) {
   const app = await import("./app")
   return await app.tui(input)
 }
-// kilocode_change end
+// accurecode_change end
 
 function createWorkerFetch(client: RpcClient): typeof fetch {
   const fn = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
@@ -70,7 +70,7 @@ function createEventSource(client: RpcClient): EventSource {
 }
 
 async function target() {
-  if (typeof KILO_WORKER_PATH !== "undefined") return KILO_WORKER_PATH
+  if (typeof ACCURECODE_WORKER_PATH !== "undefined") return ACCURECODE_WORKER_PATH
   const dist = new URL("./cli/cmd/tui/worker.js", import.meta.url)
   if (await Filesystem.exists(fileURLToPath(dist))) return dist
   return new URL("./worker.ts", import.meta.url)
@@ -84,27 +84,27 @@ async function input(value?: string) {
 }
 
 export function resolveThreadDirectory(project?: string, envPWD = process.env.PWD, cwd = process.cwd()) {
-  // kilocode_change start - ignore stale PWD from wrappers such as `bun --cwd`, except kilo-dev's caller cwd
-  const dev = process.env.KILO_DEV_CWD
+  // accurecode_change start - ignore stale PWD from wrappers such as `bun --cwd`, except accure-dev's caller cwd
+  const dev = process.env.ACCURECODE_DEV_CWD
   const real = Filesystem.resolve(cwd)
   const root = dev
     ? Filesystem.resolve(dev)
     : envPWD && Filesystem.resolve(envPWD) === real
       ? Filesystem.resolve(envPWD)
       : real
-  // kilocode_change end
+  // accurecode_change end
   if (project) return Filesystem.resolve(path.isAbsolute(project) ? project : path.join(root, project))
-  return dev ? root : real // kilocode_change
+  return dev ? root : real // accurecode_change
 }
 
 export const TuiThreadCommand = cmd({
   command: "$0 [project]",
-  describe: "start kilo tui", // kilocode_change
+  describe: "start accure tui", // accurecode_change
   builder: (yargs) =>
     withNetworkOptions(yargs)
       .positional("project", {
         type: "string",
-        describe: "path to start kilo in", // kilocode_change
+        describe: "path to start accure in", // accurecode_change
       })
       .option("model", {
         type: "string",
@@ -155,14 +155,14 @@ export const TuiThreadCommand = cmd({
         process.exitCode = 1
         return
       }
-      // kilocode_change start
+      // accurecode_change start
       const cloudForkError = validateCloudFork(args)
       if (cloudForkError) {
         UI.error(cloudForkError)
         process.exitCode = 1
         return
       }
-      // kilocode_change end
+      // accurecode_change end
 
       // Resolve relative --project paths from PWD, then use the real cwd after
       // chdir so the thread and worker share the same directory key.
@@ -175,13 +175,13 @@ export const TuiThreadCommand = cmd({
         return
       }
       const cwd = Filesystem.resolve(process.cwd())
-      // kilocode_change start - default TUI sessions attach to the daemon unless explicitly disabled
-      if (await KiloTuiThreadDaemon.attach({ args, cwd, input: () => input(args.prompt), start })) return
-      // kilocode_change end
+      // accurecode_change start - default TUI sessions attach to the daemon unless explicitly disabled
+      if (await AccureTuiThreadDaemon.attach({ args, cwd, input: () => input(args.prompt), start })) return
+      // accurecode_change end
       const env = sanitizedProcessEnv({
-        [KILO_PROCESS_ROLE]: "worker",
-        [KILO_RUN_ID]: ensureRunID(),
-        KILO_BACKGROUND_PROCESS_PORTS: "true", // kilocode_change - TUI surfaces inferred background process ports
+        [ACCURECODE_PROCESS_ROLE]: "worker",
+        [ACCURECODE_RUN_ID]: ensureRunID(),
+        ACCURECODE_BACKGROUND_PROCESS_PORTS: "true", // accurecode_change - TUI surfaces inferred background process ports
       })
 
       const worker = new Worker(file, {
@@ -226,7 +226,7 @@ export const TuiThreadCommand = cmd({
         })
         worker.terminate()
       }
-      // kilocode_change start - graceful shutdown on external signals
+      // accurecode_change start - graceful shutdown on external signals
       // The worker's postMessage for the RPC result may never be delivered
       // after shutdown because the worker's event loop drains. Send the
       // shutdown request without awaiting the response, wait for the worker
@@ -289,7 +289,7 @@ export const TuiThreadCommand = cmd({
         shutdownAndExit({ reason: "parent-exit", code: 0 })
       }, 1000)
       orphanWatch.unref()
-      // kilocode_change end
+      // accurecode_change end
 
       const prompt = await input(args.prompt)
       const config = await TuiConfig.get()
@@ -310,14 +310,14 @@ export const TuiThreadCommand = cmd({
             events: undefined,
           }
         : {
-            url: "http://kilo.internal",
+            url: "http://accure.internal",
             fetch: createWorkerFetch(client),
             events: createEventSource(client),
           }
 
       try {
         await validateSession({
-          url: transport.url, // kilocode_change
+          url: transport.url, // accurecode_change
           sessionID: args.session,
           directory: cwd,
           fetch: transport.fetch,
@@ -333,10 +333,10 @@ export const TuiThreadCommand = cmd({
       }, 1000).unref?.()
 
       try {
-        // kilocode_change start - import cloud session before TUI renders
+        // accurecode_change start - import cloud session before TUI renders
         if (args.cloudFork && args.session) {
           UI.println("Importing session from cloud...")
-          const sdk = createKiloClient({
+          const sdk = createAccureClient({
             baseUrl: transport.url,
             fetch: transport.fetch,
             directory: cwd,
@@ -350,10 +350,10 @@ export const TuiThreadCommand = cmd({
           args.session = id
           args.cloudFork = false
         }
-        // kilocode_change end
+        // accurecode_change end
 
         await start({
-          // kilocode_change - shared lazy loader also supports daemon attach
+          // accurecode_change - shared lazy loader also supports daemon attach
           url: transport.url,
           async onSnapshot() {
             const tui = writeHeapSnapshot("tui.heapsnapshot")

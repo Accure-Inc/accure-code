@@ -1,6 +1,6 @@
 import { createEffect, createMemo, createSignal } from "solid-js"
 import type { Accessor } from "solid-js"
-import type { AgentBuilderPreviewResponse, Model, Provider } from "@kilocode/sdk/v2/client"
+import type { AgentBuilderPreviewResponse, Model, Provider } from "@accurecode/sdk/v2/client"
 import { previewAgent, saveAgent, type AgentPayload, type Scope, type Snapshot } from "../../../client"
 import { useConfig } from "../../../context/config"
 import { clean, friendly, sorted, toMode, toolCapabilities, toolName } from "../../../shared/utils"
@@ -43,8 +43,8 @@ export const snippets = [
 ]
 
 function order(a: Provider, b: Provider) {
-  if (a.id === "kilo") return -1
-  if (b.id === "kilo") return 1
+  if (a.id === "accure") return -1
+  if (b.id === "accure") return 1
   return a.name.localeCompare(b.name)
 }
 

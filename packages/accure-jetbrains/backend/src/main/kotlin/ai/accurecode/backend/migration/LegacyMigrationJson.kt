@@ -1,4 +1,4 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray

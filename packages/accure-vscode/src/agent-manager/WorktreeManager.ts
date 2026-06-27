@@ -1,9 +1,9 @@
 /**
  * WorktreeManager - Manages git worktrees for agent sessions.
  *
- * Ported from kilocode/src/core/kilocode/agent-manager/WorktreeManager.ts.
+ * Ported from accurecode/src/core/accurecode/agent-manager/WorktreeManager.ts.
  * Handles creation, discovery, and cleanup of worktrees stored in
- * {projectRoot}/.kilo/worktrees/
+ * {projectRoot}/.accurecode/worktrees/
  */
 
 import * as path from "path"
@@ -11,7 +11,7 @@ import * as fs from "fs"
 import { randomUUID } from "crypto"
 import simpleGit, { type SimpleGit } from "simple-git"
 import { generateBranchName, sanitizeBranchName } from "./branch-name"
-import { type GitOps, isKiloOwnedSshCommand, nonInteractiveEnv } from "./GitOps"
+import { type GitOps, isAccureOwnedSshCommand, nonInteractiveEnv } from "./GitOps"
 import { execWithShellEnv } from "./shell-env"
 import { markNoIndex } from "../util/spotlight"
 import {
@@ -28,7 +28,7 @@ import {
   type BranchListItem,
 } from "./git-import"
 
-const TEMP_PREFIX = ".kilo-delete-"
+const TEMP_PREFIX = ".accurecode-delete-"
 const RM_OPTS: fs.RmOptions = { recursive: true, force: true, maxRetries: 3, retryDelay: 200 }
 
 export interface WorktreeInfo {
@@ -82,11 +82,11 @@ function stripRemotePrefix(ref: string): { branch: string; remote?: string } {
   return { branch: ref }
 }
 
-import { KILO_DIR, LEGACY_DIR, migrateAgentManagerData } from "./constants"
+import { ACCURECODE_DIR, LEGACY_DIR, migrateAgentManagerData } from "./constants"
 
 const SESSION_ID_FILE = "session-id"
 const METADATA_FILE = "metadata.json"
-const GIT_METADATA_FILE = "kilo-agent-manager-metadata.json"
+const GIT_METADATA_FILE = "accure-agent-manager-metadata.json"
 
 export class WorktreeManager {
   private readonly root: string
@@ -98,13 +98,13 @@ export class WorktreeManager {
 
   constructor(root: string, log: (msg: string) => void, ops?: GitOps) {
     this.root = root
-    this.dir = path.join(root, KILO_DIR, "worktrees")
+    this.dir = path.join(root, ACCURECODE_DIR, "worktrees")
     this.git = simpleGit(root)
     this.ops = ops
     this.log = log
   }
 
-  /** Run once before first read/write to migrate Agent Manager data from .kilocode → .kilo. */
+  /** Run once before first read/write to migrate Agent Manager data from .accurecode → .accurecode. */
   private async ensureMigrated(): Promise<void> {
     if (this.migrated) return
     this.migrated = true
@@ -391,7 +391,7 @@ export class WorktreeManager {
 
     // 1. Atomic rename — makes the worktree instantly invisible to git and pollers.
     //    rename() is near-instant on the same filesystem (same parent dir guarantees this).
-    const temp = path.join(path.dirname(worktreePath), `.kilo-delete-${randomUUID()}`)
+    const temp = path.join(path.dirname(worktreePath), `.accurecode-delete-${randomUUID()}`)
     try {
       await fs.promises.rename(worktreePath, temp)
     } catch {
@@ -424,7 +424,7 @@ export class WorktreeManager {
     }
   }
 
-  /** Remove orphaned .kilo-delete-* temp dirs left by interrupted deletions. */
+  /** Remove orphaned .accurecode-delete-* temp dirs left by interrupted deletions. */
   cleanupOrphanedTempDirs(): void {
     if (!fs.existsSync(this.dir)) return
     fs.promises
@@ -473,8 +473,8 @@ export class WorktreeManager {
     const current = await this.readCurrentMetadata(worktreePath)
     if (current) return current
 
-    // Check .kilo/ first, then legacy .kilocode/
-    for (const dirName of [KILO_DIR, LEGACY_DIR]) {
+    // Check .accurecode/ first, then legacy .accurecode/
+    for (const dirName of [ACCURECODE_DIR, LEGACY_DIR]) {
       const result = await this.readMetadataFrom(worktreePath, dirName)
       if (result) return result
     }
@@ -560,20 +560,20 @@ export class WorktreeManager {
     const gitDir = await this.resolveGitDir()
     const excludePath = path.join(gitDir, "info", "exclude")
     const items = [
-      [".kilo/worktrees/", "Accure Code agent worktrees"],
-      [".kilo/agent-manager.json", "Kilo Agent Manager state"],
-      [".kilo/setup-script", "Accure Code worktree setup script"],
-      [".kilo/setup-script.sh", "Accure Code worktree setup script"],
-      [".kilo/setup-script.ps1", "Accure Code worktree setup script"],
-      [".kilo/setup-script.cmd", "Accure Code worktree setup script"],
-      [".kilo/setup-script.bat", "Accure Code worktree setup script"],
-      [".kilocode/worktrees/", "Accure Code legacy agent worktrees"],
-      [".kilocode/agent-manager.json", "Kilo Agent Manager legacy state"],
-      [".kilocode/setup-script", "Accure Code legacy worktree setup script"],
-      [".kilocode/setup-script.sh", "Accure Code legacy worktree setup script"],
-      [".kilocode/setup-script.ps1", "Accure Code legacy worktree setup script"],
-      [".kilocode/setup-script.cmd", "Accure Code legacy worktree setup script"],
-      [".kilocode/setup-script.bat", "Accure Code legacy worktree setup script"],
+      [".accurecode/worktrees/", "Accure Code agent worktrees"],
+      [".accurecode/agent-manager.json", "Accure Agent Manager state"],
+      [".accurecode/setup-script", "Accure Code worktree setup script"],
+      [".accurecode/setup-script.sh", "Accure Code worktree setup script"],
+      [".accurecode/setup-script.ps1", "Accure Code worktree setup script"],
+      [".accurecode/setup-script.cmd", "Accure Code worktree setup script"],
+      [".accurecode/setup-script.bat", "Accure Code worktree setup script"],
+      [".accurecode/worktrees/", "Accure Code legacy agent worktrees"],
+      [".accurecode/agent-manager.json", "Accure Agent Manager legacy state"],
+      [".accurecode/setup-script", "Accure Code legacy worktree setup script"],
+      [".accurecode/setup-script.sh", "Accure Code legacy worktree setup script"],
+      [".accurecode/setup-script.ps1", "Accure Code legacy worktree setup script"],
+      [".accurecode/setup-script.cmd", "Accure Code legacy worktree setup script"],
+      [".accurecode/setup-script.bat", "Accure Code legacy worktree setup script"],
     ] as const
 
     for (const [entry, comment] of items) {
@@ -711,10 +711,10 @@ export class WorktreeManager {
       onProgress?.("fetching", `Fetching ${remote}/${branch}...`)
       try {
         // Only opt into simple-git's allowUnsafeSshCommand when the SSH command
-        // is the fixed value Kilo injects — never for an inherited one, which
+        // is the fixed value Accure injects — never for an inherited one, which
         // could be attacker-controlled.
         const env = nonInteractiveEnv()
-        await simpleGit(this.root, { unsafe: { allowUnsafeSshCommand: isKiloOwnedSshCommand(env) } })
+        await simpleGit(this.root, { unsafe: { allowUnsafeSshCommand: isAccureOwnedSshCommand(env) } })
           .env(env)
           .fetch(remote, branch, { "--quiet": null, "--no-tags": null })
         WorktreeManager.fetchCache.set(cacheKey, Date.now())

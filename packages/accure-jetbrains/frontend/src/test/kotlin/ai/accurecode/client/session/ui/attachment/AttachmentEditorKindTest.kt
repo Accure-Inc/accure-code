@@ -1,21 +1,21 @@
-package ai.kilocode.client.session.ui.attachment
+package ai.accurecode.client.session.ui.attachment
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.session.model.FileAttachment
-import ai.kilocode.client.testing.FakeAppRpcApi
-import ai.kilocode.client.testing.FakeSessionRpcApi
-import ai.kilocode.client.vfs.KiloPath
-import ai.kilocode.client.vfs.KiloEditorKindRegistry
-import ai.kilocode.client.vfs.KiloVirtualFile
-import ai.kilocode.client.vfs.KiloVirtualFileKindRegistry
-import ai.kilocode.client.vfs.KiloVirtualFileSystem
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.PartDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.session.model.FileAttachment
+import ai.accurecode.client.testing.FakeAppRpcApi
+import ai.accurecode.client.testing.FakeSessionRpcApi
+import ai.accurecode.client.vfs.AccurePath
+import ai.accurecode.client.vfs.AccureEditorKindRegistry
+import ai.accurecode.client.vfs.AccureVirtualFile
+import ai.accurecode.client.vfs.AccureVirtualFileKindRegistry
+import ai.accurecode.client.vfs.AccureVirtualFileSystem
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.PartDto
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
 import com.intellij.openapi.util.Disposer
@@ -37,9 +37,9 @@ class AttachmentEditorKindTest : BasePlatformTestCase() {
         }
 
         val params = attachmentParams("ses1", "msg1", item, "note.txt", "/repo")
-        val path = KiloPath(AttachmentEditorKind.ID, params).canonical()
-        val json = KiloVirtualFileSystem.getInstance().getPath(path)
-        val decoded = KiloVirtualFileSystem.decode(json)
+        val path = AccurePath(AttachmentEditorKind.ID, params).canonical()
+        val json = AccureVirtualFileSystem.getInstance().getPath(path)
+        val decoded = AccureVirtualFileSystem.decode(json)
 
         assertEquals(path, decoded)
         assertEquals(AttachmentEditorKind.ID, path.kind)
@@ -67,12 +67,12 @@ class AttachmentEditorKindTest : BasePlatformTestCase() {
             "directory" to "/repo",
         )
 
-        val one = KiloVirtualFileSystem.getInstance().getPath(KiloPath(AttachmentEditorKind.ID, params))
-        val two = KiloVirtualFileSystem.getInstance().getPath(KiloPath(AttachmentEditorKind.ID, params.toList().reversed().toMap()))
+        val one = AccureVirtualFileSystem.getInstance().getPath(AccurePath(AttachmentEditorKind.ID, params))
+        val two = AccureVirtualFileSystem.getInstance().getPath(AccurePath(AttachmentEditorKind.ID, params.toList().reversed().toMap()))
 
         assertEquals(one, two)
-        assertFalse(one.contains("/system/kilo/editors"))
-        assertFalse(one.contains("kiloattachment"))
+        assertFalse(one.contains("/system/accure/editors"))
+        assertFalse(one.contains("accureattachment"))
     }
 
     fun testDuplicatePartAttachmentsMapToDistinctVirtualFiles() {
@@ -91,12 +91,12 @@ class AttachmentEditorKindTest : BasePlatformTestCase() {
 
         assertFalse(one == two)
         assertFalse(one["attachmentKey"] == two["attachmentKey"])
-        assertFalse(KiloPath(AttachmentEditorKind.ID, one) == KiloPath(AttachmentEditorKind.ID, two))
+        assertFalse(AccurePath(AttachmentEditorKind.ID, one) == AccurePath(AttachmentEditorKind.ID, two))
     }
 
     fun testVirtualFilesAreExcludedFromEditorHistory() {
         ensureAttachmentEditorKind()
-        val file = KiloVirtualFile(KiloPath(AttachmentEditorKind.ID, mapOf(
+        val file = AccureVirtualFile(AccurePath(AttachmentEditorKind.ID, mapOf(
             "directory" to "/repo",
             "sessionId" to "ses1",
             "messageId" to "msg1",
@@ -109,8 +109,8 @@ class AttachmentEditorKindTest : BasePlatformTestCase() {
 
     fun testAttachmentEditorKindAndVirtualFilesCanBeCleared() {
         ensureAttachmentEditorKind()
-        val fs = KiloVirtualFileSystem.getInstance()
-        val path = KiloPath(AttachmentEditorKind.ID, mapOf(
+        val fs = AccureVirtualFileSystem.getInstance()
+        val path = AccurePath(AttachmentEditorKind.ID, mapOf(
             "directory" to "/repo",
             "sessionId" to "ses1",
             "messageId" to "msg1",
@@ -120,14 +120,14 @@ class AttachmentEditorKindTest : BasePlatformTestCase() {
         val file = fs.findOrCreateFile(path)
 
         assertNotNull(file)
-        assertNotNull(service<KiloEditorKindRegistry>().get(AttachmentEditorKind.ID))
-        assertNotNull(service<KiloVirtualFileKindRegistry>().get(AttachmentEditorKind.ID))
+        assertNotNull(service<AccureEditorKindRegistry>().get(AttachmentEditorKind.ID))
+        assertNotNull(service<AccureVirtualFileKindRegistry>().get(AttachmentEditorKind.ID))
 
         unregisterAttachmentEditorKind()
         fs.clear()
 
-        assertNull(service<KiloEditorKindRegistry>().get(AttachmentEditorKind.ID))
-        assertNull(service<KiloVirtualFileKindRegistry>().get(AttachmentEditorKind.ID))
+        assertNull(service<AccureEditorKindRegistry>().get(AttachmentEditorKind.ID))
+        assertNull(service<AccureVirtualFileKindRegistry>().get(AttachmentEditorKind.ID))
         assertNull(fs.findOrCreateFile(path))
     }
 
@@ -136,7 +136,7 @@ class AttachmentEditorKindTest : BasePlatformTestCase() {
         val cs = CoroutineScope(SupervisorJob())
         val app = FakeAppRpcApi()
         val rpc = FakeSessionRpcApi()
-        app.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        app.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         val first = PartDto(
             id = "part1",
             sessionID = "ses1",
@@ -156,8 +156,8 @@ class AttachmentEditorKindTest : BasePlatformTestCase() {
             ),
             parts = listOf(first, second),
         ))
-        ApplicationManager.getApplication().replaceService(KiloAppService::class.java, KiloAppService(cs, app), testRootDisposable)
-        project.replaceService(KiloSessionService::class.java, KiloSessionService(project, cs, rpc), testRootDisposable)
+        ApplicationManager.getApplication().replaceService(AccureAppService::class.java, AccureAppService(cs, app), testRootDisposable)
+        project.replaceService(AccureSessionService::class.java, AccureSessionService(project, cs, rpc), testRootDisposable)
         val item = FileAttachment("part1").apply {
             mime = "text/plain"
             url = second.url.orEmpty()
@@ -167,7 +167,7 @@ class AttachmentEditorKindTest : BasePlatformTestCase() {
         val parent = Disposer.newDisposable()
 
         try {
-            KiloAttachmentEditorService(project, cs).load(ref("ses1", "msg1", item, "note.txt", "/repo"), parent) {
+            AccureAttachmentEditorService(project, cs).load(ref("ses1", "msg1", item, "note.txt", "/repo"), parent) {
                 results.add(it)
             }
 
@@ -207,9 +207,9 @@ class AttachmentEditorKindTest : BasePlatformTestCase() {
             ),
             parts = listOf(part),
         ))
-        app.state.value = KiloAppStateDto(KiloAppStatusDto.ERROR)
-        ApplicationManager.getApplication().replaceService(KiloAppService::class.java, KiloAppService(cs, app), testRootDisposable)
-        project.replaceService(KiloSessionService::class.java, KiloSessionService(project, cs, rpc), testRootDisposable)
+        app.state.value = AccureAppStateDto(AccureAppStatusDto.ERROR)
+        ApplicationManager.getApplication().replaceService(AccureAppService::class.java, AccureAppService(cs, app), testRootDisposable)
+        project.replaceService(AccureSessionService::class.java, AccureSessionService(project, cs, rpc), testRootDisposable)
         val item = FileAttachment("part1").apply {
             mime = part.mime.orEmpty()
             url = part.url.orEmpty()
@@ -219,7 +219,7 @@ class AttachmentEditorKindTest : BasePlatformTestCase() {
         val parent = Disposer.newDisposable()
 
         try {
-            KiloAttachmentEditorService(project, cs).load(ref("ses1", "msg1", item, "note.txt", "/repo"), parent) {
+            AccureAttachmentEditorService(project, cs).load(ref("ses1", "msg1", item, "note.txt", "/repo"), parent) {
                 results.add(it)
             }
 
@@ -227,7 +227,7 @@ class AttachmentEditorKindTest : BasePlatformTestCase() {
             assertTrue(results.any { it is AttachmentData.Connecting })
             assertTrue(results.any { it is AttachmentData.ConnectionFailed })
 
-            app.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+            app.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
 
             waitFor { results.any { it is AttachmentData.Text } }
             val data = results.last { it is AttachmentData.Text } as AttachmentData.Text

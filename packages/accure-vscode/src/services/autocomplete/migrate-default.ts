@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
 import { DEFAULT_AUTOCOMPLETE_MODEL } from "../../shared/autocomplete-models"
 
-const FLAG = "kilo.autocomplete.defaultClearMigrationV1"
+const FLAG = "accure.autocomplete.defaultClearMigrationV1"
 
 /**
  * One-time migration: clear `accure-code.autocomplete.{provider,model}` when

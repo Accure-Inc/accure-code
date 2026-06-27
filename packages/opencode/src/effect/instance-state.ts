@@ -1,6 +1,6 @@
 import { Effect, ScopedCache, Scope } from "effect"
 import * as EffectLogger from "@opencode-ai/core/effect/logger"
-import { capture, type InstanceContext } from "@/kilocode/instance" // kilocode_change
+import { capture, type InstanceContext } from "@/accurecode/instance" // accurecode_change
 import { InstanceRef, WorkspaceRef } from "./instance-ref"
 import { registerDisposer } from "./instance-registry"
 import { WorkspaceContext } from "@/control-plane/workspace-context"
@@ -13,7 +13,7 @@ export interface InstanceState<A, E = never, R = never> {
 }
 
 export const context = Effect.gen(function* () {
-  const ctx = (yield* InstanceRef) ?? capture() // kilocode_change
+  const ctx = (yield* InstanceRef) ?? capture() // accurecode_change
   if (!ctx) return yield* Effect.die(new Error("InstanceRef not provided"))
   return ctx
 })

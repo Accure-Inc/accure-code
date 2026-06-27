@@ -1,11 +1,11 @@
 ---
-title: Read File Tool | Kilo Code Docs
-description: Learn how the read_file tool examines file contents with line number support to help Kilo Code understand code, configuration, and documentation.
+title: Read File Tool | Accure Code Docs
+description: Learn how the read_file tool examines file contents with line number support to help Accure Code understand code, configuration, and documentation.
 ---
 
 # read_file
 
-The `read_file` tool examines the contents of files in a project. It allows Kilo Code to understand code, configuration files, and documentation to provide better assistance.
+The `read_file` tool examines the contents of files in a project. It allows Accure Code to understand code, configuration files, and documentation to provide better assistance.
 
 ## Parameters
 
@@ -22,10 +22,10 @@ This tool reads the content of a specified file and returns it with line numbers
 
 ## When is it used?
 
-- When Kilo Code needs to understand existing code structure
-- When Kilo Code needs to analyze configuration files
-- When Kilo Code needs to extract information from text files
-- When Kilo Code needs to see code before suggesting changes
+- When Accure Code needs to understand existing code structure
+- When Accure Code needs to analyze configuration files
+- When Accure Code needs to extract information from text files
+- When Accure Code needs to see code before suggesting changes
 - When specific line numbers need to be referenced in discussions
 
 ## Key Features
@@ -83,9 +83,9 @@ The tool uses a clear decision hierarchy to determine how to read a file:
 
 ## Examples When Used
 
-- When asked to explain or improve code, Kilo Code first reads the relevant files to understand the current implementation.
-- When troubleshooting configuration issues, Kilo Code reads config files to identify potential problems.
-- When working with documentation, Kilo Code reads existing docs to understand the current content before suggesting improvements.
+- When asked to explain or improve code, Accure Code first reads the relevant files to understand the current implementation.
+- When troubleshooting configuration issues, Accure Code reads config files to identify potential problems.
+- When working with documentation, Accure Code reads existing docs to understand the current content before suggesting improvements.
 
 ## Usage Examples
 
@@ -181,7 +181,7 @@ Error: File not found at path 'non_existent_file.txt'.
 
 ### Attempting to Read a Blocked File
 
-If the file is excluded by rules in a `.kilocodeignore` file:
+If the file is excluded by rules in a `.accurecodeignore` file:
 
 **Input:**
 
@@ -194,5 +194,5 @@ If the file is excluded by rules in a `.kilocodeignore` file:
 **Simulated Output (Error):**
 
 ```
-Error: Access denied to file '.env' due to .kilocodeignore rules.
+Error: Access denied to file '.env' due to .accurecodeignore rules.
 ```

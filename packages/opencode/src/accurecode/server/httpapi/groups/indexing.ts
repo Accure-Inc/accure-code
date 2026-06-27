@@ -1,6 +1,6 @@
 import { Schema } from "effect"
 import { HttpApi, HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/unstable/httpapi"
-import { IndexingStatusInfo, IndexingWarningInfo } from "@/kilocode/indexing-event"
+import { IndexingStatusInfo, IndexingWarningInfo } from "@/accurecode/indexing-event"
 import { Authorization } from "@/server/routes/instance/httpapi/middleware/authorization"
 import { InstanceContextMiddleware } from "@/server/routes/instance/httpapi/middleware/instance-context"
 import {
@@ -9,9 +9,9 @@ import {
 } from "@/server/routes/instance/httpapi/middleware/workspace-routing"
 import { described } from "@/server/routes/instance/httpapi/groups/metadata"
 
-export { IndexingStatusInfo, IndexingStatusState, IndexingWarningInfo } from "@/kilocode/indexing-event"
+export { IndexingStatusInfo, IndexingStatusState, IndexingWarningInfo } from "@/accurecode/indexing-event"
 
-export const KiloEmbeddingModel = Schema.Struct({
+export const AccureEmbeddingModel = Schema.Struct({
   id: Schema.String,
   name: Schema.String,
   dimension: Schema.Int.check(Schema.isGreaterThan(0)),
@@ -19,11 +19,11 @@ export const KiloEmbeddingModel = Schema.Struct({
   note: Schema.optional(Schema.String),
 })
 
-export const KiloEmbeddingModelCatalog = Schema.Struct({
+export const AccureEmbeddingModelCatalog = Schema.Struct({
   defaultModel: Schema.String,
-  models: Schema.Array(KiloEmbeddingModel),
+  models: Schema.Array(AccureEmbeddingModel),
   aliases: Schema.Record(Schema.String, Schema.String),
-}).annotate({ identifier: "KiloEmbeddingModelCatalog" })
+}).annotate({ identifier: "AccureEmbeddingModelCatalog" })
 
 const root = "/indexing"
 
@@ -61,19 +61,19 @@ export const IndexingApi = HttpApi.make("indexing")
       .add(
         HttpApiEndpoint.get("models", IndexingPaths.models, {
           query: WorkspaceRoutingQuery,
-          success: described(KiloEmbeddingModelCatalog, "Kilo embedding model catalog"),
+          success: described(AccureEmbeddingModelCatalog, "Accure embedding model catalog"),
         }).annotateMerge(
           OpenApi.annotations({
             identifier: "indexing.models",
-            summary: "List Kilo embedding models",
-            description: "Retrieve the embedding models available through the active Kilo account.",
+            summary: "List Accure embedding models",
+            description: "Retrieve the embedding models available through the active Accure account.",
           }),
         ),
       )
       .annotateMerge(
         OpenApi.annotations({
           title: "indexing",
-          description: "Kilo indexing routes.",
+          description: "Accure indexing routes.",
         }),
       )
       .middleware(InstanceContextMiddleware)
@@ -82,8 +82,8 @@ export const IndexingApi = HttpApi.make("indexing")
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "accure HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Accure HttpApi surface.",
     }),
   )

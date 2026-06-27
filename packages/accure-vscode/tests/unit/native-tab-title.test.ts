@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test"
-import type { Session } from "@kilocode/sdk/v2/client"
-import { nativeTitle } from "../../src/kilo-provider/native-tab-title"
+import type { Session } from "@accurecode/sdk/v2/client"
+import { nativeTitle } from "../../src/accure-provider/native-tab-title"
 
 const session = (title: string | null) => ({ title }) as Session
 
@@ -16,6 +16,6 @@ describe("nativeTitle", () => {
   })
 
   it("truncates long session titles", () => {
-    expect(nativeTitle(session("Dynamic VS Code tab titles for Kilo sessions"))).toBe("Dynamic VS Code tab...")
+    expect(nativeTitle(session("Dynamic VS Code tab titles for Accure sessions"))).toBe("Dynamic VS Code tab...")
   })
 })

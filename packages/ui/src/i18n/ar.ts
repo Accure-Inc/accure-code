@@ -54,7 +54,7 @@ export const dict = {
 
   "dialog.usageExceeded.freeTier.title": "تم الوصول إلى الحد المجاني",
   "dialog.usageExceeded.freeTier.description":
-    "اشترك في Kilo Go للحصول على وصول موثوق إلى أفضل النماذج مفتوحة المصدر، ابتداءً من $5/شهر.",
+    "اشترك في Accure Go للحصول على وصول موثوق إلى أفضل النماذج مفتوحة المصدر، ابتداءً من $5/شهر.",
   "dialog.usageExceeded.freeTier.actionLabel": "اشترك",
   "dialog.usageExceeded.accountRateLimit.title": "تم الوصول إلى حد Go",
   "dialog.usageExceeded.accountRateLimit.description":
@@ -105,7 +105,7 @@ export const dict = {
   "ui.textField.copied": "تم النسخ",
 
   "ui.imagePreview.alt": "معاينة الصورة",
-  // kilocode_change start
+  // accurecode_change start
   "ui.mermaid.rendering": "جارٍ عرض مخطط Mermaid...",
   "ui.mermaid.renderError": "فشل عرض Mermaid: {{message}}",
   "ui.mermaid.errorDefault": "تعذر عرض مخطط Mermaid.",
@@ -116,7 +116,7 @@ export const dict = {
   "ui.mermaid.copyPng": "نسخ PNG",
   "ui.mermaid.downloadSvg": "تنزيل SVG",
   "ui.mermaid.downloadPng": "تنزيل PNG",
-  // kilocode_change end
+  // accurecode_change end
   "ui.scrollView.ariaLabel": "محتوى قابل للتمرير",
 
   "ui.tool.read": "قراءة",

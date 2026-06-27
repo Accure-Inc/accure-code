@@ -11,12 +11,12 @@ import { deriveSubagentSessionPermission } from "../agent/subagent-permissions"
 import type { SessionPrompt } from "../session/prompt"
 import { SessionStatus } from "@/session/status"
 import { Config } from "@/config/config"
-import { Provider } from "@/provider/provider" // kilocode_change
-import { KiloTask } from "../kilocode/tool/task" // kilocode_change
-import { KiloCostPropagation } from "../kilocode/session/cost-propagation" // kilocode_change
-import { KiloSessionProcessor } from "../kilocode/session/processor" // kilocode_change
-import { KiloSession } from "../kilocode/session" // kilocode_change
-import { errorMessage } from "@/util/error" // kilocode_change
+import { Provider } from "@/provider/provider" // accurecode_change
+import { AccureTask } from "../accurecode/tool/task" // accurecode_change
+import { AccureCostPropagation } from "../accurecode/session/cost-propagation" // accurecode_change
+import { AccureSessionProcessor } from "../accurecode/session/processor" // accurecode_change
+import { AccureSession } from "../accurecode/session" // accurecode_change
+import { errorMessage } from "@/util/error" // accurecode_change
 import { TuiEvent } from "@/cli/cmd/tui/event"
 import { Cause, Effect, Exit, Option, Schema, Scope } from "effect"
 import { EffectBridge } from "@/effect/bridge"
@@ -114,7 +114,7 @@ export const TaskTool = Tool.define(
     const bus = yield* Bus.Service
     const config = yield* Config.Service
     const sessions = yield* Session.Service
-    const provider = yield* Provider.Service // kilocode_change
+    const provider = yield* Provider.Service // accurecode_change
     const scope = yield* Scope.Scope
     const status = yield* SessionStatus.Service
     const flags = yield* RuntimeFlags.Service
@@ -126,7 +126,9 @@ export const TaskTool = Tool.define(
       const cfg = yield* config.get()
       const runInBackground = params.background === true
       if (runInBackground && !flags.experimentalBackgroundSubagents) {
-        return yield* Effect.fail(new Error("Background subagents require KILO_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true"))
+        return yield* Effect.fail(
+          new Error("Background subagents require ACCURECODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true"),
+        )
       }
 
       if (!ctx.extra?.bypassAgentCheck) {
@@ -145,11 +147,11 @@ export const TaskTool = Tool.define(
       if (!next) {
         return yield* Effect.fail(new Error(`Unknown agent type: ${params.subagent_type} is not a valid agent type`))
       }
-      // kilocode_change start — reject primary agents; only subagent/all modes allowed
-      KiloTask.validate(next, params.subagent_type)
-      // kilocode_change end
+      // accurecode_change start — reject primary agents; only subagent/all modes allowed
+      AccureTask.validate(next, params.subagent_type)
+      // accurecode_change end
 
-      const canTask = KiloTask.nestedTask() // kilocode_change - Kilo disallows subagents spawning subagents
+      const canTask = AccureTask.nestedTask() // accurecode_change - Accure disallows subagents spawning subagents
       const canTodo = next.permission.some((rule) => rule.permission === "todowrite")
 
       const taskID = params.task_id
@@ -157,40 +159,40 @@ export const TaskTool = Tool.define(
         ? yield* sessions.get(SessionID.make(taskID)).pipe(Effect.catchCause(() => Effect.succeed(undefined)))
         : undefined
       if (session && session.parentID !== ctx.sessionID) {
-        return yield* Effect.fail(new Error(`Cannot resume session ${taskID}: not a child of the current session`)) // kilocode_change - prevent cross-session task resume
+        return yield* Effect.fail(new Error(`Cannot resume session ${taskID}: not a child of the current session`)) // accurecode_change - prevent cross-session task resume
       }
       const parent = yield* sessions.get(ctx.sessionID)
       const parentAgent = parent.agent
         ? yield* agent.get(parent.agent).pipe(Effect.catchCause(() => Effect.succeed(undefined)))
         : undefined
-      // kilocode_change start — inherit edit/bash/MCP restrictions from calling agent
+      // accurecode_change start — inherit edit/bash/MCP restrictions from calling agent
       const caller = yield* agent.get(ctx.agent)
-      const rules = KiloTask.inherited({ caller, session: parent, mcp: cfg.mcp })
-      // kilocode_change end
-      // kilocode_change start - refresh current parent restrictions when resuming an existing task session
+      const rules = AccureTask.inherited({ caller, session: parent, mcp: cfg.mcp })
+      // accurecode_change end
+      // accurecode_change start - refresh current parent restrictions when resuming an existing task session
       if (session) {
-        const permission = KiloTask.merge(
+        const permission = AccureTask.merge(
           session.permission ?? [],
           deriveSubagentSessionPermission({
             parentSessionPermission: parent.permission ?? [],
             parentAgent,
             subagent: next,
           }),
-          KiloTask.permissions(rules),
+          AccureTask.permissions(rules),
         )
         session.permission = permission
         yield* sessions.setPermission({ sessionID: session.id, permission })
       }
-      // kilocode_change end
-      const platform = KiloSession.resolvePlatform(ctx.sessionID) // kilocode_change - preserve parent attribution across task creation/resume
+      // accurecode_change end
+      const platform = AccureSession.resolvePlatform(ctx.sessionID) // accurecode_change - preserve parent attribution across task creation/resume
       const nextSession =
         session ??
         (yield* sessions.create({
           parentID: ctx.sessionID,
           title: params.description + ` (@${next.name} subagent)`,
-          platform, // kilocode_change
-          // kilocode_change start - dedupe inherited restrictions before child prompt toggles persist
-          permission: KiloTask.merge(
+          platform, // accurecode_change
+          // accurecode_change start - dedupe inherited restrictions before child prompt toggles persist
+          permission: AccureTask.merge(
             deriveSubagentSessionPermission({
               parentSessionPermission: parent.permission ?? [],
               parentAgent,
@@ -201,19 +203,19 @@ export const TaskTool = Tool.define(
               action: "allow" as const,
               permission: item,
             })) ?? [],
-            KiloTask.permissions(rules),
+            AccureTask.permissions(rules),
           ),
-          // kilocode_change end
+          // accurecode_change end
         }))
-      // kilocode_change start - rebuild in-memory ancestry and attribution after process restart
-      KiloSession.register({ id: nextSession.id, parentID: ctx.sessionID, platform })
-      // kilocode_change end
+      // accurecode_change start - rebuild in-memory ancestry and attribution after process restart
+      AccureSession.register({ id: nextSession.id, parentID: ctx.sessionID, platform })
+      // accurecode_change end
 
       const msg = yield* MessageV2.get({ sessionID: ctx.sessionID, messageID: ctx.messageID }).pipe(Effect.orDie)
       if (msg.info.role !== "assistant") return yield* Effect.fail(new Error("Not an assistant message"))
 
-      // kilocode_change start — prefer valid subagent overrides, safely inheriting when overrides go stale
-      const selected = yield* KiloTask.resolveModel({
+      // accurecode_change start — prefer valid subagent overrides, safely inheriting when overrides go stale
+      const selected = yield* AccureTask.resolveModel({
         name: next.name,
         agent: next,
         config: cfg,
@@ -226,12 +228,12 @@ export const TaskTool = Tool.define(
       })
       const model = selected.model
       const variant = selected.variant
-      // kilocode_change end
+      // accurecode_change end
       const metadata = {
         parentSessionId: ctx.sessionID,
         sessionId: nextSession.id,
         model,
-        variant, // kilocode_change
+        variant, // accurecode_change
         ...(runInBackground ? { background: true } : {}),
       }
 
@@ -246,7 +248,7 @@ export const TaskTool = Tool.define(
 
       const runTask = Effect.fn("TaskTool.runTask")(function* () {
         const parts = yield* ops.resolvePromptParts(params.prompt)
-        KiloSessionProcessor.markReviewTelemetry(parts, params.command) // kilocode_change - carry review command into child session telemetry
+        AccureSessionProcessor.markReviewTelemetry(parts, params.command) // accurecode_change - carry review command into child session telemetry
         const result = yield* ops.prompt({
           messageID: MessageID.ascending(),
           sessionID: nextSession.id,
@@ -254,21 +256,21 @@ export const TaskTool = Tool.define(
             modelID: model.modelID,
             providerID: model.providerID,
           },
-          variant, // kilocode_change
+          variant, // accurecode_change
           agent: next.name,
           tools: {
-            question: false, // kilocode_change - subagents cannot prompt the user directly
+            question: false, // accurecode_change - subagents cannot prompt the user directly
             ...(canTodo ? {} : { todowrite: false }),
             ...(canTask ? {} : { task: false }),
             ...Object.fromEntries((cfg.experimental?.primary_tools ?? []).map((item) => [item, false])),
           },
           parts,
         })
-        // kilocode_change start - expose terminal child assistant errors through the task tool boundary
+        // accurecode_change start - expose terminal child assistant errors through the task tool boundary
         if (result.info.role === "assistant" && result.info.error) {
           return yield* Effect.fail(new Error(errorMessage(result.info.error)))
         }
-        // kilocode_change end
+        // accurecode_change end
         return result.parts.findLast((item) => item.type === "text")?.text ?? ""
       })
 
@@ -342,9 +344,9 @@ export const TaskTool = Tool.define(
           type: id,
           title: params.description,
           metadata,
-          // kilocode_change start - background tasks propagate only cost accrued by this invocation
+          // accurecode_change start - background tasks propagate only cost accrued by this invocation
           run: Effect.acquireUseRelease(
-            KiloCostPropagation.childCost(sessions, nextSession.id),
+            AccureCostPropagation.childCost(sessions, nextSession.id),
             () =>
               runTask().pipe(
                 Effect.tap((text) => inject("completed", text).pipe(Effect.ignore)),
@@ -357,11 +359,11 @@ export const TaskTool = Tool.define(
               ),
             (costBefore) =>
               Effect.gen(function* () {
-                const costAfter = yield* KiloCostPropagation.childCost(sessions, nextSession.id)
-                yield* KiloCostPropagation.propagate(sessions, ctx.sessionID, ctx.messageID, costAfter - costBefore)
+                const costAfter = yield* AccureCostPropagation.childCost(sessions, nextSession.id)
+                yield* AccureCostPropagation.propagate(sessions, ctx.sessionID, ctx.messageID, costAfter - costBefore)
               }),
           ),
-          // kilocode_change end
+          // accurecode_change end
         })
 
         return {
@@ -381,12 +383,12 @@ export const TaskTool = Tool.define(
       }
 
       return yield* Effect.acquireUseRelease(
-        // kilocode_change start - snapshot child cost so we propagate only the delta on resume (#6321)
+        // accurecode_change start - snapshot child cost so we propagate only the delta on resume (#6321)
         Effect.gen(function* () {
           ctx.abort.addEventListener("abort", onAbort)
-          return yield* KiloCostPropagation.childCost(sessions, nextSession.id)
+          return yield* AccureCostPropagation.childCost(sessions, nextSession.id)
         }),
-        // kilocode_change end
+        // accurecode_change end
         () =>
           Effect.gen(function* () {
             const text = yield* runTask()
@@ -396,7 +398,7 @@ export const TaskTool = Tool.define(
               output: output(nextSession.id, text),
             }
           }),
-        // kilocode_change start - propagate subagent cost delta to parent on every exit path (#6321)
+        // accurecode_change start - propagate subagent cost delta to parent on every exit path (#6321)
         (costBefore, exit) =>
           Effect.gen(function* () {
             if (Exit.hasInterrupts(exit)) yield* cancel
@@ -404,10 +406,10 @@ export const TaskTool = Tool.define(
             Effect.ensuring(
               Effect.gen(function* () {
                 ctx.abort.removeEventListener("abort", onAbort)
-                const costAfter = yield* KiloCostPropagation.childCost(sessions, nextSession.id).pipe(
+                const costAfter = yield* AccureCostPropagation.childCost(sessions, nextSession.id).pipe(
                   Effect.catchTag("NotFoundError", () => Effect.succeed(costBefore)),
                 )
-                yield* KiloCostPropagation.propagate(
+                yield* AccureCostPropagation.propagate(
                   sessions,
                   ctx.sessionID,
                   ctx.messageID,
@@ -416,7 +418,7 @@ export const TaskTool = Tool.define(
               }),
             ),
           ),
-        // kilocode_change end
+        // accurecode_change end
       )
     })
 

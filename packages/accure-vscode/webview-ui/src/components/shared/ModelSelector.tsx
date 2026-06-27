@@ -21,11 +21,11 @@ import {
 } from "solid-js"
 import type { Accessor, Component } from "solid-js"
 import { PopupSelector } from "./PopupSelector"
-import { Button } from "@kilocode/accure-ui/button"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
-import { Tag } from "@kilocode/accure-ui/tag"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { Tooltip } from "@kilocode/accure-ui/tooltip"
+import { Button } from "@accurecode/accure-ui/button"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
+import { Tag } from "@accurecode/accure-ui/tag"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { Tooltip } from "@accurecode/accure-ui/tooltip"
 import { useProvider } from "../../context/provider"
 import type { EnrichedModel } from "../../context/provider"
 import { useSession, SessionContext } from "../../context/session"
@@ -33,7 +33,7 @@ import { useLanguage } from "../../context/language"
 import type { ModelSelection } from "../../types/messages"
 import { isEnterKeyCommitNotIme } from "../../utils/ime-enter"
 import {
-  KILO_GATEWAY_ID,
+  ACCURECODE_GATEWAY_ID,
   isSmall,
   providerSortKey,
   isFree,
@@ -45,6 +45,7 @@ import {
 } from "./model-selector-utils"
 import { ModelPreview } from "./ModelPreview"
 import { searchMatch } from "../../utils/search-match"
+import AccureProviderConfigDialog from "./AccureProviderConfigDialog"
 
 // ---------------------------------------------------------------------------
 // Row / group key helpers — single source of truth for key formatting
@@ -114,7 +115,7 @@ export interface ModelSelectorBaseProps {
   allowClear?: boolean
   /** Label shown for the clear option */
   clearLabel?: string
-  /** Include the kilo-auto/small model in the list — defaults to false */
+  /** Include the accure-auto/small model in the list — defaults to false */
   includeAutoSmall?: boolean
   /** Override the provider catalog for constrained selectors. */
   models?: EnrichedModel[]
@@ -202,14 +203,17 @@ export const ModelSelectorBase: Component<ModelSelectorBaseProps> = (props) => {
     window.addEventListener("mouseup", onUp)
   }
 
-  // Only show models from Kilo Gateway or connected providers.
-  // kilo-auto/small is excluded unless includeAutoSmall is explicitly true.
+  // Only show models from always-visible providers or connected providers.
+  // accure-auto/small is excluded unless includeAutoSmall is explicitly true.
+  // Amazon Bedrock and Accure ATM-4 are always shown so users can click through
+  // to set up credentials — they don't need to pre-connect before seeing models.
+  const ALWAYS_VISIBLE = new Set([ACCURECODE_GATEWAY_ID, "amazon-bedrock", "accure-models"])
   const visibleModels = createMemo(() => {
     if (props.models) return props.models
     const c = connected()
     return models().filter((m) => {
       if (!props.includeAutoSmall && isSmall(m)) return false
-      return m.providerID === KILO_GATEWAY_ID || c.includes(m.providerID)
+      return ALWAYS_VISIBLE.has(m.providerID) || c.includes(m.providerID)
     })
   })
 
@@ -322,7 +326,7 @@ export const ModelSelectorBase: Component<ModelSelectorBaseProps> = (props) => {
   })
 
   // Collapse state is honored even during search so users can skip past
-  // large providers (e.g. Kilo Gateway) without scrolling through every match.
+  // large providers (e.g. Accure Gateway) without scrolling through every match.
   const isGroupOpen = (key: string) => !collapsed().has(key)
 
   function toggleGroup(key: string) {
@@ -488,7 +492,16 @@ export const ModelSelectorBase: Component<ModelSelectorBaseProps> = (props) => {
     clearTimeout(previewTimer)
   })
 
+  // Providers that always show but need credential config before use
+  const NEEDS_CONFIG = new Set(["amazon-bedrock", "accure-models"])
+  const [configModel, setConfigModel] = createSignal<EnrichedModel | null>(null)
+
   function pick(model: EnrichedModel) {
+    const needsConfig = NEEDS_CONFIG.has(model.providerID) && !connected().includes(model.providerID)
+    if (needsConfig) {
+      setConfigModel(model)
+      return
+    }
     props.onSelect(model.providerID, model.id)
     setOpen(false)
     props.onPick?.()
@@ -824,12 +837,8 @@ export const ModelSelectorBase: Component<ModelSelectorBaseProps> = (props) => {
                     role="treeitem"
                     aria-selected={!props.value?.providerID}
                     onClick={() => pickClear()}
-                    onMouseMove={() => {
-                      setPointer(true)
-                    }}
-                    onMouseEnter={() => {
-                      if (pointer()) setSelectedKey(CLEAR_KEY)
-                    }}
+                    onMouseMove={() => { setPointer(true) }}
+                    onMouseEnter={() => { if (pointer()) setSelectedKey(CLEAR_KEY) }}
                   >
                     <span class="model-selector-item-name" style={{ "font-style": "italic", opacity: 0.7 }}>
                       {props.clearLabel ?? language.t("dialog.model.notSet")}
@@ -837,168 +846,172 @@ export const ModelSelectorBase: Component<ModelSelectorBaseProps> = (props) => {
                   </div>
                 </Show>
 
-                <For each={groups()}>
-                  {(group) => {
-                    const shown = () => isGroupOpen(group.key)
-                    return (
-                      <div class="model-selector-group" role="presentation">
-                        <div
-                          id={optionID(groupKey(group.key))}
-                          ref={(el) => {
-                            refs.set(groupKey(group.key), el)
-                            onCleanup(() => refs.delete(groupKey(group.key)))
-                          }}
-                          class={`model-selector-group-label${isSelected(groupKey(group.key)) ? " selected" : ""}${isSelected(groupKey(group.key)) && !pointer() ? " keyboard-focused" : ""}`}
-                          role="treeitem"
-                          aria-expanded={shown()}
-                          onMouseDown={(e) => e.preventDefault()}
-                          onClick={() => toggleGroup(group.key)}
-                          onMouseMove={() => setPointer(true)}
-                          onMouseEnter={() => {
-                            if (pointer()) setSelectedKey(groupKey(group.key))
-                          }}
-                        >
-                          <svg
-                            class={`model-selector-group-chevron${shown() ? "" : " model-selector-group-chevron--collapsed"}`}
-                            width="10"
-                            height="10"
-                            viewBox="0 0 16 16"
-                            fill="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path d="M4 6l4 5 4-5H4z" />
-                          </svg>
-                          <span>{group.label}</span>
-                          <Show when={!shown() && !!debouncedSearch()}>
-                            <span class="model-selector-group-match-dot" aria-hidden="true" />
-                          </Show>
-                        </div>
-                        <Show when={shown()}>
-                          <div role="group" aria-label={group.label}>
-                            <For each={group.rows}>
-                              {(row) => {
-                                if (!row.model) return null
-                                const model = row.model
-                                const hovered = () => isSelected(row.key)
-                                const preActive = () => isPreActive(row.key)
-                                const starred = () => favoriteKeys().has(modelKey(model.providerID, model.id))
-                                const showProvider = () => row.kind === "favorite"
-                                const showSelect = () => expanded() && preActive() && !isActive(model)
-                                const starLabel = () =>
-                                  `${starred() ? language.t("model.favorite.remove") : language.t("model.favorite.add")}: ${sanitizeName(model.name)}`
-                                return (
-                                  <div
-                                    role="presentation"
-                                    class={`model-selector-row${hovered() || preActive() ? " selected" : ""}`}
-                                  >
-                                    <div
-                                      id={optionID(row.key)}
-                                      ref={(el) => {
-                                        refs.set(row.key, el)
-                                        onCleanup(() => refs.delete(row.key))
-                                      }}
-                                      class={`model-selector-item${(hovered() && !pointer()) || preActive() ? " keyboard-focused" : ""}${hovered() || preActive() ? " selected" : ""}${chosen(row) ? " active" : ""}`}
-                                      role="treeitem"
-                                      aria-selected={chosen(row)}
-                                      onClick={() => {
-                                        if (!expanded()) {
-                                          selectRow(row)
-                                          return
-                                        }
-                                        setRow(row.key)
-                                        setPreviewKey(row.key)
-                                        searchRef?.focus()
-                                      }}
-                                      onDblClick={() => {
-                                        if (expanded()) selectRow(row)
-                                      }}
-                                      onMouseMove={() => {
-                                        setPointer(true)
-                                      }}
-                                      onMouseEnter={() => {
-                                        if (pointer()) setSelectedKey(row.key)
-                                        schedulePreview(row.key)
-                                      }}
-                                    >
-                                      <div class="model-selector-item-left">
-                                        <span class="model-selector-item-name">
-                                          {(() => {
-                                            const full = sanitizeName(model.name)
-                                            const sep = full.indexOf(": ")
-                                            if (sep < 0)
-                                              return <span class="model-selector-item-name-main">{full}</span>
-                                            return (
-                                              <>
-                                                <span class="model-selector-item-name-provider">
-                                                  {full.slice(0, sep)}
-                                                </span>
-                                                <span class="model-selector-item-name-main">{full.slice(sep + 2)}</span>
-                                              </>
-                                            )
-                                          })()}
-                                        </span>
-                                        <Show when={isFree(model) || hasByok(model) || isDataCollectedModel(model)}>
-                                          <span class="model-selector-free-data">
-                                            <Show when={isFree(model) && !hasByok(model)}>
-                                              <span class="model-selector-data-badge">
-                                                <Tag data-variant="member">{freeLabel()}</Tag>
-                                              </span>
-                                            </Show>
-                                            <Show when={hasByok(model)}>
-                                              <span class="model-selector-data-badge model-selector-data-badge--byok">
-                                                <Tag data-variant="member">BYOK</Tag>
-                                              </span>
-                                            </Show>
-                                            <Show when={isDataCollectedModel(model)}>
-                                              <Tooltip value={dataLabel()} placement="top">
-                                                <span class="model-selector-free-data-icon" aria-label={dataLabel()}>
-                                                  <Icon name="book-open-check" size="small" />
-                                                </span>
-                                              </Tooltip>
-                                            </Show>
+                {/* Credential config overlay — shown when a provider needs setup */}
+                <Show when={configModel()}>
+                  {(m) => (
+                    <div class="accure-provider-config-overlay">
+                      <AccureProviderConfigDialog
+                        model={m()}
+                        onDone={(pid, mid) => {
+                          setConfigModel(null)
+                          props.onSelect(pid, mid)
+                          setOpen(false)
+                          props.onPick?.()
+                        }}
+                        onCancel={() => setConfigModel(null)}
+                      />
+                    </div>
+                  )}
+                </Show>
+
+                {/* Flat model list — no group headers, provider shown as a tag per row */}
+                <Show when={!configModel()}>
+                  <For each={groups()}>
+                    {(group) => (
+                      <div role="presentation">
+                        <For each={group.rows}>
+                          {(row) => {
+                            if (!row.model) return null
+                            const model = row.model
+                            const hovered = () => isSelected(row.key)
+                            const preActive = () => isPreActive(row.key)
+                            const starred = () => favoriteKeys().has(modelKey(model.providerID, model.id))
+                            // Always show provider tag except for Accure gateway (first-party)
+                            const showProvider = () => model.providerID !== ACCURECODE_GATEWAY_ID
+                            const showSelect = () => expanded() && preActive() && !isActive(model)
+                            const needsCfg = () => NEEDS_CONFIG.has(model.providerID) && !connected().includes(model.providerID)
+                            const starLabel = () =>
+                              `${starred() ? language.t("model.favorite.remove") : language.t("model.favorite.add")}: ${sanitizeName(model.name)}`
+                            return (
+                              <div
+                                role="presentation"
+                                class={`model-selector-row${hovered() || preActive() ? " selected" : ""}`}
+                              >
+                                <div
+                                  id={optionID(row.key)}
+                                  ref={(el) => {
+                                    refs.set(row.key, el)
+                                    onCleanup(() => refs.delete(row.key))
+                                  }}
+                                  class={`model-selector-item${(hovered() && !pointer()) || preActive() ? " keyboard-focused" : ""}${hovered() || preActive() ? " selected" : ""}${chosen(row) ? " active" : ""}`}
+                                  role="treeitem"
+                                  aria-selected={chosen(row)}
+                                  onClick={() => {
+                                    if (!expanded()) {
+                                      selectRow(row)
+                                      return
+                                    }
+                                    setRow(row.key)
+                                    setPreviewKey(row.key)
+                                    searchRef?.focus()
+                                  }}
+                                  onDblClick={() => { if (expanded()) selectRow(row) }}
+                                  onMouseMove={() => { setPointer(true) }}
+                                  onMouseEnter={() => {
+                                    if (pointer()) setSelectedKey(row.key)
+                                    schedulePreview(row.key)
+                                  }}
+                                >
+                                  <div class="model-selector-item-left">
+                                    <span class="model-selector-item-name">
+                                      {(() => {
+                                        const full = sanitizeName(model.name)
+                                        const sep = full.indexOf(": ")
+                                        if (sep < 0)
+                                          return <span class="model-selector-item-name-main">{full}</span>
+                                        return (
+                                          <>
+                                            <span class="model-selector-item-name-provider">
+                                              {full.slice(0, sep)}
+                                            </span>
+                                            <span class="model-selector-item-name-main">{full.slice(sep + 2)}</span>
+                                          </>
+                                        )
+                                      })()}
+                                    </span>
+                                    <Show when={isFree(model) || hasByok(model) || isDataCollectedModel(model)}>
+                                      <span class="model-selector-free-data">
+                                        <Show when={isFree(model) && !hasByok(model)}>
+                                          <span class="model-selector-data-badge">
+                                            <Tag data-variant="member">{freeLabel()}</Tag>
                                           </span>
                                         </Show>
-                                        <Show when={showProvider()}>
-                                          <span class="model-selector-item-provider-tag">{model.providerName}</span>
+                                        <Show when={hasByok(model)}>
+                                          <span class="model-selector-data-badge model-selector-data-badge--byok">
+                                            <Tag data-variant="member">BYOK</Tag>
+                                          </span>
                                         </Show>
-                                      </div>
-                                    </div>
-                                    <Show when={session && props.favorites !== false}>
-                                      <button
-                                        type="button"
-                                        class={`model-selector-star${starred() ? " model-selector-star--active" : ""}`}
-                                        aria-label={starLabel()}
-                                        aria-pressed={starred()}
-                                        onMouseDown={(e) => e.preventDefault()}
-                                        onClick={(e) => {
-                                          e.stopPropagation()
-                                          toggleFavorite(model, row)
-                                          searchRef?.focus()
-                                        }}
-                                      >
-                                        <Icon name={starred() ? "star-filled" : "star"} size="small" />
-                                      </button>
+                                        <Show when={isDataCollectedModel(model)}>
+                                          <Tooltip value={dataLabel()} placement="top">
+                                            <span class="model-selector-free-data-icon" aria-label={dataLabel()}>
+                                              <Icon name="book-open-check" size="small" />
+                                            </span>
+                                          </Tooltip>
+                                        </Show>
+                                      </span>
                                     </Show>
-                                    <Show when={showSelect()}>
-                                      <button
-                                        type="button"
-                                        class="model-selector-item-select-btn"
-                                        aria-label={`${language.t("dialog.model.select")}: ${sanitizeName(model.name)}`}
-                                        onClick={() => selectRow(row)}
-                                      >
-                                        {language.t("dialog.model.select")}
-                                      </button>
+                                    <Show when={showProvider()}>
+                                      <span class={`model-selector-item-provider-tag${needsCfg() ? " model-selector-item-provider-tag--needs-cfg" : ""}`}>
+                                        {model.providerName}
+                                        <Show when={needsCfg()}>
+                                          <span class="model-selector-item-cfg-icon" aria-label="Needs configuration"> ⚙</span>
+                                        </Show>
+                                      </span>
                                     </Show>
                                   </div>
-                                )
-                              }}
-                            </For>
-                          </div>
-                        </Show>
+                                </div>
+                                <Show when={session && props.favorites !== false}>
+                                  <button
+                                    type="button"
+                                    class={`model-selector-star${starred() ? " model-selector-star--active" : ""}`}
+                                    aria-label={starLabel()}
+                                    aria-pressed={starred()}
+                                    onMouseDown={(e) => e.preventDefault()}
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      toggleFavorite(model, row)
+                                      searchRef?.focus()
+                                    }}
+                                  >
+                                    <Icon name={starred() ? "star-filled" : "star"} size="small" />
+                                  </button>
+                                </Show>
+                                {/* Configure button — shown on hover for providers that have credential settings */}
+                                <Show when={NEEDS_CONFIG.has(model.providerID)}>
+                                  <Tooltip value="Edit credentials" placement="top">
+                                    <button
+                                      type="button"
+                                      class="model-selector-configure-btn"
+                                      aria-label={`Configure ${model.providerName}`}
+                                      onMouseDown={(e) => e.preventDefault()}
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        setConfigModel(model)
+                                      }}
+                                    >
+                                      <Icon name="settings-gear" size="small" />
+                                    </button>
+                                  </Tooltip>
+                                </Show>
+                                <Show when={showSelect()}>
+                                  <button
+                                    type="button"
+                                    class="model-selector-item-select-btn"
+                                    aria-label={`${language.t("dialog.model.select")}: ${sanitizeName(model.name)}`}
+                                    onClick={() => selectRow(row)}
+                                  >
+                                    {language.t("dialog.model.select")}
+                                  </button>
+                                </Show>
+                              </div>
+                            )
+                          }}
+                        </For>
                       </div>
-                    )
-                  }}
-                </For>
+                    )}
+                  </For>
+                </Show>
+
               </div>
 
               <Show when={expanded()}>

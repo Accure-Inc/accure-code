@@ -22,9 +22,9 @@ import { RuntimeFlags } from "@/effect/runtime-flags"
 import { Permission } from "@/permission"
 import { LLMAISDK } from "@/session/llm/ai-sdk"
 import { Session as SessionNs } from "@/session/session"
-import { USER_AGENT } from "../../src/installation" // kilocode_change
+import { USER_AGENT } from "../../src/installation" // accurecode_change
 
-type ConfigModel = NonNullable<NonNullable<NonNullable<Config.Info["provider"]>[string]>["models"]>[string] // kilocode_change
+type ConfigModel = NonNullable<NonNullable<NonNullable<Config.Info["provider"]>[string]>["models"]>[string] // accurecode_change
 
 const openAIConfig = (model: ModelsDev.Provider["models"][string], baseURL: string): Partial<Config.Info> => {
   const { experimental: _experimental, ...configModel } = model
@@ -445,7 +445,7 @@ describe("session.llm.ai-sdk adapter", () => {
     ])
   })
 
-  // kilocode_change start - preserve AI SDK raw usage for Kilo provider billing
+  // accurecode_change start - preserve AI SDK raw usage for Accure provider billing
   test("preserves raw usage in native usage provider metadata", async () => {
     const events = await adapt([
       uncheckedAdapterEvent({
@@ -472,7 +472,7 @@ describe("session.llm.ai-sdk adapter", () => {
       },
     })
   })
-  // kilocode_change end
+  // accurecode_change end
 
   // Anthropic emits cache write counts in providerMetadata.anthropic.cacheCreationInputTokens
   // rather than usage.inputTokenDetails.cacheWriteTokens. Session.getUsage falls back to the
@@ -782,7 +782,7 @@ describe("session.llm.stream", () => {
         expect(url.pathname.startsWith("/v1/")).toBe(true)
         expect(url.pathname.endsWith("/chat/completions")).toBe(true)
         expect(headers.get("Authorization")).toBe("Bearer test-key")
-        expect(headers.get("User-Agent") ?? "").toMatch(/^Kilo-Code\//) // kilocode_change
+        expect(headers.get("User-Agent") ?? "").toMatch(/^Accure-Code\//) // accurecode_change
 
         expect(body.model).toBe(resolved.api.id)
         expect(body.temperature).toBe(0.4)
@@ -1774,10 +1774,10 @@ describe("session.llm.stream", () => {
 
         const capture = yield* Effect.promise(() => request)
         const body = capture.body
-        const headers = capture.headers // kilocode_change
+        const headers = capture.headers // accurecode_change
 
         expect(capture.url.pathname.endsWith("/messages")).toBe(true)
-        expect(headers.get("User-Agent")?.split(" ")[0]).toBe(USER_AGENT) // kilocode_change
+        expect(headers.get("User-Agent")?.split(" ")[0]).toBe(USER_AGENT) // accurecode_change
         const messages = body.messages as Array<{ role: string; content: Array<Record<string, unknown>> }>
         expect(messages[0]?.role).toBe("user")
         expect(messages[0]?.content[0]).toMatchObject({

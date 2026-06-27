@@ -1,9 +1,9 @@
 import { describe, expect } from "bun:test"
 import path from "path"
-// kilocode_change start
+// accurecode_change start
 import fs from "fs/promises"
 import os from "os"
-// kilocode_change end
+// accurecode_change end
 import { Cause, Effect, Exit, Layer } from "effect"
 import { GlobTool } from "../../src/tool/glob"
 import { SessionID, MessageID } from "../../src/session/schema"
@@ -55,9 +55,9 @@ const ctx = {
   ask: () => Effect.void,
 }
 
-// kilocode_change start - skip on windows: address windows ci failures #9496
+// accurecode_change start - skip on windows: address windows ci failures #9496
 const unixInstance = process.platform !== "win32" ? it.instance : it.instance.skip
-// kilocode_change end
+// accurecode_change end
 
 const asks = () => {
   const items: Array<Omit<Permission.Request, "id" | "sessionID" | "tool">> = []
@@ -76,15 +76,15 @@ const asks = () => {
 const githubBase = <A, E, R>(url: string, self: Effect.Effect<A, E, R>) =>
   Effect.acquireUseRelease(
     Effect.sync(() => {
-      const previous = process.env.KILO_REPO_CLONE_GITHUB_BASE_URL
-      process.env.KILO_REPO_CLONE_GITHUB_BASE_URL = url
+      const previous = process.env.ACCURECODE_REPO_CLONE_GITHUB_BASE_URL
+      process.env.ACCURECODE_REPO_CLONE_GITHUB_BASE_URL = url
       return previous
     }),
     () => self,
     (previous) =>
       Effect.sync(() => {
-        if (previous) process.env.KILO_REPO_CLONE_GITHUB_BASE_URL = previous
-        else delete process.env.KILO_REPO_CLONE_GITHUB_BASE_URL
+        if (previous) process.env.ACCURECODE_REPO_CLONE_GITHUB_BASE_URL = previous
+        else delete process.env.ACCURECODE_REPO_CLONE_GITHUB_BASE_URL
       }),
   )
 
@@ -106,9 +106,9 @@ const git = Effect.fn("GlobToolTest.git")(function* (cwd: string, args: string[]
 })
 
 describe("tool.glob", () => {
-  // kilocode_change start - skip on windows: address windows ci failures #9496
+  // accurecode_change start - skip on windows: address windows ci failures #9496
   unixInstance("matches files from a directory path", () =>
-    // kilocode_change end
+    // accurecode_change end
     Effect.gen(function* () {
       const test = yield* TestInstance
       yield* Effect.promise(() => Bun.write(path.join(test.directory, "a.ts"), "export const a = 1\n"))
@@ -152,7 +152,7 @@ describe("tool.glob", () => {
     }),
   )
 
-  // kilocode_change start - absolute glob patterns outside the project
+  // accurecode_change start - absolute glob patterns outside the project
   unixInstance(
     "supports absolute glob patterns outside the project",
     () =>
@@ -175,7 +175,7 @@ describe("tool.glob", () => {
       }),
     { git: true },
   )
-  // kilocode_change end
+  // accurecode_change end
 
   scout.instance(
     "does not ask for external_directory permission inside configured git references",

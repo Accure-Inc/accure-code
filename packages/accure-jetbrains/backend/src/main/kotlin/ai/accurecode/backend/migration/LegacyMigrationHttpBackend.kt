@@ -1,4 +1,4 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -10,11 +10,11 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
 /**
- * OkHttp implementation of [LegacyMigrationBackend] against `kilo serve`.
+ * OkHttp implementation of [LegacyMigrationBackend] against `accure serve`.
  *
  * Uses raw OkHttp so that partial/dynamic JSON payloads (provider auth, global config,
  * session-import) can be built exactly as needed without the generated client's type
- * constraints getting in the way. Mirrors the pattern in KiloBackendChatManager.
+ * constraints getting in the way. Mirrors the pattern in AccureBackendChatManager.
  *
  * All calls are synchronous blocking. The caller owns threading and error handling.
  */
@@ -78,7 +78,7 @@ class LegacyMigrationHttpBackend(
 
     override fun importProject(project: JsonObject): String {
         val dir = project["worktree"]?.jsonPrimitive?.content ?: ""
-        val url = "$base/kilocode/session-import/project?directory=${encode(dir)}"
+        val url = "$base/accurecode/session-import/project?directory=${encode(dir)}"
         val body = project.toString()
         val request = Request.Builder()
             .url(url)
@@ -96,7 +96,7 @@ class LegacyMigrationHttpBackend(
 
     override fun importSession(session: JsonObject): LegacyImportResult {
         val dir = session["directory"]?.jsonPrimitive?.content ?: ""
-        val url = "$base/kilocode/session-import/session?directory=${encode(dir)}"
+        val url = "$base/accurecode/session-import/session?directory=${encode(dir)}"
         val body = session.toString()
         val request = Request.Builder()
             .url(url)
@@ -116,7 +116,7 @@ class LegacyMigrationHttpBackend(
 
     override fun importMessage(message: JsonObject) {
         val sessionId = message["sessionID"]?.jsonPrimitive?.content ?: ""
-        val url = "$base/kilocode/session-import/message?sessionID=${encode(sessionId)}"
+        val url = "$base/accurecode/session-import/message?sessionID=${encode(sessionId)}"
         val body = message.toString()
         val request = Request.Builder()
             .url(url)
@@ -129,7 +129,7 @@ class LegacyMigrationHttpBackend(
 
     override fun importPart(part: JsonObject) {
         val sessionId = part["sessionID"]?.jsonPrimitive?.content ?: ""
-        val url = "$base/kilocode/session-import/part?sessionID=${encode(sessionId)}"
+        val url = "$base/accurecode/session-import/part?sessionID=${encode(sessionId)}"
         val body = part.toString()
         val request = Request.Builder()
             .url(url)

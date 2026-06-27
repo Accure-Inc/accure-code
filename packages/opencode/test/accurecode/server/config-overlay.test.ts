@@ -4,7 +4,7 @@ import * as Log from "@opencode-ai/core/util/log"
 import { Global } from "@opencode-ai/core/global"
 import { Server } from "../../../src/server/server"
 import { Config } from "../../../src/config/config"
-import { KilocodeConfigOverlay } from "../../../src/kilocode/config/overlay"
+import { AccurecodeConfigOverlay } from "../../../src/accurecode/config/overlay"
 import { Permission } from "../../../src/permission"
 import { PtyPaths } from "../../../src/server/routes/instance/httpapi/groups/pty"
 import { resetDatabase } from "../../fixture/db"
@@ -35,7 +35,7 @@ function req(dir: string, input: string, init?: RequestInit) {
   return Server.Default().app.request(input, {
     ...init,
     headers: {
-      "x-kilo-directory": dir,
+      "x-accure-directory": dir,
       ...init?.headers,
     },
   })
@@ -49,7 +49,7 @@ function request(target: ReturnType<typeof app>, dir: string | undefined, input:
   return target.request(input, {
     ...init,
     headers: {
-      ...(dir ? { "x-kilo-directory": dir } : {}),
+      ...(dir ? { "x-accure-directory": dir } : {}),
       ...init?.headers,
     },
   })
@@ -61,7 +61,7 @@ async function json<T>(response: Response) {
 }
 
 async function config(dir: string, value: unknown) {
-  await Bun.write(path.join(dir, "kilo.json"), JSON.stringify(value, null, 2))
+  await Bun.write(path.join(dir, "accure.json"), JSON.stringify(value, null, 2))
 }
 
 async function setGlobal(dir: string, value: Config.Info) {
@@ -77,7 +77,7 @@ async function setGlobal(dir: string, value: Config.Info) {
 
 describe("config overlay routes", () => {
   test("ignores unsafe patch paths", () => {
-    const patched = KilocodeConfigOverlay.patch({
+    const patched = AccurecodeConfigOverlay.patch({
       scope: "project",
       unset: [
         ["__proto__", "polluted"],
@@ -95,7 +95,7 @@ describe("config overlay routes", () => {
     await using global = await tmpdir()
     await using project = await tmpdir()
     await setGlobal(global.path, {
-      model: "kilo/global-model",
+      model: "accure/global-model",
       permission: { bash: "ask" },
       mcp: { shared: { type: "local", command: ["node", "shared.js"], enabled: true } },
     })
@@ -168,7 +168,7 @@ describe("config overlay routes", () => {
     }
     await config(project.path, local)
 
-    const body = await KilocodeConfigOverlay.resolve({
+    const body = await AccurecodeConfigOverlay.resolve({
       directory: project.path,
       scope: "global",
       effective: local,
@@ -183,7 +183,7 @@ describe("config overlay routes", () => {
     expect(body.fields["indexing.ollama.baseUrl"].value).toBeUndefined()
   })
 
-  test.serial("writes project indexing overrides to .kilo/kilo.jsonc", async () => {
+  test.serial("writes project indexing overrides to .accurecode/accure.jsonc", async () => {
     await using global = await tmpdir()
     await using project = await tmpdir()
     await setGlobal(global.path, { indexing: { enabled: true, provider: "openai" } })
@@ -199,11 +199,11 @@ describe("config overlay routes", () => {
       }),
     )
 
-    const file = path.join(project.path, ".kilo", "kilo.jsonc")
+    const file = path.join(project.path, ".accurecode", "accure.jsonc")
     const saved = (await Bun.file(file).json()) as { indexing: Record<string, unknown> }
     const body = await json<Overlay>(await req(project.path, "/config/overlay?scope=project"))
 
-    expect(await Bun.file(path.join(project.path, ".kilo", "kilo.json")).exists()).toBe(false)
+    expect(await Bun.file(path.join(project.path, ".accurecode", "accure.json")).exists()).toBe(false)
     expect(saved.indexing).toEqual({
       enabled: false,
       provider: "ollama",
@@ -215,8 +215,8 @@ describe("config overlay routes", () => {
 
   test.serial("removes local scalar override and falls back to global", async () => {
     await using global = await tmpdir()
-    await using project = await tmpdir({ config: { model: "kilo/project-model", username: "alice" } })
-    await setGlobal(global.path, { model: "kilo/global-model" })
+    await using project = await tmpdir({ config: { model: "accure/project-model", username: "alice" } })
+    await setGlobal(global.path, { model: "accure/global-model" })
 
     await json(
       await req(project.path, "/config/overlay", {
@@ -251,7 +251,7 @@ describe("config overlay routes", () => {
       }),
     )
 
-    const saved = (await Bun.file(path.join(project.path, ".kilo", "kilo.jsonc")).json()) as {
+    const saved = (await Bun.file(path.join(project.path, ".accurecode", "accure.jsonc")).json()) as {
       mcp: Record<string, unknown>
     }
     expect(Object.keys(saved.mcp)).toEqual(["local"])
@@ -272,7 +272,7 @@ describe("config overlay routes", () => {
       }),
     )
 
-    const saved = (await Bun.file(path.join(project.path, ".kilo", "kilo.jsonc")).json()) as {
+    const saved = (await Bun.file(path.join(project.path, ".accurecode", "accure.jsonc")).json()) as {
       mcp: Record<string, unknown>
     }
     expect(saved.mcp).toEqual({ shared: { enabled: false } })
@@ -344,7 +344,7 @@ describe("config overlay routes", () => {
     await using global = await tmpdir()
     await using project = await tmpdir()
     ;(Global.Path as { config: string }).config = global.path
-    const headers = { "x-kilo-directory": project.path }
+    const headers = { "x-accure-directory": project.path }
     const created = await Server.Default().app.request(PtyPaths.create, {
       method: "POST",
       headers: { ...headers, "content-type": "application/json" },

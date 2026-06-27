@@ -5,7 +5,7 @@ import type { OpenAIResponsesProviderOptions } from "@ai-sdk/openai"
 import type { OpenAICompatibleProviderOptions } from "@ai-sdk/openai-compatible"
 import type { OpenRouterProviderOptions } from "@openrouter/ai-sdk-provider"
 
-export function kiloProviderOptions(options: { [x: string]: any }) {
+export function accureProviderOptions(options: { [x: string]: any }) {
   const result: Record<string, any> = {}
   const openrouter = options as OpenRouterProviderOptions & {
     verbosity?: "high" | "medium" | "low"

@@ -1,4 +1,4 @@
-export const INDEXING_PLUGIN_NAMES = ["accure-indexing", "@kilocode/accure-indexing"] as const
+export const INDEXING_PLUGIN_NAMES = ["accure-indexing", "@accurecode/accure-indexing"] as const
 
 // RATIONALE: PluginSpec is string | [string, Record] — accept both forms.
 type Candidate = string | readonly [string, ...unknown[]]
@@ -53,7 +53,11 @@ function isPathSpecifier(value: string): boolean {
 
   const normalized = value.replaceAll("\\", "/")
   if (normalized.includes("/node_modules/")) return true
-  if (normalized.includes("/.opencode/") || normalized.includes("/.kilo/") || normalized.includes("/.kilocode/")) {
+  if (
+    normalized.includes("/.opencode/") ||
+    normalized.includes("/.accurecode/") ||
+    normalized.includes("/.accurecode/")
+  ) {
     return true
   }
 
@@ -73,11 +77,11 @@ function normalizePath(value: string): string {
     if (head) return head
   }
 
-  const scoped = parts.findIndex((part, i) => part === "@kilocode" && parts[i + 1] === "accure-indexing")
-  if (scoped >= 0) return "@kilocode/accure-indexing"
+  const scoped = parts.findIndex((part, i) => part === "@accurecode" && parts[i + 1] === "accure-indexing")
+  if (scoped >= 0) return "@accurecode/accure-indexing"
 
   const workspace = parts.findIndex((part, i) => part === "packages" && parts[i + 1] === "accure-indexing")
-  if (workspace >= 0) return "@kilocode/accure-indexing"
+  if (workspace >= 0) return "@accurecode/accure-indexing"
 
   return stem(value)
 }

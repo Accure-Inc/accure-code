@@ -1,4 +1,4 @@
-package ai.kilocode.client.ui
+package ai.accurecode.client.ui
 
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.components.BorderLayoutPanel

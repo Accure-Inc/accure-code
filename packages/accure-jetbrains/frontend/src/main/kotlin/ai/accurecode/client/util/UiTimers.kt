@@ -1,4 +1,4 @@
-package ai.kilocode.client.util
+package ai.accurecode.client.util
 
 import javax.swing.Timer
 

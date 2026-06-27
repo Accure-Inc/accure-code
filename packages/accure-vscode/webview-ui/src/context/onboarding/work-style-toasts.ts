@@ -1,4 +1,4 @@
-import { showToast } from "@kilocode/accure-ui/toast"
+import { showToast } from "@accurecode/accure-ui/toast"
 import type { LanguageContextValue } from "../language"
 
 export function createWorkStyleToasts(t: LanguageContextValue["t"]) {

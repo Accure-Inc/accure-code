@@ -3,33 +3,33 @@ import { Server } from "../../server/server"
 import { effectCmd } from "../effect-cmd"
 import { withNetworkOptions, resolveNetworkOptions } from "../network"
 import { Flag } from "@opencode-ai/core/flag/flag"
-import { InstanceRuntime } from "../../project/instance-runtime" // kilocode_change
+import { InstanceRuntime } from "../../project/instance-runtime" // accurecode_change
 
 export const ServeCommand = effectCmd({
   command: "serve",
   builder: (yargs) => withNetworkOptions(yargs),
-  describe: "starts a headless kilo server",
-  // Server loads instances per-request via x-kilo-directory header — no
+  describe: "starts a headless accure server",
+  // Server loads instances per-request via x-accure-directory header — no
   // need for an ambient project InstanceContext at startup.
-  instance: false, // kilocode_change
+  instance: false, // accurecode_change
   handler: Effect.fn("Cli.serve")(function* (args) {
-    if (!Flag.KILO_SERVER_PASSWORD) {
-      console.log("Warning: KILO_SERVER_PASSWORD is not set; server is unsecured.")
+    if (!Flag.ACCURECODE_SERVER_PASSWORD) {
+      console.log("Warning: ACCURECODE_SERVER_PASSWORD is not set; server is unsecured.")
     }
     const opts = yield* resolveNetworkOptions(args)
     const server = yield* Effect.promise(() => Server.listen(opts))
 
-    // kilocode_change start
+    // accurecode_change start
     const urls = server.urls
 
-    console.log(`kilo server listening on ${urls.bind}`)
+    console.log(`accure server listening on ${urls.bind}`)
     if (urls.network) {
       console.log(`  Local:   ${urls.local}`)
       console.log(`  Network: ${urls.network}`)
     }
-    // kilocode_change end
+    // accurecode_change end
 
-    // kilocode_change start - graceful signal shutdown
+    // accurecode_change start - graceful signal shutdown
     // yield* Effect.never
     yield* Effect.promise(
       () =>
@@ -47,6 +47,6 @@ export const ServeCommand = effectCmd({
           process.once("SIGHUP", shutdown)
         }),
     )
-    // kilocode_change end
+    // accurecode_change end
   }),
 })

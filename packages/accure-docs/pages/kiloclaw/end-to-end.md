@@ -1,15 +1,15 @@
 ---
 title: "Setup walkthrough"
-description: "Start-to-finish guide for configuring your KiloClaw instance"
+description: "Start-to-finish guide for configuring your AccureClaw instance"
 ---
 
 # Setup walkthrough
 
-This guide walks you through a full KiloClaw setup — from creating accounts to scheduling your first automated workflow. Plan for about 60 minutes.
+This guide walks you through a full AccureClaw setup — from creating accounts to scheduling your first automated workflow. Plan for about 60 minutes.
 
 ## Planning your setup
 
-For most users, a useful KiloClaw configuration involves:
+For most users, a useful AccureClaw configuration involves:
 
 1. A **chat platform** (called a "channel" in OpenClaw) so you can message your Claw
 2. **Google services** for email, calendar, and Drive
@@ -17,17 +17,17 @@ For most users, a useful KiloClaw configuration involves:
 
 ### Use dedicated accounts for your Claw
 
-We recommend creating **separate accounts** for your KiloClaw rather than connecting it to your personal accounts. This applies to Google, GitHub, and any other services you connect. A dedicated account improves isolation — your personal data stays separate, and you can control exactly what access the Claw has by sharing or delegating only what you want.
+We recommend creating **separate accounts** for your AccureClaw rather than connecting it to your personal accounts. This applies to Google, GitHub, and any other services you connect. A dedicated account improves isolation — your personal data stays separate, and you can control exactly what access the Claw has by sharing or delegating only what you want.
 
 ### Chat platform options
 
-- **[Kilo Chat](https://app.kilo.ai)** — available in the Kilo web and mobile apps, plus supported Kilo Code editor and TUI surfaces; requires zero configuration
-- **[Telegram](/docs/kiloclaw/chat-platforms/telegram)** — easy to set up, private by default
-- **[Discord](/docs/kiloclaw/chat-platforms/discord)** — moderate setup
-- **[Slack](/docs/kiloclaw/chat-platforms/slack)** — most involved setup
+- **[Accure Chat](https://app.accurecode.ai)** — available in the Accure web and mobile apps, plus supported Accure Code editor and TUI surfaces; requires zero configuration
+- **[Telegram](/docs/accureclaw/chat-platforms/telegram)** — easy to set up, private by default
+- **[Discord](/docs/accureclaw/chat-platforms/discord)** — moderate setup
+- **[Slack](/docs/accureclaw/chat-platforms/slack)** — most involved setup
 
 {% callout type="warning" title="Chain-of-connection security" %}
-If your Claw has access to sensitive data (like your email), be careful which chat platform you connect it to. On broadly-accessible platforms like Slack or Discord, anyone on the server could potentially message your Claw and access that data. If you're connecting sensitive integrations, use a private platform like Kilo Chat or Telegram.
+If your Claw has access to sensitive data (like your email), be careful which chat platform you connect it to. On broadly-accessible platforms like Slack or Discord, anyone on the server could potentially message your Claw and access that data. If you're connecting sensitive integrations, use a private platform like Accure Chat or Telegram.
 {% /callout %}
 
 The steps below walk you through this configuration.
@@ -36,7 +36,7 @@ The steps below walk you through this configuration.
 
 Take these steps before configuring your Claw.
 
-If you are doing a [1-1 configuration call with Kilo](https://kilo.ai/kiloclaw/config-service), please complete these steps before the call.
+If you are doing a [1-1 configuration call with Accure](https://accure.ai/accureclaw/config-service), please complete these steps before the call.
 
 ### Google
 
@@ -44,7 +44,7 @@ Configuring Google services is by far the most involved part of setting up your 
 
 Before configuring, take these preflight steps:
 
-1. **Create a Google Account for your Claw** — Go to [google.com](https://www.google.com/) and create a new Google/Gmail account dedicated to your KiloClaw. Something like `yourname.bot@gmail.com` works well.
+1. **Create a Google Account for your Claw** — Go to [google.com](https://www.google.com/) and create a new Google/Gmail account dedicated to your AccureClaw. Something like `yourname.bot@gmail.com` works well.
 
 {% callout type="tip" title="Google Workspace users" %}
 If your organization uses Google Workspace, create the dedicated bot account inside your Workspace domain (e.g., `claw@yourcompany.com`) rather than as a standalone `@gmail.com` account.
@@ -55,10 +55,10 @@ A Workspace-managed account benefits from your organization's admin policies, ma
 2. **Set up Google Cloud** — Visit [console.cloud.google.com](https://console.cloud.google.com). Accept the terms of service and click "Start my free tier". You may need to add a credit card for identity verification.
 
    {% callout type="info" %}
-   Nothing KiloClaw does costs any money with Google.
+   Nothing AccureClaw does costs any money with Google.
    {% /callout %}
 
-3. **Install Docker** — KiloClaw configures Google by running a Docker container on your machine. Download Docker at [docker.com](https://www.docker.com/), then open it. You don't need to sign in or create a Docker account.
+3. **Install Docker** — AccureClaw configures Google by running a Docker container on your machine. Download Docker at [docker.com](https://www.docker.com/), then open it. You don't need to sign in or create a Docker account.
 
 ## Other Services
 
@@ -66,14 +66,14 @@ A Workspace-managed account benefits from your organization's admin policies, ma
 
 ## Set up a messaging platform
 
-Your Claw needs a way to communicate with you. **[Kilo Chat](https://app.kilo.ai)** requires no setup — open the Kilo web or mobile app, or use a supported Kilo Code editor or TUI surface. For other platforms, follow the relevant guide:
+Your Claw needs a way to communicate with you. **[Accure Chat](https://app.accurecode.ai)** requires no setup — open the Accure web or mobile app, or use a supported Accure Code editor or TUI surface. For other platforms, follow the relevant guide:
 
-- [Telegram](/docs/kiloclaw/chat-platforms/telegram) — about 2 minutes
-- [Discord](/docs/kiloclaw/chat-platforms/discord) — about 10 minutes
-- [Slack](/docs/kiloclaw/chat-platforms/slack) — about 15 minutes; always use the manifest
+- [Telegram](/docs/accureclaw/chat-platforms/telegram) — about 2 minutes
+- [Discord](/docs/accureclaw/chat-platforms/discord) — about 10 minutes
+- [Slack](/docs/accureclaw/chat-platforms/slack) — about 15 minutes; always use the manifest
 
 {% callout type="tip" %}
-If you're not sure which to pick, Kilo Chat (no setup) or Telegram (2 minutes) are the easiest options.
+If you're not sure which to pick, Accure Chat (no setup) or Telegram (2 minutes) are the easiest options.
 {% /callout %}
 
 ## Set up Google OAuth
@@ -82,14 +82,14 @@ This lets your Claw act as the bot Google account — sending email, reading cal
 
 Prerequisites: Docker is installed and running, and your bot Google account is already created.
 
-1. In the KiloClaw dashboard, go to **Settings → Google Account** and copy the Docker command shown.
+1. In the AccureClaw dashboard, go to **Settings → Google Account** and copy the Docker command shown.
 2. Open a terminal and run the command.
 3. Follow the steps in the console:
    - At each step, confirm you're logged in to the bot account (check the top-right corner of the screen).
    - After project creation, confirm you're in the correct project.
    - The last step may look like it failed — this is expected.
 
-For full details, see the [Google setup guide](/docs/kiloclaw/development-tools/google).
+For full details, see the [Google setup guide](/docs/accureclaw/development-tools/google).
 
 ## Set up GitHub
 
@@ -100,7 +100,7 @@ A dedicated bot GitHub account is strongly recommended. Takes about 7 minutes.
 1. In GitHub, go to **Settings → Developer Settings → Personal Access Tokens → Classic → Generate new token**.
 2. Select these scopes: `repo`, `workflow`, `write:org`, `read:user`.
 
-For full details, see the [GitHub setup guide](/docs/kiloclaw/development-tools/github).
+For full details, see the [GitHub setup guide](/docs/accureclaw/development-tools/github).
 
 **Set up a private workspace repo:**
 
@@ -124,13 +124,13 @@ After OAuth is set up, decide how much access to give your Claw to your personal
 Email forwarding is configured from the **destination** (bot) account. Account delegation is configured from the **source** (personal) account.
 {% /callout %}
 
-**Push notifications:** by default, your Claw wakes up on every incoming email. If you'd prefer a digest (e.g., once at 7am), disable push notifications in **Settings → Google Account** on the [dashboard](/docs/kiloclaw/dashboard) — otherwise it processes each email as it arrives.
+**Push notifications:** by default, your Claw wakes up on every incoming email. If you'd prefer a digest (e.g., once at 7am), disable push notifications in **Settings → Google Account** on the [dashboard](/docs/accureclaw/dashboard) — otherwise it processes each email as it arrives.
 
 **Google Calendar:** share your personal calendar from your personal Google account. Go to **Google Calendar → Settings → Settings for my calendars → [your calendar] → Share with specific people**, and add the bot account.
 
 ## Enable auto-approval
 
-By default, KiloClaw asks for confirmation before every tool call. To let it act freely, go to the [KiloClaw dashboard](https://app.kilo.ai/claw) and enable auto-approval in the **Default Permissions** section.
+By default, AccureClaw asks for confirmation before every tool call. To let it act freely, go to the [AccureClaw dashboard](https://app.accurecode.ai/claw) and enable auto-approval in the **Default Permissions** section.
 
 ## Prompt and schedule work
 
@@ -154,10 +154,10 @@ Reusable capabilities that extend what your Claw can do — things like triaging
 
 > Install the [skill name] skill.
 
-Or ask your Claw to build a custom skill from scratch — it has a built-in skill-builder skill for exactly this. You can explore popular skills and use case inspiration at the [KiloClaw Bytes library](https://kilo.ai/kiloclaw/bytes).
+Or ask your Claw to build a custom skill from scratch — it has a built-in skill-builder skill for exactly this. You can explore popular skills and use case inspiration at the [AccureClaw Bytes library](https://accure.ai/accureclaw/bytes).
 
 ## Manage inference
 
 **Model picker:** Balanced is a good starting point. Frontier is more capable but significantly more expensive.
 
-You can also use your [Kilo Pass](https://kilo.ai/pricing/kilo-pass) credits — find this under **Profile** in the dashboard.
+You can also use your [Accure Pass](https://accure.ai/pricing/accure-pass) credits — find this under **Profile** in the dashboard.

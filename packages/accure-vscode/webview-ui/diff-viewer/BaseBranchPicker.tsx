@@ -1,5 +1,5 @@
 import { type Component, createMemo, createSignal, Show } from "solid-js"
-import { Icon } from "@kilocode/accure-ui/icon"
+import { Icon } from "@accurecode/accure-ui/icon"
 import { BranchSelect, BranchSelectPopover } from "../src/components/shared/BranchSelect"
 import type { BranchInfo } from "../src/types/messages"
 import { useLanguage } from "../src/context/language"

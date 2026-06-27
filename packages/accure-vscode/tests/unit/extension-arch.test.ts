@@ -15,7 +15,7 @@ const ROOT = path.resolve(import.meta.dir, "../..")
 const PKG_JSON_FILE = path.join(ROOT, "package.json")
 const SRC_DIR = path.join(ROOT, "src")
 const EXTENSION_FILE = path.join(ROOT, "src/extension.ts")
-const KILO_PROVIDER_FILE = path.join(ROOT, "src/KiloProvider.ts")
+const ACCURECODE_PROVIDER_FILE = path.join(ROOT, "src/AccureProvider.ts")
 const VSCODE_HOST_FILE = path.join(ROOT, "src/agent-manager/vscode-host.ts")
 
 function sliceBlock(source: string, start: number): string {
@@ -129,24 +129,24 @@ describe("Extension — package.json command sync", () => {
 })
 
 // ---------------------------------------------------------------------------
-// KiloProvider handler wiring — every new KiloProvider() must get
+// AccureProvider handler wiring — every new AccureProvider() must get
 // setContinueInWorktreeHandler() called before resolving its webview.
 //
-// Regression: tab panels created via openKiloInNewTab() and the TabPanel
+// Regression: tab panels created via openAccureInNewTab() and the TabPanel
 // deserializer were missing the handler, causing "Capturing changes..." to
 // spin forever because the webview message was silently dropped.
 // ---------------------------------------------------------------------------
 
-describe("Extension — KiloProvider handler wiring", () => {
+describe("Extension — AccureProvider handler wiring", () => {
   const ext = fs.readFileSync(EXTENSION_FILE, "utf-8")
 
   /**
-   * Every `new KiloProvider(` in extension.ts must be followed (before the
-   * next `new KiloProvider(`) by a `setContinueInWorktreeHandler` call.
+   * Every `new AccureProvider(` in extension.ts must be followed (before the
+   * next `new AccureProvider(`) by a `setContinueInWorktreeHandler` call.
    * This prevents future tab/panel additions from silently missing the handler.
    */
-  it("every KiloProvider instance gets setContinueInWorktreeHandler wired", () => {
-    const pattern = /new KiloProvider\(/g
+  it("every AccureProvider instance gets setContinueInWorktreeHandler wired", () => {
+    const pattern = /new AccureProvider\(/g
     const instances: number[] = []
     let match
     while ((match = pattern.exec(ext)) !== null) {
@@ -155,7 +155,7 @@ describe("Extension — KiloProvider handler wiring", () => {
 
     expect(
       instances.length,
-      "expected at least 3 KiloProvider instances (sidebar, tab, deserializer)",
+      "expected at least 3 AccureProvider instances (sidebar, tab, deserializer)",
     ).toBeGreaterThanOrEqual(3)
 
     const missing: string[] = []
@@ -166,22 +166,22 @@ describe("Extension — KiloProvider handler wiring", () => {
 
       if (!region.includes("setContinueInWorktreeHandler")) {
         const line = ext.slice(0, start).split("\n").length
-        missing.push(`KiloProvider at line ${line}`)
+        missing.push(`AccureProvider at line ${line}`)
       }
     }
 
     expect(
       missing,
-      `These KiloProvider instances are missing setContinueInWorktreeHandler.\n` +
+      `These AccureProvider instances are missing setContinueInWorktreeHandler.\n` +
         `Without it, "Continue in Worktree" silently no-ops and the spinner\n` +
         `stays stuck on "Capturing changes..." forever.\n\n` +
         missing.map((m) => `  - ${m}`).join("\n"),
     ).toEqual([])
   })
 
-  it("openKiloInNewTab wires setContinueInWorktreeHandler before resolveWebviewPanel", () => {
-    const fn = ext.indexOf("function openKiloInNewTab")
-    expect(fn, "openKiloInNewTab must exist").toBeGreaterThan(-1)
+  it("openAccureInNewTab wires setContinueInWorktreeHandler before resolveWebviewPanel", () => {
+    const fn = ext.indexOf("function openAccureInNewTab")
+    expect(fn, "openAccureInNewTab must exist").toBeGreaterThan(-1)
     const body = sliceBlock(ext, fn)
     const handler = body.indexOf("setContinueInWorktreeHandler")
     const resolve = body.indexOf("resolveWebviewPanel")
@@ -203,7 +203,7 @@ describe("Extension — KiloProvider handler wiring", () => {
 })
 
 // ---------------------------------------------------------------------------
-// KiloProvider — continueInWorktree error fallback
+// AccureProvider — continueInWorktree error fallback
 //
 // Regression: when continueInWorktreeHandler is null, the message handler
 // must send an error back to the webview so the spinner resets. Previously
@@ -227,8 +227,8 @@ describe("Extension — Agent Manager remote wiring", () => {
   })
 })
 
-describe("KiloProvider — remote focus lifecycle", () => {
-  const provider = fs.readFileSync(KILO_PROVIDER_FILE, "utf-8")
+describe("AccureProvider — remote focus lifecycle", () => {
+  const provider = fs.readFileSync(ACCURECODE_PROVIDER_FILE, "utf-8")
 
   it("registers newly created sessions and uses the synchronous session ID", () => {
     const create = sliceBlock(provider, provider.indexOf("private async handleCreateSession"))
@@ -239,8 +239,8 @@ describe("KiloProvider — remote focus lifecycle", () => {
   })
 })
 
-describe("KiloProvider — continueInWorktree error fallback", () => {
-  const helper = fs.readFileSync(path.join(ROOT, "src/kilo-provider/continue-worktree.ts"), "utf-8")
+describe("AccureProvider — continueInWorktree error fallback", () => {
+  const helper = fs.readFileSync(path.join(ROOT, "src/accure-provider/continue-worktree.ts"), "utf-8")
 
   it("sends error progress when handler is missing", () => {
     expect(helper, "must send error status back to webview").toContain('"error"')

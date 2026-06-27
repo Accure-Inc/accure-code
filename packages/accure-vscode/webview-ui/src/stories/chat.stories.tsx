@@ -8,7 +8,7 @@
  */
 
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
-import type { AssistantMessage } from "@kilocode/sdk/v2"
+import type { AssistantMessage } from "@accurecode/sdk/v2"
 import { StoryProviders, defaultMockData, mockSessionValue } from "./StoryProviders"
 import { ChatView } from "../components/chat/ChatView"
 import { ErrorDisplay } from "../components/chat/ErrorDisplay"
@@ -183,7 +183,7 @@ export const UserMessageReviewComments: Story = {
     const comments: ReviewComment[] = [
       {
         id: "review-1",
-        file: "src/components/chat/KiloBackendChatManager.kt",
+        file: "src/components/chat/AccureBackendChatManager.kt",
         side: "additions",
         line: 114,
         comment: "Keep this state synchronized when the active session changes.",
@@ -191,7 +191,7 @@ export const UserMessageReviewComments: Story = {
       },
       {
         id: "review-2",
-        file: "resources/messages/KiloBundle_bs.properties",
+        file: "resources/messages/AccureBundle_bs.properties",
         side: "deletions",
         line: 235,
         comment: "Translate the modified setting description.",
@@ -412,7 +412,7 @@ const spacingParts = {
       state: {
         status: "completed",
         input: { command: "pwd", description: "Print current directory" },
-        output: "/Users/marius/Documents/git/kilocode/.kilo/worktrees/zest-kettledrum",
+        output: "/Users/marius/Documents/git/accurecode/.accurecode/worktrees/zest-kettledrum",
         title: "pwd",
         metadata: {},
         time: { start: toolNow - 7000, end: toolNow - 6500 },
@@ -674,7 +674,7 @@ const headerMessages: Message[] = [
     createdAt: new Date(headerNow - 10000).toISOString(),
     time: { created: headerNow - 10000 },
     modelID: "anthropic/claude-sonnet-4-6",
-    providerID: "kilo",
+    providerID: "accure",
     mode: "default",
     agent: "code",
     path: { cwd: "/project", root: "/project" },
@@ -851,14 +851,14 @@ export const TaskHeaderWithTodosAllDone: Story = {
 }
 
 // ---------------------------------------------------------------------------
-// Welcome screen with AccountSwitcher + KiloNotifications
+// Welcome screen with AccountSwitcher + AccureNotifications
 // ---------------------------------------------------------------------------
 
 const MOCK_NOTIFICATION = {
   id: "notif-1",
-  title: "Try BYOK for Kilo Gateway",
-  message: "Bring your own API key for even more flexibility with Kilo Gateway models.",
-  action: { actionText: "Learn more", actionURL: "https://kilo.ai/docs" },
+  title: "Try BYOK for Accure Gateway",
+  message: "Bring your own API key for even more flexibility with Accure Gateway models.",
+  action: { actionText: "Learn more", actionURL: "https://accure.ai/docs" },
 }
 
 /** Mock server context with profile data so AccountSwitcher is visible */
@@ -871,9 +871,9 @@ const mockServer = {
   isConnected: () => true,
   profileData: () => ({
     profile: {
-      email: "dev@kilo.dev",
+      email: "dev@accurecode.dev",
       name: "Dev User",
-      organizations: [{ id: "org-1", name: "Kilo Org", role: "member" }],
+      organizations: [{ id: "org-1", name: "Accure Org", role: "member" }],
     },
     balance: { balance: 5.0 },
     currentOrgId: "org-1",

@@ -1,14 +1,14 @@
 /**
  * SetupScriptService - Manages worktree setup scripts
  *
- * Handles reading, creating, and checking for setup scripts stored in .kilo/.
+ * Handles reading, creating, and checking for setup scripts stored in .accurecode/.
  * Setup scripts run before an agent starts in a worktree (new sessions only).
  */
 
 import * as fs from "node:fs"
 import * as path from "node:path"
 import { SETUP_SCRIPT_TEMPLATE, SETUP_SCRIPT_TEMPLATE_POWERSHELL } from "./setup-script-template"
-import { KILO_DIR } from "./constants"
+import { ACCURECODE_DIR } from "./constants"
 
 const SETUP_SCRIPT_FILENAME = "setup-script"
 const SETUP_SCRIPT_SHELL_FILENAME = "setup-script.sh"
@@ -38,7 +38,7 @@ export class SetupScriptService {
   private readonly dir: string
 
   constructor(root: string) {
-    this.dir = path.join(root, KILO_DIR)
+    this.dir = path.join(root, ACCURECODE_DIR)
   }
 
   /** Resolve the setup script path and interpreter type for the current platform. */

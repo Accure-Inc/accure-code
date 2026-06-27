@@ -5,7 +5,7 @@ import { DateTime, Effect, Layer, Schema } from "effect"
 import { Bus } from "../../src/bus"
 import { RuntimeFlags } from "../../src/effect/runtime-flags"
 import { EventV2Bridge } from "../../src/event-v2-bridge"
-import * as EventWire from "../../src/kilocode/event-wire"
+import * as EventWire from "../../src/accurecode/event-wire"
 import { SessionID } from "../../src/session/schema"
 import { Database, eq } from "../../src/storage/db"
 import { SyncEvent } from "../../src/sync"
@@ -31,8 +31,8 @@ describe("SyncEvent encoding", () => {
     const schema = Schema.Struct({ value: Schema.Unknown })
 
     expect(EventWire.encode(schema, { value: new Date(0) })).toEqual({ value: "1970-01-01T00:00:00.000Z" })
-    expect(EventWire.encode(schema, { value: new URL("https://kilo.ai/docs") })).toEqual({
-      value: "https://kilo.ai/docs",
+    expect(EventWire.encode(schema, { value: new URL("https://accure.ai/docs") })).toEqual({
+      value: "https://accure.ai/docs",
     })
   })
 

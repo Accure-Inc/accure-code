@@ -1,4 +1,4 @@
-import type { CodeIndexManager } from "@kilocode/accure-indexing/engine"
+import type { CodeIndexManager } from "@accurecode/accure-indexing/engine"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { format } from "node:util"
 import type { Request, Result, Event, Log } from "./indexing-worker-protocol"
@@ -44,10 +44,10 @@ async function dispose(key: string) {
 
 async function init(request: Extract<Request, { method: "init" }>) {
   await dispose(request.key)
-  if (request.input.lancedbPath) process.env.KILO_LANCEDB_PATH = request.input.lancedbPath
+  if (request.input.lancedbPath) process.env.ACCURECODE_LANCEDB_PATH = request.input.lancedbPath
   const [engine, status] = await Promise.all([
-    import("@kilocode/accure-indexing/engine"),
-    import("@kilocode/accure-indexing/status"),
+    import("@accurecode/accure-indexing/engine"),
+    import("@accurecode/accure-indexing/status"),
   ])
   const manager = new engine.CodeIndexManager(
     request.input.directory,

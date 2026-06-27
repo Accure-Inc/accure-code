@@ -1,9 +1,9 @@
 /**
  * Architecture test: webview font-size token usage.
  *
- * Kilo's VS Code webviews use the `accure-code.fontSize` setting, not
- * VS Code editor font-size or raw pixel declarations. This keeps the Kilo UI
- * independently scalable across sidebar, settings, Agent Manager, KiloClaw,
+ * Accure's VS Code webviews use the `accure-code.fontSize` setting, not
+ * VS Code editor font-size or raw pixel declarations. This keeps the Accure UI
+ * independently scalable across sidebar, settings, Agent Manager, AccureClaw,
  * diff viewers, code blocks, and shared accure-ui controls.
  */
 
@@ -17,7 +17,7 @@ const REPO = path.resolve(ROOT, "../..")
 const TARGETS = [
   path.join(ROOT, "webview-ui/src"),
   path.join(ROOT, "webview-ui/agent-manager"),
-  path.join(ROOT, "webview-ui/kiloclaw"),
+  path.join(ROOT, "webview-ui/accureclaw"),
   path.join(ROOT, "webview-ui/marketplace"),
   path.join(ROOT, "webview-ui/diff-viewer"),
   path.join(ROOT, "webview-ui/diff-virtual"),
@@ -25,10 +25,10 @@ const TARGETS = [
 ]
 
 const WATCHED_PROVIDERS = [
-  path.join(ROOT, "src/KiloProvider.ts"),
+  path.join(ROOT, "src/AccureProvider.ts"),
   path.join(ROOT, "src/diff/DiffViewerProvider.ts"),
   path.join(ROOT, "src/DiffVirtualProvider.ts"),
-  path.join(ROOT, "src/kiloclaw/KiloClawProvider.ts"),
+  path.join(ROOT, "src/accureclaw/AccureClawProvider.ts"),
   path.join(ROOT, "src/MarketplacePanelProvider.ts"),
 ]
 
@@ -96,8 +96,8 @@ describe("webview font-size architecture", () => {
 
     expect(
       violations,
-      `Use the Kilo webview font-size tokens instead of raw pixels or VS Code editor font-size variables.\n` +
-        `Preferred tokens: var(--font-size-base), var(--font-size-small), or var(--kilo-font-size-N).\n\n` +
+      `Use the Accure webview font-size tokens instead of raw pixels or VS Code editor font-size variables.\n` +
+        `Preferred tokens: var(--font-size-base), var(--font-size-small), or var(--accure-font-size-N).\n\n` +
         violations.map((v) => `  - ${v}`).join("\n"),
     ).toEqual([])
   })
@@ -121,7 +121,7 @@ describe("webview font-size architecture", () => {
   it("injects and live-broadcasts the webview font-size setting to all webview providers", () => {
     const util = fs.readFileSync(path.join(ROOT, "src/utils.ts"), "utf-8")
     expect(util, "buildWebviewHtml must seed webview font tokens before app code runs").toContain("getWebviewFontSize")
-    expect(util, "buildWebviewHtml must define scaled Kilo font tokens").toContain("--kilo-font-size-")
+    expect(util, "buildWebviewHtml must define scaled Accure font tokens").toContain("--accure-font-size-")
 
     const missing = WATCHED_PROVIDERS.filter((file) => !fs.readFileSync(file, "utf-8").includes("watchFontSizeConfig"))
     expect(

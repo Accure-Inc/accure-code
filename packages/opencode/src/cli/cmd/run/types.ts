@@ -13,7 +13,7 @@
 //         → OpenTUI split-footer renderer writes to terminal
 import type { KeyEvent, Renderable } from "@opentui/core"
 import type { Binding } from "@opentui/keymap"
-import type { KiloClient, PermissionRequest, QuestionRequest, ToolPart } from "@kilocode/sdk/v2"
+import type { AccureClient, PermissionRequest, QuestionRequest, ToolPart } from "@accurecode/sdk/v2"
 
 export type RunFilePart = {
   type: "file"
@@ -22,14 +22,14 @@ export type RunFilePart = {
   mime: string
 }
 
-type PromptModel = Parameters<KiloClient["session"]["prompt"]>[0]["model"]
-type PromptInput = Parameters<KiloClient["session"]["prompt"]>[0]
+type PromptModel = Parameters<AccureClient["session"]["prompt"]>[0]["model"]
+type PromptInput = Parameters<AccureClient["session"]["prompt"]>[0]
 
 export type RunPromptPart = NonNullable<PromptInput["parts"]>[number]
 
-export type RunCommand = NonNullable<Awaited<ReturnType<KiloClient["command"]["list"]>>["data"]>[number]
+export type RunCommand = NonNullable<Awaited<ReturnType<AccureClient["command"]["list"]>>["data"]>[number]
 
-export type RunProvider = NonNullable<Awaited<ReturnType<KiloClient["provider"]["list"]>>["data"]>["all"][number]
+export type RunProvider = NonNullable<Awaited<ReturnType<AccureClient["provider"]["list"]>>["data"]>["all"][number]
 
 export type RunPrompt = {
   text: string
@@ -41,14 +41,14 @@ export type RunPrompt = {
   }
 }
 
-export type RunAgent = NonNullable<Awaited<ReturnType<KiloClient["app"]["agents"]>>["data"]>[number]
+export type RunAgent = NonNullable<Awaited<ReturnType<AccureClient["app"]["agents"]>>["data"]>[number]
 
-type RunResourceMap = NonNullable<Awaited<ReturnType<KiloClient["experimental"]["resource"]["list"]>>["data"]>
+type RunResourceMap = NonNullable<Awaited<ReturnType<AccureClient["experimental"]["resource"]["list"]>>["data"]>
 
 export type RunResource = RunResourceMap[string]
 
 export type RunInput = {
-  sdk: KiloClient
+  sdk: AccureClient
   directory: string
   sessionID: string
   sessionTitle?: string
@@ -259,11 +259,11 @@ export type FooterEvent =
       state: FooterSubagentState
     }
 
-export type PermissionReply = Parameters<KiloClient["permission"]["reply"]>[0]
+export type PermissionReply = Parameters<AccureClient["permission"]["reply"]>[0]
 
-export type QuestionReply = Parameters<KiloClient["question"]["reply"]>[0]
+export type QuestionReply = Parameters<AccureClient["question"]["reply"]>[0]
 
-export type QuestionReject = Parameters<KiloClient["question"]["reject"]>[0]
+export type QuestionReject = Parameters<AccureClient["question"]["reject"]>[0]
 
 type FooterBinding = Binding<Renderable, KeyEvent>
 

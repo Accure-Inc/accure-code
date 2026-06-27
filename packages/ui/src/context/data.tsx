@@ -1,4 +1,4 @@
-import type { Message, Session, Part, SnapshotFileDiff, SessionStatus, Provider } from "@kilocode/sdk/v2"
+import type { Message, Session, Part, SnapshotFileDiff, SessionStatus, Provider } from "@accurecode/sdk/v2"
 import { createSimpleContext } from "./helper"
 import { PreloadMultiFileDiffResult } from "@pierre/diffs/ssr"
 
@@ -41,22 +41,22 @@ export type NavigateToSessionFn = (sessionID: string) => void
 
 export type SessionHrefFn = (sessionID: string) => string
 
-// kilocode_change start
+// accurecode_change start
 export type OpenFileFn = (filePath: string, line?: number, column?: number) => void
 
 export type OpenDiffFn = (diff: {
   file: string
-  before?: string // kilocode_change - optional, kilo uses `patch`
-  after?: string // kilocode_change - optional, kilo uses `patch`
-  patch?: string // kilocode_change
+  before?: string // accurecode_change - optional, accure uses `patch`
+  after?: string // accurecode_change - optional, accure uses `patch`
+  patch?: string // accurecode_change
   additions: number
   deletions: number
 }) => void
 
 export type OpenUrlFn = (url: string) => void
 
-export type OpenContentFn = (content: string, language?: string) => void // kilocode_change
-// kilocode_change end
+export type OpenContentFn = (content: string, language?: string) => void // accurecode_change
+// accurecode_change end
 
 export const { use: useData, provider: DataProvider } = createSimpleContext({
   name: "Data",
@@ -65,10 +65,10 @@ export const { use: useData, provider: DataProvider } = createSimpleContext({
     directory: string
     onNavigateToSession?: NavigateToSessionFn
     onSessionHref?: SessionHrefFn
-    onOpenFile?: OpenFileFn // kilocode_change
-    onOpenDiff?: OpenDiffFn // kilocode_change
-    onOpenUrl?: OpenUrlFn // kilocode_change
-    onOpenContent?: OpenContentFn // kilocode_change
+    onOpenFile?: OpenFileFn // accurecode_change
+    onOpenDiff?: OpenDiffFn // accurecode_change
+    onOpenUrl?: OpenUrlFn // accurecode_change
+    onOpenContent?: OpenContentFn // accurecode_change
   }) => {
     return {
       get store() {
@@ -79,10 +79,10 @@ export const { use: useData, provider: DataProvider } = createSimpleContext({
       },
       navigateToSession: props.onNavigateToSession,
       sessionHref: props.onSessionHref,
-      openFile: props.onOpenFile, // kilocode_change
-      openDiff: props.onOpenDiff, // kilocode_change
-      openUrl: props.onOpenUrl, // kilocode_change
-      openContent: props.onOpenContent, // kilocode_change
+      openFile: props.onOpenFile, // accurecode_change
+      openDiff: props.onOpenDiff, // accurecode_change
+      openUrl: props.onOpenUrl, // accurecode_change
+      openContent: props.onOpenContent, // accurecode_change
     }
   },
 })

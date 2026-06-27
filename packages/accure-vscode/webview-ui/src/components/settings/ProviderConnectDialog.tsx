@@ -1,11 +1,11 @@
-import { Button } from "@kilocode/accure-ui/button"
-import { useDialog } from "@kilocode/accure-ui/context/dialog"
-import { Dialog } from "@kilocode/accure-ui/dialog"
-import { Select } from "@kilocode/accure-ui/select"
-import { Spinner } from "@kilocode/accure-ui/spinner"
-import { TextField } from "@kilocode/accure-ui/text-field"
-import { showToast } from "@kilocode/accure-ui/toast"
-import type { ProviderAuthAuthorization, ProviderAuthMethod } from "@kilocode/sdk/v2/client"
+import { Button } from "@accurecode/accure-ui/button"
+import { useDialog } from "@accurecode/accure-ui/context/dialog"
+import { Dialog } from "@accurecode/accure-ui/dialog"
+import { Select } from "@accurecode/accure-ui/select"
+import { Spinner } from "@accurecode/accure-ui/spinner"
+import { TextField } from "@accurecode/accure-ui/text-field"
+import { showToast } from "@accurecode/accure-ui/toast"
+import type { ProviderAuthAuthorization, ProviderAuthMethod } from "@accurecode/sdk/v2/client"
 import { Component, For, Match, Show, Switch, createMemo, createSignal, onCleanup, onMount } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "../../context/language"
@@ -370,7 +370,7 @@ const ProviderConnectDialog: Component<ProviderConnectDialogProps> = (props) => 
                 <div style={{ display: "flex", "flex-direction": "column", gap: "4px" }}>
                   <label
                     style={{
-                      "font-size": "var(--kilo-font-size-12)",
+                      "font-size": "var(--accure-font-size-12)",
                       "font-weight": "500",
                       color: "var(--text-weak-base)",
                     }}
@@ -392,7 +392,7 @@ const ProviderConnectDialog: Component<ProviderConnectDialogProps> = (props) => 
                     triggerVariant="settings"
                   />
                   <Show when={state.field === prompt.key && state.error}>
-                    <span style={{ "font-size": "var(--kilo-font-size-12)", color: "var(--vscode-errorForeground)" }}>
+                    <span style={{ "font-size": "var(--accure-font-size-12)", color: "var(--vscode-errorForeground)" }}>
                       {state.error}
                     </span>
                   </Show>
@@ -402,24 +402,24 @@ const ProviderConnectDialog: Component<ProviderConnectDialogProps> = (props) => 
           )}
         </For>
         <Show when={state.error && !state.field}>
-          <div style={{ color: "var(--vscode-errorForeground)", "font-size": "var(--kilo-font-size-13)" }}>
+          <div style={{ color: "var(--vscode-errorForeground)", "font-size": "var(--accure-font-size-13)" }}>
             {state.error}
           </div>
         </Show>
         <div class="dialog-confirm-actions provider-connect-actions">
           <div class="provider-connect-byok">
-            {language.t("provider.connect.kiloGateway.byok.prefix")}
+            {language.t("provider.connect.accureGateway.byok.prefix")}
             <a
-              href="https://blog.kilo.ai/p/accure-gateway-now-supports-byok-20-providers"
+              href="https://blog.accurecode.ai/p/accure-gateway-now-supports-byok-20-providers"
               onClick={(e) => {
                 e.preventDefault()
-                openExternal("https://blog.kilo.ai/p/accure-gateway-now-supports-byok-20-providers")
+                openExternal("https://blog.accurecode.ai/p/accure-gateway-now-supports-byok-20-providers")
               }}
               class="provider-connect-byok-link"
             >
-              {language.t("provider.connect.kiloGateway.byok.link")}
+              {language.t("provider.connect.accureGateway.byok.link")}
             </a>
-            {language.t("provider.connect.kiloGateway.byok.suffix")}
+            {language.t("provider.connect.accureGateway.byok.suffix")}
           </div>
           <Button variant="ghost" size="large" type="button" onClick={back}>
             {language.t("common.goBack")}

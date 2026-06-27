@@ -4,7 +4,7 @@ import { join } from "path"
 import { tmpdir } from "os"
 import { resolveCoreRuntimeWasmPath, resolveLanguageWasmPath } from "../../../src/tree-sitter/languageParser"
 
-const env = "KILO_TREE_SITTER_WASM_DIR"
+const env = "ACCURECODE_TREE_SITTER_WASM_DIR"
 const prev = process.env[env]
 
 describe("tree-sitter WASM resolution", () => {
@@ -14,7 +14,7 @@ describe("tree-sitter WASM resolution", () => {
   })
 
   test("prefers installed CLI tree-sitter resources over module resolution", async () => {
-    const root = await mkdtemp(join(tmpdir(), "kilo-tree-sitter-wasm-"))
+    const root = await mkdtemp(join(tmpdir(), "accure-tree-sitter-wasm-"))
     try {
       const dir = join(root, "bin", "tree-sitter")
       await mkdir(dir, { recursive: true })

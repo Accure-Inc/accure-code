@@ -1,11 +1,11 @@
-// KiloClaw SolidJS webview entry point
+// AccureClaw SolidJS webview entry point
 
 import { render } from "solid-js/web"
-import "@kilocode/accure-ui/styles"
-import "./kiloclaw.css"
-import { KiloClawApp } from "./KiloClawApp"
+import "@accurecode/accure-ui/styles"
+import "./accureclaw.css"
+import { AccureClawApp } from "./AccureClawApp"
 
 const root = document.getElementById("root")
 if (root) {
-  render(() => <KiloClawApp />, root)
+  render(() => <AccureClawApp />, root)
 }

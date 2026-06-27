@@ -1,4 +1,4 @@
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 import { retry } from "../services/cli-backend/retry"
 
 export const MESSAGE_PAGE_LIMIT = 80
@@ -17,7 +17,7 @@ function synthesizeCursor(oldest: { info: { id: string; time: { created: number 
 }
 
 export async function fetchMessagePage(
-  client: KiloClient,
+  client: AccureClient,
   input: {
     sessionID: string
     workspaceDir: string

@@ -1,9 +1,9 @@
-package ai.kilocode.client.settings.models
+package ai.accurecode.client.settings.models
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.model.ModelPicker
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.ui.layout.StackAxis
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.model.ModelPicker
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.ui.layout.StackAxis
 
 internal class ModelSettingPicker : Stack(StackAxis.HORIZONTAL) {
     val picker = ModelPicker()
@@ -12,7 +12,7 @@ internal class ModelSettingPicker : Stack(StackAxis.HORIZONTAL) {
 
     init {
         picker.allowEmpty = true
-        picker.emptyText = KiloBundle.message("settings.models.notSet")
+        picker.emptyText = AccureBundle.message("settings.models.notSet")
         next(picker)
     }
 

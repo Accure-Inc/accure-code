@@ -31,7 +31,7 @@ function runGit(cwd: string, args: string[]): string {
 }
 
 async function withRepo(run: (cwd: string) => Promise<void>): Promise<void> {
-  const cwd = await fs.mkdtemp(nodePath.join(os.tmpdir(), "kilo-gitops-test-"))
+  const cwd = await fs.mkdtemp(nodePath.join(os.tmpdir(), "accure-gitops-test-"))
   try {
     runGit(cwd, ["init"])
     await run(cwd)

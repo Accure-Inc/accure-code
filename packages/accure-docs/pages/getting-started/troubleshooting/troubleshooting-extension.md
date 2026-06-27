@@ -1,6 +1,6 @@
 ---
 title: "Troubleshooting IDE Extensions"
-description: "How to capture console logs and report issues with Kilo Code"
+description: "How to capture console logs and report issues with Accure Code"
 ---
 
 # Capturing Console Logs
@@ -29,11 +29,11 @@ Providing console logs helps us pinpoint exactly what's going wrong with your in
 
 ### Connect Chrome DevTools
 
-1. Make sure the **Kilo Code panel is open** in your IDE (the debug target won't appear unless the webview is active)
+1. Make sure the **Accure Code panel is open** in your IDE (the debug target won't appear unless the webview is active)
 2. Open Chrome (or any Chromium-based browser like Edge or Arc)
 3. Navigate to `http://localhost:9222/json` to see the list of inspectable targets
-4. Find the entry with `"title": "Kilo Code"` and open the `devtoolsFrontendUrl` link
-5. Chrome DevTools will open connected to the Kilo webview—click the **Console** tab
+4. Find the entry with `"title": "Accure Code"` and open the `devtoolsFrontendUrl` link
+5. Chrome DevTools will open connected to the Accure webview—click the **Console** tab
 
 {% /tab %}
 {% /tabs %}
@@ -49,18 +49,18 @@ Once you have the Developer Tools console open:
 
 ## SQLite database is malformed
 
-If every prompt fails with `SQLiteError: database disk image is malformed`, Kilo Code's local SQLite database may be corrupted. This database stores local Kilo state such as sessions and history.
+If every prompt fails with `SQLiteError: database disk image is malformed`, Accure Code's local SQLite database may be corrupted. This database stores local Accure state such as sessions and history.
 
 ### Find the database
 
-The database location depends on where Kilo Code is running:
+The database location depends on where Accure Code is running:
 
 | Environment | Database path |
 |---|---|
-| Windows | `%LOCALAPPDATA%\kilo\kilo.db` |
-| macOS | `~/Library/Application Support/kilo/kilo.db` |
-| Linux | `~/.local/share/kilo/kilo.db` |
-| VS Code Remote SSH | `~/.local/share/kilo/kilo.db` on the remote machine |
+| Windows | `%LOCALAPPDATA%\accure\accure.db` |
+| macOS | `~/Library/Application Support/accure/accure.db` |
+| Linux | `~/.local/share/accure/accure.db` |
+| VS Code Remote SSH | `~/.local/share/accure/accure.db` on the remote machine |
 
 {% callout type="warning" %}
 When using VS Code Remote SSH, check the remote Linux machine, not your local Windows or macOS computer.
@@ -68,38 +68,38 @@ When using VS Code Remote SSH, check the remote Linux machine, not your local Wi
 
 ### Reset the database
 
-Close VS Code or stop the Kilo backend first. On Linux or Remote SSH, run:
+Close VS Code or stop the Accure backend first. On Linux or Remote SSH, run:
 
 ```bash
-pkill -f "kilo serve"
-mkdir -p ~/.local/share/kilo
-mv ~/.local/share/kilo/kilo.db ~/.local/share/kilo/kilo.db.bak
-mv ~/.local/share/kilo/kilo.db-wal ~/.local/share/kilo/kilo.db-wal.bak 2>/dev/null
-mv ~/.local/share/kilo/kilo.db-shm ~/.local/share/kilo/kilo.db-shm.bak 2>/dev/null
+pkill -f "accure serve"
+mkdir -p ~/.local/share/accure
+mv ~/.local/share/accure/accure.db ~/.local/share/accure/accure.db.bak
+mv ~/.local/share/accure/accure.db-wal ~/.local/share/accure/accure.db-wal.bak 2>/dev/null
+mv ~/.local/share/accure/accure.db-shm ~/.local/share/accure/accure.db-shm.bak 2>/dev/null
 ```
 
-Then reload VS Code or reconnect Remote SSH. Kilo Code recreates the database the next time it starts.
+Then reload VS Code or reconnect Remote SSH. Accure Code recreates the database the next time it starts.
 
-On Windows or macOS, rename the database file and any `kilo.db-wal` or `kilo.db-shm` files in the same folder, then restart the IDE.
+On Windows or macOS, rename the database file and any `accure.db-wal` or `accure.db-shm` files in the same folder, then restart the IDE.
 
 {% callout type="warning" %}
-Renaming this database resets local Kilo Code sessions and history for that machine. Keep the `.bak` files if you need to share them with support or attempt recovery later.
+Renaming this database resets local Accure Code sessions and history for that machine. Keep the `.bak` files if you need to share them with support or attempt recovery later.
 {% /callout %}
 
-### Fully reset local Kilo data
+### Fully reset local Accure data
 
-If resetting the database does not fix the issue, you can fully reset Kilo Code's local data. This also removes local configuration and cache files, so use it only after trying the database reset above.
+If resetting the database does not fix the issue, you can fully reset Accure Code's local data. This also removes local configuration and cache files, so use it only after trying the database reset above.
 
-On Linux or VS Code Remote SSH, run this on the machine where Kilo Code is running:
+On Linux or VS Code Remote SSH, run this on the machine where Accure Code is running:
 
 ```bash
-pkill -f "kilo serve"
-mv ~/.local/share/kilo ~/.local/share/kilo.bak 2>/dev/null
-mv ~/.config/kilo ~/.config/kilo.bak 2>/dev/null
-mv ~/.cache/kilo ~/.cache/kilo.bak 2>/dev/null
+pkill -f "accure serve"
+mv ~/.local/share/accure ~/.local/share/accure.bak 2>/dev/null
+mv ~/.config/accure ~/.config/accure.bak 2>/dev/null
+mv ~/.cache/accure ~/.cache/accure.bak 2>/dev/null
 ```
 
-Then reload VS Code or reconnect Remote SSH. Kilo Code recreates these directories the next time it starts.
+Then reload VS Code or reconnect Remote SSH. Accure Code recreates these directories the next time it starts.
 
 {% callout type="warning" %}
 This resets local sessions, history, settings, and cached data. Prefer renaming the directories instead of deleting them so you can recover files. Remove secrets such as API keys or tokens before sharing any backup with support.
@@ -107,9 +107,9 @@ This resets local sessions, history, settings, and cached data. Prefer renaming 
 
 ## Contact Support
 
-If you're unable to resolve the issue, please inspect the console logs, remove any secrets, and send the logs to **[hi@kilocode.ai](mailto:hi@kilocode.ai)** along with the following:
+If you're unable to resolve the issue, please inspect the console logs, remove any secrets, and send the logs to **[hi@accurecode.ai](mailto:hi@accurecode.ai)** along with the following:
 
 - The error messages from the console
 - Steps to reproduce the issue
 - Screenshots or screen recordings of the issue
-- Your IDE and Kilo Code version
+- Your IDE and Accure Code version

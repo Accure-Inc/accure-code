@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { IndexingWorker } from "../../src/kilocode/indexing-worker-client"
+import { IndexingWorker } from "../../src/accurecode/indexing-worker-client"
 import { tmpdir } from "../fixture/fixture"
 
 test("runs indexing engine requests in its worker", async () => {

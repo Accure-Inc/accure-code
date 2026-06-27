@@ -1,6 +1,6 @@
 ---
 title: "FAQ"
-description: "Frequently asked questions about KiloClaw"
+description: "Frequently asked questions about AccureClaw"
 ---
 
 # FAQ
@@ -10,25 +10,25 @@ description: "Frequently asked questions about KiloClaw"
 You can change the model in two ways:
 
 - **From chat** — Type `/model` in the Chat window within the OpenClaw Control UI to switch models directly.
-- **From the dashboard** — Go to [https://app.kilo.ai/claw](https://app.kilo.ai/claw), select the model you want, and click **Save**. No redeploy is needed.
+- **From the dashboard** — Go to [https://app.accurecode.ai/claw](https://app.accurecode.ai/claw), select the model you want, and click **Save**. No redeploy is needed.
 
 ## Can I access the filesystem?
 
-You can access instance files in `/root/.openclaw/` directly from the [KiloClaw Dashboard](https://app.kilo.ai/claw). This is useful for examining or restoring config files. You can also interact with files through your OpenClaw agent using its built-in file tools.
+You can access instance files in `/root/.openclaw/` directly from the [AccureClaw Dashboard](https://app.accurecode.ai/claw). This is useful for examining or restoring config files. You can also interact with files through your OpenClaw agent using its built-in file tools.
 
-## Can I access my KiloClaw via SSH?
+## Can I access my AccureClaw via SSH?
 
-For security reasons, SSH access is currently disabled for all KiloClaw instances. Our primary goal is to provide a secure environment for all users, and restricting direct SSH access is one of the many measures we take to ensure the platform remains safe and protected for everyone.
+For security reasons, SSH access is currently disabled for all AccureClaw instances. Our primary goal is to provide a secure environment for all users, and restricting direct SSH access is one of the many measures we take to ensure the platform remains safe and protected for everyone.
 
 ## How can I update my OpenClaw?
 
-Do **not** click **Update Now** inside the OpenClaw Control UI — this is not supported for KiloClaw instances and may break your setup.
+Do **not** click **Update Now** inside the OpenClaw Control UI — this is not supported for AccureClaw instances and may break your setup.
 
-Updates are managed by the KiloClaw platform team to ensure stability. When a new version is available, it will be announced in the **Changelog** on your dashboard. To apply the update, click **Upgrade & Redeploy** from the [KiloClaw Dashboard](/docs/kiloclaw/dashboard#redeploy).
+Updates are managed by the AccureClaw platform team to ensure stability. When a new version is available, it will be announced in the **Changelog** on your dashboard. To apply the update, click **Upgrade & Redeploy** from the [AccureClaw Dashboard](/docs/accureclaw/dashboard#redeploy).
 
 ## How do I migrate my OpenClaw?
 
-Whether you're migrating from another OpenClaw provider to KiloClaw, moving between KiloClaw instances (e.g., individual to org or vice versa), or leaving KiloClaw for another OpenClaw provider, you should plan to migrate your workspace, memory, and context so your new Claw retains the same knowledge as before.
+Whether you're migrating from another OpenClaw provider to AccureClaw, moving between AccureClaw instances (e.g., individual to org or vice versa), or leaving AccureClaw for another OpenClaw provider, you should plan to migrate your workspace, memory, and context so your new Claw retains the same knowledge as before.
 
 You should plan to reconfigure integrations in the new instance as these are often tied to the instance and will break if you attempt migration.
 
@@ -36,13 +36,13 @@ You should plan to reconfigure integrations in the new instance as these are oft
 
 Have your current instance export the workspace. We recommend creating a GitHub repo or `tar` archive file for easy loading.
 
-If you are on KiloClaw, you can use
+If you are on AccureClaw, you can use
 
-**GitHub export** — make sure [GitHub is configured](/docs/kiloclaw/development-tools/github) and ask your instance:
+**GitHub export** — make sure [GitHub is configured](/docs/accureclaw/development-tools/github) and ask your instance:
 
 > Create a new GitHub repo and push your entire workspace there with the `gh` CLI. Tell me the URL of the repo you used.
 
-**Google Drive** — make sure [Google Drive is configured](/docs/kiloclaw/development-tools/google) and ask your instance:
+**Google Drive** — make sure [Google Drive is configured](/docs/accureclaw/development-tools/google) and ask your instance:
 
 > Tar compress your workspace and push the file to Google Drive with the `gog` CLI. Then share the filename you used.
 

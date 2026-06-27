@@ -57,10 +57,10 @@ const esbuildProblemMatcherPlugin = {
 
 /**
  * Route the shared `@opencode-ai/ui/pierre/worker` module (and its relative
- * variants) to the Kilo implementation in `webview-ui/pierre-worker.ts`.
+ * variants) to the Accure implementation in `webview-ui/pierre-worker.ts`.
  *
  * The upstream module loads Pierre's Shiki worker via a Vite-only
- * `?worker&url` import that esbuild can't resolve. The Kilo replacement loads
+ * `?worker&url` import that esbuild can't resolve. The Accure replacement loads
  * the worker from the bundled `dist/shiki-worker.js` asset instead, so syntax
  * highlighting runs off the main thread. `@pierre/diffs/worker` (used by that
  * replacement) is left alone.
@@ -78,7 +78,7 @@ const pierreWorkerAliasPlugin = {
 }
 
 /**
- * Resolve the synthetic `kilo-shiki-worker` entry point to Pierre's Shiki worker
+ * Resolve the synthetic `accure-shiki-worker` entry point to Pierre's Shiki worker
  * so esbuild can bundle it (and its inlined oniguruma WebAssembly) into a single
  * `dist/shiki-worker.js` asset loaded by `webview-ui/pierre-worker.ts`. Switch to
  * `worker-portable.js` to drop WebAssembly and use the JS regex engine instead.
@@ -88,7 +88,7 @@ const pierreWorkerAliasPlugin = {
 const shikiWorkerEntryPlugin = {
   name: "shiki-worker-entry",
   setup(build) {
-    build.onResolve({ filter: /^kilo-shiki-worker$/ }, async () => {
+    build.onResolve({ filter: /^accure-shiki-worker$/ }, async () => {
       const resolved = await build.resolve("@pierre/diffs/worker/worker.js", {
         kind: "import-statement",
         resolveDir: __dirname,
@@ -108,9 +108,9 @@ const svgSpritePlugin = {
         contents: `
           const svg = ${JSON.stringify(content)};
           const inject = () => {
-            if (!document.getElementById("kilo-sprite")) {
+            if (!document.getElementById("accure-sprite")) {
               const el = document.createElement("div");
-              el.id = "kilo-sprite";
+              el.id = "accure-sprite";
               el.style.display = "none";
               el.innerHTML = svg;
               document.body.appendChild(el);
@@ -171,7 +171,7 @@ function createBrowserWebviewContext(entryPoint, outfile) {
 // webviews load off the main thread for syntax highlighting.
 function createShikiWorkerContext() {
   return esbuild.context({
-    entryPoints: ["kilo-shiki-worker"],
+    entryPoints: ["accure-shiki-worker"],
     bundle: true,
     format: "iife",
     minify: production,
@@ -206,8 +206,8 @@ async function main() {
     "dist/agent-manager.js",
   )
 
-  // Build KiloClaw webview (SolidJS, standalone chat panel)
-  const kiloClawCtx = await createBrowserWebviewContext("webview-ui/kiloclaw/index.tsx", "dist/kiloclaw.js")
+  // Build AccureClaw webview (SolidJS, standalone chat panel)
+  const accureClawCtx = await createBrowserWebviewContext("webview-ui/accureclaw/index.tsx", "dist/accureclaw.js")
 
   // Build Marketplace webview (SolidJS, standalone catalog panel)
   const marketplaceCtx = await createBrowserWebviewContext("webview-ui/marketplace/index.tsx", "dist/marketplace.js")
@@ -231,7 +231,7 @@ async function main() {
       agentManagerCtx.watch(),
       diffViewerCtx.watch(),
       diffVirtualCtx.watch(),
-      kiloClawCtx.watch(),
+      accureClawCtx.watch(),
       marketplaceCtx.watch(),
       shikiWorkerCtx.watch(),
     ])
@@ -240,7 +240,7 @@ async function main() {
       extensionCtx.rebuild(),
       webviewCtx.rebuild(),
       agentManagerCtx.rebuild(),
-      kiloClawCtx.rebuild(),
+      accureClawCtx.rebuild(),
       marketplaceCtx.rebuild(),
       diffViewerCtx.rebuild(),
       diffVirtualCtx.rebuild(),
@@ -252,7 +252,7 @@ async function main() {
       agentManagerCtx.dispose(),
       diffViewerCtx.dispose(),
       diffVirtualCtx.dispose(),
-      kiloClawCtx.dispose(),
+      accureClawCtx.dispose(),
       marketplaceCtx.dispose(),
       shikiWorkerCtx.dispose(),
     ])

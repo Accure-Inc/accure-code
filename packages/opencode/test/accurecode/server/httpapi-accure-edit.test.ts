@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, spyOn, test } from "bun:test"
 import { ConfigProvider, Layer } from "effect"
 import { HttpRouter } from "effect/unstable/http"
-import { HEADER_FEATURE, HEADER_ORGANIZATIONID } from "@kilocode/accure-gateway"
+import { HEADER_FEATURE, HEADER_ORGANIZATIONID } from "@accurecode/accure-gateway"
 import * as Log from "@opencode-ai/core/util/log"
-import { KiloGatewayPaths } from "../../../src/kilocode/server/httpapi/groups/accure-gateway"
+import { AccureGatewayPaths } from "../../../src/accurecode/server/httpapi/groups/accure-gateway"
 import * as HttpApiServer from "../../../src/server/routes/instance/httpapi/server"
 import { resetDatabase } from "../../fixture/db"
 import { disposeAllInstances, tmpdir } from "../../fixture/fixture"
@@ -11,12 +11,12 @@ import { disposeAllInstances, tmpdir } from "../../fixture/fixture"
 void Log.init({ print: false })
 
 const env = {
-  KILO_AUTH_CONTENT: process.env.KILO_AUTH_CONTENT,
+  ACCURECODE_AUTH_CONTENT: process.env.ACCURECODE_AUTH_CONTENT,
   INCEPTION_API_KEY: process.env.INCEPTION_API_KEY,
 }
 
 const edit = {
-  provider: "kilo",
+  provider: "accure",
   model: "inception/mercury-next-edit",
   currentFilePath: "src/index.ts",
   currentFileContent: "export const value = 1\n",
@@ -46,9 +46,9 @@ function app() {
 
 async function send(body: Record<string, unknown> = edit, signal?: AbortSignal) {
   await using tmp = await tmpdir({ git: true, config: { formatter: false, lsp: false } })
-  return app().request(KiloGatewayPaths.edit, {
+  return app().request(AccureGatewayPaths.edit, {
     method: "POST",
-    headers: { "content-type": "application/json", "x-kilo-directory": tmp.path },
+    headers: { "content-type": "application/json", "x-accure-directory": tmp.path },
     body: JSON.stringify(body),
     signal,
   })
@@ -70,8 +70,8 @@ function completion(input: RequestInfo | URL) {
 }
 
 function authenticate() {
-  process.env.KILO_AUTH_CONTENT = JSON.stringify({
-    kilo: {
+  process.env.ACCURECODE_AUTH_CONTENT = JSON.stringify({
+    accure: {
       type: "oauth",
       refresh: "refresh-token",
       access: "gateway-token",
@@ -94,18 +94,18 @@ afterEach(async () => {
   await resetDatabase()
 })
 
-describe("HttpApi Kilo next edit", () => {
-  test("requires Kilo Gateway authentication for the Kilo-backed model", async () => {
-    process.env.KILO_AUTH_CONTENT = "{}"
+describe("HttpApi Accure next edit", () => {
+  test("requires Accure Gateway authentication for the Accure-backed model", async () => {
+    process.env.ACCURECODE_AUTH_CONTENT = "{}"
     expect((await send()).status).toBe(401)
   })
 
   test("rejects non-edit placeholder targets", async () => {
-    process.env.KILO_AUTH_CONTENT = "{}"
+    process.env.ACCURECODE_AUTH_CONTENT = "{}"
     expect((await send({ ...edit, model: "mistralai/codestral-2508" })).status).toBe(400)
   })
 
-  test("proxies Kilo-backed edits with gateway auth and autocomplete headers", async () => {
+  test("proxies Accure-backed edits with gateway auth and autocomplete headers", async () => {
     authenticate()
     const calls: Array<{ input: RequestInfo | URL; init?: RequestInit }> = []
     const mock = stub(async (input, init) => {
@@ -141,7 +141,7 @@ describe("HttpApi Kilo next edit", () => {
   })
 
   test("preserves direct Inception BYOK edits", async () => {
-    process.env.KILO_AUTH_CONTENT = "{}"
+    process.env.ACCURECODE_AUTH_CONTENT = "{}"
     process.env.INCEPTION_API_KEY = "inception-token"
     const calls: Array<{ input: RequestInfo | URL; init?: RequestInit }> = []
     const mock = stub(async (input, init) => {

@@ -1,12 +1,12 @@
 ---
-title: "Using SAP AI Core with Kilo Code"
-description: "Connect SAP AI Core to Kilo Code to use enterprise foundation models from your SAP BTP account. Setup and authentication guide."
+title: "Using SAP AI Core with Accure Code"
+description: "Connect SAP AI Core to Accure Code to use enterprise foundation models from your SAP BTP account. Setup and authentication guide."
 sidebar_label: SAP AI Core
 ---
 
-# Using SAP AI Core With Kilo Code
+# Using SAP AI Core With Accure Code
 
-Kilo Code supports accessing models through SAP AI Core, a service in the SAP Business Technology Platform that lets you efficiently run AI scenarios in a standardized, scalable, and hyperscaler-agnostic manner.
+Accure Code supports accessing models through SAP AI Core, a service in the SAP Business Technology Platform that lets you efficiently run AI scenarios in a standardized, scalable, and hyperscaler-agnostic manner.
 
 **Website:** [https://help.sap.com/docs/sap-ai-core](https://help.sap.com/docs/sap-ai-core)
 
@@ -19,7 +19,7 @@ Kilo Code supports accessing models through SAP AI Core, a service in the SAP Bu
 
 ## Getting Credentials
 
-To use SAP AI Core with Kilo Code, you'll need to create a service key for your SAP AI Core service instance:
+To use SAP AI Core with Accure Code, you'll need to create a service key for your SAP AI Core service instance:
 
 1. **In SAP BTP Cockpit:**
    - Navigate to your subaccount
@@ -55,7 +55,7 @@ SAP AI Core provider supports two operating modes:
 
 ## Model Requirements
 
-Kilo Code applies the following filters when fetching models:
+Accure Code applies the following filters when fetching models:
 
 - **Streaming:** Models must support streaming
 - **Capabilities:** Models must support text generation
@@ -77,12 +77,12 @@ Kilo Code applies the following filters when fetching models:
 
 The exact list of available models depends on your SAP AI Core configuration and active model offerings.
 
-## Configuration in Kilo Code
+## Configuration in Accure Code
 
 {% tabs %}
 {% tab label="VSCode (Legacy)" %}
 
-1. **Open Kilo Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Kilo Code panel.
+1. **Open Accure Code Settings:** Click the gear icon ({% codicon name="gear" /%}) in the Accure Code panel.
 2. **Select Provider:** Choose "SAP AI Core" from the "API Provider" dropdown.
 3. **Enter Credentials:**
    - **Client ID:** Enter your SAP AI Core OAuth2 client ID
@@ -101,7 +101,7 @@ The exact list of available models depends on your SAP AI Core configuration and
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add SAP AI Core. Enter your OAuth2 client credentials (Client ID, Client Secret, Base URL, and Auth URL) in the provider settings.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `accure.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
@@ -116,7 +116,7 @@ export AICORE_DEPLOYMENT_ID="your-deployment-id"
 export AICORE_RESOURCE_GROUP="your-resource-group"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/accure/accure.json` or `./accure.json`):
 
 ```jsonc
 {
@@ -185,7 +185,7 @@ To get started with SAP AI Core:
 
 1. Set up your SAP BTP account and access SAP AI Core service
 2. Create a service instance and generate a service key
-3. Configure Kilo Code with your credentials
+3. Configure Accure Code with your credentials
 4. Choose between Foundation Models or Orchestration mode based on your needs
 5. Select an appropriate model and start coding
 

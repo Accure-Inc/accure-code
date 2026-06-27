@@ -107,11 +107,11 @@ describe("tool parameters", () => {
       expect(parsed.timeout).toBe(5000)
       expect(parsed.workdir).toBe("/tmp")
     })
-    // kilocode_change start - description is optional in kilo (see bash.ts Parameters)
-    test("accepts missing description (optional in kilo)", () => {
+    // accurecode_change start - description is optional in accure (see bash.ts Parameters)
+    test("accepts missing description (optional in accure)", () => {
       expect(accepts(Shell, { command: "ls" })).toBe(true)
     })
-    // kilocode_change end
+    // accurecode_change end
     test("rejects missing command", () => {
       expect(accepts(Shell, { description: "list" })).toBe(false)
     })

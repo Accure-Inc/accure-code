@@ -2,7 +2,7 @@ import { BusEvent } from "@/bus/bus-event"
 import { Bus } from "@/bus"
 import { InstanceState } from "@/effect/instance-state"
 import { SessionID } from "./schema"
-import { QuestionID } from "@/question/schema" // kilocode_change
+import { QuestionID } from "@/question/schema" // accurecode_change
 import { NonNegativeInt } from "@opencode-ai/core/schema"
 import { Effect, Layer, Context, Schema } from "effect"
 
@@ -29,13 +29,13 @@ export const Info = Schema.Union([
   Schema.Struct({
     type: Schema.Literal("busy"),
   }),
-  // kilocode_change start
+  // accurecode_change start
   Schema.Struct({
     type: Schema.Literal("offline"),
     requestID: QuestionID,
     message: Schema.String,
   }),
-  // kilocode_change end
+  // accurecode_change end
 ]).annotate({ identifier: "SessionStatus" })
 export type Info = Schema.Schema.Type<typeof Info>
 

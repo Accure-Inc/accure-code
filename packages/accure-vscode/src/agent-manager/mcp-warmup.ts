@@ -1,6 +1,6 @@
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 
-type Client = Pick<KiloClient, "mcp">
+type Client = Pick<AccureClient, "mcp">
 type Log = (...args: unknown[]) => void
 
 async function warm(client: Client, dir: string, log: Log): Promise<void> {

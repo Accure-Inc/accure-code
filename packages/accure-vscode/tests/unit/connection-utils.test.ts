@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import type { GlobalEvent } from "@kilocode/sdk/v2/client"
+import type { GlobalEvent } from "@accurecode/sdk/v2/client"
 import { resolveEventSessionId } from "../../src/services/cli-backend/connection-utils"
 
 const noLookup = (_: string) => undefined
@@ -12,7 +12,7 @@ const message = {
   role: "user",
   time: { created: 0 },
   agent: "build",
-  model: { providerID: "kilo", modelID: "test" },
+  model: { providerID: "accure", modelID: "test" },
 } as const
 
 const part = {

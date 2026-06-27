@@ -1,7 +1,7 @@
 export * as ConfigPermission from "./permission"
 import { Schema, SchemaGetter } from "effect"
 
-export const Action = Schema.NullOr(Schema.Literals(["ask", "allow", "deny"])) // kilocode_change - nullable allows null as a delete sentinel
+export const Action = Schema.NullOr(Schema.Literals(["ask", "allow", "deny"])) // accurecode_change - nullable allows null as a delete sentinel
   .annotate({ identifier: "PermissionActionConfig" })
 export type Action = Schema.Schema.Type<typeof Action>
 
@@ -33,7 +33,7 @@ const InputObject = Schema.StructWithRest(
     lsp: Schema.optional(Rule),
     doom_loop: Schema.optional(Action),
     skill: Schema.optional(Rule),
-    agent_manager: Schema.optional(Rule), // kilocode_change
+    agent_manager: Schema.optional(Rule), // accurecode_change
   }),
   [Schema.Record(Schema.String, Rule)],
 )
@@ -45,7 +45,7 @@ const InputSchema = Schema.Union([Action, InputObject])
 // Normalise the Action shorthand into `{ "*": action }`. Object inputs pass
 // through untouched.
 const normalizeInput = (input: Schema.Schema.Type<typeof InputSchema>): Schema.Schema.Type<typeof InputObject> =>
-  input === null || typeof input === "string" ? { "*": input } : input // kilocode_change
+  input === null || typeof input === "string" ? { "*": input } : input // accurecode_change
 
 export const Info = InputSchema.pipe(
   Schema.decodeTo(InputObject, {

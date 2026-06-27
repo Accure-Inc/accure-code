@@ -58,7 +58,7 @@ export const dict = {
 
   "dialog.usageExceeded.freeTier.title": "Dostignut besplatan limit",
   "dialog.usageExceeded.freeTier.description":
-    "Pretplatite se na Kilo Go za pouzdan pristup najboljim open-source modelima, počevši od $5/mjesec.",
+    "Pretplatite se na Accure Go za pouzdan pristup najboljim open-source modelima, počevši od $5/mjesec.",
   "dialog.usageExceeded.freeTier.actionLabel": "Pretplati se",
   "dialog.usageExceeded.accountRateLimit.title": "Dostignut Go limit",
   "dialog.usageExceeded.accountRateLimit.description":
@@ -109,7 +109,7 @@ export const dict = {
   "ui.textField.copied": "Kopirano",
 
   "ui.imagePreview.alt": "Pregled slike",
-  // kilocode_change start
+  // accurecode_change start
   "ui.mermaid.rendering": "Renderovanje Mermaid dijagrama...",
   "ui.mermaid.renderError": "Renderovanje Mermaid dijagrama nije uspjelo: {{message}}",
   "ui.mermaid.errorDefault": "Nije moguće renderovati Mermaid dijagram.",
@@ -120,7 +120,7 @@ export const dict = {
   "ui.mermaid.copyPng": "Kopiraj PNG",
   "ui.mermaid.downloadSvg": "Preuzmi SVG",
   "ui.mermaid.downloadPng": "Preuzmi PNG",
-  // kilocode_change end
+  // accurecode_change end
   "ui.scrollView.ariaLabel": "sadržaj za pomjeranje",
 
   "ui.tool.read": "Čitanje",

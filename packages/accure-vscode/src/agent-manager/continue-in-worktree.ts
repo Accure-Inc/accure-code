@@ -1,14 +1,14 @@
-import type { KiloClient, Session } from "@kilocode/sdk/v2/client"
+import type { AccureClient, Session } from "@accurecode/sdk/v2/client"
 import type { CreateWorktreeResult } from "./WorktreeManager"
 import type { WorktreeStateManager } from "./WorktreeStateManager"
 import { capture as captureGitState, apply as applyGitState, type GitSnapshot } from "./git-transfer"
-import { getErrorMessage } from "../kilo-provider-utils"
+import { getErrorMessage } from "../accure-provider-utils"
 import { PLATFORM } from "./constants"
 import { recordForkHandoff } from "./fork-handoff"
 
 export interface ContinueContext {
   root: string
-  getClient: () => KiloClient
+  getClient: () => AccureClient
   createWorktreeOnDisk: (opts: { baseBranch: string }) => Promise<{
     worktree: { id: string }
     result: CreateWorktreeResult
@@ -93,7 +93,7 @@ async function rollback(
 
 /** Fork the session into the worktree directory. */
 export async function forkSession(ctx: ContinueContext, sessionId: string, dir: string): Promise<StepResult<Session>> {
-  let client: KiloClient
+  let client: AccureClient
   try {
     client = ctx.getClient()
   } catch (err) {

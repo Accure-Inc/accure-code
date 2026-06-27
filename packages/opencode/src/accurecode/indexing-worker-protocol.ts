@@ -2,8 +2,8 @@ import type {
   IndexingConfigInput,
   IndexingTelemetryEvent,
   VectorStoreSearchResult,
-} from "@kilocode/accure-indexing/engine"
-import type { IndexingStatus } from "@kilocode/accure-indexing/status"
+} from "@accurecode/accure-indexing/engine"
+import type { IndexingStatus } from "@accurecode/accure-indexing/status"
 import type { IndexingWarning } from "./indexing-warning"
 
 export type InitInput = {

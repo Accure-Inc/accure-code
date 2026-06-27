@@ -1,6 +1,6 @@
 /** @jsxImportSource solid-js */
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
-import { Diff } from "@kilocode/accure-ui/diff-ssr"
+import { Diff } from "@accurecode/accure-ui/diff-ssr"
 import { WorkerPoolProvider } from "@opencode-ai/ui/context/worker-pool"
 
 const meta: Meta = {

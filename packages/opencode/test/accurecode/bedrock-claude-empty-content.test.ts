@@ -31,14 +31,14 @@ describe("ProviderTransform.message - bedrock claude empty content filtering", (
     const msgs = [
       { role: "user", content: "Hello" },
       { role: "assistant", content: "" },
-      { role: "user", content: "World" },
+      { role: "assistant", content: "Hi" },
     ] as any[]
 
     const result = ProviderTransform.message(msgs, model, {})
 
     expect(result).toHaveLength(2)
     expect(result[0].content).toBe("Hello")
-    expect(result[1].content).toBe("World")
+    expect(result[1].content).toBe("Hi")
   })
 
   test("filters out empty text parts from array content", () => {
@@ -69,7 +69,7 @@ describe("ProviderTransform.message - bedrock claude empty content filtering", (
           { type: "reasoning", text: "" },
         ],
       },
-      { role: "user", content: "World" },
+      { role: "assistant", content: "World" },
     ] as any[]
 
     const result = ProviderTransform.message(msgs, model, {})
@@ -110,7 +110,7 @@ describe("ProviderTransform.message - bedrock claude empty content filtering", (
     expect(result[1].content[0]).toEqual({ type: "text", text: "Answer" })
   })
 
-  test("does not filter for non-claude bedrock models", () => {
+  test("filters empty messages for non-claude bedrock models too", () => {
     const titan = {
       ...model,
       id: "amazon-bedrock/amazon.titan-text-express-v1",
@@ -122,17 +122,19 @@ describe("ProviderTransform.message - bedrock claude empty content filtering", (
     }
 
     const msgs = [
+      { role: "user", content: "Hello" },
       { role: "assistant", content: "" },
       {
         role: "assistant",
         content: [{ type: "text", text: "" }],
       },
+      { role: "assistant", content: "Hi" },
     ] as any[]
 
     const result = ProviderTransform.message(msgs, titan, {})
 
     expect(result).toHaveLength(2)
-    expect(result[0].content).toBe("")
-    expect(result[1].content).toHaveLength(1)
+    expect(result[0].content).toBe("Hello")
+    expect(result[1].content).toBe("Hi")
   })
 })

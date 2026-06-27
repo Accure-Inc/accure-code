@@ -6,13 +6,13 @@ import { EffectBridge } from "@/effect/bridge"
 import { lazy } from "@opencode-ai/core/util/lazy"
 import { Plugin } from "@/plugin"
 import { Shell } from "@/shell/shell"
-import { KiloPtySelfCommand } from "@/kilocode/pty/self-command" // kilocode_change
+import { AccurePtySelfCommand } from "@/accurecode/pty/self-command" // accurecode_change
 import type { Proc } from "#pty"
 import * as Log from "@opencode-ai/core/util/log"
 import { PtyID } from "./schema"
 import { Effect, Layer, Context, Schema, Types } from "effect"
 import { NonNegativeInt, PositiveInt } from "@opencode-ai/core/schema"
-import { SessionID } from "@/session/schema" // kilocode_change
+import { SessionID } from "@/session/schema" // accurecode_change
 
 const log = Log.create({ service: "pty" })
 
@@ -63,7 +63,7 @@ export const Info = Schema.Struct({
   cwd: Schema.String,
   status: Schema.Literals(["running", "exited"]),
   pid: PositiveInt,
-  sessionID: Schema.optional(Schema.NullOr(SessionID)), // kilocode_change
+  sessionID: Schema.optional(Schema.NullOr(SessionID)), // accurecode_change
 }).annotate({ identifier: "Pty" })
 
 export type Info = Types.DeepMutable<Schema.Schema.Type<typeof Info>>
@@ -80,7 +80,7 @@ export type CreateInput = Types.DeepMutable<Schema.Schema.Type<typeof CreateInpu
 
 export const UpdateInput = Schema.Struct({
   title: Schema.optional(Schema.String),
-  sessionID: Schema.optional(Schema.NullOr(SessionID)), // kilocode_change
+  sessionID: Schema.optional(Schema.NullOr(SessionID)), // accurecode_change
   size: Schema.optional(
     Schema.Struct({
       rows: PositiveInt,
@@ -190,33 +190,33 @@ export const layer = Layer.effect(
       const bridge = yield* EffectBridge.make()
       const cfg = yield* config.get()
       const id = PtyID.ascending()
-      const resolved = KiloPtySelfCommand.resolve(input) // kilocode_change
-      const command = resolved.command || Shell.preferred(cfg.shell) // kilocode_change
-      const args = resolved.args || [] // kilocode_change
+      const resolved = AccurePtySelfCommand.resolve(input) // accurecode_change
+      const command = resolved.command || Shell.preferred(cfg.shell) // accurecode_change
+      const args = resolved.args || [] // accurecode_change
       if (Shell.login(command)) {
         args.push("-l")
       }
 
-      const cwd = resolved.cwd || s.dir // kilocode_change
+      const cwd = resolved.cwd || s.dir // accurecode_change
       const shell = yield* plugin.trigger("shell.env", { cwd }, { env: {} })
       const env = {
         ...process.env,
         ...input.env,
         ...shell.env,
         TERM: "xterm-256color",
-        KILO_TERMINAL: "1",
-        KILO_PTY_ID: id, // kilocode_change
+        ACCURECODE_TERMINAL: "1",
+        ACCURECODE_PTY_ID: id, // accurecode_change
       } as Record<string, string>
-      // kilocode_change start
-      // Don't leak the kilo server's auth credential into user shells.
+      // accurecode_change start
+      // Don't leak the accure server's auth credential into user shells.
       // Anything the shell forks (npm post-install scripts, `curl | bash`,
       // supply-chain-compromised tools) would otherwise see the password
-      // with zero effort. Users who genuinely need `kilo run`/`kilo tui
-      // attach` to auto-connect from inside a kilo-spawned terminal can
+      // with zero effort. Users who genuinely need `accure run`/`accure tui
+      // attach` to auto-connect from inside a accure-spawned terminal can
       // pass `--password` explicitly or re-export the env themselves.
-      delete env.KILO_SERVER_PASSWORD
-      delete env.KILO_SERVER_USERNAME
-      // kilocode_change end
+      delete env.ACCURECODE_SERVER_PASSWORD
+      delete env.ACCURECODE_SERVER_USERNAME
+      // accurecode_change end
 
       if (process.platform === "win32") {
         env.LC_ALL = "C.UTF-8"
@@ -293,11 +293,11 @@ export const layer = Layer.effect(
       if (input.title) {
         session.info.title = input.title
       }
-      // kilocode_change start
+      // accurecode_change start
       if ("sessionID" in input) {
         session.info.sessionID = input.sessionID ?? undefined
       }
-      // kilocode_change end
+      // accurecode_change end
       if (input.size) {
         session.process.resize(input.size.cols, input.size.rows)
       }

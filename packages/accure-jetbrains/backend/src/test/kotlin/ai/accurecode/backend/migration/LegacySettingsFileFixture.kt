@@ -1,4 +1,4 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -7,7 +7,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import java.nio.file.Files
 
 internal class LegacySettingsFileFixture {
-    private val file = Files.createTempDirectory("kilo-legacy-migration").resolve("legacy-settings.json").toFile()
+    private val file = Files.createTempDirectory("accure-legacy-migration").resolve("legacy-settings.json").toFile()
     var migrationStatus: LegacyMigrationStatus? = null
     var providerProfiles: String? = null
     val oauthSecrets: MutableMap<String, String> = mutableMapOf()

@@ -124,7 +124,7 @@ export const TerminalTab: Component<Props> = (props) => {
   /** Single logger so every error path in this file surfaces in the
    *  webview DevTools console with a consistent prefix. The component
    *  is intricate — we deliberately do not swallow errors silently. */
-  const log = (...args: unknown[]) => console.warn(`[Kilo New][XTerm][${props.terminalId}]`, ...args)
+  const log = (...args: unknown[]) => console.warn(`[Accure New][XTerm][${props.terminalId}]`, ...args)
 
   onMount(() => {
     const term = new Terminal({
@@ -143,7 +143,7 @@ export const TerminalTab: Component<Props> = (props) => {
     // webviews intercept and silently drop — so we pass an explicit
     // handler that posts an `openExternal` message. The message falls
     // through `AgentManagerProvider.onMessage` to the underlying
-    // `KiloProvider.handleWebviewMessage` path which already calls
+    // `AccureProvider.handleWebviewMessage` path which already calls
     // `vscode.env.openExternal` for sidebar + settings links.
     term.loadAddon(
       new WebLinksAddon((_event, url) => {
@@ -300,7 +300,7 @@ export const TerminalTab: Component<Props> = (props) => {
         return
       }
 
-      // fontSizeChanged/ready control the Kilo chat UI font — do not apply
+      // fontSizeChanged/ready control the Accure chat UI font — do not apply
       // them to the terminal, which has its own independent font settings.
       // Keep the repaint for any downstream layout side-effects.
       const size =

@@ -1,4 +1,4 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
 interface SessionView {
     val sessionViewKind: Kind

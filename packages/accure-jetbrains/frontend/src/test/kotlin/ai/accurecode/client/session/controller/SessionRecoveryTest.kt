@@ -1,21 +1,21 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.QuestionInfoDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionStatusDto
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.QuestionInfoDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionStatusDto
 
 /**
  * Tests for pending permission/question recovery after history load.
  *
  * VS Code rehydrates pending prompts by calling list endpoints after
- * reconnect. JetBrains now does the same in [ai.kilocode.client.session.controller.SessionController.recoverPending].
+ * reconnect. JetBrains now does the same in [ai.accurecode.client.session.controller.SessionController.recoverPending].
  */
 class SessionRecoveryTest : SessionControllerTestBase() {
 
@@ -23,7 +23,7 @@ class SessionRecoveryTest : SessionControllerTestBase() {
         super.setUp()
         // Set a pre-existing session in the fake API
         rpc.session = rpc.session.copy(id = "ses_test")
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, config = ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, config = ConfigDto(model = "accure/gpt-5"))
     }
 
     fun `test pending permission is recovered on history load`() {
@@ -107,19 +107,19 @@ class SessionRecoveryTest : SessionControllerTestBase() {
         assertTrue(m.model.state is SessionState.AwaitingPermission)
     }
 
-    // ------ Status seeding from KiloSessionService.statuses ------
+    // ------ Status seeding from AccureSessionService.statuses ------
 
     fun `test busy status is seeded from statuses map`() {
         rpc.statuses.value = mapOf("ses_test" to SessionStatusDto("busy"))
 
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test")
         flush()
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [busy] [considering next steps]
+            [code] [accure/gpt-5] [busy] [considering next steps]
             """,
             m, show = true,
         )
@@ -133,14 +133,14 @@ class SessionRecoveryTest : SessionControllerTestBase() {
             next = 5000L,
         ))
 
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test")
         flush()
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [retry] [Rate limited]
+            [code] [accure/gpt-5] [retry] [Rate limited]
             """,
             m, show = true,
         )
@@ -156,14 +156,14 @@ class SessionRecoveryTest : SessionControllerTestBase() {
             requestID = "req_xyz",
         ))
 
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test")
         flush()
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [offline] [No network]
+            [code] [accure/gpt-5] [offline] [No network]
             """,
             m, show = true,
         )
@@ -173,14 +173,14 @@ class SessionRecoveryTest : SessionControllerTestBase() {
     fun `test idle status in map leaves controller in Idle`() {
         rpc.statuses.value = mapOf("ses_test" to SessionStatusDto("idle"))
 
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test")
         flush()
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m, show = true,
         )
@@ -189,14 +189,14 @@ class SessionRecoveryTest : SessionControllerTestBase() {
     fun `test missing status entry leaves controller in Idle`() {
         rpc.statuses.value = emptyMap()
 
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test")
         flush()
 
         assertSession(
             """
-            [code] [kilo/gpt-5] [idle]
+            [code] [accure/gpt-5] [idle]
             """,
             m, show = true,
         )
@@ -213,7 +213,7 @@ class SessionRecoveryTest : SessionControllerTestBase() {
             )
         )
 
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test")
         flush()
@@ -229,7 +229,7 @@ class SessionRecoveryTest : SessionControllerTestBase() {
             state: PENDING
             metadata: <none>
 
-            [code] [kilo/gpt-5] [awaiting-permission]
+            [code] [accure/gpt-5] [awaiting-permission]
             """,
             m, show = true,
         )
@@ -262,7 +262,7 @@ class SessionRecoveryTest : SessionControllerTestBase() {
             )
         )
 
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test")
         flush()
@@ -283,7 +283,7 @@ class SessionRecoveryTest : SessionControllerTestBase() {
             )
         )
 
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test")
         flush()
@@ -325,7 +325,7 @@ class SessionRecoveryTest : SessionControllerTestBase() {
             )
         )
 
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test")
         flush()
@@ -346,7 +346,7 @@ class SessionRecoveryTest : SessionControllerTestBase() {
             )
         )
 
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY, config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY, config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         val m = controller("ses_test")
         flush()
@@ -360,7 +360,7 @@ class SessionRecoveryTest : SessionControllerTestBase() {
             multiple: false
             custom: true
 
-            [code] [kilo/gpt-5] [awaiting-question]
+            [code] [accure/gpt-5] [awaiting-question]
             """,
             m, show = true,
         )

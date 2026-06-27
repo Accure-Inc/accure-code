@@ -1,14 +1,14 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.rpc.dto.AgentDto
-import ai.kilocode.rpc.dto.AgentConfigDto
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ModelDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.ModelStateDto
-import ai.kilocode.rpc.dto.ProviderDto
+import ai.accurecode.rpc.dto.AgentDto
+import ai.accurecode.rpc.dto.AgentConfigDto
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ModelDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.ModelStateDto
+import ai.accurecode.rpc.dto.ProviderDto
 
 class ConfigSelectionTest : SessionControllerTestBase() {
 
@@ -18,16 +18,16 @@ class ConfigSelectionTest : SessionControllerTestBase() {
         collect(m)
         flush()
 
-        edt { m.selectModel("kilo", "gpt-5") }
+        edt { m.selectModel("accure", "gpt-5") }
         flush()
 
         assertTrue(rpc.configs.isEmpty())
         assertEquals("code", appRpc.selections.single().agent)
-        assertEquals("kilo", appRpc.selections.single().providerID)
+        assertEquals("accure", appRpc.selections.single().providerID)
         assertEquals("gpt-5", appRpc.selections.single().modelID)
         assertSession(
             """
-            [code] [kilo/gpt-5] [app: DISCONNECTED] [workspace: READY]
+            [code] [accure/gpt-5] [app: DISCONNECTED] [workspace: READY]
             """,
             m,
             show = false,
@@ -60,7 +60,7 @@ class ConfigSelectionTest : SessionControllerTestBase() {
         flush()
         events.clear()
 
-        edt { m.selectModel("kilo", "gpt-5") }
+        edt { m.selectModel("accure", "gpt-5") }
         flush()
 
         assertControllerEvents("WorkspaceReady", events)
@@ -68,16 +68,16 @@ class ConfigSelectionTest : SessionControllerTestBase() {
 
     fun `test clearModelOverride restores default model`() {
         appRpc.models = ModelStateDto(model = mapOf("code" to ModelSelectionDto("openai", "gpt")))
-        appRpc.state.value = KiloAppStateDto(
-            KiloAppStatusDto.READY,
+        appRpc.state.value = AccureAppStateDto(
+            AccureAppStatusDto.READY,
             config = ConfigDto(agent = mapOf("code" to AgentConfigDto(model = "anthropic/claude"))),
         )
         projectRpc.state.value = workspaceReady(
             providers = listOf(
                 ProviderDto(
-                    id = "kilo",
-                    name = "Kilo",
-                    models = mapOf("kilo-auto/free" to ModelDto(id = "kilo-auto/free", name = "Auto")),
+                    id = "accure",
+                    name = "Accure",
+                    models = mapOf("accure-auto/free" to ModelDto(id = "accure-auto/free", name = "Auto")),
                 ),
                 ProviderDto(
                     id = "anthropic",
@@ -90,7 +90,7 @@ class ConfigSelectionTest : SessionControllerTestBase() {
                     models = mapOf("gpt" to ModelDto(id = "gpt", name = "GPT")),
                 ),
             ),
-            connected = listOf("kilo", "anthropic", "openai"),
+            connected = listOf("accure", "anthropic", "openai"),
             defaults = emptyMap(),
         )
         val m = controller()
@@ -109,16 +109,16 @@ class ConfigSelectionTest : SessionControllerTestBase() {
     }
 
     fun `test global config supplies computed default`() {
-        appRpc.state.value = KiloAppStateDto(
-            KiloAppStatusDto.READY,
+        appRpc.state.value = AccureAppStateDto(
+            AccureAppStatusDto.READY,
             config = ConfigDto(model = "openai/gpt"),
         )
         projectRpc.state.value = workspaceReady(
             providers = listOf(
                 ProviderDto(
-                    id = "kilo",
-                    name = "Kilo",
-                    models = mapOf("kilo-auto/free" to ModelDto(id = "kilo-auto/free", name = "Auto")),
+                    id = "accure",
+                    name = "Accure",
+                    models = mapOf("accure-auto/free" to ModelDto(id = "accure-auto/free", name = "Auto")),
                 ),
                 ProviderDto(
                     id = "openai",
@@ -126,7 +126,7 @@ class ConfigSelectionTest : SessionControllerTestBase() {
                     models = mapOf("gpt" to ModelDto(id = "gpt", name = "GPT")),
                 ),
             ),
-            connected = listOf("kilo", "openai"),
+            connected = listOf("accure", "openai"),
             defaults = emptyMap(),
         )
         val m = controller()
@@ -140,13 +140,13 @@ class ConfigSelectionTest : SessionControllerTestBase() {
 
     fun `test recent supplies computed default when config is absent`() {
         appRpc.models = ModelStateDto(recent = listOf(ModelSelectionDto("anthropic", "claude")))
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY)
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady(
             providers = listOf(
                 ProviderDto(
-                    id = "kilo",
-                    name = "Kilo",
-                    models = mapOf("kilo-auto/free" to ModelDto(id = "kilo-auto/free", name = "Auto")),
+                    id = "accure",
+                    name = "Accure",
+                    models = mapOf("accure-auto/free" to ModelDto(id = "accure-auto/free", name = "Auto")),
                 ),
                 ProviderDto(
                     id = "anthropic",
@@ -154,7 +154,7 @@ class ConfigSelectionTest : SessionControllerTestBase() {
                     models = mapOf("claude" to ModelDto(id = "claude", name = "Claude")),
                 ),
             ),
-            connected = listOf("kilo", "anthropic"),
+            connected = listOf("accure", "anthropic"),
             defaults = emptyMap(),
         )
         val m = controller()
@@ -168,16 +168,16 @@ class ConfigSelectionTest : SessionControllerTestBase() {
 
     fun `test invalid config falls through to recent`() {
         appRpc.models = ModelStateDto(recent = listOf(ModelSelectionDto("anthropic", "claude")))
-        appRpc.state.value = KiloAppStateDto(
-            KiloAppStatusDto.READY,
+        appRpc.state.value = AccureAppStateDto(
+            AccureAppStatusDto.READY,
             config = ConfigDto(model = "openai/gpt"),
         )
         projectRpc.state.value = workspaceReady(
             providers = listOf(
                 ProviderDto(
-                    id = "kilo",
-                    name = "Kilo",
-                    models = mapOf("kilo-auto/free" to ModelDto(id = "kilo-auto/free", name = "Auto")),
+                    id = "accure",
+                    name = "Accure",
+                    models = mapOf("accure-auto/free" to ModelDto(id = "accure-auto/free", name = "Auto")),
                 ),
                 ProviderDto(
                     id = "anthropic",
@@ -190,7 +190,7 @@ class ConfigSelectionTest : SessionControllerTestBase() {
                     models = mapOf("gpt" to ModelDto(id = "gpt", name = "GPT")),
                 ),
             ),
-            connected = listOf("kilo", "anthropic"),
+            connected = listOf("accure", "anthropic"),
             defaults = emptyMap(),
         )
         val m = controller()
@@ -201,18 +201,18 @@ class ConfigSelectionTest : SessionControllerTestBase() {
         assertEquals("anthropic/claude", m.model.model)
     }
 
-    fun `test no valid candidates falls back to kilo auto`() {
+    fun `test no valid candidates falls back to accure auto`() {
         appRpc.models = ModelStateDto(recent = listOf(ModelSelectionDto("openai", "gpt")))
-        appRpc.state.value = KiloAppStateDto(
-            KiloAppStatusDto.READY,
+        appRpc.state.value = AccureAppStateDto(
+            AccureAppStatusDto.READY,
             config = ConfigDto(model = "missing/model"),
         )
         projectRpc.state.value = workspaceReady(
             providers = listOf(
                 ProviderDto(
-                    id = "kilo",
-                    name = "Kilo",
-                    models = mapOf("kilo-auto/free" to ModelDto(id = "kilo-auto/free", name = "Auto")),
+                    id = "accure",
+                    name = "Accure",
+                    models = mapOf("accure-auto/free" to ModelDto(id = "accure-auto/free", name = "Auto")),
                 ),
                 ProviderDto(
                     id = "openai",
@@ -220,15 +220,15 @@ class ConfigSelectionTest : SessionControllerTestBase() {
                     models = mapOf("gpt" to ModelDto(id = "gpt", name = "GPT")),
                 ),
             ),
-            connected = listOf("kilo"),
+            connected = listOf("accure"),
             defaults = emptyMap(),
         )
         val m = controller()
         collect(m)
         flush()
 
-        assertEquals("kilo/kilo-auto/free", m.model.defaultModel)
-        assertEquals("kilo/kilo-auto/free", m.model.model)
+        assertEquals("accure/accure-auto/free", m.model.defaultModel)
+        assertEquals("accure/accure-auto/free", m.model.model)
         assertFalse(m.model.modelOverride)
     }
 
@@ -237,8 +237,8 @@ class ConfigSelectionTest : SessionControllerTestBase() {
             model = mapOf("code" to ModelSelectionDto("openai", "gpt")),
             variant = mapOf("anthropic/claude" to "high"),
         )
-        appRpc.state.value = KiloAppStateDto(
-            KiloAppStatusDto.READY,
+        appRpc.state.value = AccureAppStateDto(
+            AccureAppStatusDto.READY,
             config = ConfigDto(agent = mapOf("code" to AgentConfigDto(model = "anthropic/claude"))),
         )
         projectRpc.state.value = workspaceReady(
@@ -274,7 +274,7 @@ class ConfigSelectionTest : SessionControllerTestBase() {
 
     fun `test selectAgent uses saved model for selected agent`() {
         appRpc.models = ModelStateDto(model = mapOf("plan" to ModelSelectionDto("openai", "gpt")))
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, config = ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, config = ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady(
             agents = listOf(
                 AgentDto(name = "code", displayName = "Code", mode = "code"),
@@ -282,8 +282,8 @@ class ConfigSelectionTest : SessionControllerTestBase() {
             ),
             providers = listOf(
                 ProviderDto(
-                    id = "kilo",
-                    name = "Kilo",
+                    id = "accure",
+                    name = "Accure",
                     models = mapOf("gpt-5" to ModelDto(id = "gpt-5", name = "GPT-5")),
                 ),
                 ProviderDto(
@@ -292,8 +292,8 @@ class ConfigSelectionTest : SessionControllerTestBase() {
                     models = mapOf("gpt" to ModelDto(id = "gpt", name = "GPT")),
                 ),
             ),
-            connected = listOf("kilo", "openai"),
-            defaults = mapOf("code" to "kilo/gpt-5", "plan" to "kilo/gpt-5"),
+            connected = listOf("accure", "openai"),
+            defaults = mapOf("code" to "accure/gpt-5", "plan" to "accure/gpt-5"),
         )
         val m = controller()
         collect(m)
@@ -310,8 +310,8 @@ class ConfigSelectionTest : SessionControllerTestBase() {
         projectRpc.state.value = workspaceReady(
             providers = listOf(
                 ProviderDto(
-                    id = "kilo",
-                    name = "Kilo",
+                    id = "accure",
+                    name = "Accure",
                     models = mapOf(
                         "gpt-5" to ModelDto(id = "gpt-5", name = "GPT-5", variants = listOf("low", "medium", "high")),
                     ),
@@ -326,7 +326,7 @@ class ConfigSelectionTest : SessionControllerTestBase() {
         flush()
 
         assertEquals("high", m.model.variant)
-        assertEquals("kilo/gpt-5", appRpc.variants.single().key)
+        assertEquals("accure/gpt-5", appRpc.variants.single().key)
         assertEquals("high", appRpc.variants.single().value)
     }
 }

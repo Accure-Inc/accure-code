@@ -1,5 +1,5 @@
 /**
- * Custom OAuth handler for Kilo Gateway
+ * Custom OAuth handler for Accure Gateway
  *
  * Handles the device authorization flow and organization selection
  * before completing authentication.
@@ -13,7 +13,7 @@ import { useSync } from "@tui/context/sync"
 import { useToast } from "@tui/ui/toast"
 import { Link } from "@tui/ui/link"
 import * as Clipboard from "@tui/util/clipboard"
-import { DialogKiloOrganization } from "./dialog-kilo-organization.js"
+import { DialogAccureOrganization } from "./dialog-accure-organization.js"
 
 // These types are OpenCode-internal and imported at runtime
 type UseSDK = any
@@ -21,7 +21,7 @@ type UseTheme = any
 type ProviderAuthAuthorization = any
 type DialogModel = any
 
-interface KiloAutoMethodProps {
+interface AccureAutoMethodProps {
   index: number
   providerID: string
   title: string
@@ -31,7 +31,7 @@ interface KiloAutoMethodProps {
   DialogModel: DialogModel
 }
 
-export function KiloAutoMethod(props: KiloAutoMethodProps) {
+export function AccureAutoMethod(props: AccureAutoMethodProps) {
   const { theme } = props.useTheme()
   const sdk = props.useSDK()
   const dialog = useDialog()
@@ -66,7 +66,7 @@ export function KiloAutoMethod(props: KiloAutoMethodProps) {
 
       // Step 2: Fetch profile using the new server endpoint
       // This endpoint uses the stored auth credentials to fetch profile
-      const profileResponse = await sdk.client.kilo.profile()
+      const profileResponse = await sdk.client.accurecode.profile()
 
       if (profileResponse.error || !profileResponse.data) {
         // Couldn't fetch profile - fallback to personal account
@@ -83,7 +83,7 @@ export function KiloAutoMethod(props: KiloAutoMethodProps) {
         await sync.bootstrap()
 
         dialog.replace(() => (
-          <DialogKiloOrganization
+          <DialogAccureOrganization
             organizations={profile.organizations!}
             userEmail={profile.email}
             providerID={props.providerID}
@@ -102,7 +102,7 @@ export function KiloAutoMethod(props: KiloAutoMethodProps) {
       if (error instanceof DOMException && error.name === "AbortError") return
 
       // Error fetching profile - fallback to personal account
-      console.warn("Failed to fetch Kilo profile, using personal account:", error)
+      console.warn("Failed to fetch Accure profile, using personal account:", error)
       setStatus("error")
 
       toast.show({

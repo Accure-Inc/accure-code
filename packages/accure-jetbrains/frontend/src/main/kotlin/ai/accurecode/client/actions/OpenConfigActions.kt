@@ -1,11 +1,11 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.KiloNotifications
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.SessionManager
-import ai.kilocode.client.telemetry.Telemetry
-import ai.kilocode.rpc.dto.ConfigTargetDto
+import ai.accurecode.client.AccureNotifications
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.SessionManager
+import ai.accurecode.client.telemetry.Telemetry
+import ai.accurecode.rpc.dto.ConfigTargetDto
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -22,30 +22,30 @@ abstract class ConfigAction(
 
     protected fun text(target: ConfigTargetDto?): String {
         val key = if (target?.exists == false) create else open
-        return KiloBundle.message(key, target?.displayPath ?: "...")
+        return AccureBundle.message(key, target?.displayPath ?: "...")
     }
 
     protected fun failed() {
-        KiloNotifications.error(KiloBundle.message("action.Kilo.OpenConfig.failed"))
+        AccureNotifications.error(AccureBundle.message("action.Accure.OpenConfig.failed"))
     }
 }
 
 class OpenLocalConfigAction : ConfigAction(
-    open = "action.Kilo.OpenLocalConfig.text",
-    create = "action.Kilo.CreateLocalConfig.text",
-    text = KiloBundle.message("action.Kilo.OpenLocalConfig.text", "..."),
-    description = KiloBundle.message("action.Kilo.OpenLocalConfig.description"),
+    open = "action.Accure.OpenLocalConfig.text",
+    create = "action.Accure.CreateLocalConfig.text",
+    text = AccureBundle.message("action.Accure.OpenLocalConfig.text", "..."),
+    description = AccureBundle.message("action.Accure.OpenLocalConfig.description"),
 ) {
     override fun update(e: AnActionEvent) {
         val dir = directory(e)
         e.presentation.isEnabled = dir != null
-        e.presentation.text = text(dir?.let { service<KiloWorkspaceService>().localConfig[it] })
+        e.presentation.text = text(dir?.let { service<AccureWorkspaceService>().localConfig[it] })
     }
 
     override fun actionPerformed(e: AnActionEvent) {
         val dir = directory(e) ?: return
         Telemetry.send("Config Opened", mapOf("surface" to "tool_window", "scope" to "local"))
-        service<KiloWorkspaceService>().openLocalConfig(dir) { ok ->
+        service<AccureWorkspaceService>().openLocalConfig(dir) { ok ->
             if (!ok) failed()
         }
     }
@@ -56,18 +56,18 @@ class OpenLocalConfigAction : ConfigAction(
 }
 
 class OpenGlobalConfigAction : ConfigAction(
-    open = "action.Kilo.OpenGlobalConfig.text",
-    create = "action.Kilo.CreateGlobalConfig.text",
-    text = KiloBundle.message("action.Kilo.OpenGlobalConfig.text", "..."),
-    description = KiloBundle.message("action.Kilo.OpenGlobalConfig.description"),
+    open = "action.Accure.OpenGlobalConfig.text",
+    create = "action.Accure.CreateGlobalConfig.text",
+    text = AccureBundle.message("action.Accure.OpenGlobalConfig.text", "..."),
+    description = AccureBundle.message("action.Accure.OpenGlobalConfig.description"),
 ) {
     override fun update(e: AnActionEvent) {
-        e.presentation.text = text(service<KiloWorkspaceService>().globalConfig)
+        e.presentation.text = text(service<AccureWorkspaceService>().globalConfig)
     }
 
     override fun actionPerformed(e: AnActionEvent) {
         Telemetry.send("Config Opened", mapOf("surface" to "tool_window", "scope" to "global"))
-        service<KiloWorkspaceService>().openGlobalConfig { ok ->
+        service<AccureWorkspaceService>().openGlobalConfig { ok ->
             if (!ok) failed()
         }
     }

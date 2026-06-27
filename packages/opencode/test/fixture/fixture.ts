@@ -11,11 +11,11 @@ import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process"
 import type { Config } from "@/config/config"
 import { InstanceRef } from "../../src/effect/instance-ref"
 import { InstanceBootstrap } from "../../src/project/bootstrap-service"
-import { context as instanceContext, type InstanceContext } from "../../src/project/instance-context" // kilocode_change
+import { context as instanceContext, type InstanceContext } from "../../src/project/instance-context" // accurecode_change
 import { InstanceRuntime } from "../../src/project/instance-runtime"
 import { InstanceStore } from "../../src/project/instance-store"
 import { TestLLMServer } from "../lib/llm-server"
-import { remove as cleanup } from "../kilocode/cleanup" // kilocode_change
+import { remove as cleanup } from "../accurecode/cleanup" // accurecode_change
 
 const noopBootstrap = Layer.succeed(InstanceBootstrap.Service, InstanceBootstrap.Service.of({ run: Effect.void }))
 export const testInstanceStoreLayer = InstanceStore.defaultLayer.pipe(Layer.provide(noopBootstrap))
@@ -32,19 +32,19 @@ export async function provideTestInstance<R>(input: {
   const ctx = await runTestInstanceStore((store) => store.load({ directory: input.directory }))
   try {
     if (input.init) await testInstanceRuntime.runPromise(input.init.pipe(Effect.provideService(InstanceRef, ctx)))
-    return await instanceContext.provide(ctx, () => input.fn(ctx)) // kilocode_change
+    return await instanceContext.provide(ctx, () => input.fn(ctx)) // accurecode_change
   } finally {
-    // kilocode_change start
+    // accurecode_change start
     await instanceContext.provide(ctx, () =>
       runTestInstanceStore((store) => store.dispose(ctx).pipe(Effect.provideService(InstanceRef, ctx))),
     )
-    // kilocode_change end
+    // accurecode_change end
   }
 }
 
 export async function withTestInstance<R>(input: { directory: string; fn: (ctx: InstanceContext) => R }) {
   const ctx = await runTestInstanceStore((store) => store.load({ directory: input.directory }))
-  return instanceContext.provide(ctx, () => input.fn(ctx)) // kilocode_change
+  return instanceContext.provide(ctx, () => input.fn(ctx)) // accurecode_change
 }
 
 export async function reloadTestInstance(input: { directory: string }) {
@@ -68,7 +68,7 @@ function exists(dir: string) {
 }
 
 function clean(dir: string) {
-  return cleanup(dir) // kilocode_change
+  return cleanup(dir) // accurecode_change
 }
 
 async function stop(dir: string) {
@@ -97,7 +97,7 @@ export async function tmpdir<T>(options?: TmpDirOptions<T>) {
     await Bun.write(
       path.join(dirpath, "opencode.json"),
       JSON.stringify({
-        $schema: "https://app.kilo.ai/config.json",
+        $schema: "https://app.accurecode.ai/config.json",
         ...options.config,
       }),
     )
@@ -154,7 +154,7 @@ export function tmpdirScoped(options?: {
       yield* Effect.promise(() =>
         fs.writeFile(
           path.join(dir, "opencode.json"),
-          JSON.stringify({ $schema: "https://app.kilo.ai/config.json", ...resolved }), // kilocode_change
+          JSON.stringify({ $schema: "https://app.accurecode.ai/config.json", ...resolved }), // accurecode_change
         ),
       )
     }

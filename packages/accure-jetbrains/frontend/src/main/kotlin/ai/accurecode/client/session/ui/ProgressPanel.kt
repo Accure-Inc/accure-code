@@ -1,14 +1,14 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.session.model.SessionModel
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.ui.layout.StackAxis
+import ai.accurecode.client.session.model.SessionModel
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.ui.layout.StackAxis
 import com.intellij.openapi.Disposable
 import com.intellij.ui.AnimatedIcon
 import com.intellij.ui.components.JBLabel

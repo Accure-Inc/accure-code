@@ -20,10 +20,10 @@ body:
       required: false
 
   - type: input
-    id: kilo-version
+    id: accure-version
     attributes:
-      label: Kilo version
-      description: What version of Kilo are you using?
+      label: Accure version
+      description: What version of Accure are you using?
     validations:
       required: false
 

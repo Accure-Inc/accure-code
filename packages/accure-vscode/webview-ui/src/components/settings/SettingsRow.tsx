@@ -1,4 +1,4 @@
-import { Tag } from "@kilocode/accure-ui/tag"
+import { Tag } from "@accurecode/accure-ui/tag"
 import { Component, JSX, Show } from "solid-js"
 
 const SettingsRow: Component<{

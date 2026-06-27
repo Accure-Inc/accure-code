@@ -2,20 +2,20 @@
     <dependencies>
         <module name="intellij.platform.backend"/>
         <module name="intellij.platform.kernel.backend"/>
-        <module name="kilo.jetbrains.shared"/>
+        <module name="accurecode.jetbrains.shared"/>
     </dependencies>
 
     <extensions defaultExtensionNs="com.intellij">
-        <platform.rpc.backend.remoteApiProvider implementation="ai.kilocode.backend.rpc.KiloAppRpcApiProvider"/>
-        <platform.rpc.backend.remoteApiProvider implementation="ai.kilocode.backend.rpc.KiloProviderRpcApiProvider"/>
-        <platform.rpc.backend.remoteApiProvider implementation="ai.kilocode.backend.rpc.KiloProjectRpcApiProvider"/>
-        <platform.rpc.backend.remoteApiProvider implementation="ai.kilocode.backend.rpc.KiloSessionRpcApiProvider"/>
-        <platform.rpc.backend.remoteApiProvider implementation="ai.kilocode.backend.rpc.KiloMigrationRpcApiProvider"/>
-        <applicationService serviceImplementation="ai.kilocode.backend.migration.KiloBackendLegacyMigrationStoreService"/>
+        <platform.rpc.backend.remoteApiProvider implementation="ai.accurecode.backend.rpc.AccureAppRpcApiProvider"/>
+        <platform.rpc.backend.remoteApiProvider implementation="ai.accurecode.backend.rpc.AccureProviderRpcApiProvider"/>
+        <platform.rpc.backend.remoteApiProvider implementation="ai.accurecode.backend.rpc.AccureProjectRpcApiProvider"/>
+        <platform.rpc.backend.remoteApiProvider implementation="ai.accurecode.backend.rpc.AccureSessionRpcApiProvider"/>
+        <platform.rpc.backend.remoteApiProvider implementation="ai.accurecode.backend.rpc.AccureMigrationRpcApiProvider"/>
+        <applicationService serviceImplementation="ai.accurecode.backend.migration.AccureBackendLegacyMigrationStoreService"/>
     </extensions>
 
     <applicationListeners>
-        <listener class="ai.kilocode.backend.plugin.KiloBackendDynamicPluginListener"
+        <listener class="ai.accurecode.backend.plugin.AccureBackendDynamicPluginListener"
                   topic="com.intellij.ide.plugins.DynamicPluginListener"/>
     </applicationListeners>
 </idea-plugin>

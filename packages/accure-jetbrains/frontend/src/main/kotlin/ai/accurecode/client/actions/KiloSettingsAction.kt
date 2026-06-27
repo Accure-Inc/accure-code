@@ -1,6 +1,6 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.telemetry.Telemetry
+import ai.accurecode.client.telemetry.Telemetry
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
@@ -8,16 +8,16 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.ui.popup.JBPopupFactory
 
 /**
- * Gear icon action placed in the Kilo tool window title bar.
+ * Gear icon action placed in the Accure tool window title bar.
  *
- * Looks up [Kilo.SettingsGroup] from [ActionManager] and shows it
+ * Looks up [Accure.SettingsGroup] from [ActionManager] and shows it
  * as a popup. The group composition is declared in
- * `kilo.jetbrains.frontend.xml`.
+ * `accurecode.jetbrains.frontend.xml`.
  */
-class KiloSettingsAction : AnAction() {
+class AccureSettingsAction : AnAction() {
 
     companion object {
-        const val GROUP_ID = "Kilo.SettingsGroup"
+        const val GROUP_ID = "Accure.SettingsGroup"
     }
 
     override fun actionPerformed(e: AnActionEvent) {

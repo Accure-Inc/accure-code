@@ -1,10 +1,10 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.client.telemetry
+package ai.accurecode.client.telemetry
 
-import ai.kilocode.log.KiloLog
-import ai.kilocode.rpc.KiloAppRpcApi
-import ai.kilocode.rpc.dto.TelemetryCaptureDto
+import ai.accurecode.log.AccureLog
+import ai.accurecode.rpc.AccureAppRpcApi
+import ai.accurecode.rpc.dto.TelemetryCaptureDto
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import fleet.rpc.client.durable
@@ -17,23 +17,23 @@ import java.util.concurrent.atomic.AtomicInteger
 
 object Telemetry {
     fun send(event: String, properties: Map<String, String> = emptyMap()) {
-        KiloTelemetryService.getInstance().send(event, properties)
+        AccureTelemetryService.getInstance().send(event, properties)
     }
 }
 
 @Service(Service.Level.APP)
-class KiloTelemetryService internal constructor(
+class AccureTelemetryService internal constructor(
     private val cs: CoroutineScope,
-    private val rpc: KiloAppRpcApi?,
+    private val rpc: AccureAppRpcApi?,
 ) {
     constructor(cs: CoroutineScope) : this(cs, null)
 
     companion object {
-        private val LOG = KiloLog.create(KiloTelemetryService::class.java)
+        private val LOG = AccureLog.create(AccureTelemetryService::class.java)
         private const val MAX_PENDING = 64
         private const val TIMEOUT_MS = 5_000L
 
-        fun getInstance(): KiloTelemetryService = service()
+        fun getInstance(): AccureTelemetryService = service()
     }
 
     private val pending = AtomicInteger()
@@ -49,8 +49,8 @@ class KiloTelemetryService internal constructor(
         }
         cs.launch {
             try {
-                if (KiloLog.sandbox()) {
-                    val payload = KiloLog.payload(LOG) + properties
+                if (AccureLog.sandbox()) {
+                    val payload = AccureLog.payload(LOG) + properties
                     LOG.info("event=$event ${payload.entries.joinToString(" ") { "${it.key}=${it.value}" }}")
                     return@launch
                 }
@@ -58,7 +58,7 @@ class KiloTelemetryService internal constructor(
                 val sent = withTimeoutOrNull(TIMEOUT_MS) {
                     val api = rpc
                     if (api != null) api.captureTelemetry(dto)
-                    else durable { KiloAppRpcApi.getInstance().captureTelemetry(dto) }
+                    else durable { AccureAppRpcApi.getInstance().captureTelemetry(dto) }
                     true
                 }
                 if (sent != true) LOG.warn("telemetry capture timed out: $event")

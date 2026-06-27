@@ -1,8 +1,8 @@
 {
   "name": "accure-code",
-  "displayName": "Accure Code: AI Coding Agent, Copilot, and Autocomplete",
-  "description": "Open Source AI coding agent that generates code from natural language, automates tasks, and runs terminal commands. Features inline autocomplete, browser automation, automated refactoring, and custom modes for planning, coding, and debugging. Supports 500+ AI models including Claude (Anthropic), Gemini, Grok, GPT, Codex and GLM.",
-  "version": "7.3.50",
+  "displayName": "Accure Code: AI Software Engineer",
+  "description": "Your autonomous pair programmer. Code at the speed of thought with an open-source agent that edits files, runs terminal commands, and runs browser tests. Switch custom modes or code with fast inline completions. Supports 500+ AI models.",
+  "version": "1.1.1",
   "icon": "assets/icons/logo-outline-black.png",
   "galleryBanner": {
     "color": "#FFFFFF",
@@ -11,7 +11,7 @@
   "publisher": "accure",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kilo-Org/kilocode.git",
+    "url": "https://github.com/Accure-Inc/accure-code.git",
     "directory": "packages/accure-vscode"
   },
   "engines": {
@@ -30,9 +30,9 @@
     "Testing"
   ],
   "keywords": [
-    "kilo",
+    "accure",
     "Accure Code",
-    "kilocode",
+    "accurecode",
     "ai",
     "agent",
     "agentic",
@@ -61,7 +61,7 @@
   "contributes": {
     "taskDefinitions": [
       {
-        "type": "kilo-worktree-setup",
+        "type": "accure-worktree-setup",
         "properties": {
           "script": {
             "type": "string",
@@ -74,7 +74,7 @@
       "accure-logo": {
         "description": "Accure Code logo",
         "default": {
-          "fontPath": "assets/icons/kilo-icon-font.woff2",
+          "fontPath": "assets/icons/accure-icon-font.woff2",
           "fontCharacter": "\\F101"
         }
       }
@@ -84,8 +84,8 @@
         {
           "id": "accure-code-ActivityBar",
           "title": "Accure Code",
-          "icon": "assets/icons/kilo-light.png",
-          "darkIcon": "assets/icons/kilo-dark.png"
+          "icon": "assets/icons/accure-light.png",
+          "darkIcon": "assets/icons/accure-dark.png"
         }
       ]
     },
@@ -111,30 +111,15 @@
         "category": "Accure Code",
         "icon": "$(organization)"
       },
-      {
-        "command": "accure-code.kiloClawOpen",
-        "title": "KiloClaw",
-        "category": "Accure Code",
-        "icon": "$(comment-discussion)"
-      },
-      {
-        "command": "accure-code.marketplaceButtonClicked",
-        "title": "Marketplace",
-        "category": "Accure Code",
-        "icon": "$(extensions)"
-      },
+
+
       {
         "command": "accure-code.historyButtonClicked",
         "title": "History",
         "category": "Accure Code",
         "icon": "$(history)"
       },
-      {
-        "command": "accure-code.profileButtonClicked",
-        "title": "Profile",
-        "category": "Accure Code",
-        "icon": "$(account)"
-      },
+
       {
         "command": "accure-code.settingsButtonClicked",
         "title": "Settings",
@@ -151,26 +136,14 @@
         "title": "Agent Manager",
         "icon": "$(organization)"
       },
-      {
-        "command": "accure-code.sidebarTitle.kiloClawOpen",
-        "title": "KiloClaw",
-        "icon": "$(comment-discussion)"
-      },
-      {
-        "command": "accure-code.sidebarTitle.marketplaceButtonClicked",
-        "title": "Marketplace",
-        "icon": "$(extensions)"
-      },
+
+
       {
         "command": "accure-code.sidebarTitle.historyButtonClicked",
         "title": "History",
         "icon": "$(history)"
       },
-      {
-        "command": "accure-code.sidebarTitle.profileButtonClicked",
-        "title": "Profile",
-        "icon": "$(account)"
-      },
+
       {
         "command": "accure-code.sidebarTitle.settingsButtonClicked",
         "title": "Settings",
@@ -181,8 +154,8 @@
         "title": "Open in Tab",
         "category": "Accure Code",
         "icon": {
-          "light": "assets/icons/kilo-light.svg",
-          "dark": "assets/icons/kilo-dark.svg"
+          "light": "assets/icons/accure-light.svg",
+          "dark": "assets/icons/accure-dark.svg"
         }
       },
       {
@@ -354,8 +327,8 @@
         "title": "Generate Commit Message",
         "category": "Accure Code",
         "icon": {
-          "light": "assets/icons/kilo-light.svg",
-          "dark": "assets/icons/kilo-dark.svg"
+          "light": "assets/icons/accure-light.svg",
+          "dark": "assets/icons/accure-dark.svg"
         }
       },
       {
@@ -448,18 +421,8 @@
           "command": "accure-code.sidebarTitle.agentManagerOpen",
           "when": "false"
         },
-        {
-          "command": "accure-code.sidebarTitle.kiloClawOpen",
-          "when": "false"
-        },
-        {
-          "command": "accure-code.sidebarTitle.marketplaceButtonClicked",
-          "when": "false"
-        },
-        {
-          "command": "accure-code.sidebarTitle.profileButtonClicked",
-          "when": "false"
-        },
+
+
         {
           "command": "accure-code.sidebarTitle.settingsButtonClicked",
           "when": "false"
@@ -481,21 +444,8 @@
           "group": "navigation@2",
           "when": "view == accure-code.SidebarProvider"
         },
-        {
-          "command": "accure-code.sidebarTitle.kiloClawOpen",
-          "group": "navigation@3",
-          "when": "false"
-        },
-        {
-          "command": "accure-code.sidebarTitle.marketplaceButtonClicked",
-          "group": "navigation@4",
-          "when": "view == accure-code.SidebarProvider"
-        },
-        {
-          "command": "accure-code.sidebarTitle.profileButtonClicked",
-          "group": "navigation@5",
-          "when": "view == accure-code.SidebarProvider"
-        },
+
+
         {
           "command": "accure-code.sidebarTitle.settingsButtonClicked",
           "group": "navigation@6",
@@ -532,11 +482,7 @@
           "group": "navigation@1",
           "when": "activeWebviewPanelId == accure-code.TabPanel"
         },
-        {
-          "command": "accure-code.profileButtonClicked",
-          "group": "navigation@2",
-          "when": "activeWebviewPanelId == accure-code.TabPanel"
-        },
+
         {
           "command": "accure-code.settingsButtonClicked",
           "group": "navigation@3",
@@ -546,7 +492,7 @@
       "editor/context": [
         {
           "submenu": "accure-code.editorContextMenu",
-          "group": "1_kilocode"
+          "group": "1_accurecode"
         }
       ],
       "accure-code.editorContextMenu": [
@@ -570,7 +516,7 @@
       "terminal/context": [
         {
           "submenu": "accure-code.terminalContextMenu",
-          "group": "2_kilocode"
+          "group": "2_accurecode"
         }
       ],
       "accure-code.terminalContextMenu": [
@@ -886,9 +832,9 @@
             "mercury-next-edit"
           ],
           "enumDescriptions": [
-            "Codestral via Kilo Gateway",
-            "Mercury Edit 2 (FIM) via Kilo Gateway",
-            "Mercury Edit 2 (Next Edit), multi-line edit predictions with jump-to-edit UX, via Kilo Gateway",
+            "Codestral via Accure Gateway",
+            "Mercury Edit 2 (FIM) via Accure Gateway",
+            "Mercury Edit 2 (Next Edit), multi-line edit predictions with jump-to-edit UX, via Accure Gateway",
             "Codestral via your connected Mistral provider API key",
             "Mercury Edit 2 (FIM) via your connected Inception provider API key",
             "Mercury Edit 2 (Next Edit), multi-line edit predictions with jump-to-edit UX, via your connected Inception provider API key"
@@ -898,16 +844,16 @@
         "accure-code.autocomplete.provider": {
           "type": "string",
           "enum": [
-            "kilo",
+            "accure",
             "mistral",
             "inception"
           ],
           "enumDescriptions": [
-            "Use autocomplete models through Kilo Gateway",
+            "Use autocomplete models through Accure Gateway",
             "Use autocomplete models through your connected Mistral provider API key",
             "Use autocomplete models through your connected Inception provider API key"
           ],
-          "description": "Provider to use for inline autocomplete suggestions. If unset, Kilo Gateway is used."
+          "description": "Provider to use for inline autocomplete suggestions. If unset, Accure Gateway is used."
         },
         "accure-code.autocomplete.enableAutoTrigger": {
           "type": "boolean",
@@ -927,12 +873,12 @@
         "accure-code.claudeCodeCompat": {
           "type": "boolean",
           "default": false,
-          "description": "Load CLAUDE.md instructions and skills from your Claude Code configuration directory into Kilo sessions. Enable this if you want Kilo to use your Claude Code instructions and skills."
+          "description": "Load CLAUDE.md instructions and skills from your Claude Code configuration directory into Accure sessions. Enable this if you want Accure to use your Claude Code instructions and skills."
         },
         "accure-code.extraCaCerts": {
           "type": "string",
           "default": "",
-          "description": "Absolute path to a PEM file containing extra CA certificates to trust when the Kilo backend makes HTTPS requests (sets NODE_EXTRA_CA_CERTS on the CLI process). Use this if you're behind a corporate proxy that performs SSL inspection. Leave empty to rely on the OS trust store."
+          "description": "Absolute path to a PEM file containing extra CA certificates to trust when the Accure backend makes HTTPS requests (sets NODE_EXTRA_CA_CERTS on the CLI process). Use this if you're behind a corporate proxy that performs SSL inspection. Leave empty to rely on the OS trust store."
         },
         "accure-code.autoApprove.enabled": {
           "type": "boolean",
@@ -1038,7 +984,7 @@
           "enumDescriptions": [
             "Show work style onboarding so you can choose again",
             "Human in the Loop: review agent actions as they happen",
-            "High autonomy: let Kilo take most actions with fewer interruptions",
+            "High autonomy: let Accure take most actions with fewer interruptions",
             "Onboarding was skipped without changing work style settings"
           ],
           "description": "Preferred agent work style. Set to Unset to show the onboarding flow again."
@@ -1046,7 +992,7 @@
         "accure-code.diff.renderMarkdown": {
           "type": "boolean",
           "default": false,
-          "description": "Render Markdown files in Kilo diff viewers by default. Toggle this from a Markdown file header in the diff viewer."
+          "description": "Render Markdown files in Accure diff viewers by default. Toggle this from a Markdown file header in the diff viewer."
         }
       }
     }
@@ -1069,7 +1015,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "knip": "knip",
-    "check-kilocode-change": "! grep -rIn 'kilocode_change' . ../accure-ui/ --exclude='package.json' --exclude='*.md' --exclude-dir='node_modules' --exclude-dir='dist' | grep -v '`kilocode_change`'",
+    "check-accurecode-change": "! grep -rIn 'accurecode_change' . ../accure-ui/ --exclude='package.json' --exclude='*.md' --exclude-dir='node_modules' --exclude-dir='dist' | grep -v '`accurecode_change`'",
     "lint": "eslint src webview-ui",
     "test": "vscode-test",
     "test:unit": "bun test tests/unit/",
@@ -1115,12 +1061,12 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "fuzzysort": "3.1.0",
-    "@kilocode/accure-gateway": "workspace:*",
-    "@kilocode/accure-i18n": "workspace:*",
-    "@kilocode/accure-indexing": "workspace:*",
-    "@kilocode/accure-ui": "workspace:*",
-    "@kilocode/plugin": "workspace:*",
-    "@kilocode/sdk": "workspace:*",
+    "@accurecode/accure-gateway": "workspace:*",
+    "@accurecode/accure-i18n": "workspace:*",
+    "@accurecode/accure-indexing": "workspace:*",
+    "@accurecode/accure-ui": "workspace:*",
+    "@accurecode/plugin": "workspace:*",
+    "@accurecode/sdk": "workspace:*",
     "@opencode-ai/ui": "workspace:*",
     "@pierre/diffs": "catalog:",
     "@thisbeyond/solid-dnd": "0.7.5",

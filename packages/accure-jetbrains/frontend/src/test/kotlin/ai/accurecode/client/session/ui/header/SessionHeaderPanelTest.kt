@@ -1,22 +1,22 @@
-package ai.kilocode.client.session.ui.header
+package ai.accurecode.client.session.ui.header
 
-import ai.kilocode.client.session.model.Reasoning
-import ai.kilocode.client.session.model.StepFinish
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.model.ToolExecState
-import ai.kilocode.client.session.model.ToolKind
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.controller.SessionControllerTestBase
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.ModelDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PartTimeDto
-import ai.kilocode.rpc.dto.ProviderDto
-import ai.kilocode.rpc.dto.TodoDto
-import ai.kilocode.rpc.dto.TokensDto
+import ai.accurecode.client.session.model.Reasoning
+import ai.accurecode.client.session.model.StepFinish
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.model.ToolExecState
+import ai.accurecode.client.session.model.ToolKind
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.controller.SessionControllerTestBase
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.ModelDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PartTimeDto
+import ai.accurecode.rpc.dto.ProviderDto
+import ai.accurecode.rpc.dto.TodoDto
+import ai.accurecode.rpc.dto.TokensDto
 import com.intellij.icons.AllIcons
 import com.intellij.ide.util.PropertiesComponent
 import java.awt.Cursor
@@ -43,7 +43,7 @@ class SessionHeaderPanelTest : SessionControllerTestBase() {
     }
 
     fun `test starts hidden for empty header`() {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val c = controller()
         flush()
@@ -156,15 +156,15 @@ class SessionHeaderPanelTest : SessionControllerTestBase() {
     }
 
     fun `test timeline colors honor semantic named color keys`() {
-        val old = UIManager.getColor("Kilo.Session.Timeline.Read")
+        val old = UIManager.getColor("Accure.Session.Timeline.Read")
         val color = Color(12, 34, 56)
 
         try {
-            UIManager.put("Kilo.Session.Timeline.Read", color)
+            UIManager.put("Accure.Session.Timeline.Read", color)
 
             assertEquals(color.rgb, SessionUiStyle.Timeline.READ.rgb)
         } finally {
-            UIManager.put("Kilo.Session.Timeline.Read", old)
+            UIManager.put("Accure.Session.Timeline.Read", old)
         }
     }
 
@@ -384,7 +384,7 @@ class SessionHeaderPanelTest : SessionControllerTestBase() {
 
     fun `test hidden empty header collapse keeps saved expansion preference`() {
         PropertiesComponent.getInstance().setValue(SessionHeaderPanel.EXPANDED_KEY, "true")
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(ai.kilocode.rpc.dto.KiloAppStatusDto.READY)
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(ai.accurecode.rpc.dto.AccureAppStatusDto.READY)
         projectRpc.state.value = workspaceReady()
         val c = controller()
         flush()
@@ -559,21 +559,21 @@ class SessionHeaderPanelTest : SessionControllerTestBase() {
         assertEquals(0, panel.timelineViewport().viewPosition.y)
     }
 
-    private fun promptedHeader(): ai.kilocode.client.session.controller.SessionController {
-        appRpc.state.value = ai.kilocode.rpc.dto.KiloAppStateDto(
-            ai.kilocode.rpc.dto.KiloAppStatusDto.READY,
-            config = ai.kilocode.rpc.dto.ConfigDto(model = "kilo/gpt-5"),
+    private fun promptedHeader(): ai.accurecode.client.session.controller.SessionController {
+        appRpc.state.value = ai.accurecode.rpc.dto.AccureAppStateDto(
+            ai.accurecode.rpc.dto.AccureAppStatusDto.READY,
+            config = ai.accurecode.rpc.dto.ConfigDto(model = "accure/gpt-5"),
         )
         projectRpc.state.value = workspaceReady(
             providers = listOf(
                 ProviderDto(
-                    id = "kilo",
-                    name = "Kilo",
+                    id = "accure",
+                    name = "Accure",
                     models = mapOf(
                         "gpt-5" to ModelDto(
                             id = "gpt-5",
                             name = "GPT-5",
-                            limit = ai.kilocode.rpc.dto.ModelLimitDto(context = 2_000_000, output = 200_000),
+                            limit = ai.accurecode.rpc.dto.ModelLimitDto(context = 2_000_000, output = 200_000),
                         ),
                     ),
                 ),

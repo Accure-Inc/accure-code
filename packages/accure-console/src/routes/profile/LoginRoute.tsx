@@ -1,9 +1,9 @@
 import { useLocation, useNavigate } from "@solidjs/router"
-import { Button } from "@kilocode/accure-web-ui/button"
-import { Card } from "@kilocode/accure-web-ui/card"
+import { Button } from "@accurecode/accure-web-ui/button"
+import { Card } from "@accurecode/accure-web-ui/card"
 import { createEffect, createMemo, createSignal, Match, onCleanup, Show, Switch } from "solid-js"
 import { LoadingScreen } from "../../components/LoadingScreen"
-import { completeKiloLogin, loadKiloProfile, startKiloLogin, type ProjectQuery } from "../../client"
+import { completeAccureLogin, loadAccureProfile, startAccureLogin, type ProjectQuery } from "../../client"
 import { errMsg } from "../../shared/utils"
 import { markDisconnected, page, parseDeviceCode, safeReturn } from "./profile-utils"
 import { useProfileServer } from "./server"
@@ -54,7 +54,7 @@ export function LoginRoute() {
     setAttempt(rev)
     setActive(ctl)
     setAuth({ status: "initiating" })
-    void startKiloLogin(input)
+    void startAccureLogin(input)
       .then((info) => {
         if (attempt() !== rev) return false
         setAuth({
@@ -63,12 +63,12 @@ export function LoginRoute() {
           url: info.url,
           expiresIn: 900,
         })
-        return completeKiloLogin(input, ctl.signal).then(() => true)
+        return completeAccureLogin(input, ctl.signal).then(() => true)
       })
       .then((ok) => {
         if (!ok || attempt() !== rev) return
         setAuth({ status: "success" })
-        void loadKiloProfile(input)
+        void loadAccureProfile(input)
           .then(() => markDisconnected(false))
           .catch(() => markDisconnected(false))
           .finally(done)
@@ -134,9 +134,9 @@ export function LoginRoute() {
     <section class="route-empty">
       <div class="profile-login-page">
         <header class="profile-login-header">
-          <p class="eyebrow">Kilo Login</p>
-          <h1>Login to Kilo</h1>
-          <p>Authorize this Kilo Console through the same device auth flow used by the editor clients.</p>
+          <p class="eyebrow">Accure Login</p>
+          <h1>Login to Accure</h1>
+          <p>Authorize this Accure Console through the same device auth flow used by the editor clients.</p>
         </header>
 
         <Show when={!server.query() && server.discoverable()}>
@@ -145,8 +145,8 @@ export function LoginRoute() {
 
         <Show when={!server.query() && !server.discoverable()}>
           <Card class="profile-login-card" variant="warning">
-            <strong>Kilo server not found</strong>
-            <p>Start a local Kilo server or pass a server URL with ?server=.</p>
+            <strong>Accure server not found</strong>
+            <p>Start a local Accure server or pass a server URL with ?server=.</p>
             <a class="profile-link-button" href={profile()}>
               Back to Profile
             </a>

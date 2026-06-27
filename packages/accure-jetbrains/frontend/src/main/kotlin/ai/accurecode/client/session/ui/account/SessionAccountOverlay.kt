@@ -1,14 +1,14 @@
-package ai.kilocode.client.session.ui.account
+package ai.accurecode.client.session.ui.account
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.controller.SessionControllerEvent
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.FilledBadgeIcon
-import ai.kilocode.client.ui.HoverIcon
-import ai.kilocode.client.ui.PickerButton
-import ai.kilocode.client.ui.RoundedContentPanel
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.Stack
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.controller.SessionControllerEvent
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.FilledBadgeIcon
+import ai.accurecode.client.ui.HoverIcon
+import ai.accurecode.client.ui.PickerButton
+import ai.accurecode.client.ui.RoundedContentPanel
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.Stack
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.ui.CollectionListModel
@@ -17,7 +17,7 @@ import com.intellij.ui.ScrollPaneFactory
 import com.intellij.ui.ScrollingUtil
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBList
-import ai.kilocode.client.settings.profile.formatBalance
+import ai.accurecode.client.settings.profile.formatBalance
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
@@ -62,8 +62,8 @@ internal class SessionAccountOverlay(
 
     private val profileBtn = HoverIcon().apply {
         icon = AllIcons.General.User
-        toolTipText = KiloBundle.message("action.Kilo.ShowProfile.description")
-        accessibleContext.accessibleName = KiloBundle.message("action.Kilo.ShowProfile.text")
+        toolTipText = AccureBundle.message("action.Accure.ShowProfile.description")
+        accessibleContext.accessibleName = AccureBundle.message("action.Accure.ShowProfile.text")
         addActionListener { profile() }
     }
 
@@ -120,11 +120,11 @@ internal class SessionAccountOverlay(
     }
 
     @RequiresEdt
-    private fun updateLoggedIn(prof: ai.kilocode.rpc.dto.ProfileDto, switching: Boolean, target: String?): Boolean {
+    private fun updateLoggedIn(prof: ai.accurecode.rpc.dto.ProfileDto, switching: Boolean, target: String?): Boolean {
         var layout = false
 
         val orgs = prof.organizations
-        val next = listOf(AccountChoice(null, KiloBundle.message("profile.personalAccount"))) +
+        val next = listOf(AccountChoice(null, AccureBundle.message("profile.personalAccount"))) +
             orgs.map { org -> AccountChoice(org.id, org.name) }
         if (next != choices) {
             choices = next
@@ -148,9 +148,9 @@ internal class SessionAccountOverlay(
         }
 
         val tip = if (switching) {
-            KiloBundle.message("profile.switchingAccount")
+            AccureBundle.message("profile.switchingAccount")
         } else {
-            KiloBundle.message("session.account.switcher")
+            AccureBundle.message("session.account.switcher")
         }
         if (picker.toolTipText != tip) picker.toolTipText = tip
 
@@ -159,7 +159,7 @@ internal class SessionAccountOverlay(
     }
 
     @RequiresEdt
-    private fun syncBalance(prof: ai.kilocode.rpc.dto.ProfileDto): Boolean {
+    private fun syncBalance(prof: ai.accurecode.rpc.dto.ProfileDto): Boolean {
         var layout = false
         val next = prof.balance?.let { formatBalance(it.balance) }
         if (next == null) {
@@ -185,7 +185,7 @@ internal class SessionAccountOverlay(
                 )
                 layout = true
             }
-            val tip = KiloBundle.message("session.account.balance", next)
+            val tip = AccureBundle.message("session.account.balance", next)
             if (balance.toolTipText != tip) balance.toolTipText = tip
             balanceText = next
         }

@@ -7,7 +7,7 @@ import { onMount, createSignal } from "solid-js"
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
 import { StoryProviders, mockSessionValue } from "./StoryProviders"
 import { SessionContext } from "../context/session"
-import { KiloEmbeddingModelsContext } from "../context/kilo-embedding-models"
+import { AccureEmbeddingModelsContext } from "../context/accure-embedding-models"
 import Settings from "../components/settings/Settings"
 import ProvidersTab from "../components/settings/ProvidersTab"
 import ModelsTab from "../components/settings/ModelsTab"
@@ -87,7 +87,7 @@ export const ModelsAccessibleLabels: Story = {
 export const ModelsSpeechToText: Story = {
   name: "ModelsTab — speech-to-text model",
   render: () => (
-    <StoryProviders kiloAuth config={{ experimental: { speech_to_text_model: "google/chirp-3" } } as any}>
+    <StoryProviders accureAuth config={{ experimental: { speech_to_text_model: "google/chirp-3" } } as any}>
       <div style={{ "max-height": "700px", overflow: "auto" }}>
         <ModelsTab />
       </div>
@@ -181,7 +181,7 @@ export const AgentBehaviourEditCustomMode: Story = {
       reviewer: {
         description: "Review code for quality and best practices",
         prompt: "You are a code reviewer. Focus on code quality, best practices, and potential bugs.",
-        model: "kilo/anthropic/claude-sonnet-4-6",
+        model: "accure/anthropic/claude-sonnet-4-6",
         variant: "high",
         temperature: 0.3,
         permission: {
@@ -529,12 +529,12 @@ export const IndexingScopeSwitch: Story = {
   },
 }
 
-export const IndexingKiloModelPreset: Story = {
-  name: "IndexingTab - Kilo stale custom model fallback",
+export const IndexingAccureModelPreset: Story = {
+  name: "IndexingTab - Accure stale custom model fallback",
   render: () => {
     const cfg: Config = {
       indexing: {
-        provider: "kilo",
+        provider: "accure",
         model: "custom/model",
         dimension: 2048,
       },
@@ -549,18 +549,18 @@ export const IndexingKiloModelPreset: Story = {
     }
     return (
       <StoryProviders config={cfg}>
-        <KiloEmbeddingModelsContext.Provider value={{ catalog: () => catalog }}>
+        <AccureEmbeddingModelsContext.Provider value={{ catalog: () => catalog }}>
           <div style={{ "max-height": "700px", overflow: "auto" }}>
             <IndexingTab />
           </div>
-        </KiloEmbeddingModelsContext.Provider>
+        </AccureEmbeddingModelsContext.Provider>
       </StoryProviders>
     )
   },
 }
 
-export const IndexingKiloCatalogLoading: Story = {
-  name: "IndexingTab - Kilo catalog loading",
+export const IndexingAccureCatalogLoading: Story = {
+  name: "IndexingTab - Accure catalog loading",
   render: () => {
     const [saved, setSaved] = createSignal<Record<string, unknown>>({})
     const cfg: Config = {
@@ -570,14 +570,14 @@ export const IndexingKiloCatalogLoading: Story = {
       <>
         <StoryProviders
           config={cfg}
-          kiloAuth
+          accureAuth
           onConfigChange={(next: Config) => setSaved((next.indexing ?? {}) as Record<string, unknown>)}
         >
           <div style={{ "max-height": "700px", overflow: "auto" }}>
             <IndexingTab />
           </div>
         </StoryProviders>
-        <pre data-testid="indexing-kilo-loading-save">{JSON.stringify(saved(), null, 2)}</pre>
+        <pre data-testid="indexing-accure-loading-save">{JSON.stringify(saved(), null, 2)}</pre>
       </>
     )
   },

@@ -9,7 +9,7 @@
 
 import { type Accessor, Component, createSignal, For, onCleanup, Show } from "solid-js"
 import { PopupSelector } from "./PopupSelector"
-import { Button } from "@kilocode/accure-ui/button"
+import { Button } from "@accurecode/accure-ui/button"
 import { useSession } from "../../context/session"
 import { isEnterKeyCommitNotIme } from "../../utils/ime-enter"
 

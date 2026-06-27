@@ -1,5 +1,5 @@
 // Regressions for SessionPrompt.runLoop compaction-history safety.
-// Ensures Kilo's post-filterCompacted trim and post-summary media strip are
+// Ensures Accure's post-filterCompacted trim and post-summary media strip are
 // applied before messages are serialized for the provider request.
 
 import { NodeFileSystem } from "@effect/platform-node"

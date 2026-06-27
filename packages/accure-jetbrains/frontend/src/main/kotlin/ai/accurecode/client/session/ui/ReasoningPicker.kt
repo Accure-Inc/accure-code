@@ -1,7 +1,7 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.ui.PickerButton
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.ui.PickerButton
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
@@ -40,7 +40,7 @@ class ReasoningPicker : PickerButton() {
         isEnabled = false
         isVisible = false
         text = " "
-        toolTipText = KiloBundle.message("reasoning.picker.tooltip")
+        toolTipText = AccureBundle.message("reasoning.picker.tooltip")
 
         addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {

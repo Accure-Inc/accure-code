@@ -1,6 +1,6 @@
 import * as path from "path"
 import * as vscode from "vscode"
-import type { KiloClient, Message, Part, Session } from "@kilocode/sdk/v2/client"
+import type { AccureClient, Message, Part, Session } from "@accurecode/sdk/v2/client"
 import { fetchMessagePage } from "./message-page"
 
 type Item = {
@@ -9,7 +9,7 @@ type Item = {
 }
 
 export async function exportTranscript(
-  client: KiloClient,
+  client: AccureClient,
   input: {
     sessionID: string
     dir: string

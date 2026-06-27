@@ -20,21 +20,21 @@ import { SyncApi } from "./groups/sync"
 import { TuiApi } from "./groups/tui"
 import { WorkspaceApi } from "./groups/workspace"
 import { V2Api } from "./groups/v2"
-// kilocode_change start - Kilo HttpApi groups
-import { AgentBuilderApi } from "@/kilocode/server/httpapi/groups/agent-builder"
-import { CommitMessageApi } from "@/kilocode/server/httpapi/groups/commit-message"
-import { BackgroundProcessApi } from "@/kilocode/server/httpapi/groups/background-process"
-import { ConfigConsoleApi } from "@/kilocode/server/httpapi/groups/config-console"
-import { EnhancePromptApi } from "@/kilocode/server/httpapi/groups/enhance-prompt"
-import { IndexingApi } from "@/kilocode/server/httpapi/groups/indexing"
-import { KiloGatewayApi } from "@/kilocode/server/httpapi/groups/accure-gateway"
-import { KilocodeApi } from "@/kilocode/server/httpapi/groups/kilocode"
-import { NetworkApi } from "@/kilocode/server/httpapi/groups/network"
-import { RemoteApi } from "@/kilocode/server/httpapi/groups/remote"
-import { SessionImportApi } from "@/kilocode/server/httpapi/groups/session-import"
-import { SuggestionApi } from "@/kilocode/server/httpapi/groups/suggestion"
-import { TelemetryApi } from "@/kilocode/server/httpapi/groups/telemetry"
-// kilocode_change end
+// accurecode_change start - Accure HttpApi groups
+import { AgentBuilderApi } from "@/accurecode/server/httpapi/groups/agent-builder"
+import { CommitMessageApi } from "@/accurecode/server/httpapi/groups/commit-message"
+import { BackgroundProcessApi } from "@/accurecode/server/httpapi/groups/background-process"
+import { ConfigConsoleApi } from "@/accurecode/server/httpapi/groups/config-console"
+import { EnhancePromptApi } from "@/accurecode/server/httpapi/groups/enhance-prompt"
+import { IndexingApi } from "@/accurecode/server/httpapi/groups/indexing"
+import { AccureGatewayApi } from "@/accurecode/server/httpapi/groups/accure-gateway"
+import { AccurecodeApi } from "@/accurecode/server/httpapi/groups/accurecode"
+import { NetworkApi } from "@/accurecode/server/httpapi/groups/network"
+import { RemoteApi } from "@/accurecode/server/httpapi/groups/remote"
+import { SessionImportApi } from "@/accurecode/server/httpapi/groups/session-import"
+import { SuggestionApi } from "@/accurecode/server/httpapi/groups/suggestion"
+import { TelemetryApi } from "@/accurecode/server/httpapi/groups/telemetry"
+// accurecode_change end
 import { Authorization } from "./middleware/authorization"
 import { SchemaErrorMiddleware } from "./middleware/schema-error"
 
@@ -64,21 +64,21 @@ export const InstanceHttpApi = HttpApi.make("opencode-instance")
   .addHttpApi(V2Api)
   .addHttpApi(TuiApi)
   .addHttpApi(WorkspaceApi)
-  // kilocode_change start - Kilo HttpApi groups
+  // accurecode_change start - Accure HttpApi groups
   .addHttpApi(AgentBuilderApi)
   .addHttpApi(BackgroundProcessApi)
   .addHttpApi(CommitMessageApi)
   .addHttpApi(ConfigConsoleApi)
   .addHttpApi(EnhancePromptApi)
   .addHttpApi(IndexingApi)
-  .addHttpApi(KiloGatewayApi)
-  .addHttpApi(KilocodeApi)
+  .addHttpApi(AccureGatewayApi)
+  .addHttpApi(AccurecodeApi)
   .addHttpApi(NetworkApi)
   .addHttpApi(RemoteApi)
   .addHttpApi(SessionImportApi)
   .addHttpApi(SuggestionApi)
   .addHttpApi(TelemetryApi)
-  // kilocode_change end
+  // accurecode_change end
   .middleware(SchemaErrorMiddleware)
 
 export const OpenCodeHttpApi = HttpApi.make("opencode")

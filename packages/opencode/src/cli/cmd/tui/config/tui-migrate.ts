@@ -1,5 +1,5 @@
 import path from "path"
-import { access, constants } from "fs/promises" // kilocode_change
+import { access, constants } from "fs/promises" // accurecode_change
 import { type ParseError as JsoncParseError, applyEdits, modify, parse as parseJsonc } from "jsonc-parser"
 import { unique } from "remeda"
 import { Option, Schema } from "effect"
@@ -12,7 +12,7 @@ import * as ConfigPaths from "@/config/paths"
 
 const log = Log.create({ service: "tui.migrate" })
 
-const TUI_SCHEMA_URL = "https://app.kilo.ai/tui.json" // kilocode_change
+const TUI_SCHEMA_URL = "https://app.accurecode.ai/tui.json" // accurecode_change
 
 const decodeTheme = Schema.decodeUnknownOption(Schema.String)
 const decodeRecord = Schema.decodeUnknownOption(Schema.Record(Schema.String, Schema.Unknown))
@@ -101,7 +101,7 @@ function normalizeTui(data: Record<string, unknown>):
 }
 
 async function backupAndStripLegacy(file: string, source: string) {
-  // kilocode_change start
+  // accurecode_change start
   // On POSIX, `rename()` can overwrite a read-only file when the parent directory is
   // writable, bypassing file-level write permissions. Check write access explicitly so
   // that callers can distinguish "strip succeeded" from "strip skipped" correctly.
@@ -109,7 +109,7 @@ async function backupAndStripLegacy(file: string, source: string) {
     .then(() => true)
     .catch(() => false)
   if (!writable) return false
-  // kilocode_change end
+  // accurecode_change end
 
   const backup = file + ".tui-migration.bak"
   const hasBackup = await Filesystem.exists(backup)
@@ -146,16 +146,16 @@ async function backupAndStripLegacy(file: string, source: string) {
 }
 
 async function opencodeFiles(input: { directories: string[]; cwd: string }) {
-  // kilocode_change start: use kilo directory everywhere
-  const project = Flag.KILO_DISABLE_PROJECT_CONFIG
+  // accurecode_change start: use accure directory everywhere
+  const project = Flag.ACCURECODE_DISABLE_PROJECT_CONFIG
     ? []
-    : await Filesystem.findUp(["kilo.json", "kilo.jsonc"], input.cwd, undefined, { rootFirst: true })
-  const files = [...project, ...ConfigPaths.fileInDirectory(Global.Path.config, "kilo")]
-  // kilocode_change end
+    : await Filesystem.findUp(["accure.json", "accure.jsonc"], input.cwd, undefined, { rootFirst: true })
+  const files = [...project, ...ConfigPaths.fileInDirectory(Global.Path.config, "accure")]
+  // accurecode_change end
   for (const dir of unique(input.directories)) {
-    files.push(...ConfigPaths.fileInDirectory(dir, "kilo"))
+    files.push(...ConfigPaths.fileInDirectory(dir, "accure"))
   }
-  if (Flag.KILO_CONFIG) files.push(Flag.KILO_CONFIG)
+  if (Flag.ACCURECODE_CONFIG) files.push(Flag.ACCURECODE_CONFIG)
 
   const existing = await Promise.all(
     unique(files).map(async (file) => {

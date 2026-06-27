@@ -1,26 +1,26 @@
-package ai.kilocode.client.settings.providers
+package ai.accurecode.client.settings.providers
 
-import ai.kilocode.client.app.KiloProviderService
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.settings.base.BaseContentPanel
-import ai.kilocode.client.settings.base.SettingsPanel
-import ai.kilocode.client.settings.auth.DeviceOAuthInfo
-import ai.kilocode.client.settings.auth.DeviceOAuthPanel
-import ai.kilocode.client.settings.auth.DeviceOAuthText
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.log.KiloLog
-import ai.kilocode.rpc.dto.CustomModelDto
-import ai.kilocode.rpc.dto.CustomProviderSaveDto
-import ai.kilocode.rpc.dto.ProviderAuthMethodDto
-import ai.kilocode.rpc.dto.ProviderAuthOptionDto
-import ai.kilocode.rpc.dto.ProviderConnectDto
-import ai.kilocode.rpc.dto.ProviderDisconnectDto
-import ai.kilocode.rpc.dto.ProviderEnableDto
-import ai.kilocode.rpc.dto.ProviderOAuthAuthorizeDto
-import ai.kilocode.rpc.dto.ProviderOAuthCallbackDto
-import ai.kilocode.rpc.dto.ProviderSettingsDto
-import ai.kilocode.rpc.dto.ProviderSettingsProviderDto
+import ai.accurecode.client.app.AccureProviderService
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.settings.base.BaseContentPanel
+import ai.accurecode.client.settings.base.SettingsPanel
+import ai.accurecode.client.settings.auth.DeviceOAuthInfo
+import ai.accurecode.client.settings.auth.DeviceOAuthPanel
+import ai.accurecode.client.settings.auth.DeviceOAuthText
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.log.AccureLog
+import ai.accurecode.rpc.dto.CustomModelDto
+import ai.accurecode.rpc.dto.CustomProviderSaveDto
+import ai.accurecode.rpc.dto.ProviderAuthMethodDto
+import ai.accurecode.rpc.dto.ProviderAuthOptionDto
+import ai.accurecode.rpc.dto.ProviderConnectDto
+import ai.accurecode.rpc.dto.ProviderDisconnectDto
+import ai.accurecode.rpc.dto.ProviderEnableDto
+import ai.accurecode.rpc.dto.ProviderOAuthAuthorizeDto
+import ai.accurecode.rpc.dto.ProviderOAuthCallbackDto
+import ai.accurecode.rpc.dto.ProviderSettingsDto
+import ai.accurecode.rpc.dto.ProviderSettingsProviderDto
 import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.actionSystem.ActionManager
@@ -81,24 +81,24 @@ internal class ProvidersSettingsUi(
     private val directory: String,
 ) : SettingsPanel(), Disposable {
     companion object {
-        val LOG = KiloLog.create(ProvidersSettingsUi::class.java)
+        val LOG = AccureLog.create(ProvidersSettingsUi::class.java)
     }
 
     private val add = ProviderToolbarAction(
-        KiloBundle.message("settings.providers.addCustom"),
-        KiloBundle.message("settings.providers.addCustom.description"),
+        AccureBundle.message("settings.providers.addCustom"),
+        AccureBundle.message("settings.providers.addCustom.description"),
         AllIcons.General.Add,
         { !busy },
     ) { custom() }
     private val refresh = ProviderToolbarAction(
-        KiloBundle.message("settings.providers.refresh"),
-        KiloBundle.message("settings.providers.refresh.description"),
+        AccureBundle.message("settings.providers.refresh"),
+        AccureBundle.message("settings.providers.refresh.description"),
         AllIcons.Actions.Refresh,
         { !busy },
     ) { reload() }
     private val view = ProvidersContent(::connect, ::oauth, ::disconnect, ::enable)
     private val search = SearchTextField(false).apply {
-        textEditor.emptyText.text = KiloBundle.message("settings.providers.search")
+        textEditor.emptyText.text = AccureBundle.message("settings.providers.search")
     }
     private var state = ProviderSettingsDto()
     private var job: Job? = null
@@ -119,7 +119,7 @@ internal class ProvidersSettingsUi(
         checkEdt()
         LOG.info("provider settings ui reload: start dir=$directory")
         if (!launch("reload") { id ->
-            val next = service<KiloProviderService>().state(directory)
+            val next = service<AccureProviderService>().state(directory)
             LOG.info("provider settings ui reload: state providers=${next.providers.size} errors=${next.errors.size}")
             apply(id, next, null)
         }) return
@@ -129,7 +129,7 @@ internal class ProvidersSettingsUi(
     @RequiresEdt
     private fun syncLoading() {
         checkEdt()
-        showProgress(KiloBundle.message("settings.providers.loading"))
+        showProgress(AccureBundle.message("settings.providers.loading"))
     }
 
     @RequiresEdt
@@ -141,7 +141,7 @@ internal class ProvidersSettingsUi(
         val key = dialog.key()
         val metadata = dialog.metadata()
         if (!launch("connect provider=${provider.id}") { id ->
-            val result = service<KiloProviderService>().connect(ProviderConnectDto(directory, provider.id, key, metadata))
+            val result = service<AccureProviderService>().connect(ProviderConnectDto(directory, provider.id, key, metadata))
             apply(id, result.state, result.error)
         }) return
         syncLoading()
@@ -152,7 +152,7 @@ internal class ProvidersSettingsUi(
         checkEdt()
         val method = providerOAuthMethodIndex(state.auth[provider.id].orEmpty()) ?: return
         if (!launch("authorize provider=${provider.id}") { id ->
-            val ready = service<KiloProviderService>().authorize(ProviderOAuthAuthorizeDto(directory, provider.id, method))
+            val ready = service<AccureProviderService>().authorize(ProviderOAuthAuthorizeDto(directory, provider.id, method))
             val code = withContext(edt) {
                 if (!active(id)) return@withContext null
                 ready.url?.let(BrowserUtil::browse)
@@ -172,7 +172,7 @@ internal class ProvidersSettingsUi(
                             DeviceOAuthInfo(
                                 url = url,
                                 code = oauthCode(ready.instructions),
-                                expiresIn = (KiloProviderService.OAUTH_RPC_TIMEOUT_MS / 1000).toInt(),
+                                expiresIn = (AccureProviderService.OAUTH_RPC_TIMEOUT_MS / 1000).toInt(),
                                 started = System.currentTimeMillis(),
                             ),
                         )
@@ -185,12 +185,12 @@ internal class ProvidersSettingsUi(
             withContext(edt) {
                 if (oauth == null) syncOAuthWaiting(id)
             }
-            val result = service<KiloProviderService>().callback(ProviderOAuthCallbackDto(directory, provider.id, method, code))
+            val result = service<AccureProviderService>().callback(ProviderOAuthCallbackDto(directory, provider.id, method, code))
             apply(id, result.state, result.error)
         }) return
         showProgress(
-            KiloBundle.message("settings.providers.oauth.starting", provider.name),
-            KiloBundle.message("settings.providers.oauth.cancel"),
+            AccureBundle.message("settings.providers.oauth.starting", provider.name),
+            AccureBundle.message("settings.providers.oauth.cancel"),
         ) { cancelOAuth(request) }
     }
 
@@ -198,7 +198,7 @@ internal class ProvidersSettingsUi(
     private fun disconnect(provider: ProviderSettingsProviderDto) {
         checkEdt()
         if (!launch("disconnect provider=${provider.id}") { id ->
-            val result = service<KiloProviderService>().disconnect(ProviderDisconnectDto(directory, provider.id))
+            val result = service<AccureProviderService>().disconnect(ProviderDisconnectDto(directory, provider.id))
             apply(id, result.state, result.error)
         }) return
         syncLoading()
@@ -208,7 +208,7 @@ internal class ProvidersSettingsUi(
     private fun enable(provider: ProviderSettingsProviderDto) {
         checkEdt()
         if (!launch("enable provider=${provider.id}") { id ->
-            val result = service<KiloProviderService>().enable(ProviderEnableDto(directory, provider.id))
+            val result = service<AccureProviderService>().enable(ProviderEnableDto(directory, provider.id))
             apply(id, result.state, result.error)
         }) return
         syncLoading()
@@ -221,7 +221,7 @@ internal class ProvidersSettingsUi(
         if (!dialog.showAndGet()) return
         val input = dialog.input(directory)
         if (!launch("save custom provider") { id ->
-            val result = service<KiloProviderService>().saveCustom(input)
+            val result = service<AccureProviderService>().saveCustom(input)
             apply(id, result.state, result.error)
         }) return
         syncLoading()
@@ -315,16 +315,16 @@ internal class ProvidersSettingsUi(
     private fun syncOAuthWaiting(id: Int) {
         checkEdt()
         if (!active(id)) return
-        val expiry = System.currentTimeMillis() + KiloProviderService.OAUTH_RPC_TIMEOUT_MS
+        val expiry = System.currentTimeMillis() + AccureProviderService.OAUTH_RPC_TIMEOUT_MS
         fun text(): String {
             val ms = (expiry - System.currentTimeMillis()).coerceAtLeast(0)
             val remain = ((ms + 999) / 1000).toInt()
             val min = remain / 60
             val sec = remain % 60
-            return KiloBundle.message("settings.providers.oauth.waitingTimed", "$min:${sec.toString().padStart(2, '0')}")
+            return AccureBundle.message("settings.providers.oauth.waitingTimed", "$min:${sec.toString().padStart(2, '0')}")
         }
         stopTimer()
-        showProgress(text(), KiloBundle.message("settings.providers.oauth.cancel")) { cancelOAuth(id) }
+        showProgress(text(), AccureBundle.message("settings.providers.oauth.cancel")) { cancelOAuth(id) }
         timer = Timer(1000) {
             if (!active(id)) {
                 stopTimer()
@@ -354,12 +354,12 @@ internal class ProvidersSettingsUi(
         clearProgress()
         val panel = DeviceOAuthPanel(
             DeviceOAuthText(
-                title = KiloBundle.message("settings.providers.oauth.starting", provider.name),
-                qrDescription = KiloBundle.message("profile.login.qr.description"),
+                title = AccureBundle.message("settings.providers.oauth.starting", provider.name),
+                qrDescription = AccureBundle.message("profile.login.qr.description"),
             ),
             cancel = { cancelOAuth(id) },
             browse = { BrowserUtil.browse(it) },
-            prefix = "kilo.provider.oauth",
+            prefix = "accure.provider.oauth",
         )
         oauth?.dispose()
         oauth = panel
@@ -424,7 +424,7 @@ internal class ProvidersContent(
     private val model = CollectionListModel<ProviderListRow>()
     private val list = JBList(model).apply {
         selectionMode = ListSelectionModel.SINGLE_SELECTION
-        emptyText.text = KiloBundle.message("settings.providers.noMatches")
+        emptyText.text = AccureBundle.message("settings.providers.noMatches")
     }
     private var state = ProviderSettingsDto()
     private var filter = ""
@@ -579,7 +579,7 @@ private class ApiKeyDialog(title: String, method: ProviderAuthMethodDto?) : Dial
 
     override fun createCenterPanel(): JComponent {
         val panel = Stack.vertical(UiStyle.Gap.sm())
-        panel.next(JBLabel(KiloBundle.message("settings.providers.apiKey")))
+        panel.next(JBLabel(AccureBundle.message("settings.providers.apiKey")))
         panel.next(key)
         fields.forEach { (prompt, field) ->
             panel.next(JBLabel(prompt.label))
@@ -589,7 +589,7 @@ private class ApiKeyDialog(title: String, method: ProviderAuthMethodDto?) : Dial
     }
 
     override fun doValidate(): ValidationInfo? {
-        if (key().isBlank()) return ValidationInfo(KiloBundle.message("settings.providers.apiKeyRequired"), key)
+        if (key().isBlank()) return ValidationInfo(AccureBundle.message("settings.providers.apiKeyRequired"), key)
         return null
     }
 
@@ -614,7 +614,7 @@ private class CustomProviderDialog : DialogWrapper(true) {
     private val models = JBTextField()
 
     init {
-        title = KiloBundle.message("settings.providers.customTitle")
+        title = AccureBundle.message("settings.providers.customTitle")
         init()
         initValidation()
     }
@@ -635,12 +635,12 @@ private class CustomProviderDialog : DialogWrapper(true) {
     override fun createCenterPanel(): JComponent {
         val panel = Stack.vertical(UiStyle.Gap.sm())
         listOf(
-            KiloBundle.message("settings.providers.customId") to id,
-            KiloBundle.message("settings.providers.customName") to name,
-            KiloBundle.message("settings.providers.customUrl") to url,
-            KiloBundle.message("settings.providers.apiKey") to key,
-            KiloBundle.message("settings.providers.customEnv") to env,
-            KiloBundle.message("settings.providers.customModels") to models,
+            AccureBundle.message("settings.providers.customId") to id,
+            AccureBundle.message("settings.providers.customName") to name,
+            AccureBundle.message("settings.providers.customUrl") to url,
+            AccureBundle.message("settings.providers.apiKey") to key,
+            AccureBundle.message("settings.providers.customEnv") to env,
+            AccureBundle.message("settings.providers.customModels") to models,
         ).forEach { (label, field) ->
             panel.next(JBLabel(label))
             panel.next(field)
@@ -649,8 +649,8 @@ private class CustomProviderDialog : DialogWrapper(true) {
     }
 
     override fun doValidate(): ValidationInfo? {
-        if (id.text.isBlank()) return ValidationInfo(KiloBundle.message("settings.providers.customIdRequired"), id)
-        if (url.text.isBlank()) return ValidationInfo(KiloBundle.message("settings.providers.customUrlRequired"), url)
+        if (id.text.isBlank()) return ValidationInfo(AccureBundle.message("settings.providers.customIdRequired"), id)
+        if (url.text.isBlank()) return ValidationInfo(AccureBundle.message("settings.providers.customUrlRequired"), url)
         return null
     }
 }

@@ -1,10 +1,10 @@
-package ai.kilocode.client.migration
+package ai.accurecode.client.migration
 
-import ai.kilocode.rpc.dto.LegacyMigrationDetectionDto
-import ai.kilocode.rpc.dto.LegacyMigrationSelectionsDto
-import ai.kilocode.rpc.dto.MigrationAutoApprovalSelectionsDto
-import ai.kilocode.rpc.dto.MigrationSessionSelectionDto
-import ai.kilocode.rpc.dto.MigrationSettingsSelectionsDto
+import ai.accurecode.rpc.dto.LegacyMigrationDetectionDto
+import ai.accurecode.rpc.dto.LegacyMigrationSelectionsDto
+import ai.accurecode.rpc.dto.MigrationAutoApprovalSelectionsDto
+import ai.accurecode.rpc.dto.MigrationSessionSelectionDto
+import ai.accurecode.rpc.dto.MigrationSettingsSelectionsDto
 
 /**
  * Builds default preselections from detection data, mirroring VS Code behavior.

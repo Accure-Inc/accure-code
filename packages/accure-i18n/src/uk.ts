@@ -1,19 +1,19 @@
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1":
-    "Kilo Gateway надає доступ до добірки надійних оптимізованих моделей для агентів кодування.",
-  "provider.connect.kiloGateway.line2":
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1":
+    "Accure Gateway надає доступ до добірки надійних оптимізованих моделей для агентів кодування.",
+  "provider.connect.accureGateway.line2":
     "За допомогою одного API-ключа ви отримаєте доступ до таких моделей, як Claude, GPT, Gemini, GLM та інших.",
-  "provider.connect.kiloGateway.visit.prefix": "Відвідайте ",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": " щоб отримати свій API-ключ.",
-  "provider.connect.kiloGateway.byok.prefix": "Для отримання додаткової статистики використання використовуйте ",
-  "provider.connect.kiloGateway.byok.link": "BYOK через Kilo's Gateway",
-  "provider.connect.kiloGateway.byok.suffix": ".",
+  "provider.connect.accureGateway.visit.prefix": "Відвідайте ",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": " щоб отримати свій API-ключ.",
+  "provider.connect.accureGateway.byok.prefix": "Для отримання додаткової статистики використання використовуйте ",
+  "provider.connect.accureGateway.byok.link": "BYOK через Accure's Gateway",
+  "provider.connect.accureGateway.byok.suffix": ".",
 
   // Provider settings translations
   "settings.providers.group.recommended": "Рекомендовані",
-  "settings.providers.note.kilo": "Доступ до 500+ моделей ШІ",
+  "settings.providers.note.accurecode": "Доступ до 500+ моделей ШІ",
   "settings.providers.note.opencode": "Добірні моделі, зокрема Claude, GPT, Gemini та інші",
   "settings.providers.note.anthropic": "Прямий доступ до моделей Claude, зокрема Pro і Max",
   "settings.providers.note.deepseek": "Моделі DeepSeek для завдань міркування та програмування",
@@ -102,7 +102,7 @@ export const dict = {
     "Зачекайте, поки знімок завершиться. Наступні ходи будуть швидкими, щойно початковий знімок буде створений.",
   "snapshot.slowRepo.answer.disable": "Вимкнути для цього проєкту",
   "snapshot.slowRepo.answer.disable.description":
-    "Вимкніть знімки Kilo для цього проєкту. Ви втратите скасування/повторення для змін Kilo, але git продовжить відстежувати все.",
+    "Вимкніть знімки Accure для цього проєкту. Ви втратите скасування/повторення для змін Accure, але git продовжить відстежувати все.",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "Відкрити в переглядачі відмінностей",

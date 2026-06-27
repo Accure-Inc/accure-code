@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
-import type { KiloConnectionService } from "../services/cli-backend/connection-service"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
+import type { AccureConnectionService } from "../services/cli-backend/connection-service"
 
 /**
  * Callback that resolves the correct working directory for a session.
@@ -32,7 +32,7 @@ const KEY = "enabled"
  */
 export function registerToggleAutoApprove(
   context: vscode.ExtensionContext,
-  connectionService: KiloConnectionService,
+  connectionService: AccureConnectionService,
   resolve: DirectoryResolver,
   directories: AllDirectories,
 ): AutoApproveController {
@@ -72,11 +72,11 @@ export function registerToggleAutoApprove(
         for (const req of pending) {
           if (generation !== snapshot) break
           await client.permission.reply({ requestID: req.id, directory: dir, reply: "once" }).catch((err) => {
-            console.error("[Kilo New] toggleAutoApprove: failed to drain pending:", err)
+            console.error("[Accure New] toggleAutoApprove: failed to drain pending:", err)
           })
         }
       } catch (err) {
-        console.error("[Kilo New] toggleAutoApprove: failed to list pending permissions:", err)
+        console.error("[Accure New] toggleAutoApprove: failed to list pending permissions:", err)
       }
     }
 
@@ -91,7 +91,7 @@ export function registerToggleAutoApprove(
     const dir =
       directory ?? connectionService.getPermissionDirectory(event.properties.id) ?? resolve(event.properties.sessionID)
     client.permission.reply({ requestID: event.properties.id, directory: dir, reply: "once" }).catch((err) => {
-      console.error("[Kilo New] toggleAutoApprove: failed to auto-reply:", err)
+      console.error("[Accure New] toggleAutoApprove: failed to auto-reply:", err)
     })
   })
 
@@ -137,7 +137,7 @@ function target(): vscode.ConfigurationTarget {
   return vscode.ConfigurationTarget.Global
 }
 
-function tryGetClient(connectionService: KiloConnectionService): KiloClient | undefined {
+function tryGetClient(connectionService: AccureConnectionService): AccureClient | undefined {
   try {
     return connectionService.getClient()
   } catch {

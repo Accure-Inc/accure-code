@@ -1,5 +1,5 @@
 import { Flag } from "@opencode-ai/core/flag/flag"
-import * as PowerShell from "@/kilocode/shell/shell" // kilocode_change - encoded PowerShell args
+import * as PowerShell from "@/accurecode/shell/shell" // accurecode_change - encoded PowerShell args
 import { lazy } from "@/util/lazy"
 import { Filesystem } from "@/util/filesystem"
 import { which } from "@/util/which"
@@ -116,7 +116,7 @@ function select(file: string | undefined, opts?: { acceptable?: boolean }) {
 
 export function gitbash() {
   if (process.platform !== "win32") return
-  if (Flag.KILO_GIT_BASH_PATH) return Flag.KILO_GIT_BASH_PATH
+  if (Flag.ACCURECODE_GIT_BASH_PATH) return Flag.ACCURECODE_GIT_BASH_PATH
   const git = which("git")
   if (!git) return
   const file = path.join(git, "..", "..", "bin", "bash.exe")
@@ -170,7 +170,7 @@ export function args(file: string, command: string, cwd: string) {
         cd -- "$1"
         eval ${JSON.stringify(command)}
       `,
-      "kilo", // kilocode_change
+      "accure", // accurecode_change
       cwd,
     ]
   }
@@ -184,12 +184,12 @@ export function args(file: string, command: string, cwd: string) {
         cd -- "$1"
         eval ${JSON.stringify(command)}
       `,
-      "kilo", // kilocode_change
+      "accure", // accurecode_change
       cwd,
     ]
   }
   if (n === "cmd") return ["/c", command]
-  if (ps(file)) return PowerShell.args(command) // kilocode_change - encoded PowerShell args
+  if (ps(file)) return PowerShell.args(command) // accurecode_change - encoded PowerShell args
   return ["-c", command]
 }
 

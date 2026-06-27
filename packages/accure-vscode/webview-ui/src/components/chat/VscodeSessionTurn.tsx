@@ -10,18 +10,18 @@
  */
 
 import { Component, createMemo, For, Show, createEffect } from "solid-js"
-import { UserMessageDisplay } from "@kilocode/accure-ui/message-part"
-import { DiffChanges } from "@kilocode/accure-ui/diff-changes"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { useData } from "@kilocode/accure-ui/context/data"
-import { useI18n } from "@kilocode/accure-ui/context/i18n"
+import { UserMessageDisplay } from "@accurecode/accure-ui/message-part"
+import { DiffChanges } from "@accurecode/accure-ui/diff-changes"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { useData } from "@accurecode/accure-ui/context/data"
+import { useI18n } from "@accurecode/accure-ui/context/i18n"
 import { AssistantMessage } from "./AssistantMessage"
 import type {
   AssistantMessage as SDKAssistantMessage,
   Message as SDKMessage,
   Part as SDKPart,
   SnapshotFileDiff,
-} from "@kilocode/sdk/v2"
+} from "@accurecode/sdk/v2"
 import { ErrorDisplay } from "./ErrorDisplay"
 import { useServer } from "../../context/server"
 import { useSession } from "../../context/session"

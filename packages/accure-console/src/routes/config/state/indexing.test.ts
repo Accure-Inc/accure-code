@@ -38,8 +38,8 @@ describe("indexing config state", () => {
   })
 
   test("builds provider patches for custom selector changes", () => {
-    expect(providerPatch("kilo", "default-embedding")).toEqual({
-      provider: "kilo",
+    expect(providerPatch("accure", "default-embedding")).toEqual({
+      provider: "accure",
       model: "default-embedding",
       dimension: undefined,
     })

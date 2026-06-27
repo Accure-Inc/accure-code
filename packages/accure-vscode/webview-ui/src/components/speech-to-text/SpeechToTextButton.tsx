@@ -1,6 +1,6 @@
-import { Button } from "@kilocode/accure-ui/button"
-import { Tooltip } from "@kilocode/accure-ui/tooltip"
-import { Spinner } from "@kilocode/accure-ui/spinner"
+import { Button } from "@accurecode/accure-ui/button"
+import { Tooltip } from "@accurecode/accure-ui/tooltip"
+import { Spinner } from "@accurecode/accure-ui/spinner"
 import type { Component } from "solid-js"
 import type { SpeechToText } from "./useSpeechToText"
 

@@ -27,7 +27,7 @@ await createClient({
     },
     {
       name: "@hey-api/sdk",
-      instance: "KiloClient",
+      instance: "AccureClient",
       exportFromIndex: false,
       auth: false,
       paramsStructure: "flat",

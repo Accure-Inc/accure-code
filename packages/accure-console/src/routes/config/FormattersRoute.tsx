@@ -1,7 +1,7 @@
 import { For, Show } from "solid-js"
-import { Button } from "@kilocode/accure-web-ui/button"
-import { ConfigRow, SectionTitle } from "@kilocode/accure-web-ui/console"
-import { IconButton } from "@kilocode/accure-web-ui/icon-button"
+import { Button } from "@accurecode/accure-web-ui/button"
+import { ConfigRow, SectionTitle } from "@accurecode/accure-web-ui/console"
+import { IconButton } from "@accurecode/accure-web-ui/icon-button"
 import { ConfigCountTag as CountTag, ConfigPage, ConfigTag as Tag, SourceBadge } from "./ConfigPage"
 import { useFormatterSettings, type ToolRow } from "./state/formatters"
 
@@ -268,7 +268,7 @@ export function FormattersRoute() {
           <CountTag>{state.builtinFmt().length + state.customFmt().length}</CountTag>
         </span>
       }
-      description="Control native and custom formatters Kilo can run after editing files."
+      description="Control native and custom formatters Accure can run after editing files."
       actions={
         <>
           <Button

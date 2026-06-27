@@ -1,20 +1,20 @@
-package ai.kilocode.client.session.history
+package ai.accurecode.client.session.history
 
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.SessionManager
-import ai.kilocode.client.session.SessionActivityKind
-import ai.kilocode.client.session.SessionRef
-import ai.kilocode.client.testing.FakeSessionRpcApi
-import ai.kilocode.client.testing.FakeWorkspaceRpcApi
-import ai.kilocode.rpc.dto.CloudSessionDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionStatusDto
-import ai.kilocode.rpc.dto.SessionTimeDto
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.SessionManager
+import ai.accurecode.client.session.SessionActivityKind
+import ai.accurecode.client.session.SessionRef
+import ai.accurecode.client.testing.FakeSessionRpcApi
+import ai.accurecode.client.testing.FakeWorkspaceRpcApi
+import ai.accurecode.rpc.dto.CloudSessionDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.SessionTimeDto
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.Disposer
@@ -42,7 +42,7 @@ class HistoryControllerTest : BasePlatformTestCase() {
     private lateinit var scope: CoroutineScope
     private lateinit var parent: Disposable
     private lateinit var rpc: FakeSessionRpcApi
-    private lateinit var sessions: KiloSessionService
+    private lateinit var sessions: AccureSessionService
     private lateinit var workspace: Workspace
 
     override fun setUp() {
@@ -50,9 +50,9 @@ class HistoryControllerTest : BasePlatformTestCase() {
         scope = CoroutineScope(SupervisorJob())
         parent = Disposer.newDisposable("history")
         rpc = FakeSessionRpcApi()
-        sessions = KiloSessionService(project, scope, rpc)
-        val workspaces = KiloWorkspaceService(scope, FakeWorkspaceRpcApi().also {
-            it.state.value = KiloWorkspaceStateDto(status = KiloWorkspaceStatusDto.READY)
+        sessions = AccureSessionService(project, scope, rpc)
+        val workspaces = AccureWorkspaceService(scope, FakeWorkspaceRpcApi().also {
+            it.state.value = AccureWorkspaceStateDto(status = AccureWorkspaceStatusDto.READY)
         })
         workspace = workspaces.workspace("/test")
     }
@@ -211,7 +211,7 @@ class HistoryControllerTest : BasePlatformTestCase() {
         panel.syncActivity()
 
         assertTrue(panel.runningBadgeVisible(0))
-        assertEquals(KiloBundle.message("session.part.tool.running"), panel.badgeText(0))
+        assertEquals(AccureBundle.message("session.part.tool.running"), panel.badgeText(0))
     }
 
     fun `test history panel overlay shows specific badge`() {
@@ -226,7 +226,7 @@ class HistoryControllerTest : BasePlatformTestCase() {
 
         panel.syncActivity()
 
-        assertEquals(KiloBundle.message("history.badge.permission"), panel.badgeText(0))
+        assertEquals(AccureBundle.message("history.badge.permission"), panel.badgeText(0))
     }
 
     fun `test history panel sync repaints activity kind change`() {
@@ -242,12 +242,12 @@ class HistoryControllerTest : BasePlatformTestCase() {
         flush()
 
         panel.syncActivity()
-        assertEquals(KiloBundle.message("session.part.tool.running"), panel.badgeText(0))
+        assertEquals(AccureBundle.message("session.part.tool.running"), panel.badgeText(0))
 
         kind = SessionActivityKind.QUESTION
         panel.syncActivity()
 
-        assertEquals(KiloBundle.message("history.badge.question"), panel.badgeText(0))
+        assertEquals(AccureBundle.message("history.badge.question"), panel.badgeText(0))
     }
 
     fun `test history panel sync uses live title overlay`() {
@@ -295,12 +295,12 @@ class HistoryControllerTest : BasePlatformTestCase() {
         val panel = HistoryPanel(parent, controller())
         flush()
 
-        assertEquals(KiloBundle.message("history.back"), panel.backText())
+        assertEquals(AccureBundle.message("history.back"), panel.backText())
 
         panel.clickCloud()
         flush()
 
-        assertEquals(KiloBundle.message("history.back"), panel.backText())
+        assertEquals(AccureBundle.message("history.back"), panel.backText())
     }
 
     fun `test panel back button invokes callback`() {
@@ -451,10 +451,10 @@ class HistoryControllerTest : BasePlatformTestCase() {
             ),
         )
 
-        assertEquals(KiloBundle.message("history.time.hours", 5), HistoryTime.relative(today, now.toEpochMilli()))
+        assertEquals(AccureBundle.message("history.time.hours", 5), HistoryTime.relative(today, now.toEpochMilli()))
         assertEquals(HistorySection.TODAY, HistoryTime.section(today, now.toEpochMilli()))
         assertEquals(HistorySection.YESTERDAY, HistoryTime.section(yesterday, now.toEpochMilli()))
-        assertEquals(KiloBundle.message("history.time.hours", 10), HistoryTime.relative(offset, now.toEpochMilli()))
+        assertEquals(AccureBundle.message("history.time.hours", 10), HistoryTime.relative(offset, now.toEpochMilli()))
     }
 
     fun `test history section boundaries are inclusive at 7 and 30 days`() {

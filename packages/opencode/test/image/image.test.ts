@@ -57,7 +57,7 @@ describe("Image", () => {
     }),
   )
 
-  // kilocode_change start - cover Kilo's Photon-unavailable fallback
+  // accurecode_change start - cover Accure's Photon-unavailable fallback
   test("preserves a valid in-limit image without Photon", () => {
     const data = "UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA"
     const input = part("image/webp", data)
@@ -95,7 +95,7 @@ describe("Image", () => {
       expect(result.height).toBe(1)
     }
   })
-  // kilocode_change end
+  // accurecode_change end
 
   tiny.effect("fails with a typed size error when no resized candidate fits", () =>
     Effect.gen(function* () {

@@ -1,6 +1,6 @@
-import { Button } from "@kilocode/accure-web-ui/button"
-import { Card } from "@kilocode/accure-web-ui/card"
-import type { IndexingConfig } from "@kilocode/sdk/v2/client"
+import { Button } from "@accurecode/accure-web-ui/button"
+import { Card } from "@accurecode/accure-web-ui/card"
+import type { IndexingConfig } from "@accurecode/sdk/v2/client"
 import { For, Show, createEffect, createMemo, createResource, createSignal, type JSX } from "solid-js"
 import { CustomSelect, type SelectOption } from "../../components/CustomSelect"
 import { loadEmbeddingModels } from "../../client"
@@ -15,7 +15,7 @@ type Field = { key: string; label: string; placeholder: string; secret?: boolean
 
 const providers = [
   { value: "", label: "Automatic" },
-  { value: "kilo", label: "Kilo" },
+  { value: "accure", label: "Accure" },
   { value: "openai", label: "OpenAI" },
   { value: "ollama", label: "Ollama (local)" },
   { value: "openai-compatible", label: "OpenAI-compatible" },
@@ -33,7 +33,7 @@ const stores = [
 ] satisfies SelectOption<Store>[]
 
 const fields: Record<Provider, Field[]> = {
-  kilo: [],
+  accure: [],
   openai: [{ key: "apiKey", label: "API key", placeholder: "sk-...", secret: true }],
   ollama: [{ key: "baseUrl", label: "Base URL", placeholder: "http://localhost:11434" }],
   "openai-compatible": [
@@ -124,15 +124,15 @@ export function IndexingRoute() {
   const provider = createMemo(() => view().provider)
   const store = createMemo<Store>(() => view().vectorStore ?? "lancedb")
   const [catalog] = createResource(ctx.query, loadEmbeddingModels)
-  const kiloModels = createMemo<SelectOption<string>[]>(() => {
+  const accureModels = createMemo<SelectOption<string>[]>(() => {
     const models = catalog()?.models ?? []
-    if (models.length === 0) return [{ value: "", label: "No Kilo embedding models available", disabled: true }]
+    if (models.length === 0) return [{ value: "", label: "No Accure embedding models available", disabled: true }]
     return models.map((model) => ({
       value: model.id,
       label: `${model.name} (${model.note ? `${model.note}, ` : ""}${model.dimension}d)`,
     }))
   })
-  const kiloModel = createMemo(() => {
+  const accureModel = createMemo(() => {
     const data = catalog()
     if (!data) return ""
     const model = view().model ?? data.defaultModel
@@ -252,7 +252,7 @@ export function IndexingRoute() {
             <div class="ui-form agent-builder-form">
               <FieldCard
                 label="Provider"
-                description="Automatic uses Kilo when signed in, otherwise the provider runtime default."
+                description="Automatic uses Accure when signed in, otherwise the provider runtime default."
                 actions={
                   <SourceBadge
                     source={field("provider")?.source}
@@ -274,8 +274,8 @@ export function IndexingRoute() {
               <FieldCard
                 label="Model"
                 description={
-                  provider() === "kilo"
-                    ? "Select a Kilo-hosted embedding model."
+                  provider() === "accure"
+                    ? "Select a Accure-hosted embedding model."
                     : "Leave empty to use the provider's default embedding model."
                 }
                 actions={
@@ -287,7 +287,7 @@ export function IndexingRoute() {
                 }
               >
                 <Show
-                  when={provider() === "kilo"}
+                  when={provider() === "accure"}
                   fallback={
                     <input
                       value={view().model ?? ""}
@@ -299,9 +299,9 @@ export function IndexingRoute() {
                 >
                   <CustomSelect
                     class="indexing-select"
-                    label="Kilo embedding model"
-                    value={kiloModel()}
-                    options={kiloModels()}
+                    label="Accure embedding model"
+                    value={accureModel()}
+                    options={accureModels()}
                     disabled={Boolean(ctx.saving()) || !catalog()?.models.length}
                     onSelect={(value) => update({ model: value, dimension: undefined })}
                   />
@@ -325,15 +325,15 @@ export function IndexingRoute() {
                   step="1"
                   value={view().dimension ?? ""}
                   placeholder="Auto-detect"
-                  disabled={Boolean(ctx.saving()) || provider() === "kilo"}
+                  disabled={Boolean(ctx.saving()) || provider() === "accure"}
                   onInput={(event) => number("dimension", event.currentTarget.value)}
                 />
               </FieldCard>
 
-              <Show when={provider() === "kilo"}>
+              <Show when={provider() === "accure"}>
                 <div class="indexing-note">
-                  Kilo embeddings use the account currently signed in to this Kilo server. Model dimensions are supplied
-                  by the catalog.
+                  Accure embeddings use the account currently signed in to this Accure server. Model dimensions are
+                  supplied by the catalog.
                 </div>
               </Show>
 
@@ -416,7 +416,7 @@ export function IndexingRoute() {
                   >
                     <input
                       value={view().lancedb?.directory ?? ""}
-                      placeholder="Default Kilo state directory"
+                      placeholder="Default Accure state directory"
                       disabled={Boolean(ctx.saving())}
                       onInput={(event) =>
                         update({ lancedb: { ...draft().lancedb, directory: event.currentTarget.value || undefined } })

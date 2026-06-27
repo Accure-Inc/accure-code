@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Kilo CLI is an open source AI coding agent that generates code from natural language, automates tasks, and supports 500+ AI models.
+Accure CLI is an open source AI coding agent that generates code from natural language, automates tasks, and supports 500+ AI models.
 
 - ALWAYS USE PARALLEL TOOLS WHEN APPLICABLE.
 - The default branch in this repo is `main`.
@@ -15,15 +15,15 @@ Kilo CLI is an open source AI coding agent that generates code from natural lang
 - **Typecheck**: `bun turbo typecheck` (uses `tsgo`, not `tsc`). Includes the JetBrains plugin and requires Java 21; do not run `java -version` as a routine preflight. Only check Java when a Gradle/Java command fails with a Java-version or missing-Java error. If missing, install via SDKMAN: `sdk install java 21-tem && sdk use java 21-tem`. If SDKMAN is not installed, see https://sdkman.io/install.
 - **Test**: `bun test` from `packages/opencode/` (NOT from root -- root blocks tests)
 - **Single test**: `bun test ./test/tool/tool-define.test.ts` from `packages/opencode/`
-- **CLI build artifact size check**: after `bun run script/build.ts --single --skip-install` in `packages/opencode/`, use `du -h dist/*/*/bin/kilo` (scoped package output lives under `dist/@kilocode/`)
+- **CLI build artifact size check**: after `bun run script/build.ts --single --skip-install` in `packages/opencode/`, use `du -h dist/*/*/bin/accure` (scoped package output lives under `dist/@accurecode/`)
 - **SDK regen**: After changing server endpoints in `packages/opencode/src/server/`, run `./script/generate.ts` from root to regenerate `packages/sdk/js/`
 - **Knip** (unused exports): `bun run knip` from `packages/accure-vscode/`. CI runs this — all exported types/functions must be imported somewhere. Remove or unexport unused exports before pushing.
 - **Source links**: After adding or changing URLs in `packages/accure-vscode/`, `packages/accure-vscode/webview-ui/`, or `packages/opencode/src/`, run `bun run script/extract-source-links.ts` from the repo root and commit the updated `packages/accure-docs/source-links.md`. CI runs this check — the build fails if the file is stale.
-- **kilocode_change check**: `bun run check-kilocode-change` from `packages/accure-vscode/`. CI runs this — `kilocode_change` is a marker for upstream merge conflicts and must not appear in `packages/accure-vscode/` or `packages/accure-ui/` (these are entirely Kilo Code additions). Remove the markers before pushing.
-- **opencode annotation check**: `bun run script/check-opencode-annotations.ts` from repo root. CI runs this on PRs touching `packages/opencode/` — every Kilo-specific change in shared opencode files must be annotated with `kilocode_change` markers. Exempt paths (no markers needed): `packages/opencode/src/kilocode/`, `packages/opencode/test/kilocode/`, and any path containing `kilocode` in the name.
-- **Effect facade ratchet**: Do not add runtime-backed Promise facades to shared `packages/opencode/src` Effect services; use service dependencies, `AppRuntime`, or Kilo-owned boundaries. Run `bun run script/check-opencode-promise-facades.ts` when touching service adapters.
+- **accurecode_change check**: `bun run check-accurecode-change` from `packages/accure-vscode/`. CI runs this — `accurecode_change` is a marker for upstream merge conflicts and must not appear in `packages/accure-vscode/` or `packages/accure-ui/` (these are entirely Accure Code additions). Remove the markers before pushing.
+- **opencode annotation check**: `bun run script/check-opencode-annotations.ts` from repo root. CI runs this on PRs touching `packages/opencode/` — every Accure-specific change in shared opencode files must be annotated with `accurecode_change` markers. Exempt paths (no markers needed): `packages/opencode/src/accurecode/`, `packages/opencode/test/accurecode/`, and any path containing `accurecode` in the name.
+- **Effect facade ratchet**: Do not add runtime-backed Promise facades to shared `packages/opencode/src` Effect services; use service dependencies, `AppRuntime`, or Accure-owned boundaries. Run `bun run script/check-opencode-promise-facades.ts` when touching service adapters.
 - **workflow allowlist**: `bun run script/check-workflows.ts` from repo root. CI runs this as part of the annotations workflow — any `.yml` / `.yaml` file added to or removed from `.github/workflows/` must be reflected in the hardcoded list in `script/check-workflows.ts`. Prevents upstream-merged workflows from silently starting to run in our CI.
-- **Backend/SDK programmatic testing**: see [TESTING.md](./TESTING.md) for spawning the local main-branch backend (`bun dev serve`) and driving it via `curl` — use this instead of `kilo serve` (prod binary) when testing backend fixes.
+- **Backend/SDK programmatic testing**: see [TESTING.md](./TESTING.md) for spawning the local main-branch backend (`bun dev serve`) and driving it via `curl` — use this instead of `accure serve` (prod binary) when testing backend fixes.
 
 ## Quality Checks
 
@@ -36,24 +36,24 @@ Before saying an implementation is ready, run the smallest relevant checks that 
 | VS Code extension | From `packages/accure-vscode/`: `bun run typecheck`, `bun run lint`, `bun run test:unit` or `bun run test` |
 | Extension build/package | From `packages/accure-vscode/`: `bun run compile` or `bun run package` when touching build, packaging, SDK, or webview integration paths |
 | JetBrains plugin | From `packages/accure-jetbrains/`: `./gradlew typecheck`, `./gradlew test`. Requires Java 21; do not run `java -version` as a routine preflight. Check Java only after a Java-version or missing-Java failure. |
-| CI-only guards | Run affected guards documented above, such as `bun run knip`, `bun run check-kilocode-change`, `bun run script/check-opencode-annotations.ts`, or source link extraction |
+| CI-only guards | Run affected guards documented above, such as `bun run knip`, `bun run check-accurecode-change`, `bun run script/check-opencode-annotations.ts`, or source link extraction |
 
 Never run root `bun test`; the root script prints `do not run tests from root` and exits with code 1. Use package-level tests instead.
 
 ## Products
 
-All products are clients of the **CLI** (`packages/opencode/`), which contains the AI agent runtime, HTTP server, and session management. Each client spawns or connects to a `kilo serve` process and communicates via HTTP + SSE using `@kilocode/sdk`.
+All products are clients of the **CLI** (`packages/opencode/`), which contains the AI agent runtime, HTTP server, and session management. Each client spawns or connects to a `accure serve` process and communicates via HTTP + SSE using `@accurecode/sdk`.
 
 | Product | Package | Description |
 |---|---|---|
-| Kilo CLI | `packages/opencode/` | Core engine. TUI, `kilo run`, `kilo serve`. Fork of upstream OpenCode. |
-| Kilo VS Code Extension | `packages/accure-vscode/` | VS Code extension. Bundles the CLI binary, spawns `kilo serve` as a child process. Includes the **Agent Manager** — a multi-session orchestration panel with git worktree isolation. |
+| Accure CLI | `packages/opencode/` | Core engine. TUI, `accure run`, `accure serve`. Fork of upstream OpenCode. |
+| Accure VS Code Extension | `packages/accure-vscode/` | VS Code extension. Bundles the CLI binary, spawns `accure serve` as a child process. Includes the **Agent Manager** — a multi-session orchestration panel with git worktree isolation. |
 
 **Agent Manager** refers to a feature inside `packages/accure-vscode/` (extension code in `src/agent-manager/`, webview in `webview-ui/agent-manager/`). It is not a standalone product. See the extension's `AGENTS.md` for details.
 
-In each VS Code extension host, one `KiloConnectionService` is created for the sidebar, every Kilo editor tab, and Agent Manager; it lazily starts and reuses one current `kilo serve` backend at a time. Agent Manager worktree sessions pass a directory context to this shared backend rather than starting one per worktree. State captured by the active service layer, such as Snapshot `trackState`, is shared across those requests; only directory-keyed `InstanceState` data is isolated.
+In each VS Code extension host, one `AccureConnectionService` is created for the sidebar, every Accure editor tab, and Agent Manager; it lazily starts and reuses one current `accure serve` backend at a time. Agent Manager worktree sessions pass a directory context to this shared backend rather than starting one per worktree. State captured by the active service layer, such as Snapshot `trackState`, is shared across those requests; only directory-keyed `InstanceState` data is isolated.
 
-Extension-specific settings should live in the Kilo extension settings, not default VS Code settings, unless they are intentionally VS Code-wide.
+Extension-specific settings should live in the Accure extension settings, not default VS Code settings, unless they are intentionally VS Code-wide.
 
 ## Package Instructions
 
@@ -65,15 +65,15 @@ Turborepo + Bun workspaces. The packages you'll work with most:
 
 | Package | Name | Purpose |
 |---|---|---|
-| `packages/opencode/` | `@kilocode/cli` | Core CLI -- agents, tools, sessions, server, TUI. This is where most work happens. |
-| `packages/sdk/js/` | `@kilocode/sdk` | Auto-generated TypeScript SDK (client for the server API). Do not edit `src/gen/` by hand. |
-| `packages/accure-vscode/` | `kilo-code` | VS Code extension with sidebar chat + Agent Manager. See its own `AGENTS.md` for details. |
-| `packages/accure-gateway/` | `@kilocode/accure-gateway` | Kilo auth, provider routing, API integration |
-| `packages/accure-telemetry/` | `@kilocode/accure-telemetry` | PostHog analytics + OpenTelemetry |
-| `packages/accure-i18n/` | `@kilocode/accure-i18n` | Internationalization / translations |
-| `packages/accure-ui/` | `@kilocode/accure-ui` | SolidJS component library shared by the extension webview and docs screenshot stories |
+| `packages/opencode/` | `@accurecode/cli` | Core CLI -- agents, tools, sessions, server, TUI. This is where most work happens. |
+| `packages/sdk/js/` | `@accurecode/sdk` | Auto-generated TypeScript SDK (client for the server API). Do not edit `src/gen/` by hand. |
+| `packages/accure-vscode/` | `accure-code` | VS Code extension with sidebar chat + Agent Manager. See its own `AGENTS.md` for details. |
+| `packages/accure-gateway/` | `@accurecode/accure-gateway` | Accure auth, provider routing, API integration |
+| `packages/accure-telemetry/` | `@accurecode/accure-telemetry` | PostHog analytics + OpenTelemetry |
+| `packages/accure-i18n/` | `@accurecode/accure-i18n` | Internationalization / translations |
+| `packages/accure-ui/` | `@accurecode/accure-ui` | SolidJS component library shared by the extension webview and docs screenshot stories |
 | `packages/util/` | `@opencode-ai/util` | Shared utilities (error, path, retry, slug, etc.) |
-| `packages/plugin/` | `@kilocode/plugin` | Plugin/tool interface definitions |
+| `packages/plugin/` | `@accurecode/plugin` | Plugin/tool interface definitions |
 
 ## Commits and PR Titles
 
@@ -136,7 +136,7 @@ Do not pad markdown table cells for column alignment. Use the compact form with 
 ```
 | Command | What it runs |
 |---|---|
-| `kilo serve` | The prod CLI on `$PATH`. |
+| `accure serve` | The prod CLI on `$PATH`. |
 ```
 
 Do **not** right-pad cells to line up columns:
@@ -144,7 +144,7 @@ Do **not** right-pad cells to line up columns:
 ```
 | Command                       | What it runs             |
 | ----------------------------- | ------------------------ |
-| `kilo serve`                  | The prod CLI on `$PATH`. |
+| `accure serve`                  | The prod CLI on `$PATH`. |
 ```
 
 Padding makes every content change rewrite the entire table, which blows up diffs on untouched rows. Markdown files are excluded from prettier (see `.prettierignore`) so running the formatter won't re-pad them, and `script/check-md-table-padding.ts` enforces the rule in CI. Run `bun run script/check-md-table-padding.ts --fix` to auto-rewrite padded tables.
@@ -165,31 +165,31 @@ PR descriptions should explain **what** changed, **why** the change is needed, a
 
 ## GitHub Issues
 
-When creating or managing GitHub issues for the VS Code extension or JetBrains plugin via `gh`, load `.kilo/skills/gh-issues/SKILL.md`. It covers templates, project boards (`VS Code Extension`, `Jetbrains Plugin`), title conventions, and the `gh auth refresh -s project` recovery path.
+When creating or managing GitHub issues for the VS Code extension or JetBrains plugin via `gh`, load `.accurecode/skills/gh-issues/SKILL.md`. It covers templates, project boards (`VS Code Extension`, `Jetbrains Plugin`), title conventions, and the `gh auth refresh -s project` recovery path.
 
 ## Fork Merge Process
 
-Kilo CLI is a fork of [opencode](https://github.com/anomalyco/opencode).
+Accure CLI is a fork of [opencode](https://github.com/anomalyco/opencode).
 
-**Very important**: when planning or coding, update shared files with OpenCode as last resort! Everything is shared code from OpenCode, except folders that contain `kilo` in the name or have a parent directory that contains `kilo` in the name. Example of kilo specific folders: `packages/opencode/src/kilocode/` and `packages/accure-docs/`. Always look for ways to implement your feature or fix in a way that minimizes changes to shared code.
+**Very important**: when planning or coding, update shared files with OpenCode as last resort! Everything is shared code from OpenCode, except folders that contain `accure` in the name or have a parent directory that contains `accure` in the name. Example of accure specific folders: `packages/opencode/src/accurecode/` and `packages/accure-docs/`. Always look for ways to implement your feature or fix in a way that minimizes changes to shared code.
 
 ### Minimizing Merge Conflicts
 
 We regularly merge upstream changes from opencode. To minimize merge conflicts and keep the sync process smooth:
 
-1. **Prefer `kilocode` directories** - Place Kilo-specific code in dedicated directories whenever possible:
-   - `packages/opencode/src/kilocode/` - Kilo-specific source code
-   - `packages/opencode/test/kilocode/` - Kilo-specific tests
-   - `packages/accure-gateway/` - The Kilo Gateway package
+1. **Prefer `accurecode` directories** - Place Accure-specific code in dedicated directories whenever possible:
+   - `packages/opencode/src/accurecode/` - Accure-specific source code
+   - `packages/opencode/test/accurecode/` - Accure-specific tests
+   - `packages/accure-gateway/` - The Accure Gateway package
 
 2. **Minimize changes to shared files** - When you must modify files that exist in upstream opencode, keep changes as small and isolated as possible.
 
-3. **Use `kilocode_change` markers** - When modifying shared code, mark your changes with `kilocode_change` comments so they can be easily identified during merges.
-   Do not use these markers in files within directories with kilo in the name
+3. **Use `accurecode_change` markers** - When modifying shared code, mark your changes with `accurecode_change` comments so they can be easily identified during merges.
+   Do not use these markers in files within directories with accure in the name
 
 4. **Avoid restructuring upstream code** - Don't refactor or reorganize code that comes from opencode unless absolutely necessary.
 
-5. **Mirror new config keys to the cloud schema** - When adding a `kilocode_change` key to `Config.Info` in `packages/opencode/src/config/config.ts`, also add the matching JSON Schema entry in `apps/web/src/app/config.json/extras.ts` in the [cloud repo](https://github.com/Kilo-Org/cloud). See [CLI Config Schema](packages/accure-docs/pages/contributing/architecture/config-schema.md) for the step-by-step.
+5. **Mirror new config keys to the cloud schema** - When adding a `accurecode_change` key to `Config.Info` in `packages/opencode/src/config/config.ts`, also add the matching JSON Schema entry in `apps/web/src/app/config.json/extras.ts` in the [cloud repo](https://github.com/Accure-Org/cloud). See [CLI Config Schema](packages/accure-docs/pages/contributing/architecture/config-schema.md) for the step-by-step.
 
 The goal is to keep our diff from upstream as small as possible, making regular merges straightforward and reducing the risk of conflicts.
 
@@ -197,15 +197,15 @@ The goal is to keep our diff from upstream as small as possible, making regular 
 
 `bun install` sets `merge.conflictStyle=zdiff3` repo-locally via `script/setup-git.ts` (wired into `postinstall`). Conflicts include the common ancestor between `|||||||` and `=======`, which is what `script/upstream/` and `mergiraf` rely on for structural resolution and what makes manual resolution on shared opencode files tractable. If you've overridden it in your user config, the repo-local setting takes precedence — don't override it back.
 
-### Kilocode Change Markers
+### Accurecode Change Markers
 
-When editing shared upstream files, mark Kilo-specific lines with `kilocode_change` comments so future merges can find them. The basic forms are:
+When editing shared upstream files, mark Accure-specific lines with `accurecode_change` comments so future merges can find them. The basic forms are:
 
-- Single line: `const value = 42 // kilocode_change`
-- Multi-line block: wrap with `// kilocode_change start` / `// kilocode_change end`
-- New file in a shared path: `// kilocode_change - new file` at the top
-- JSX/TSX: use `{/* kilocode_change */}` (and `{/* kilocode_change start */}` / `end`)
+- Single line: `const value = 42 // accurecode_change`
+- Multi-line block: wrap with `// accurecode_change start` / `// accurecode_change end`
+- New file in a shared path: `// accurecode_change - new file` at the top
+- JSX/TSX: use `{/* accurecode_change */}` (and `{/* accurecode_change start */}` / `end`)
 
-Markers are NOT needed in paths that contain `kilocode` in the name (e.g. `packages/opencode/src/kilocode/`, `packages/opencode/test/kilocode/`) — these are entirely Kilo Code additions and won't conflict with upstream.
+Markers are NOT needed in paths that contain `accurecode` in the name (e.g. `packages/opencode/src/accurecode/`, `packages/opencode/test/accurecode/`) — these are entirely Accure Code additions and won't conflict with upstream.
 
-For decision rules on when to keep changes inline vs. extract Kilo logic, marker placement guidance, and verification commands, load `.kilo/skills/kilocode-merge-minimizer/SKILL.md`.
+For decision rules on when to keep changes inline vs. extract Accure logic, marker placement guidance, and verification commands, load `.accurecode/skills/accurecode-merge-minimizer/SKILL.md`.

@@ -1,4 +1,4 @@
-import { Daemon } from "@/kilocode/daemon/daemon"
+import { Daemon } from "@/accurecode/daemon/daemon"
 
 export function warnPort(port: number) {
   if (port === 0) return

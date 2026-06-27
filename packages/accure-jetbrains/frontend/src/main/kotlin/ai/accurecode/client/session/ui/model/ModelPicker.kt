@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.ui.model
+package ai.accurecode.client.session.ui.model
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.ui.PickerButton
-import ai.kilocode.rpc.dto.ModelSelectionDto
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.ui.PickerButton
+import ai.accurecode.rpc.dto.ModelSelectionDto
 import com.intellij.openapi.ui.popup.JBPopup
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.PopupShowOptions
@@ -76,7 +76,7 @@ class ModelPicker : PickerButton() {
     var favorites: () -> List<ModelSelectionDto> = { emptyList() }
     var onFavoriteToggle: (Item) -> Unit = {}
     var allowEmpty: Boolean = false
-    var emptyText: String = KiloBundle.message("settings.models.notSet")
+    var emptyText: String = AccureBundle.message("settings.models.notSet")
     var includeSmall: Boolean = false
     var placement: Placement = Placement.BELOW
 
@@ -86,7 +86,7 @@ class ModelPicker : PickerButton() {
     init {
         isEnabled = false
         text = " "
-        toolTipText = KiloBundle.message("model.picker.tooltip")
+        toolTipText = AccureBundle.message("model.picker.tooltip")
 
         addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
@@ -123,7 +123,7 @@ class ModelPicker : PickerButton() {
             isEnabled = allowEmpty
             text = if (allowEmpty) emptyText else " "
             icon = null
-            toolTipText = KiloBundle.message("model.picker.tooltip")
+            toolTipText = AccureBundle.message("model.picker.tooltip")
             cursor = if (allowEmpty) Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) else Cursor.getDefaultCursor()
             return
         }
@@ -132,7 +132,7 @@ class ModelPicker : PickerButton() {
         icon = if (item?.let(ModelText::collectsData) == true) ModelPickerRenderer.DATA_COLLECTED else null
         horizontalTextPosition = SwingConstants.LEFT
         iconTextGap = JBUI.CurrentTheme.ActionsList.elementIconGap()
-        toolTipText = if (item?.let(ModelText::collectsData) == true) ModelText.dataCollectedTooltip() else KiloBundle.message("model.picker.tooltip")
+        toolTipText = if (item?.let(ModelText::collectsData) == true) ModelText.dataCollectedTooltip() else AccureBundle.message("model.picker.tooltip")
         isEnabled = true
         cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
     }
@@ -143,7 +143,7 @@ class ModelPicker : PickerButton() {
         val list = JBList(model).apply {
             selectionMode = ListSelectionModel.SINGLE_SELECTION
             isFocusable = false
-            emptyText.text = KiloBundle.message("model.picker.no.matches")
+            emptyText.text = AccureBundle.message("model.picker.no.matches")
             background = popupBackground
             border = JBUI.Borders.empty(PopupUtil.getListInsets(false, false))
             cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
@@ -154,7 +154,7 @@ class ModelPicker : PickerButton() {
             favorites = { favoriteKeys() },
         )
         val search = SearchTextField(false).apply {
-            textEditor.emptyText.text = KiloBundle.message("model.picker.search")
+            textEditor.emptyText.text = AccureBundle.message("model.picker.search")
         }
 
         lateinit var popup: JBPopup
@@ -432,7 +432,7 @@ internal object ModelSearch {
 }
 
 internal object ModelText {
-    private val small = setOf("kilo-auto/small", "auto-small")
+    private val small = setOf("accure-auto/small", "auto-small")
 
     data class Parts(val provider: String?, val model: String)
 
@@ -456,26 +456,26 @@ internal object ModelText {
 
     fun buttonLabel(item: ModelPicker.Item): String {
         val part = parts(item).model
-        if (item.provider == "kilo") return part
+        if (item.provider == "accure") return part
         val provider = item.providerName.trim()
         if (provider.isEmpty()) return part
         return "$provider / $part"
     }
 
-    fun small(item: ModelPicker.Item): Boolean = item.provider == "kilo" && item.id in small
+    fun small(item: ModelPicker.Item): Boolean = item.provider == "accure" && item.id in small
 
-    fun providerSort(id: String): Int = if (id == "kilo") 0 else 1
+    fun providerSort(id: String): Int = if (id == "accure") 0 else 1
 
-    fun dataCollected(): String = KiloBundle.message("model.picker.dataCollected")
+    fun dataCollected(): String = AccureBundle.message("model.picker.dataCollected")
 
     fun dataCollectedTooltip(): String = XmlStringUtil.wrapInHtmlLines(
-        KiloBundle.message("model.picker.tooltip"),
-        KiloBundle.message("model.picker.dataCollected.current"),
+        AccureBundle.message("model.picker.tooltip"),
+        AccureBundle.message("model.picker.dataCollected.current"),
     )
 
-    fun freeLabel(): String = KiloBundle.message("model.picker.free")
+    fun freeLabel(): String = AccureBundle.message("model.picker.free")
 
     fun collectsData(item: ModelPicker.Item): Boolean = item.mayTrainOnYourPrompts
 
-    fun freeBg(): JBColor = JBColor.namedColor("Kilo.ModelPicker.freeBadgeBackground", JBColor(0x95D6AC, 0x7FCA99))
+    fun freeBg(): JBColor = JBColor.namedColor("Accure.ModelPicker.freeBadgeBackground", JBColor(0x95D6AC, 0x7FCA99))
 }

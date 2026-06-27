@@ -24,18 +24,18 @@ void Log.init({ print: false })
 const testStateLayer = Layer.effectDiscard(
   Effect.gen(function* () {
     const original = {
-      KILO_SERVER_PASSWORD: Flag.KILO_SERVER_PASSWORD,
-      KILO_SERVER_USERNAME: Flag.KILO_SERVER_USERNAME,
-      envPassword: process.env.KILO_SERVER_PASSWORD,
-      envUsername: process.env.KILO_SERVER_USERNAME,
+      ACCURECODE_SERVER_PASSWORD: Flag.ACCURECODE_SERVER_PASSWORD,
+      ACCURECODE_SERVER_USERNAME: Flag.ACCURECODE_SERVER_USERNAME,
+      envPassword: process.env.ACCURECODE_SERVER_PASSWORD,
+      envUsername: process.env.ACCURECODE_SERVER_USERNAME,
     }
 
     yield* Effect.addFinalizer(() =>
       Effect.sync(() => {
-        Flag.KILO_SERVER_PASSWORD = original.KILO_SERVER_PASSWORD
-        Flag.KILO_SERVER_USERNAME = original.KILO_SERVER_USERNAME
-        restoreEnv("KILO_SERVER_PASSWORD", original.envPassword)
-        restoreEnv("KILO_SERVER_USERNAME", original.envUsername)
+        Flag.ACCURECODE_SERVER_PASSWORD = original.ACCURECODE_SERVER_PASSWORD
+        Flag.ACCURECODE_SERVER_USERNAME = original.ACCURECODE_SERVER_USERNAME
+        restoreEnv("ACCURECODE_SERVER_PASSWORD", original.envPassword)
+        restoreEnv("ACCURECODE_SERVER_USERNAME", original.envUsername)
       }),
     )
   }),
@@ -57,8 +57,8 @@ function app(input?: { password?: string; username?: string }) {
       Layer.provide(
         ConfigProvider.layer(
           ConfigProvider.fromUnknown({
-            KILO_SERVER_PASSWORD: input?.password,
-            KILO_SERVER_USERNAME: input?.username,
+            ACCURECODE_SERVER_PASSWORD: input?.password,
+            ACCURECODE_SERVER_USERNAME: input?.username,
           }),
         ),
       ),
@@ -105,8 +105,8 @@ function uiApp(input?: {
         HttpServer.layerServices,
         ConfigProvider.layer(
           ConfigProvider.fromUnknown({
-            KILO_SERVER_PASSWORD: input?.password,
-            KILO_SERVER_USERNAME: input?.username,
+            ACCURECODE_SERVER_PASSWORD: input?.password,
+            ACCURECODE_SERVER_USERNAME: input?.username,
           }),
         ),
       ]),
@@ -186,7 +186,7 @@ function responseText(response: Response) {
 }
 
 describe("HttpApi UI fallback", () => {
-  // kilocode_change start - embedded UI is the only supported fallback; never proxy to app.opencode.ai
+  // accurecode_change start - embedded UI is the only supported fallback; never proxy to app.opencode.ai
   it.live("returns not found without proxying when embedded UI is disabled", () =>
     Effect.gen(function* () {
       let proxied = false
@@ -202,7 +202,7 @@ describe("HttpApi UI fallback", () => {
       expect(proxied).toBe(false)
     }),
   )
-  // kilocode_change end
+  // accurecode_change end
 
   it.live("serves embedded UI assets when Bun can read them but access reports missing", () =>
     Effect.gen(function* () {
@@ -274,7 +274,7 @@ describe("HttpApi UI fallback", () => {
     Effect.gen(function* () {
       const response = yield* uiApp({
         password: "secret",
-        username: "kilo", // kilocode_change
+        username: "accure", // accurecode_change
         disableEmbeddedWebUi: true,
       }).request("/")
 
@@ -285,47 +285,47 @@ describe("HttpApi UI fallback", () => {
 
   it.live("accepts auth token for the web UI", () =>
     Effect.gen(function* () {
-      let proxied = false // kilocode_change
+      let proxied = false // accurecode_change
       const response = yield* uiApp({
         password: "secret",
-        username: "kilo", // kilocode_change
+        username: "accure", // accurecode_change
         disableEmbeddedWebUi: true,
-        // kilocode_change start - authenticated requests still must not proxy when embedded UI is disabled
-        client: httpClient(new Response("<html>kilo</html>", { headers: { "content-type": "text/html" } }), () => {
+        // accurecode_change start - authenticated requests still must not proxy when embedded UI is disabled
+        client: httpClient(new Response("<html>accure</html>", { headers: { "content-type": "text/html" } }), () => {
           proxied = true
         }),
-        // kilocode_change end
-      }).request(`/?auth_token=${btoa("kilo:secret")}`)
+        // accurecode_change end
+      }).request(`/?auth_token=${btoa("accure:secret")}`)
 
-      // kilocode_change start
+      // accurecode_change start
       expect(response.status).toBe(404)
       expect(yield* Effect.promise(() => response.json())).toEqual({ error: "Not Found" })
       expect(proxied).toBe(false)
-      // kilocode_change end
+      // accurecode_change end
     }),
   )
 
   it.live("accepts basic auth for the web UI", () =>
     Effect.gen(function* () {
-      let proxied = false // kilocode_change
+      let proxied = false // accurecode_change
       const response = yield* uiApp({
         password: "secret",
-        username: "kilo", // kilocode_change
+        username: "accure", // accurecode_change
         disableEmbeddedWebUi: true,
-        // kilocode_change start
+        // accurecode_change start
         client: httpClient(new Response("ui"), () => {
           proxied = true
         }),
-        // kilocode_change end
+        // accurecode_change end
       }).request("/", {
-        headers: { authorization: `Basic ${btoa("kilo:secret")}` },
+        headers: { authorization: `Basic ${btoa("accure:secret")}` },
       })
 
-      // kilocode_change start
+      // accurecode_change start
       expect(response.status).toBe(404)
       expect(yield* Effect.promise(() => response.json())).toEqual({ error: "Not Found" })
       expect(proxied).toBe(false)
-      // kilocode_change end
+      // accurecode_change end
     }),
   )
 
@@ -339,7 +339,7 @@ describe("HttpApi UI fallback", () => {
       for (const path of ["/site.webmanifest", "/web-app-manifest-192x192.png", "/web-app-manifest-512x512.png"]) {
         const response = yield* uiApp({
           password: "secret",
-          username: "kilo", // kilocode_change
+          username: "accure", // accurecode_change
           disableEmbeddedWebUi: true,
           client: httpClient(new Response("ok")),
         }).request(path)
@@ -350,8 +350,8 @@ describe("HttpApi UI fallback", () => {
 
   it.live("allows web UI preflight without auth", () =>
     Effect.gen(function* () {
-      const response = yield* app({ password: "secret", username: "kilo" }).request("/", {
-        // kilocode_change
+      const response = yield* app({ password: "secret", username: "accure" }).request("/", {
+        // accurecode_change
         method: "OPTIONS",
         headers: {
           origin: "http://localhost:3000",

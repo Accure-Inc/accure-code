@@ -1,19 +1,19 @@
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1":
-    "يمنحك Kilo Gateway الوصول إلى مجموعة مختارة من النماذج الموثوقة والمحسّنة لوكلاء البرمجة.",
-  "provider.connect.kiloGateway.line2":
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1":
+    "يمنحك Accure Gateway الوصول إلى مجموعة مختارة من النماذج الموثوقة والمحسّنة لوكلاء البرمجة.",
+  "provider.connect.accureGateway.line2":
     "بمفتاح API واحد، ستحصل على إمكانية الوصول إلى نماذج مثل Claude وGPT وGemini وGLM والمزيد.",
-  "provider.connect.kiloGateway.visit.prefix": "قم بزيارة ",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": " للحصول على مفتاح API الخاص بك.",
-  "provider.connect.kiloGateway.byok.prefix": "للحصول على المزيد من إحصائيات الاستخدام، استخدم ",
-  "provider.connect.kiloGateway.byok.link": "BYOK عبر Kilo's Gateway",
-  "provider.connect.kiloGateway.byok.suffix": ".",
+  "provider.connect.accureGateway.visit.prefix": "قم بزيارة ",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": " للحصول على مفتاح API الخاص بك.",
+  "provider.connect.accureGateway.byok.prefix": "للحصول على المزيد من إحصائيات الاستخدام، استخدم ",
+  "provider.connect.accureGateway.byok.link": "BYOK عبر Accure's Gateway",
+  "provider.connect.accureGateway.byok.suffix": ".",
 
   // Provider settings translations
   "settings.providers.group.recommended": "موصى به",
-  "settings.providers.note.kilo": "الوصول إلى أكثر من 500 نموذج ذكاء اصطناعي",
+  "settings.providers.note.accurecode": "الوصول إلى أكثر من 500 نموذج ذكاء اصطناعي",
   "settings.providers.note.opencode": "نماذج منتقاة تشمل Claude وGPT وGemini والمزيد",
   "settings.providers.note.anthropic": "وصول مباشر إلى نماذج Claude، بما في ذلك Pro وMax",
   "settings.providers.note.deepseek": "نماذج DeepSeek لمهام الاستدلال والبرمجة",
@@ -102,7 +102,7 @@ export const dict = {
     "استمر في الانتظار حتى تكتمل اللقطة. تكون الدورات اللاحقة سريعة بعد إنشاء اللقطة الأولى.",
   "snapshot.slowRepo.answer.disable": "تعطيل لهذا المشروع",
   "snapshot.slowRepo.answer.disable.description":
-    "أوقف لقطات Kilo لهذا المشروع. ستفقد ميزة التراجع/الإعادة لتعديلات Kilo، لكن git سيستمر في تتبع كل شيء.",
+    "أوقف لقطات Accure لهذا المشروع. ستفقد ميزة التراجع/الإعادة لتعديلات Accure، لكن git سيستمر في تتبع كل شيء.",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "فتح في عارض الفروقات",

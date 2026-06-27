@@ -14,7 +14,7 @@
  * callbacks so this module is trivially unit-testable with fakes.
  */
 
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { AccureClient } from "@accurecode/sdk/v2/client"
 import type { AgentManagerInMessage, AgentManagerOutMessage, TerminalFont } from "./types"
 import { TerminalManager } from "./terminal-manager"
 
@@ -25,8 +25,8 @@ interface ServerConfig {
 
 export interface TerminalRoutingDeps {
   /** Shared SDK client. Throws when the CLI backend is not connected. */
-  getClient(): KiloClient
-  /** Loopback URL + basic-auth password for the running `kilo serve`. */
+  getClient(): AccureClient
+  /** Loopback URL + basic-auth password for the running `accure serve`. */
   getServerConfig(): ServerConfig | undefined
   /** Workspace root — used as cwd fallback when no worktree is selected (LOCAL). */
   getRoot(): string | undefined
@@ -146,13 +146,13 @@ export class TerminalRouter {
    * `username:password`. Browsers cannot set HTTP headers on
    * `new WebSocket(...)`, so query-param auth is the only option. Safe
    * because the server binds loopback-only and the password rotates on
-   * every `kilo serve` spawn.
+   * every `accure serve` spawn.
    */
   private buildWsUrl(ptyID: string, cwd: string): string {
     const config = this.deps.getServerConfig()
     if (!config) throw new Error("Not connected to CLI backend")
     const base = config.baseUrl.replace(/^http/i, "ws")
-    const token = Buffer.from(`kilo:${config.password}`).toString("base64")
+    const token = Buffer.from(`accure:${config.password}`).toString("base64")
     const dir = encodeURIComponent(cwd)
     const auth = encodeURIComponent(token)
     return `${base}/pty/${encodeURIComponent(ptyID)}/connect?directory=${dir}&cursor=-1&auth_token=${auth}`

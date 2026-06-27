@@ -1,6 +1,6 @@
 import { createUniqueId, Show } from "solid-js"
-import { Button } from "@kilocode/accure-web-ui/button"
-import { Icon } from "@kilocode/accure-web-ui/icon"
+import { Button } from "@accurecode/accure-web-ui/button"
+import { Icon } from "@accurecode/accure-web-ui/icon"
 
 type Props = {
   open: boolean

@@ -1,11 +1,11 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.backend.app.KiloAppState
-import ai.kilocode.backend.app.KiloBackendAppService
-import ai.kilocode.backend.app.KiloBackendSessionManager
-import ai.kilocode.backend.testing.FakeCliServer
-import ai.kilocode.backend.testing.MockCliServer
-import ai.kilocode.backend.testing.TestLog
+import ai.accurecode.backend.app.AccureAppState
+import ai.accurecode.backend.app.AccureBackendAppService
+import ai.accurecode.backend.app.AccureBackendSessionManager
+import ai.accurecode.backend.testing.FakeCliServer
+import ai.accurecode.backend.testing.MockCliServer
+import ai.accurecode.backend.testing.TestLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -24,7 +24,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class KiloBackendSessionManagerTest {
+class AccureBackendSessionManagerTest {
 
     private val mock = MockCliServer()
     private val log = TestLog()
@@ -36,14 +36,14 @@ class KiloBackendSessionManagerTest {
         mock.close()
     }
 
-    private fun setup(): KiloBackendAppService {
-        return KiloBackendAppService.create(scope, FakeCliServer(mock), log)
+    private fun setup(): AccureBackendAppService {
+        return AccureBackendAppService.create(scope, FakeCliServer(mock), log)
     }
 
-    private suspend fun ready(app: KiloBackendAppService) {
+    private suspend fun ready(app: AccureBackendAppService) {
         app.connect()
         withTimeout(10_000) {
-            app.appState.first { it is KiloAppState.Ready }
+            app.appState.first { it is AccureAppState.Ready }
         }
     }
 
@@ -210,15 +210,15 @@ class KiloBackendSessionManagerTest {
         val app = setup()
         ready(app)
 
-        app.sessions.cloudSessions("/repo path", "cur 1", 25, "git@github.com:Kilo-Org/kilo.git")
+        app.sessions.cloudSessions("/repo path", "cur 1", 25, "git@github.com:Accure-Org/accure.git")
 
         val path = mock.lastCloudSessionsPath ?: error("missing cloud sessions request")
-        assertTrue(path.startsWith("/kilo/cloud-sessions?"))
+        assertTrue(path.startsWith("/accure/cloud-sessions?"))
         val decoded = URLDecoder.decode(path, "UTF-8")
         assertTrue(decoded.contains("directory=/repo path"), path)
         assertTrue(decoded.contains("cursor=cur 1"), path)
         assertTrue(decoded.contains("limit=25"), path)
-        assertTrue(decoded.contains("gitUrl=git@github.com:Kilo-Org/kilo.git"), path)
+        assertTrue(decoded.contains("gitUrl=git@github.com:Accure-Org/accure.git"), path)
     }
 
     @Test
@@ -264,7 +264,7 @@ class KiloBackendSessionManagerTest {
         assertEquals("ses_imported", session.id)
         assertEquals("Imported Cloud", session.title)
         val path = mock.lastCloudSessionImportPath ?: error("missing cloud import request")
-        assertTrue(path.startsWith("/kilo/cloud/session/import?"))
+        assertTrue(path.startsWith("/accure/cloud/session/import?"))
         assertTrue(URLDecoder.decode(path, "UTF-8").contains("directory=/repo path"), path)
         assertEquals("""{"sessionId":"cloud_1"}""", mock.lastCloudSessionImportBody)
     }

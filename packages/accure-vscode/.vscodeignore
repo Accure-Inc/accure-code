@@ -28,3 +28,10 @@ AGENTS.md
 
 # Include WAV assets used by extension-host notification playback
 !audio-wav/**
+
+.npm_cache/**
+.turbo/**
+.storybook/**
+package-vsix.sh
+bunfig.toml
+knip.json

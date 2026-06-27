@@ -1,35 +1,35 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.session.model.SessionModel
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.client.testing.FakeAppRpcApi
-import ai.kilocode.client.testing.FakeWorkspaceRpcApi
-import ai.kilocode.client.testing.FakeSessionRpcApi
-import ai.kilocode.client.testing.TestCoroutines
-import ai.kilocode.client.testing.TestUiTimers
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.session.SessionRef
-import ai.kilocode.rpc.dto.AgentDto
-import ai.kilocode.rpc.dto.AgentsDto
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.ConfigDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStateDto
-import ai.kilocode.rpc.dto.KiloWorkspaceStatusDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageTimeDto
-import ai.kilocode.rpc.dto.ModelDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.ProviderDto
-import ai.kilocode.rpc.dto.ProvidersDto
-import ai.kilocode.rpc.dto.SessionDto
-import ai.kilocode.rpc.dto.SessionTimeDto
-import ai.kilocode.rpc.dto.TelemetryCaptureDto
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.session.model.SessionModel
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.client.testing.FakeAppRpcApi
+import ai.accurecode.client.testing.FakeWorkspaceRpcApi
+import ai.accurecode.client.testing.FakeSessionRpcApi
+import ai.accurecode.client.testing.TestCoroutines
+import ai.accurecode.client.testing.TestUiTimers
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.session.SessionRef
+import ai.accurecode.rpc.dto.AgentDto
+import ai.accurecode.rpc.dto.AgentsDto
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.ConfigDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStateDto
+import ai.accurecode.rpc.dto.AccureWorkspaceStatusDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageTimeDto
+import ai.accurecode.rpc.dto.ModelDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.ProviderDto
+import ai.accurecode.rpc.dto.ProvidersDto
+import ai.accurecode.rpc.dto.SessionDto
+import ai.accurecode.rpc.dto.SessionTimeDto
+import ai.accurecode.rpc.dto.TelemetryCaptureDto
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.Disposer
@@ -41,7 +41,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
 /**
- * Base class for [ai.kilocode.client.session.controller.SessionController] tests.
+ * Base class for [ai.accurecode.client.session.controller.SessionController] tests.
  *
  * Provides real IntelliJ Application/EDT/Disposer via [BasePlatformTestCase],
  * real frontend services wired to fake RPC backends, and shared helpers.
@@ -52,8 +52,8 @@ abstract class SessionControllerTestBase : BasePlatformTestCase() {
         val body: String,
         val turns: String,
         val state: SessionState,
-        val diff: List<ai.kilocode.rpc.dto.DiffFileDto>,
-        val todos: List<ai.kilocode.rpc.dto.TodoDto>,
+        val diff: List<ai.accurecode.rpc.dto.DiffFileDto>,
+        val todos: List<ai.accurecode.rpc.dto.TodoDto>,
         val compacted: Int,
     ) {
         override fun toString(): String = buildString {
@@ -91,9 +91,9 @@ abstract class SessionControllerTestBase : BasePlatformTestCase() {
     protected lateinit var appRpc: FakeAppRpcApi
     protected lateinit var projectRpc: FakeWorkspaceRpcApi
 
-    protected lateinit var sessions: KiloSessionService
-    protected lateinit var app: KiloAppService
-    protected lateinit var workspaces: KiloWorkspaceService
+    protected lateinit var sessions: AccureSessionService
+    protected lateinit var app: AccureAppService
+    protected lateinit var workspaces: AccureWorkspaceService
     protected lateinit var workspace: Workspace
     protected lateinit var timers: TestUiTimers
 
@@ -112,9 +112,9 @@ abstract class SessionControllerTestBase : BasePlatformTestCase() {
         scope = coroutines.scope
         parent = Disposer.newDisposable("test")
 
-        sessions = KiloSessionService(project, scope, rpc)
-        app = KiloAppService(scope, appRpc)
-        workspaces = KiloWorkspaceService(scope, projectRpc)
+        sessions = AccureSessionService(project, scope, rpc)
+        app = AccureAppService(scope, appRpc)
+        workspaces = AccureWorkspaceService(scope, projectRpc)
         workspace = workspaces.workspace("/test")
     }
 
@@ -278,7 +278,7 @@ abstract class SessionControllerTestBase : BasePlatformTestCase() {
 
     /** Create a controller, attach both listeners, send initial prompt, and flush. */
     protected fun prompted(): Triple<SessionController, MutableList<SessionControllerEvent>, MutableList<SessionModelEvent>> {
-        appRpc.state.value = KiloAppStateDto(KiloAppStatusDto.READY, config = ConfigDto(model = "kilo/gpt-5"))
+        appRpc.state.value = AccureAppStateDto(AccureAppStatusDto.READY, config = ConfigDto(model = "accure/gpt-5"))
         projectRpc.state.value = workspaceReady()
         val m = controller()
         val events = collect(m)
@@ -317,7 +317,7 @@ abstract class SessionControllerTestBase : BasePlatformTestCase() {
         assertEquals(expected.trimIndent().trim(), act)
     }
 
-    protected fun assertQuestionReply(expected: String, replies: List<Triple<String, String, ai.kilocode.rpc.dto.QuestionReplyDto>>) {
+    protected fun assertQuestionReply(expected: String, replies: List<Triple<String, String, ai.accurecode.rpc.dto.QuestionReplyDto>>) {
         val act = replies.joinToString("\n") { (id, dir, reply) ->
             val answers = reply.answers.joinToString(",", "[", "]") { inner ->
                 inner.joinToString(",", "[", "]")
@@ -379,15 +379,15 @@ abstract class SessionControllerTestBase : BasePlatformTestCase() {
         default: String = "code",
         providers: List<ProviderDto> = listOf(
             ProviderDto(
-                id = "kilo",
-                name = "Kilo",
+                id = "accure",
+                name = "Accure",
                 models = mapOf("gpt-5" to ModelDto(id = "gpt-5", name = "GPT-5")),
             ),
         ),
-        connected: List<String> = listOf("kilo"),
+        connected: List<String> = listOf("accure"),
         defaults: Map<String, String> = emptyMap(),
-    ) = KiloWorkspaceStateDto(
-        status = KiloWorkspaceStatusDto.READY,
+    ) = AccureWorkspaceStateDto(
+        status = AccureWorkspaceStatusDto.READY,
         agents = AgentsDto(agents = agents, all = agents, default = default),
         providers = ProvidersDto(providers = providers, connected = connected, defaults = defaults),
     )

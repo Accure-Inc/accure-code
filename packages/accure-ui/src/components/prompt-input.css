@@ -1,4 +1,4 @@
-/* Kilo Prompt Input overrides – styled to match legacy ChatTextArea look */
+/* Accure Prompt Input overrides – styled to match legacy ChatTextArea look */
 
 /* Form wrapper: VS Code native input look instead of pill shape */
 [data-component="prompt-input-form"] {
@@ -55,7 +55,7 @@
       height: auto !important;
       min-height: 22px;
       padding: 4px 6px !important;
-      font-size: var(--kilo-font-size-12);
+      font-size: var(--accure-font-size-12);
       line-height: normal;
       border-radius: 6px;
       background: var(--surface-base);

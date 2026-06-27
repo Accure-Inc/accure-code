@@ -1,12 +1,12 @@
-package ai.kilocode.client.settings.base
+package ai.accurecode.client.settings.base
 
-import ai.kilocode.client.KiloNotifications
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloWorkspaceService
-import ai.kilocode.client.settings.profile.UserProfileConfigurable
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ModelStateDto
+import ai.accurecode.client.AccureNotifications
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureWorkspaceService
+import ai.accurecode.client.settings.profile.UserProfileConfigurable
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ModelStateDto
 import com.intellij.ide.DataManager
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.EDT
@@ -32,8 +32,8 @@ import javax.swing.JComponent
 internal abstract class BaseSettingsUi<C : BaseContentPanel, D, P, R, W>(
     protected val scope: CoroutineScope,
     initial: D,
-    private val app: KiloAppService = service(),
-    private val workspaces: KiloWorkspaceService = service(),
+    private val app: AccureAppService = service(),
+    private val workspaces: AccureWorkspaceService = service(),
     private val hint: String? = null,
     private val loginBanner: Boolean = true,
 ) : SettingsPanel() {
@@ -43,7 +43,7 @@ internal abstract class BaseSettingsUi<C : BaseContentPanel, D, P, R, W>(
     protected var draft = initial
     protected val saving get() = save
     protected val saveError get() = error
-    protected var appState: KiloAppStateDto = app.state.value
+    protected var appState: AccureAppStateDto = app.state.value
         private set
     protected var modelState: ModelStateDto = app.models.value
         private set
@@ -90,9 +90,9 @@ internal abstract class BaseSettingsUi<C : BaseContentPanel, D, P, R, W>(
     }
 
     @RequiresEdt
-    private fun updateApp(state: KiloAppStateDto) {
+    private fun updateApp(state: AccureAppStateDto) {
         appState = state
-        if (state.status != KiloAppStatusDto.READY) {
+        if (state.status != AccureAppStatusDto.READY) {
             workspaceLoading = false
             unavailable(state)
             syncContent()
@@ -113,7 +113,7 @@ internal abstract class BaseSettingsUi<C : BaseContentPanel, D, P, R, W>(
     @RequiresEdt
     private fun load() {
         val root = projectDirectory ?: return
-        if (appState.status != KiloAppStatusDto.READY || workspaceLoading || workspaceLoaded) return
+        if (appState.status != AccureAppStatusDto.READY || workspaceLoading || workspaceLoaded) return
         workspaceLoading = true
         clearWorkspaceError()
         syncContent()
@@ -257,7 +257,7 @@ internal abstract class BaseSettingsUi<C : BaseContentPanel, D, P, R, W>(
     protected abstract fun failedText(): String
 
     @RequiresEdt
-    protected abstract fun draft(state: KiloAppStateDto): D
+    protected abstract fun draft(state: AccureAppStateDto): D
 
     @RequiresBackgroundThread
     protected abstract suspend fun loadWorkspace(root: String): W
@@ -269,7 +269,7 @@ internal abstract class BaseSettingsUi<C : BaseContentPanel, D, P, R, W>(
     protected open fun saved(base: D, draft: D): Boolean = base == draft
 
     @RequiresEdt
-    protected open fun onSaveFailedAfterDispose(change: P) = KiloNotifications.error(failedText())
+    protected open fun onSaveFailedAfterDispose(change: P) = AccureNotifications.error(failedText())
 
     @RequiresEdt
     protected open fun logSaveStarted(change: P) = Unit
@@ -287,7 +287,7 @@ internal abstract class BaseSettingsUi<C : BaseContentPanel, D, P, R, W>(
     protected open fun logSaveCompletedAfterDispose(change: P) = Unit
 
     @RequiresEdt
-    protected open fun unavailable(state: KiloAppStateDto) = Unit
+    protected open fun unavailable(state: AccureAppStateDto) = Unit
 
     @RequiresEdt
     protected open fun models(state: ModelStateDto) = Unit

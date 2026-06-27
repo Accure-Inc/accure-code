@@ -2,7 +2,7 @@ import { describe, expect, test, afterEach } from "bun:test"
 import { createServer } from "http"
 import { McpOAuthCallback } from "../../src/mcp/oauth-callback"
 
-describe("Kilo MCP OAuth callback", () => {
+describe("Accure MCP OAuth callback", () => {
   afterEach(async () => {
     await McpOAuthCallback.stop()
   })

@@ -1,7 +1,7 @@
-package ai.kilocode.client.settings.base
+package ai.accurecode.client.settings.base
 
-import ai.kilocode.client.ui.LayeredOverlayPanel
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.ui.LayeredOverlayPanel
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import java.awt.Rectangle
 

@@ -1,9 +1,9 @@
-import type { Session, SessionStatus } from "@kilocode/sdk/v2/client"
-import type { KiloConnectionService } from "../services/cli-backend"
+import type { Session, SessionStatus } from "@accurecode/sdk/v2/client"
+import type { AccureConnectionService } from "../services/cli-backend"
 import { forkSession } from "../agent-manager/fork-session"
 
 export interface ForkContext {
-  connection: KiloConnectionService
+  connection: AccureConnectionService
   post: (message: { type: "error"; message: string }) => void
   register: (session: Session) => void
   forked: (session: Session) => void
@@ -20,7 +20,7 @@ export async function handleForkSession(ctx: ForkContext, sessionId: string, mes
       )
       .then((result) => result.data?.[sessionId]?.type ?? "idle")
       .catch((e) => {
-        console.error("[Kilo New] refreshForkStatus failed:", e)
+        console.error("[Accure New] refreshForkStatus failed:", e)
         return "busy" as SessionStatus["type"]
       }))
   if (status !== "idle") {
@@ -41,7 +41,7 @@ export async function handleForkSession(ctx: ForkContext, sessionId: string, mes
         ctx.forked(session)
       },
       registerSession: () => {},
-      log: (...args) => console.log("[Kilo New] KiloProvider:", ...args),
+      log: (...args) => console.log("[Accure New] AccureProvider:", ...args),
     },
     sessionId,
     undefined,

@@ -1,11 +1,11 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.backend.app.AppData
-import ai.kilocode.backend.app.KiloAppState
-import ai.kilocode.backend.app.LoadError
-import ai.kilocode.backend.app.LoadProgress
-import ai.kilocode.backend.app.ProfileResult
-import ai.kilocode.jetbrains.api.model.Config
+import ai.accurecode.backend.app.AppData
+import ai.accurecode.backend.app.AccureAppState
+import ai.accurecode.backend.app.LoadError
+import ai.accurecode.backend.app.LoadProgress
+import ai.accurecode.backend.app.ProfileResult
+import ai.accurecode.jetbrains.api.model.Config
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -13,7 +13,7 @@ import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class KiloAppStateTest {
+class AccureAppStateTest {
 
     @Test
     fun `default LoadProgress has all fields unloaded`() {
@@ -37,20 +37,20 @@ class KiloAppStateTest {
     }
 
     @Test
-    fun `KiloAppState sealed subtypes are distinct`() {
-        assertIs<KiloAppState.Disconnected>(KiloAppState.Disconnected)
-        assertIs<KiloAppState.Connecting>(KiloAppState.Connecting)
-        assertIs<KiloAppState.Loading>(KiloAppState.Loading(LoadProgress()))
-        assertIs<KiloAppState.Error>(KiloAppState.Error("fail"))
+    fun `AccureAppState sealed subtypes are distinct`() {
+        assertIs<AccureAppState.Disconnected>(AccureAppState.Disconnected)
+        assertIs<AccureAppState.Connecting>(AccureAppState.Connecting)
+        assertIs<AccureAppState.Loading>(AccureAppState.Loading(LoadProgress()))
+        assertIs<AccureAppState.Error>(AccureAppState.Error("fail"))
     }
 
     @Test
-    fun `KiloAppState Error with errors list`() {
+    fun `AccureAppState Error with errors list`() {
         val errors = listOf(
           LoadError("config", status = 500, detail = "server error"),
           LoadError("notifications", detail = "timeout"),
         )
-        val state = KiloAppState.Error("Failed", errors = errors)
+        val state = AccureAppState.Error("Failed", errors = errors)
         assertEquals(2, state.errors.size)
         assertEquals("config", state.errors[0].resource)
         assertEquals(500, state.errors[0].status)

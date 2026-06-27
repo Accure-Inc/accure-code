@@ -5,7 +5,7 @@ import { Bus } from "../../src/bus"
 import { Event as ServerEvent } from "../../src/server/event"
 import { Server } from "../../src/server/server"
 import { EventPaths } from "../../src/server/routes/instance/httpapi/groups/event"
-// kilocode_change start - verify transformed EventV2 values at the legacy SSE boundary
+// accurecode_change start - verify transformed EventV2 values at the legacy SSE boundary
 import { Catalog } from "@opencode-ai/core/catalog"
 import { EventV2 } from "@opencode-ai/core/event"
 import { ModelV2 } from "@opencode-ai/core/model"
@@ -17,7 +17,7 @@ import { InstanceRef } from "../../src/effect/instance-ref"
 import { EventV2Bridge } from "../../src/event-v2-bridge"
 import { GlobalPaths } from "../../src/server/routes/instance/httpapi/groups/global"
 import { SessionID } from "../../src/session/schema"
-// kilocode_change end
+// accurecode_change end
 import { resetDatabase } from "../fixture/db"
 import { disposeAllInstances, TestInstance } from "../fixture/fixture"
 import { testEffectShared } from "../lib/effect"
@@ -30,7 +30,7 @@ const EventData = Schema.Struct({
   properties: Schema.Record(Schema.String, Schema.Any),
 })
 
-// kilocode_change start - inspect the real global SSE envelope
+// accurecode_change start - inspect the real global SSE envelope
 const GlobalEventData = Schema.Struct({
   directory: Schema.optional(Schema.String),
   payload: Schema.Struct({
@@ -39,7 +39,7 @@ const GlobalEventData = Schema.Struct({
     properties: Schema.optional(Schema.Record(Schema.String, Schema.Any)),
   }),
 })
-// kilocode_change end
+// accurecode_change end
 
 const readEvent = (reader: ReadableStreamDefaultReader<Uint8Array>) =>
   Effect.gen(function* () {
@@ -58,7 +58,7 @@ const readEvent = (reader: ReadableStreamDefaultReader<Uint8Array>) =>
 const openEventStream = (directory: string) =>
   Effect.gen(function* () {
     const response = yield* Effect.promise(async () =>
-      Server.Default().app.request(EventPaths.event, { headers: { "x-kilo-directory": directory } }),
+      Server.Default().app.request(EventPaths.event, { headers: { "x-accure-directory": directory } }),
     )
     if (!response.body) return yield* Effect.die("missing SSE response body")
     const reader = response.body.getReader()
@@ -66,7 +66,7 @@ const openEventStream = (directory: string) =>
     return { response, reader }
   })
 
-// kilocode_change start - read transformed values from the global SSE wire payload
+// accurecode_change start - read transformed values from the global SSE wire payload
 const ready = (count: number) =>
   Effect.gen(function* () {
     while (GlobalBus.listenerCount("event") <= count) yield* Effect.sleep("10 millis")
@@ -109,7 +109,7 @@ const readGlobalUntil = (
       if (predicate(event)) return event
     }
   })
-// kilocode_change end
+// accurecode_change end
 
 afterEach(async () => {
   await disposeAllInstances()
@@ -168,7 +168,7 @@ describe("event HttpApi", () => {
     { git: true, config: { formatter: false, lsp: false } },
   )
 
-  // kilocode_change start - transformed EventV2 data is numeric on legacy SSE while domain data stays decoded
+  // accurecode_change start - transformed EventV2 data is numeric on legacy SSE while domain data stays decoded
   const v2 = testEffectShared(Layer.mergeAll(Bus.defaultLayer, EventV2Bridge.defaultLayer))
 
   v2.instance(
@@ -238,5 +238,5 @@ describe("event HttpApi", () => {
       }),
     { git: true, config: { formatter: false, lsp: false } },
   )
-  // kilocode_change end
+  // accurecode_change end
 })

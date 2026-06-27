@@ -113,8 +113,8 @@ describe("Project.fromDirectory", () => {
       expect(project.vcs).toBe("git")
       expect(project.worktree).toBe(tmp)
 
-      const kiloFile = path.join(tmp, ".git", "kilo")
-      expect(yield* Effect.promise(() => Bun.file(kiloFile).exists())).toBe(false)
+      const accureFile = path.join(tmp, ".git", "accure")
+      expect(yield* Effect.promise(() => Bun.file(accureFile).exists())).toBe(false)
     }),
   )
 
@@ -129,8 +129,8 @@ describe("Project.fromDirectory", () => {
       expect(project.vcs).toBe("git")
       expect(project.worktree).toBe(tmp)
 
-      const kiloFile = path.join(tmp, ".git", "kilo")
-      expect(yield* Effect.promise(() => Bun.file(kiloFile).exists())).toBe(true)
+      const accureFile = path.join(tmp, ".git", "accure")
+      expect(yield* Effect.promise(() => Bun.file(accureFile).exists())).toBe(true)
     }),
   )
 
@@ -246,7 +246,7 @@ describe("Project.fromDirectory with worktrees", () => {
       expect(wt.id).toBe(main.id)
 
       // Cache should live in the common .git dir, not the worktree's .git file
-      const cache = path.join(tmp, ".git", "kilo")
+      const cache = path.join(tmp, ".git", "accure")
       const exists = yield* Effect.promise(() => Bun.file(cache).exists())
       expect(exists).toBe(true)
     }),
@@ -642,8 +642,8 @@ describe("Project.fromDirectory with bare repos", () => {
       expect(project.id).not.toBe(ProjectID.global)
       expect(project.worktree).toBe(barePath)
 
-      const correctCache = path.join(barePath, "kilo")
-      const wrongCache = path.join(parentDir, ".git", "kilo")
+      const correctCache = path.join(barePath, "accure")
+      const wrongCache = path.join(parentDir, ".git", "accure")
 
       expect(yield* Effect.promise(() => Bun.file(correctCache).exists())).toBe(true)
       expect(yield* Effect.promise(() => Bun.file(wrongCache).exists())).toBe(false)
@@ -676,9 +676,9 @@ describe("Project.fromDirectory with bare repos", () => {
 
       expect(projA.id).not.toBe(projB.id)
 
-      const cacheA = path.join(bareA, "kilo")
-      const cacheB = path.join(bareB, "kilo")
-      const wrongCache = path.join(parentDir, ".git", "kilo")
+      const cacheA = path.join(bareA, "accure")
+      const cacheB = path.join(bareB, "accure")
+      const wrongCache = path.join(parentDir, ".git", "accure")
 
       expect(yield* Effect.promise(() => Bun.file(cacheA).exists())).toBe(true)
       expect(yield* Effect.promise(() => Bun.file(cacheB).exists())).toBe(true)
@@ -705,7 +705,7 @@ describe("Project.fromDirectory with bare repos", () => {
       expect(project.id).not.toBe(ProjectID.global)
       expect(project.worktree).toBe(barePath)
 
-      const correctCache = path.join(barePath, "kilo")
+      const correctCache = path.join(barePath, "accure")
       expect(yield* Effect.promise(() => Bun.file(correctCache).exists())).toBe(true)
     }),
   )

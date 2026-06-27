@@ -10,9 +10,9 @@
  */
 
 import { type Component, type JSX, For, Show, createEffect, createMemo, createSignal, on, onCleanup } from "solid-js"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { Spinner } from "@kilocode/accure-ui/spinner"
-import { createAutoScroll } from "@kilocode/accure-ui/hooks"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { Spinner } from "@accurecode/accure-ui/spinner"
+import { createAutoScroll } from "@accurecode/accure-ui/hooks"
 import { useSession } from "../../context/session"
 import { useServer } from "../../context/server"
 import { useLanguage } from "../../context/language"
@@ -20,7 +20,7 @@ import { WelcomeEmptyState } from "./WelcomeEmptyState"
 import { TranscriptRowView } from "./TranscriptRow"
 import { RevertBanner } from "./RevertBanner"
 import { AccountSwitcher } from "../shared/AccountSwitcher"
-import { KiloNotifications } from "./KiloNotifications"
+import { AccureNotifications } from "./AccureNotifications"
 import { WorkingIndicator } from "../shared/WorkingIndicator"
 import { TurnOutcome } from "../shared/TurnOutcome"
 import { QuestionDock } from "./QuestionDock"
@@ -284,7 +284,7 @@ export const MessageList: Component<MessageListProps> = (props) => {
       <Show when={isEmpty()}>
         <div class="welcome-header">
           <AccountSwitcher class="account-switcher-welcome" />
-          <KiloNotifications />
+          <AccureNotifications />
         </div>
       </Show>
       <div
@@ -304,7 +304,7 @@ export const MessageList: Component<MessageListProps> = (props) => {
           </Show>
           <Show when={isEmpty() && props.readonly}>
             <div class="message-list-empty">
-              <p class="kilo-about-text">{language.t("session.messages.initializing")}</p>
+              <p class="accure-about-text">{language.t("session.messages.initializing")}</p>
             </div>
           </Show>
           <Show when={isEmpty() && !props.readonly}>

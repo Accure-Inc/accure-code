@@ -14,7 +14,7 @@ const ReplyPayload = Schema.Struct({
   message: Schema.optional(Schema.String),
 })
 
-// kilocode_change start
+// accurecode_change start
 export const SaveAlwaysRulesBody = Schema.Struct({
   approvedAlways: Schema.Array(Schema.String).pipe(Schema.optional),
   deniedAlways: Schema.Array(Schema.String).pipe(Schema.optional),
@@ -25,7 +25,7 @@ export const AllowEverythingBody = Schema.Struct({
   requestID: Schema.optional(Schema.String),
   sessionID: Schema.optional(Schema.String),
 })
-// kilocode_change end
+// accurecode_change end
 
 export const PermissionApi = HttpApi.make("permission")
   .add(
@@ -54,7 +54,7 @@ export const PermissionApi = HttpApi.make("permission")
             description: "Approve or deny a permission request from the AI assistant.",
           }),
         ),
-        // kilocode_change start
+        // accurecode_change start
         HttpApiEndpoint.post("saveAlwaysRules", `${root}/:requestID/always-rules`, {
           params: { requestID: PermissionID },
           query: WorkspaceRoutingQuery,
@@ -80,7 +80,7 @@ export const PermissionApi = HttpApi.make("permission")
             description: "Enable or disable allowing all permissions without prompts.",
           }),
         ),
-        // kilocode_change end
+        // accurecode_change end
       )
       .annotateMerge(
         OpenApi.annotations({

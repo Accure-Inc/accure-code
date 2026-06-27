@@ -1,19 +1,19 @@
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1":
-    "Kilo Gateway giver dig adgang til et udvalgt sæt pålidelige, optimerede modeller til kodningsagenter.",
-  "provider.connect.kiloGateway.line2":
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1":
+    "Accure Gateway giver dig adgang til et udvalgt sæt pålidelige, optimerede modeller til kodningsagenter.",
+  "provider.connect.accureGateway.line2":
     "Med en enkelt API-nøgle får du adgang til modeller som Claude, GPT, Gemini, GLM og flere.",
-  "provider.connect.kiloGateway.visit.prefix": "Besøg ",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": " for at hente din API-nøgle.",
-  "provider.connect.kiloGateway.byok.prefix": "For flere brugsstatistikker, brug ",
-  "provider.connect.kiloGateway.byok.link": "BYOK via Kilo's Gateway",
-  "provider.connect.kiloGateway.byok.suffix": ".",
+  "provider.connect.accureGateway.visit.prefix": "Besøg ",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": " for at hente din API-nøgle.",
+  "provider.connect.accureGateway.byok.prefix": "For flere brugsstatistikker, brug ",
+  "provider.connect.accureGateway.byok.link": "BYOK via Accure's Gateway",
+  "provider.connect.accureGateway.byok.suffix": ".",
 
   // Provider settings translations
   "settings.providers.group.recommended": "Anbefalede",
-  "settings.providers.note.kilo": "Adgang til 500+ AI-modeller",
+  "settings.providers.note.accurecode": "Adgang til 500+ AI-modeller",
   "settings.providers.note.opencode": "Udvalgte modeller inklusive Claude, GPT, Gemini og mere",
   "settings.providers.note.anthropic": "Direkte adgang til Claude-modeller, inklusive Pro og Max",
   "settings.providers.note.deepseek": "DeepSeek-modeller til ræsonnement og kodningsopgaver",
@@ -102,7 +102,7 @@ export const dict = {
     "Vent, indtil snapshot'et er færdigt. Efterfølgende ture er hurtige, når det indledende snapshot er bygget.",
   "snapshot.slowRepo.answer.disable": "Deaktivér for dette projekt",
   "snapshot.slowRepo.answer.disable.description":
-    "Slå Kilos snapshots fra for dette projekt. Du mister fortryd/gentag for Kilo-ændringer, men git sporer stadig alt.",
+    "Slå Accures snapshots fra for dette projekt. Du mister fortryd/gentag for Accure-ændringer, men git sporer stadig alt.",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "Åbn i Diff-visning",

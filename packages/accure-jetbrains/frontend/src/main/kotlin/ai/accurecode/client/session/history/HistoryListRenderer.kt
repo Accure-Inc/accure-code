@@ -1,9 +1,9 @@
-package ai.kilocode.client.session.history
+package ai.accurecode.client.session.history
 
-import ai.kilocode.client.session.ui.PickerRow
-import ai.kilocode.client.session.SessionActivityKind
-import ai.kilocode.client.ui.FilledBadgeIcon
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.session.ui.PickerRow
+import ai.accurecode.client.session.SessionActivityKind
+import ai.accurecode.client.ui.FilledBadgeIcon
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.icons.AllIcons
 import com.intellij.ui.GroupHeaderSeparator
 import com.intellij.ui.SimpleColoredComponent

@@ -1,2 +1,2 @@
-// kilocode_change - new file
-// Moved to test/kilocode/suggestion/suggestion.test.ts.
+// accurecode_change - new file
+// Moved to test/accurecode/suggestion/suggestion.test.ts.

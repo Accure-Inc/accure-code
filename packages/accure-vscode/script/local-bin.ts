@@ -8,26 +8,26 @@ import { currentFfmpegTarget, ensureFfmpegForTarget } from "./ffmpeg-helper"
 const forceRebuild = process.argv.includes("--force")
 
 /**
- * Ensures the VS Code extension has a CLI binary at `packages/accure-vscode/bin/kilo`.
+ * Ensures the VS Code extension has a CLI binary at `packages/accure-vscode/bin/accure`.
  *
  * Strategy:
- * 1) If `bin/kilo` already exists -> ok.
+ * 1) If `bin/accure` already exists -> ok.
  * 2) Else try to locate a prebuilt binary produced by `packages/opencode` build.
  * 3) Else try to build it via `bun run build --single` in `packages/opencode`.
- * 4) Copy the resulting binary into `packages/accure-vscode/bin/kilo` and chmod +x.
+ * 4) Copy the resulting binary into `packages/accure-vscode/bin/accure` and chmod +x.
  *
  * This script is intended to be run from `packages/accure-vscode` as part of build/package.
  */
 
-const kiloVscodeDir = join(import.meta.dir, "..")
-const packagesDir = join(kiloVscodeDir, "..")
+const accureVscodeDir = join(import.meta.dir, "..")
+const packagesDir = join(accureVscodeDir, "..")
 const opencodeDir = join(packagesDir, "opencode")
 const coreDir = join(packagesDir, "core")
 const gatewayDir = join(packagesDir, "accure-gateway")
 const indexingDir = join(packagesDir, "accure-indexing")
 
-const targetBinDir = join(kiloVscodeDir, "bin")
-const binName = process.platform === "win32" ? "kilo.exe" : "kilo"
+const targetBinDir = join(accureVscodeDir, "bin")
+const binName = process.platform === "win32" ? "accure.exe" : "accure"
 const targetBinPath = join(targetBinDir, binName)
 const versionFile = join(targetBinDir, ".cli-version")
 
@@ -84,7 +84,7 @@ function platformTag(): string {
   return `cli-${os}-${process.arch}`
 }
 
-async function findKiloBinaryInOpencodeDist(): Promise<string | null> {
+async function findAccureBinaryInOpencodeDist(): Promise<string | null> {
   const distDir = join(opencodeDir, "dist")
 
   try {
@@ -95,7 +95,7 @@ async function findKiloBinaryInOpencodeDist(): Promise<string | null> {
 
   // Prefer the binary matching the current platform (e.g. cli-darwin-arm64)
   const tag = platformTag()
-  const preferred = join(distDir, `@kilocode`, tag, "bin", binName)
+  const preferred = join(distDir, `@accurecode`, tag, "bin", binName)
   try {
     statSync(preferred)
     if (!hasTreeSitterResources(preferred)) return null
@@ -104,7 +104,7 @@ async function findKiloBinaryInOpencodeDist(): Promise<string | null> {
     // fall through to generic search
   }
 
-  // Fallback: find any dist/**/bin/kilo or kilo.exe
+  // Fallback: find any dist/**/bin/accure or accure.exe
   const queue = [distDir]
   while (queue.length) {
     const dir = queue.pop()
@@ -123,7 +123,7 @@ async function findKiloBinaryInOpencodeDist(): Promise<string | null> {
         queue.push(p)
         continue
       }
-      if (e.isFile() && (e.name === "kilo" || e.name === "kilo.exe") && basename(dirname(p)) === "bin") {
+      if (e.isFile() && (e.name === "accure" || e.name === "accure.exe") && basename(dirname(p)) === "bin") {
         if (!hasTreeSitterResources(p)) continue
         return p
       }
@@ -133,11 +133,11 @@ async function findKiloBinaryInOpencodeDist(): Promise<string | null> {
 }
 
 async function ensureBuiltBinary(): Promise<string> {
-  const found = await findKiloBinaryInOpencodeDist()
+  const found = await findAccureBinaryInOpencodeDist()
   if (found) return found
 
   log(
-    `No prebuilt binary found under ${relative(kiloVscodeDir, join(opencodeDir, "dist"))} - attempting build via bun.`,
+    `No prebuilt binary found under ${relative(accureVscodeDir, join(opencodeDir, "dist"))} - attempting build via bun.`,
   )
 
   const bunPath = Bun.which("bun")
@@ -155,10 +155,10 @@ async function ensureBuiltBinary(): Promise<string> {
   // Build using the opencode package script.
   await $`bun run build --single`.cwd(opencodeDir)
 
-  const built = await findKiloBinaryInOpencodeDist()
+  const built = await findAccureBinaryInOpencodeDist()
   if (!built) {
     throw new Error(
-      `CLI build completed but no binary was found in ${join(opencodeDir, "dist")} (expected dist/**/bin/kilo).`,
+      `CLI build completed but no binary was found in ${join(opencodeDir, "dist")} (expected dist/**/bin/accure).`,
     )
   }
   return built
@@ -187,7 +187,7 @@ async function writeSourceWrapper() {
   const hash = await cliSourceHash()
   if (hash) await Bun.write(versionFile, hash + "\n")
   log(
-    `Compiled CLI build failed; wrote source wrapper at ${relative(kiloVscodeDir, targetBinPath)} for local development.`,
+    `Compiled CLI build failed; wrote source wrapper at ${relative(accureVscodeDir, targetBinPath)} for local development.`,
   )
 }
 
@@ -202,7 +202,7 @@ async function main() {
   if (ready && !rebuild) {
     const st = statSync(targetBinPath)
     log(
-      `CLI binary already present at ${relative(kiloVscodeDir, targetBinPath)} (${Math.round(st.size / 1024 / 1024)}MB). Use --force to rebuild.`,
+      `CLI binary already present at ${relative(accureVscodeDir, targetBinPath)} (${Math.round(st.size / 1024 / 1024)}MB). Use --force to rebuild.`,
     )
     await ensureFfmpegForTarget(currentFfmpegTarget(), targetBinDir)
     return
@@ -241,7 +241,7 @@ async function main() {
   const hash = await cliSourceHash()
   if (hash) await Bun.write(versionFile, hash + "\n")
 
-  log(`Copied CLI binary from ${relative(packagesDir, sourceBinPath)} -> ${relative(kiloVscodeDir, targetBinPath)}`)
+  log(`Copied CLI binary from ${relative(packagesDir, sourceBinPath)} -> ${relative(accureVscodeDir, targetBinPath)}`)
 }
 
 function removeDist() {
@@ -249,7 +249,7 @@ function removeDist() {
   const distDir = join(opencodeDir, "dist")
   if (!existsSync(distDir)) return
   rmSync(distDir, { recursive: true })
-  log(`Removed ${relative(kiloVscodeDir, distDir)} to force rebuild.`)
+  log(`Removed ${relative(accureVscodeDir, distDir)} to force rebuild.`)
 }
 
 try {

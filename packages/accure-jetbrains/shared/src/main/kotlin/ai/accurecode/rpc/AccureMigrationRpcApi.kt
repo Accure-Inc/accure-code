@@ -1,13 +1,13 @@
 @file:Suppress("UnstableApiUsage")
 
-package ai.kilocode.rpc
+package ai.accurecode.rpc
 
-import ai.kilocode.rpc.dto.LegacyCleanupReportDto
-import ai.kilocode.rpc.dto.LegacyCleanupTargetsDto
-import ai.kilocode.rpc.dto.LegacyMigrationDetectionDto
-import ai.kilocode.rpc.dto.LegacyMigrationEventDto
-import ai.kilocode.rpc.dto.LegacyMigrationSelectionsDto
-import ai.kilocode.rpc.dto.LegacyMigrationStatusDto
+import ai.accurecode.rpc.dto.LegacyCleanupReportDto
+import ai.accurecode.rpc.dto.LegacyCleanupTargetsDto
+import ai.accurecode.rpc.dto.LegacyMigrationDetectionDto
+import ai.accurecode.rpc.dto.LegacyMigrationEventDto
+import ai.accurecode.rpc.dto.LegacyMigrationSelectionsDto
+import ai.accurecode.rpc.dto.LegacyMigrationStatusDto
 import com.intellij.platform.rpc.RemoteApiProviderService
 import fleet.rpc.RemoteApi
 import fleet.rpc.Rpc
@@ -18,13 +18,13 @@ import kotlinx.coroutines.flow.Flow
  * App-level RPC API for legacy migration operations.
  *
  * All operations are app-scoped. The backend implementation delegates to
- * [ai.kilocode.backend.app.KiloBackendMigrationManager] using the active CLI connection.
+ * [ai.accurecode.backend.app.AccureBackendMigrationManager] using the active CLI connection.
  */
 @Rpc
-interface KiloMigrationRpcApi : RemoteApi<Unit> {
+interface AccureMigrationRpcApi : RemoteApi<Unit> {
     companion object {
-        suspend fun getInstance(): KiloMigrationRpcApi =
-            RemoteApiProviderService.resolve(remoteApiDescriptor<KiloMigrationRpcApi>())
+        suspend fun getInstance(): AccureMigrationRpcApi =
+            RemoteApiProviderService.resolve(remoteApiDescriptor<AccureMigrationRpcApi>())
     }
 
     /** Return the persisted migration status, or null if not yet set. */

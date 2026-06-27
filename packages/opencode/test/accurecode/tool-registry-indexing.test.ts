@@ -2,14 +2,14 @@ import { afterEach, describe, expect, spyOn, test } from "bun:test"
 import { Effect, Layer, Schema } from "effect"
 import * as Log from "@opencode-ai/core/util/log"
 import { Agent } from "../../src/agent/agent"
-import { KiloIndexing } from "../../src/kilocode/indexing"
-import { KilocodeBootstrap } from "../../src/kilocode/bootstrap"
-import { KiloSessions } from "../../src/kilo-sessions/kilo-sessions"
-import { KiloToolRegistry } from "../../src/kilocode/tool/registry"
+import { AccureIndexing } from "../../src/accurecode/indexing"
+import { AccurecodeBootstrap } from "../../src/accurecode/bootstrap"
+import { AccureSessions } from "../../src/accure-sessions/accure-sessions"
+import { AccureToolRegistry } from "../../src/accurecode/tool/registry"
 import { ModelID, ProviderID } from "../../src/provider/schema"
 import { ToolRegistry } from "../../src/tool/registry"
 import type * as Tool from "../../src/tool/tool"
-import { Instance } from "../../src/kilocode/instance"
+import { Instance } from "../../src/accurecode/instance"
 import { disposeAllInstances, provideTmpdirInstance } from "../fixture/fixture"
 import * as CrossSpawnSpawner from "@opencode-ai/core/cross-spawn-spawner"
 import { testEffect } from "../lib/effect"
@@ -25,14 +25,14 @@ afterEach(async () => {
   await disposeAllInstances()
 })
 
-describe("kilocode tool registry indexing", () => {
-  const logger = Log.create({ service: "kilocode-tool-registry" })
+describe("accurecode tool registry indexing", () => {
+  const logger = Log.create({ service: "accurecode-tool-registry" })
 
   it.live("omits semantic_search without waiting for slow indexing startup", () =>
     provideTmpdirInstance(
       () =>
         Effect.gen(function* () {
-          const avail = spyOn(KiloIndexing, "available").mockImplementation(() => new Promise<boolean>(() => {}))
+          const avail = spyOn(AccureIndexing, "available").mockImplementation(() => new Promise<boolean>(() => {}))
 
           try {
             const registry = yield* ToolRegistry.Service
@@ -57,7 +57,7 @@ describe("kilocode tool registry indexing", () => {
       () =>
         Effect.gen(function* () {
           const err = new Error("ready failed")
-          const ready = spyOn(KiloIndexing, "ready").mockImplementation(() => {
+          const ready = spyOn(AccureIndexing, "ready").mockImplementation(() => {
             throw err
           })
           const warn = spyOn(logger, "warn").mockImplementation(() => {})
@@ -85,7 +85,9 @@ describe("kilocode tool registry indexing", () => {
       () =>
         Effect.gen(function* () {
           const err = new Error("ready rejected")
-          const ready = spyOn(KiloIndexing, "ready").mockImplementation(() => Promise.reject(err) as unknown as boolean)
+          const ready = spyOn(AccureIndexing, "ready").mockImplementation(
+            () => Promise.reject(err) as unknown as boolean,
+          )
           const warn = spyOn(logger, "warn").mockImplementation(() => {})
 
           try {
@@ -110,7 +112,7 @@ describe("kilocode tool registry indexing", () => {
     provideTmpdirInstance(
       () =>
         Effect.gen(function* () {
-          const ready = spyOn(KiloIndexing, "ready").mockReturnValue(true)
+          const ready = spyOn(AccureIndexing, "ready").mockReturnValue(true)
 
           try {
             const registry = yield* ToolRegistry.Service
@@ -129,7 +131,7 @@ describe("kilocode tool registry indexing", () => {
     provideTmpdirInstance(
       () =>
         Effect.gen(function* () {
-          const ready = spyOn(KiloIndexing, "ready").mockReturnValue(false)
+          const ready = spyOn(AccureIndexing, "ready").mockReturnValue(false)
 
           try {
             const agent = yield* Agent.Service
@@ -153,7 +155,7 @@ describe("kilocode tool registry indexing", () => {
     provideTmpdirInstance(
       () =>
         Effect.gen(function* () {
-          const ready = spyOn(KiloIndexing, "ready").mockReturnValue(true)
+          const ready = spyOn(AccureIndexing, "ready").mockReturnValue(true)
 
           try {
             const agent = yield* Agent.Service
@@ -177,20 +179,20 @@ describe("kilocode tool registry indexing", () => {
 
   test("enables semantic search from indexing configuration before the index is ready", () => {
     expect(
-      KiloToolRegistry.indexing({
+      AccureToolRegistry.indexing({
         indexing: { enabled: true },
       }),
     ).toBe(true)
     expect(
-      KiloToolRegistry.indexing({
+      AccureToolRegistry.indexing({
         indexing: { enabled: false },
       }),
     ).toBe(false)
-    expect(KiloToolRegistry.indexing({}, { indexing: { enabled: true } })).toBe(true)
+    expect(AccureToolRegistry.indexing({}, { indexing: { enabled: true } })).toBe(true)
   })
 
-  test("conditionally includes Kilo registry extras", () => {
-    const prev = process.env["KILO_CLIENT"]
+  test("conditionally includes Accure registry extras", () => {
+    const prev = process.env["ACCURECODE_CLIENT"]
     const def = (id: string): Tool.Def => ({
       id,
       description: id,
@@ -206,49 +208,49 @@ describe("kilocode tool registry indexing", () => {
     }
 
     try {
-      process.env["KILO_CLIENT"] = "cli"
-      expect(KiloToolRegistry.extra(tools, {}).map((tool) => tool.id)).toEqual([
+      process.env["ACCURECODE_CLIENT"] = "cli"
+      expect(AccureToolRegistry.extra(tools, {}).map((tool) => tool.id)).toEqual([
         "semantic_search",
         "recall",
         "background_process",
       ])
-      expect(KiloToolRegistry.extra(tools, { experimental: { codebase_search: true } }).map((tool) => tool.id)).toEqual(
-        ["codebase_search", "semantic_search", "recall", "background_process"],
-      )
+      expect(
+        AccureToolRegistry.extra(tools, { experimental: { codebase_search: true } }).map((tool) => tool.id),
+      ).toEqual(["codebase_search", "semantic_search", "recall", "background_process"])
 
-      process.env["KILO_CLIENT"] = "vscode"
-      expect(KiloToolRegistry.extra(tools, { experimental: { codebase_search: true } }).map((tool) => tool.id)).toEqual(
-        ["codebase_search", "semantic_search", "recall", "background_process", "agent_manager"],
-      )
-      expect(KiloToolRegistry.extra({ ...tools, semantic: undefined }, {}).map((tool) => tool.id)).toEqual([
+      process.env["ACCURECODE_CLIENT"] = "vscode"
+      expect(
+        AccureToolRegistry.extra(tools, { experimental: { codebase_search: true } }).map((tool) => tool.id),
+      ).toEqual(["codebase_search", "semantic_search", "recall", "background_process", "agent_manager"])
+      expect(AccureToolRegistry.extra({ ...tools, semantic: undefined }, {}).map((tool) => tool.id)).toEqual([
         "recall",
         "background_process",
         "agent_manager",
       ])
 
-      process.env["KILO_CLIENT"] = "desktop"
-      expect(KiloToolRegistry.extra(tools, {}).map((tool) => tool.id)).toEqual(["semantic_search", "recall"])
+      process.env["ACCURECODE_CLIENT"] = "desktop"
+      expect(AccureToolRegistry.extra(tools, {}).map((tool) => tool.id)).toEqual(["semantic_search", "recall"])
     } finally {
-      if (prev === undefined) delete process.env["KILO_CLIENT"]
-      if (prev !== undefined) process.env["KILO_CLIENT"] = prev
+      if (prev === undefined) delete process.env["ACCURECODE_CLIENT"]
+      if (prev !== undefined) process.env["ACCURECODE_CLIENT"] = prev
     }
   })
 
   test("logs indexing bootstrap failures without blocking session bootstrap", async () => {
-    const logger = Log.create({ service: "kilocode-bootstrap" })
+    const logger = Log.create({ service: "accurecode-bootstrap" })
     const err = new Error("indexing init failed")
     const calls: string[] = []
     const sessions = Layer.succeed(
-      KiloSessions.Service,
-      KiloSessions.Service.of({ init: () => Effect.sync(() => calls.push("sessions")) }),
+      AccureSessions.Service,
+      AccureSessions.Service.of({ init: () => Effect.sync(() => calls.push("sessions")) }),
     )
-    const indexing = spyOn(KiloIndexing, "init").mockRejectedValue(err)
+    const indexing = spyOn(AccureIndexing, "init").mockRejectedValue(err)
     const warn = spyOn(logger, "warn").mockImplementation(() => {})
 
     try {
       await Effect.runPromise(
-        KilocodeBootstrap.Service.use((svc) => svc.init()).pipe(
-          Effect.provide(KilocodeBootstrap.layer.pipe(Layer.provide(sessions))),
+        AccurecodeBootstrap.Service.use((svc) => svc.init()).pipe(
+          Effect.provide(AccurecodeBootstrap.layer.pipe(Layer.provide(sessions))),
           Effect.scoped,
         ),
       )

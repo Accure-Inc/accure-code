@@ -1,13 +1,13 @@
-package ai.kilocode.backend.cli
+package ai.accurecode.backend.cli
 
 import com.intellij.openapi.util.SystemInfo
 import java.io.File
 
-internal object KiloCliConfigPath {
+internal object AccureCliConfigPath {
     fun resolve(env: Map<String, String>): File {
-        env["KILO_CONFIG_DIR"]?.takeIf { it.isNotBlank() }?.let { return File(it) }
-        env["XDG_CONFIG_HOME"]?.takeIf { it.isNotBlank() }?.let { return File(it, "kilo") }
-        return File(defaultRoot(), "kilo")
+        env["ACCURECODE_CONFIG_DIR"]?.takeIf { it.isNotBlank() }?.let { return File(it) }
+        env["XDG_CONFIG_HOME"]?.takeIf { it.isNotBlank() }?.let { return File(it, "accure") }
+        return File(defaultRoot(), "accure")
     }
 
     fun legacySettingsFile(env: Map<String, String>): File = File(resolve(env), "legacy-settings.json")

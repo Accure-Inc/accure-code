@@ -675,12 +675,12 @@ export class FileWatcher implements IFileWatcher {
         }
       }
 
-      // Check if file should be ignored by root .gitignore / .kilocodeignore rules.
+      // Check if file should be ignored by root .gitignore / .accurecodeignore rules.
       if (this.ignoreInstance && this.ignoreInstance.ignores(relativeFilePath)) {
         return {
           path: filePath,
           status: "skipped" as const,
-          reason: "File is ignored by .gitignore or .kilocodeignore",
+          reason: "File is ignored by .gitignore or .accurecodeignore",
         }
       }
 

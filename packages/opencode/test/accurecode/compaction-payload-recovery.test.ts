@@ -9,8 +9,8 @@ import { Config } from "../../src/config/config"
 import { RuntimeFlags } from "../../src/effect/runtime-flags"
 import { EventV2Bridge } from "../../src/event-v2-bridge"
 import { Image } from "../../src/image/image"
-import { KiloCompactionPayloadRecovery } from "../../src/kilocode/session/compaction-payload-recovery"
-import { KiloSessionCompaction } from "../../src/kilocode/session/compaction"
+import { AccureCompactionPayloadRecovery } from "../../src/accurecode/session/compaction-payload-recovery"
+import { AccureSessionCompaction } from "../../src/accurecode/session/compaction"
 import { Permission } from "../../src/permission"
 import { Plugin } from "../../src/plugin"
 import { provideTestInstance } from "../fixture/fixture"
@@ -189,14 +189,14 @@ afterEach(() => {
   mock.restore()
 })
 
-describe("KiloCompactionPayloadRecovery", () => {
-  test("detects Kilo gateway payload-size errors", () => {
+describe("AccureCompactionPayloadRecovery", () => {
+  test("detects Accure gateway payload-size errors", () => {
     const error = new MessageV2.ContextOverflowError({
       message: "Request Entity Too Large",
       responseBody: "Request Entity Too Large\n\nFUNCTION_PAYLOAD_TOO_LARGE",
     }).toObject()
 
-    expect(KiloCompactionPayloadRecovery.matches(error)).toBe(true)
+    expect(AccureCompactionPayloadRecovery.matches(error)).toBe(true)
   })
 
   test("strips media and marks completed tool outputs compacted", async () => {
@@ -253,7 +253,7 @@ describe("KiloCompactionPayloadRecovery", () => {
     const updated: MessageV2.Part[] = []
 
     await Effect.runPromise(
-      KiloCompactionPayloadRecovery.strip({
+      AccureCompactionPayloadRecovery.strip({
         messages: [user, assistant],
         update: (part) => Effect.sync(() => updated.push(part)).pipe(Effect.as(part)),
       }),
@@ -279,7 +279,7 @@ describe("KiloCompactionPayloadRecovery", () => {
       return Stream.fail(
         new APICallError({
           message: "Request Entity Too Large",
-          url: "https://api.kilo.ai/api/openrouter/responses",
+          url: "https://api.accurecode.ai/api/openrouter/responses",
           requestBodyValues: {},
           statusCode: 413,
           responseHeaders: { "content-type": "text/plain" },
@@ -345,7 +345,7 @@ describe("KiloCompactionPayloadRecovery", () => {
           },
         })
         await Effect.runPromise(
-          KiloSessionCompaction.create({
+          AccureSessionCompaction.create({
             session: {
               updateMessage: (msg) => Effect.promise(() => svc.updateMessage(msg)),
               updatePart: (part) => Effect.promise(() => svc.updatePart(part)),

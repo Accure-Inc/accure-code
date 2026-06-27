@@ -1,12 +1,12 @@
-package ai.kilocode.client.session.ui
+package ai.accurecode.client.session.ui
 
-import ai.kilocode.client.session.controller.SessionController
-import ai.kilocode.client.session.controller.SessionControllerEvent
-import ai.kilocode.client.session.controller.SessionControllerTestBase
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.rpc.dto.ConfigWarningDto
-import ai.kilocode.rpc.dto.KiloAppStateDto
-import ai.kilocode.rpc.dto.KiloAppStatusDto
+import ai.accurecode.client.session.controller.SessionController
+import ai.accurecode.client.session.controller.SessionControllerEvent
+import ai.accurecode.client.session.controller.SessionControllerTestBase
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.rpc.dto.ConfigWarningDto
+import ai.accurecode.rpc.dto.AccureAppStateDto
+import ai.accurecode.rpc.dto.AccureAppStatusDto
 import java.awt.Dimension
 
 @Suppress("UnstableApiUsage")
@@ -81,8 +81,8 @@ class ConnectionPanelTest : SessionControllerTestBase() {
 
     fun `test retry click triggers app retry for app error`() {
         edt {
-            controller.model.app = KiloAppStateDto(
-                status = KiloAppStatusDto.ERROR,
+            controller.model.app = AccureAppStateDto(
+                status = AccureAppStatusDto.ERROR,
                 error = "CLI startup failed",
             )
             panel.onEvent(SessionControllerEvent.ConnectionChanged.ShowError("CLI startup failed", null))
@@ -99,7 +99,7 @@ class ConnectionPanelTest : SessionControllerTestBase() {
         edt {
             panel.onEvent(SessionControllerEvent.ConnectionChanged.ShowWarning(
                 "Configuration warnings",
-                ".kilo/kilo.json: Invalid JSON\nCloseBraceExpected at line 11, column 1",
+                ".accurecode/accure.json: Invalid JSON\nCloseBraceExpected at line 11, column 1",
             ))
         }
 
@@ -112,7 +112,7 @@ class ConnectionPanelTest : SessionControllerTestBase() {
         assertTrue(panel.retryVisible())
         assertFalse(panel.retryFocusable())
         assertEquals(
-            ".kilo/kilo.json: Invalid JSON\nCloseBraceExpected at line 11, column 1",
+            ".accurecode/accure.json: Invalid JSON\nCloseBraceExpected at line 11, column 1",
             panel.detailsText(),
         )
 
@@ -124,9 +124,9 @@ class ConnectionPanelTest : SessionControllerTestBase() {
 
     fun `test retry click triggers app retry for warnings`() {
         edt {
-            controller.model.app = KiloAppStateDto(
-                status = KiloAppStatusDto.READY,
-                warnings = listOf(ConfigWarningDto(path = ".kilo/kilo.json", message = "Invalid JSON")),
+            controller.model.app = AccureAppStateDto(
+                status = AccureAppStatusDto.READY,
+                warnings = listOf(ConfigWarningDto(path = ".accurecode/accure.json", message = "Invalid JSON")),
             )
             panel.onEvent(SessionControllerEvent.ConnectionChanged.ShowWarning("Configuration warnings", null))
         }

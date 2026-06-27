@@ -1,14 +1,14 @@
-package ai.kilocode.client.migration.ui
+package ai.accurecode.client.migration.ui
 
-import ai.kilocode.client.migration.MigrationItemUiProgress
-import ai.kilocode.client.migration.MigrationUiPhase
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.layout.HAlign
-import ai.kilocode.client.ui.layout.Stack
-import ai.kilocode.client.ui.layout.VAlign
-import ai.kilocode.client.ui.layout.align
-import ai.kilocode.rpc.dto.MigrationItemCategoryDto
-import ai.kilocode.rpc.dto.MigrationItemProgressStatusDto
+import ai.accurecode.client.migration.MigrationItemUiProgress
+import ai.accurecode.client.migration.MigrationUiPhase
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.layout.HAlign
+import ai.accurecode.client.ui.layout.Stack
+import ai.accurecode.client.ui.layout.VAlign
+import ai.accurecode.client.ui.layout.align
+import ai.accurecode.rpc.dto.MigrationItemCategoryDto
+import ai.accurecode.rpc.dto.MigrationItemProgressStatusDto
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.JBUI

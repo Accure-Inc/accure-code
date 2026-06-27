@@ -1,9 +1,9 @@
-package ai.kilocode.backend.cli
+package ai.accurecode.backend.cli
 
 /**
  * Abstraction over the CLI process lifecycle.
  *
- * Production: [KiloBackendCliManager]. Tests: fake returning mock server port.
+ * Production: [AccureBackendCliManager]. Tests: fake returning mock server port.
  */
 interface CliServer {
     sealed class State {

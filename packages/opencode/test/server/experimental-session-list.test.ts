@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { afterEach, beforeEach, describe, expect, mock, spyOn, test } from "bun:test"
 import { $ } from "bun"
 import path from "path"
@@ -7,7 +7,7 @@ import { InstanceRef } from "../../src/effect/instance-ref"
 import * as Log from "@opencode-ai/core/util/log"
 import { resetDatabase } from "../fixture/db"
 import { tmpdir, withTestInstance } from "../fixture/fixture"
-import { RemoteSender } from "../../src/kilo-sessions/remote-sender"
+import { RemoteSender } from "../../src/accure-sessions/remote-sender"
 import { Effect } from "effect"
 
 beforeEach(() => {
@@ -49,20 +49,20 @@ describe("experimental.session.list", () => {
           fn: (ctx) => create("worktree-session", ctx),
         })
 
-        // Now write a stale project ID to .git/kilo — this overrides the root's cached ID
-        await Bun.write(path.join(first.path, ".git", "kilo"), "stale-project-id")
+        // Now write a stale project ID to .git/accure — this overrides the root's cached ID
+        await Bun.write(path.join(first.path, ".git", "accure"), "stale-project-id")
 
         const root = await withTestInstance({
           directory: first.path,
           fn: async (ctx) => ({
             app: Server.Default().app,
             project: await Server.Default().app.request("/project/current", {
-              headers: { "x-kilo-directory": first.path },
+              headers: { "x-accure-directory": first.path },
             }),
             session: await create("root-session", ctx),
           }),
         })
-        await Bun.file(path.join(first.path, ".git", "kilo")).delete()
+        await Bun.file(path.join(first.path, ".git", "accure")).delete()
 
         await withTestInstance({
           directory: second.path,
@@ -74,7 +74,7 @@ describe("experimental.session.list", () => {
         const response = await app.request(
           `/experimental/session?projectID=${encodeURIComponent(project.id)}&roots=true&worktrees=true`,
           {
-            headers: { "x-kilo-directory": first.path },
+            headers: { "x-accure-directory": first.path },
           },
         )
 
@@ -118,7 +118,7 @@ describe("experimental.session.list", () => {
           fn: async (ctx) => ({
             app: Server.Default().app,
             project: await Server.Default().app.request("/project/current", {
-              headers: { "x-kilo-directory": first.path },
+              headers: { "x-accure-directory": first.path },
             }),
             session: await create("root-session", ctx),
           }),
@@ -137,7 +137,7 @@ describe("experimental.session.list", () => {
         const response = await app.request(
           `/experimental/session?projectID=${encodeURIComponent(project.id)}&roots=true&worktrees=true&directory=${encodeURIComponent(first.path)}`,
           {
-            headers: { "x-kilo-directory": first.path },
+            headers: { "x-accure-directory": first.path },
           },
         )
 
@@ -177,7 +177,7 @@ describe("experimental.session.list", () => {
           fn: async (ctx) => ({
             app: Server.Default().app,
             project: await Server.Default().app.request("/project/current", {
-              headers: { "x-kilo-directory": first.path },
+              headers: { "x-accure-directory": first.path },
             }),
             session: await create("root-session", ctx),
           }),
@@ -189,7 +189,7 @@ describe("experimental.session.list", () => {
         const response = await app.request(
           `/experimental/session?projectID=${encodeURIComponent(project.id)}&roots=true&worktrees=true&current=true&directory=${encodeURIComponent(cwd)}`,
           {
-            headers: { "x-kilo-directory": first.path },
+            headers: { "x-accure-directory": first.path },
           },
         )
 
@@ -209,7 +209,7 @@ describe("experimental.session.list", () => {
 
   test("current=true excludes Agent Manager worktrees from the root worktree", async () => {
     await using first = await tmpdir({ git: true })
-    const worktree = path.join(first.path, ".kilo", "worktrees", "nested-current")
+    const worktree = path.join(first.path, ".accurecode", "worktrees", "nested-current")
 
     try {
       await $`git worktree add --quiet -b test-branch-nested-current-${Date.now()} ${worktree} HEAD`.cwd(first.path)
@@ -227,7 +227,7 @@ describe("experimental.session.list", () => {
           fn: async (ctx) => ({
             app: Server.Default().app,
             project: await Server.Default().app.request("/project/current", {
-              headers: { "x-kilo-directory": first.path },
+              headers: { "x-accure-directory": first.path },
             }),
             session: await create("root-session", ctx),
           }),
@@ -238,13 +238,13 @@ describe("experimental.session.list", () => {
         const all = await app.request(
           `/experimental/session?projectID=${encodeURIComponent(project.id)}&roots=true&worktrees=true&directory=${encodeURIComponent(first.path)}`,
           {
-            headers: { "x-kilo-directory": first.path },
+            headers: { "x-accure-directory": first.path },
           },
         )
         const current = await app.request(
           `/experimental/session?projectID=${encodeURIComponent(project.id)}&roots=true&worktrees=true&current=true&directory=${encodeURIComponent(first.path)}`,
           {
-            headers: { "x-kilo-directory": first.path },
+            headers: { "x-accure-directory": first.path },
           },
         )
 

@@ -501,7 +501,7 @@ export class Reply {
     return this
   }
 
-  // kilocode_change start
+  // accurecode_change start
   finish(reason: string) {
     this.#finish = reason
     this.#hang = false
@@ -509,7 +509,7 @@ export class Reply {
     this.#reset = false
     return this
   }
-  // kilocode_change end
+  // accurecode_change end
 
   tool(name: string, input: unknown) {
     const id = this.#id()

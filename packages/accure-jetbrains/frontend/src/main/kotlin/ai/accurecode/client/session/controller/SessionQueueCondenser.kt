@@ -1,9 +1,9 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.ChatEventDto
 
 /**
- * Reduces a batch of queued [ai.kilocode.rpc.dto.ChatEventDto] events before they are flushed to
+ * Reduces a batch of queued [ai.accurecode.rpc.dto.ChatEventDto] events before they are flushed to
  * the model, by merging consecutive same-key snapshot and text-delta events.
  *
  * ## Algorithm

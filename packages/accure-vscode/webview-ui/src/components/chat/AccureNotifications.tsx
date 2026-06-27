@@ -4,11 +4,11 @@ import { useVSCode } from "../../context/vscode"
 import { useSession } from "../../context/session"
 import { useProvider } from "../../context/provider"
 import { useLanguage } from "../../context/language"
-import { KILO_PROVIDER_ID } from "../../../../src/shared/provider-model"
+import { ACCURECODE_PROVIDER_ID } from "../../../../src/shared/provider-model"
 import { TelemetryEventName } from "../../../../src/services/telemetry/types"
 import { stripSubProviderPrefix } from "../shared/model-selector-utils"
 
-export const KiloNotifications: Component = () => {
+export const AccureNotifications: Component = () => {
   const { filteredNotifications, dismiss } = useNotifications()
   const vscode = useVSCode()
   const session = useSession()
@@ -42,14 +42,14 @@ export const KiloNotifications: Component = () => {
   }
 
   /**
-   * Resolve suggestModelId to a kilo-provider model selection.
-   * Only the kilo provider is supported — the model must be present in the
+   * Resolve suggestModelId to a accure-provider model selection.
+   * Only the accure provider is supported — the model must be present in the
    * catalog and reachable (isModelValid) before the button is shown.
    */
   const suggestedModel = createMemo(() => {
     const id = current()?.suggestModelId
     if (!id) return undefined
-    const sel = { providerID: KILO_PROVIDER_ID, modelID: id }
+    const sel = { providerID: ACCURECODE_PROVIDER_ID, modelID: id }
     if (!provider.isModelValid(sel)) return undefined
     return sel
   })
@@ -87,21 +87,21 @@ export const KiloNotifications: Component = () => {
 
   return (
     <Show when={total() > 0}>
-      <div class="kilo-notifications">
-        <div class="kilo-notifications-card">
-          <div class="kilo-notifications-header">
-            <span class="kilo-notifications-title">{current()?.title}</span>
+      <div class="accure-notifications">
+        <div class="accure-notifications-card">
+          <div class="accure-notifications-header">
+            <span class="accure-notifications-title">{current()?.title}</span>
             <Show when={total() > 1}>
-              <span class="kilo-notifications-nav-count">
+              <span class="accure-notifications-nav-count">
                 {safeIndex() + 1} / {total()}
               </span>
             </Show>
           </div>
-          <p class="kilo-notifications-message">{current()?.message}</p>
-          <div class="kilo-notifications-footer">
-            <div class="kilo-notifications-cta-group">
+          <p class="accure-notifications-message">{current()?.message}</p>
+          <div class="accure-notifications-footer">
+            <div class="accure-notifications-cta-group">
               <Show when={canSwitchModel()}>
-                <button class="kilo-notifications-action-btn" onClick={handleTryModel}>
+                <button class="accure-notifications-action-btn" onClick={handleTryModel}>
                   {suggestedName()
                     ? language.t("notifications.action.tryModel", { model: suggestedName()! })
                     : language.t("notifications.action.tryModelGeneric")}
@@ -109,19 +109,19 @@ export const KiloNotifications: Component = () => {
               </Show>
               <Show when={current()?.action}>
                 {(action) => (
-                  <button class="kilo-notifications-action-btn" onClick={() => handleAction(action().actionURL)}>
+                  <button class="accure-notifications-action-btn" onClick={() => handleAction(action().actionURL)}>
                     {action().actionText}
                   </button>
                 )}
               </Show>
             </div>
-            <div class="kilo-notifications-next-group">
+            <div class="accure-notifications-next-group">
               <Show when={safeIndex() > 0}>
-                <button class="kilo-notifications-back-link" onClick={() => setIndex(safeIndex() - 1)}>
+                <button class="accure-notifications-back-link" onClick={() => setIndex(safeIndex() - 1)}>
                   {language.t("common.goBack")}
                 </button>
               </Show>
-              <button class="kilo-notifications-primary-btn" onClick={handleNext}>
+              <button class="accure-notifications-primary-btn" onClick={handleNext}>
                 {isLast() ? language.t("notifications.action.close") : language.t("notifications.action.next")}
               </button>
             </div>

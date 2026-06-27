@@ -1,7 +1,7 @@
-package ai.kilocode.client.session.views.base
+package ai.accurecode.client.session.views.base
 
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.SessionViewIcons
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.SessionViewIcons
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.JBUI
 import java.awt.BorderLayout

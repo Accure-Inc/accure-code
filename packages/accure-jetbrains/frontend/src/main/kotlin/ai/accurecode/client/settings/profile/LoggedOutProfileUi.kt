@@ -1,13 +1,13 @@
-package ai.kilocode.client.settings.profile
+package ai.accurecode.client.settings.profile
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.settings.auth.DeviceOAuthInfo
-import ai.kilocode.client.settings.auth.DeviceOAuthPanel
-import ai.kilocode.client.settings.auth.DeviceOAuthText
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.util.UiTimerSource
-import ai.kilocode.client.util.UiTimers
-import ai.kilocode.rpc.dto.KiloAppStatusDto
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.settings.auth.DeviceOAuthInfo
+import ai.accurecode.client.settings.auth.DeviceOAuthPanel
+import ai.accurecode.client.settings.auth.DeviceOAuthText
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.util.UiTimerSource
+import ai.accurecode.client.util.UiTimers
+import ai.accurecode.rpc.dto.AccureAppStatusDto
 import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.concurrency.annotations.RequiresEdt
@@ -43,35 +43,35 @@ internal class LoggedOutProfileUi(
     private var mode: OutMode? = null
 
     // -- retained buttons --
-    val loginBtn = JButton(KiloBundle.message("profile.action.login"))
+    val loginBtn = JButton(AccureBundle.message("profile.action.login"))
         .also { it.addActionListener { login() } }
 
-    private val retryBtnConnecting = JButton(KiloBundle.message("profile.action.retry"))
+    private val retryBtnConnecting = JButton(AccureBundle.message("profile.action.retry"))
         .also { it.addActionListener { retry() } }
 
-    private val retryBtnError = JButton(KiloBundle.message("profile.action.retry"))
+    private val retryBtnError = JButton(AccureBundle.message("profile.action.retry"))
         .also { it.addActionListener { retry() } }
 
-    private val authRetryBtn = JButton(KiloBundle.message("profile.login.tryAgain"))
+    private val authRetryBtn = JButton(AccureBundle.message("profile.login.tryAgain"))
         .also { it.addActionListener { login() } }
 
     private val auth = DeviceOAuthPanel(
         DeviceOAuthText(
-            title = KiloBundle.message("profile.login.title"),
-            qrDescription = KiloBundle.message("profile.login.qr.description"),
+            title = AccureBundle.message("profile.login.title"),
+            qrDescription = AccureBundle.message("profile.login.qr.description"),
         ),
         cancel = cancel,
         browse = browse,
-        prefix = "kilo.login",
+        prefix = "accure.login",
         timers = timers,
     )
 
-    private val initiatingIcon = AsyncProcessIcon("KiloInitiating").also { it.suspend() }
+    private val initiatingIcon = AsyncProcessIcon("AccureInitiating").also { it.suspend() }
 
-    private val logoLabel = JBLabel(IconLoader.getIcon("/icons/kilo-profile.svg", LoggedOutProfileUi::class.java)).apply {
-        name = "kilo.profile.logo.loggedOut"
+    private val logoLabel = JBLabel(IconLoader.getIcon("/icons/accure-profile.svg", LoggedOutProfileUi::class.java)).apply {
+        name = "accure.profile.logo.loggedOut"
         horizontalAlignment = SwingConstants.CENTER
-        accessibleContext.accessibleName = KiloBundle.message("settings.kilo.displayName")
+        accessibleContext.accessibleName = AccureBundle.message("settings.accurecode.displayName")
     }
 
     private val errLabel = JBLabel().apply {
@@ -93,7 +93,7 @@ internal class LoggedOutProfileUi(
 
     private fun connectingCard(): JPanel {
         val p = padded()
-        p.add(JBLabel(KiloBundle.message("profile.status.connecting")).apply {
+        p.add(JBLabel(AccureBundle.message("profile.status.connecting")).apply {
             foreground = UiStyle.Colors.weak()
             horizontalAlignment = SwingConstants.CENTER
         }, gbc(0))
@@ -103,7 +103,7 @@ internal class LoggedOutProfileUi(
 
     private fun appErrorCard(): JPanel {
         val p = padded()
-        p.add(JBLabel(KiloBundle.message("profile.status.error")).apply {
+        p.add(JBLabel(AccureBundle.message("profile.status.error")).apply {
             foreground = UiStyle.Colors.errorLabelForeground()
             horizontalAlignment = SwingConstants.CENTER
         }, gbc(0))
@@ -114,7 +114,7 @@ internal class LoggedOutProfileUi(
     private fun emptyCard(): JPanel {
         val p = padded()
         p.add(logoLabel, gbc(0).centered())
-        p.add(JBLabel(KiloBundle.message("profile.notLoggedIn")).apply {
+        p.add(JBLabel(AccureBundle.message("profile.notLoggedIn")).apply {
             foreground = UiStyle.Colors.weak()
             horizontalAlignment = SwingConstants.CENTER
         }, gbc(1, UiStyle.Gap.pad()))
@@ -127,7 +127,7 @@ internal class LoggedOutProfileUi(
         val row = JPanel(FlowLayout(FlowLayout.CENTER, UiStyle.Gap.sm(), 0)).apply {
             isOpaque = false
             add(initiatingIcon)
-            add(JBLabel(KiloBundle.message("profile.login.starting")).apply {
+            add(JBLabel(AccureBundle.message("profile.login.starting")).apply {
                 foreground = UiStyle.Colors.weak()
             })
         }
@@ -145,7 +145,7 @@ internal class LoggedOutProfileUi(
     // ---- update ----
 
     @RequiresEdt
-    fun update(status: KiloAppStatusDto, login: LoginState) {
+    fun update(status: AccureAppStatusDto, login: LoginState) {
         val target = resolveMode(status, login)
 
         if (target == OutMode.AUTH && login is LoginState.Pending) {
@@ -180,9 +180,9 @@ internal class LoggedOutProfileUi(
         auth.dispose()
     }
 
-    private fun resolveMode(status: KiloAppStatusDto, login: LoginState): OutMode = when {
-        status == KiloAppStatusDto.DISCONNECTED || status == KiloAppStatusDto.CONNECTING || status == KiloAppStatusDto.MIGRATION_REQUIRED -> OutMode.CONNECTING
-        status == KiloAppStatusDto.ERROR -> OutMode.APP_ERROR
+    private fun resolveMode(status: AccureAppStatusDto, login: LoginState): OutMode = when {
+        status == AccureAppStatusDto.DISCONNECTED || status == AccureAppStatusDto.CONNECTING || status == AccureAppStatusDto.MIGRATION_REQUIRED -> OutMode.CONNECTING
+        status == AccureAppStatusDto.ERROR -> OutMode.APP_ERROR
         login is LoginState.Initiating -> OutMode.INITIATING
         login is LoginState.Pending -> OutMode.AUTH
         login is LoginState.Error -> OutMode.LOGIN_ERROR

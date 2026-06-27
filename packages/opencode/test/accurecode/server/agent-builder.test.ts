@@ -30,7 +30,7 @@ function req(dir: string, input: string, init?: RequestInit) {
   return Server.Default().app.request(input, {
     ...init,
     headers: {
-      "x-kilo-directory": dir,
+      "x-accure-directory": dir,
       ...init?.headers,
     },
   })
@@ -44,7 +44,7 @@ function request(target: ReturnType<typeof app>, dir: string, input: string, ini
   return target.request(input, {
     ...init,
     headers: {
-      "x-kilo-directory": dir,
+      "x-accure-directory": dir,
       ...init?.headers,
     },
   })
@@ -58,7 +58,7 @@ describe("agent builder routes", () => {
       scope: "project",
       description: "Review code",
       mode: "subagent",
-      model: "kilo/gpt-5.5",
+      model: "accure/gpt-5.5",
       tools: ["read", "grep"],
       prompt: "Review the current diff and report risks.",
     }
@@ -83,7 +83,7 @@ describe("agent builder routes", () => {
 
     expect(saved.status).toBe(200)
     const output = (await saved.json()) as Output
-    expect(output.path).toBe(path.join(tmp.path, ".kilo", "agent", "reviewer.md"))
+    expect(output.path).toBe(path.join(tmp.path, ".accurecode", "agent", "reviewer.md"))
     expect(await Bun.file(output.path).text()).toBe(output.markdown)
 
     const agents = (await (await req(tmp.path, "/agent")).json()) as Agent[]
@@ -107,7 +107,7 @@ describe("agent builder routes", () => {
     expect(saved.status).toBe(200)
     const output = (await saved.json()) as Output
     expect(output.id).toBe("canonical")
-    expect(output.path).toBe(path.join(tmp.path, ".kilo", "agent", "canonical.md"))
+    expect(output.path).toBe(path.join(tmp.path, ".accurecode", "agent", "canonical.md"))
     expect(await Bun.file(output.path).exists()).toBe(true)
   })
 
@@ -153,13 +153,13 @@ describe("agent builder routes", () => {
       })
 
       expect(saved.status).toBe(400)
-      expect(await Bun.file(path.join(tmp.path, ".kilo", "agent", "bad:id.md")).exists()).toBe(false)
+      expect(await Bun.file(path.join(tmp.path, ".accurecode", "agent", "bad:id.md")).exists()).toBe(false)
     })
   }
 
   // Regression: saving must dispose the instance so open TUIs hot-reload the agent list. The
   // dispose is the reload trigger — the server agent cache is keyed by config
-  // (KiloAgent.cacheKey), not file-based `.md` agents, so without it a new agent would not
+  // (AccureAgent.cacheKey), not file-based `.md` agents, so without it a new agent would not
   // surface until restart. The TUI reacts to `server.instance.disposed` by re-bootstrapping and
   // refetching `app.agents`.
   test("disposes the instance after save so open TUIs hot-reload agents", async () => {

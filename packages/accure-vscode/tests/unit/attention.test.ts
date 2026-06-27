@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test"
-import type { TuiAttentionSoundName } from "@kilocode/plugin/tui"
+import type { TuiAttentionSoundName } from "@accurecode/plugin/tui"
 import { AttentionService } from "../../src/services/attention/service"
-import type { KiloConnectionService } from "../../src/services/cli-backend/connection-service"
+import type { AccureConnectionService } from "../../src/services/cli-backend/connection-service"
 import type { SSEPayload } from "../../src/services/cli-backend/sdk-sse-adapter"
 import { CustomSoundIDs, resolveSoundID } from "../../src/services/attention/sound"
 
@@ -18,7 +18,7 @@ function setup() {
       states.push(handler)
       return () => undefined
     },
-  } as unknown as KiloConnectionService
+  } as unknown as AccureConnectionService
   const service = new AttentionService(connection)
   ;(service as unknown as { notify: (sound: TuiAttentionSoundName) => void }).notify = (sound) => sounds.push(sound)
   return {

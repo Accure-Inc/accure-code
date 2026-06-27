@@ -26,7 +26,7 @@ import {
   Todo,
   QuestionAnswer,
   QuestionInfo,
-} from "@kilocode/sdk/v2"
+} from "@accurecode/sdk/v2"
 import { useData } from "../context"
 import { useFileComponent } from "../context/file"
 import { useDialog } from "../context/dialog"

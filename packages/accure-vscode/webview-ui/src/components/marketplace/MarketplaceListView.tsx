@@ -1,8 +1,8 @@
 import { createSignal, createMemo, For, Show } from "solid-js"
-import { TextField } from "@kilocode/accure-ui/text-field"
-import { Select } from "@kilocode/accure-ui/select"
-import { Tag } from "@kilocode/accure-ui/tag"
-import { Spinner } from "@kilocode/accure-ui/spinner"
+import { TextField } from "@accurecode/accure-ui/text-field"
+import { Select } from "@accurecode/accure-ui/select"
+import { Tag } from "@accurecode/accure-ui/tag"
+import { Spinner } from "@accurecode/accure-ui/spinner"
 import type {
   MarketplaceItem,
   McpMarketplaceItem,

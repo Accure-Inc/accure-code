@@ -6,8 +6,8 @@ import { TuiEvent } from "../../src/cli/cmd/tui/event"
 import { Identifier } from "../../src/id/id"
 import { SessionID, MessageID, PartID } from "../../src/session/schema"
 import { ModelID, ProviderID } from "../../src/provider/schema"
-import { formatTodos, generateHandover, PlanFollowup, PlanFollowupRuntime } from "../../src/kilocode/plan-followup"
-import { Instance } from "../../src/kilocode/instance"
+import { formatTodos, generateHandover, PlanFollowup, PlanFollowupRuntime } from "../../src/accurecode/plan-followup"
+import { Instance } from "../../src/accurecode/instance"
 import { provideTestInstance } from "../fixture/fixture"
 import { Provider } from "../../src/provider/provider"
 import { Question } from "../../src/question"
@@ -24,7 +24,7 @@ import fs from "fs/promises"
 import { tmpdir } from "../fixture/fixture"
 
 Log.init({ print: false })
-process.env.KILO_CLIENT = "cli"
+process.env.ACCURECODE_CLIENT = "cli"
 
 const runtime = makeRuntime(Question.Service, Question.defaultLayer)
 const question = {
@@ -346,9 +346,9 @@ describe("plan follow-up", () => {
 
   test("ask - hides custom answer row on VS Code where the main prompt input handles typed replies", () =>
     withInstance(async () => {
-      const prev = process.env.KILO_CLIENT
+      const prev = process.env.ACCURECODE_CLIENT
       try {
-        process.env.KILO_CLIENT = "vscode"
+        process.env.ACCURECODE_CLIENT = "vscode"
         const seeded = await seed({ text: "1. Build" })
         const pending = PlanFollowup.ask({
           question,
@@ -371,7 +371,7 @@ describe("plan follow-up", () => {
         await question.reject(item.id)
         await expect(pending).resolves.toBe("break")
       } finally {
-        process.env.KILO_CLIENT = prev
+        process.env.ACCURECODE_CLIENT = prev
       }
     }))
 
@@ -501,12 +501,12 @@ describe("plan follow-up", () => {
 
   test("ask - retargets prompt queue so injected message is visible in scope", () =>
     withInstance(async () => {
-      const { KiloSessionPromptQueue } = await import("../../src/kilocode/session/prompt-queue")
+      const { AccureSessionPromptQueue } = await import("../../src/accurecode/session/prompt-queue")
       const seeded = await seed({ text: "1. Refactor\n2. Ship" })
 
       // Simulate the prompt queue having a target set (like during a running loop)
       const original = seeded.messages.find((m) => m.info.role === "user")!.info.id
-      KiloSessionPromptQueue.retarget(seeded.sessionID, original)
+      AccureSessionPromptQueue.retarget(seeded.sessionID, original)
 
       const pending = PlanFollowup.ask({
         question,
@@ -527,7 +527,7 @@ describe("plan follow-up", () => {
 
       // The injected user message must be visible when scoped
       const all = await store.messages({ sessionID: seeded.sessionID })
-      const scoped = KiloSessionPromptQueue.scope(seeded.sessionID, all)
+      const scoped = AccureSessionPromptQueue.scope(seeded.sessionID, all)
       const injected = scoped.findLast((m) => m.info.role === "user")
       expect(injected).toBeDefined()
       const part = injected!.parts.find((p) => p.type === "text")

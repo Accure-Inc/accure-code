@@ -4,13 +4,13 @@ import {
   indexingEnabled,
   INDEXING_PLUGIN,
   resolveIndexingPlugin,
-} from "../../src/kilocode/indexing-feature"
+} from "../../src/accurecode/indexing-feature"
 
 describe("indexing plugin helpers", () => {
   test("detects plugin-enabled configs", () => {
     expect(indexingEnabled({ plugin: ["global-plugin"] })).toBe(false)
     expect(indexingEnabled({ plugin: [INDEXING_PLUGIN] })).toBe(true)
-    expect(indexingEnabled({ plugin: ["@kilocode/accure-indexing@1.0.0"] })).toBe(true)
+    expect(indexingEnabled({ plugin: ["@accurecode/accure-indexing@1.0.0"] })).toBe(true)
   })
 
   test("adds indexing plugin when present but missing from config", () => {
@@ -20,8 +20,8 @@ describe("indexing plugin helpers", () => {
   })
 
   test("does not add duplicate indexing plugin", () => {
-    const list = ensureIndexingPlugin(["@kilocode/accure-indexing@1.0.0"], INDEXING_PLUGIN)
-    expect(list).toEqual(["@kilocode/accure-indexing@1.0.0"])
+    const list = ensureIndexingPlugin(["@accurecode/accure-indexing@1.0.0"], INDEXING_PLUGIN)
+    expect(list).toEqual(["@accurecode/accure-indexing@1.0.0"])
   })
 
   test("skips hard-enable when plugin package is unavailable", () => {

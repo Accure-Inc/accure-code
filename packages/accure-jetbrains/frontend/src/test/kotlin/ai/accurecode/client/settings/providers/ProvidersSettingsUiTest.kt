@@ -1,16 +1,16 @@
-package ai.kilocode.client.settings.providers
+package ai.accurecode.client.settings.providers
 
-import ai.kilocode.client.app.KiloProviderService
-import ai.kilocode.client.testing.FakeProviderRpcApi
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.rpc.dto.CustomProviderConfigDto
-import ai.kilocode.rpc.dto.ModelDto
-import ai.kilocode.rpc.dto.ProviderAuthMethodDto
-import ai.kilocode.rpc.dto.ProviderDisconnectDto
-import ai.kilocode.rpc.dto.ProviderMetadataDto
-import ai.kilocode.rpc.dto.ProviderOAuthReadyDto
-import ai.kilocode.rpc.dto.ProviderSettingsDto
-import ai.kilocode.rpc.dto.ProviderSettingsProviderDto
+import ai.accurecode.client.app.AccureProviderService
+import ai.accurecode.client.testing.FakeProviderRpcApi
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.rpc.dto.CustomProviderConfigDto
+import ai.accurecode.rpc.dto.ModelDto
+import ai.accurecode.rpc.dto.ProviderAuthMethodDto
+import ai.accurecode.rpc.dto.ProviderDisconnectDto
+import ai.accurecode.rpc.dto.ProviderMetadataDto
+import ai.accurecode.rpc.dto.ProviderOAuthReadyDto
+import ai.accurecode.rpc.dto.ProviderSettingsDto
+import ai.accurecode.rpc.dto.ProviderSettingsProviderDto
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.testFramework.replaceService
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
@@ -143,12 +143,12 @@ class ProvidersSettingsUiTest : BasePlatformTestCase() {
         edt { assertEquals(listOf(ProviderListAction.DISCONNECT), rows(content).single().actions) }
     }
 
-    fun `test popular rows use vscode order including kilo`() {
+    fun `test popular rows use vscode order including accure`() {
         val rows = providerListRows(
             ProviderSettingsDto(
                 providers = listOf(
                     provider("openrouter", "OpenRouter", priority = 5),
-                    provider("kilo", "Kilo", priority = 0),
+                    provider("accure", "Accure", priority = 0),
                     provider("google", "Google", priority = 4),
                     provider("anthropic", "Anthropic", priority = 1),
                     provider("vercel", "Vercel", priority = 6),
@@ -159,7 +159,7 @@ class ProvidersSettingsUiTest : BasePlatformTestCase() {
             "",
         )
 
-        assertEquals(listOf("kilo", "anthropic", "deepseek", "openai", "google", "openrouter", "vercel"), rows.map { it.key })
+        assertEquals(listOf("accure", "anthropic", "deepseek", "openai", "google", "openrouter", "vercel"), rows.map { it.key })
         assertEquals("Popular providers", providerListSectionTitle(rows, 0))
     }
 
@@ -227,16 +227,16 @@ class ProvidersSettingsUiTest : BasePlatformTestCase() {
         assertTrue(rows.isEmpty())
     }
 
-    fun `test connected kilo gateway has no provider settings actions`() {
+    fun `test connected accure gateway has no provider settings actions`() {
         val rows = providerListRows(
             ProviderSettingsDto(
-                providers = listOf(provider("kilo", "Kilo Gateway")),
-                connected = listOf("kilo"),
+                providers = listOf(provider("accure", "Accure Gateway")),
+                connected = listOf("accure"),
             ),
             "",
         )
 
-        assertEquals(listOf("kilo"), rows.map { it.key })
+        assertEquals(listOf("accure"), rows.map { it.key })
         assertEquals("Connected providers", providerListSectionTitle(rows, 0))
         assertTrue(rows.single().actions.isEmpty())
     }
@@ -545,7 +545,7 @@ class ProvidersSettingsUiTest : BasePlatformTestCase() {
     }
 
     fun `test provider oauth waiting countdown can be cancelled without refresh`() {
-        val callback = CompletableDeferred<ai.kilocode.rpc.dto.ProviderActionResultDto>()
+        val callback = CompletableDeferred<ai.accurecode.rpc.dto.ProviderActionResultDto>()
         val rpc = installProvider(
             ProviderSettingsDto(
                 providers = listOf(provider("github-copilot", "GitHub Copilot")),
@@ -562,7 +562,7 @@ class ProvidersSettingsUiTest : BasePlatformTestCase() {
         edt { components(panel).filterIsInstance<JButton>().single { it.text == "Cancel" && it.isVisible }.doClick() }
 
         flushUntil { edt { !text(panel).contains("Waiting for authorization") && rows(panel).single().disabled.not() } }
-        callback.complete(ai.kilocode.rpc.dto.ProviderActionResultDto(providerState(provider("stale", "Stale"))))
+        callback.complete(ai.accurecode.rpc.dto.ProviderActionResultDto(providerState(provider("stale", "Stale"))))
         flushUntil { callback.isCompleted }
 
         edt {
@@ -614,7 +614,7 @@ class ProvidersSettingsUiTest : BasePlatformTestCase() {
     }
 
     fun `test provider oauth auto response shows device auth panel`() {
-        val callback = CompletableDeferred<ai.kilocode.rpc.dto.ProviderActionResultDto>()
+        val callback = CompletableDeferred<ai.accurecode.rpc.dto.ProviderActionResultDto>()
         val rpc = installProvider(
             ProviderSettingsDto(
                 providers = listOf(provider("openai", "OpenAI")),
@@ -645,14 +645,14 @@ class ProvidersSettingsUiTest : BasePlatformTestCase() {
             assertTrue(t, t.contains("A B C D - E F G H"))
             assertTrue(t, t.contains("Open Browser"))
             assertTrue(t, t.contains("Cancel"))
-            assertEquals("https://auth.openai.com/device", fieldsByName(panel, "kilo.provider.oauth.url").single().text)
-            val qr = components(panel).filterIsInstance<JBLabel>().single { it.name == "kilo.provider.oauth.qr" }
+            assertEquals("https://auth.openai.com/device", fieldsByName(panel, "accure.provider.oauth.url").single().text)
+            val qr = components(panel).filterIsInstance<JBLabel>().single { it.name == "accure.provider.oauth.qr" }
             assertNotNull(qr.icon)
         }
 
         edt { components(panel).filterIsInstance<JButton>().single { it.text == "Cancel" && it.isVisible }.doClick() }
         flushUntil { edt { rpc.callbacks.size == 1 && rows(panel).single().disabled.not() } }
-        callback.complete(ai.kilocode.rpc.dto.ProviderActionResultDto(providerState(provider("stale", "Stale"))))
+        callback.complete(ai.accurecode.rpc.dto.ProviderActionResultDto(providerState(provider("stale", "Stale"))))
     }
 
     fun `test provider oauth cancel before authorize completion skips callback`() {
@@ -720,14 +720,14 @@ class ProvidersSettingsUiTest : BasePlatformTestCase() {
         scope = cs
         val rpc = FakeProviderRpcApi()
         rpc.state = providerState(provider("openai", "OpenAI"))
-        rpc.disconnectError = IllegalStateException("Kilo backend is not ready")
-        val service = KiloProviderService(cs, rpc)
+        rpc.disconnectError = IllegalStateException("Accure backend is not ready")
+        val service = AccureProviderService(cs, rpc)
 
         val result = withContext(kotlinx.coroutines.Dispatchers.Default) {
             service.disconnect(ProviderDisconnectDto("/test", "openai"))
         }
 
-        assertEquals("Kilo backend is not ready", result.error)
+        assertEquals("Accure backend is not ready", result.error)
         assertEquals(listOf("openai"), result.state.providers.map { it.id })
         assertEquals(listOf("/test"), rpc.stateCalls)
     }
@@ -782,8 +782,8 @@ class ProvidersSettingsUiTest : BasePlatformTestCase() {
         val rpc = FakeProviderRpcApi()
         rpc.state = state
         ApplicationManager.getApplication().replaceService(
-            KiloProviderService::class.java,
-            KiloProviderService(cs, rpc),
+            AccureProviderService::class.java,
+            AccureProviderService(cs, rpc),
             testRootDisposable,
         )
         return rpc

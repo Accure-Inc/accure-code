@@ -15,7 +15,7 @@ import { Storage } from "@/storage/storage"
 import { Snapshot } from "@/snapshot"
 import { Plugin } from "@/plugin"
 import { ModelsDev } from "@opencode-ai/core/models-dev"
-import { ModelCache } from "@/provider/model-cache" // kilocode_change
+import { ModelCache } from "@/provider/model-cache" // accurecode_change
 import { Provider } from "@/provider/provider"
 import { ProviderAuth } from "@/provider/auth"
 import { Agent } from "@/agent/agent"
@@ -74,7 +74,7 @@ const CoreLayer = Layer.mergeAll(
   Storage.defaultLayer,
   Snapshot.defaultLayer,
   Plugin.defaultLayer,
-  ModelCache.defaultLayer, // kilocode_change
+  ModelCache.defaultLayer, // accurecode_change
   ModelsDev.defaultLayer,
   Provider.defaultLayer,
   ProviderAuth.defaultLayer,

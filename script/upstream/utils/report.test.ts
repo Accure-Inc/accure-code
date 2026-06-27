@@ -16,7 +16,7 @@ test("does not recommend skip for unrelated packages", () => {
   )
 })
 
-test("recommends keep ours for Kilo directories", () => {
+test("recommends keep ours for Accure directories", () => {
   expect(getRecommendation("packages/accure-vscode/.prettierignore", [], []).recommendation).toBe("keep-ours")
   expect(getRecommendation("packages/accure-i18n/tsconfig.json", [], []).recommendation).toBe("keep-ours")
 })

@@ -1,11 +1,11 @@
 import { type Component, createSignal, createMemo, For, Show, onMount } from "solid-js"
-import { Icon } from "@kilocode/accure-ui/icon"
-import { Tooltip } from "@kilocode/accure-ui/tooltip"
+import { Icon } from "@accurecode/accure-ui/icon"
+import { Tooltip } from "@accurecode/accure-ui/tooltip"
 import { useProvider } from "../src/context/provider"
 import type { EnrichedModel } from "../src/context/provider"
 import { useLanguage } from "../src/context/language"
 import {
-  KILO_GATEWAY_ID,
+  ACCURECODE_GATEWAY_ID,
   freeDataLabel,
   hasByok,
   isDataCollectedModel,
@@ -42,9 +42,10 @@ export const MultiModelSelector: Component<{
   const freeLabel = () => t("model.tag.free")
   const dataLabel = () => freeDataLabel(t("model.tag.free"), t("model.tag.dataCollected"))
 
+  const ALWAYS_VISIBLE = new Set([ACCURECODE_GATEWAY_ID, "amazon-bedrock", "accure-atm-4"])
   const visibleModels = createMemo(() => {
     const c = connected()
-    return models().filter((m) => m.providerID === KILO_GATEWAY_ID || c.includes(m.providerID))
+    return models().filter((m) => ALWAYS_VISIBLE.has(m.providerID) || c.includes(m.providerID))
   })
 
   const filtered = createMemo(() => {

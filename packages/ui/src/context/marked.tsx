@@ -1,33 +1,33 @@
 import { marked } from "marked"
-// kilocode_change: marked-shiki highlighted code blocks synchronously during
+// accurecode_change: marked-shiki highlighted code blocks synchronously during
 // parse, freezing the main thread on session switches with many code blocks
 // (issue #6221 / PR #7102). We render plain <pre><code data-lang="..."> here
 // and hand off to deferredHighlight() in markdown.tsx for progressive Shiki.
 // This import was re-added by an upstream merge; removing it restores the
 // two-pass rendering design.
 import katex from "katex"
-// kilocode_change start: import types for double-dollar math extension
+// accurecode_change start: import types for double-dollar math extension
 import type { MarkedExtension, TokenizerAndRendererExtension } from "marked"
-// kilocode_change end
+// accurecode_change end
 import { bundledLanguages, type BundledLanguage } from "shiki"
-import { parseFilePath } from "../file-path" // kilocode_change
+import { parseFilePath } from "../file-path" // accurecode_change
 import { createSimpleContext } from "./helper"
-import { getSharedHighlighter } from "@pierre/diffs" // kilocode_change
-import { ensureKiloDiffTheme } from "../pierre/kilo-diff-theme" // kilocode_change
+import { getSharedHighlighter } from "@pierre/diffs" // accurecode_change
+import { ensureAccureDiffTheme } from "../pierre/accure-diff-theme" // accurecode_change
 
-// kilocode_change start: the "Kilo" diff/highlight theme registration moved to
-// ../pierre/kilo-diff-theme so the diff worker pool can register it without
+// accurecode_change start: the "Accure" diff/highlight theme registration moved to
+// ../pierre/accure-diff-theme so the diff worker pool can register it without
 // importing this module's katex/marked dependencies. This call keeps the markdown
 // highlighter (getSharedHighlighter, below) working. Upstream keeps an inline
 // registerCustomTheme("OpenCode", …) block here — do not restore it on merges;
-// route registration through ensureKiloDiffTheme() instead.
-ensureKiloDiffTheme()
-// kilocode_change end
+// route registration through ensureAccureDiffTheme() instead.
+ensureAccureDiffTheme()
+// accurecode_change end
 
-// kilocode_change start: double-dollar-only math rules for marked.
+// accurecode_change start: double-dollar-only math rules for marked.
 const BLOCK = /^\$\$\n((?:\\[^]|[^\\])+?)\n\$\$(?:\n|$)/
 const INLINE = /^\$\$(?!\$)((?:\\.|[^\\\n])*?(?:\\.|[^\\\n$]))\$\$/
-// kilocode_change end
+// accurecode_change end
 
 function renderMathInText(text: string): string {
   let result = text
@@ -45,7 +45,7 @@ function renderMathInText(text: string): string {
     }
   })
 
-  // kilocode_change: removed single-dollar inline math ($...$) rendering.
+  // accurecode_change: removed single-dollar inline math ($...$) rendering.
   // Single $ is far more common as a currency symbol in agent responses
   // (e.g. $93K, $307K) than as a LaTeX delimiter. Only $$...$$ is supported.
 
@@ -75,7 +75,7 @@ async function highlightCodeBlocks(html: string): Promise<string> {
   if (matches.length === 0) return html
 
   const highlighter = await getSharedHighlighter({
-    themes: ["Kilo"],
+    themes: ["Accure"],
     langs: [],
     preferredHighlighter: "shiki-wasm",
   })
@@ -100,7 +100,7 @@ async function highlightCodeBlocks(html: string): Promise<string> {
 
     const highlighted = highlighter.codeToHtml(code, {
       lang: language,
-      theme: "Kilo",
+      theme: "Accure",
       tabindex: false,
     })
     result = result.replace(fullMatch, () => highlighted)
@@ -111,9 +111,9 @@ async function highlightCodeBlocks(html: string): Promise<string> {
 
 export type NativeMarkdownParser = (markdown: string) => Promise<string>
 
-// kilocode_change: parseFilePath imported from ../file-path
+// accurecode_change: parseFilePath imported from ../file-path
 
-// kilocode_change start: highlight cache for deferred highlighting
+// accurecode_change start: highlight cache for deferred highlighting
 
 /** FNV-1a hash — lightweight alternative to storing full source code in DOM attributes. */
 export function fnv1a(s: string): string {
@@ -189,7 +189,7 @@ export async function deferredHighlight(
     return
   }
 
-  const highlighter = await getSharedHighlighter({ themes: ["Kilo"], langs: [] })
+  const highlighter = await getSharedHighlighter({ themes: ["Accure"], langs: [] })
 
   for (const block of blocks) {
     // Short-circuit if the container is unmounted or the caller cancelled this run
@@ -226,7 +226,7 @@ export async function deferredHighlight(
               resolve()
               return
             }
-            const html = highlighter.codeToHtml(code, { lang: language, theme: "Kilo", tabindex: false })
+            const html = highlighter.codeToHtml(code, { lang: language, theme: "Accure", tabindex: false })
             touchHighlightCache(cacheKey, html)
             // Note: data-highlighted is NOT set on `block` here because
             // replaceWithHighlighted replaces the parent <pre> entirely — the
@@ -262,12 +262,12 @@ export async function deferredHighlight(
     onComplete?.()
   }
 }
-// kilocode_change end
+// accurecode_change end
 
 export const { use: useMarked, provider: MarkedProvider } = createSimpleContext({
   name: "Marked",
   init: (props: { nativeParser?: NativeMarkdownParser }) => {
-    // kilocode_change start: two-pass parser — first pass skips Shiki highlighting
+    // accurecode_change start: two-pass parser — first pass skips Shiki highlighting
     // to avoid blocking the main thread with Oniguruma WASM regex (issue #6221).
     // Code blocks render as plain <pre><code data-lang="..."> immediately.
     // The Markdown component calls deferredHighlight() after DOM paint.
@@ -278,7 +278,7 @@ export const { use: useMarked, provider: MarkedProvider } = createSimpleContext(
             const titleAttr = title ? ` title="${title}"` : ""
             return `<a href="${href}"${titleAttr} class="external-link" target="_blank" rel="noopener noreferrer">${text}</a>`
           },
-          // kilocode_change start
+          // accurecode_change start
           codespan({ text }) {
             const file = parseFilePath(text)
             const escaped = text
@@ -309,10 +309,10 @@ export const { use: useMarked, provider: MarkedProvider } = createSimpleContext(
             const attr = data ? ` class="language-${data}" data-lang="${data}"` : ' data-lang="text"'
             return `<pre><code${attr}>${escaped}</code></pre>`
           },
-          // kilocode_change end
+          // accurecode_change end
         },
       },
-      // kilocode_change start: enable only double-dollar math.
+      // accurecode_change start: enable only double-dollar math.
       // Single $ is far more common as a currency symbol in agent responses
       // (e.g. $93K, $307K) than as a LaTeX delimiter. Avoid registering the
       // marked-katex-extension inline tokenizer because Marked falls through
@@ -360,13 +360,13 @@ export const { use: useMarked, provider: MarkedProvider } = createSimpleContext(
           } satisfies TokenizerAndRendererExtension,
         ],
       } satisfies MarkedExtension,
-      // kilocode_change end
-      // kilocode_change: markedShiki removed — the custom `code` renderer
+      // accurecode_change end
+      // accurecode_change: markedShiki removed — the custom `code` renderer
       // above returns plain <pre><code data-lang="..."> and markdown.tsx
       // calls deferredHighlight() after paint. Running Shiki inside parse
       // blocks the main thread on session switches (issue #6221).
     )
-    // kilocode_change end
+    // accurecode_change end
 
     if (props.nativeParser) {
       const nativeParser = props.nativeParser

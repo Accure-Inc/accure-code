@@ -1,16 +1,16 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.backend.migration.LegacyCleanupTargets
-import ai.kilocode.backend.migration.LegacyCleanupReport
-import ai.kilocode.backend.migration.LegacyMigrationBackend
-import ai.kilocode.backend.migration.LegacyMigrationDetection
-import ai.kilocode.backend.migration.LegacyMigrationEngine
-import ai.kilocode.backend.migration.LegacyMigrationHttpBackend
-import ai.kilocode.backend.migration.LegacyMigrationReport
-import ai.kilocode.backend.migration.LegacyMigrationSelections
-import ai.kilocode.backend.migration.LegacyMigrationSink
-import ai.kilocode.backend.migration.LegacyMigrationStatus
-import ai.kilocode.backend.migration.LegacyMigrationStore
+import ai.accurecode.backend.migration.LegacyCleanupTargets
+import ai.accurecode.backend.migration.LegacyCleanupReport
+import ai.accurecode.backend.migration.LegacyMigrationBackend
+import ai.accurecode.backend.migration.LegacyMigrationDetection
+import ai.accurecode.backend.migration.LegacyMigrationEngine
+import ai.accurecode.backend.migration.LegacyMigrationHttpBackend
+import ai.accurecode.backend.migration.LegacyMigrationReport
+import ai.accurecode.backend.migration.LegacyMigrationSelections
+import ai.accurecode.backend.migration.LegacyMigrationSink
+import ai.accurecode.backend.migration.LegacyMigrationStatus
+import ai.accurecode.backend.migration.LegacyMigrationStore
 import okhttp3.OkHttpClient
 
 /**
@@ -20,7 +20,7 @@ import okhttp3.OkHttpClient
  * Instantiate when the CLI connection is ready (port + authenticated client available).
  * The [store] is caller-supplied, allowing test and UI flows to provide different adapters.
  */
-class KiloBackendMigrationManager(
+class AccureBackendMigrationManager(
     private val client: OkHttpClient,
     private val port: Int,
 ) {

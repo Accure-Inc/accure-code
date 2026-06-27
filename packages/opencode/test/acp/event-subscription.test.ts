@@ -7,7 +7,7 @@ import type {
   ToolStateCompleted,
   ToolStatePending,
   ToolStateRunning,
-} from "@kilocode/sdk/v2"
+} from "@accurecode/sdk/v2"
 import { provideTestInstance, tmpdir } from "../fixture/fixture"
 
 const pollUntil = async <T>(
@@ -299,10 +299,10 @@ function createFakeAgent() {
         return {
           data: [
             {
-              // kilocode_change start - renamed from "build" to "code"
+              // accurecode_change start - renamed from "build" to "code"
               name: "code",
               description: "code",
-              // kilocode_change end
+              // accurecode_change end
               mode: "agent",
             },
           ],

@@ -4,7 +4,7 @@ import path from "node:path"
 
 const ROOT = path.resolve(import.meta.dir, "../..")
 const TURN_FILE = path.join(ROOT, "webview-ui/src/components/chat/VscodeSessionTurn.tsx")
-const PROVIDER_FILE = path.join(ROOT, "src/KiloProvider.ts")
+const PROVIDER_FILE = path.join(ROOT, "src/AccureProvider.ts")
 
 const src = fs.readFileSync(TURN_FILE, "utf-8")
 const provider = fs.readFileSync(PROVIDER_FILE, "utf-8")

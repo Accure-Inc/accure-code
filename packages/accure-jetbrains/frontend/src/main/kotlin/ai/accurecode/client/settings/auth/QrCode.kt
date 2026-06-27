@@ -1,4 +1,4 @@
-package ai.kilocode.client.settings.auth
+package ai.accurecode.client.settings.auth
 
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType

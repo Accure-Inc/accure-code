@@ -1,1 +1,1 @@
-export * from "@kilocode/accure-ui/message-part"
+export * from "@accurecode/accure-ui/message-part"

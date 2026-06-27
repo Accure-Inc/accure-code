@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "@kilocode/plugin",
+  "name": "@accurecode/plugin",
   "version": "7.3.50",
   "type": "module",
   "license": "MIT",
@@ -17,7 +17,7 @@
     "dist"
   ],
   "dependencies": {
-    "@kilocode/sdk": "workspace:*",
+    "@accurecode/sdk": "workspace:*",
     "effect": "catalog:",
     "zod": "catalog:"
   },
@@ -48,7 +48,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kilo-Org/kilocode",
+    "url": "https://github.com/Accure-Inc/accure-code",
     "directory": "packages/plugin"
   }
 }

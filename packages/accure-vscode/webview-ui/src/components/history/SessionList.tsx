@@ -6,12 +6,12 @@
  */
 
 import { Component, Show, createSignal, onMount, type JSX } from "solid-js"
-import { List } from "@kilocode/accure-ui/list"
-import { ContextMenu } from "@kilocode/accure-ui/context-menu"
-import { Dialog } from "@kilocode/accure-ui/dialog"
-import { Button } from "@kilocode/accure-ui/button"
-import { IconButton } from "@kilocode/accure-ui/icon-button"
-import { useDialog } from "@kilocode/accure-ui/context/dialog"
+import { List } from "@accurecode/accure-ui/list"
+import { ContextMenu } from "@accurecode/accure-ui/context-menu"
+import { Dialog } from "@accurecode/accure-ui/dialog"
+import { Button } from "@accurecode/accure-ui/button"
+import { IconButton } from "@accurecode/accure-ui/icon-button"
+import { useDialog } from "@accurecode/accure-ui/context/dialog"
 import { useSession } from "../../context/session"
 import { useLanguage } from "../../context/language"
 import { formatRelativeDate } from "../../utils/date"
@@ -51,7 +51,7 @@ const SessionList: Component<SessionListProps> = (props) => {
   let seq = 0
 
   onMount(() => {
-    console.log("[Kilo New] SessionList mounted, loading sessions")
+    console.log("[Accure New] SessionList mounted, loading sessions")
     session.loadSessions()
   })
 

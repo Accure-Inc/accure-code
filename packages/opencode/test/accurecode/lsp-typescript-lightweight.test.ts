@@ -1,14 +1,14 @@
 // Tests for the lightweight TypeScript diagnostic mode.
 // These are regression guards — if an upstream OpenCode merge overwrites the
-// kilocode integration in shared LSP files, these tests catch it.
+// accurecode integration in shared LSP files, these tests catch it.
 
 import { describe, test, expect, spyOn, afterEach } from "bun:test"
 import path from "path"
 import * as LSPServer from "../../src/lsp/server"
-import { TsClient } from "../../src/kilocode/ts-client"
-import { TsCheck } from "../../src/kilocode/ts-check"
+import { TsClient } from "../../src/accurecode/ts-client"
+import { TsCheck } from "../../src/accurecode/ts-check"
 import { Flag } from "@opencode-ai/core/flag/flag"
-import { Instance, type InstanceContext } from "../../src/kilocode/instance"
+import { Instance, type InstanceContext } from "../../src/accurecode/instance"
 import { disposeAllInstances } from "../fixture/fixture"
 import type { RuntimeFlags } from "../../src/effect/runtime-flags"
 
@@ -23,19 +23,19 @@ const fakeFlags = {} as RuntimeFlags.Info
 describe("typescript lightweight mode", () => {
   describe("spawn gate", () => {
     test("Typescript.spawn returns undefined when flag is off", async () => {
-      const saved = Flag.KILO_EXPERIMENTAL_LSP_TOOL
-      Flag.KILO_EXPERIMENTAL_LSP_TOOL = false
+      const saved = Flag.ACCURECODE_EXPERIMENTAL_LSP_TOOL
+      Flag.ACCURECODE_EXPERIMENTAL_LSP_TOOL = false
       try {
         const result = await LSPServer.Typescript.spawn("/tmp/any", fakeCtx, fakeFlags)
         expect(result).toBeUndefined()
       } finally {
-        Flag.KILO_EXPERIMENTAL_LSP_TOOL = saved
+        Flag.ACCURECODE_EXPERIMENTAL_LSP_TOOL = saved
       }
     })
 
     test("Typescript.spawn calls native_tsgo when flag is on", async () => {
-      const saved = Flag.KILO_EXPERIMENTAL_LSP_TOOL
-      Flag.KILO_EXPERIMENTAL_LSP_TOOL = true
+      const saved = Flag.ACCURECODE_EXPERIMENTAL_LSP_TOOL
+      Flag.ACCURECODE_EXPERIMENTAL_LSP_TOOL = true
       const spy = spyOn(TsCheck, "native_tsgo").mockResolvedValue(undefined)
 
       try {
@@ -43,7 +43,7 @@ describe("typescript lightweight mode", () => {
         expect(spy).toHaveBeenCalled()
         expect(result).toBeUndefined() // undefined because mock returns no binary
       } finally {
-        Flag.KILO_EXPERIMENTAL_LSP_TOOL = saved
+        Flag.ACCURECODE_EXPERIMENTAL_LSP_TOOL = saved
         spy.mockRestore()
       }
     })
@@ -73,12 +73,12 @@ describe("typescript lightweight mode", () => {
   })
 
   describe("source integration guards", () => {
-    // These tests verify that kilocode integration code exists in shared
+    // These tests verify that accurecode integration code exists in shared
     // files. If an upstream merge strips the integration blocks, these fail.
 
     test("lsp/server.ts gates Typescript.spawn behind flag", async () => {
       const src = await Bun.file(path.resolve(import.meta.dir, "../../src/lsp/server.ts")).text()
-      expect(src).toContain("KILO_EXPERIMENTAL_LSP_TOOL")
+      expect(src).toContain("ACCURECODE_EXPERIMENTAL_LSP_TOOL")
       expect(src).toContain("native_tsgo")
     })
 

@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
-import type { Config } from "@kilocode/sdk/v2/client"
-import type { KiloConnectionService } from "../services/cli-backend/connection-service"
+import type { Config } from "@accurecode/sdk/v2/client"
+import type { AccureConnectionService } from "../services/cli-backend/connection-service"
 import type { WorkStyle, WorkStyleConfig, WorkStyleState } from "../shared/work-style-presets"
 import { applyWorkStyle, type WorkStyleSettingSnapshot } from "./work-style-apply"
 
@@ -13,7 +13,7 @@ function inspect(config: vscode.WorkspaceConfiguration, key: string): WorkStyleS
   }
 }
 
-async function apply(connection: KiloConnectionService, directory: string, style: WorkStyle) {
+async function apply(connection: AccureConnectionService, directory: string, style: WorkStyle) {
   const settings = vscode.workspace.getConfiguration("accure-code")
   return applyWorkStyle(style, {
     read: async () => {
@@ -34,13 +34,13 @@ async function apply(connection: KiloConnectionService, directory: string, style
 
 export async function handleWorkStyleApplyMessage(input: {
   message: { type?: string; style?: WorkStyleState }
-  connection: KiloConnectionService
+  connection: AccureConnectionService
   directory: string
   post: (message: unknown) => void
 }): Promise<boolean> {
   if (input.message.type !== "applyWorkStyle") return false
   if (input.message.style !== "human-in-the-loop" && input.message.style !== "autonomous") {
-    console.error("[Kilo New] Invalid style in applyWorkStyle message")
+    console.error("[Accure New] Invalid style in applyWorkStyle message")
     input.post({ type: "workStyleApplyFailed", message: "Invalid work style", rollbackFailed: false })
     return true
   }

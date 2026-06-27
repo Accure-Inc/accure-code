@@ -1,22 +1,22 @@
 import { describe, expect, spyOn, test } from "bun:test"
 import { Effect, Schema } from "effect"
 import * as Log from "@opencode-ai/core/util/log"
-import { KiloToolRegistry } from "../../src/kilocode/tool/registry"
+import { AccureToolRegistry } from "../../src/accurecode/tool/registry"
 import { Agent } from "../../src/agent/agent"
 import * as Truncate from "../../src/tool/truncate"
 import type * as Tool from "../../src/tool/tool"
 
-const logger = Log.create({ service: "kilocode-tool-registry" })
+const logger = Log.create({ service: "accurecode-tool-registry" })
 const deps = { agent: {} as Agent.Interface, truncate: {} as Truncate.Interface }
 
-describe("kilocode tool registry indexing import failure", () => {
+describe("accurecode tool registry indexing import failure", () => {
   test("omits semantic_search when the indexing module cannot load", async () => {
     const err = new Error("indexing import failed")
     const warn = spyOn(logger, "warn").mockImplementation(() => {})
 
     try {
       const result = await Effect.runPromise(
-        KiloToolRegistry.build(infos(), deps, {
+        AccureToolRegistry.build(infos(), deps, {
           indexing: async () => {
             throw err
           },

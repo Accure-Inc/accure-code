@@ -1,10 +1,10 @@
-package ai.kilocode.backend.migration
+package ai.accurecode.backend.migration
 
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
 // ---------------------------------------------------------------------------
-// Legacy input models (data shapes from legacy Kilo Code v5.x)
+// Legacy input models (data shapes from legacy Accure Code v5.x)
 // ---------------------------------------------------------------------------
 
 data class LegacyProviderProfiles(

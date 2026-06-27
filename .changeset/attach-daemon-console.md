@@ -1,5 +1,5 @@
 ---
-"@kilocode/cli": minor
+"@accurecode/cli": minor
 ---
 
-Support stopping the daemon with `kilo console stop` and keeping console or daemon commands attached with `--foreground`
+Support stopping the daemon with `accure console stop` and keeping console or daemon commands attached with `--foreground`

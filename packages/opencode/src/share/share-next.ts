@@ -1,4 +1,4 @@
-import type * as SDK from "@kilocode/sdk/v2"
+import type * as SDK from "@accurecode/sdk/v2"
 import { serviceUse } from "@/effect/service-use"
 import { Effect, Exit, Layer, Option, Schema, Scope, Context, Stream } from "effect"
 import { FetchHttpClient, HttpClient, HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
@@ -17,7 +17,7 @@ import * as Log from "@opencode-ai/core/util/log"
 import { SessionShareTable } from "./share.sql"
 
 const log = Log.create({ service: "share-next" })
-const disabled = process.env["KILO_DISABLE_SHARE"] === "true" || process.env["KILO_DISABLE_SHARE"] === "1"
+const disabled = process.env["ACCURECODE_DISABLE_SHARE"] === "true" || process.env["ACCURECODE_DISABLE_SHARE"] === "1"
 
 export type Api = {
   create: string
@@ -91,7 +91,7 @@ function api(resource: string): Api {
   }
 }
 
-// kilocode_change start - preserve the share transport contract when stored legacy summary diffs omit file details
+// accurecode_change start - preserve the share transport contract when stored legacy summary diffs omit file details
 function transport(info: Session.Info): SDK.Session {
   return {
     ...info,
@@ -103,7 +103,7 @@ function transport(info: Session.Info): SDK.Session {
       : undefined,
   }
 }
-// kilocode_change end
+// accurecode_change end
 
 const legacyApi = api("share")
 const consoleApi = api("shares")

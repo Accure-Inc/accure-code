@@ -4,8 +4,8 @@ import { Effect, Layer } from "effect"
 import { HttpClient, HttpClientRequest, HttpRouter } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder } from "effect/unstable/httpapi"
 import { Auth } from "../../../src/auth"
-import { KiloGatewayApi, KiloGatewayPaths } from "../../../src/kilocode/server/httpapi/groups/accure-gateway"
-import { kiloGatewayHandlers } from "../../../src/kilocode/server/httpapi/handlers/accure-gateway"
+import { AccureGatewayApi, AccureGatewayPaths } from "../../../src/accurecode/server/httpapi/groups/accure-gateway"
+import { accureGatewayHandlers } from "../../../src/accurecode/server/httpapi/handlers/accure-gateway"
 import { InstanceStore } from "../../../src/project/instance-store"
 import { ModelCache } from "../../../src/provider/model-cache"
 import { Session } from "../../../src/session/session"
@@ -18,7 +18,7 @@ import {
 } from "../../../src/server/routes/instance/httpapi/middleware/workspace-routing"
 import { testEffect } from "../../lib/effect"
 
-const TestHttpApi = HttpApi.make("opencode-instance").addHttpApi(KiloGatewayApi)
+const TestHttpApi = HttpApi.make("opencode-instance").addHttpApi(AccureGatewayApi)
 const auth = Layer.mock(Auth.Service)({
   get: () => Effect.succeed(new Auth.Api({ type: "api", key: "test-token" })),
 })
@@ -41,7 +41,7 @@ const testWorkspaceRouting = Layer.succeed(
 )
 const layer = HttpRouter.serve(
   HttpApiBuilder.layer(TestHttpApi).pipe(
-    Layer.provide(kiloGatewayHandlers),
+    Layer.provide(accureGatewayHandlers),
     Layer.provide(schemaErrorLayer),
     Layer.provide([
       passthroughAuthorization,
@@ -83,12 +83,12 @@ function post(path: string, body: Record<string, unknown>) {
   return HttpClientRequest.post(path).pipe(HttpClientRequest.bodyJson(body), Effect.flatMap(HttpClient.execute))
 }
 
-describe("Kilo gateway HttpApi statuses", () => {
+describe("Accure gateway HttpApi statuses", () => {
   it.live("reports locally stored API authentication without a Gateway request", () =>
     Effect.gen(function* () {
       yield* stub(() => Promise.reject(new Error("unexpected Gateway request")))
 
-      const response = yield* HttpClient.get(KiloGatewayPaths.authStatus)
+      const response = yield* HttpClient.get(AccureGatewayPaths.authStatus)
 
       expect(response.status).toBe(200)
       expect(yield* response.json).toEqual({ authenticated: true, type: "api" })
@@ -99,7 +99,7 @@ describe("Kilo gateway HttpApi statuses", () => {
     Effect.gen(function* () {
       yield* stub(() => new Response("rate limited", { status: 429 }))
 
-      const response = yield* HttpClient.get(KiloGatewayPaths.cloudSessions)
+      const response = yield* HttpClient.get(AccureGatewayPaths.cloudSessions)
 
       expect(response.status).toBe(429)
       expect(yield* response.json).toEqual({ error: "Cloud sessions fetch failed: 429" })
@@ -110,7 +110,7 @@ describe("Kilo gateway HttpApi statuses", () => {
     Effect.gen(function* () {
       yield* stub(() => Promise.reject(new TypeError("network error")))
 
-      const response = yield* HttpClient.get(KiloGatewayPaths.cloudSessions)
+      const response = yield* HttpClient.get(AccureGatewayPaths.cloudSessions)
 
       expect(response.status).toBe(500)
       expect(yield* response.json).toEqual({ error: "Internal error" })
@@ -121,7 +121,7 @@ describe("Kilo gateway HttpApi statuses", () => {
     Effect.gen(function* () {
       yield* stub(() => new Response("missing", { status: 404 }))
 
-      const response = yield* HttpClient.get(KiloGatewayPaths.cloudSession.replace(":id", "missing"))
+      const response = yield* HttpClient.get(AccureGatewayPaths.cloudSession.replace(":id", "missing"))
 
       expect(response.status).toBe(404)
       expect(yield* response.json).toEqual({ error: "Session not found" })
@@ -132,7 +132,7 @@ describe("Kilo gateway HttpApi statuses", () => {
     Effect.gen(function* () {
       yield* stub(() => new Response("failed", { status: 500 }))
 
-      const response = yield* HttpClient.get(KiloGatewayPaths.cloudSession.replace(":id", "failed"))
+      const response = yield* HttpClient.get(AccureGatewayPaths.cloudSession.replace(":id", "failed"))
 
       expect(response.status).toBe(500)
       expect(yield* response.json).toEqual({ error: "Failed to fetch session" })
@@ -143,7 +143,7 @@ describe("Kilo gateway HttpApi statuses", () => {
     Effect.gen(function* () {
       yield* stub(() => Promise.reject(new TypeError("network error")))
 
-      const response = yield* HttpClient.get(KiloGatewayPaths.cloudSession.replace(":id", "failed"))
+      const response = yield* HttpClient.get(AccureGatewayPaths.cloudSession.replace(":id", "failed"))
 
       expect(response.status).toBe(500)
       expect(yield* response.json).toEqual({ error: "Internal error" })
@@ -154,7 +154,7 @@ describe("Kilo gateway HttpApi statuses", () => {
     Effect.gen(function* () {
       yield* stub(() => new Response("unauthorized", { status: 401 }))
 
-      const response = yield* post(KiloGatewayPaths.cloudSessionImport, { sessionId: "unauthorized" })
+      const response = yield* post(AccureGatewayPaths.cloudSessionImport, { sessionId: "unauthorized" })
 
       expect(response.status).toBe(401)
       expect(yield* response.json).toEqual({ error: "Import failed: 401" })
@@ -165,32 +165,32 @@ describe("Kilo gateway HttpApi statuses", () => {
     Effect.gen(function* () {
       yield* stub(() => Promise.reject(new TypeError("network error")))
 
-      const response = yield* post(KiloGatewayPaths.cloudSessionImport, { sessionId: "failed" })
+      const response = yield* post(AccureGatewayPaths.cloudSessionImport, { sessionId: "failed" })
 
       expect(response.status).toBe(500)
       expect(yield* response.json).toEqual({ error: "Internal error" })
     }),
   )
 
-  it.live("preserves KiloClaw worker failures", () =>
+  it.live("preserves AccureClaw worker failures", () =>
     Effect.gen(function* () {
       yield* stub(() => new Response("worker failed", { status: 500 }))
 
-      const response = yield* HttpClient.get(KiloGatewayPaths.clawStatus)
+      const response = yield* HttpClient.get(AccureGatewayPaths.clawStatus)
 
       expect(response.status).toBe(500)
-      expect(yield* response.json).toEqual({ error: "KiloClaw request failed: 500 worker failed" })
+      expect(yield* response.json).toEqual({ error: "AccureClaw request failed: 500 worker failed" })
     }),
   )
 
-  it.live("maps KiloClaw transport failures to bad gateway", () =>
+  it.live("maps AccureClaw transport failures to bad gateway", () =>
     Effect.gen(function* () {
       yield* stub(() => Promise.reject(new TypeError("network error")))
 
-      const response = yield* HttpClient.get(KiloGatewayPaths.clawStatus)
+      const response = yield* HttpClient.get(AccureGatewayPaths.clawStatus)
 
       expect(response.status).toBe(502)
-      expect(yield* response.json).toEqual({ error: "Failed to reach KiloClaw" })
+      expect(yield* response.json).toEqual({ error: "Failed to reach AccureClaw" })
     }),
   )
 })

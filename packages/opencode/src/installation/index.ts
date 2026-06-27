@@ -12,15 +12,15 @@ import { makeRuntime } from "@opencode-ai/core/effect/runtime"
 import semver from "semver"
 import { InstallationChannel, InstallationVersion } from "@opencode-ai/core/installation/version"
 import { NpmConfig } from "@opencode-ai/core/npm-config"
-// kilocode_change start
+// accurecode_change start
 import {
-  Brew as KiloBrew,
-  Choco as KiloChoco,
-  Npm as KiloNpm,
-  Release as KiloRelease,
-  Scoop as KiloScoop,
-} from "@/kilocode/installation"
-// kilocode_change end
+  Brew as AccureBrew,
+  Choco as AccureChoco,
+  Npm as AccureNpm,
+  Release as AccureRelease,
+  Scoop as AccureScoop,
+} from "@/accurecode/installation"
+// accurecode_change end
 
 const log = Log.create({ service: "installation" })
 
@@ -61,7 +61,7 @@ export const Info = Schema.Struct({
 export type Info = Schema.Schema.Type<typeof Info>
 
 export function userAgent(client = "cli") {
-  return `kilo/${InstallationChannel}/${InstallationVersion}/${client}` // kilocode_change
+  return `accure/${InstallationChannel}/${InstallationVersion}/${client}` // accurecode_change
 }
 
 export const USER_AGENT = userAgent()
@@ -149,11 +149,11 @@ export const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProce
     )
 
     const getBrewFormula = Effect.fnUntraced(function* () {
-      const tapFormula = yield* text(["brew", "list", "--formula", KiloBrew.formula]) // kilocode_change
-      if (tapFormula.includes(KiloBrew.name)) return KiloBrew.formula // kilocode_change
-      const coreFormula = yield* text(["brew", "list", "--formula", KiloBrew.name]) // kilocode_change
-      if (coreFormula.includes(KiloBrew.name)) return KiloBrew.name // kilocode_change
-      return KiloBrew.formula // kilocode_change
+      const tapFormula = yield* text(["brew", "list", "--formula", AccureBrew.formula]) // accurecode_change
+      if (tapFormula.includes(AccureBrew.name)) return AccureBrew.formula // accurecode_change
+      const coreFormula = yield* text(["brew", "list", "--formula", AccureBrew.name]) // accurecode_change
+      if (coreFormula.includes(AccureBrew.name)) return AccureBrew.name // accurecode_change
+      return AccureBrew.formula // accurecode_change
     })
 
     const upgradeFailure = (method: Method, result?: { code: number; stdout: string; stderr: string }) => {
@@ -164,7 +164,7 @@ export const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProce
 
     const upgradeCurl = Effect.fnUntraced(
       function* (target: string) {
-        const response = yield* httpOk.execute(HttpClientRequest.get(KiloRelease.install)) // kilocode_change
+        const response = yield* httpOk.execute(HttpClientRequest.get(AccureRelease.install)) // accurecode_change
         const body = yield* response.text
         const bodyBytes = new TextEncoder().encode(body)
         const result = yield* appProcess.run(
@@ -191,7 +191,7 @@ export const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProce
         }
       }),
       method: Effect.fn("Installation.method")(function* () {
-        if (process.execPath.includes(path.join(".kilo", "bin"))) return "curl" as Method // kilocode_change
+        if (process.execPath.includes(path.join(".accurecode", "bin"))) return "curl" as Method // accurecode_change
         if (process.execPath.includes(path.join(".opencode", "bin"))) return "curl" as Method
         if (process.execPath.includes(path.join(".local", "bin"))) return "curl" as Method
         const exec = process.execPath.toLowerCase()
@@ -212,16 +212,16 @@ export const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProce
           { name: "bun", command: () => text(["bun", "pm", "ls", "-g"]) },
           {
             name: "brew",
-            command: () => text(["brew", "list", "--formula", KiloBrew.formula]),
-          }, // kilocode_change
+            command: () => text(["brew", "list", "--formula", AccureBrew.formula]),
+          }, // accurecode_change
           {
             name: "scoop",
-            command: () => text(["scoop", "list", KiloScoop.name]),
-          }, // kilocode_change
+            command: () => text(["scoop", "list", AccureScoop.name]),
+          }, // accurecode_change
           {
             name: "choco",
-            command: () => text(["choco", "list", "--limit-output", KiloChoco.name]),
-          }, // kilocode_change
+            command: () => text(["choco", "list", "--limit-output", AccureChoco.name]),
+          }, // accurecode_change
         ]
 
         checks.sort((a, b) => {
@@ -234,16 +234,16 @@ export const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProce
 
         for (const check of checks) {
           const output = yield* check.command()
-          // kilocode_change start
+          // accurecode_change start
           const installedName =
             check.name === "brew"
-              ? KiloBrew.name
+              ? AccureBrew.name
               : check.name === "choco"
-                ? KiloChoco.name
+                ? AccureChoco.name
                 : check.name === "scoop"
-                  ? KiloScoop.name
-                  : KiloNpm.name
-          // kilocode_change end
+                  ? AccureScoop.name
+                  : AccureNpm.name
+          // accurecode_change end
           if (output.includes(installedName)) {
             return check.name
           }
@@ -262,7 +262,7 @@ export const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProce
             return info.formulae[0].versions.stable
           }
           const response = yield* httpOk.execute(
-            HttpClientRequest.get(KiloBrew.api).pipe(HttpClientRequest.acceptJson), // kilocode_change
+            HttpClientRequest.get(AccureBrew.api).pipe(HttpClientRequest.acceptJson), // accurecode_change
           )
           const data = yield* HttpClientResponse.schemaBodyJson(BrewFormula)(response)
           return data.versions.stable
@@ -274,10 +274,10 @@ export const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProce
           detectedMethod === "bun" ||
           detectedMethod === "pnpm"
         ) {
-          // kilocode_change
+          // accurecode_change
           const response = yield* httpOk.execute(
             HttpClientRequest.get(
-              `${yield* NpmConfig.registry(process.cwd())}/${KiloNpm.path}/${InstallationChannel}`, // kilocode_change
+              `${yield* NpmConfig.registry(process.cwd())}/${AccureNpm.path}/${InstallationChannel}`, // accurecode_change
             ).pipe(HttpClientRequest.acceptJson),
           )
           const data = yield* HttpClientResponse.schemaBodyJson(NpmPackage)(response)
@@ -287,7 +287,7 @@ export const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProce
         if (detectedMethod === "choco") {
           const response = yield* httpOk.execute(
             HttpClientRequest.get(
-              KiloChoco.api, // kilocode_change
+              AccureChoco.api, // accurecode_change
             ).pipe(
               HttpClientRequest.setHeaders({
                 Accept: "application/json;odata=verbose",
@@ -301,7 +301,7 @@ export const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProce
         if (detectedMethod === "scoop") {
           const response = yield* httpOk.execute(
             HttpClientRequest.get(
-              KiloScoop.manifest, // kilocode_change
+              AccureScoop.manifest, // accurecode_change
             ).pipe(HttpClientRequest.setHeaders({ Accept: "application/json" })),
           )
           const data = yield* HttpClientResponse.schemaBodyJson(ScoopManifest)(response)
@@ -309,7 +309,7 @@ export const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProce
         }
 
         const response = yield* httpOk.execute(
-          HttpClientRequest.get(KiloRelease.api).pipe(HttpClientRequest.acceptJson), // kilocode_change
+          HttpClientRequest.get(AccureRelease.api).pipe(HttpClientRequest.acceptJson), // accurecode_change
         )
         const data = yield* HttpClientResponse.schemaBodyJson(GitHubRelease)(response)
         return data.tag_name.replace(/^v/, "")
@@ -320,30 +320,30 @@ export const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProce
           case "curl":
             upgradeResult = yield* upgradeCurl(target)
             break
-          // kilocode_change start
+          // accurecode_change start
           case "npm":
-            upgradeResult = yield* run(["npm", "install", "-g", `${KiloNpm.name}@${target}`])
+            upgradeResult = yield* run(["npm", "install", "-g", `${AccureNpm.name}@${target}`])
             break
           case "yarn":
-            upgradeResult = yield* run(["yarn", "global", "add", `${KiloNpm.name}@${target}`])
+            upgradeResult = yield* run(["yarn", "global", "add", `${AccureNpm.name}@${target}`])
             break
-          // kilocode_change end
+          // accurecode_change end
           case "pnpm":
-            upgradeResult = yield* run(["pnpm", "install", "-g", `${KiloNpm.name}@${target}`]) // kilocode_change
+            upgradeResult = yield* run(["pnpm", "install", "-g", `${AccureNpm.name}@${target}`]) // accurecode_change
             break
           case "bun":
-            upgradeResult = yield* run(["bun", "install", "-g", `${KiloNpm.name}@${target}`]) // kilocode_change
+            upgradeResult = yield* run(["bun", "install", "-g", `${AccureNpm.name}@${target}`]) // accurecode_change
             break
           case "brew": {
             const formula = yield* getBrewFormula()
             const env = { HOMEBREW_NO_AUTO_UPDATE: "1" }
             if (formula.includes("/")) {
-              const tap = yield* run(["brew", "tap", KiloBrew.tap], { env }) // kilocode_change
+              const tap = yield* run(["brew", "tap", AccureBrew.tap], { env }) // accurecode_change
               if (tap.code !== 0) {
                 upgradeResult = tap
                 break
               }
-              const repo = yield* text(["brew", "--repo", KiloBrew.tap]) // kilocode_change
+              const repo = yield* text(["brew", "--repo", AccureBrew.tap]) // accurecode_change
               const dir = repo.trim()
               if (dir) {
                 const pull = yield* run(["git", "pull", "--ff-only"], {
@@ -360,10 +360,10 @@ export const layer: Layer.Layer<Service, never, HttpClient.HttpClient | AppProce
             break
           }
           case "choco":
-            upgradeResult = yield* run(["choco", "upgrade", KiloChoco.name, `--version=${target}`, "-y"]) // kilocode_change
+            upgradeResult = yield* run(["choco", "upgrade", AccureChoco.name, `--version=${target}`, "-y"]) // accurecode_change
             break
           case "scoop":
-            upgradeResult = yield* run(["scoop", "install", `${KiloScoop.name}@${target}`]) // kilocode_change
+            upgradeResult = yield* run(["scoop", "install", `${AccureScoop.name}@${target}`]) // accurecode_change
             break
           default:
             return yield* new UpgradeFailedError({

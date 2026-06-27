@@ -72,22 +72,22 @@ describe("CodeIndexConfigManager", () => {
     expect(cfg.getConfig().vectorStoreProvider).toBe("qdrant")
   })
 
-  test("configures Kilo with hosted auth options and explicit model metadata", () => {
+  test("configures Accure with hosted auth options and explicit model metadata", () => {
     const cfg = new CodeIndexConfigManager(
       createInput({
-        embedderProvider: "kilo",
+        embedderProvider: "accure",
         openAiKey: undefined,
-        kiloApiKey: "kilo-token",
-        kiloBaseUrl: "https://example.test/api/gateway/",
-        kiloOrganizationId: "org_123",
+        accureApiKey: "accure-token",
+        accureBaseUrl: "https://example.test/api/gateway/",
+        accureOrganizationId: "org_123",
         modelId: "mistralai/mistral-embed-2312",
         modelDimension: 1024,
       }),
     )
 
     expect(cfg.isFeatureConfigured).toBe(true)
-    expect(cfg.getConfig().kiloOptions).toEqual({
-      apiKey: "kilo-token",
+    expect(cfg.getConfig().accureOptions).toEqual({
+      apiKey: "accure-token",
       baseUrl: "https://example.test/api/gateway/",
       organizationId: "org_123",
     })
@@ -95,12 +95,12 @@ describe("CodeIndexConfigManager", () => {
     expect(cfg.currentModelDimension).toBe(1024)
   })
 
-  test("requires Kilo model metadata from Cloud config", () => {
+  test("requires Accure model metadata from Cloud config", () => {
     const cfg = new CodeIndexConfigManager(
       createInput({
-        embedderProvider: "kilo",
+        embedderProvider: "accure",
         openAiKey: undefined,
-        kiloApiKey: "kilo-token",
+        accureApiKey: "accure-token",
       }),
     )
 
@@ -109,12 +109,12 @@ describe("CodeIndexConfigManager", () => {
     expect(cfg.currentModelDimension).toBeUndefined()
   })
 
-  test("uses configured dimension for Kilo models outside the fallback catalog", () => {
+  test("uses configured dimension for Accure models outside the fallback catalog", () => {
     const cfg = new CodeIndexConfigManager(
       createInput({
-        embedderProvider: "kilo",
+        embedderProvider: "accure",
         openAiKey: undefined,
-        kiloApiKey: "kilo-token",
+        accureApiKey: "accure-token",
         modelId: "custom/model",
         modelDimension: 2048,
       }),
@@ -183,12 +183,12 @@ describe("CodeIndexConfigManager", () => {
       expect(cfg.loadConfiguration(input).requiresRestart).toBe(false)
     })
 
-    test("requires restart when Kilo auth changes", () => {
+    test("requires restart when Accure auth changes", () => {
       const cfg = new CodeIndexConfigManager(
         createInput({
-          embedderProvider: "kilo",
+          embedderProvider: "accure",
           openAiKey: undefined,
-          kiloApiKey: "old-token",
+          accureApiKey: "old-token",
           modelId: "mistralai/mistral-embed-2312",
           modelDimension: 1024,
         }),
@@ -196,9 +196,9 @@ describe("CodeIndexConfigManager", () => {
 
       const result = cfg.loadConfiguration(
         createInput({
-          embedderProvider: "kilo",
+          embedderProvider: "accure",
           openAiKey: undefined,
-          kiloApiKey: "new-token",
+          accureApiKey: "new-token",
           modelId: "mistralai/mistral-embed-2312",
           modelDimension: 1024,
         }),

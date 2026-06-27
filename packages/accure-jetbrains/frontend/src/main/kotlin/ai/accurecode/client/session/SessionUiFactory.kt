@@ -1,10 +1,10 @@
-package ai.kilocode.client.session
+package ai.accurecode.client.session
 
-import ai.kilocode.client.app.KiloAppService
-import ai.kilocode.client.app.KiloSessionService
-import ai.kilocode.client.app.Workspace
-import ai.kilocode.client.util.UiTimerSource
-import ai.kilocode.client.util.UiTimers
+import ai.accurecode.client.app.AccureAppService
+import ai.accurecode.client.app.AccureSessionService
+import ai.accurecode.client.app.Workspace
+import ai.accurecode.client.util.UiTimerSource
+import ai.accurecode.client.util.UiTimers
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
@@ -25,8 +25,8 @@ class SessionUiFactory(
     ): SessionUi = SessionUi(
         project = project,
         workspace = workspace,
-        sessions = project.service<KiloSessionService>(),
-        app = service<KiloAppService>(),
+        sessions = project.service<AccureSessionService>(),
+        app = service<AccureAppService>(),
         cs = scope(),
         ref = ref,
         manager = manager,

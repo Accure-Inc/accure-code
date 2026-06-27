@@ -60,7 +60,7 @@ export const dict = {
 
   "dialog.usageExceeded.freeTier.title": "Ücretsiz sınıra ulaşıldı",
   "dialog.usageExceeded.freeTier.description":
-    "En iyi açık kaynak modellere güvenilir erişim için Kilo Go'ya abone olun. Aylık $5'tan başlar.",
+    "En iyi açık kaynak modellere güvenilir erişim için Accure Go'ya abone olun. Aylık $5'tan başlar.",
   "dialog.usageExceeded.freeTier.actionLabel": "Abone ol",
   "dialog.usageExceeded.accountRateLimit.title": "Go sınırına ulaşıldı",
   "dialog.usageExceeded.accountRateLimit.description":
@@ -111,7 +111,7 @@ export const dict = {
   "ui.textField.copied": "Kopyalandı",
 
   "ui.imagePreview.alt": "Görsel önizleme",
-  // kilocode_change start
+  // accurecode_change start
   "ui.mermaid.rendering": "Mermaid diyagramı işleniyor...",
   "ui.mermaid.renderError": "Mermaid işleme başarısız: {{message}}",
   "ui.mermaid.errorDefault": "Mermaid diyagramı işlenemiyor.",
@@ -122,7 +122,7 @@ export const dict = {
   "ui.mermaid.copyPng": "PNG kopyala",
   "ui.mermaid.downloadSvg": "SVG indir",
   "ui.mermaid.downloadPng": "PNG indir",
-  // kilocode_change end
+  // accurecode_change end
   "ui.scrollView.ariaLabel": "kaydırılabilir içerik",
 
   "ui.tool.read": "Oku",

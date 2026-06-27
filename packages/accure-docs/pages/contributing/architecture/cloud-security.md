@@ -1,14 +1,14 @@
 ---
-title: "Kilo Cloud Security Architecture"
-description: "Security architecture overview for Kilo Cloud"
+title: "Accure Cloud Security Architecture"
+description: "Security architecture overview for Accure Cloud"
 ---
 
-# Kilo Cloud Security Architecture
+# Accure Cloud Security Architecture
 
-This page gives contributors and customer security reviewers a high-level view of Kilo Cloud security architecture. It covers logical topology, trust boundaries, data flows, persistence, execution isolation, external integrations, and shared responsibility.
+This page gives contributors and customer security reviewers a high-level view of Accure Cloud security architecture. It covers logical topology, trust boundaries, data flows, persistence, execution isolation, external integrations, and shared responsibility.
 
 {% callout type="info" title="Static source scope" %}
-This overview is based on deployable code and configuration in open-source `Kilo-Org/cloud` repository. Static source does not prove live production enablement, rollout percentages, exact regions, retention enforcement, backup policy, WAF rules, credential rotation, or vendor settings. Validate those against live production inventory before making contractual, production, or compliance claims.
+This overview is based on deployable code and configuration in open-source `Accure-Org/cloud` repository. Static source does not prove live production enablement, rollout percentages, exact regions, retention enforcement, backup policy, WAF rules, credential rotation, or vendor settings. Validate those against live production inventory before making contractual, production, or compliance claims.
 {% /callout %}
 
 {% callout type="info" title="How to use this page" %}
@@ -17,7 +17,7 @@ Cloud contributors should read [Cloud Platform](/docs/contributing/architecture/
 
 ## Executive overview
 
-Kilo Cloud combines web control plane with Cloudflare-hosted services and scoped execution environments.
+Accure Cloud combines web control plane with Cloudflare-hosted services and scoped execution environments.
 
 - Browser, editor, and mobile clients connect to public application, gateway, and event surfaces.
 - Vercel-hosted Next.js application provides account management, organization authorization, billing, product configuration, and API orchestration.
@@ -25,7 +25,7 @@ Kilo Cloud combines web control plane with Cloudflare-hosted services and scoped
 - Managed PostgreSQL stores relational control-plane records. Durable Objects, queues, KV, R2, and feature-specific analytical stores hold scoped state.
 - Cloud Agent coding sessions run in Cloudflare sandbox containers with session-specific workspaces and policy-selected sandbox allocation.
 - Generated-app preview and deployment builds run in boundaries separate from Cloud Agent coding sessions.
-- KiloClaw assistant instances run in owner-scoped provider-backed runtimes with instance-scoped storage and encrypted configuration delivery.
+- AccureClaw assistant instances run in owner-scoped provider-backed runtimes with instance-scoped storage and encrypted configuration delivery.
 - Gas Town binds to Wasteland as separate multi-agent orchestration boundary.
 
 ## Logical topology
@@ -48,7 +48,7 @@ flowchart LR
   subgraph control["Control and service layer"]
     web["Web and API application"]
     workers["Cloud service Workers"]
-    chat["Kilo Chat / Event Service / Notifications"]
+    chat["Accure Chat / Event Service / Notifications"]
     async["Queues and Durable Objects"]
   end
 
@@ -56,7 +56,7 @@ flowchart LR
     agent["Cloud Agent policy-selected sandbox"]
     preview["App Builder preview sandbox"]
     build["Deployment builder sandbox"]
-    claw["Owner-scoped KiloClaw runtime"]
+    claw["Owner-scoped AccureClaw runtime"]
     town["Gas Town Town container"]
     wasteland["Wasteland commons boundary"]
   end
@@ -110,7 +110,7 @@ flowchart LR
 | Cloud Agent execution | Policy-selected sandbox containers with session-specific workspace and home directory |
 | Generated-app preview | App Builder preview `Sandbox` container reached through preview routing |
 | Generated-app deployment | Deployment builder `Sandbox` container plus dispatcher public wildcard ingress |
-| KiloClaw execution | Owner-scoped provider-backed runtime with persistent storage |
+| AccureClaw execution | Owner-scoped provider-backed runtime with persistent storage |
 | Gas Town and Wasteland | Town-owned container execution plus separate collaborative commons Worker |
 | External providers | Third-party trust boundaries invoked by enabled capabilities |
 
@@ -126,15 +126,15 @@ flowchart LR
 | Control plane to generated-app preview | Generated source and preview request traffic | App Builder `PreviewDO`, preview routing, bearer-protected status APIs, and separate preview sandbox |
 | Control plane to deployment builder | Generated source and build input | `DeploymentOrchestrator`, build sandbox container, and deployment event callbacks |
 | Internet to deployed applications | Public wildcard deployed-app requests | Dispatcher routes, dispatch namespace, KV mappings, and dispatcher rate limit |
-| Control plane to KiloClaw runtime | Owner routing, config, proxy traffic, and machine lifecycle | JWT auth, one-time code redemption, derived gateway tokens, machine API keys, Durable Object owner scope, and encrypted config delivery |
+| Control plane to AccureClaw runtime | Owner routing, config, proxy traffic, and machine lifecycle | JWT auth, one-time code redemption, derived gateway tokens, machine API keys, Durable Object owner scope, and encrypted config delivery |
 | Gas Town to Wasteland | Collaborative orchestration operations | `WASTELAND_SERVICE` binding and separate Wasteland Durable Objects |
-| Kilo Cloud to third parties | Repository operations, model requests, billing, notifications, and telemetry | Provider credentials, opt-in where applicable, scoped tokens, and feature-specific routing |
+| Accure Cloud to third parties | Repository operations, model requests, billing, notifications, and telemetry | Provider credentials, opt-in where applicable, scoped tokens, and feature-specific routing |
 
 ## Identity and access
 
 Web control plane uses JWT-backed application sessions and supports multiple sign-in methods. Repository-supported providers include Google, Apple, GitHub, GitLab, Discord, LinkedIn OpenID Connect, WorkOS enterprise SSO, and email magic links.
 
-Kilo Cloud uses several authorization contexts:
+Accure Cloud uses several authorization contexts:
 
 - Browser sessions for web product use.
 - Signed bearer tokens for non-browser clients and selected cloud services.
@@ -144,7 +144,7 @@ Kilo Cloud uses several authorization contexts:
 - Short-lived one-time Event Service connection tickets.
 - Provider-specific signature or token checks on supported external ingress.
 
-Application records commonly scope to user or organization. Cloud Agent durable state scopes to session while sandbox allocation remains policy-selected. KiloClaw runtime scopes to owner or instance rather than global assistant process.
+Application records commonly scope to user or organization. Cloud Agent durable state scopes to session while sandbox allocation remains policy-selected. AccureClaw runtime scopes to owner or instance rather than global assistant process.
 
 ## Data and persistence
 
@@ -155,7 +155,7 @@ Application records commonly scope to user or organization. Cloud Agent durable 
 | Billing | Customer IDs, subscription state, transaction references, and invoices | Entitlement, reconciliation, and financial record keeping |
 | Usage and operations | Model, token counts, costs, feature status, session IDs, timestamps, and error summaries | Metering, support, and reliability |
 | Repository and automation | Repository metadata, refs, issue or review context, webhook payloads, and findings | Source control, Cloud Agent work, review automation, and security features |
-| AI and session content | Prompts, responses, conversation history, attachments, and session events | Inference, Cloud Agent sessions, KiloClaw, and enabled experiments |
+| AI and session content | Prompts, responses, conversation history, attachments, and session events | Inference, Cloud Agent sessions, AccureClaw, and enabled experiments |
 | Integration config | OAuth metadata, provider config, webhook settings, and customer secrets | Enabled integrations and owner-scoped runtime config |
 | Network and abuse telemetry | IP address, user agent, browser signals, and risk metadata | Abuse prevention, fraud controls, and investigation |
 | Mobile and notification | Device tokens, notification status, and mobile-store transaction metadata | Mobile auth, subscriptions, and notifications |
@@ -168,7 +168,7 @@ Application records commonly scope to user or organization. Cloud Agent durable 
 | R2 | Session blobs, attachments, feature assets, templates, and telemetry export | Bucket lifecycle, encryption, residency, and deletion require live validation |
 | KV | Cache, rollout, mapping, and dedup state | Not strongly consistent authority |
 | Analytical stores | Analytics Engine datasets, Pipeline export, and optional specialized stores | Active providers and retention require live validation |
-| Runtime storage | Owner-scoped KiloClaw workspace and config persistence | Separate execution boundary tied to assigned runtime provider |
+| Runtime storage | Owner-scoped AccureClaw workspace and config persistence | Separate execution boundary tied to assigned runtime provider |
 
 ## Core data flows
 
@@ -272,7 +272,7 @@ sequenceDiagram
   participant Ticket as Event Service ticket API
   participant Events as Event Service
   participant Session as UserSessionDO
-  participant Chat as Kilo Chat conversation-state DOs
+  participant Chat as Accure Chat conversation-state DOs
   participant Notify as NotificationChannelDO
   participant Expo
   participant Queue as Receipt queue
@@ -296,9 +296,9 @@ sequenceDiagram
   end
 ```
 
-Kilo Chat binds to Event Service and Notifications. Event Service consumes one-time tickets before WebSocket upgrade and places connections in per-user Durable Objects. Notifications service uses per-user Durable Objects, checks presence context for conversation pushes, sends Expo push, and processes delayed receipts. See [Chat, events, and notifications](/docs/contributing/architecture/cloud-platform#chat-events-and-notifications) for canonical service topology.
+Accure Chat binds to Event Service and Notifications. Event Service consumes one-time tickets before WebSocket upgrade and places connections in per-user Durable Objects. Notifications service uses per-user Durable Objects, checks presence context for conversation pushes, sends Expo push, and processes delayed receipts. See [Chat, events, and notifications](/docs/contributing/architecture/cloud-platform#chat-events-and-notifications) for canonical service topology.
 
-### KiloClaw ingress
+### AccureClaw ingress
 
 ```mermaid
 flowchart TB
@@ -307,22 +307,22 @@ flowchart TB
     browser["Browser request"] --> jwt["JWT validation"]
     code["One-time code"] --> access["Access gateway form"]
     machine["Runtime machine"] --> machineAuth["API key + gateway token"]
-    chat["Kilo Chat RPC binding"]
+    chat["Accure Chat RPC binding"]
     email["Cloudflare Email Routing"] --> parse["Alias lookup + bounded parse"]
     gmail["Gmail Pub/Sub push"] --> oidc["Google OIDC validation"]
   end
 
-  subgraph coordination ["KiloClaw coordination"]
+  subgraph coordination ["AccureClaw coordination"]
     direction LR
-    proxy["KiloClaw proxy"]
+    proxy["AccureClaw proxy"]
     scope["Resolve owner or instance scope"]
     instance["Owner- or instance-scoped<br/>Durable Object"]
     redeem["Hyperdrive-backed redemption<br/>Auth cookie + derived gateway token"]
     controller["/api/controller/checkin"]
     emailQueue["Inbound email queue"]
     gmailQueue["Gmail delivery queue"]
-    platform["KiloClaw platform delivery"]
-    controllerDelivery["KiloClaw controller delivery"]
+    platform["AccureClaw platform delivery"]
+    controllerDelivery["AccureClaw controller delivery"]
   end
 
   runtime["Provider-backed runtime"]
@@ -338,7 +338,7 @@ flowchart TB
   scope --> ui
 ```
 
-KiloClaw separates lifecycle coordination from runtime process. Fly is provider path and legacy fallback, docker-local supports development, and Northflank support exists in provider model. Active rollout must be checked in live environment. See [KiloClaw](/docs/contributing/architecture/cloud-platform#kiloclaw) for canonical runtime topology.
+AccureClaw separates lifecycle coordination from runtime process. Fly is provider path and legacy fallback, docker-local supports development, and Northflank support exists in provider model. Active rollout must be checked in live environment. See [AccureClaw](/docs/contributing/architecture/cloud-platform#accureclaw) for canonical runtime topology.
 
 ### Gas Town and Wasteland
 
@@ -374,8 +374,8 @@ Higher-order agent outcome analysis is roadmap work unless separate source prove
 | Authorization | User, organization, role, owner, instance, and administrative checks by operation |
 | Abuse prevention | Turnstile, fraud telemetry, blocking logic, free-model limits, bounded external payload handling, and deployment threat scanning |
 | Internal service separation | Service bindings, callback tokens, and service credentials separate public access from orchestration |
-| Execution isolation | Cloud Agent workspaces, preview sandbox, deployment builder sandbox, town container, and owner-scoped KiloClaw runtimes |
-| Secret handling | Protected config storage, encrypted delivery for supported runtime secrets, fail-closed KiloClaw bootstrap, and sensitive-log prohibitions |
+| Execution isolation | Cloud Agent workspaces, preview sandbox, deployment builder sandbox, town container, and owner-scoped AccureClaw runtimes |
+| Secret handling | Protected config storage, encrypted delivery for supported runtime secrets, fail-closed AccureClaw bootstrap, and sensitive-log prohibitions |
 | Privacy | Soft-delete and anonymization workflows, webhook-header redaction, explicit experiment paths, and purpose-specific retention paths |
 | Reliability | Durable coordination, queues, retries, dead-letter patterns, idempotency handling, and reconciliation |
 | Browser hardening | HSTS, framing restrictions, MIME protection, referrer policy, cross-origin policies, permissions restrictions, and configurable CSP |
@@ -401,7 +401,7 @@ Higher-order agent outcome analysis is roadmap work unless separate source prove
 
 ## Privacy logging and retention
 
-Kilo Cloud includes user soft-delete flows that anonymize direct user PII, invalidate auth material, delete many user-owned records and integrations, remove selected object-storage content, and request deletion from selected downstream services. Financial, audit, anti-abuse, and product-specific records can have retention exceptions.
+Accure Cloud includes user soft-delete flows that anonymize direct user PII, invalidate auth material, delete many user-owned records and integrations, remove selected object-storage content, and request deletion from selected downstream services. Financial, audit, anti-abuse, and product-specific records can have retention exceptions.
 
 Operational telemetry can contain customer-linked identifiers and diagnostic content. Telemetry-enabled product surfaces can also submit assistant-response feedback with limited correlation metadata. Production access, filtering, retention, and vendor config remain required review areas. Pay special attention to deployment-builder Sentry payloads, mobile diagnostics, replay masking, screenshots, object storage, Durable Object state, vector stores, analytical stores, runtime volumes, and backups.
 
@@ -409,7 +409,7 @@ Data paths vary by product and enabled integration. State residency and retentio
 
 ## Shared responsibility
 
-Kilo Cloud provides platform controls for auth, scoped authorization, internal-service separation, durable coordination, execution isolation, and protected handling of supported secrets.
+Accure Cloud provides platform controls for auth, scoped authorization, internal-service separation, durable coordination, execution isolation, and protected handling of supported secrets.
 
 Customers remain responsible for decisions that expand enabled trust boundaries:
 

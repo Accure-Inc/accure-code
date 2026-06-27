@@ -12,8 +12,8 @@ import { commitMessageHandlers } from "./handlers/commit-message"
 import { configConsoleHandlers } from "./handlers/config-console"
 import { enhancePromptHandlers } from "./handlers/enhance-prompt"
 import { indexingHandlers } from "./handlers/indexing"
-import { kiloGatewayHandlers } from "./handlers/accure-gateway"
-import { kilocodeHandlers } from "./handlers/kilocode"
+import { accureGatewayHandlers } from "./handlers/accure-gateway"
+import { accurecodeHandlers } from "./handlers/accurecode"
 import { networkHandlers } from "./handlers/network"
 import { remoteHandlers } from "./handlers/remote"
 import { sessionImportHandlers } from "./handlers/session-import"
@@ -27,8 +27,8 @@ export const provide = Layer.provide([
   configConsoleHandlers,
   enhancePromptHandlers,
   indexingHandlers,
-  kiloGatewayHandlers,
-  kilocodeHandlers,
+  accureGatewayHandlers,
+  accurecodeHandlers,
   networkHandlers,
   remoteHandlers,
   sessionImportHandlers,

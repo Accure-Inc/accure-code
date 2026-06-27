@@ -1,11 +1,11 @@
 import { describe, expect, test } from "bun:test"
 import { Effect, Stream } from "effect"
 import { LLMEvent } from "@opencode-ai/llm"
-import { KiloLLM } from "@/kilocode/session/llm"
+import { AccureLLM } from "@/accurecode/session/llm"
 
-describe("kilocode.session.llm.timeout", () => {
+describe("accurecode.session.llm.timeout", () => {
   test("uses prepared options before the provider fallback", () => {
-    const result = KiloLLM.timeout({
+    const result = AccureLLM.timeout({
       options: { chunkTimeout: 15_000 },
       fallback: { chunkTimeout: 30_000 },
     })
@@ -14,7 +14,7 @@ describe("kilocode.session.llm.timeout", () => {
   })
 
   test("uses the provider fallback when prepared options omit the timeout", () => {
-    const result = KiloLLM.timeout({
+    const result = AccureLLM.timeout({
       options: {},
       fallback: { chunkTimeout: 30_000 },
     })
@@ -23,7 +23,7 @@ describe("kilocode.session.llm.timeout", () => {
   })
 
   test("uses the provider fallback when the prepared value is not a number", () => {
-    const result = KiloLLM.timeout({
+    const result = AccureLLM.timeout({
       options: { chunkTimeout: "15_000" },
       fallback: { chunkTimeout: 30_000 },
     })
@@ -32,14 +32,14 @@ describe("kilocode.session.llm.timeout", () => {
   })
 
   test("omits the timeout when it is not configured", () => {
-    expect(KiloLLM.timeout({ options: {} })).toEqual({})
+    expect(AccureLLM.timeout({ options: {} })).toEqual({})
   })
 })
 
-describe("kilocode.session.llm.text", () => {
+describe("accurecode.session.llm.text", () => {
   test("joins text delta events", async () => {
     const out = await Effect.runPromise(
-      KiloLLM.text(
+      AccureLLM.text(
         Stream.make(
           LLMEvent.textDelta({ id: "text", text: "hello " }),
           LLMEvent.textDelta({ id: "text", text: "world" }),
@@ -52,7 +52,7 @@ describe("kilocode.session.llm.text", () => {
 
   test("fails on stream errors after partial text", async () => {
     const err = new Error("provider unavailable")
-    const text = KiloLLM.text(
+    const text = AccureLLM.text(
       Stream.concat(Stream.make(LLMEvent.textDelta({ id: "text", text: "partial" })), Stream.fail(err)),
     )
 
@@ -60,7 +60,7 @@ describe("kilocode.session.llm.text", () => {
   })
 
   test("fails on stream interruption", async () => {
-    const text = KiloLLM.text(Stream.fail(new DOMException("Aborted", "AbortError")))
+    const text = AccureLLM.text(Stream.fail(new DOMException("Aborted", "AbortError")))
 
     await expect(Effect.runPromise(text)).rejects.toMatchObject({ name: "AbortError" })
   })

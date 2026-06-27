@@ -2,7 +2,7 @@ import type { PermissionConfig } from "./permissions"
 import type { AgentConfig } from "./agents"
 import type { ProviderConfig } from "./providers"
 
-type SdkIndexingStatus = import("@kilocode/sdk/v2/client").IndexingStatus
+type SdkIndexingStatus = import("@accurecode/sdk/v2/client").IndexingStatus
 
 export interface McpConfig {
   type?: "local" | "remote"
@@ -51,7 +51,7 @@ export interface CommitMessageConfig {
 }
 
 export type IndexingProvider =
-  | "kilo"
+  | "accure"
   | "openai"
   | "ollama"
   | "openai-compatible"
@@ -68,7 +68,7 @@ export interface IndexingConfig {
   model?: string | null
   dimension?: number | null
   vectorStore?: "lancedb" | "qdrant"
-  kilo?: { apiKey?: string; baseUrl?: string; organizationId?: string }
+  accure?: { apiKey?: string; baseUrl?: string; organizationId?: string }
   openai?: { apiKey?: string }
   ollama?: { baseUrl?: string }
   "openai-compatible"?: { baseUrl?: string; apiKey?: string }
@@ -86,7 +86,7 @@ export interface IndexingConfig {
   scannerMaxBatchRetries?: number
 }
 
-export type KiloEmbeddingModel = {
+export type AccureEmbeddingModel = {
   id: string
   name: string
   dimension: number
@@ -94,9 +94,9 @@ export type KiloEmbeddingModel = {
   note?: string
 }
 
-export type KiloEmbeddingModelCatalog = {
+export type AccureEmbeddingModelCatalog = {
   defaultModel: string
-  models: KiloEmbeddingModel[]
+  models: AccureEmbeddingModel[]
   aliases: Record<string, string>
 }
 

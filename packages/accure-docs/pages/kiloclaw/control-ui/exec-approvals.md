@@ -1,6 +1,6 @@
 ---
 title: "Exec Approvals"
-description: "Control which commands your KiloClaw agent can run on the host machine"
+description: "Control which commands your AccureClaw agent can run on the host machine"
 ---
 
 # Exec Approvals
@@ -25,13 +25,13 @@ Approvals are enforced locally on the execution host and sit on top of tool poli
 
 ## Allow Everything from Settings
 
-If you want to skip per-command approvals entirely, you can set the security policy to **Allow Everything** directly from the [KiloClaw Settings dashboard](https://app.kilo.ai/claw/settings). This applies the `full` policy globally, allowing your agent to execute any host command without prompts — equivalent to elevated mode.
+If you want to skip per-command approvals entirely, you can set the security policy to **Allow Everything** directly from the [AccureClaw Settings dashboard](https://app.accurecode.ai/claw/settings). This applies the `full` policy globally, allowing your agent to execute any host command without prompts — equivalent to elevated mode.
 
 {% callout type="warning" %}
 Enabling **Allow Everything** removes all exec safety checks. Only use this in trusted environments where you are comfortable with your agent running arbitrary commands.
 {% /callout %}
 
-{% image src="/docs/img/kiloclaw/allow-everything-settings.png" alt="Allow Everything setting in KiloClaw Settings Dashboard" width="800" caption="The Allow Everything toggle in KiloClaw Settings" /%}
+{% image src="/docs/img/accureclaw/allow-everything-settings.png" alt="Allow Everything setting in AccureClaw Settings Dashboard" width="800" caption="The Allow Everything toggle in AccureClaw Settings" /%}
 
 ## Ask Behavior
 

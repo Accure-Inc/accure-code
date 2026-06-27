@@ -18,9 +18,9 @@ describe("loadIgnore", () => {
     await rm(root, { recursive: true, force: true })
   })
 
-  test("loads root .kilocodeignore in addition to root .gitignore", async () => {
+  test("loads root .accurecodeignore in addition to root .gitignore", async () => {
     await writeFile(path.join(root, ".gitignore"), "dist/\n")
-    await writeFile(path.join(root, ".kilocodeignore"), "secret/\n")
+    await writeFile(path.join(root, ".accurecodeignore"), "secret/\n")
 
     const ig = await loadIgnore(root)
 
@@ -29,7 +29,7 @@ describe("loadIgnore", () => {
     expect(ig.ignores("src/app.ts")).toBe(false)
   })
 
-  test("preserves existing .gitignore-only behavior when .kilocodeignore is absent", async () => {
+  test("preserves existing .gitignore-only behavior when .accurecodeignore is absent", async () => {
     await writeFile(path.join(root, ".gitignore"), "coverage/\n")
 
     const ig = await loadIgnore(root)
@@ -40,11 +40,11 @@ describe("loadIgnore", () => {
 
   test("ignores the ignore files themselves", async () => {
     await writeFile(path.join(root, ".gitignore"), "dist/\n")
-    await writeFile(path.join(root, ".kilocodeignore"), "secret/\n")
+    await writeFile(path.join(root, ".accurecodeignore"), "secret/\n")
 
     const ig = await loadIgnore(root)
 
     expect(ig.ignores(".gitignore")).toBe(true)
-    expect(ig.ignores(".kilocodeignore")).toBe(true)
+    expect(ig.ignores(".accurecodeignore")).toBe(true)
   })
 })

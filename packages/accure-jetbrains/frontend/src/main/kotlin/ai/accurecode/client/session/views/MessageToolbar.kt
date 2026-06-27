@@ -1,6 +1,6 @@
-package ai.kilocode.client.session.views
+package ai.accurecode.client.session.views
 
-import ai.kilocode.client.session.ui.selection.SessionCopyButton
+import ai.accurecode.client.session.ui.selection.SessionCopyButton
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import java.awt.BorderLayout
 import java.awt.Graphics

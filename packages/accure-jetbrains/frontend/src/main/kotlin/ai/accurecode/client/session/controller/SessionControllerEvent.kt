@@ -1,10 +1,10 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.model.SessionModel
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.rpc.dto.KiloAppStatusDto
-import ai.kilocode.rpc.dto.ProfileDto
-import ai.kilocode.rpc.dto.SessionDto
+import ai.accurecode.client.session.model.SessionModel
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.rpc.dto.AccureAppStatusDto
+import ai.accurecode.rpc.dto.ProfileDto
+import ai.accurecode.rpc.dto.SessionDto
 
 /**
  * Lifecycle events fired by [SessionController] on the EDT.
@@ -37,7 +37,7 @@ sealed class SessionControllerEvent {
     }
 
     data class AccountOverlaySnapshot(
-        val status: KiloAppStatusDto,
+        val status: AccureAppStatusDto,
         val profile: ProfileDto?,
         val transient: Boolean = false,
         val switching: Boolean = false,

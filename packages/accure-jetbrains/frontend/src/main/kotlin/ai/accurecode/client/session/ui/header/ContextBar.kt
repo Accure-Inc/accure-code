@@ -1,9 +1,9 @@
-package ai.kilocode.client.session.ui.header
+package ai.accurecode.client.session.ui.header
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.ContextUsage
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.ContextUsage
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.JBUI
 import java.awt.BorderLayout
@@ -88,9 +88,9 @@ private data class ContextData(
     val output: Long,
 ) {
     fun tip(): String {
-        val lines = mutableListOf(KiloBundle.message("session.header.context.used", num(used), num(limit)))
-        if (output > 0) lines.add(KiloBundle.message("session.header.context.reserved", num(output)))
-        if (available > 0) lines.add(KiloBundle.message("session.header.context.available", num(available)))
+        val lines = mutableListOf(AccureBundle.message("session.header.context.used", num(used), num(limit)))
+        if (output > 0) lines.add(AccureBundle.message("session.header.context.reserved", num(output)))
+        if (available > 0) lines.add(AccureBundle.message("session.header.context.available", num(available)))
         return lines.joinToString("\n")
     }
 }

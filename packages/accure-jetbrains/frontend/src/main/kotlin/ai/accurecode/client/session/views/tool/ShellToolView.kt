@@ -1,18 +1,18 @@
-package ai.kilocode.client.session.views.tool
+package ai.accurecode.client.session.views.tool
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.model.Tool
-import ai.kilocode.client.session.ui.selection.SessionSelection
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.base.SecondarySessionPartView
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.client.ui.md.MdCodeBlockBorder
-import ai.kilocode.client.ui.md.MdCodeBlockFactory
-import ai.kilocode.client.ui.md.MdCodeBlockOptions
-import ai.kilocode.client.ui.md.MdViewFactory
-import ai.kilocode.client.ui.md.hybrid.MdTerminal
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.model.Tool
+import ai.accurecode.client.session.ui.selection.SessionSelection
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.base.SecondarySessionPartView
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.client.ui.md.MdCodeBlockBorder
+import ai.accurecode.client.ui.md.MdCodeBlockFactory
+import ai.accurecode.client.ui.md.MdCodeBlockOptions
+import ai.accurecode.client.ui.md.MdViewFactory
+import ai.accurecode.client.ui.md.hybrid.MdTerminal
 import com.intellij.openapi.actionSystem.DataSink
 import com.intellij.openapi.actionSystem.UiDataProvider
 import com.intellij.openapi.Disposable
@@ -285,9 +285,9 @@ private data class ShellContent(
     val body: String = listOf(command, output, error).filter { it.isNotBlank() }.joinToString("\n\n")
 
     val markdown: String = buildString {
-        section(KiloBundle.message("session.part.tool.shell.command"), command, "shell-command")
-        section(KiloBundle.message("session.part.tool.shell.output"), rawOutput, outputLang(rawOutput))
-        section(KiloBundle.message("session.part.tool.shell.error"), rawError, "ansi-stderr")
+        section(AccureBundle.message("session.part.tool.shell.command"), command, "shell-command")
+        section(AccureBundle.message("session.part.tool.shell.output"), rawOutput, outputLang(rawOutput))
+        section(AccureBundle.message("session.part.tool.shell.error"), rawError, "ansi-stderr")
     }
 }
 

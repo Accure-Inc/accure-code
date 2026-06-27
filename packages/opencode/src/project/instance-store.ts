@@ -5,7 +5,7 @@ import { InstanceRef } from "@/effect/instance-ref"
 import { disposeInstance as runDisposers } from "@/effect/instance-registry"
 import { AppFileSystem } from "@opencode-ai/core/filesystem"
 import { Context, Deferred, Duration, Effect, Exit, Layer, Scope } from "effect"
-import { context as instanceContext, type InstanceContext } from "./instance-context" // kilocode_change
+import { context as instanceContext, type InstanceContext } from "./instance-context" // accurecode_change
 import { InstanceBootstrap } from "./bootstrap-service"
 import * as Project from "./project"
 
@@ -55,11 +55,11 @@ export const layer: Layer.Layer<Service, never, Project.Service | InstanceBootst
                   project: result.project,
                 })),
               )
-        // kilocode_change start - run bootstrap inside the Instance ALS so KilocodeBootstrap
+        // accurecode_change start - run bootstrap inside the Instance ALS so AccurecodeBootstrap
         // (and anything it forks via Effect.forkDetach) sees Instance.directory.
         const ready = bootstrap.run.pipe(Effect.provideService(InstanceRef, ctx)) as Effect.Effect<void>
         yield* Effect.promise(() => instanceContext.provide(ctx, () => Effect.runPromise(ready)))
-        // kilocode_change end
+        // accurecode_change end
         return ctx
       }).pipe(Effect.withSpan("InstanceStore.boot"))
 
@@ -94,7 +94,7 @@ export const layer: Layer.Layer<Service, never, Project.Service | InstanceBootst
 
     const disposeContext = Effect.fn("InstanceStore.disposeContext")(function* (ctx: InstanceContext) {
       yield* Effect.logInfo("disposing instance").pipe(Effect.annotateLogs("directory", ctx.directory))
-      yield* Effect.promise(() => instanceContext.provide(ctx, () => runDisposers(ctx.directory))) // kilocode_change
+      yield* Effect.promise(() => instanceContext.provide(ctx, () => runDisposers(ctx.directory))) // accurecode_change
       yield* emitDisposed({ directory: ctx.directory, project: ctx.project.id })
     })
 
@@ -134,14 +134,14 @@ export const layer: Layer.Layer<Service, never, Project.Service | InstanceBootst
           yield* Effect.gen(function* () {
             yield* Effect.logInfo("reloading instance").pipe(Effect.annotateLogs("directory", directory))
             if (previous) {
-              // kilocode_change start - dispose reloads under the previous instance context
+              // accurecode_change start - dispose reloads under the previous instance context
               const exit = yield* Deferred.await(previous.deferred).pipe(Effect.exit)
               yield* Effect.promise(() =>
                 Exit.isSuccess(exit)
                   ? instanceContext.provide(exit.value, () => runDisposers(directory))
                   : runDisposers(directory),
               )
-              // kilocode_change end
+              // accurecode_change end
               yield* emitDisposed({ directory, project: input.project?.id })
             }
             yield* completeLoad(directory, input, entry)

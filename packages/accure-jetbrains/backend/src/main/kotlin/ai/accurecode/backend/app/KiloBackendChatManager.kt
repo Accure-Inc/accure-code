@@ -1,19 +1,19 @@
-package ai.kilocode.backend.app
+package ai.accurecode.backend.app
 
-import ai.kilocode.backend.cli.KiloCliDataParser
-import ai.kilocode.log.ChatLogSummary
-import ai.kilocode.log.KiloLog
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.ConfigUpdateDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.ModelSelectionDto
-import ai.kilocode.rpc.dto.PermissionAlwaysRulesDto
-import ai.kilocode.rpc.dto.PermissionReplyDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PromptDto
-import ai.kilocode.rpc.dto.QuestionReplyDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
+import ai.accurecode.backend.cli.AccureCliDataParser
+import ai.accurecode.log.ChatLogSummary
+import ai.accurecode.log.AccureLog
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.ConfigUpdateDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.ModelSelectionDto
+import ai.accurecode.rpc.dto.PermissionAlwaysRulesDto
+import ai.accurecode.rpc.dto.PermissionReplyDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PromptDto
+import ai.accurecode.rpc.dto.QuestionReplyDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -37,14 +37,14 @@ import kotlin.coroutines.resumeWithException
  * Chat orchestrator that handles message sending, history loading,
  * and SSE event routing for the agent chat UI.
  *
- * **Not an IntelliJ service** — owned by [KiloBackendAppService] which
- * calls [start] after [KiloAppState.Ready] and [stop] on disconnect.
+ * **Not an IntelliJ service** — owned by [AccureBackendAppService] which
+ * calls [start] after [AccureAppState.Ready] and [stop] on disconnect.
  *
- * All JSON parsing is delegated to [KiloCliDataParser].
+ * All JSON parsing is delegated to [AccureCliDataParser].
  */
-class KiloBackendChatManager(
+class AccureBackendChatManager(
     private val cs: CoroutineScope,
-    private val log: KiloLog,
+    private val log: AccureLog,
 ) {
     companion object {
         private val JSON_TYPE = "application/json".toMediaType()
@@ -80,7 +80,7 @@ class KiloBackendChatManager(
     private var client: OkHttpClient? = null
     private var base: String? = null
     private var watcher: Job? = null
-    private var normalizer = KiloCliDataParser.ChatEventNormalizer()
+    private var normalizer = AccureCliDataParser.ChatEventNormalizer()
 
     fun start(http: OkHttpClient, port: Int, sse: SharedFlow<SseEvent>) {
         client = http
@@ -115,7 +115,7 @@ class KiloBackendChatManager(
         watcher = null
         client = null
         base = null
-        normalizer = KiloCliDataParser.ChatEventNormalizer()
+        normalizer = AccureCliDataParser.ChatEventNormalizer()
         log.info("Chat manager stopped")
     }
 
@@ -124,7 +124,7 @@ class KiloBackendChatManager(
     suspend fun enhancePrompt(dir: String, text: String): String {
         val http = requireClient()
         val url = requireBase()
-        val body = KiloCliDataParser.buildEnhancePromptJson(text)
+        val body = AccureCliDataParser.buildEnhancePromptJson(text)
         val request = Request.Builder()
             .url("$url/enhance-prompt?directory=${encode(dir)}")
             .post(body.toRequestBody(JSON_TYPE))
@@ -139,7 +139,7 @@ class KiloBackendChatManager(
                 raw.takeIf { it.isNotBlank() }?.let { log.debug { "kind=enhancePrompt error=${ChatLogSummary.body(it)}" } }
                 throw RuntimeException("Enhance prompt failed: HTTP ${response.code}")
             }
-            KiloCliDataParser.parseEnhancedPrompt(raw)
+            AccureCliDataParser.parseEnhancedPrompt(raw)
         }
     }
 
@@ -153,7 +153,7 @@ class KiloBackendChatManager(
         val http = requireClient()
         val url = requireBase()
 
-        val body = KiloCliDataParser.buildPromptJson(prompt)
+        val body = AccureCliDataParser.buildPromptJson(prompt)
         val target = "$url/session/$id/prompt_async?directory=${encode(dir)}"
         log.debug { "${ChatLogSummary.sid(id)} ${ChatLogSummary.prompt(prompt)} ${ChatLogSummary.dir(dir)} op=prompt_async send=true" }
         val request = Request.Builder()
@@ -207,7 +207,7 @@ class KiloBackendChatManager(
         log.info("${ChatLogSummary.sid(id)} kind=compact ${ChatLogSummary.dir(dir)} model=${model.providerID}/${model.modelID} op=summarize")
         val http = requireClient()
         val url = requireBase()
-        val body = KiloCliDataParser.buildSummarizeJson(model)
+        val body = AccureCliDataParser.buildSummarizeJson(model)
         val request = Request.Builder()
             .url("$url/session/$id/summarize?directory=${encode(dir)}")
             .post(body.toRequestBody(JSON_TYPE))
@@ -250,7 +250,7 @@ class KiloBackendChatManager(
                 return emptyList()
             }
             val raw = response.body?.string() ?: return emptyList()
-            val parsed = KiloCliDataParser.parseMessages(raw)
+            val parsed = AccureCliDataParser.parseMessages(raw)
             log.debug { "${ChatLogSummary.sid(id)} ${ChatLogSummary.history(parsed)} op=messages ok=true code=${response.code}" }
             parsed
         }
@@ -273,7 +273,7 @@ class KiloBackendChatManager(
         val http = requireClient()
         val url = requireBase()
 
-        val partial = KiloCliDataParser.buildConfigPartial(update)
+        val partial = AccureCliDataParser.buildConfigPartial(update)
 
         val request = Request.Builder()
             .url("$url/global/config")
@@ -294,19 +294,19 @@ class KiloBackendChatManager(
 
     fun replyPermission(requestId: String, dir: String, reply: PermissionReplyDto) {
         log.debug { "kind=permission rid=$requestId ${ChatLogSummary.dir(dir)} op=replyPermission reply=${reply.reply} send=true" }
-        val body = KiloCliDataParser.buildPermissionReplyJson(reply)
+        val body = AccureCliDataParser.buildPermissionReplyJson(reply)
         post("/permission/$requestId/reply?directory=${encode(dir)}", body, "replyPermission", "kind=permission rid=$requestId")
     }
 
     fun savePermissionRules(requestId: String, dir: String, rules: PermissionAlwaysRulesDto) {
         log.debug { "kind=permission rid=$requestId ${ChatLogSummary.dir(dir)} op=savePermissionRules approved=${rules.approvedAlways.size} denied=${rules.deniedAlways.size} send=true" }
-        val body = KiloCliDataParser.buildPermissionAlwaysRulesJson(rules)
+        val body = AccureCliDataParser.buildPermissionAlwaysRulesJson(rules)
         post("/permission/$requestId/always-rules?directory=${encode(dir)}", body, "savePermissionRules", "kind=permission rid=$requestId")
     }
 
     fun replyQuestion(requestId: String, dir: String, answers: QuestionReplyDto) {
         log.debug { "kind=question rid=$requestId ${ChatLogSummary.dir(dir)} op=replyQuestion answers=${answers.answers.size} send=true" }
-        val body = KiloCliDataParser.buildQuestionReplyJson(answers)
+        val body = AccureCliDataParser.buildQuestionReplyJson(answers)
         post("/question/$requestId/reply?directory=${encode(dir)}", body, "replyQuestion", "kind=question rid=$requestId")
     }
 
@@ -317,14 +317,14 @@ class KiloBackendChatManager(
 
     fun pendingPermissions(dir: String): List<PermissionRequestDto> {
         val raw = get("/permission?directory=${encode(dir)}", "pendingPermissions") ?: return emptyList()
-        val parsed = KiloCliDataParser.parsePermissionRequests(raw)
+        val parsed = AccureCliDataParser.parsePermissionRequests(raw)
         log.debug { "kind=permission ${ChatLogSummary.dir(dir)} op=pendingPermissions ok=true count=${parsed.size}" }
         return parsed
     }
 
     fun pendingQuestions(dir: String): List<QuestionRequestDto> {
         val raw = get("/question?directory=${encode(dir)}", "pendingQuestions") ?: return emptyList()
-        val parsed = KiloCliDataParser.parseQuestionRequests(raw)
+        val parsed = AccureCliDataParser.parseQuestionRequests(raw)
         log.debug { "kind=question ${ChatLogSummary.dir(dir)} op=pendingQuestions ok=true count=${parsed.size}" }
         return parsed
     }

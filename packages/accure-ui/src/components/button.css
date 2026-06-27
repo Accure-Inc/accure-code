@@ -1,9 +1,9 @@
-/* Kilo Button overrides – styled to match Figma design */
+/* Accure Button overrides – styled to match Figma design */
 
 [data-component="button"] {
   font-family: var(--vscode-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: var(--kilo-font-size-13);
-  line-height: var(--kilo-font-size-16);
+  font-size: var(--accure-font-size-13);
+  line-height: var(--accure-font-size-16);
   border-radius: 2px;
   cursor: pointer;
   border-color: transparent;
@@ -89,8 +89,8 @@
     min-height: 32px;
     padding: 6px 16px;
     gap: 6px;
-    font-size: var(--kilo-font-size-13);
-    line-height: var(--kilo-font-size-16);
+    font-size: var(--accure-font-size-13);
+    line-height: var(--accure-font-size-16);
 
     &[data-icon] {
       padding: 6px 16px 6px 12px;
@@ -101,8 +101,8 @@
     min-height: 32px;
     padding: 6px 16px;
     gap: 6px;
-    font-size: var(--kilo-font-size-13);
-    line-height: var(--kilo-font-size-16);
+    font-size: var(--accure-font-size-13);
+    line-height: var(--accure-font-size-16);
 
     &[data-icon] {
       padding: 6px 16px 6px 12px;
@@ -113,8 +113,8 @@
     min-height: 24px;
     padding: 4px 12px;
     gap: 4px;
-    font-size: var(--kilo-font-size-13);
-    line-height: var(--kilo-font-size-16);
+    font-size: var(--accure-font-size-13);
+    line-height: var(--accure-font-size-16);
 
     &[data-icon] {
       padding: 4px 12px 4px 8px;

@@ -10,7 +10,7 @@ import { NextEditInlineCompletionProvider } from "./next-edit/NextEditInlineComp
 import { disposeLog } from "./next-edit/log"
 import { NextEditSuggestionManager } from "./next-edit/NextEditSuggestionManager"
 import { toAllowedMercuryRecentSnippets } from "./next-edit/recentSnippetsAdapter"
-import type { KiloConnectionService } from "../cli-backend"
+import type { AccureConnectionService } from "../cli-backend"
 import { hasValidCredentials } from "./fim"
 import { DEFAULT_AUTOCOMPLETE_MODEL, getAutocompleteModel } from "../../shared/autocomplete-models"
 
@@ -48,7 +48,7 @@ async function writeSettings(patch: Partial<AutocompleteServiceSettings>): Promi
 export class AutocompleteServiceManager {
   private static _instance: AutocompleteServiceManager | null = null
 
-  private readonly connectionService: KiloConnectionService
+  private readonly connectionService: AccureConnectionService
   private readonly context: vscode.ExtensionContext
   private settings: AutocompleteServiceSettings | null = null
 
@@ -75,7 +75,7 @@ export class AutocompleteServiceManager {
   // snippet filtering. Null until the async initialize() resolves.
   private ignoreControllerSync: { validateAccess(fsPath: string): boolean } | null = null
 
-  constructor(context: vscode.ExtensionContext, connectionService: KiloConnectionService) {
+  constructor(context: vscode.ExtensionContext, connectionService: AccureConnectionService) {
     if (AutocompleteServiceManager._instance) {
       throw new Error(
         "AutocompleteServiceManager is a singleton. Use AutocompleteServiceManager.getInstance() instead.",
@@ -385,14 +385,12 @@ export class AutocompleteServiceManager {
    */
   private handleFatalAutocompleteError(status: number | null): void {
     const msg =
-      status === 402
-        ? t("accure:autocomplete.creditsExhausted.message")
-        : t("accure:autocomplete.authError.message")
+      status === 402 ? t("accure:autocomplete.creditsExhausted.message") : t("accure:autocomplete.authError.message")
 
     if (status === 402) {
       vscode.window.showWarningMessage(msg, t("accure:autocomplete.creditsExhausted.addCredits")).then((choice) => {
         if (choice === t("accure:autocomplete.creditsExhausted.addCredits")) {
-          vscode.env.openExternal(vscode.Uri.parse("https://app.kilo.ai/credits"))
+          vscode.env.openExternal(vscode.Uri.parse("https://app.accurecode.ai/credits"))
         }
       })
     } else {

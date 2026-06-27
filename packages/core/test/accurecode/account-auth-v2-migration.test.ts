@@ -18,19 +18,19 @@ function layer(dir: string) {
 
 const auth = Effect.acquireRelease(
   Effect.sync(() => {
-    const value = process.env.KILO_AUTH_CONTENT
-    delete process.env.KILO_AUTH_CONTENT
+    const value = process.env.ACCURECODE_AUTH_CONTENT
+    delete process.env.ACCURECODE_AUTH_CONTENT
     return value
   }),
   (value) =>
     Effect.sync(() => {
-      if (value === undefined) delete process.env.KILO_AUTH_CONTENT
-      else process.env.KILO_AUTH_CONTENT = value
+      if (value === undefined) delete process.env.ACCURECODE_AUTH_CONTENT
+      else process.env.ACCURECODE_AUTH_CONTENT = value
     }),
 )
 
 describe("AccountV2 auth-v2 migration", () => {
-  it.live("preserves multiple accounts, active selection, and Kilo organization", () =>
+  it.live("preserves multiple accounts, active selection, and Accure organization", () =>
     Effect.acquireRelease(
       Effect.promise(() => tmpdir()),
       (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
@@ -44,7 +44,7 @@ describe("AccountV2 auth-v2 migration", () => {
                 accounts: {
                   acc_first: {
                     id: "acc_first",
-                    serviceID: "kilo",
+                    serviceID: "accure",
                     description: "first",
                     credential: {
                       type: "oauth",
@@ -56,7 +56,7 @@ describe("AccountV2 auth-v2 migration", () => {
                   },
                   acc_second: {
                     id: "acc_second",
-                    serviceID: "kilo",
+                    serviceID: "accure",
                     description: "second",
                     credential: {
                       type: "oauth",
@@ -67,7 +67,7 @@ describe("AccountV2 auth-v2 migration", () => {
                     },
                   },
                 },
-                active: { kilo: "acc_second" },
+                active: { accure: "acc_second" },
               }
               yield* Effect.promise(() => Bun.write(path.join(tmp.path, "auth-v2.json"), JSON.stringify(store)))
 
@@ -75,7 +75,7 @@ describe("AccountV2 auth-v2 migration", () => {
                 const accounts = yield* AccountV2.Service
                 return {
                   all: yield* accounts.all(),
-                  active: yield* accounts.active(AccountV2.ServiceID.make("kilo")),
+                  active: yield* accounts.active(AccountV2.ServiceID.make("accure")),
                 }
               }).pipe(Effect.provide(layer(tmp.path)))
 

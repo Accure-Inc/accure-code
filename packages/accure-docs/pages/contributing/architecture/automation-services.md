@@ -1,6 +1,6 @@
 ---
 title: "Automation Services Architecture"
-description: "Architecture of Kilo Cloud automation services that dispatch scoped work"
+description: "Architecture of Accure Cloud automation services that dispatch scoped work"
 ---
 
 # Automation Services Architecture
@@ -8,7 +8,7 @@ description: "Architecture of Kilo Cloud automation services that dispatch scope
 Automation services turn commands, source-control events, labels, review requests, HTTP webhooks, and schedules into scoped work.
 
 {% callout type="info" title="Static source scope" %}
-This page describes cloud automation boundaries present in `Kilo-Org/cloud`. Static source shows supported code paths, Worker bindings, and deployable surfaces. It does not prove live production enablement or rollout policy.
+This page describes cloud automation boundaries present in `Accure-Org/cloud`. Static source shows supported code paths, Worker bindings, and deployable surfaces. It does not prove live production enablement or rollout policy.
 {% /callout %}
 
 ## How to use this page
@@ -64,25 +64,25 @@ flowchart LR
 
 | Service | Trigger | Orchestration boundary | Execution target | Output or recovery |
 |---|---|---|---|---|
-| Kilo Bot | GitHub, Slack, or Linear command ingress | Web control plane bot libraries | Cloud Agent for requested repository work | Command response and coding-session result |
+| Accure Bot | GitHub, Slack, or Linear command ingress | Web control plane bot libraries | Cloud Agent for requested repository work | Command response and coding-session result |
 | Code Review | Pull-request webhook or review dispatch | Database queue and `code-review-infra` Durable Object per review | Cloud Agent review session | Pull-request feedback; dispatch next waiting review |
 | Auto Triage | GitHub issue event or dispatch queue | Web duplicate check and `auto-triage-infra` Durable Object per ticket | Cloud Agent only when classification session is needed | Labels, status, callback, and timeout alarm |
-| Auto Fix | `kilo-auto-fix` label or dispatch rule | `auto-fix-infra` Durable Object per fix ticket | Cloud Agent branch and pull-request work | Pull request and lifecycle status callback |
+| Auto Fix | `accure-auto-fix` label or dispatch rule | `auto-fix-infra` Durable Object per fix ticket | Cloud Agent branch and pull-request work | Pull request and lifecycle status callback |
 | Security Agent | Interactive or scheduled Dependabot sync plus analysis queue | `security-sync` and `security-auto-analysis` Workers | Model triage in `security-auto-analysis`; Cloud Agent only for selected deep analysis | Finding state, audit records, and stale-analysis cleanup |
-| Webhook Agent Ingest | HTTP webhook or scheduled alarm | `webhook-agent-ingest` queue and `TriggerDO` | Cloud Agent or Kilo Chat destination | Destination delivery and queue retry behavior |
+| Webhook Agent Ingest | HTTP webhook or scheduled alarm | `webhook-agent-ingest` queue and `TriggerDO` | Cloud Agent or Accure Chat destination | Destination delivery and queue retry behavior |
 
-## Kilo Bot ingress and source-control targets
+## Accure Bot ingress and source-control targets
 
-Kilo Bot command ingress and repository target support are separate concerns.
+Accure Bot command ingress and repository target support are separate concerns.
 
 | Concern | Current static-source statement |
 |---|---|
-| Command ingress | GitHub, Slack, and Linear are current Kilo Bot command surfaces |
+| Command ingress | GitHub, Slack, and Linear are current Accure Bot command surfaces |
 | GitHub target | Supported across bot, review, triage, fix, security, and Cloud Agent paths |
 | GitLab target | Supported in selected Cloud Agent and bot context paths |
-| GitLab command ingress | GitLab repository support does not imply note or comment-triggered Kilo Bot commands |
+| GitLab command ingress | GitLab repository support does not imply note or comment-triggered Accure Bot commands |
 
-Do not document GitLab issue notes or merge-request comments as current Kilo Bot trigger surfaces unless source adds explicit ingress handling.
+Do not document GitLab issue notes or merge-request comments as current Accure Bot trigger surfaces unless source adds explicit ingress handling.
 
 ## Code Review
 
@@ -107,7 +107,7 @@ Auto Triage classifies GitHub issues and applies labels or status updates. Dupli
 | Duplicate check | Calls Next.js API and can complete without Cloud Agent |
 | Execution | Cloud Agent session runs structured classification prompt when needed |
 | Callback | `POST /tickets/:ticketId/classification-callback` with per-ticket secret |
-| Output | High-confidence classification applies labels such as `kilo-auto-fix` for downstream Auto Fix |
+| Output | High-confidence classification applies labels such as `accure-auto-fix` for downstream Auto Fix |
 | Recovery | Durable Object alarm marks stuck ticket failed |
 
 ## Auto Fix
@@ -148,7 +148,7 @@ Webhook Agent Ingest handles configured trigger endpoints and schedules. `Trigge
 | Activation | HTTP webhook | Can apply configured webhook authentication before queued delivery |
 | Activation | Scheduled | Uses cron expression and Durable Object alarm; webhook auth is not applicable |
 | Destination | `cloud_agent` | Launches Cloud Agent session with webhook or scheduled platform marker |
-| Destination | `kiloclaw_chat` | Posts to user-scoped Kilo Chat destination through Kilo Chat service binding |
+| Destination | `accureclaw_chat` | Posts to user-scoped Accure Chat destination through Accure Chat service binding |
 
 ```mermaid
 flowchart LR
@@ -157,7 +157,7 @@ flowchart LR
   queue["Webhook delivery queue"]
   consumer["Queue consumer"]
   agent["Cloud Agent"]
-  chat["Kilo Chat destination"]
+  chat["Accure Chat destination"]
 
   http --> queue
   schedule --> queue
@@ -168,11 +168,11 @@ flowchart LR
 
 ## Source map
 
-Paths below are relative to [`Kilo-Org/cloud`](https://github.com/Kilo-Org/cloud).
+Paths below are relative to [`Accure-Org/cloud`](https://github.com/Accure-Org/cloud).
 
 | Service | Source paths |
 |---|---|
-| Kilo Bot | `apps/web/src/lib/bot/`{% linebreak /%}`apps/web/src/lib/bots/`{% linebreak /%}`apps/web/src/lib/slack-bot/` |
+| Accure Bot | `apps/web/src/lib/bot/`{% linebreak /%}`apps/web/src/lib/bots/`{% linebreak /%}`apps/web/src/lib/slack-bot/` |
 | Code Review | `apps/web/src/lib/code-reviews/`{% linebreak /%}`services/code-review-infra/` |
 | Auto Triage | `apps/web/src/lib/auto-triage/`{% linebreak /%}`services/auto-triage-infra/` |
 | Auto Fix | `apps/web/src/lib/auto-fix/`{% linebreak /%}`services/auto-fix-infra/` |

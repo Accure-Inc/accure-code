@@ -1,5 +1,5 @@
 ---
-title: Delete File Tool | Kilo Code Docs
+title: Delete File Tool | Accure Code Docs
 description: Learn how the delete_file tool safely removes files and directories from the workspace across all platforms as an alternative to rm commands.
 ---
 
@@ -20,7 +20,7 @@ This tool safely deletes files and directories with user confirmation. For direc
 - Only deletes files/directories within the workspace
 - Requires user confirmation before deletion
 - Prevents deletion of write-protected files
-- Validates all files against `.kilocodeignore` rules
+- Validates all files against `.accurecodeignore` rules
 - For directories: scans recursively and shows statistics (file count, directory count, total size) before deletion
 - Blocks directory deletion if any contained file is protected or ignored
 
@@ -55,6 +55,6 @@ The tool provides clear error messages for:
 
 - File or directory does not exist
 - File is write-protected
-- File is blocked by `.kilocodeignore` rules
+- File is blocked by `.accurecodeignore` rules
 - Directory contains protected or ignored files
 - Path is outside the workspace

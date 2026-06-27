@@ -1,10 +1,10 @@
-import type { IndexingConfig } from "@kilocode/accure-indexing/config"
+import type { IndexingConfig } from "@accurecode/accure-indexing/config"
 
 type Auth = unknown
 
 type Env = {
-  KILO_API_KEY?: string
-  KILO_ORG_ID?: string
+  ACCURECODE_API_KEY?: string
+  ACCURECODE_ORG_ID?: string
 }
 
 type Provider = {
@@ -12,7 +12,7 @@ type Provider = {
   options?: Record<string, unknown>
 }
 
-export type KiloIndexingAuth = {
+export type AccureIndexingAuth = {
   apiKey?: string
   baseUrl?: string
   organizationId?: string
@@ -66,52 +66,52 @@ function hasOtherProvider(indexing: unknown): boolean {
   return providers.some((provider) => value(cfg[provider]))
 }
 
-export function resolveKiloIndexingAuth(input: {
+export function resolveAccureIndexingAuth(input: {
   config?: unknown
   provider?: Provider
   auth?: Auth
   env?: Env
-}): KiloIndexingAuth {
+}): AccureIndexingAuth {
   const config = record(input.config)
-  const options = record(record(config.provider).kilo)
+  const options = record(record(config.provider).accurecode)
   const provider = input.provider ?? record(input.provider)
   const providerOptions = record(provider.options)
   const providerConfig = record(options.options)
-  const kilo = record(record(config.indexing).kilo)
+  const accure = record(record(config.indexing).accurecode)
   const env = input.env ?? process.env
 
   return {
     apiKey:
-      text(kilo.apiKey) ??
+      text(accure.apiKey) ??
       text(providerConfig.apiKey) ??
       token(input.auth) ??
       text(provider.key) ??
-      text(providerOptions.kilocodeToken) ??
-      text(env.KILO_API_KEY),
-    baseUrl: text(kilo.baseUrl) ?? text(providerConfig.baseURL) ?? text(providerConfig.baseUrl),
+      text(providerOptions.accurecodeToken) ??
+      text(env.ACCURECODE_API_KEY),
+    baseUrl: text(accure.baseUrl) ?? text(providerConfig.baseURL) ?? text(providerConfig.baseUrl),
     organizationId:
-      text(kilo.organizationId) ??
-      text(providerConfig.kilocodeOrganizationId) ??
+      text(accure.organizationId) ??
+      text(providerConfig.accurecodeOrganizationId) ??
       org(input.auth) ??
-      text(providerOptions.kilocodeOrganizationId) ??
-      text(env.KILO_ORG_ID),
+      text(providerOptions.accurecodeOrganizationId) ??
+      text(env.ACCURECODE_ORG_ID),
   }
 }
 
-export function hasKiloIndexingAuth(input: Parameters<typeof resolveKiloIndexingAuth>[0]): boolean {
-  return !!resolveKiloIndexingAuth(input).apiKey
+export function hasAccureIndexingAuth(input: Parameters<typeof resolveAccureIndexingAuth>[0]): boolean {
+  return !!resolveAccureIndexingAuth(input).apiKey
 }
 
-export function shouldDefaultIndexingToKilo(indexing: unknown, auth: KiloIndexingAuth): boolean {
+export function shouldDefaultIndexingToAccure(indexing: unknown, auth: AccureIndexingAuth): boolean {
   const cfg = record(indexing)
   if (cfg.provider !== undefined || !auth.apiKey) return false
   return !hasOtherProvider(cfg)
 }
 
-export function indexingWithKiloDefault(
+export function indexingWithAccureDefault(
   indexing: IndexingConfig | undefined,
-  auth: KiloIndexingAuth,
+  auth: AccureIndexingAuth,
 ): IndexingConfig | undefined {
-  if (!shouldDefaultIndexingToKilo(indexing, auth)) return indexing
-  return { ...indexing, provider: "kilo" }
+  if (!shouldDefaultIndexingToAccure(indexing, auth)) return indexing
+  return { ...indexing, provider: "accure" }
 }

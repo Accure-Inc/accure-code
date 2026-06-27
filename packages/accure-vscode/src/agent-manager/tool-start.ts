@@ -1,4 +1,4 @@
-import type { KiloClient, Session } from "@kilocode/sdk/v2/client"
+import type { AccureClient, Session } from "@accurecode/sdk/v2/client"
 import { sanitizeBranchName, versionedName } from "./branch-name"
 import type { CreateWorktreeResult } from "./WorktreeManager"
 import type { WorktreeStateManager } from "./WorktreeStateManager"
@@ -29,7 +29,7 @@ interface WorktreeCreated {
 }
 
 export interface ToolDeps {
-  getClient: () => KiloClient
+  getClient: () => AccureClient
   getRoot: () => string | undefined
   getState: () => WorktreeStateManager | undefined
   getPanel: () => PanelContext | undefined
@@ -96,7 +96,7 @@ function versionedLabel(base: string | undefined, index: number, total: number):
   return base
 }
 
-async function prompt(client: KiloClient, sid: string, dir: string, task: ToolTask) {
+async function prompt(client: AccureClient, sid: string, dir: string, task: ToolTask) {
   const body = text(task)
   if (!body) return
   await client.session.promptAsync(
@@ -110,7 +110,7 @@ async function prompt(client: KiloClient, sid: string, dir: string, task: ToolTa
   )
 }
 
-async function local(deps: ToolDeps, client: KiloClient, task: ToolTask, directory?: string) {
+async function local(deps: ToolDeps, client: AccureClient, task: ToolTask, directory?: string) {
   const root = deps.getRoot()
   const state = deps.getState()
   if (!root || !state) return false
@@ -146,7 +146,7 @@ async function local(deps: ToolDeps, client: KiloClient, task: ToolTask, directo
 
 async function worktree(
   deps: ToolDeps,
-  client: KiloClient,
+  client: AccureClient,
   task: ToolTask,
   index: number,
   total: number,

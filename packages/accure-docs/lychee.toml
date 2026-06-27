@@ -1,6 +1,6 @@
 root_dir = "."
 fallback_extensions = ["md"]
-remap = ["kilo-docs/docs kilo-docs/pages"]
+remap = ["accure-docs/docs accure-docs/pages"]
 
 format = "detailed"
 max_redirects = 2

@@ -2,15 +2,15 @@ import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test"
 import { Effect } from "effect"
 import fs from "node:fs/promises"
 import path from "node:path"
-import { CodeIndexManager } from "@kilocode/accure-indexing/engine"
-import { normalizeIndexingStatus } from "@kilocode/accure-indexing/status"
+import { CodeIndexManager } from "@accurecode/accure-indexing/engine"
+import { normalizeIndexingStatus } from "@accurecode/accure-indexing/status"
 import type { Config } from "../../src/config/config"
 import { GlobalBus } from "../../src/bus/global"
 import { WorkspaceID } from "../../src/control-plane/schema"
 import { WorkspaceContext } from "../../src/control-plane/workspace-context"
-import { KiloIndexing } from "../../src/kilocode/indexing"
-import { indexingWarningKey } from "../../src/kilocode/indexing-warning"
-import { IndexingWorker } from "../../src/kilocode/indexing-worker-client"
+import { AccureIndexing } from "../../src/accurecode/indexing"
+import { indexingWarningKey } from "../../src/accurecode/indexing-warning"
+import { IndexingWorker } from "../../src/accurecode/indexing-worker-client"
 import { provideTestInstance, withTestInstance } from "../fixture/fixture"
 import { Server } from "../../src/server/server"
 import * as Log from "@opencode-ai/core/util/log"
@@ -21,7 +21,7 @@ Log.init({ print: false })
 const fetch = global.fetch
 
 const cfg: Partial<Config.Info> = {
-  plugin: ["@kilocode/accure-indexing"],
+  plugin: ["@accurecode/accure-indexing"],
   indexing: {
     enabled: true,
     provider: "ollama",
@@ -33,7 +33,7 @@ const cfg: Partial<Config.Info> = {
 }
 
 const unset: Partial<Config.Info> = {
-  plugin: ["@kilocode/accure-indexing"],
+  plugin: ["@accurecode/accure-indexing"],
   indexing: {
     provider: "ollama",
     vectorStore: "qdrant",
@@ -43,22 +43,22 @@ const unset: Partial<Config.Info> = {
   },
 }
 const inactive: Partial<Config.Info> = {
-  plugin: ["@kilocode/accure-indexing"],
+  plugin: ["@accurecode/accure-indexing"],
   indexing: {
     enabled: false,
     provider: "ollama",
     vectorStore: "qdrant",
   },
 }
-const kilo: Partial<Config.Info> = {
-  plugin: ["@kilocode/accure-indexing"],
+const accure: Partial<Config.Info> = {
+  plugin: ["@accurecode/accure-indexing"],
   indexing: {
     enabled: true,
     vectorStore: "qdrant",
   },
 }
 const implicitOpenAi: Partial<Config.Info> = {
-  plugin: ["@kilocode/accure-indexing"],
+  plugin: ["@accurecode/accure-indexing"],
   indexing: {
     enabled: true,
     vectorStore: "qdrant",
@@ -67,18 +67,18 @@ const implicitOpenAi: Partial<Config.Info> = {
     },
   },
 }
-const staleKilo: Partial<Config.Info> = {
-  plugin: ["@kilocode/accure-indexing"],
+const staleAccure: Partial<Config.Info> = {
+  plugin: ["@accurecode/accure-indexing"],
   indexing: {
     enabled: true,
-    provider: "kilo",
+    provider: "accure",
     model: "custom/model",
     dimension: 2048,
     vectorStore: "qdrant",
   },
 }
-const configDir = process.env["KILO_CONFIG_DIR"]
-const disabled = process.env["KILO_DISABLE_CODEBASE_INDEXING"]
+const configDir = process.env["ACCURECODE_CONFIG_DIR"]
+const disabled = process.env["ACCURECODE_DISABLE_CODEBASE_INDEXING"]
 const error = new Error("test indexing initialization failed")
 
 function inline(directory: string, root: string, hooks: IndexingWorker.Hooks): IndexingWorker.Driver {
@@ -100,7 +100,7 @@ function inline(directory: string, root: string, hooks: IndexingWorker.Hooks): I
   }
 }
 
-async function wait(read: () => Promise<KiloIndexing.Status>, state: KiloIndexing.Status["state"]) {
+async function wait(read: () => Promise<AccureIndexing.Status>, state: AccureIndexing.Status["state"]) {
   for (const _ of Array.from({ length: 100 })) {
     const status = await read()
     if (status.state === state) return status
@@ -123,32 +123,32 @@ beforeEach(() => {
 
 afterEach(async () => {
   IndexingWorker.override()
-  if (configDir === undefined) delete process.env["KILO_CONFIG_DIR"]
-  else process.env["KILO_CONFIG_DIR"] = configDir
-  if (disabled === undefined) delete process.env["KILO_DISABLE_CODEBASE_INDEXING"]
-  else process.env["KILO_DISABLE_CODEBASE_INDEXING"] = disabled
+  if (configDir === undefined) delete process.env["ACCURECODE_CONFIG_DIR"]
+  else process.env["ACCURECODE_CONFIG_DIR"] = configDir
+  if (disabled === undefined) delete process.env["ACCURECODE_DISABLE_CODEBASE_INDEXING"]
+  else process.env["ACCURECODE_DISABLE_CODEBASE_INDEXING"] = disabled
   global.fetch = fetch
   await disposeAllInstances()
 })
 
 describe("indexing model catalog", () => {
-  test("ignores a project-scoped Kilo origin", async () => {
+  test("ignores a project-scoped Accure origin", async () => {
     await using tmp = await tmpdir({
       git: true,
       init: async (dir) => {
         const global = path.join(dir, "global")
         const project = path.join(dir, "project")
-        await fs.mkdir(path.join(project, ".kilo"), { recursive: true })
+        await fs.mkdir(path.join(project, ".accurecode"), { recursive: true })
         await fs.mkdir(global, { recursive: true })
-        await Bun.write(path.join(global, "kilo.jsonc"), "{}")
+        await Bun.write(path.join(global, "accure.jsonc"), "{}")
         await Bun.write(
-          path.join(project, ".kilo", "kilo.jsonc"),
-          JSON.stringify({ indexing: { kilo: { baseUrl: "http://127.0.0.1:4567" } } }),
+          path.join(project, ".accurecode", "accure.jsonc"),
+          JSON.stringify({ indexing: { accure: { baseUrl: "http://127.0.0.1:4567" } } }),
         )
         return { global, project }
       },
     })
-    process.env["KILO_CONFIG_DIR"] = tmp.extra.global
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.extra.global
     const calls: string[] = []
     globalThis.fetch = (async (input) => {
       calls.push(String(input))
@@ -162,7 +162,7 @@ describe("indexing model catalog", () => {
     }) as typeof fetch
 
     const response = await Server.Default().app.request("/indexing/models", {
-      headers: { "x-kilo-directory": tmp.extra.project },
+      headers: { "x-accure-directory": tmp.extra.project },
     })
 
     const catalogs = calls.filter((url) => url.includes("embedding-models"))
@@ -177,14 +177,14 @@ describe("indexing startup degradation", () => {
     const init = spyOn(CodeIndexManager.prototype, "initialize").mockRejectedValue(error)
 
     await using tmp = await tmpdir({ git: true, config: cfg })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
 
     try {
       const app = Server.Default().app
 
       const config = await app.request("/config", {
         headers: {
-          "x-kilo-directory": tmp.path,
+          "x-accure-directory": tmp.path,
         },
       })
       expect(config.status).toBe(200)
@@ -192,7 +192,7 @@ describe("indexing startup degradation", () => {
       const body = await wait(async () => {
         const status = await app.request("/indexing/status", {
           headers: {
-            "x-kilo-directory": tmp.path,
+            "x-accure-directory": tmp.path,
           },
         })
         expect(status.status).toBe(200)
@@ -241,14 +241,14 @@ describe("indexing startup degradation", () => {
     })
 
     await using tmp = await tmpdir({ git: true, config: cfg })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
     const on = (data: {
       directory?: string
       workspace?: string
       payload?: { type?: string; properties?: typeof warning }
     }) => {
       if (data.directory !== tmp.path) return
-      if (data.payload?.type !== KiloIndexing.Warning.type) return
+      if (data.payload?.type !== AccureIndexing.Warning.type) return
       if (data.payload.properties) events.push(data.payload.properties)
       workspaces.push(data.workspace)
     }
@@ -261,7 +261,7 @@ describe("indexing startup degradation", () => {
         fn: () =>
           withTestInstance({
             directory: tmp.path,
-            fn: () => KiloIndexing.current(),
+            fn: () => AccureIndexing.current(),
           }),
       })
       const app = Server.Default().app
@@ -270,7 +270,7 @@ describe("indexing startup degradation", () => {
         for (const _ of Array.from({ length: 100 })) {
           const response = await app.request("/indexing/warnings", {
             headers: {
-              "x-kilo-directory": tmp.path,
+              "x-accure-directory": tmp.path,
             },
           })
           expect(response.status).toBe(200)
@@ -297,7 +297,7 @@ describe("indexing startup degradation", () => {
         fn: () =>
           withTestInstance({
             directory: tmp.path,
-            fn: () => KiloIndexing.warnings(),
+            fn: () => AccureIndexing.warnings(),
           }),
       })
       const next = { ...warning, message: `${warning.message} Again.` }
@@ -318,7 +318,7 @@ describe("indexing startup degradation", () => {
   })
 
   test("coalesces burst indexing progress publications", async () => {
-    const complete: KiloIndexing.Status = {
+    const complete: AccureIndexing.Status = {
       state: "Complete",
       message: "Index up-to-date.",
       processedFiles: 50,
@@ -345,14 +345,14 @@ describe("indexing startup degradation", () => {
     }))
 
     await using tmp = await tmpdir({ git: true, config: cfg })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
-    const events: KiloIndexing.Status[] = []
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
+    const events: AccureIndexing.Status[] = []
     const on = (data: {
       directory?: string
-      payload?: { type?: string; properties?: { status?: KiloIndexing.Status } }
+      payload?: { type?: string; properties?: { status?: AccureIndexing.Status } }
     }) => {
       if (data.directory !== tmp.path) return
-      if (data.payload?.type !== KiloIndexing.Event.type) return
+      if (data.payload?.type !== AccureIndexing.Event.type) return
       if (data.payload.properties?.status) events.push(data.payload.properties.status)
     }
     GlobalBus.on("event", on)
@@ -360,7 +360,7 @@ describe("indexing startup degradation", () => {
     try {
       await withTestInstance({
         directory: tmp.path,
-        fn: async () => expect(await wait(() => KiloIndexing.current(), "Complete")).toEqual(complete),
+        fn: async () => expect(await wait(() => AccureIndexing.current(), "Complete")).toEqual(complete),
       })
       await new Promise((resolve) => setTimeout(resolve, 150))
 
@@ -375,7 +375,7 @@ describe("indexing startup degradation", () => {
 
   test("reports routes as in progress while initialization is in flight", async () => {
     await using tmp = await tmpdir({ git: true, config: cfg })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
     const gate = Promise.withResolvers<{ requiresRestart: boolean }>()
     const init = spyOn(CodeIndexManager.prototype, "initialize").mockImplementation(() => gate.promise)
 
@@ -384,7 +384,7 @@ describe("indexing startup degradation", () => {
 
       const config = await app.request("/config", {
         headers: {
-          "x-kilo-directory": tmp.path,
+          "x-accure-directory": tmp.path,
         },
       })
       expect(config.status).toBe(200)
@@ -392,7 +392,7 @@ describe("indexing startup degradation", () => {
 
       const status = await app.request("/indexing/status", {
         headers: {
-          "x-kilo-directory": tmp.path,
+          "x-accure-directory": tmp.path,
         },
       })
       expect(status.status).toBe(200)
@@ -410,16 +410,16 @@ describe("indexing startup degradation", () => {
 
   test("does not publish initialized status after in-flight startup is disposed", async () => {
     await using tmp = await tmpdir({ git: true, config: cfg })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
     const gate = Promise.withResolvers<{ requiresRestart: boolean }>()
     const init = spyOn(CodeIndexManager.prototype, "initialize").mockImplementation(() => gate.promise)
-    const events: KiloIndexing.Status[] = []
+    const events: AccureIndexing.Status[] = []
     const on = (data: {
       directory?: string
-      payload?: { type?: string; properties?: { status?: KiloIndexing.Status } }
+      payload?: { type?: string; properties?: { status?: AccureIndexing.Status } }
     }) => {
       if (data.directory !== tmp.path) return
-      if (data.payload?.type !== KiloIndexing.Event.type) return
+      if (data.payload?.type !== AccureIndexing.Event.type) return
       if (data.payload.properties?.status) events.push(data.payload.properties.status)
     }
     GlobalBus.on("event", on)
@@ -427,10 +427,10 @@ describe("indexing startup degradation", () => {
     try {
       await provideTestInstance({
         directory: tmp.path,
-        init: Effect.promise(() => KiloIndexing.init()),
+        init: Effect.promise(() => AccureIndexing.init()),
         fn: async () => {
           await called(init)
-          expect((await KiloIndexing.current()).state).toBe("In Progress")
+          expect((await AccureIndexing.current()).state).toBe("In Progress")
         },
       })
 
@@ -451,20 +451,20 @@ describe("indexing startup degradation", () => {
     const dispose = spyOn(CodeIndexManager.prototype, "dispose")
 
     await using tmp = await tmpdir({ git: true, config: cfg })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
 
     try {
       await provideTestInstance({
         directory: tmp.path,
-        init: Effect.promise(() => KiloIndexing.init()),
+        init: Effect.promise(() => AccureIndexing.init()),
         fn: async () => {
-          const status = await wait(() => KiloIndexing.current(), "Error")
+          const status = await wait(() => AccureIndexing.current(), "Error")
 
           expect(status.state).toBe("Error")
           expect(status.message).toContain("Failed to initialize: test indexing initialization failed")
-          expect(await KiloIndexing.available()).toBe(false)
-          expect(KiloIndexing.ready()).toBe(false)
-          expect(await KiloIndexing.search("boot failure")).toEqual([])
+          expect(await AccureIndexing.available()).toBe(false)
+          expect(AccureIndexing.ready()).toBe(false)
+          expect(await AccureIndexing.search("boot failure")).toEqual([])
           expect(dispose).toHaveBeenCalledTimes(1)
         },
       })
@@ -476,21 +476,21 @@ describe("indexing startup degradation", () => {
 
   test("reports not ready while initialization is in flight", async () => {
     await using tmp = await tmpdir({ git: true, config: cfg })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
     const gate = Promise.withResolvers<{ requiresRestart: boolean }>()
     const init = spyOn(CodeIndexManager.prototype, "initialize").mockImplementation(() => gate.promise)
 
     try {
       await provideTestInstance({
         directory: tmp.path,
-        init: Effect.promise(() => KiloIndexing.init()),
+        init: Effect.promise(() => AccureIndexing.init()),
         fn: async () => {
           await called(init)
 
           expect(init).toHaveBeenCalled()
-          expect(KiloIndexing.ready()).toBe(false)
-          expect(await KiloIndexing.available()).toBe(false)
-          const search = KiloIndexing.search("boot failure")
+          expect(AccureIndexing.ready()).toBe(false)
+          expect(await AccureIndexing.available()).toBe(false)
+          const search = AccureIndexing.search("boot failure")
           const pending = await Promise.race([search.then(() => false), Promise.resolve(true)])
           expect(pending).toBe(true)
           gate.resolve({ requiresRestart: false })
@@ -505,21 +505,21 @@ describe("indexing startup degradation", () => {
 
   test("stays disabled when indexing enablement is unset", async () => {
     await using tmp = await tmpdir({ git: true, config: unset })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
     const init = spyOn(CodeIndexManager.prototype, "initialize")
 
     await provideTestInstance({
       directory: tmp.path,
       fn: async () => {
-        const status = await wait(() => KiloIndexing.current(), "Disabled")
+        const status = await wait(() => AccureIndexing.current(), "Disabled")
 
         expect(status).toMatchObject({
           state: "Disabled",
           message: "Indexing disabled.",
         })
-        expect(await KiloIndexing.available()).toBe(false)
-        expect(KiloIndexing.ready()).toBe(false)
-        expect(await KiloIndexing.search("disabled")).toEqual([])
+        expect(await AccureIndexing.available()).toBe(false)
+        expect(AccureIndexing.ready()).toBe(false)
+        expect(await AccureIndexing.search("disabled")).toEqual([])
         expect(init).not.toHaveBeenCalled()
       },
     })
@@ -533,26 +533,26 @@ describe("indexing startup degradation", () => {
     })
 
     await using tmp = await tmpdir({ git: true, config: inactive })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
 
     await provideTestInstance({
       directory: tmp.path,
       fn: async () => {
-        const status = await wait(() => KiloIndexing.current(), "Disabled")
+        const status = await wait(() => AccureIndexing.current(), "Disabled")
 
         expect(status).toMatchObject({
           state: "Disabled",
           message: "Indexing disabled.",
         })
-        expect(await KiloIndexing.available()).toBe(false)
-        expect(KiloIndexing.ready()).toBe(false)
-        expect(await KiloIndexing.search("disabled")).toEqual([])
+        expect(await AccureIndexing.available()).toBe(false)
+        expect(AccureIndexing.ready()).toBe(false)
+        expect(await AccureIndexing.search("disabled")).toEqual([])
         expect(created).toEqual([])
       },
     })
   })
 
-  test("enriches Kilo provider config from env auth", async () => {
+  test("enriches Accure provider config from env auth", async () => {
     global.fetch = (() =>
       Promise.resolve(
         new Response(
@@ -566,24 +566,24 @@ describe("indexing startup degradation", () => {
         ),
       )) as unknown as typeof global.fetch
     const init = spyOn(CodeIndexManager.prototype, "initialize").mockResolvedValue({ requiresRestart: false })
-    const key = process.env.KILO_API_KEY
-    const org = process.env.KILO_ORG_ID
+    const key = process.env.ACCURECODE_API_KEY
+    const org = process.env.ACCURECODE_ORG_ID
 
-    await using tmp = await tmpdir({ git: true, config: kilo })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
-    process.env.KILO_ORG_ID = "org_123"
+    await using tmp = await tmpdir({ git: true, config: accure })
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
+    process.env.ACCURECODE_API_KEY = "accure-token"
+    process.env.ACCURECODE_ORG_ID = "org_123"
 
     try {
       await provideTestInstance({
         directory: tmp.path,
-        init: Effect.promise(() => KiloIndexing.init()),
+        init: Effect.promise(() => AccureIndexing.init()),
         fn: async () => {
           await called(init)
           expect(init.mock.calls[0]?.[0]).toMatchObject({
-            embedderProvider: "kilo",
-            kiloApiKey: "kilo-token",
-            kiloOrganizationId: "org_123",
+            embedderProvider: "accure",
+            accureApiKey: "accure-token",
+            accureOrganizationId: "org_123",
             modelId: "mistralai/mistral-embed-2312",
             modelDimension: 1024,
             searchMinScore: 0.35,
@@ -591,15 +591,15 @@ describe("indexing startup degradation", () => {
         },
       })
     } finally {
-      if (key === undefined) delete process.env.KILO_API_KEY
-      else process.env.KILO_API_KEY = key
-      if (org === undefined) delete process.env.KILO_ORG_ID
-      else process.env.KILO_ORG_ID = org
+      if (key === undefined) delete process.env.ACCURECODE_API_KEY
+      else process.env.ACCURECODE_API_KEY = key
+      if (org === undefined) delete process.env.ACCURECODE_ORG_ID
+      else process.env.ACCURECODE_ORG_ID = org
       init.mockRestore()
     }
   })
 
-  test("falls back from unsupported stored Kilo models to the hosted default", async () => {
+  test("falls back from unsupported stored Accure models to the hosted default", async () => {
     global.fetch = (() =>
       Promise.resolve(
         new Response(
@@ -613,20 +613,20 @@ describe("indexing startup degradation", () => {
         ),
       )) as unknown as typeof global.fetch
     const init = spyOn(CodeIndexManager.prototype, "initialize").mockResolvedValue({ requiresRestart: false })
-    const key = process.env.KILO_API_KEY
+    const key = process.env.ACCURECODE_API_KEY
 
-    await using tmp = await tmpdir({ git: true, config: staleKilo })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
+    await using tmp = await tmpdir({ git: true, config: staleAccure })
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
+    process.env.ACCURECODE_API_KEY = "accure-token"
 
     try {
       await provideTestInstance({
         directory: tmp.path,
-        init: Effect.promise(() => KiloIndexing.init()),
+        init: Effect.promise(() => AccureIndexing.init()),
         fn: async () => {
           await called(init)
           expect(init.mock.calls[0]?.[0]).toMatchObject({
-            embedderProvider: "kilo",
+            embedderProvider: "accure",
             modelId: "mistralai/mistral-embed-2312",
             modelDimension: 1024,
             searchMinScore: 0.35,
@@ -634,13 +634,13 @@ describe("indexing startup degradation", () => {
         },
       })
     } finally {
-      if (key === undefined) delete process.env.KILO_API_KEY
-      else process.env.KILO_API_KEY = key
+      if (key === undefined) delete process.env.ACCURECODE_API_KEY
+      else process.env.ACCURECODE_API_KEY = key
       init.mockRestore()
     }
   })
 
-  test("uses hosted dimensions for supported Kilo models", async () => {
+  test("uses hosted dimensions for supported Accure models", async () => {
     global.fetch = (() =>
       Promise.resolve(
         new Response(
@@ -660,57 +660,57 @@ describe("indexing startup degradation", () => {
         ),
       )) as unknown as typeof global.fetch
     const init = spyOn(CodeIndexManager.prototype, "initialize").mockResolvedValue({ requiresRestart: false })
-    const key = process.env.KILO_API_KEY
+    const key = process.env.ACCURECODE_API_KEY
     const config: Partial<Config.Info> = {
-      ...staleKilo,
+      ...staleAccure,
       indexing: {
-        ...staleKilo.indexing,
+        ...staleAccure.indexing,
         model: "openai/text-embedding-3-small",
         dimension: 256,
       },
     }
 
     await using tmp = await tmpdir({ git: true, config })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
+    process.env.ACCURECODE_API_KEY = "accure-token"
 
     try {
       await provideTestInstance({
         directory: tmp.path,
-        init: Effect.promise(() => KiloIndexing.init()),
+        init: Effect.promise(() => AccureIndexing.init()),
         fn: async () => {
           await called(init)
           expect(init.mock.calls[0]?.[0]).toMatchObject({
-            embedderProvider: "kilo",
+            embedderProvider: "accure",
             modelId: "openai/text-embedding-3-small",
             modelDimension: 1536,
           })
         },
       })
     } finally {
-      if (key === undefined) delete process.env.KILO_API_KEY
-      else process.env.KILO_API_KEY = key
+      if (key === undefined) delete process.env.ACCURECODE_API_KEY
+      else process.env.ACCURECODE_API_KEY = key
       init.mockRestore()
     }
   })
 
-  test("leaves Kilo model metadata unset when the hosted catalog is unavailable", async () => {
+  test("leaves Accure model metadata unset when the hosted catalog is unavailable", async () => {
     global.fetch = (() => Promise.resolve(new Response(undefined, { status: 500 }))) as unknown as typeof global.fetch
     const init = spyOn(CodeIndexManager.prototype, "initialize").mockResolvedValue({ requiresRestart: false })
-    const key = process.env.KILO_API_KEY
+    const key = process.env.ACCURECODE_API_KEY
 
-    await using tmp = await tmpdir({ git: true, config: staleKilo })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
+    await using tmp = await tmpdir({ git: true, config: staleAccure })
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
+    process.env.ACCURECODE_API_KEY = "accure-token"
 
     try {
       await provideTestInstance({
         directory: tmp.path,
-        init: Effect.promise(() => KiloIndexing.init()),
+        init: Effect.promise(() => AccureIndexing.init()),
         fn: async () => {
           await called(init)
           expect(init.mock.calls[0]?.[0]).toMatchObject({
-            embedderProvider: "kilo",
+            embedderProvider: "accure",
             modelId: undefined,
             modelDimension: undefined,
             searchMinScore: undefined,
@@ -718,24 +718,24 @@ describe("indexing startup degradation", () => {
         },
       })
     } finally {
-      if (key === undefined) delete process.env.KILO_API_KEY
-      else process.env.KILO_API_KEY = key
+      if (key === undefined) delete process.env.ACCURECODE_API_KEY
+      else process.env.ACCURECODE_API_KEY = key
       init.mockRestore()
     }
   })
 
-  test("does not default to Kilo when an existing provider config is present", async () => {
+  test("does not default to Accure when an existing provider config is present", async () => {
     const init = spyOn(CodeIndexManager.prototype, "initialize").mockResolvedValue({ requiresRestart: false })
-    const key = process.env.KILO_API_KEY
+    const key = process.env.ACCURECODE_API_KEY
 
     await using tmp = await tmpdir({ git: true, config: implicitOpenAi })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
+    process.env.ACCURECODE_API_KEY = "accure-token"
 
     try {
       await provideTestInstance({
         directory: tmp.path,
-        init: Effect.promise(() => KiloIndexing.init()),
+        init: Effect.promise(() => AccureIndexing.init()),
         fn: async () => {
           await called(init)
           expect(init.mock.calls[0]?.[0]).toMatchObject({
@@ -745,32 +745,32 @@ describe("indexing startup degradation", () => {
         },
       })
     } finally {
-      if (key === undefined) delete process.env.KILO_API_KEY
-      else process.env.KILO_API_KEY = key
+      if (key === undefined) delete process.env.ACCURECODE_API_KEY
+      else process.env.ACCURECODE_API_KEY = key
       init.mockRestore()
     }
   })
 
   test("stays disabled when VS Code starts without a workspace folder", async () => {
     await using tmp = await tmpdir({ git: true, config: cfg })
-    process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env["KILO_DISABLE_CODEBASE_INDEXING"] = "vscode-no-workspace"
+    process.env["ACCURECODE_CONFIG_DIR"] = tmp.path
+    process.env["ACCURECODE_DISABLE_CODEBASE_INDEXING"] = "vscode-no-workspace"
     const init = spyOn(CodeIndexManager.prototype, "initialize")
 
     try {
       await provideTestInstance({
         directory: tmp.path,
-        init: Effect.promise(() => KiloIndexing.init()),
+        init: Effect.promise(() => AccureIndexing.init()),
         fn: async () => {
-          const status = await KiloIndexing.current()
+          const status = await AccureIndexing.current()
 
           expect(status).toMatchObject({
             state: "Disabled",
             message: "Codebase indexing is disabled because no workspace folder is open in VS Code.",
           })
-          expect(await KiloIndexing.available()).toBe(false)
-          expect(KiloIndexing.ready()).toBe(false)
-          expect(await KiloIndexing.search("no workspace")).toEqual([])
+          expect(await AccureIndexing.available()).toBe(false)
+          expect(AccureIndexing.ready()).toBe(false)
+          expect(await AccureIndexing.search("no workspace")).toEqual([])
           expect(init).not.toHaveBeenCalled()
         },
       })

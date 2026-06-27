@@ -14,8 +14,8 @@ import { Config } from "../../../src/config/config"
 import { ConfigMarkdown } from "../../../src/config/markdown"
 import { ConfigParse } from "../../../src/config/parse"
 import { Env } from "../../../src/env"
-import { KiloIndexing } from "../../../src/kilocode/indexing"
-import { KilocodeConfig } from "../../../src/kilocode/config/config"
+import { AccureIndexing } from "../../../src/accurecode/indexing"
+import { AccurecodeConfig } from "../../../src/accurecode/config/config"
 import { provideTestInstance } from "../../fixture/fixture"
 import { Filesystem } from "../../../src/util/filesystem"
 import { disposeAllInstances, tmpdir } from "../../fixture/fixture"
@@ -57,7 +57,7 @@ const saveGlobal = (config: Config.Info) =>
 const saveProject = (config: Config.Info) =>
   Effect.runPromise(Config.Service.use((svc) => svc.update(config)).pipe(Effect.scoped, Effect.provide(layer)))
 
-async function writeConfig(dir: string, config: object, name = "kilo.json") {
+async function writeConfig(dir: string, config: object, name = "accure.json") {
   await Filesystem.write(path.join(dir, name), JSON.stringify(config))
 }
 
@@ -73,7 +73,7 @@ function decode(input: unknown): Config.Info {
 }
 
 const cfg: Partial<Config.Info> = {
-  plugin: ["@kilocode/accure-indexing"],
+  plugin: ["@accurecode/accure-indexing"],
   indexing: {
     provider: "ollama",
     vectorStore: "qdrant",
@@ -84,20 +84,20 @@ const cfg: Partial<Config.Info> = {
 }
 
 afterEach(async () => {
-  delete process.env.KILO_MD_TEST
+  delete process.env.ACCURECODE_MD_TEST
   await clear()
   await disposeAllInstances()
 })
 
 describe("markdown substitutions", () => {
   test("applies file and env substitutions to parsed markdown body", async () => {
-    process.env.KILO_MD_TEST = "env content"
+    process.env.ACCURECODE_MD_TEST = "env content"
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(path.join(dir, "body.md"), "file content")
         await Filesystem.write(
           path.join(dir, "SKILL.md"),
-          ["---", "name: test", "description: Test", "---", "{file:body.md}", "{env:KILO_MD_TEST}"].join("\n"),
+          ["---", "name: test", "description: Test", "---", "{file:body.md}", "{env:ACCURECODE_MD_TEST}"].join("\n"),
         )
       },
     })
@@ -109,7 +109,7 @@ describe("markdown substitutions", () => {
   })
 })
 
-describe("kilocode indexing config", () => {
+describe("accurecode indexing config", () => {
   test("ignores retired semantic indexing flags in existing configs", async () => {
     await using tmp = await tmpdir({ git: true })
     await writeConfig(tmp.path, {
@@ -137,7 +137,7 @@ describe("kilocode indexing config", () => {
 
     try {
       await writeConfig(globalTmp.path, {
-        $schema: "https://app.kilo.ai/config.json",
+        $schema: "https://app.accurecode.ai/config.json",
         indexing: {
           enabled: true,
           provider: "ollama",
@@ -174,7 +174,7 @@ describe("kilocode indexing config", () => {
 
     try {
       await writeConfig(globalTmp.path, {
-        $schema: "https://app.kilo.ai/config.json",
+        $schema: "https://app.accurecode.ai/config.json",
         indexing: {
           enabled: true,
         },
@@ -187,7 +187,7 @@ describe("kilocode indexing config", () => {
             Config.Service.use((svc) => svc.getGlobal()).pipe(Effect.scoped, Effect.provide(layer)),
           )
           const config = await load()
-          const input = KiloIndexing.input(config.indexing, global.indexing)
+          const input = AccureIndexing.input(config.indexing, global.indexing)
           expect(input.enabled).toBe(true)
         },
       })
@@ -199,13 +199,13 @@ describe("kilocode indexing config", () => {
   })
 
   test("project indexing enabled overrides global enablement", async () => {
-    const input = KiloIndexing.input({ enabled: false }, { enabled: true })
+    const input = AccureIndexing.input({ enabled: false }, { enabled: true })
     expect(input.enabled).toBe(false)
-    expect(KiloIndexing.input(undefined, { enabled: true }).enabled).toBe(true)
-    expect(KiloIndexing.input({ enabled: true }, { enabled: false }).enabled).toBe(true)
+    expect(AccureIndexing.input(undefined, { enabled: true }).enabled).toBe(true)
+    expect(AccureIndexing.input({ enabled: true }, { enabled: false }).enabled).toBe(true)
   })
 
-  test("creates missing project config as .kilo/kilo.jsonc", async () => {
+  test("creates missing project config as .accurecode/accure.jsonc", async () => {
     await using tmp = await tmpdir({ git: true })
 
     await provideTestInstance({
@@ -215,13 +215,13 @@ describe("kilocode indexing config", () => {
       },
     })
 
-    expect(await Bun.file(path.join(tmp.path, ".kilo", "kilo.jsonc")).exists()).toBe(true)
-    expect(await Bun.file(path.join(tmp.path, ".kilo", "kilo.json")).exists()).toBe(false)
+    expect(await Bun.file(path.join(tmp.path, ".accurecode", "accure.jsonc")).exists()).toBe(true)
+    expect(await Bun.file(path.join(tmp.path, ".accurecode", "accure.json")).exists()).toBe(false)
   })
 
   test("accepts delete sentinels for indexing model overrides", () => {
     const patch = decode({ indexing: { model: null, dimension: null } })
-    const merged = KilocodeConfig.mergeConfig(
+    const merged = AccurecodeConfig.mergeConfig(
       {
         indexing: {
           provider: "openai",
@@ -231,7 +231,7 @@ describe("kilocode indexing config", () => {
       },
       patch,
     )
-    const input = KiloIndexing.input(patch.indexing)
+    const input = AccureIndexing.input(patch.indexing)
 
     expect(merged.indexing).toEqual({ provider: "openai" })
     expect(input.modelId).toBeUndefined()
@@ -242,7 +242,7 @@ describe("kilocode indexing config", () => {
 describe("custom provider model config", () => {
   test("persists and removes reasoning across a global config reload", async () => {
     await using globalTmp = await tmpdir()
-    const file = path.join(globalTmp.path, "kilo.json")
+    const file = path.join(globalTmp.path, "accure.json")
     const prev = Global.Path.config
     ;(Global.Path as { config: string }).config = globalTmp.path
     await clear()
@@ -301,7 +301,7 @@ describe("subagent variant overrides", () => {
         "anthropic/claude-sonnet-4-6": null,
       },
     })
-    const merged = KilocodeConfig.mergeConfig(
+    const merged = AccurecodeConfig.mergeConfig(
       {
         subagent_variant_overrides: {
           "anthropic/claude-sonnet-4-6": "high",
@@ -317,7 +317,7 @@ describe("subagent variant overrides", () => {
 
   test("accepts a delete sentinel for the complete override map", () => {
     const patch = decode({ subagent_variant_overrides: null })
-    const merged = KilocodeConfig.mergeConfig(
+    const merged = AccurecodeConfig.mergeConfig(
       {
         subagent_variant_overrides: {
           "anthropic/claude-sonnet-4-6": "high",
@@ -334,11 +334,11 @@ describe("subagent variant overrides", () => {
 describe("agent config", () => {
   test("accepts delete sentinels for agent model and variant overrides", () => {
     const patch = decode({ agent: { explore: { model: null, variant: null } } })
-    const merged = KilocodeConfig.mergeConfig(
+    const merged = AccurecodeConfig.mergeConfig(
       {
         agent: {
           explore: {
-            model: "kilo/anthropic/claude-sonnet-4-6",
+            model: "accure/anthropic/claude-sonnet-4-6",
             variant: "high",
           },
         },
@@ -353,11 +353,11 @@ describe("agent config", () => {
 
   test("removes an agent variant override without removing its model", () => {
     const patch = decode({ agent: { explore: { variant: null } } })
-    const merged = KilocodeConfig.mergeConfig(
+    const merged = AccurecodeConfig.mergeConfig(
       {
         agent: {
           explore: {
-            model: "kilo/anthropic/claude-sonnet-4-6",
+            model: "accure/anthropic/claude-sonnet-4-6",
             variant: "high",
           },
         },
@@ -366,12 +366,12 @@ describe("agent config", () => {
     )
 
     expect(patch.agent?.explore?.variant).toBeNull()
-    expect(merged.agent?.explore).toEqual({ model: "kilo/anthropic/claude-sonnet-4-6" })
+    expect(merged.agent?.explore).toEqual({ model: "accure/anthropic/claude-sonnet-4-6" })
   })
 
   test("removes agent model and variant overrides from global JSONC config", async () => {
     await using globalTmp = await tmpdir()
-    const file = path.join(globalTmp.path, "kilo.jsonc")
+    const file = path.join(globalTmp.path, "accure.jsonc")
     const prev = Global.Path.config
     ;(Global.Path as { config: string }).config = globalTmp.path
     await clear()
@@ -385,7 +385,7 @@ describe("agent config", () => {
           "  // Preserve this comment while clearing overrides.",
           '  "agent": {',
           '    "explore": {',
-          '      "model": "kilo/anthropic/claude-sonnet-4-6",',
+          '      "model": "accure/anthropic/claude-sonnet-4-6",',
           '      "variant": "high",',
           '      "description": "Keep me"',
           "    }",
@@ -414,12 +414,12 @@ describe("bash permission migration", () => {
   for (const action of ["allow", "ask", "deny"] as const) {
     test(`preserves string-form ${action} permission in jsonc`, async () => {
       const input = `{
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.accurecode.ai/config.json",
   "permission": "${action}"
 }`
       await using tmp = await tmpdir({
         init: async (dir) => {
-          await Filesystem.write(path.join(dir, "kilo.jsonc"), input)
+          await Filesystem.write(path.join(dir, "accure.jsonc"), input)
         },
       })
 
@@ -429,9 +429,9 @@ describe("bash permission migration", () => {
       await disposeAllInstances()
 
       try {
-        await KilocodeConfig.migrateBashPermission()
+        await AccurecodeConfig.migrateBashPermission()
 
-        const file = path.join(tmp.path, "kilo.jsonc")
+        const file = path.join(tmp.path, "accure.jsonc")
         const text = await Filesystem.readText(file)
         const parsed = ConfigParse.schema(Config.Info, ConfigParse.jsonc(text, file), file)
         expect(text).toBe(input)
@@ -446,12 +446,12 @@ describe("bash permission migration", () => {
 
     test(`preserves string-form ${action} permission in json`, async () => {
       const input = JSON.stringify({
-        $schema: "https://app.kilo.ai/config.json",
+        $schema: "https://app.accurecode.ai/config.json",
         permission: action,
       })
       await using tmp = await tmpdir({
         init: async (dir) => {
-          await Filesystem.write(path.join(dir, "kilo.json"), input)
+          await Filesystem.write(path.join(dir, "accure.json"), input)
         },
       })
 
@@ -461,9 +461,9 @@ describe("bash permission migration", () => {
       await disposeAllInstances()
 
       try {
-        await KilocodeConfig.migrateBashPermission()
+        await AccurecodeConfig.migrateBashPermission()
 
-        const file = path.join(tmp.path, "kilo.json")
+        const file = path.join(tmp.path, "accure.json")
         const text = await Filesystem.readText(file)
         const parsed = ConfigParse.schema(Config.Info, ConfigParse.jsonc(text, file), file)
         expect(text).toBe(input)
@@ -481,9 +481,9 @@ describe("bash permission migration", () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, "kilo.jsonc"),
+          path.join(dir, "accure.jsonc"),
           `{
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.accurecode.ai/config.json",
   "permission": {
     "read": "allow"
   }
@@ -498,9 +498,9 @@ describe("bash permission migration", () => {
     await disposeAllInstances()
 
     try {
-      await KilocodeConfig.migrateBashPermission()
+      await AccurecodeConfig.migrateBashPermission()
 
-      const file = path.join(tmp.path, "kilo.jsonc")
+      const file = path.join(tmp.path, "accure.jsonc")
       const text = await Filesystem.readText(file)
       const parsed = ConfigParse.schema(Config.Info, ConfigParse.jsonc(text, file), file)
       expect(parsed.permission?.read).toBe("allow")

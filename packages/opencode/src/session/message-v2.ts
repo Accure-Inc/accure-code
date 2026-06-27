@@ -21,9 +21,9 @@ import { isMedia } from "@/util/media"
 import type { SystemError } from "bun"
 import type { Provider } from "@/provider/provider"
 import { ModelID, ProviderID } from "@/provider/schema"
-import { SessionNetwork } from "./network" // kilocode_change
-import { CodexAuthExpiredError } from "@/kilocode/provider/codex-refresh" // kilocode_change
-import { KiloSessionMessageOrder } from "@/kilocode/session/message-order" // kilocode_change
+import { SessionNetwork } from "./network" // accurecode_change
+import { CodexAuthExpiredError } from "@/accurecode/provider/codex-refresh" // accurecode_change
+import { AccureSessionMessageOrder } from "@/accurecode/session/message-order" // accurecode_change
 import { Effect, Schema, Types } from "effect"
 import { NonNegativeInt } from "@opencode-ai/core/schema"
 import * as EffectLogger from "@opencode-ai/core/effect/logger"
@@ -327,7 +327,7 @@ const messageBase = {
   sessionID: SessionID,
 }
 
-// kilocode_change start - shared editor context schema (used by MessageV2.User and SessionPrompt.PromptInput)
+// accurecode_change start - shared editor context schema (used by MessageV2.User and SessionPrompt.PromptInput)
 export const EditorContext = Schema.Struct({
   visibleFiles: Schema.optional(Schema.Array(Schema.String)),
   openTabs: Schema.optional(Schema.Array(Schema.String)),
@@ -335,7 +335,7 @@ export const EditorContext = Schema.Struct({
   shell: Schema.optional(Schema.String),
 })
 export type EditorContext = Types.DeepMutable<Schema.Schema.Type<typeof EditorContext>>
-// kilocode_change end
+// accurecode_change end
 
 export const User = Schema.Struct({
   ...messageBase,
@@ -359,9 +359,9 @@ export const User = Schema.Struct({
   }),
   system: Schema.optional(Schema.String),
   tools: Schema.optional(Schema.Record(Schema.String, Schema.Boolean)),
-  // kilocode_change start
+  // accurecode_change start
   editorContext: Schema.optional(EditorContext),
-  // kilocode_change end
+  // accurecode_change end
 }).annotate({ identifier: "UserMessage" })
 export type User = Types.DeepMutable<Schema.Schema.Type<typeof User>>
 
@@ -593,7 +593,7 @@ export const cursor = {
   },
 }
 
-// kilocode_change start - strip bloated metadata fields from stored parts to prevent multi-MB payloads
+// accurecode_change start - strip bloated metadata fields from stored parts to prevent multi-MB payloads
 // This handles both legacy data that was stored with full file contents and keeps the API response lean.
 function stripPatch(value: unknown) {
   if (typeof value !== "string") return undefined
@@ -607,7 +607,7 @@ function withPatch(value: unknown) {
 }
 
 export function stripPartMetadata(part: Part): Part {
-  // kilocode_change - exported for testing
+  // accurecode_change - exported for testing
   if (part.type !== "tool") return part
   const { state } = part
   if (state.status !== "completed" && state.status !== "running") return part
@@ -662,7 +662,7 @@ export function stripPartMetadata(part: Part): Part {
 }
 
 export function stripMessageMetadata(info: Info): Info {
-  // kilocode_change - exported for testing
+  // accurecode_change - exported for testing
   // Strip oversized summary.diffs patches from user messages to limit SSE payload.
   // Small patches are preserved so the UI can render inline diffs.
   if (info.role !== "user") return info
@@ -678,9 +678,9 @@ export function stripMessageMetadata(info: Info): Info {
     },
   } as Info
 }
-// kilocode_change end
+// accurecode_change end
 
-// kilocode_change - apply stripping inside helpers so all read paths are covered
+// accurecode_change - apply stripping inside helpers so all read paths are covered
 const info = (row: typeof MessageTable.$inferSelect) =>
   stripMessageMetadata({
     ...row.data,
@@ -695,7 +695,7 @@ const part = (row: typeof PartTable.$inferSelect) =>
     sessionID: row.session_id,
     messageID: row.message_id,
   } as Part)
-// kilocode_change end
+// accurecode_change end
 
 const older = (row: Cursor) =>
   or(lt(MessageTable.time_created, row.time), and(eq(MessageTable.time_created, row.time), lt(MessageTable.id, row.id)))
@@ -878,7 +878,7 @@ export const toModelMessagesEffect = Effect.fnUntraced(function* (
         return part.metadata?.anthropic?.signature != null
       })
       for (const part of msg.parts) {
-        // kilocode_change - !part.ignored keeps local UI warnings out of future prompts
+        // accurecode_change - !part.ignored keeps local UI warnings out of future prompts
         if (part.type === "text" && !part.ignored) {
           const text = part.text === "" && hasSignedReasoning ? " " : part.text
           assistantMessage.parts.push({
@@ -1093,14 +1093,14 @@ export function parts(message_id: MessageID) {
   )
   return rows.map(
     (row) =>
-      // kilocode_change - apply stripping to parts fetched individually as well to cover all read paths
+      // accurecode_change - apply stripping to parts fetched individually as well to cover all read paths
       stripPartMetadata({
         ...row.data,
         id: row.id,
         sessionID: row.session_id,
         messageID: row.message_id,
       } as Part),
-    // kilocode_change end
+    // accurecode_change end
   )
 }
 
@@ -1143,7 +1143,7 @@ export function filterCompacted(msgs: Iterable<WithParts>) {
       completed.add(msg.info.parentID)
   }
   result.reverse()
-  KiloSessionMessageOrder.annotate(result) // kilocode_change - preserve chronology before retained-tail projection
+  AccureSessionMessageOrder.annotate(result) // accurecode_change - preserve chronology before retained-tail projection
   const compactionIndex = result.findLastIndex(
     (msg) =>
       msg.info.role === "user" &&
@@ -1206,6 +1206,7 @@ export function fromError(
   e: unknown,
   ctx: { providerID: ProviderID; aborted?: boolean },
 ): NonNullable<Assistant["error"]> {
+  let error: NonNullable<Assistant["error"]> | undefined
   switch (true) {
     case e instanceof DOMException && e.name === "AbortError":
       return new AbortedError(
@@ -1224,18 +1225,18 @@ export function fromError(
         },
         { cause: e },
       ).toObject()
-    case e instanceof CodexAuthExpiredError: // kilocode_change start
+    case e instanceof CodexAuthExpiredError: // accurecode_change start
       return new AuthError(
         {
           providerID: "openai",
           message: e.message,
         },
         { cause: e },
-      ).toObject() // kilocode_change end
-    case SessionNetwork.disconnected(e): // kilocode_change start
+      ).toObject() // accurecode_change end
+    case SessionNetwork.disconnected(e): // accurecode_change start
       return new APIError(
         {
-          message: SessionNetwork.message(e), // kilocode_change end
+          message: SessionNetwork.message(e), // accurecode_change end
           isRetryable: true,
           metadata: {
             code: (e as SystemError).code ?? "",
@@ -1247,35 +1248,48 @@ export function fromError(
       ).toObject()
     case e instanceof Error && (e as FetchDecompressionError).code === "ZlibError":
       if (ctx.aborted) {
-        return new AbortedError({ message: e.message }, { cause: e }).toObject()
-      }
-      return new APIError(
-        {
-          message: "Response decompression failed",
-          isRetryable: true,
-          metadata: {
-            code: (e as FetchDecompressionError).code,
-            message: e.message,
+        error = new AbortedError({ message: e.message }, { cause: e }).toObject()
+      } else {
+        error = new APIError(
+          {
+            message: "Response decompression failed",
+            isRetryable: true,
+            metadata: {
+              code: (e as FetchDecompressionError).code,
+              message: e.message,
+            },
           },
-        },
-        { cause: e },
-      ).toObject()
+          { cause: e },
+        ).toObject()
+      }
+      break
+    case e instanceof AbortedError:
+    case e instanceof StructuredOutputError:
+    case e instanceof ContextOverflowError:
+    case e instanceof APIError:
+    case e instanceof NamedError.Unknown:
+      error = e.toObject()
+      break
+    case e instanceof AuthError:
+      error = new APIError({ message: e.message, isRetryable: false, statusCode: 401 }).toObject()
+      break
     case APICallError.isInstance(e):
       const parsed = ProviderError.parseAPICallError({
         providerID: ctx.providerID,
         error: e,
       })
       if (parsed.type === "context_overflow") {
-        return new ContextOverflowError(
+        error = new ContextOverflowError(
           {
             message: parsed.message,
             responseBody: parsed.responseBody,
           },
           { cause: e },
         ).toObject()
+        break
       }
 
-      return new APIError(
+      error = new APIError(
         {
           message: parsed.message,
           statusCode: parsed.statusCode,
@@ -1286,34 +1300,48 @@ export function fromError(
         },
         { cause: e },
       ).toObject()
+      break
     case e instanceof Error:
-      return new NamedError.Unknown({ message: errorMessage(e) }, { cause: e }).toObject()
+      error = new NamedError.Unknown({ message: errorMessage(e) }, { cause: e }).toObject()
+      break
     default:
       try {
-        const parsed = ProviderError.parseStreamError(e)
-        if (parsed) {
-          if (parsed.type === "context_overflow") {
-            return new ContextOverflowError(
+        const parsedStream = ProviderError.parseStreamError(e)
+        if (parsedStream) {
+          if (parsedStream.type === "context_overflow") {
+            error = new ContextOverflowError(
               {
-                message: parsed.message,
-                responseBody: parsed.responseBody,
+                message: parsedStream.message,
+                responseBody: parsedStream.responseBody,
               },
               { cause: e },
             ).toObject()
+            break
           }
-          return new APIError(
+          error = new APIError(
             {
-              message: parsed.message,
-              isRetryable: parsed.isRetryable,
-              responseBody: parsed.responseBody,
+              message: parsedStream.message,
+              isRetryable: parsedStream.isRetryable,
+              responseBody: parsedStream.responseBody,
             },
-            {
-              cause: e,
-            },
+            { cause: e },
           ).toObject()
+          break
         }
       } catch {}
-      return new NamedError.Unknown({ message: JSON.stringify(e) }, { cause: e }).toObject()
+      error = new NamedError.Unknown({ message: errorMessage(e) }, { cause: e }).toObject()
+      break
+  }
+
+  if (!error) {
+    return new NamedError.Unknown({ message: errorMessage(e) }).toObject()
+  }
+
+  try {
+    JSON.stringify(error)
+    return error
+  } catch {
+    return new NamedError.Unknown({ message: errorMessage(e) }).toObject()
   }
 }
 

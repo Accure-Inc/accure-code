@@ -375,7 +375,7 @@ describe("ConfigState", () => {
       s.handleConfigLoaded({
         agent: {
           explore: {
-            model: "kilo/anthropic/claude-sonnet-4-6",
+            model: "accure/anthropic/claude-sonnet-4-6",
             variant: "high",
           },
         },

@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// accurecode_change - new file
 import { describe, expect, test } from "bun:test"
 import { Config } from "../../../src/config/config"
 import { Schema } from "effect"

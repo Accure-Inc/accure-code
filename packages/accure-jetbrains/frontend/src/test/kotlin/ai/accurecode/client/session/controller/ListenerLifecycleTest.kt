@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.model.SessionState
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.SessionStatusDto
+import ai.accurecode.client.session.model.SessionState
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.SessionStatusDto
 import com.intellij.openapi.util.Disposer
 
 class ListenerLifecycleTest : SessionControllerTestBase() {

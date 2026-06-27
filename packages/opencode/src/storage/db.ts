@@ -15,7 +15,7 @@ import { EffectBridge } from "@/effect/bridge"
 import { init } from "#db"
 import { Effect, Schema } from "effect"
 
-declare const KILO_MIGRATIONS: { sql: string; timestamp: number; name: string }[] | undefined
+declare const ACCURECODE_MIGRATIONS: { sql: string; timestamp: number; name: string }[] | undefined
 
 export const NotFoundError = NamedError.create("NotFoundError", {
   message: Schema.String,
@@ -30,18 +30,18 @@ const readRuntimeFlags = () =>
 
 export function getChannelPath(flags: Pick<DatabaseFlags, "disableChannelDb"> = readRuntimeFlags()) {
   if (["latest", "beta", "prod"].includes(InstallationChannel) || flags.disableChannelDb)
-    return path.join(Global.Path.data, "kilo.db") // kilocode_change
+    return path.join(Global.Path.data, "accure.db") // accurecode_change
   const safe = InstallationChannel.replace(/[^a-zA-Z0-9._-]/g, "-")
-  const next = path.join(Global.Path.data, `kilo-${safe}.db`) // kilocode_change
-  const prev = path.join(Global.Path.data, `opencode-${safe}.db`) // kilocode_change
-  if (!existsSync(next) && existsSync(prev)) return prev // kilocode_change
-  return next // kilocode_change
+  const next = path.join(Global.Path.data, `accure-${safe}.db`) // accurecode_change
+  const prev = path.join(Global.Path.data, `opencode-${safe}.db`) // accurecode_change
+  if (!existsSync(next) && existsSync(prev)) return prev // accurecode_change
+  return next // accurecode_change
 }
 
 export const getPath = (flags?: Pick<DatabaseFlags, "disableChannelDb">) => {
-  if (Flag.KILO_DB) {
-    if (Flag.KILO_DB === ":memory:" || path.isAbsolute(Flag.KILO_DB)) return Flag.KILO_DB
-    return path.join(Global.Path.data, Flag.KILO_DB)
+  if (Flag.ACCURECODE_DB) {
+    if (Flag.ACCURECODE_DB === ":memory:" || path.isAbsolute(Flag.ACCURECODE_DB)) return Flag.ACCURECODE_DB
+    return path.join(Global.Path.data, Flag.ACCURECODE_DB)
   }
   return getChannelPath(flags)
 }
@@ -113,13 +113,13 @@ export const Client = Object.assign(
 
     // Apply schema migrations
     const entries =
-      typeof KILO_MIGRATIONS !== "undefined"
-        ? KILO_MIGRATIONS
+      typeof ACCURECODE_MIGRATIONS !== "undefined"
+        ? ACCURECODE_MIGRATIONS
         : migrations(path.join(import.meta.dirname, "../../migration"))
     if (entries.length > 0) {
       log.info("applying migrations", {
         count: entries.length,
-        mode: typeof KILO_MIGRATIONS !== "undefined" ? "bundled" : "dev",
+        mode: typeof ACCURECODE_MIGRATIONS !== "undefined" ? "bundled" : "dev",
       })
       if (flags.skipMigrations) {
         for (const item of entries) {

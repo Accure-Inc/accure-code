@@ -1,11 +1,11 @@
 ---
 title: "JetBrains Plugin Architecture"
-description: "Architecture of the Kilo JetBrains split-mode plugin"
+description: "Architecture of the Accure JetBrains split-mode plugin"
 ---
 
 # JetBrains Plugin Architecture
 
-The JetBrains plugin (`packages/accure-jetbrains/`) is a split-mode Swing client of [Kilo CLI runtime](/docs/contributing/architecture/cli-runtime). Frontend module renders IDE UI. Backend module owns project-local logic and one bundled `kilo serve` server. Shared module defines cross-process RPC contracts and serializable payloads.
+The JetBrains plugin (`packages/accure-jetbrains/`) is a split-mode Swing client of [Accure CLI runtime](/docs/contributing/architecture/cli-runtime). Frontend module renders IDE UI. Backend module owns project-local logic and one bundled `accure serve` server. Shared module defines cross-process RPC contracts and serializable payloads.
 
 {% callout type="info" title="Scope" %}
 This page describes repository-defined plugin architecture and development checks. It does not claim Marketplace rollout state or remote-host deployment configuration.
@@ -33,12 +33,12 @@ flowchart LR
   subgraph backend ["JetBrains backend"]
     rpcImpl["RPC providers"]
     app["Backend app service"]
-    conn["KiloConnectionService"]
+    conn["AccureConnectionService"]
     workspaces["Directory workspace cache"]
-    cli["Extracted kilo serve --port 0"]
+    cli["Extracted accure serve --port 0"]
   end
 
-  runtime["Kilo CLI runtime"]
+  runtime["Accure CLI runtime"]
 
   swing --> rpcClient --> rpcImpl --> app
   app --> conn --> cli --> runtime
@@ -51,10 +51,10 @@ Shared RPC surfaces separate app, workspace, session, and migration behavior.
 
 | Contract | Scope | Examples |
 |---|---|---|
-| `KiloAppRpcApi` | Application | Connect, state flow, health, retry, restart, reinstall, model state, profile, login, telemetry |
-| `KiloWorkspaceRpcApi` | Directory | Resolve real backend project directory, workspace state flow, reload, file lookup, open file |
-| `KiloSessionRpcApi` | Session and directory | Create/list sessions, prompt, stream events, permission and question replies, config update |
-| `KiloMigrationRpcApi` | Legacy migration | Detect, run, and observe migration state |
+| `AccureAppRpcApi` | Application | Connect, state flow, health, retry, restart, reinstall, model state, profile, login, telemetry |
+| `AccureWorkspaceRpcApi` | Directory | Resolve real backend project directory, workspace state flow, reload, file lookup, open file |
+| `AccureSessionRpcApi` | Session and directory | Create/list sessions, prompt, stream events, permission and question replies, config update |
+| `AccureMigrationRpcApi` | Legacy migration | Detect, run, and observe migration state |
 
 Frontend calls RPC from coroutines, not Event Dispatch Thread (EDT). Swing creation, mutation, and access remain on EDT. Long-lived RPC calls and flows should use JetBrains durable patterns so UI can survive reconnect and backend restart.
 
@@ -63,17 +63,17 @@ Frontend calls RPC from coroutines, not Event Dispatch Thread (EDT). Swing creat
 Backend extracts CLI resource from plugin JAR into IntelliJ system path:
 
 ```text
-<PathManager.getSystemPath()>/kilo/bin/kilo
-<PathManager.getSystemPath()>/kilo/bin/kilo.exe   # Windows
+<PathManager.getSystemPath()>/accure/bin/accure
+<PathManager.getSystemPath()>/accure/bin/accure.exe   # Windows
 ```
 
-It chooses platform resource by OS and CPU architecture, reuses extracted binary when resource size matches, and can force re-extraction during reinstall flow. This editor-owned child is separate from detached local daemon managed by `kilo daemon`.
+It chooses platform resource by OS and CPU architecture, reuses extracted binary when resource size matches, and can force re-extraction during reinstall flow. This editor-owned child is separate from detached local daemon managed by `accure daemon`.
 
 | Area | Behavior |
 |---|---|
-| Spawn | Runs extracted binary as `kilo serve --port 0` |
+| Spawn | Runs extracted binary as `accure serve --port 0` |
 | Port | CLI server prefers `4096`, then asks OS for free port; backend reads listening line from stdout |
-| Authentication | Generates random 32-byte hex password and passes `KILO_SERVER_PASSWORD`; username defaults to `kilo` |
+| Authentication | Generates random 32-byte hex password and passes `ACCURECODE_SERVER_PASSWORD`; username defaults to `accure` |
 | Environment | Sets JetBrains client/platform metadata, question tool enablement, telemetry level, Claude Code disable flag, and default edit/bash ask permissions unless overridden |
 | Ownership | Backend app service owns CLI manager and connection lifecycle |
 | Shutdown | Kills process descendants, then process; uses forced termination after timeout when needed |
@@ -108,7 +108,7 @@ Backend connection service uses bundled OkHttp clients and `/global/event` SSE.
 
 Backend workspace manager caches workspace clients by directory path. Root project and worktree are same routing shape: worktree is alternate directory key. First lookup creates workspace object and starts load; disconnect clears cache.
 
-This mirrors CLI `InstanceStore`: directory remains isolation key while one editor-owned `kilo serve` process serves multiple workspace contexts.
+This mirrors CLI `InstanceStore`: directory remains isolation key while one editor-owned `accure serve` process serves multiple workspace contexts.
 
 ## Remote development constraints
 
@@ -140,17 +140,17 @@ Run `Plugin DevKit | Code | Frontend and Backend API Usage` inspection when movi
 
 ## Source map
 
-Paths below are relative to [`Kilo-Org/kilocode`](https://github.com/Kilo-Org/kilocode).
+Paths below are relative to [`Accure-Inc/accure-code`](https://github.com/Accure-Inc/accure-code).
 
 | Concern | Source path |
 |---|---|
 | Split modules | `packages/accure-jetbrains/settings.gradle.kts` and module XML descriptors |
 | Contributor constraints | `packages/accure-jetbrains/AGENTS.md` |
-| CLI lifecycle | `packages/accure-jetbrains/backend/src/main/kotlin/ai/kilocode/backend/cli/KiloBackendCliManager.kt` |
-| Connection recovery | `packages/accure-jetbrains/backend/src/main/kotlin/ai/kilocode/backend/app/KiloBackendConnectionService.kt` |
-| Workspace cache | `packages/accure-jetbrains/backend/src/main/kotlin/ai/kilocode/backend/workspace/KiloBackendWorkspaceManager.kt` |
+| CLI lifecycle | `packages/accure-jetbrains/backend/src/main/kotlin/ai/accurecode/backend/cli/AccureBackendCliManager.kt` |
+| Connection recovery | `packages/accure-jetbrains/backend/src/main/kotlin/ai/accurecode/backend/app/AccureBackendConnectionService.kt` |
+| Workspace cache | `packages/accure-jetbrains/backend/src/main/kotlin/ai/accurecode/backend/workspace/AccureBackendWorkspaceManager.kt` |
 | Kotlin client generation | `packages/accure-jetbrains/backend/build.gradle.kts` |
-| RPC contracts | `packages/accure-jetbrains/shared/src/main/kotlin/ai/kilocode/rpc/` |
+| RPC contracts | `packages/accure-jetbrains/shared/src/main/kotlin/ai/accurecode/rpc/` |
 
 ## Related pages
 

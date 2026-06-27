@@ -28,7 +28,7 @@ describe("tui sync (#26560)", () => {
       directory,
       project_id: "proj_test",
     }
-    // kilocode_change start
+    // accurecode_change start
     const { app, sync } = await provideTestInstance({
       directory: tmp.path,
       fn: () =>
@@ -41,13 +41,13 @@ describe("tui sync (#26560)", () => {
           return undefined
         }),
     })
-    // kilocode_change end
+    // accurecode_change end
 
     try {
       await expect(sync.session.sync(sessionID)).resolves.toBeUndefined()
     } finally {
       app.renderer.destroy()
-      await disposeAllInstances() // kilocode_change
+      await disposeAllInstances() // accurecode_change
       Global.Path.state = previous
     }
   })

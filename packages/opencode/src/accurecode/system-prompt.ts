@@ -1,11 +1,11 @@
-// kilocode_change - new file
+// accurecode_change - new file
 
 import { Global } from "@opencode-ai/core/global"
-import { staticEnvLines, type EditorContext } from "@/kilocode/editor-context"
+import { staticEnvLines, type EditorContext } from "@/accurecode/editor-context"
 import type { Provider } from "@/provider/provider"
 import type { InstanceContext } from "@/project/instance-context"
 
-export namespace KilocodeSystemPrompt {
+export namespace AccurecodeSystemPrompt {
   export function environment(input: { ctx: InstanceContext; model: Provider.Model; editor?: EditorContext }) {
     return [
       [
@@ -15,7 +15,7 @@ export namespace KilocodeSystemPrompt {
         `  Is directory a git repo: ${input.ctx.project.vcs === "git" ? "yes" : "no"}`,
         `  Platform: ${process.platform}`,
         `  Today's date: ${new Date().toDateString()}`,
-        `  Project config: .kilo/command/*.md, .kilo/agent/*.md, kilo.json, AGENTS.md. Put new commands and agents in .kilo/. Do not use .kilocode/ or .opencode/.`,
+        `  Project config: .accurecode/command/*.md, .accurecode/agent/*.md, accure.json, AGENTS.md. Put new commands and agents in .accurecode/. Do not use .accurecode/ or .opencode/.`,
         `  Global config: ${Global.Path.config}/ (same structure)`,
         ...staticEnvLines(input.editor),
         `</env>`,

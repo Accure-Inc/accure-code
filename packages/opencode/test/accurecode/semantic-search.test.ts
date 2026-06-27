@@ -2,8 +2,8 @@ import { describe, expect, test, spyOn } from "bun:test"
 import path from "path"
 import { Effect, Layer, ManagedRuntime } from "effect"
 import { Agent } from "../../src/agent/agent"
-import { SemanticSearchTool } from "../../src/kilocode/tool/semantic-search"
-import { KiloIndexing } from "../../src/kilocode/indexing"
+import { SemanticSearchTool } from "../../src/accurecode/tool/semantic-search"
+import { AccureIndexing } from "../../src/accurecode/indexing"
 import { provideTestInstance } from "../fixture/fixture"
 import { tmpdir } from "../fixture/fixture"
 import type { Permission } from "../../src/permission"
@@ -52,7 +52,7 @@ describe("tool.semantic_search", () => {
       directory: tmp.path,
       fn: async () => {
         const requests: Array<Omit<Permission.Request, "id" | "sessionID" | "tool">> = []
-        const search = spyOn(KiloIndexing, "search").mockResolvedValue([])
+        const search = spyOn(AccureIndexing, "search").mockResolvedValue([])
 
         try {
           const tool = await initTool()
@@ -92,7 +92,7 @@ describe("tool.semantic_search", () => {
     await provideTestInstance({
       directory: tmp.path,
       fn: async () => {
-        const search = spyOn(KiloIndexing, "search").mockResolvedValue([])
+        const search = spyOn(AccureIndexing, "search").mockResolvedValue([])
 
         try {
           const tool = await initTool()
@@ -113,7 +113,7 @@ describe("tool.semantic_search", () => {
     await provideTestInstance({
       directory: tmp.path,
       fn: async () => {
-        const search = spyOn(KiloIndexing, "search").mockResolvedValue([
+        const search = spyOn(AccureIndexing, "search").mockResolvedValue([
           {
             id: "1",
             score: 0.812345,
@@ -169,7 +169,7 @@ describe("tool.semantic_search", () => {
     await provideTestInstance({
       directory: tmp.path,
       fn: async () => {
-        const search = spyOn(KiloIndexing, "search").mockResolvedValue([])
+        const search = spyOn(AccureIndexing, "search").mockResolvedValue([])
 
         try {
           const tool = await initTool()

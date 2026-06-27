@@ -70,12 +70,12 @@ export const RevertPayload = Schema.Struct(Struct.omit(SessionRevert.RevertInput
 export const PermissionResponsePayload = Schema.Struct({
   response: Permission.Reply,
 })
-// kilocode_change start
+// accurecode_change start
 export const ViewedPayload = Schema.Struct({
   focused: Schema.optional(Schema.Array(Schema.String)),
   open: Schema.optional(Schema.Array(Schema.String)),
 })
-// kilocode_change end
+// accurecode_change end
 
 export const SessionPaths = {
   list: root,
@@ -104,7 +104,7 @@ export const SessionPaths = {
   deleteMessage: `${root}/:sessionID/message/:messageID`,
   deletePart: `${root}/:sessionID/message/:messageID/part/:partID`,
   updatePart: `${root}/:sessionID/message/:messageID/part/:partID`,
-  viewed: `${root}/viewed`, // kilocode_change
+  viewed: `${root}/viewed`, // accurecode_change
 } as const
 
 export const SessionApi = HttpApi.make("session")
@@ -118,7 +118,7 @@ export const SessionApi = HttpApi.make("session")
           OpenApi.annotations({
             identifier: "session.list",
             summary: "List sessions",
-            description: "Get a list of all Kilo sessions, sorted by most recently updated.", // kilocode_change
+            description: "Get a list of all Accure sessions, sorted by most recently updated.", // accurecode_change
           }),
         ),
         HttpApiEndpoint.get("status", SessionPaths.status, {
@@ -141,7 +141,7 @@ export const SessionApi = HttpApi.make("session")
           OpenApi.annotations({
             identifier: "session.get",
             summary: "Get session",
-            description: "Retrieve detailed information about a specific Kilo session.", // kilocode_change
+            description: "Retrieve detailed information about a specific Accure session.", // accurecode_change
           }),
         ),
         HttpApiEndpoint.get("children", SessionPaths.children, {
@@ -212,7 +212,7 @@ export const SessionApi = HttpApi.make("session")
           OpenApi.annotations({
             identifier: "session.create",
             summary: "Create session",
-            description: "Create a new Kilo session for interacting with AI assistants and managing conversations.", // kilocode_change
+            description: "Create a new Accure session for interacting with AI assistants and managing conversations.", // accurecode_change
           }),
         ),
         HttpApiEndpoint.delete("remove", SessionPaths.remove, {
@@ -243,9 +243,9 @@ export const SessionApi = HttpApi.make("session")
         HttpApiEndpoint.post("fork", SessionPaths.fork, {
           params: { sessionID: SessionID },
           query: WorkspaceRoutingQuery,
-          payload: Schema.optional(ForkPayload), // kilocode_change - carry upstream bodyless full-session fork support
+          payload: Schema.optional(ForkPayload), // accurecode_change - carry upstream bodyless full-session fork support
           success: described(Session.Info, "200"),
-          error: [HttpApiError.BadRequest, ApiNotFoundError], // kilocode_change - carry upstream malformed payload response
+          error: [HttpApiError.BadRequest, ApiNotFoundError], // accurecode_change - carry upstream malformed payload response
         }).annotateMerge(
           OpenApi.annotations({
             identifier: "session.fork",
@@ -445,7 +445,7 @@ export const SessionApi = HttpApi.make("session")
             description: "Update a part in a message.",
           }),
         ),
-        // kilocode_change start
+        // accurecode_change start
         HttpApiEndpoint.post("viewed", SessionPaths.viewed, {
           query: WorkspaceRoutingQuery,
           payload: ViewedPayload,
@@ -457,7 +457,7 @@ export const SessionApi = HttpApi.make("session")
             description: "Notify the server which sessions the user is currently viewing, or clear all.",
           }),
         ),
-        // kilocode_change end
+        // accurecode_change end
       )
       .annotateMerge(
         OpenApi.annotations({

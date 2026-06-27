@@ -1,5 +1,5 @@
 /**
- * KiloClaw chat slash-command autocomplete.
+ * AccureClaw chat slash-command autocomplete.
  *
  * Slim port of `cli/cmd/tui/component/prompt/autocomplete.tsx` — drops the
  * `@`-mode branches (file mentions, agents, MCP resources, frecency,
@@ -9,7 +9,7 @@
  * prop. We intentionally do NOT pull from the global `useCommandSlashes()` registry
  * because that registry holds globally-registered commands across all
  * routes (e.g. the home route's `/new` for sessions), which would clash
- * with kiloclaw's own `/new` for conversations.
+ * with accureclaw's own `/new` for conversations.
  *
  * Mounts as an absolutely-positioned popup above the chat textarea and
  * suspends the global command keybinds while open so arrow keys drive the
@@ -172,13 +172,13 @@ export function ClawAutocomplete(props: {
     target: props.input,
     enabled: () => store.visible,
     bindings: [
-      { key: "up", desc: "Previous command", group: "KiloClaw", cmd: () => move(-1) },
-      { key: "ctrl+p", desc: "Previous command", group: "KiloClaw", cmd: () => move(-1) },
-      { key: "down", desc: "Next command", group: "KiloClaw", cmd: () => move(1) },
-      { key: "ctrl+n", desc: "Next command", group: "KiloClaw", cmd: () => move(1) },
-      { key: "escape", desc: "Hide autocomplete", group: "KiloClaw", cmd: hide },
-      { key: "return", desc: "Select command", group: "KiloClaw", cmd: select },
-      { key: "tab", desc: "Select command", group: "KiloClaw", cmd: select },
+      { key: "up", desc: "Previous command", group: "AccureClaw", cmd: () => move(-1) },
+      { key: "ctrl+p", desc: "Previous command", group: "AccureClaw", cmd: () => move(-1) },
+      { key: "down", desc: "Next command", group: "AccureClaw", cmd: () => move(1) },
+      { key: "ctrl+n", desc: "Next command", group: "AccureClaw", cmd: () => move(1) },
+      { key: "escape", desc: "Hide autocomplete", group: "AccureClaw", cmd: hide },
+      { key: "return", desc: "Select command", group: "AccureClaw", cmd: select },
+      { key: "tab", desc: "Select command", group: "AccureClaw", cmd: select },
       {
         key: "right",
         fallthrough: true,

@@ -5,36 +5,27 @@
 <div dir="rtl">
 
 <p align="center">
-  <a href="https://kilo.ai"><img width="250" alt="Kilo Code logo" src="https://github.com/user-attachments/assets/bdb0c174-b9fd-40ad-a47b-f3aab9b54e8d" /></a>
+  <a href="https://accure.ai"><img width="250" alt="Accure Code logo" src="logo.png" /></a>
 </p>
 
 <p align="center">وكيل برمجة مفتوح المصدر للبناء باستخدام الذكاء الاصطناعي في VS Code أو JetBrains أو CLI.</p>
 
-<p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code"><img src="https://raster.shields.io/badge/VS_Code_Marketplace-007ACC?style=flat&logo=visualstudiocode&logoColor=white" alt="VS Code Marketplace" height="20"></a>
-  <a href="https://www.npmjs.com/package/@kilocode/cli"><img alt="npm" src="https://raster.shields.io/npm/v/@kilocode/cli?style=flat" height="20" /></a>
-  <a href="https://x.com/kilocode"><img src="https://raster.shields.io/badge/kilocode-000000?style=flat&logo=x&logoColor=white" alt="X (Twitter)" height="20"></a>
-  <a href="https://blog.kilo.ai"><img src="https://raster.shields.io/badge/Blog-555?style=flat&logo=substack&logoColor=white" alt="Blog" height="20"></a>
-  <a href="https://kilo.ai/discord"><img src="https://raster.shields.io/badge/Join%20Discord-5865F2?style=flat&logo=discord&logoColor=white" alt="Discord" height="20"></a>
-  <a href="https://www.reddit.com/r/kilocode/"><img src="https://raster.shields.io/badge/Join%20r%2Fkilocode-D84315?style=flat&logo=reddit&logoColor=white" alt="Reddit" height="20"></a>
-</p>
-
-![Kilo-in-VS-Code-and-CLI](https://github.com/user-attachments/assets/0536ca59-ed81-4512-9e05-d186187a1b52)
+![Accure-in-VS-Code-and-CLI](screenshot.png)
 
 ---
 
-Kilo Code هو وكيل برمجة بالذكاء الاصطناعي يعمل معك أينما تعمل: [VS Code](https://kilo.ai/landing/vs-code) و[JetBrains](https://kilo.ai/features/jetbrains-native) و[CLI](https://kilo.ai/cli). إنه مفتوح المصدر وبتسعير مفتوح. يمكنك الاختيار من بين أكثر من 500 نموذج، والتبديل بينها أثناء المهمة، ودفع سعر مزود النموذج من دون أي هامش إضافي. لا تحتاج إلى مفاتيح API للبدء.
+Accure Code هو وكيل برمجة بالذكاء الاصطناعي يعمل معك أينما تعمل: [VS Code](https://accure.ai/landing/vs-code) و[JetBrains](https://accure.ai/features/jetbrains-native) و[CLI](https://accure.ai/cli). إنه مفتوح المصدر وبتسعير مفتوح. يمكنك الاختيار من بين أكثر من 500 نموذج، والتبديل بينها أثناء المهمة، ودفع سعر مزود النموذج من دون أي هامش إضافي. لا تحتاج إلى مفاتيح API للبدء.
 
 ### التثبيت
 
-اختر المكان الذي تريد تشغيل Kilo فيه.
+اختر المكان الذي تريد تشغيل Accure فيه.
 
 <details open>
 <summary><strong>VS Code</strong></summary>
 
 <br>
 
-ثبّت [إضافة Kilo Code](vscode:extension/kilocode.kilo-code) مباشرة، أو احصل عليها من [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code). أنشئ حسابًا وستحصل على إمكانية الوصول إلى أكثر من 500 نموذج، بما في ذلك GPT-5.5 وClaude Opus 4.7 وClaude Sonnet 4.6 وGemini 3.1 Pro Preview، كلها بسعر المزود.
+ثبّت [إضافة Accure Code](vscode:extension/accurecode.accure-code) مباشرة، أو احصل عليها من [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=accurecode.Accure-Code). أنشئ حسابًا وستحصل على إمكانية الوصول إلى أكثر من 500 نموذج، بما في ذلك GPT-5.5 وClaude Opus 4.7 وClaude Sonnet 4.6 وGemini 3.1 Pro Preview، كلها بسعر المزود.
 
 </details>
 
@@ -45,25 +36,25 @@ Kilo Code هو وكيل برمجة بالذكاء الاصطناعي يعمل م
 
 ```bash
 # npm
-npm install -g @kilocode/cli
+npm install -g @accurecode/cli
 
 # curl
-curl -fsSL https://kilo.ai/cli/install | bash
+curl -fsSL https://accure.ai/cli/install | bash
 
 # pnpm
-pnpm add -g @kilocode/cli
+pnpm add -g @accurecode/cli
 
 # bun
-bun add -g @kilocode/cli
+bun add -g @accurecode/cli
 
 # Homebrew (macOS / Linux)
-brew install Kilo-Org/tap/kilo
+brew install Accure-Org/tap/accure
 
 # Arch Linux (AUR)
-paru -S kilo-bin
+paru -S accure-bin
 ```
 
-بعد ذلك شغّل `kilo` في أي مجلد مشروع للبدء.
+بعد ذلك شغّل `accure` في أي مجلد مشروع للبدء.
 
 </details>
 
@@ -72,7 +63,7 @@ paru -S kilo-bin
 
 <br>
 
-ثبّت [إضافة Kilo Code](https://plugins.jetbrains.com/plugin/28350-kilo-code) من JetBrains Marketplace، أو ابحث عن "Kilo Code" في `Settings → Plugins` داخل أي JetBrains IDE.
+ثبّت [إضافة Accure Code](https://plugins.jetbrains.com/plugin/28350-accure-code) من JetBrains Marketplace، أو ابحث عن "Accure Code" في `Settings → Plugins` داخل أي JetBrains IDE.
 
 </details>
 
@@ -81,7 +72,7 @@ paru -S kilo-bin
 
 <br>
 
-شغّل Kilo من الويب، من دون جهاز محلي، على [app.kilo.ai/cloud](https://app.kilo.ai/cloud).
+شغّل Accure من الويب، من دون جهاز محلي، على [app.accure.ai/cloud](https://app.accure.ai/cloud).
 
 </details>
 
@@ -90,31 +81,31 @@ paru -S kilo-bin
 
 <br>
 
-أعدّ مراجعات كود آلية بالذكاء الاصطناعي لطلبات السحب الخاصة بك على [app.kilo.ai/code-reviews](https://app.kilo.ai/code-reviews).
+أعدّ مراجعات كود آلية بالذكاء الاصطناعي لطلبات السحب الخاصة بك على [app.accure.ai/code-reviews](https://app.accure.ai/code-reviews).
 
 </details>
 
 <details>
-<summary><strong>KiloClaw</strong></summary>
+<summary><strong>AccureClaw</strong></summary>
 
 <br>
 
-شغّل وكيل الذكاء الاصطناعي الدائم لديك على [app.kilo.ai/claw](https://app.kilo.ai/claw).
+شغّل وكيل الذكاء الاصطناعي الدائم لديك على [app.accure.ai/claw](https://app.accure.ai/claw).
 
 </details>
 
 <details>
 <summary>تثبيت CLI من GitHub Releases (ملفات ثنائية)</summary>
 
-نزّل أحدث ملف ثنائي من [صفحة Releases](https://github.com/Kilo-Org/kilocode/releases).
+نزّل أحدث ملف ثنائي من [صفحة Releases](https://github.com/Accure-Org/accurecode/releases).
 
 | المنصة | الملف |
 |---|---|
-| Windows (معظم أجهزة PC) | `kilo-windows-x64.zip` |
-| macOS (Apple Silicon) | `kilo-darwin-arm64.zip` |
-| macOS (Intel) | `kilo-darwin-x64.zip` |
-| Linux x64 | `kilo-linux-x64.tar.gz` |
-| Linux ARM | `kilo-linux-arm64.tar.gz` |
+| Windows (معظم أجهزة PC) | `accure-windows-x64.zip` |
+| macOS (Apple Silicon) | `accure-darwin-arm64.zip` |
+| macOS (Intel) | `accure-darwin-x64.zip` |
+| Linux x64 | `accure-linux-x64.tar.gz` |
+| Linux ARM | `accure-linux-arm64.tar.gz` |
 
 ملاحظات: `x64-baseline` هو بناء توافق للمعالجات القديمة التي لا تدعم AVX. `musl` هو البناء المرتبط ثابتًا لـ Alpine أو صور Docker البسيطة من دون glibc. `accure-vscode-*.vsix` هو حزمة إضافة VS Code وليس CLI. أرشيفات `Source code` مخصصة للبناء من المصدر.
 
@@ -122,7 +113,7 @@ paru -S kilo-bin
 
 ### Agents
 
-يأتي Kilo مع agents متخصصة يمكنك التبديل بينها حسب المهمة. يمكنك أيضًا إنشاء agents مخصصة خاصة بك.
+يأتي Accure مع agents متخصصة يمكنك التبديل بينها حسب المهمة. يمكنك أيضًا إنشاء agents مخصصة خاصة بك.
 
 - **Code** - الافتراضي. ينفذ الكود ويعدّله من اللغة الطبيعية.
 - **Plan** - يصمم البنية ويكتب خطط التنفيذ قبل كتابة أي كود.
@@ -130,7 +121,7 @@ paru -S kilo-bin
 - **Debug** - يستكشف المشكلات ويتتبعها.
 - **Review** - يراجع تغييراتك ويكشف مشكلات الأداء والأمان والأسلوب وتغطية الاختبارات.
 
-تعرّف أكثر على [agents وagents المخصصة](https://kilo.ai/docs/code-with-ai/agents/using-agents).
+تعرّف أكثر على [agents وagents المخصصة](https://accure.ai/docs/code-with-ai/agents/using-agents).
 
 ### ما الذي يفعله
 
@@ -143,17 +134,17 @@ paru -S kilo-bin
 
 ### الوضع المستقل (CI/CD)
 
-شغّل `kilo run` مع `--auto` للعمل بشكل مستقل بالكامل ومن دون prompts، وهو مصمم لخطوط CI/CD:
+شغّل `accure run` مع `--auto` للعمل بشكل مستقل بالكامل ومن دون prompts، وهو مصمم لخطوط CI/CD:
 
 ```bash
-kilo run --auto "run tests and fix any failures"
+accure run --auto "run tests and fix any failures"
 ```
 
 يعطّل `--auto` كل مطالبات الأذونات ويسمح للوكيل بتنفيذ أي إجراء من دون تأكيد. استخدمه فقط في بيئات موثوقة.
 
 ### التوثيق
 
-لإعدادات التكوين وكل ما عدا ذلك، راجع [التوثيق](https://kilo.ai/docs).
+لإعدادات التكوين وكل ما عدا ذلك، راجع [التوثيق](https://accure.ai/docs).
 
 ### المساهمة
 
@@ -168,14 +159,14 @@ MIT. يمكنك استخدام هذا الكود وتعديله وتوزيعه،
 ### FAQ
 
 <details>
-<summary>من أين جاء Kilo CLI؟</summary>
+<summary>من أين جاء Accure CLI؟</summary>
 
-Kilo CLI هو fork من [OpenCode](https://github.com/Kilo-Org/kilocode)، وتم تحسينه للعمل داخل منصة Kilo agentic engineering.
+Accure CLI هو fork من [OpenCode](https://github.com/Accure-Org/accurecode)، وتم تحسينه للعمل داخل منصة Accure agentic engineering.
 
 </details>
 
 ---
 
-**انضم إلى المجتمع** [Discord](https://kilo.ai/discord) | [X](https://x.com/kilocode) | [Reddit](https://www.reddit.com/r/kilocode/)
+**انضم إلى المجتمع** [Discord](https://accure.ai/discord) | [X](https://x.com/accurecode) | [Reddit](https://www.reddit.com/r/accurecode/)
 
 </div>

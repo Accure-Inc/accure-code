@@ -14,7 +14,7 @@
 import type { TextareaRenderable } from "@opentui/core"
 import { useKeyboard, useTerminalDimensions } from "@opentui/solid"
 import { For, Match, Show, Switch, createEffect, createMemo, createSignal } from "solid-js"
-import type { PermissionRequest } from "@kilocode/sdk/v2"
+import type { PermissionRequest } from "@accurecode/sdk/v2"
 import {
   createPermissionBodyState,
   permissionAlwaysLines,
@@ -99,7 +99,7 @@ function RejectField(props: {
       minHeight={1}
       maxHeight={3}
       wrapMode="word"
-      placeholder={"Tell Kilo what to do differently" /* kilocode_change */}
+      placeholder={"Tell Accure what to do differently" /* accurecode_change */}
       placeholderColor={props.theme.muted}
       textColor={props.theme.text}
       focusedTextColor={props.theme.text}
@@ -288,7 +288,7 @@ export function RunPermissionBody(props: {
           </Match>
           <Match when={state().stage === "reject"}>
             <box paddingLeft={1}>
-              <text fg={props.theme.muted}>{"Tell Kilo what to do differently" /* kilocode_change */}</text>
+              <text fg={props.theme.muted}>{"Tell Accure what to do differently" /* accurecode_change */}</text>
             </box>
           </Match>
         </Switch>

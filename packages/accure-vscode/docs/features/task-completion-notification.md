@@ -1,7 +1,7 @@
 # Task Completion Notification
 
 **Priority:** P2
-**Issue:** [#6084](https://github.com/Kilo-Org/kilocode/issues/6084)
+**Issue:** [#6084](https://github.com/Accure-Inc/accure-code/issues/6084)
 
 ## Remaining Work
 
@@ -9,4 +9,4 @@
 - Use `showInformationMessage()` for task completion, `showWarningMessage()` for permission requests
 - Add a setting to enable/disable notifications (default: on)
 - Notifications should include a "Show" button that focuses the webview panel
-- Only fire when `KiloProvider.panel.visible` is false
+- Only fire when `AccureProvider.panel.visible` is false

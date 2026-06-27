@@ -1,26 +1,26 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test"
-import { SessionExport } from "@/kilocode/session-export"
-import { getKillSwitchReason, resetEligibility } from "@/kilocode/session-export/eligibility"
+import { SessionExport } from "@/accurecode/session-export"
+import { getKillSwitchReason, resetEligibility } from "@/accurecode/session-export/eligibility"
 
 describe("SessionExport worker respawn", () => {
   let feature: string | undefined
 
   beforeEach(async () => {
     await SessionExport.shutdown()
-    feature = process.env.KILOCODE_FEATURE
+    feature = process.env.ACCURECODE_FEATURE
     resetEligibility()
   })
 
   afterEach(async () => {
     await SessionExport.shutdown()
     resetEligibility()
-    if (feature === undefined) delete process.env.KILOCODE_FEATURE
-    else process.env.KILOCODE_FEATURE = feature
+    if (feature === undefined) delete process.env.ACCURECODE_FEATURE
+    else process.env.ACCURECODE_FEATURE = feature
   })
 
   test("passes surface to worker init", () => {
     const workers: FakeWorker[] = []
-    process.env.KILOCODE_FEATURE = "cli"
+    process.env.ACCURECODE_FEATURE = "cli"
     SessionExport.init({
       agentVersion: "v0",
       dbPath: ":memory:",
@@ -187,7 +187,7 @@ class FakeWorker {
 function request(sessionId: string, workspaceKey?: string): Parameters<typeof SessionExport.beforeRequest>[0] {
   return {
     input: {
-      model: { api: { npm: "@kilocode/accure-gateway" }, isFree: true, providerId: "kilo", modelId: "free-1" },
+      model: { api: { npm: "@accurecode/accure-gateway" }, isFree: true, providerId: "accure", modelId: "free-1" },
       org: { type: "personal" },
     },
     requestMeta: {

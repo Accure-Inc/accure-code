@@ -1,6 +1,6 @@
-package ai.kilocode.client.settings.base
+package ai.accurecode.client.settings.base
 
-import ai.kilocode.client.ui.UiStyle
+import ai.accurecode.client.ui.UiStyle
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.JBUI
 import java.awt.BorderLayout

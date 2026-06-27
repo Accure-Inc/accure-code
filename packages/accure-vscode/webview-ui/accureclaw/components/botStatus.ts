@@ -2,7 +2,7 @@
 // VS Code extension reaches the same conclusions for
 // "online / idle / offline / unknown".
 //
-// Ref: cloud/apps/web/src/app/(app)/claw/kilo-chat/components/BotStatus.tsx
+// Ref: cloud/apps/web/src/app/(app)/claw/accure-chat/components/BotStatus.tsx
 
 import { createSignal, onCleanup } from "solid-js"
 

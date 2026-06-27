@@ -11,7 +11,7 @@ import { spawn as lspspawn } from "./launch"
 import { Effect, Layer, Context, Schema } from "effect"
 import { InstanceState } from "@/effect/instance-state"
 import { containsPath } from "@/project/instance-context"
-import { TsClient } from "../kilocode/ts-client" // kilocode_change
+import { TsClient } from "../accurecode/ts-client" // accurecode_change
 import { NonNegativeInt } from "@opencode-ai/core/schema"
 import { RuntimeFlags } from "@/effect/runtime-flags"
 
@@ -102,7 +102,7 @@ const kinds = [
 const filterExperimentalServers = (servers: Record<string, LSPServer.Info>, flags: RuntimeFlags.Info) => {
   if (flags.experimentalLspTy) {
     if (servers["pyright"]) {
-      log.info("LSP server pyright is disabled because KILO_EXPERIMENTAL_LSP_TY is enabled")
+      log.info("LSP server pyright is disabled because ACCURECODE_EXPERIMENTAL_LSP_TY is enabled")
       delete servers["pyright"]
     }
   } else {
@@ -265,7 +265,7 @@ export const layer = Layer.effect(
           if (!root) continue
           if (s.broken.has(root + server.id)) continue
 
-          // kilocode_change start - use lightweight tsgo-based client when persistent LSP is not enabled
+          // accurecode_change start - use lightweight tsgo-based client when persistent LSP is not enabled
           if (server.id === "typescript" && !flags.experimentalLspTool) {
             const existing = s.clients.find((x) => x.root === root && x.serverID === server.id)
             if (existing) {
@@ -278,7 +278,7 @@ export const layer = Layer.effect(
             await Bus.publish(ctx, Event.Updated, {})
             continue
           }
-          // kilocode_change end
+          // accurecode_change end
 
           const match = s.clients.find((x) => x.root === root && x.serverID === server.id)
           if (match) {

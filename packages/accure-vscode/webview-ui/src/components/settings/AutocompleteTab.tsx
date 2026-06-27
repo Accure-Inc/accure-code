@@ -1,6 +1,6 @@
 import { Component } from "solid-js"
-import { Switch } from "@kilocode/accure-ui/switch"
-import { Card } from "@kilocode/accure-ui/card"
+import { Switch } from "@accurecode/accure-ui/switch"
+import { Card } from "@accurecode/accure-ui/card"
 import { useConfig } from "../../context/config"
 import { useLanguage } from "../../context/language"
 import SettingsRow from "./SettingsRow"
@@ -65,7 +65,7 @@ const AutocompleteTab: Component<{ onNavigateToModels?: () => void }> = (props) 
         data-slot="autocomplete-models-hint"
         style={{
           "margin-top": "20px",
-          "font-size": "var(--kilo-font-size-12)",
+          "font-size": "var(--accure-font-size-12)",
           "text-align": "right",
           color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
         }}

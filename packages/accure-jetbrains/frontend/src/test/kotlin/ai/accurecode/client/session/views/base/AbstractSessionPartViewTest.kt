@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.views.base
+package ai.accurecode.client.session.views.base
 
-import ai.kilocode.client.session.model.Content
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.session.views.SessionViewIcons
+import ai.accurecode.client.session.model.Content
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.session.views.SessionViewIcons
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import java.awt.Color
 import java.awt.Component

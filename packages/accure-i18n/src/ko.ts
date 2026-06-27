@@ -1,18 +1,18 @@
 export const dict = {
-  // Kilo Gateway provider translations
-  "provider.connect.kiloGateway.line1":
-    "Kilo Gateway는 코딩 에이전트를 위한 신뢰할 수 있는 최적화된 모델 세트를 제공합니다.",
-  "provider.connect.kiloGateway.line2": "하나의 API 키로 Claude, GPT, Gemini, GLM 등의 모델을 사용할 수 있습니다.",
-  "provider.connect.kiloGateway.visit.prefix": "",
-  "provider.connect.kiloGateway.visit.link": "kilo.ai",
-  "provider.connect.kiloGateway.visit.suffix": "를 방문하여 API 키를 받으세요.",
-  "provider.connect.kiloGateway.byok.prefix": "더 많은 사용 통계를 보려면 ",
-  "provider.connect.kiloGateway.byok.link": "Kilo's Gateway를 통해 BYOK",
-  "provider.connect.kiloGateway.byok.suffix": "를 사용하세요.",
+  // Accure Gateway provider translations
+  "provider.connect.accureGateway.line1":
+    "Accure Gateway는 코딩 에이전트를 위한 신뢰할 수 있는 최적화된 모델 세트를 제공합니다.",
+  "provider.connect.accureGateway.line2": "하나의 API 키로 Claude, GPT, Gemini, GLM 등의 모델을 사용할 수 있습니다.",
+  "provider.connect.accureGateway.visit.prefix": "",
+  "provider.connect.accureGateway.visit.link": "accure.ai",
+  "provider.connect.accureGateway.visit.suffix": "를 방문하여 API 키를 받으세요.",
+  "provider.connect.accureGateway.byok.prefix": "더 많은 사용 통계를 보려면 ",
+  "provider.connect.accureGateway.byok.link": "Accure's Gateway를 통해 BYOK",
+  "provider.connect.accureGateway.byok.suffix": "를 사용하세요.",
 
   // Provider settings translations
   "settings.providers.group.recommended": "추천",
-  "settings.providers.note.kilo": "500개 이상의 AI 모델 이용 가능",
+  "settings.providers.note.accurecode": "500개 이상의 AI 모델 이용 가능",
   "settings.providers.note.opencode": "Claude, GPT, Gemini 등을 포함한 엄선된 모델",
   "settings.providers.note.anthropic": "Pro 및 Max를 포함한 Claude 모델에 직접 액세스",
   "settings.providers.note.deepseek": "추론 및 코딩 작업을 위한 DeepSeek 모델",
@@ -100,7 +100,7 @@ export const dict = {
     "스냅샷이 완료될 때까지 기다리세요. 초기 스냅샷이 만들어지면 이후 턴은 빠릅니다.",
   "snapshot.slowRepo.answer.disable": "이 프로젝트에서 비활성화",
   "snapshot.slowRepo.answer.disable.description":
-    "이 프로젝트의 Kilo 스냅샷을 끕니다. Kilo 변경에 대한 실행 취소/다시 실행은 사용할 수 없지만 git은 여전히 모든 것을 추적합니다.",
+    "이 프로젝트의 Accure 스냅샷을 끕니다. Accure 변경에 대한 실행 취소/다시 실행은 사용할 수 없지만 git은 여전히 모든 것을 추적합니다.",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "차이점 뷰어에서 열기",

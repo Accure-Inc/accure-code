@@ -1,10 +1,10 @@
 import type { LegacyApiMessage, LegacyHistoryItem } from "./lib/legacy-types"
 import type {
-  KilocodeSessionImportMessageData as Message,
-  KilocodeSessionImportPartData as Part,
-  KilocodeSessionImportProjectData as Project,
-  KilocodeSessionImportSessionData as Session,
-} from "@kilocode/sdk/v2"
+  AccurecodeSessionImportMessageData as Message,
+  AccurecodeSessionImportPartData as Part,
+  AccurecodeSessionImportProjectData as Project,
+  AccurecodeSessionImportSessionData as Session,
+} from "@accurecode/sdk/v2"
 import { getApiConversationHistory, parseFile } from "./lib/legacy-conversation"
 import { parseMessagesFromConversation } from "./lib/messages"
 import { parsePartsFromConversation } from "./lib/parts/parts"

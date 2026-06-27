@@ -1,14 +1,14 @@
 ---
 title: "API Reference"
-description: "Complete API reference for the Kilo AI Gateway, including chat completions, FIM completions, and model listing endpoints."
+description: "Complete API reference for the Accure AI Gateway, including chat completions, FIM completions, and model listing endpoints."
 ---
 
 # API Reference
 
-The Kilo AI Gateway provides an OpenAI-compatible API. All endpoints use the base URL:
+The Accure AI Gateway provides an OpenAI-compatible API. All endpoints use the base URL:
 
 ```
-https://api.kilo.ai/api/gateway
+https://api.accurecode.ai/api/gateway
 ```
 
 ## Chat completions
@@ -130,8 +130,8 @@ type ChatCompletionChunk = {
 ### Example request
 
 ```bash
-curl -X POST "https://api.kilo.ai/api/gateway/chat/completions" \
-  -H "Authorization: Bearer $KILO_API_KEY" \
+curl -X POST "https://api.accurecode.ai/api/gateway/chat/completions" \
+  -H "Authorization: Bearer $ACCURECODE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "anthropic/claude-sonnet-4.5",
@@ -263,8 +263,8 @@ type FIMRequest = {
 ### Example request
 
 ```bash
-curl -X POST "https://api.kilo.ai/api/fim/completions" \
-  -H "Authorization: Bearer $KILO_API_KEY" \
+curl -X POST "https://api.accurecode.ai/api/fim/completions" \
+  -H "Authorization: Bearer $ACCURECODE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "mistralai/codestral-2508",

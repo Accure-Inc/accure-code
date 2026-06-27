@@ -31,7 +31,7 @@ import { resetDatabase } from "../fixture/db"
 import { disposeAllInstances, tmpdir } from "../fixture/fixture"
 import { it } from "../lib/effect"
 
-const originalWorkspaces = Flag.KILO_EXPERIMENTAL_WORKSPACES
+const originalWorkspaces = Flag.ACCURECODE_EXPERIMENTAL_WORKSPACES
 
 type Method = "get" | "post" | "put" | "delete" | "patch"
 type QuerySchema = { readonly fields: Record<string, unknown> }
@@ -89,7 +89,7 @@ const queryParamPatterns = [
 ] satisfies Array<{ method: Method; path: string; name: string; pattern: string }>
 
 const pathParamPatterns = [
-  // kilocode_change start
+  // accurecode_change start
   { method: "get", path: SessionPaths.get, name: "sessionID", pattern: "^ses.*" },
   { method: "get", path: SessionPaths.message, name: "messageID", pattern: "^msg.*" },
   { method: "patch", path: SessionPaths.updatePart, name: "partID", pattern: "^prt.*" },
@@ -98,7 +98,7 @@ const pathParamPatterns = [
   { method: "post", path: "/question/:requestID/reply", name: "requestID", pattern: "^que.*" },
   { method: "put", path: PtyPaths.update, name: "ptyID", pattern: "^pty.*" },
   { method: "delete", path: WorkspacePaths.remove, name: "id", pattern: "^wrk.*" },
-  // kilocode_change end
+  // accurecode_change end
 ] satisfies Array<{ method: Method; path: string; name: string; pattern: string }>
 
 function app() {
@@ -151,7 +151,7 @@ function assertAdvertisedQueryParamsAreRuntimeFields(input: {
 }
 
 afterEach(async () => {
-  Flag.KILO_EXPERIMENTAL_WORKSPACES = originalWorkspaces
+  Flag.ACCURECODE_EXPERIMENTAL_WORKSPACES = originalWorkspaces
   await disposeAllInstances()
   await resetDatabase()
 })

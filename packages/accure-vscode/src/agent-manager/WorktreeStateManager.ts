@@ -1,7 +1,7 @@
 /**
  * WorktreeStateManager - Centralized persistent state for agent manager worktrees and sessions.
  *
- * Persists to `.kilo/agent-manager.json`. Decouples worktrees from sessions
+ * Persists to `.accurecode/agent-manager.json`. Decouples worktrees from sessions
  * (many sessions per worktree) and provides CRUD operations for both.
  *
  * Data model:
@@ -82,7 +82,7 @@ export interface StateLoadResult extends MigrationResult {
   status: StateLoadStatus
 }
 
-import { KILO_DIR, migrateAgentManagerData, type MigrationResult } from "./constants"
+import { ACCURECODE_DIR, migrateAgentManagerData, type MigrationResult } from "./constants"
 
 const STATE_FILE = "agent-manager.json"
 
@@ -114,7 +114,7 @@ export class WorktreeStateManager {
 
   constructor(root: string, log: (msg: string) => void) {
     this.root = root
-    this.file = path.join(root, KILO_DIR, STATE_FILE)
+    this.file = path.join(root, ACCURECODE_DIR, STATE_FILE)
     this.log = log
   }
 
@@ -568,7 +568,7 @@ export class WorktreeStateManager {
   // ---------------------------------------------------------------------------
 
   async load(): Promise<StateLoadResult> {
-    // Migrate Agent Manager data from .kilocode → .kilo before first read
+    // Migrate Agent Manager data from .accurecode → .accurecode before first read
     let migration: MigrationResult = { refsFixed: 0 }
     if (!this.migrated) {
       this.migrated = true
@@ -618,10 +618,10 @@ export class WorktreeStateManager {
     this.reviewDiffStyle = "unified"
 
     for (const [id, wt] of Object.entries(data.worktrees ?? {})) {
-      // Rewrite stale .kilocode paths while preserving the separator style already stored.
+      // Rewrite stale .accurecode paths while preserving the separator style already stored.
       const fixed =
-        wt.path?.replace(/([/\\])\.kilocode([/\\])/g, (_match, leadingSep, trailingSep) => {
-          return `${leadingSep}.kilo${trailingSep}`
+        wt.path?.replace(/([/\\])\.accurecode([/\\])/g, (_match, leadingSep, trailingSep) => {
+          return `${leadingSep}.accurecode${trailingSep}`
         }) ?? wt.path
       this.worktrees.set(id, { id, ...wt, path: fixed })
     }

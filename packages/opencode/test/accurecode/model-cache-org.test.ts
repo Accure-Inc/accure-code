@@ -1,4 +1,4 @@
-// Regression test: OAuth accountId must flow into model fetch as kilocodeOrganizationId
+// Regression test: OAuth accountId must flow into model fetch as accurecodeOrganizationId
 // When a user logs in via OAuth and selects an enterprise organization, the model fetch
 // should use the organization-specific endpoint, not the personal endpoint.
 
@@ -14,15 +14,15 @@ import { ModelCache } from "../../src/provider/model-cache"
 import { TestConfig } from "../fixture/config"
 import { testEffect } from "../lib/effect"
 
-type Options = Parameters<ModelCache.KiloModels["fetch"]>[0]
+type Options = Parameters<ModelCache.AccureModels["fetch"]>[0]
 
 function layer(info: Auth.Info | undefined, captured: Ref.Ref<Options | undefined>) {
   const auth = Layer.mock(Auth.Service)({
-    get: (id) => Effect.succeed(id === "kilo" ? info : undefined),
+    get: (id) => Effect.succeed(id === "accure" ? info : undefined),
   })
   const models = Layer.succeed(
-    ModelCache.KiloModelsService,
-    ModelCache.KiloModelsService.of({
+    ModelCache.AccureModelsService,
+    ModelCache.AccureModelsService.of({
       fetch: (options) =>
         Ref.set(captured, options).pipe(
           Effect.as({
@@ -48,7 +48,7 @@ function layer(info: Auth.Info | undefined, captured: Ref.Ref<Options | undefine
 
 const it = testEffect(Layer.empty)
 
-it.live("model fetch uses accountId from OAuth auth as kilocodeOrganizationId", () =>
+it.live("model fetch uses accountId from OAuth auth as accurecodeOrganizationId", () =>
   Effect.gen(function* () {
     const captured = yield* Ref.make<Options | undefined>(undefined)
     const info = new Auth.Oauth({
@@ -58,15 +58,15 @@ it.live("model fetch uses accountId from OAuth auth as kilocodeOrganizationId", 
       expires: Date.now() + 3600000,
       accountId: "org-enterprise-123",
     })
-    yield* ModelCache.Service.use((cache) => cache.fetch("kilo")).pipe(Effect.provide(layer(info, captured)))
+    yield* ModelCache.Service.use((cache) => cache.fetch("accure")).pipe(Effect.provide(layer(info, captured)))
     expect(yield* Ref.get(captured)).toMatchObject({
-      kilocodeToken: "test-oauth-token",
-      kilocodeOrganizationId: "org-enterprise-123",
+      accurecodeToken: "test-oauth-token",
+      accurecodeOrganizationId: "org-enterprise-123",
     })
   }),
 )
 
-it.live("model fetch without OAuth accountId does not set kilocodeOrganizationId", () =>
+it.live("model fetch without OAuth accountId does not set accurecodeOrganizationId", () =>
   Effect.gen(function* () {
     const captured = yield* Ref.make<Options | undefined>(undefined)
     const info = new Auth.Oauth({
@@ -75,9 +75,9 @@ it.live("model fetch without OAuth accountId does not set kilocodeOrganizationId
       refresh: "test-refresh-token",
       expires: Date.now() + 3600000,
     })
-    yield* ModelCache.Service.use((cache) => cache.fetch("kilo")).pipe(Effect.provide(layer(info, captured)))
-    expect(yield* Ref.get(captured)).toMatchObject({ kilocodeToken: "test-personal-token" })
-    expect((yield* Ref.get(captured))?.kilocodeOrganizationId).toBeUndefined()
+    yield* ModelCache.Service.use((cache) => cache.fetch("accure")).pipe(Effect.provide(layer(info, captured)))
+    expect(yield* Ref.get(captured)).toMatchObject({ accurecodeToken: "test-personal-token" })
+    expect((yield* Ref.get(captured))?.accurecodeOrganizationId).toBeUndefined()
   }),
 )
 
@@ -93,18 +93,18 @@ it.live("ModelCache.clear removes cached entry so next fetch hits the network", 
     })
     yield* ModelCache.Service.use((cache) =>
       Effect.gen(function* () {
-        yield* cache.fetch("kilo")
+        yield* cache.fetch("accure")
         expect(yield* Ref.get(captured)).toBeDefined()
 
         yield* Ref.set(captured, undefined)
-        yield* cache.fetch("kilo")
+        yield* cache.fetch("accure")
         expect(yield* Ref.get(captured)).toBeUndefined()
-        expect(yield* cache.get("kilo")).toBeDefined()
+        expect(yield* cache.get("accure")).toBeDefined()
 
-        yield* cache.clear("kilo")
-        expect(yield* cache.get("kilo")).toBeUndefined()
+        yield* cache.clear("accure")
+        expect(yield* cache.get("accure")).toBeUndefined()
 
-        yield* cache.fetch("kilo")
+        yield* cache.fetch("accure")
         expect(yield* Ref.get(captured)).toBeDefined()
       }),
     ).pipe(Effect.provide(layer(info, captured)))

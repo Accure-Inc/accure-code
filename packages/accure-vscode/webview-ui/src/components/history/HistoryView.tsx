@@ -5,8 +5,8 @@
  */
 
 import { Component, createEffect, createSignal, onCleanup } from "solid-js"
-import { Button } from "@kilocode/accure-ui/button"
-import { useDialog } from "@kilocode/accure-ui/context/dialog"
+import { Button } from "@accurecode/accure-ui/button"
+import { useDialog } from "@accurecode/accure-ui/context/dialog"
 import { useLanguage } from "../../context/language"
 import { useSession } from "../../context/session"
 import { CloudImportDialog } from "../chat/CloudImportDialog"

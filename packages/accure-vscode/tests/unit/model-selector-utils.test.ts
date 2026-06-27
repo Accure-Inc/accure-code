@@ -4,7 +4,7 @@ import {
   buildTriggerLabel,
   stripSubProviderPrefix,
   sanitizeName,
-  KILO_GATEWAY_ID,
+  ACCURECODE_GATEWAY_ID,
   PROVIDER_ORDER,
   freeDataLabel,
   isDataCollectedModel,
@@ -15,8 +15,8 @@ import {
 const labels = { select: "Select model", noProviders: "No providers", notSet: "Not set" }
 
 describe("providerSortKey", () => {
-  it("returns 0 for kilo gateway", () => {
-    expect(providerSortKey(KILO_GATEWAY_ID)).toBe(0)
+  it("returns 0 for accure gateway", () => {
+    expect(providerSortKey(ACCURECODE_GATEWAY_ID)).toBe(0)
   })
 
   it("returns correct index for known providers", () => {
@@ -42,9 +42,9 @@ describe("providerSortKey", () => {
   })
 
   it("sorts providers correctly when used with sort", () => {
-    const ids = ["google", "anthropic", "kilo", "openai", "deepseek"]
+    const ids = ["google", "anthropic", "accure", "openai", "deepseek"]
     const sorted = ids.slice().sort((a, b) => providerSortKey(a) - providerSortKey(b))
-    expect(sorted).toEqual(["kilo", "anthropic", "deepseek", "openai", "google"])
+    expect(sorted).toEqual(["accure", "anthropic", "deepseek", "openai", "google"])
   })
 })
 
@@ -59,9 +59,9 @@ describe("stripSubProviderPrefix", () => {
     expect(stripSubProviderPrefix("claude-3-5-sonnet")).toBe("claude-3-5-sonnet")
   })
 
-  it("does not strip 'Kilo: ' prefix", () => {
-    expect(stripSubProviderPrefix("Kilo: Auto")).toBe("Kilo: Auto")
-    expect(stripSubProviderPrefix("kilo: Auto")).toBe("kilo: Auto")
+  it("does not strip 'Accure: ' prefix", () => {
+    expect(stripSubProviderPrefix("Accure: Auto")).toBe("Accure: Auto")
+    expect(stripSubProviderPrefix("accure: Auto")).toBe("accure: Auto")
   })
 })
 
@@ -75,8 +75,8 @@ describe("sanitizeName", () => {
     expect(sanitizeName("Model (FREE)")).toBe("Model")
   })
 
-  it("preserves bare trailing Free in names like 'Kilo Auto Free'", () => {
-    expect(sanitizeName("Kilo Auto Free")).toBe("Kilo Auto Free")
+  it("preserves bare trailing Free in names like 'Accure Auto Free'", () => {
+    expect(sanitizeName("Accure Auto Free")).toBe("Accure Auto Free")
     expect(sanitizeName("Mixtral free")).toBe("Mixtral free")
     expect(sanitizeName("Mistral:free")).toBe("Mistral:free")
     expect(sanitizeName("Gemma-free")).toBe("Gemma-free")
@@ -129,17 +129,17 @@ describe("hasByok", () => {
 })
 
 describe("buildTriggerLabel", () => {
-  it("returns resolved model name for non-kilo provider unchanged", () => {
+  it("returns resolved model name for non-accure provider unchanged", () => {
     expect(buildTriggerLabel("GPT-4o", "openai", undefined, null, false, "", true, labels)).toBe("GPT-4o")
   })
 
-  it("strips sub-provider prefix from resolved name for kilo gateway models", () => {
+  it("strips sub-provider prefix from resolved name for accure gateway models", () => {
     expect(
-      buildTriggerLabel("Anthropic: Claude Sonnet", KILO_GATEWAY_ID, undefined, null, false, "", true, labels),
+      buildTriggerLabel("Anthropic: Claude Sonnet", ACCURECODE_GATEWAY_ID, undefined, null, false, "", true, labels),
     ).toBe("Claude Sonnet")
   })
 
-  it("does not strip prefix for non-kilo provider even if name contains ': '", () => {
+  it("does not strip prefix for non-accure provider even if name contains ': '", () => {
     expect(buildTriggerLabel("Anthropic: Claude Sonnet", "anthropic", undefined, null, false, "", true, labels)).toBe(
       "Anthropic: Claude Sonnet",
     )
@@ -149,16 +149,18 @@ describe("buildTriggerLabel", () => {
     expect(buildTriggerLabel("GPT-4o", undefined, undefined, null, false, "", true, labels)).toBe("GPT-4o")
   })
 
-  it("returns providerName / resolvedName for non-kilo provider with providerName", () => {
+  it("returns providerName / resolvedName for non-accure provider with providerName", () => {
     expect(buildTriggerLabel("GPT-4o", "openai", "OpenAI", null, false, "", true, labels)).toBe("OpenAI / GPT-4o")
   })
 
-  it("returns modelID for kilo gateway raw selection", () => {
-    const raw = { providerID: "kilo", modelID: "kilo-auto/frontier" }
-    expect(buildTriggerLabel(undefined, undefined, undefined, raw, false, "", true, labels)).toBe("kilo-auto/frontier")
+  it("returns modelID for accure gateway raw selection", () => {
+    const raw = { providerID: "accure", modelID: "accure-auto/frontier" }
+    expect(buildTriggerLabel(undefined, undefined, undefined, raw, false, "", true, labels)).toBe(
+      "accure-auto/frontier",
+    )
   })
 
-  it("returns providerID / modelID for non-kilo raw selection", () => {
+  it("returns providerID / modelID for non-accure raw selection", () => {
     const raw = { providerID: "anthropic", modelID: "claude-3-5-sonnet" }
     expect(buildTriggerLabel(undefined, undefined, undefined, raw, false, "", true, labels)).toBe(
       "anthropic / claude-3-5-sonnet",

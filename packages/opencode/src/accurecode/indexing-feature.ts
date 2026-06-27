@@ -1,7 +1,7 @@
 import { pathToFileURL } from "url"
-import { hasIndexingPlugin } from "@kilocode/accure-indexing/detect"
+import { hasIndexingPlugin } from "@accurecode/accure-indexing/detect"
 
-export const INDEXING_PLUGIN = "@kilocode/accure-indexing"
+export const INDEXING_PLUGIN = "@accurecode/accure-indexing"
 
 // RATIONALE: Upstream PluginSpec changed from string to string | [string, Record].
 // Use a broad input type to accept both forms but return the concrete PluginSpec shape.

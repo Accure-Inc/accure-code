@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import type { PermissionRequest } from "@kilocode/sdk/v2"
+import type { PermissionRequest } from "@accurecode/sdk/v2"
 import {
   createPermissionBodyState,
   permissionAlwaysLines,
@@ -132,11 +132,11 @@ describe("run permission shared", () => {
 
   test("formats always-allow copy for wildcard and explicit patterns", () => {
     expect(permissionAlwaysLines(req({ permission: "bash", always: ["*"] }))).toEqual([
-      "This will allow bash until Kilo is restarted.",
+      "This will allow bash until Accure is restarted.",
     ])
 
     expect(permissionAlwaysLines(req({ always: ["src/**/*.ts", "src/**/*.tsx"] }))).toEqual([
-      "This will allow the following patterns until Kilo is restarted.",
+      "This will allow the following patterns until Accure is restarted.",
       "- src/**/*.ts",
       "- src/**/*.tsx",
     ])

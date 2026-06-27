@@ -26,12 +26,12 @@ type Body = {
 }
 
 const env = {
-  KILO_CONFIG: process.env.KILO_CONFIG,
-  KILO_CONFIG_CONTENT: process.env.KILO_CONFIG_CONTENT,
-  KILO_CONFIG_DIR: process.env.KILO_CONFIG_DIR,
-  KILO_DISABLE_PROJECT_CONFIG: process.env.KILO_DISABLE_PROJECT_CONFIG,
-  KILO_TEST_MANAGED_CONFIG_DIR: process.env.KILO_TEST_MANAGED_CONFIG_DIR,
-  flagConfig: Flag.KILO_CONFIG,
+  ACCURECODE_CONFIG: process.env.ACCURECODE_CONFIG,
+  ACCURECODE_CONFIG_CONTENT: process.env.ACCURECODE_CONFIG_CONTENT,
+  ACCURECODE_CONFIG_DIR: process.env.ACCURECODE_CONFIG_DIR,
+  ACCURECODE_DISABLE_PROJECT_CONFIG: process.env.ACCURECODE_DISABLE_PROJECT_CONFIG,
+  ACCURECODE_TEST_MANAGED_CONFIG_DIR: process.env.ACCURECODE_TEST_MANAGED_CONFIG_DIR,
+  flagConfig: Flag.ACCURECODE_CONFIG,
 }
 
 afterEach(async () => {
@@ -41,12 +41,12 @@ afterEach(async () => {
 })
 
 function restore() {
-  set("KILO_CONFIG", env.KILO_CONFIG)
-  set("KILO_CONFIG_CONTENT", env.KILO_CONFIG_CONTENT)
-  set("KILO_CONFIG_DIR", env.KILO_CONFIG_DIR)
-  set("KILO_DISABLE_PROJECT_CONFIG", env.KILO_DISABLE_PROJECT_CONFIG)
-  set("KILO_TEST_MANAGED_CONFIG_DIR", env.KILO_TEST_MANAGED_CONFIG_DIR)
-  Flag.KILO_CONFIG = env.flagConfig
+  set("ACCURECODE_CONFIG", env.ACCURECODE_CONFIG)
+  set("ACCURECODE_CONFIG_CONTENT", env.ACCURECODE_CONFIG_CONTENT)
+  set("ACCURECODE_CONFIG_DIR", env.ACCURECODE_CONFIG_DIR)
+  set("ACCURECODE_DISABLE_PROJECT_CONFIG", env.ACCURECODE_DISABLE_PROJECT_CONFIG)
+  set("ACCURECODE_TEST_MANAGED_CONFIG_DIR", env.ACCURECODE_TEST_MANAGED_CONFIG_DIR)
+  Flag.ACCURECODE_CONFIG = env.flagConfig
 }
 
 function set(key: keyof typeof process.env, value: string | undefined) {
@@ -59,7 +59,7 @@ function set(key: keyof typeof process.env, value: string | undefined) {
 
 async function sources(dir: string) {
   const response = await Server.Default().app.request("/config/sources", {
-    headers: { "x-kilo-directory": dir },
+    headers: { "x-accure-directory": dir },
   })
   expect(response.status).toBe(200)
   return (await response.json()) as Body
@@ -76,11 +76,11 @@ describe("config source routes", () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Bun.write(path.join(dir, "env.json"), "{}")
-        await Bun.write(path.join(dir, "kilo.json"), "{}")
+        await Bun.write(path.join(dir, "accure.json"), "{}")
 
-        const local = path.join(dir, ".kilo")
+        const local = path.join(dir, ".accurecode")
         await fs.mkdir(local, { recursive: true })
-        await Bun.write(path.join(local, "kilo.jsonc"), "{}")
+        await Bun.write(path.join(local, "accure.jsonc"), "{}")
 
         const extra = path.join(dir, "extra")
         await fs.mkdir(extra, { recursive: true })
@@ -88,24 +88,24 @@ describe("config source routes", () => {
 
         const managed = path.join(dir, "managed")
         await fs.mkdir(managed, { recursive: true })
-        await Bun.write(path.join(managed, "kilo.json"), "{}")
+        await Bun.write(path.join(managed, "accure.json"), "{}")
       },
     })
 
     const envFile = path.join(tmp.path, "env.json")
-    const projectFile = path.join(tmp.path, "kilo.json")
-    const configFile = path.join(tmp.path, ".kilo", "kilo.jsonc")
+    const projectFile = path.join(tmp.path, "accure.json")
+    const configFile = path.join(tmp.path, ".accurecode", "accure.jsonc")
     const extraFile = path.join(tmp.path, "extra", "opencode.json")
-    const managedFile = path.join(tmp.path, "managed", "kilo.json")
+    const managedFile = path.join(tmp.path, "managed", "accure.json")
 
-    process.env.KILO_CONFIG = envFile
-    Flag.KILO_CONFIG = envFile
-    process.env.KILO_CONFIG_CONTENT = '{"username":"secret-inline-value"}'
-    process.env.KILO_CONFIG_DIR = path.join(tmp.path, "extra")
-    process.env.KILO_TEST_MANAGED_CONFIG_DIR = path.join(tmp.path, "managed")
+    process.env.ACCURECODE_CONFIG = envFile
+    Flag.ACCURECODE_CONFIG = envFile
+    process.env.ACCURECODE_CONFIG_CONTENT = '{"username":"secret-inline-value"}'
+    process.env.ACCURECODE_CONFIG_DIR = path.join(tmp.path, "extra")
+    process.env.ACCURECODE_TEST_MANAGED_CONFIG_DIR = path.join(tmp.path, "managed")
 
     const body = await sources(tmp.path)
-    const inline = body.sources.find((source) => source.source === "KILO_CONFIG_CONTENT")
+    const inline = body.sources.find((source) => source.source === "ACCURECODE_CONFIG_CONTENT")
 
     expect(order(body, envFile)).toBeLessThan(order(body, projectFile))
     expect(order(body, projectFile)).toBeLessThan(order(body, configFile))
@@ -131,19 +131,19 @@ describe("config source routes", () => {
   test("shows project config disabled by environment", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        await Bun.write(path.join(dir, "kilo.json"), "{}")
-        await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
-        await Bun.write(path.join(dir, ".kilo", "kilo.json"), "{}")
+        await Bun.write(path.join(dir, "accure.json"), "{}")
+        await fs.mkdir(path.join(dir, ".accurecode"), { recursive: true })
+        await Bun.write(path.join(dir, ".accurecode", "accure.json"), "{}")
       },
     })
 
-    process.env.KILO_DISABLE_PROJECT_CONFIG = "1"
+    process.env.ACCURECODE_DISABLE_PROJECT_CONFIG = "1"
 
     const body = await sources(tmp.path)
 
-    expect(body.sources.some((source) => source.path === path.join(tmp.path, "kilo.json"))).toBe(false)
-    expect(body.sources.some((source) => source.path === path.join(tmp.path, ".kilo", "kilo.json"))).toBe(false)
-    expect(body.sources.find((source) => source.source === "KILO_DISABLE_PROJECT_CONFIG")).toMatchObject({
+    expect(body.sources.some((source) => source.path === path.join(tmp.path, "accure.json"))).toBe(false)
+    expect(body.sources.some((source) => source.path === path.join(tmp.path, ".accurecode", "accure.json"))).toBe(false)
+    expect(body.sources.find((source) => source.source === "ACCURECODE_DISABLE_PROJECT_CONFIG")).toMatchObject({
       kind: "runtime-env",
       scope: "env",
       exists: true,

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { TodoView } from "../../src/kilocode/todo-view"
+import { TodoView } from "../../src/accurecode/todo-view"
 
 function item(content: string, status = "pending"): TodoView.Todo {
   return { content, status, priority: "medium" }

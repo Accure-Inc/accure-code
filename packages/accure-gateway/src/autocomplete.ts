@@ -1,5 +1,5 @@
-export type AutocompleteProviderID = "kilo" | "mistral" | "inception"
-export type DirectAutocompleteProviderID = Exclude<AutocompleteProviderID, "kilo">
+export type AutocompleteProviderID = "accure" | "mistral" | "inception"
+export type DirectAutocompleteProviderID = Exclude<AutocompleteProviderID, "accure">
 
 export interface AutocompleteModelDef {
   /** Stable combined value for internal comparisons. */
@@ -14,46 +14,46 @@ export interface AutocompleteModelDef {
   readonly provider: string
   /** Full model ID sent upstream by the autocomplete route. */
   readonly requestModel: string
-  /** Provider key to use for direct BYOK. Empty means Kilo Gateway. */
+  /** Provider key to use for direct BYOK. Empty means Accure Gateway. */
   readonly directProvider?: DirectAutocompleteProviderID
   /** Request temperature. */
   readonly temperature: number
   /**
    * Which gateway endpoint this model targets. Defaults to "fim" if omitted
    * (back-compat with existing entries). Models with `kind: "edit"` route
-   * through `/kilo/edit` and use Mercury's Next Edit pipeline.
+   * through `/accure/edit` and use Mercury's Next Edit pipeline.
    */
   readonly kind?: "fim" | "edit"
 }
 
 const models: AutocompleteModelDef[] = [
   {
-    id: "kilo/mistralai/codestral-2508",
+    id: "accure/mistralai/codestral-2508",
     modelID: "mistralai/codestral-2508",
     label: "Codestral",
-    providerID: "kilo",
-    provider: "Kilo Gateway",
+    providerID: "accure",
+    provider: "Accure Gateway",
     requestModel: "mistralai/codestral-2508",
     temperature: 0.2,
   },
   {
-    id: "kilo/inception/mercury-edit-2",
+    id: "accure/inception/mercury-edit-2",
     modelID: "inception/mercury-edit-2",
     label: "Mercury Edit 2 (FIM)",
-    providerID: "kilo",
-    provider: "Kilo Gateway",
+    providerID: "accure",
+    provider: "Accure Gateway",
     requestModel: "inception/mercury-edit-2",
     temperature: 0,
   },
   {
-    // Same wire-level model as `kilo/inception/mercury-edit-2`, but routed
-    // through the Kilo Gateway's Next Edit endpoint instead of FIM. Picked by
+    // Same wire-level model as `accure/inception/mercury-edit-2`, but routed
+    // through the Accure Gateway's Next Edit endpoint instead of FIM. Picked by
     // users who want multi-line next-edit predictions with the jump-to-edit UX.
-    id: "kilo/inception/mercury-next-edit",
+    id: "accure/inception/mercury-next-edit",
     modelID: "inception/mercury-next-edit",
     label: "Mercury Edit 2 (Next Edit)",
-    providerID: "kilo",
-    provider: "Kilo Gateway",
+    providerID: "accure",
+    provider: "Accure Gateway",
     requestModel: "inception/mercury-edit-2",
     temperature: 0,
     kind: "edit",
@@ -96,7 +96,7 @@ const models: AutocompleteModelDef[] = [
 
 export const AUTOCOMPLETE_MODELS: readonly AutocompleteModelDef[] = models
 
-export const DEFAULT_AUTOCOMPLETE_PROVIDER_ID: AutocompleteProviderID = "kilo"
+export const DEFAULT_AUTOCOMPLETE_PROVIDER_ID: AutocompleteProviderID = "accure"
 export const DEFAULT_AUTOCOMPLETE_MODEL_ID = "mistralai/codestral-2508"
 
 export const DEFAULT_AUTOCOMPLETE_MODEL: AutocompleteModelDef = (() => {
@@ -116,11 +116,11 @@ const aliases: Record<string, string> = {
 }
 
 export function getAutocompleteModel(provider?: string, model?: string): AutocompleteModelDef {
-  // When provider is unset, always default to Kilo Gateway. Direct-provider
+  // When provider is unset, always default to Accure Gateway. Direct-provider
   // use must be opted into explicitly via the provider setting — never inferred
   // from a model name, since the same plain model id can exist on multiple
   // providers and we don't want to silently route legacy settings to BYOK.
-  const pid = provider ?? "kilo"
+  const pid = provider ?? "accure"
   const mid = aliases[model ?? ""] ?? model
   for (const m of models) {
     if (m.providerID === pid && m.modelID === mid) return m

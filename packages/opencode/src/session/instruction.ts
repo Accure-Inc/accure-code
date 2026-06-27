@@ -8,7 +8,7 @@ import { Flag } from "@opencode-ai/core/flag/flag"
 import { AppFileSystem } from "@opencode-ai/core/filesystem"
 import { withTransientReadRetry } from "@/util/effect-http-client"
 import { Global } from "@opencode-ai/core/global"
-import { KilocodeInstruction } from "@/kilocode/session/instruction" // kilocode_change
+import { AccurecodeInstruction } from "@/accurecode/session/instruction" // accurecode_change
 import type { MessageV2 } from "./message-v2"
 import type { MessageID } from "./schema"
 
@@ -62,9 +62,9 @@ export const layer: Layer.Layer<
     const flags = yield* RuntimeFlags.Service
     const http = HttpClient.filterStatusOk(withTransientReadRetry(yield* HttpClient.HttpClient))
     const globalFiles = [
-      // kilocode_change start - prefer KILO_CONFIG_DIR profile when set
-      ...(Flag.KILO_CONFIG_DIR ? [path.join(Flag.KILO_CONFIG_DIR, "AGENTS.md")] : []),
-      // kilocode_change end
+      // accurecode_change start - prefer ACCURECODE_CONFIG_DIR profile when set
+      ...(Flag.ACCURECODE_CONFIG_DIR ? [path.join(Flag.ACCURECODE_CONFIG_DIR, "AGENTS.md")] : []),
+      // accurecode_change end
       path.join(global.config, "AGENTS.md"),
       ...(!flags.disableClaudeCodePrompt ? [path.join(global.home, ".claude", "CLAUDE.md")] : []),
     ]
@@ -81,19 +81,19 @@ export const layer: Layer.Layer<
 
     const relative = Effect.fnUntraced(function* (instruction: string) {
       const ctx = yield* InstanceState.context
-      if (!Flag.KILO_DISABLE_PROJECT_CONFIG) {
+      if (!Flag.ACCURECODE_DISABLE_PROJECT_CONFIG) {
         return yield* fs
           .globUp(instruction, ctx.directory, ctx.worktree)
           .pipe(Effect.catch(() => Effect.succeed([] as string[])))
       }
-      // kilocode_change - prefer KILO_CONFIG_DIR profile when set, else fall back to global.config
-      const root = Flag.KILO_CONFIG_DIR ?? global.config
-      return yield* fs.globUp(instruction, root, root).pipe(Effect.catch(() => Effect.succeed([] as string[]))) // kilocode_change
+      // accurecode_change - prefer ACCURECODE_CONFIG_DIR profile when set, else fall back to global.config
+      const root = Flag.ACCURECODE_CONFIG_DIR ?? global.config
+      return yield* fs.globUp(instruction, root, root).pipe(Effect.catch(() => Effect.succeed([] as string[]))) // accurecode_change
     })
 
     const read = Effect.fnUntraced(function* (filepath: string) {
-      const content = yield* fs.readFileString(filepath).pipe(Effect.catch(() => Effect.succeed(""))) // kilocode_change
-      return yield* Effect.promise(() => KilocodeInstruction.content(content, filepath)) // kilocode_change
+      const content = yield* fs.readFileString(filepath).pipe(Effect.catch(() => Effect.succeed(""))) // accurecode_change
+      return yield* Effect.promise(() => AccurecodeInstruction.content(content, filepath)) // accurecode_change
     })
 
     const fetch = Effect.fnUntraced(function* (url: string) {
@@ -124,7 +124,7 @@ export const layer: Layer.Layer<
       }
 
       // The first project-level match wins so we don't stack AGENTS.md/CLAUDE.md from every ancestor.
-      if (!Flag.KILO_DISABLE_PROJECT_CONFIG) {
+      if (!Flag.ACCURECODE_DISABLE_PROJECT_CONFIG) {
         for (const file of instructionFiles) {
           const matches = yield* fs
             .findUp(file, ctx.directory, ctx.worktree)

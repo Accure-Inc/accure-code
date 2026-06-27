@@ -16,23 +16,23 @@ import PROMPT_TITLE from "./prompt/title.txt"
 import { Permission } from "@/permission"
 import { mergeDeep, pipe, sortBy, values } from "remeda"
 import { Global } from "@opencode-ai/core/global"
-import { KilocodePaths } from "@/kilocode/paths" // kilocode_change
+import { AccurecodePaths } from "@/accurecode/paths" // accurecode_change
 import path from "path"
 import { Plugin } from "@/plugin"
 import { Skill } from "../skill"
 import { Effect, Context, Layer, Schema } from "effect"
 import { InstanceState } from "@/effect/instance-state"
 import { type DeepMutable } from "@opencode-ai/core/schema"
-import * as KiloAgent from "@/kilocode/agent" // kilocode_change
+import * as AccureAgent from "@/accurecode/agent" // accurecode_change
 import { RuntimeFlags } from "@/effect/runtime-flags"
-import { Reference } from "@/reference/reference" // kilocode_change
-import { ConfigReference } from "@/config/reference" // kilocode_change
+import { Reference } from "@/reference/reference" // accurecode_change
+import { ConfigReference } from "@/config/reference" // accurecode_change
 
 export const Info = Schema.Struct({
   name: Schema.String,
-  displayName: Schema.optional(Schema.String), // kilocode_change - human-readable name for org modes
+  displayName: Schema.optional(Schema.String), // accurecode_change - human-readable name for org modes
   description: Schema.optional(Schema.String),
-  deprecated: Schema.optional(Schema.Boolean), // kilocode_change
+  deprecated: Schema.optional(Schema.Boolean), // accurecode_change
   mode: Schema.Literals(["subagent", "primary", "all"]),
   native: Schema.optional(Schema.Boolean),
   hidden: Schema.optional(Schema.Boolean),
@@ -77,7 +77,7 @@ export interface Interface {
   >
 }
 
-type State = Omit<Interface, "generate"> & { version: string } // kilocode_change
+type State = Omit<Interface, "generate"> & { version: string } // accurecode_change
 
 export class Service extends Context.Service<Service, Interface>()("@opencode/Agent") {}
 
@@ -97,29 +97,29 @@ export const layer = Layer.effect(
       Effect.fn("Agent.state")(function* (ctx) {
         const cfg = yield* config.get()
         const skillDirs = yield* skill.dirs()
-        // kilocode_change start - include global config dirs so agents can read them without prompting
+        // accurecode_change start - include global config dirs so agents can read them without prompting
         const whitelistedDirs = [
           Truncate.GLOB,
           path.join(Global.Path.tmp, "*"),
           ...skillDirs.map((dir) => path.join(dir, "*")),
           path.join(Global.Path.config, "*"),
-          ...KilocodePaths.globalDirs().map((dir) => path.join(dir, "*")),
+          ...AccurecodePaths.globalDirs().map((dir) => path.join(dir, "*")),
         ]
-        // kilocode_change end
+        // accurecode_change end
         const readonlyExternalDirectory = {
           "*": "ask",
           ...Object.fromEntries(whitelistedDirs.map((dir) => [dir, "allow"])),
         } satisfies Record<string, "allow" | "ask" | "deny">
 
         const baseDefaults = Permission.fromConfig({
-          // kilocode_change
+          // accurecode_change
           "*": "allow",
           doom_loop: "ask",
           external_directory: {
             "*": "ask",
             ...Object.fromEntries(whitelistedDirs.map((dir) => [dir, "allow"])),
           },
-          suggest: "deny", // kilocode_change
+          suggest: "deny", // accurecode_change
           question: "deny",
           plan_enter: "deny",
           plan_exit: "deny",
@@ -134,10 +134,10 @@ export const layer = Layer.effect(
           },
         })
 
-        // kilocode_change start - patch defaults with bash allowlist and recall permission
-        const kilo = KiloAgent.prepare(cfg)
-        const defaults = Permission.merge(baseDefaults, kilo.defaultsPatch)
-        // kilocode_change end
+        // accurecode_change start - patch defaults with bash allowlist and recall permission
+        const accure = AccureAgent.prepare(cfg)
+        const defaults = Permission.merge(baseDefaults, accure.defaultsPatch)
+        // accurecode_change end
 
         const user = Permission.fromConfig(cfg.permission ?? {})
 
@@ -150,7 +150,7 @@ export const layer = Layer.effect(
               defaults,
               Permission.fromConfig({
                 question: "allow",
-                suggest: "allow", // kilocode_change
+                suggest: "allow", // accurecode_change
                 plan_enter: "allow",
               }),
               user,
@@ -296,12 +296,12 @@ export const layer = Layer.effect(
           },
         }
 
-        // kilocode_change start - rename build→code, add debug/orchestrator/ask, patch plan/explore
-        KiloAgent.patchAgents(agents, defaults, user, cfg, kilo, ctx.worktree, whitelistedDirs)
+        // accurecode_change start - rename build→code, add debug/orchestrator/ask, patch plan/explore
+        AccureAgent.patchAgents(agents, defaults, user, cfg, accure, ctx.worktree, whitelistedDirs)
 
-        const agentConfigs = KiloAgent.preprocessConfig(cfg.agent ?? {})
+        const agentConfigs = AccureAgent.preprocessConfig(cfg.agent ?? {})
         for (const [key, value] of Object.entries(agentConfigs)) {
-          // kilocode_change end
+          // accurecode_change end
           if (value.disable) {
             delete agents[key]
             continue
@@ -328,7 +328,7 @@ export const layer = Layer.effect(
           item.steps = value.steps ?? item.steps
           item.options = mergeDeep(item.options, value.options ?? {})
           item.permission = Permission.merge(item.permission, Permission.fromConfig(value.permission ?? {}))
-          KiloAgent.processConfigItem(item) // kilocode_change - populate displayName from options
+          AccureAgent.processConfigItem(item) // accurecode_change - populate displayName from options
         }
 
         function referencePrompt(reference: Reference.Resolved) {
@@ -355,7 +355,7 @@ export const layer = Layer.effect(
             `Repository: ${reference.repository}`,
             ...(reference.branch ? [`Branch/ref: ${reference.branch}`] : []),
             `Cached directory: ${reference.path}`,
-            `Kilo materializes this configured repository before use. Do not call repo_clone for this reference.`, // kilocode_change
+            `Accure materializes this configured repository before use. Do not call repo_clone for this reference.`, // accurecode_change
             `Inspect the cached directory as the primary reference source. Prefer repo_overview with path ${JSON.stringify(reference.path)} before broader searches, then use Glob, Grep, and Read inside that directory. Do not edit files.`,
             `Return exact absolute file paths for findings whenever possible.`,
           ].join("\n\n")
@@ -369,7 +369,7 @@ export const layer = Layer.effect(
 
         if (flags.experimentalScout) {
           const resolvedReferences = Reference.resolveAll({
-            references: ConfigReference.normalize(cfg.reference ?? {}), // kilocode_change
+            references: ConfigReference.normalize(cfg.reference ?? {}), // accurecode_change
             directory: ctx.directory,
             worktree: ctx.worktree,
           })
@@ -417,10 +417,10 @@ export const layer = Layer.effect(
           )
         }
 
-        KiloAgent.hardenSystemAgents(agents) // kilocode_change - keep system utility agents deny-only after config merges
+        AccureAgent.hardenSystemAgents(agents) // accurecode_change - keep system utility agents deny-only after config merges
 
         const get = Effect.fnUntraced(function* (agent: string) {
-          return agents[KiloAgent.resolveKey(agent)] // kilocode_change - treat "build" as "code"
+          return agents[AccureAgent.resolveKey(agent)] // accurecode_change - treat "build" as "code"
         })
 
         const list = Effect.fnUntraced(function* () {
@@ -429,7 +429,7 @@ export const layer = Layer.effect(
             agents,
             values(),
             sortBy(
-              [(x) => (cfg.default_agent ? x.name === cfg.default_agent : x.name === "code"), "desc"], // kilocode_change - renamed from "build" to "code"
+              [(x) => (cfg.default_agent ? x.name === cfg.default_agent : x.name === "code"), "desc"], // accurecode_change - renamed from "build" to "code"
               [(x) => x.name, "asc"],
             ),
           )
@@ -438,19 +438,19 @@ export const layer = Layer.effect(
         const defaultInfo = Effect.fnUntraced(function* () {
           const c = yield* config.get()
           if (c.default_agent) {
-            // kilocode_change start
-            const effective = KiloAgent.resolveKey(c.default_agent)
+            // accurecode_change start
+            const effective = AccureAgent.resolveKey(c.default_agent)
             const agent = agents[effective]
-            // kilocode_change end
+            // accurecode_change end
             if (!agent) throw new Error(`default agent "${c.default_agent}" not found`)
             if (agent.mode === "subagent") throw new Error(`default agent "${c.default_agent}" is a subagent`)
             if (agent.hidden === true) throw new Error(`default agent "${c.default_agent}" is hidden`)
             return agent
           }
-          // kilocode_change start - prefer "code" as default agent (key order changes after rename from "build")
+          // accurecode_change start - prefer "code" as default agent (key order changes after rename from "build")
           const code = agents.code
           if (code && code.mode !== "subagent" && code.hidden !== true) return code
-          // kilocode_change end
+          // accurecode_change end
           const visible = Object.values(agents).find((a) => a.mode !== "subagent" && a.hidden !== true)
           if (!visible) throw new Error("no primary visible agent found")
           return visible
@@ -461,7 +461,7 @@ export const layer = Layer.effect(
         })
 
         return {
-          version: KiloAgent.cacheKey(cfg), // kilocode_change
+          version: AccureAgent.cacheKey(cfg), // accurecode_change
           get,
           list,
           defaultInfo,
@@ -470,28 +470,28 @@ export const layer = Layer.effect(
       }),
     )
 
-    // kilocode_change start - rebuild cached agents when permission-relevant config changes
+    // accurecode_change start - rebuild cached agents when permission-relevant config changes
     const current = Effect.fnUntraced(function* <A>(select: (s: State) => Effect.Effect<A>) {
       const cfg = yield* config.get()
       const s = yield* InstanceState.get(state)
-      if (s.version === KiloAgent.cacheKey(cfg)) return yield* select(s)
+      if (s.version === AccureAgent.cacheKey(cfg)) return yield* select(s)
       yield* InstanceState.invalidate(state)
       return yield* select(yield* InstanceState.get(state))
     })
-    // kilocode_change end
+    // accurecode_change end
 
     return Service.of({
       get: Effect.fn("Agent.get")(function* (agent: string) {
-        return yield* current((s) => s.get(agent)) // kilocode_change
+        return yield* current((s) => s.get(agent)) // accurecode_change
       }),
       list: Effect.fn("Agent.list")(function* () {
-        return yield* current((s) => s.list()) // kilocode_change
+        return yield* current((s) => s.list()) // accurecode_change
       }),
       defaultInfo: Effect.fn("Agent.defaultInfo")(function* () {
-        return yield* current((s) => s.defaultInfo()) // kilocode_change
+        return yield* current((s) => s.defaultInfo()) // accurecode_change
       }),
       defaultAgent: Effect.fn("Agent.defaultAgent")(function* () {
-        return yield* current((s) => s.defaultAgent()) // kilocode_change
+        return yield* current((s) => s.defaultAgent()) // accurecode_change
       }),
       generate: Effect.fn("Agent.generate")(function* (input: {
         description: string
@@ -511,9 +511,9 @@ export const layer = Layer.effect(
         const isOpenaiOauth = model.providerID === "openai" && authInfo?.type === "oauth"
 
         const params = {
-          // kilocode_change start - enable telemetry with custom PostHog tracer
-          experimental_telemetry: KiloAgent.telemetryOptions(cfg),
-          // kilocode_change end
+          // accurecode_change start - enable telemetry with custom PostHog tracer
+          experimental_telemetry: AccureAgent.telemetryOptions(cfg),
+          // accurecode_change end
           temperature: 0.3,
           messages: [
             ...(isOpenaiOauth

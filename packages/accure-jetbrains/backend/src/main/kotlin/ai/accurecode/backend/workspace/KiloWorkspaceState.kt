@@ -1,32 +1,32 @@
-package ai.kilocode.backend.workspace
+package ai.accurecode.backend.workspace
 
-import ai.kilocode.backend.app.LoadError
+import ai.accurecode.backend.app.LoadError
 
 /**
  * Workspace data lifecycle state, combining connection readiness
  * with directory-scoped data loading progress.
  *
- * Only populated after [KiloAppState.Ready][ai.kilocode.backend.app.KiloAppState.Ready]
+ * Only populated after [AccureAppState.Ready][ai.accurecode.backend.app.AccureAppState.Ready]
  * — the CLI server must be connected and global data loaded before
  * workspace data can be fetched.
  */
-sealed class KiloWorkspaceState {
-    data object Pending : KiloWorkspaceState()
-    data class Loading(val progress: KiloWorkspaceLoadProgress) : KiloWorkspaceState()
+sealed class AccureWorkspaceState {
+    data object Pending : AccureWorkspaceState()
+    data class Loading(val progress: AccureWorkspaceLoadProgress) : AccureWorkspaceState()
     data class Ready(
         val providers: ProviderData,
         val agents: AgentData,
         val commands: List<CommandInfo>,
         val skills: List<SkillInfo>,
-    ) : KiloWorkspaceState()
-    data class Error(val message: String, val errors: List<LoadError> = emptyList()) : KiloWorkspaceState()
+    ) : AccureWorkspaceState()
+    data class Error(val message: String, val errors: List<LoadError> = emptyList()) : AccureWorkspaceState()
 }
 
 /**
  * Tracks which workspace data fetches have completed during
- * the [KiloWorkspaceState.Loading] phase.
+ * the [AccureWorkspaceState.Loading] phase.
  */
-data class KiloWorkspaceLoadProgress(
+data class AccureWorkspaceLoadProgress(
     val providers: Boolean = false,
     val agents: Boolean = false,
     val commands: Boolean = false,

@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test"
 import { FormatError } from "@/cli/error"
 
 describe("MCP errors", () => {
-  test("uses Kilo-neutral capability messaging", () => {
+  test("uses Accure-neutral capability messaging", () => {
     const error = FormatError({ name: "MCPFailed", data: { name: "example" } })
 
     expect(error).toBe('MCP server "example" failed.')
@@ -21,7 +21,7 @@ describe("model not found errors", () => {
 
     const named = FormatError({ name: "ProviderModelNotFoundError", data })
     expect(named).toContain("No models are currently available.")
-    expect(named).toContain("kilo.json")
+    expect(named).toContain("accure.json")
     expect(named).not.toContain("opencode.json")
     expect(FormatError({ _tag: "ProviderModelNotFoundError", ...data })).toContain("No models are currently available.")
   })

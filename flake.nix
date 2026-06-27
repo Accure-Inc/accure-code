@@ -1,5 +1,5 @@
 {
-  description = "Kilo development flake";
+  description = "Accure development flake";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -75,18 +75,18 @@
                 };
               };
 
-            kilo-dev = pkgs.writeShellScriptBin "kilo-dev" ''
+            accure-dev = pkgs.writeShellScriptBin "accure-dev" ''
               set -euo pipefail
 
-              : "''${KILO_ROOT:?KILO_ROOT is not set. Enter the flake dev shell from the repo root.}"
-              export KILO_DEV_CWD="$PWD"
-              exec ${bun}/bin/bun --cwd "$KILO_ROOT/packages/opencode" --conditions=browser ./src/index.ts "$@"
+              : "''${ACCURECODE_ROOT:?ACCURECODE_ROOT is not set. Enter the flake dev shell from the repo root.}"
+              export ACCURECODE_DEV_CWD="$PWD"
+              exec ${bun}/bin/bun --cwd "$ACCURECODE_ROOT/packages/opencode" --conditions=browser ./src/index.ts "$@"
             '';
 
-            kilo-install-bin = pkgs.writeShellScriptBin "kilo-install" ''
+            accure-install-bin = pkgs.writeShellScriptBin "accure-install" ''
               set -euo pipefail
 
-              CACHE_DIR="$HOME/.cache/kilo-nix"
+              CACHE_DIR="$HOME/.cache/accure-nix"
               VERSION="''${1:-latest}"
 
               # Platform detection
@@ -142,16 +142,16 @@
 
               # Build filename and URL
               target="$os-$arch$needs_baseline$is_musl"
-              filename="kilo-$target$ext"
+              filename="accure-$target$ext"
 
               if [ "$VERSION" = "latest" ]; then
-                url="https://github.com/Kilo-Org/kilocode/releases/latest/download/$filename"
-                echo "Installing latest version of kilo..." >&2
+                url="https://github.com/Accure-Inc/accure-code/releases/latest/download/$filename"
+                echo "Installing latest version of accure..." >&2
               else
                 # Strip leading 'v' if present
                 VERSION="''${VERSION#v}"
-                url="https://github.com/Kilo-Org/kilocode/releases/download/v''${VERSION}/$filename"
-                echo "Installing kilo version $VERSION..." >&2
+                url="https://github.com/Accure-Inc/accure-code/releases/download/v''${VERSION}/$filename"
+                echo "Installing accure version $VERSION..." >&2
               fi
 
               # Create cache directory
@@ -163,8 +163,8 @@
 
               echo "Downloading from $url..." >&2
               if ! ${pkgs.curl}/bin/curl -fsSL -o "$tmp_dir/$filename" "$url"; then
-                echo "Error: Failed to download kilo from $url" >&2
-                echo "Please check your internet connection or visit https://github.com/Kilo-Org/kilocode/releases" >&2
+                echo "Error: Failed to download accure from $url" >&2
+                echo "Please check your internet connection or visit https://github.com/Accure-Inc/accure-code/releases" >&2
                 exit 1
               fi
 
@@ -177,33 +177,33 @@
               fi
 
               # Install the binary
-              KILO_BIN="$CACHE_DIR/kilo"
-              mv "$tmp_dir/kilo" "$KILO_BIN"
-              chmod +x "$KILO_BIN"
+              ACCURECODE_BIN="$CACHE_DIR/accure"
+              mv "$tmp_dir/accure" "$ACCURECODE_BIN"
+              chmod +x "$ACCURECODE_BIN"
 
               # Get the installed version
-              installed_version=$("$KILO_BIN" --version 2>/dev/null || echo "unknown")
-              echo "Successfully installed kilo $installed_version to $KILO_BIN" >&2
+              installed_version=$("$ACCURECODE_BIN" --version 2>/dev/null || echo "unknown")
+              echo "Successfully installed accure $installed_version to $ACCURECODE_BIN" >&2
             '';
 
-            kilo-bin = pkgs.writeShellScriptBin "kilo" ''
+            accure-bin = pkgs.writeShellScriptBin "accure" ''
               set -euo pipefail
 
-              CACHE_DIR="$HOME/.cache/kilo-nix"
-              KILO_BIN="$CACHE_DIR/kilo"
+              CACHE_DIR="$HOME/.cache/accure-nix"
+              ACCURECODE_BIN="$CACHE_DIR/accure"
 
-              if [ ! -f "$KILO_BIN" ]; then
-                echo "Error: kilo is not installed in the cache." >&2
-                echo "Please run 'kilo-install' first to download and install kilo." >&2
+              if [ ! -f "$ACCURECODE_BIN" ]; then
+                echo "Error: accure is not installed in the cache." >&2
+                echo "Please run 'accure-install' first to download and install accure." >&2
                 echo "" >&2
                 echo "Examples:" >&2
-                echo "  kilo-install          # Install latest version" >&2
-                echo "  kilo-install 1.0.180  # Install specific version" >&2
+                echo "  accure-install          # Install latest version" >&2
+                echo "  accure-install 1.0.180  # Install specific version" >&2
                 exit 1
               fi
 
               # Execute the cached binary with all arguments
-              exec "$KILO_BIN" "$@"
+              exec "$ACCURECODE_BIN" "$@"
             '';
           in
           pkgs.mkShell {
@@ -226,9 +226,9 @@
                 ripgrep
                 jetbrains.jdk
                 jdk21
-                kilo-dev
-                kilo-install-bin
-                kilo-bin
+                accure-dev
+                accure-install-bin
+                accure-bin
               ]
               ++ lib.optionals stdenv.isLinux [
                 libX11
@@ -240,7 +240,7 @@
                 freetype
               ];
             shellHook = ''
-              export KILO_ROOT="$PWD"
+              export ACCURECODE_ROOT="$PWD"
               export PLAYWRIGHT_BROWSERS_PATH="${pkgs.playwright-driver.browsers}"
               export PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true
             ''
@@ -282,13 +282,13 @@
           node_modules = pkgs.callPackage ./nix/node_modules.nix {
             inherit rev;
           };
-          kilo = pkgs.callPackage ./nix/kilo.nix {
+          accure = pkgs.callPackage ./nix/accure.nix {
             inherit node_modules;
           };
         in
         {
-          default = kilo;
-          inherit kilo;
+          default = accure;
+          inherit accure;
           # Updater derivation with fakeHash - build fails and reveals correct hash
           node_modules_updater = node_modules.override {
             hash = pkgs.lib.fakeHash;

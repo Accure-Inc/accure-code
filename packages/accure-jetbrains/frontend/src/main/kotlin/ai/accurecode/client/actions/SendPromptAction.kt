@@ -1,7 +1,7 @@
-package ai.kilocode.client.actions
+package ai.accurecode.client.actions
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.ui.prompt.PromptDataKeys
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.ui.prompt.PromptDataKeys
 import com.intellij.codeInsight.lookup.LookupManager
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.ActionPromoter
@@ -16,12 +16,12 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbAwareAction
 
 class SendPromptAction : DumbAwareAction(
-    KiloBundle.message("action.Kilo.SendPrompt.text"),
-    KiloBundle.message("action.Kilo.SendPrompt.description"),
+    AccureBundle.message("action.Accure.SendPrompt.text"),
+    AccureBundle.message("action.Accure.SendPrompt.description"),
     null,
 ), ActionPromoter {
     companion object {
-        const val ID = "Kilo.SendPrompt"
+        const val ID = "Accure.SendPrompt"
     }
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.EDT

@@ -1,9 +1,9 @@
-package ai.kilocode.backend.cli
+package ai.accurecode.backend.cli
 
-import ai.kilocode.backend.migration.session.LegacySessionIds
-import ai.kilocode.jetbrains.api.infrastructure.Serializer
-import ai.kilocode.jetbrains.api.model.Session
-import ai.kilocode.jetbrains.api.model.SessionStatus
+import ai.accurecode.backend.migration.session.LegacySessionIds
+import ai.accurecode.jetbrains.api.infrastructure.Serializer
+import ai.accurecode.jetbrains.api.model.Session
+import ai.accurecode.jetbrains.api.model.SessionStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -226,7 +226,7 @@ class SessionModelSerializationTest {
     @Test
     fun `Session time defaults to 0L when fields are omitted`() {
         // The generated model has default = 0L for created and updated
-        val obj = ai.kilocode.jetbrains.api.model.SessionTime()
+        val obj = ai.accurecode.jetbrains.api.model.SessionTime()
         assertEquals(0L, obj.created)
         assertEquals(0L, obj.updated)
     }

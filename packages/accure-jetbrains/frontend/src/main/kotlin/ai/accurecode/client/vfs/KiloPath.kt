@@ -1,13 +1,13 @@
-package ai.kilocode.client.vfs
+package ai.accurecode.client.vfs
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class KiloPath(
+data class AccurePath(
     val kind: String,
     val params: Map<String, String> = emptyMap(),
 ) {
-    fun canonical(): KiloPath = copy(params = canonicalParams(params))
+    fun canonical(): AccurePath = copy(params = canonicalParams(params))
 }
 
 internal fun canonicalParams(params: Map<String, String>): Map<String, String> {

@@ -1,8 +1,8 @@
 import * as fs from "fs"
 import * as path from "path"
-import type { KiloClient, Session } from "@kilocode/sdk/v2/client"
-import type { KiloConnectionService } from "../services/cli-backend"
-import { getErrorMessage } from "../kilo-provider-utils"
+import type { AccureClient, Session } from "@accurecode/sdk/v2/client"
+import type { AccureConnectionService } from "../services/cli-backend"
+import { getErrorMessage } from "../accure-provider-utils"
 import { resolveLocalDiffTarget } from "../diff/shared/target"
 import { getDiffMarkdownRender, setDiffMarkdownRender } from "../review-settings"
 import { isAbsolutePath } from "../path-utils"
@@ -33,7 +33,7 @@ import { recordPromotionHandoff } from "./promotion-handoff"
 import { restoreWorktrees } from "./state-recovery"
 import { createLocalDiff, diffSummary as localDiffSummary } from "./local-diff"
 import { parseToolRequest, startFromTool, type ToolRequest } from "./tool-start"
-import { stopSessionProcesses } from "../kilo-provider/background-process"
+import { stopSessionProcesses } from "../accure-provider/background-process"
 
 import { startSession } from "./mcp-warmup"
 import { readTerminalFont, watchTerminalFont } from "./terminal-font"
@@ -48,7 +48,7 @@ import type { Host, PanelContext, OutputHandle, Disposable } from "./host"
  * AgentManagerProvider opens the Agent Manager panel.
  *
  * Uses WorktreeStateManager for centralized state persistence. Worktrees and
- * sessions are stored in `.kilo/agent-manager.json`. The UI shows two
+ * sessions are stored in `.accurecode/agent-manager.json`. The UI shows two
  * sections: WORKTREES (top) with managed worktrees + their sessions, and
  * SESSIONS (bottom) with unassociated local sessions.
  */
@@ -84,9 +84,9 @@ export class AgentManagerProvider implements Disposable {
   private activeSessionId: string | undefined
   constructor(
     private readonly host: Host,
-    private readonly connectionService: KiloConnectionService,
+    private readonly connectionService: AccureConnectionService,
   ) {
-    this.outputChannel = host.createOutput("Kilo Agent Manager")
+    this.outputChannel = host.createOutput("Accure Agent Manager")
     this.terminalManager = new SessionTerminalManager(
       (msg) => this.outputChannel.appendLine(`[SessionTerminal] ${msg}`),
       createTerminalHost(),
@@ -169,7 +169,7 @@ export class AgentManagerProvider implements Disposable {
       semaphore,
     })
     this.unsubTool = this.connectionService.onEventFiltered(
-      (event) => (event as { type?: string }).type === "kilocode.agent_manager.start",
+      (event) => (event as { type?: string }).type === "accurecode.agent_manager.start",
       (event, directory) => this.onToolEvent(event, directory),
     )
   }
@@ -283,7 +283,7 @@ export class AgentManagerProvider implements Disposable {
 
     await this.recoverWorktrees(manager, state)
 
-    // When the .kilocode → .kilo migration rewrote git worktree refs, nudge
+    // When the .accurecode → .accurecode migration rewrote git worktree refs, nudge
     // VS Code's git extension to re-discover them. Without this, worktrees
     // won't appear in Source Control until the next VS Code restart.
     if (loaded.refsFixed > 0) {
@@ -745,7 +745,7 @@ export class AgentManagerProvider implements Disposable {
     let result: CreateWorktreeResult
     try {
       result = await manager.createWorktree({
-        prompt: opts?.name || "kilo",
+        prompt: opts?.name || "accure",
         baseBranch: effectiveBase ?? opts?.baseBranch,
         branchName: opts?.branchName,
         existingBranch: opts?.existingBranch,
@@ -794,7 +794,7 @@ export class AgentManagerProvider implements Disposable {
     branch: string,
     worktreeId?: string,
   ): Promise<Session | null> {
-    let client: KiloClient
+    let client: AccureClient
     try {
       client = this.connectionService.getClient()
     } catch (err) {
@@ -1089,7 +1089,7 @@ export class AgentManagerProvider implements Disposable {
 
   /** Add a new session to an existing worktree. */
   private async onAddSessionToWorktree(worktreeId: string, sessionId?: string): Promise<null> {
-    let client: KiloClient
+    let client: AccureClient
     try {
       client = this.connectionService.getClient()
     } catch (err) {
@@ -1688,7 +1688,7 @@ export class AgentManagerProvider implements Disposable {
       // Directory-boundary check: append path.sep so "/foo/bar" won't match "/foo/bar2/..."
       if (resolved !== root && !resolved.startsWith(root + path.sep)) return
     } catch (err) {
-      console.error("[Kilo New] AgentManagerProvider: Cannot resolve file path:", err)
+      console.error("[Accure New] AgentManagerProvider: Cannot resolve file path:", err)
       return
     }
     this.host.openFile(resolved, line, column)
@@ -1728,7 +1728,7 @@ export class AgentManagerProvider implements Disposable {
   /**
    * Continue a sidebar session in a new worktree.
    * Captures git state, creates worktree, applies state, forks session.
-   * Called from KiloProvider when the sidebar sends "continueInWorktree".
+   * Called from AccureProvider when the sidebar sends "continueInWorktree".
    */
   public async continueFromSidebar(
     sessionId: string,

@@ -1,15 +1,20 @@
 /**
- * Provider action handlers extracted from KiloProvider to stay under max-lines.
+ * Provider action handlers extracted from AccureProvider to stay under max-lines.
  * These are pure async functions that operate on the SDK client — no vscode dependency.
  */
-import type { Config, KiloClient } from "@kilocode/sdk/v2"
+import type { Config, AccureClient } from "@accurecode/sdk/v2"
 import { validateProviderID as validateProviderIDShared } from "./shared/custom-provider"
 import {
   resolveCustomProviderAuth,
   sanitizeCustomProviderConfig,
   withCustomProviderDeletions,
 } from "./shared/custom-provider"
-import { isCustomProviderPackage, KILO_AUTO, KILO_PROVIDER_ID, parseModelString } from "./shared/provider-model"
+import {
+  isCustomProviderPackage,
+  ACCURECODE_AUTO,
+  ACCURECODE_PROVIDER_ID,
+  parseModelString,
+} from "./shared/provider-model"
 import { configFeatures } from "./features"
 
 /**
@@ -51,45 +56,51 @@ function same(a: unknown, b: unknown): boolean {
 }
 
 /** Fetch provider availability and authentication state without exposing stored credentials. */
-export async function fetchProviderData(client: KiloClient, dir: string) {
+export async function fetchProviderData(client: AccureClient, dir: string) {
   const authRequest =
     typeof client.provider.auth === "function"
       ? client.provider
           .auth({ directory: dir }, { throwOnError: true })
-          .then((r) => r.data ?? {})
+          .then((r: any) => r.data ?? {})
           .catch(() => ({}))
       : Promise.resolve({})
-  const kiloRequest = client.kilo
+  const accureRequest = client.accure
     .authStatus({ directory: dir }, { throwOnError: true })
-    .then((r) => (r.data?.authenticated ? (r.data.type ?? null) : null))
+    .then((r: any) => (r.data?.authenticated ? (r.data.type ?? null) : null))
     .catch(() => null)
 
-  const [{ data: response }, authMethods, kiloAuth] = await Promise.all([
+  const [{ data: response }, authMethods, accureAuth] = await Promise.all([
     client.provider.list({ directory: dir }, { throwOnError: true }),
     authRequest,
-    kiloRequest,
+    accureRequest,
   ])
   const authStates: Record<string, AuthState> = {}
   const storedKeys: Record<string, StoredProviderKey> = {}
-  const all = response.all.map((item) => {
+  const all = response.all.map((item: any) => {
     const raw = item as Record<string, unknown>
     if (typeof raw.id === "string" && typeof raw.key === "string" && raw.key) {
-      authStates[raw.id] = "api"
-      // Retain the key on the extension side so model fetches for an existing
-      // provider can authenticate without the webview ever seeing the secret
-      // (#10139). Only providers with a configured baseURL are retained — the
-      // fetch handler requires a URL match before applying a stored key.
-      const options = record(raw.options) ? raw.options : undefined
-      const baseURL = options && typeof options.baseURL === "string" ? options.baseURL : undefined
-      if (baseURL) storedKeys[raw.id] = { key: raw.key, baseURL }
+      if (raw.key === "••••••••" || raw.key === "........") {
+        client.auth.remove({ providerID: raw.id }).catch((err) => {
+          console.warn(`[Accure New] failed to auto-clean placeholder key for ${raw.id}:`, err)
+        })
+      } else {
+        authStates[raw.id] = "api"
+        // Retain the key on the extension side so model fetches for an existing
+        // provider can authenticate without the webview ever seeing the secret
+        // (#10139). Only providers with a configured baseURL are retained — the
+        // fetch handler requires a URL match before applying a stored key.
+        const options = record(raw.options) ? raw.options : undefined
+        const baseURL = options && typeof options.baseURL === "string" ? options.baseURL : undefined
+        if (baseURL) storedKeys[raw.id] = { key: raw.key, baseURL }
+      }
     }
     if (!("key" in raw)) return item
     const next = { ...raw }
     delete next.key
     return next as (typeof response.all)[number]
   })
-  delete authStates[KILO_PROVIDER_ID]
-  if (kiloAuth) authStates[KILO_PROVIDER_ID] = kiloAuth
+  delete authStates[ACCURECODE_PROVIDER_ID]
+  if (accureAuth) authStates[ACCURECODE_PROVIDER_ID] = accureAuth
   return { response: { ...response, all }, authMethods, authStates, storedKeys }
 }
 
@@ -112,7 +123,7 @@ export function resolveStoredKey(
 }
 
 export function buildActionContext(
-  client: KiloClient,
+  client: AccureClient,
   post: (msg: unknown) => void,
   errFn: (err: unknown) => string,
   dir: string,
@@ -128,7 +139,7 @@ export function buildActionContext(
       // Shared State.dispose() now has a hard per-disposer timeout, so this
       // wait is bounded without needing a client-side timeout here.
       await client.global.dispose().catch((error: unknown) => {
-        console.warn(`[Kilo New] KiloProvider: global.dispose() after ${reason} failed:`, error)
+        console.warn(`[Accure New] AccureProvider: global.dispose() after ${reason} failed:`, error)
       })
     },
     fetchAndSendProviders: refresh,
@@ -179,7 +190,7 @@ export function computeDefaultSelection(
   const configured = parseModelString(cachedConfig?.config?.model)
   if (configured) return configured
   if (vscodePID && vscodeMID) return { providerID: vscodePID, modelID: vscodeMID }
-  return { ...KILO_AUTO }
+  return { ...ACCURECODE_AUTO }
 }
 
 type PostMessage = (message: unknown) => void
@@ -188,7 +199,7 @@ type SetCachedConfig = (msg: unknown) => void
 type AuthMetadata = Record<string, string>
 
 interface ActionContext {
-  client: KiloClient
+  client: AccureClient
   postMessage: PostMessage
   getErrorMessage: GetErrorMessage
   workspaceDir: string
@@ -258,7 +269,7 @@ async function removeAuth(ctx: ActionContext, id: string, configured: boolean) {
     await ctx.client.auth.remove({ providerID: id }, { throwOnError: true })
   } catch (err) {
     if (!configured) throw err
-    console.warn(`[Kilo New] auth.remove failed for configured provider ${id} (non-fatal):`, err)
+    console.warn(`[Accure New] auth.remove failed for configured provider ${id} (non-fatal):`, err)
   }
 }
 
@@ -312,6 +323,50 @@ export async function connectProvider(
     postError(ctx, requestId, providerID, "connect", ctx.getErrorMessage(error) || "Failed to connect provider")
   }
 }
+
+/**
+ * Saves provider options (region, accessKeyId, baseURL, etc.) to global config
+ * and optionally stores an API key in the auth store.
+ * Works for both built-in providers (e.g. amazon-bedrock) and custom providers.
+ */
+export async function saveProviderOptions(
+  ctx: ActionContext,
+  requestId: string,
+  providerID: string,
+  options: Record<string, string>,
+  apiKey?: string,
+) {
+  const id = validateID(ctx, requestId, providerID, "connect")
+  if (!id) return
+  try {
+    // Strip empty values so we don't pollute the config with blank strings
+    const clean: Record<string, string> = {}
+    for (const [k, v] of Object.entries(options)) {
+      const trimmed = v.trim()
+      if (trimmed) clean[k] = trimmed
+    }
+    await ctx.client.global.config.update(
+      { config: { provider: { [id]: { options: clean } } } },
+      { throwOnError: true },
+    )
+    if (apiKey !== undefined) {
+      if (apiKey.trim()) {
+        await ctx.client.auth.set(
+          { providerID: id, auth: { type: "api", key: apiKey.trim() } },
+          { throwOnError: true },
+        )
+      } else {
+        await removeAuth(ctx, id, true)
+      }
+    }
+    await ctx.disposeGlobal(`provider options save (${id})`)
+    await ctx.fetchAndSendProviders()
+    ctx.postMessage({ type: "providerConnected", requestId, providerID: id })
+  } catch (error) {
+    postError(ctx, requestId, providerID, "connect", ctx.getErrorMessage(error) || "Failed to save provider options")
+  }
+}
+
 
 export async function authorizeProviderOAuth(
   ctx: ActionContext,
@@ -386,14 +441,14 @@ export async function disconnectProvider(
     const configured = !!cfg || !!effective
     const custom = customProvider(cfg) || customProvider(effective)
     const { response } = await fetchProviderData(ctx.client, ctx.workspaceDir)
-    const active = response.all.find((item) => item.id === id)
+    const active = response.all.find((item: any) => item.id === id)
     const oauth = active?.source === "custom" && configured && !custom
 
     // Config-sourced providers may not have auth store entries because
     // credentials can come from config or env, so auth removal is non-fatal.
     await removeAuth(ctx, id, configured)
 
-    if (id === "kilo") {
+    if (id === "accure") {
       ctx.postMessage({ type: "profileData", data: null })
     }
 

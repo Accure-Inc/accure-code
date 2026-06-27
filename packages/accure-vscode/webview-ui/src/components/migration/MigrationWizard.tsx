@@ -8,8 +8,8 @@
 
 import { Show, createSignal, onMount, onCleanup } from "solid-js"
 import type { Component, JSX } from "solid-js"
-import { useDialog } from "@kilocode/accure-ui/context/dialog"
-import { showToast } from "@kilocode/accure-ui/toast"
+import { useDialog } from "@accurecode/accure-ui/context/dialog"
+import { showToast } from "@accurecode/accure-ui/toast"
 import { useVSCode } from "../../context/vscode"
 import { useLanguage } from "../../context/language"
 import SessionMigrationProgress, { type SessionMigrationProgressState } from "./SessionMigrationProgress"
@@ -39,14 +39,14 @@ import type {
 import "./migration.css"
 
 // ---------------------------------------------------------------------------
-// KiloLogo — replicates the pattern from MessageList.tsx
+// AccureLogo — replicates the pattern from MessageList.tsx
 // ---------------------------------------------------------------------------
 
-const KiloLogo = (): JSX.Element => {
+const AccureLogo = (): JSX.Element => {
   const iconsBaseUri = (window as { ICONS_BASE_URI?: string }).ICONS_BASE_URI || ""
   const isLight =
     document.body.classList.contains("vscode-light") || document.body.classList.contains("vscode-high-contrast-light")
-  const icon = isLight ? "kilo-light.svg" : "kilo-dark.svg"
+  const icon = isLight ? "accure-light.svg" : "accure-dark.svg"
   return (
     <div class="migration-wizard__logo">
       <img src={`${iconsBaseUri}/${icon}`} alt="Accure Code" />
@@ -602,7 +602,7 @@ const MigrationWizard: Component<MigrationWizardProps> = (props) => {
         {/* ---- Screen 1: What's New ---- */}
         <div class={screen() === "whats-new" ? "migration-wizard__screen--active" : "migration-wizard__screen--hidden"}>
           <div class="migration-wizard__header">
-            <KiloLogo />
+            <AccureLogo />
             <h1>{language.t("migration.whatsNew.title")}</h1>
             <p>{language.t("migration.whatsNew.subtitle")}</p>
           </div>
@@ -650,10 +650,10 @@ const MigrationWizard: Component<MigrationWizardProps> = (props) => {
           </div>
 
           <div class="migration-wizard__blog-link">
-            <a href="https://blog.kilo.ai/p/new-kilo-for-vs-code-is-live">
+            <a href="https://blog.accurecode.ai/p/new-accure-for-vs-code-is-live">
               {language.t("migration.whatsNew.blogLink")} <span>&rarr;</span>
             </a>
-            <a href="https://kilo.ai/docs/code-with-ai/platforms/vscode/whats-new">
+            <a href="https://accure.ai/docs/code-with-ai/platforms/vscode/whats-new">
               {language.t("migration.whatsNew.docsLink")} <span>&rarr;</span>
             </a>
           </div>
@@ -674,7 +674,7 @@ const MigrationWizard: Component<MigrationWizardProps> = (props) => {
         {/* ---- Screen 2: Migrate Settings ---- */}
         <div class={screen() === "migrate" ? "migration-wizard__screen--active" : "migration-wizard__screen--hidden"}>
           <div class="migration-wizard__header">
-            <KiloLogo />
+            <AccureLogo />
             <h1>{language.t("migration.migrate.title")}</h1>
             <p>{language.t("migration.migrate.subtitle")}</p>
           </div>

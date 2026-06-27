@@ -1,20 +1,20 @@
-package ai.kilocode.client.session.ui.empty
+package ai.accurecode.client.session.ui.empty
 
-import ai.kilocode.client.plugin.KiloBundle
-import ai.kilocode.client.session.SessionActivityKind
-import ai.kilocode.client.session.SessionRef
-import ai.kilocode.client.session.controller.SessionController
-import ai.kilocode.client.session.history.HistoryActivitySnapshot
-import ai.kilocode.client.session.history.HistoryTime
-import ai.kilocode.client.session.history.LocalHistoryItem
-import ai.kilocode.client.session.history.itemAt
-import ai.kilocode.client.session.history.title
-import ai.kilocode.client.session.ui.style.SessionEditorStyle
-import ai.kilocode.client.session.ui.style.SessionEditorStyleTarget
-import ai.kilocode.client.session.ui.style.SessionUiStyle
-import ai.kilocode.client.ui.FilledBadgeIcon
-import ai.kilocode.client.ui.UiStyle
-import ai.kilocode.rpc.dto.SessionDto
+import ai.accurecode.client.plugin.AccureBundle
+import ai.accurecode.client.session.SessionActivityKind
+import ai.accurecode.client.session.SessionRef
+import ai.accurecode.client.session.controller.SessionController
+import ai.accurecode.client.session.history.HistoryActivitySnapshot
+import ai.accurecode.client.session.history.HistoryTime
+import ai.accurecode.client.session.history.LocalHistoryItem
+import ai.accurecode.client.session.history.itemAt
+import ai.accurecode.client.session.history.title
+import ai.accurecode.client.session.ui.style.SessionEditorStyle
+import ai.accurecode.client.session.ui.style.SessionEditorStyleTarget
+import ai.accurecode.client.session.ui.style.SessionUiStyle
+import ai.accurecode.client.ui.FilledBadgeIcon
+import ai.accurecode.client.ui.UiStyle
+import ai.accurecode.rpc.dto.SessionDto
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBList
 import com.intellij.util.concurrency.annotations.RequiresEdt
@@ -41,7 +41,7 @@ internal class RecentsList(
     private var hover = -1
     private var snapshot = HistoryActivitySnapshot()
 
-    private val title = JBLabel(KiloBundle.message("session.empty.recent")).apply {
+    private val title = JBLabel(AccureBundle.message("session.empty.recent")).apply {
         foreground = UIUtil.getContextHelpForeground()
     }
 

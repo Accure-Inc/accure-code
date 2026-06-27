@@ -1,15 +1,15 @@
-package ai.kilocode.log
+package ai.accurecode.log
 
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.DiffFileDto
-import ai.kilocode.rpc.dto.MessageDto
-import ai.kilocode.rpc.dto.MessageWithPartsDto
-import ai.kilocode.rpc.dto.PartDto
-import ai.kilocode.rpc.dto.PermissionRequestDto
-import ai.kilocode.rpc.dto.PromptDto
-import ai.kilocode.rpc.dto.QuestionRequestDto
-import ai.kilocode.rpc.dto.SessionStatusDto
-import ai.kilocode.rpc.dto.TodoDto
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.DiffFileDto
+import ai.accurecode.rpc.dto.MessageDto
+import ai.accurecode.rpc.dto.MessageWithPartsDto
+import ai.accurecode.rpc.dto.PartDto
+import ai.accurecode.rpc.dto.PermissionRequestDto
+import ai.accurecode.rpc.dto.PromptDto
+import ai.accurecode.rpc.dto.QuestionRequestDto
+import ai.accurecode.rpc.dto.SessionStatusDto
+import ai.accurecode.rpc.dto.TodoDto
 
 object ChatLogSummary {
     fun sid(id: String?): String = "sid=${id ?: "global"}"
@@ -332,13 +332,13 @@ object ChatLogSummary {
 
     private fun hash(text: String): String = text.hashCode().toUInt().toString(16)
 
-    private fun mode(): Mode = when ((System.getProperty("kilo.dev.log.chat.content") ?: "off").lowercase()) {
+    private fun mode(): Mode = when ((System.getProperty("accurecode.dev.log.chat.content") ?: "off").lowercase()) {
         "preview" -> Mode.PREVIEW
         "full" -> Mode.FULL
         else -> Mode.OFF
     }
 
-    private fun max(): Int = (System.getProperty("kilo.dev.log.chat.preview.max")?.toIntOrNull() ?: 160)
+    private fun max(): Int = (System.getProperty("accurecode.dev.log.chat.preview.max")?.toIntOrNull() ?: 160)
         .coerceIn(1, 2000)
 
     private enum class Mode {

@@ -1,8 +1,8 @@
-package ai.kilocode.client.session.controller
+package ai.accurecode.client.session.controller
 
-import ai.kilocode.client.session.model.SessionModelEvent
-import ai.kilocode.rpc.dto.ChatEventDto
-import ai.kilocode.rpc.dto.MessageTimeDto
+import ai.accurecode.client.session.model.SessionModelEvent
+import ai.accurecode.rpc.dto.ChatEventDto
+import ai.accurecode.rpc.dto.MessageTimeDto
 
 class MessageListTest : SessionControllerTestBase() {
 

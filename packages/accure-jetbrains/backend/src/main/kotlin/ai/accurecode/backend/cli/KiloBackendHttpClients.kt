@@ -1,4 +1,4 @@
-package ai.kilocode.backend.cli
+package ai.accurecode.backend.cli
 
 import okhttp3.ConnectionPool
 import okhttp3.Interceptor
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
  * Both clients bundle Basic Auth via an interceptor and are fully independent
  * of any IntelliJ-platform-provided HTTP stack.
  */
-object KiloBackendHttpClients {
+object AccureBackendHttpClients {
 
     private const val CONNECT_TIMEOUT_MS = 10_000L
     private const val HEALTH_TIMEOUT_MS = 3_000L
@@ -59,7 +59,7 @@ object KiloBackendHttpClients {
     }
 
     private fun auth(password: String): Interceptor {
-        val header = "Basic ${Base64.getEncoder().encodeToString("kilo:$password".toByteArray())}"
+        val header = "Basic ${Base64.getEncoder().encodeToString("accure:$password".toByteArray())}"
         return Interceptor { chain ->
             chain.proceed(
                 chain.request().newBuilder()

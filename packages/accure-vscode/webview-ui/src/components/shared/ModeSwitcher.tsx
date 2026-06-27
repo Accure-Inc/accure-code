@@ -9,7 +9,7 @@
 
 import { type Accessor, Component, createSignal, onCleanup, For, Show } from "solid-js"
 import { PopupSelector } from "./PopupSelector"
-import { Button } from "@kilocode/accure-ui/button"
+import { Button } from "@accurecode/accure-ui/button"
 import { useSession } from "../../context/session"
 import { useLanguage } from "../../context/language"
 import type { AgentInfo } from "../../types/messages"
@@ -143,7 +143,7 @@ export const ModeSwitcherBase: Component<ModeSwitcherBaseProps> = (props) => {
                     <Show when={agent.deprecated}>
                       <span
                         style={{
-                          "font-size": "var(--kilo-font-size-10)",
+                          "font-size": "var(--accure-font-size-10)",
                           padding: "1px 5px",
                           "border-radius": "3px",
                           background: "var(--vscode-editorWarning-foreground, #cca700)",
