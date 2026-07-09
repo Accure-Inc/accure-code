@@ -626,13 +626,13 @@ describe("WorktreeStateManager", () => {
     })
   })
 
-  describe("legacy .accurecode migration", () => {
-    it("migrates and loads state from .accurecode when .accurecode is absent", async () => {
+  describe("legacy .accure migration", () => {
+    it("migrates and loads state from .accure when .accurecode is absent", async () => {
       // Remove the .accurecode dir created in beforeEach
       fs.rmSync(path.join(root, ".accurecode"), { recursive: true, force: true })
 
-      // Write state to legacy .accurecode dir (migration will move it to .accurecode)
-      const legacyDir = path.join(root, ".accurecode")
+      // Write state to legacy .accure dir (migration will move it to .accurecode)
+      const legacyDir = path.join(root, ".accure")
       fs.mkdirSync(legacyDir, { recursive: true })
       fs.writeFileSync(
         path.join(legacyDir, "agent-manager.json"),
@@ -674,8 +674,8 @@ describe("WorktreeStateManager", () => {
         "utf-8",
       )
 
-      // Legacy .accurecode state
-      const legacyDir = path.join(root, ".accurecode")
+      // Legacy .accure state
+      const legacyDir = path.join(root, ".accure")
       fs.mkdirSync(legacyDir, { recursive: true })
       fs.writeFileSync(
         path.join(legacyDir, "agent-manager.json"),
@@ -699,14 +699,14 @@ describe("WorktreeStateManager", () => {
       expect(manager.getWorktrees()[0].branch).toBe("new-branch")
     })
 
-    it("rewrites stale .accurecode paths in worktree entries (unix)", async () => {
+    it("rewrites stale .accure paths in worktree entries (unix)", async () => {
       fs.writeFileSync(
         path.join(root, ".accurecode", "agent-manager.json"),
         JSON.stringify({
           worktrees: {
             "wt-stale": {
               branch: "fix",
-              path: "/repo/.accurecode/worktrees/fix",
+              path: "/repo/.accure/worktrees/fix",
               parentBranch: "main",
               createdAt: new Date().toISOString(),
             },
@@ -721,14 +721,14 @@ describe("WorktreeStateManager", () => {
       expect(manager.getWorktrees()[0].path).toBe(`/repo/.accurecode/worktrees/fix`)
     })
 
-    it("rewrites stale .accurecode paths with backslashes (windows)", async () => {
+    it("rewrites stale .accure paths with backslashes (windows)", async () => {
       fs.writeFileSync(
         path.join(root, ".accurecode", "agent-manager.json"),
         JSON.stringify({
           worktrees: {
             "wt-win": {
               branch: "fix",
-              path: "C:\\.accurecode\\worktrees\\fix",
+              path: "C:\\.accure\\worktrees\\fix",
               parentBranch: "main",
               createdAt: new Date().toISOString(),
             },

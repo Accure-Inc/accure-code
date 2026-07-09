@@ -1,7 +1,7 @@
 import * as fs from "node:fs"
 import * as path from "node:path"
 
-// TODO: Remove the legacy .accurecode -> .accurecode migration helpers below after the
+// TODO: Remove the legacy .accure -> .accurecode migration helpers below after the
 // GA release cleanup tracked in https://github.com/Accure-Inc/accure-code/issues/6986.
 
 /**
@@ -20,9 +20,9 @@ export const SNAPSHOT_INITIALIZATION = "wait" as const
 export const ACCURECODE_DIR = ".accurecode"
 
 /** Legacy config directory name for backward compatibility reads. */
-export const LEGACY_DIR = ".accurecode"
+export const LEGACY_DIR = ".accure"
 
-/** Agent Manager files that should be migrated from .accurecode/ to .accurecode/. */
+/** Agent Manager files that should be migrated from .accure/ to .accurecode/. */
 const AGENT_MANAGER_ITEMS = [
   "agent-manager.json",
   "worktrees",
@@ -35,15 +35,15 @@ const AGENT_MANAGER_ITEMS = [
 
 /** Result of the migration so callers can react (e.g. refresh VS Code git). */
 export interface MigrationResult {
-  /** Number of git worktree refs that were rewritten from .accurecode → .accurecode. */
+  /** Number of git worktree refs that were rewritten from .accure → .accurecode. */
   refsFixed: number
 }
 
 /**
- * Migrate Agent Manager data from .accurecode/ to .accurecode/.
+ * Migrate Agent Manager data from .accure/ to .accurecode/.
  *
  * Moves individual Agent Manager files/directories (worktrees, state,
- * setup scripts) from the legacy .accurecode/ into .accurecode/. Skips items
+ * setup scripts) from the legacy .accure/ into .accurecode/. Skips items
  * that already exist in .accurecode/ (the new location wins). This is safe
  * because Agent Manager exclusively owns these files.
  *
@@ -135,11 +135,11 @@ async function resolveGitDir(root: string): Promise<string | undefined> {
 }
 
 /**
- * After moving worktrees from .accurecode/ to .accurecode/, fix git internal refs.
+ * After moving worktrees from .accure/ to .accurecode/, fix git internal refs.
  *
  * Git stores absolute paths in .git/worktrees/{name}/gitdir. When the
  * worktree directory moves, those paths become stale. This rewrites any
- * gitdir files that reference the old .accurecode path.
+ * gitdir files that reference the old .accure path.
  *
  * Returns the number of refs that were successfully fixed so callers can
  * tell whether a VS Code git refresh is warranted.

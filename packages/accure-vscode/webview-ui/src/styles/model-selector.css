@@ -675,7 +675,7 @@
 
 .model-selector-item-cfg-icon {
   margin-left: 2px;
-  font-size: 10px;
+  font-size: var(--font-size-small);
 }
 
 /* -------------------------------------------------------------------------

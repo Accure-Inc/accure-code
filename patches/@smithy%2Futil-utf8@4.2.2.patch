@@ -1,0 +1,24 @@
+diff --git a/dist-cjs/index.js b/dist-cjs/index.js
+index 7f94510002e78900e32a5b9932aa3bcea67d2ce5..74e66692b6dcc2f0aba23fb0193b5d795f34e751 100644
+--- a/dist-cjs/index.js
++++ b/dist-cjs/index.js
+@@ -3,6 +3,9 @@
+ var utilBufferFrom = require('@smithy/util-buffer-from');
+ 
+ const fromUtf8 = (input) => {
++    if (typeof utilBufferFrom.fromString !== "function") {
++        return new TextEncoder().encode(input);
++    }
+     const buf = utilBufferFrom.fromString(input, "utf8");
+     return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength / Uint8Array.BYTES_PER_ELEMENT);
+ };
+@@ -24,6 +27,9 @@ const toUtf8 = (input) => {
+     if (typeof input !== "object" || typeof input.byteOffset !== "number" || typeof input.byteLength !== "number") {
+         throw new Error("@smithy/util-utf8: toUtf8 encoder function only accepts string | Uint8Array.");
+     }
++    if (typeof utilBufferFrom.fromArrayBuffer !== "function") {
++        return new TextDecoder("utf-8").decode(input);
++    }
+     return utilBufferFrom.fromArrayBuffer(input.buffer, input.byteOffset, input.byteLength).toString("utf8");
+ };
+ 

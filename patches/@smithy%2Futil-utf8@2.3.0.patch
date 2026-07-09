@@ -1,0 +1,24 @@
+diff --git a/dist-cjs/index.js b/dist-cjs/index.js
+index 0b22680ad19ca9e07bf28c1011190c93726d84e1..a682e98d09d559b3f7aeefc840c7ae245ca15b04 100644
+--- a/dist-cjs/index.js
++++ b/dist-cjs/index.js
+@@ -29,6 +29,9 @@ module.exports = __toCommonJS(src_exports);
+ // src/fromUtf8.ts
+ var import_util_buffer_from = require("@smithy/util-buffer-from");
+ var fromUtf8 = /* @__PURE__ */ __name((input) => {
++  if (typeof import_util_buffer_from.fromString !== "function") {
++    return new TextEncoder().encode(input);
++  }
+   const buf = (0, import_util_buffer_from.fromString)(input, "utf8");
+   return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength / Uint8Array.BYTES_PER_ELEMENT);
+ }, "fromUtf8");
+@@ -53,6 +56,9 @@ var toUtf8 = /* @__PURE__ */ __name((input) => {
+   if (typeof input !== "object" || typeof input.byteOffset !== "number" || typeof input.byteLength !== "number") {
+     throw new Error("@smithy/util-utf8: toUtf8 encoder function only accepts string | Uint8Array.");
+   }
++  if (typeof import_util_buffer_from.fromArrayBuffer !== "function") {
++    return new TextDecoder("utf-8").decode(input);
++  }
+   return (0, import_util_buffer_from.fromArrayBuffer)(input.buffer, input.byteOffset, input.byteLength).toString("utf8");
+ }, "toUtf8");
+ // Annotate the CommonJS export names for ESM import in node:

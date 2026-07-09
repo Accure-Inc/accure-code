@@ -18,8 +18,8 @@ import {
 describe("parsePRUrl", () => {
   it("parses a standard GitHub PR URL", () => {
     expect(parsePRUrl("https://github.com/Accure-Inc/accure-code/pull/6164")).toEqual({
-      owner: "Accure-Org",
-      repo: "accurecode",
+      owner: "Accure-Inc",
+      repo: "accure-code",
       number: 6164,
     })
   })

@@ -113,6 +113,6 @@ export function reviewBody(review: ReviewMessageData, content: string): string |
 
 export function partReview(metadata: unknown, content: string): ReviewMessageView | undefined {
   const root = record(metadata)
-  const accure = record(root?.accurecode)
+  const accure = record(root?.accure)
   return view(accure?.review, content)
 }

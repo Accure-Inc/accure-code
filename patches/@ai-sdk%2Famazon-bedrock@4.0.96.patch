@@ -1,0 +1,94 @@
+diff --git a/dist/index.js b/dist/index.js
+index 6a2631202daf68b198cc820d7dabbe11c7657476..23e0b8ba5bac8860e018047801606ee0d01884f3 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -953,7 +953,8 @@ var BedrockChatLanguageModel = class {
+         }
+       };
+     }
+-    if (isAnthropicThinkingEnabled && inferenceConfig.temperature != null) {
++    const isReasoningEnabled = isAnthropicThinkingEnabled || maxReasoningEffort != null;
++    if (isReasoningEnabled && inferenceConfig.temperature != null) {
+       delete inferenceConfig.temperature;
+       warnings.push({
+         type: "unsupported",
+@@ -961,7 +962,7 @@ var BedrockChatLanguageModel = class {
+         details: "temperature is not supported when thinking is enabled"
+       });
+     }
+-    if (isAnthropicThinkingEnabled && inferenceConfig.topP != null) {
++    if (isReasoningEnabled && inferenceConfig.topP != null) {
+       delete inferenceConfig.topP;
+       warnings.push({
+         type: "unsupported",
+@@ -969,7 +970,7 @@ var BedrockChatLanguageModel = class {
+         details: "topP is not supported when thinking is enabled"
+       });
+     }
+-    if (isAnthropicThinkingEnabled && inferenceConfig.topK != null) {
++    if (isReasoningEnabled && inferenceConfig.topK != null) {
+       delete inferenceConfig.topK;
+       warnings.push({
+         type: "unsupported",
+@@ -977,6 +978,14 @@ var BedrockChatLanguageModel = class {
+         details: "topK is not supported when thinking is enabled"
+       });
+     }
++    if (maxReasoningEffort != null && inferenceConfig.maxTokens != null) {
++      delete inferenceConfig.maxTokens;
++      warnings.push({
++        type: "unsupported",
++        feature: "maxTokens",
++        details: "maxTokens is not supported when Nova reasoning is enabled"
++      });
++    }
+     const hasAnyTools = ((_m = (_l = toolConfig.tools) == null ? void 0 : _l.length) != null ? _m : 0) > 0 || additionalTools;
+     let filteredPrompt = prompt;
+     if (!hasAnyTools) {
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 2b9cfb9a5b1a0bf366ab023e6becfc32fc32b31e..585953279356f1769a605e87acc501368f89017e 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -953,7 +953,8 @@ var BedrockChatLanguageModel = class {
+         }
+       };
+     }
+-    if (isAnthropicThinkingEnabled && inferenceConfig.temperature != null) {
++    const isReasoningEnabled = isAnthropicThinkingEnabled || maxReasoningEffort != null;
++    if (isReasoningEnabled && inferenceConfig.temperature != null) {
+       delete inferenceConfig.temperature;
+       warnings.push({
+         type: "unsupported",
+@@ -961,7 +962,7 @@ var BedrockChatLanguageModel = class {
+         details: "temperature is not supported when thinking is enabled"
+       });
+     }
+-    if (isAnthropicThinkingEnabled && inferenceConfig.topP != null) {
++    if (isReasoningEnabled && inferenceConfig.topP != null) {
+       delete inferenceConfig.topP;
+       warnings.push({
+         type: "unsupported",
+@@ -969,7 +970,7 @@ var BedrockChatLanguageModel = class {
+         details: "topP is not supported when thinking is enabled"
+       });
+     }
+-    if (isAnthropicThinkingEnabled && inferenceConfig.topK != null) {
++    if (isReasoningEnabled && inferenceConfig.topK != null) {
+       delete inferenceConfig.topK;
+       warnings.push({
+         type: "unsupported",
+@@ -977,6 +978,14 @@ var BedrockChatLanguageModel = class {
+         details: "topK is not supported when thinking is enabled"
+       });
+     }
++    if (maxReasoningEffort != null && inferenceConfig.maxTokens != null) {
++      delete inferenceConfig.maxTokens;
++      warnings.push({
++        type: "unsupported",
++        feature: "maxTokens",
++        details: "maxTokens is not supported when Nova reasoning is enabled"
++      });
++    }
+     const hasAnyTools = ((_m = (_l = toolConfig.tools) == null ? void 0 : _l.length) != null ? _m : 0) > 0 || additionalTools;
+     let filteredPrompt = prompt;
+     if (!hasAnyTools) {

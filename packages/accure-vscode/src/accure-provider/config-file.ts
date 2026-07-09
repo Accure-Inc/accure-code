@@ -92,7 +92,7 @@ export function globalFiles() {
 
 export function localFiles(root: string) {
   const enabled = !process.env.ACCURECODE_DISABLE_PROJECT_CONFIG
-  const dirs = [path.join(root, ".accurecode"), root, path.join(root, ".accurecode"), path.join(root, ".opencode")]
+  const dirs = [path.join(root, ".accurecode"), root, path.join(root, ".accure"), path.join(root, ".opencode")]
   const list = dirs.flatMap((dir) => FILES.map((file) => row(path.join(dir, file), localSource(root, dir), enabled)))
   return ensure(
     list.filter((item) => item.exists),
@@ -104,7 +104,7 @@ export function localFiles(root: string) {
 function localSource(root: string, dir: string) {
   if (dir === root) return "sourceProjectRoot"
   if (dir.endsWith(`${path.sep}.accurecode`)) return "sourceProjectAccure"
-  if (dir.endsWith(`${path.sep}.accurecode`)) return "sourceProjectAccurecode"
+  if (dir.endsWith(`${path.sep}.accure`)) return "sourceProjectAccurecode"
   return "sourceProjectOpencode"
 }
 

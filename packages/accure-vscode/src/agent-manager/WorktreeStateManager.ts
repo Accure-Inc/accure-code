@@ -618,9 +618,9 @@ export class WorktreeStateManager {
     this.reviewDiffStyle = "unified"
 
     for (const [id, wt] of Object.entries(data.worktrees ?? {})) {
-      // Rewrite stale .accurecode paths while preserving the separator style already stored.
+      // Rewrite stale .accure paths while preserving the separator style already stored.
       const fixed =
-        wt.path?.replace(/([/\\])\.accurecode([/\\])/g, (_match, leadingSep, trailingSep) => {
+        wt.path?.replace(/([/\\])\.accure([/\\])/g, (_match, leadingSep, trailingSep) => {
           return `${leadingSep}.accurecode${trailingSep}`
         }) ?? wt.path
       this.worktrees.set(id, { id, ...wt, path: fixed })
