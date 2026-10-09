@@ -6,6 +6,7 @@ import type * as ModelsDev from "@opencode-ai/core/models-dev"
 import { iife } from "@/util/iife"
 import { accureProviderOptions } from "@/accurecode/provider-options"
 import { isLing } from "@/accurecode/model-match" // accurecode_change
+import { AccureLLM } from "@/accurecode/session/llm" // accurecode_change
 
 type Modality = NonNullable<ModelsDev.Model["modalities"]>["input"][number]
 
@@ -1386,8 +1387,17 @@ export function maxOutputTokens(model: Provider.Model, outputTokenMax = OUTPUT_T
     limit = typeof limit === "number" && limit > 0 ? Math.min(limit, bedrockLimit) : bedrockLimit
   }
   // accurecode_change end
-  const cap = typeof limit === "number" && limit > 0 ? Math.min(limit, outputTokenMax) : outputTokenMax
-  return cap || outputTokenMax
+  // accurecode_change start - scale default output cap for small context models (<= 65k) or unknown context models to preserve input headroom
+  const context = AccureLLM.getContext(model)
+  const max =
+    context > 0 && context <= 65_536 && outputTokenMax === OUTPUT_TOKEN_MAX
+      ? Math.min(outputTokenMax, Math.max(4_096, Math.floor(context * 0.25)))
+      : context === 0 && outputTokenMax === OUTPUT_TOKEN_MAX
+        ? 4_096
+        : outputTokenMax
+  // accurecode_change end
+  const cap = typeof limit === "number" && limit > 0 ? Math.min(limit, max) : max
+  return cap || max
 }
 
 export function schema(model: Provider.Model, schema: JSONSchema7): JSONSchema7 {

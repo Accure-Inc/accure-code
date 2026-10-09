@@ -100,7 +100,7 @@ type CompletedCompaction = {
 }
 
 // accurecode_change start - allow safe pruning at cache-invalidating boundaries
-export type PruneReason = "normal" | "post-compaction" | "payload-limit"
+export type PruneReason = "normal" | "post-compaction" | "payload-limit" | "pre-compaction"
 // accurecode_change end
 
 function summaryText(message: MessageV2.WithParts) {
@@ -314,7 +314,7 @@ export const layer = Layer.effect(
 
     // goes backwards through parts until there are PRUNE_PROTECT tokens worth of tool
     // calls, then erases output of older tool calls to free context space
-    // accurecode_change start - preserve normal opt-in pruning, but allow payload/compaction cleanup by default
+    // accurecode_change start - preserve normal opt-in pruning, scale thresholds for compact models, and allow payload/compaction cleanup
     const prune = Effect.fn("SessionCompaction.prune")(function* (input: {
       sessionID: SessionID
       reason?: PruneReason
@@ -322,13 +322,30 @@ export const layer = Layer.effect(
       const cfg = yield* config.get()
       const reason = input.reason ?? "normal"
       if (cfg.compaction?.prune === false) return
-      if (reason === "normal" && cfg.compaction?.prune !== true) return
-      log.info("pruning", { reason })
 
       const msgs = yield* session
         .messages({ sessionID: input.sessionID })
         .pipe(Effect.catchIf(NotFoundError.isInstance, () => Effect.succeed(undefined)))
       if (!msgs) return
+
+      let context = 128_000
+      const last = msgs.findLast((m) => m.info.role === "user" || m.info.role === "assistant")
+      if (last) {
+        const pid = last.info.role === "user" ? last.info.model.providerID : last.info.providerID
+        const mid = last.info.role === "user" ? last.info.model.modelID : last.info.modelID
+        const mdl = yield* provider
+          .getModel(pid, mid)
+          .pipe(Effect.catch(() => Effect.succeed(undefined)))
+        const limit = mdl?.limit.input || mdl?.limit.context
+        if (limit) context = limit
+      }
+
+      const compact = context <= 65_536
+      if (reason === "normal" && cfg.compaction?.prune !== true && !compact) return
+      log.info("pruning", { reason })
+
+      const protect = Math.min(PRUNE_PROTECT, Math.floor(context * 0.25))
+      const minimum = Math.min(PRUNE_MINIMUM, Math.max(1_000, Math.floor(context * 0.08)))
 
       let total = 0
       let pruned = 0
@@ -348,14 +365,14 @@ export const layer = Layer.effect(
           if (part.state.time.compacted) break loop
           const estimate = Token.estimate(part.state.output)
           total += estimate
-          if (total <= PRUNE_PROTECT) continue
+          if (total <= protect) continue
           pruned += estimate
           toPrune.push(part)
         }
       }
 
       log.info("found", { pruned, total })
-      if (pruned > PRUNE_MINIMUM) {
+      if (pruned > minimum) {
         for (const part of toPrune) {
           if (part.state.status === "completed") {
             part.state.time.compacted = Date.now()
@@ -413,7 +430,14 @@ export const layer = Layer.effect(
         ? yield* provider.getModel(agent.model.providerID, agent.model.modelID).pipe(Effect.orDie)
         : yield* provider.getModel(userMessage.model.providerID, userMessage.model.modelID).pipe(Effect.orDie)
       const cfg = yield* config.get()
-      const history = compactionPart && messages.at(-1)?.info.id === input.parentID ? messages.slice(0, -1) : messages
+      // accurecode_change start - proactively prune older tool outputs before selecting context for compaction
+      yield* prune({ sessionID: input.sessionID, reason: "pre-compaction" })
+      const fresh = yield* session
+        .messages({ sessionID: input.sessionID })
+        .pipe(Effect.catchIf(NotFoundError.isInstance, () => Effect.succeed(undefined)))
+      const current = fresh ?? messages
+      const history = compactionPart && current.at(-1)?.info.id === input.parentID ? current.slice(0, -1) : current
+      // accurecode_change end
       const prior = completedCompactions(history)
       const hidden = new Set(prior.flatMap((item) => [item.userIndex, item.assistantIndex]))
       const previousSummary = prior.at(-1)?.summary
@@ -485,7 +509,7 @@ export const layer = Layer.effect(
             updatePart: session.updatePart,
           })
 
-      const fallback = AccureCompactionChunks.eligible({
+      const outcome = AccureCompactionChunks.eligible({
         result,
         error: processor.message.error ?? processor.compactError?.(),
       })
@@ -505,17 +529,54 @@ export const layer = Layer.effect(
             updatePart: session.updatePart,
           })
         : result
-      if (fallback === "compact") {
-        // accurecode_change end
-        processor.message.error = new MessageV2.ContextOverflowError({
-          message: replay
-            ? "Conversation history too large to compact - exceeds model context limit"
-            : "Session too large to compact - context exceeds model limit even after stripping media",
-        }).toObject()
-        processor.message.finish = "error"
+
+      if (outcome === "compact") {
+        const all = turns(input.messages)
+        const tail = all.length > 2 ? all.at(-2) : all.at(-1)
+        const tailId =
+          selected.tail_start_id && selected.tail_start_id !== input.messages[0]?.info.id
+            ? selected.tail_start_id
+            : tail?.id
+
+        if (tailId) {
+          selected.tail_start_id = tailId
+          if (compactionPart) {
+            yield* session.updatePart({
+              ...compactionPart,
+              tail_start_id: tailId,
+            })
+          }
+        }
+
+        delete processor.message.error
+        processor.message.finish = "stop"
+
+        const limit = model.limit.input || model.limit.context
+        const notice = [
+          `Earlier conversation turns were evicted to remain within the model context limit (${model.id}, ${limit} tokens).`,
+          `Recent turns have been retained in context. If you need details from previous steps, check existing files in the workspace.`,
+          previousSummary ? `\n### Previous Summary:\n${previousSummary}` : "",
+        ]
+          .filter(Boolean)
+          .join("\n")
+
+        yield* session.updatePart({
+          id: PartID.ascending(),
+          messageID: processor.message.id,
+          sessionID: input.sessionID,
+          type: "text",
+          synthetic: true,
+          text: notice,
+          time: {
+            start: Date.now(),
+            end: Date.now(),
+          },
+        })
         yield* session.updateMessage(processor.message)
-        return "stop"
       }
+
+      const fallback = outcome === "compact" ? "continue" : outcome
+      // accurecode_change end
 
       if (compactionPart && selected.tail_start_id && compactionPart.tail_start_id !== selected.tail_start_id) {
         yield* session.updatePart({
@@ -680,6 +741,14 @@ export const layer = Layer.effect(
             outputTokens: processor.message.tokens.output,
           },
         })
+        // accurecode_change start - clear any stale errors from messages healed by this compaction
+        const history = yield* session.messages({ sessionID: input.sessionID }).pipe(Effect.orDie)
+        for (const item of history) {
+          if (item.info.role === "assistant" && item.info.error) {
+            delete item.info.error
+            yield* session.updateMessage(item.info)
+          }
+        }
         // accurecode_change end
         yield* prune({ sessionID: input.sessionID, reason: "post-compaction" })
         yield* bus.publish(Event.Compacted, { sessionID: input.sessionID })

@@ -1278,7 +1278,7 @@ export function fromError(
         providerID: ctx.providerID,
         error: e,
       })
-      if (parsed.type === "context_overflow") {
+      if (parsed.type === "context_overflow" || ProviderError.isOverflow(parsed.message)) { // accurecode_change
         error = new ContextOverflowError(
           {
             message: parsed.message,
@@ -1301,6 +1301,21 @@ export function fromError(
         { cause: e },
       ).toObject()
       break
+    // accurecode_change start - detect context overflow across any error shape (Error, AI_APICallError, stream error, etc.)
+    case typeof (e as any)?.message === "string" && ProviderError.isOverflow((e as any).message):
+    case typeof (e as any)?.error?.message === "string" && ProviderError.isOverflow((e as any).error.message):
+    case e instanceof Error && ProviderError.isOverflow(e.message): {
+      const overflowMsg = (e as any)?.message || (e as any)?.error?.message || (e instanceof Error ? e.message : "")
+      error = new ContextOverflowError(
+        {
+          message: overflowMsg,
+          responseBody: (e as any)?.responseBody ?? (typeof e === "object" ? JSON.stringify(e) : undefined),
+        },
+        { cause: e },
+      ).toObject()
+      break
+    }
+    // accurecode_change end
     case e instanceof Error:
       error = new NamedError.Unknown({ message: errorMessage(e) }, { cause: e }).toObject()
       break

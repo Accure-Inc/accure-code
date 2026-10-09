@@ -1,3 +1,4 @@
+// accurecode_change - new file
 import { streamText, tool, jsonSchema } from "ai"
 import { createAmazonBedrock } from "@ai-sdk/amazon-bedrock"
 import fs from "fs"

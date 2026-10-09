@@ -84,6 +84,26 @@ describe("transcriptRows", () => {
     expect(rows.at(-1)).toMatchObject({ type: "error", message: a3, error: a3.error })
   })
 
+  it("suppresses error row when a subsequent assistant message succeeded", () => {
+    const u1 = user("u1")
+    const a1 = assistant("a1", "u1", { error: { name: "ContextOverflowError" } })
+    const a2 = assistant("a2", "u1", {})
+    const rows = transcriptRows(messageTurns([u1, a1, a2]), lookup({ a2: [part("p1", "a2")] }))
+
+    expect(rows.some((row) => row.type === "error")).toBe(false)
+    expect(rows.at(-1)).toMatchObject({ type: "assistant", message: a2 })
+  })
+
+  it("suppresses error row on older turns when subsequent turns exist", () => {
+    const u1 = user("u1")
+    const a1 = assistant("a1", "u1", { error: { name: "ContextOverflowError" } })
+    const u2 = user("u2")
+    const a2 = assistant("a2", "u2", {})
+    const rows = transcriptRows(messageTurns([u1, a1, u2, a2]), lookup({ a2: [part("p1", "a2")] }))
+
+    expect(rows.some((row) => row.type === "error")).toBe(false)
+  })
+
   it("hides provider errors at and after an assistant part boundary", () => {
     const revert = { messageID: "message_2", partID: "part_2" }
     const u1 = user("message_1")

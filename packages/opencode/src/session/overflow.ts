@@ -10,12 +10,14 @@ export function usable(input: { cfg: Config.Info; model: Provider.Model; outputT
   const context = input.model.limit.context
   if (context === 0) return 0
 
-  const reserved =
-    input.cfg.compaction?.reserved ??
-    Math.min(COMPACTION_BUFFER, ProviderTransform.maxOutputTokens(input.model, input.outputTokenMax))
+  // accurecode_change start - scale reserved compaction buffer for compact models
+  const buffer = Math.min(COMPACTION_BUFFER, Math.floor(context * 0.2))
+  const raw = ProviderTransform.maxOutputTokens(input.model, input.outputTokenMax)
+  const reserved = input.cfg.compaction?.reserved ?? Math.min(buffer, raw)
   return input.model.limit.input
     ? Math.max(0, input.model.limit.input - reserved)
-    : Math.max(0, context - ProviderTransform.maxOutputTokens(input.model, input.outputTokenMax))
+    : Math.max(0, context - raw)
+  // accurecode_change end
 }
 
 export function isOverflow(input: {

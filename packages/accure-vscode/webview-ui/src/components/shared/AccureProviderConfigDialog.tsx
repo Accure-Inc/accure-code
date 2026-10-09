@@ -39,7 +39,6 @@ function genId() {
 const AccureProviderConfigDialog: Component<Props> = (props) => {
   const vscode = useVSCode()
   const action = createProviderAction(vscode)
-  // accurecode_change - clean up listener when dialog unmounts to avoid leaks
   onCleanup(() => action.dispose())
 
   const { providers, authStates } = useProvider()
@@ -50,7 +49,6 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
   const isAccureModels = () => pid() === "accure-models"
 
   // ─── Bedrock fields ───────────────────────────────────────────────────────
-  // accurecode_change start - editable model ID for Bedrock; pre-fill with previously saved options if available
   const savedOptions = () => (providers()[pid()] as any)?.options ?? {}
   const savedModelId = () => {
     const opts = savedOptions()
@@ -60,7 +58,6 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
   const [accessKey, setAccessKey] = createSignal(savedOptions().accessKeyId ?? "")
   const [secretKey, setSecretKey] = createSignal(savedOptions().secretAccessKey ?? "")
   const [region, setRegion] = createSignal(savedOptions().region ?? "us-east-1")
-  // accurecode_change end
 
   // ─── Accure Models fields (pre-filled) ───────────────────────────────────
   const savedBaseUrl = () => savedOptions().baseURL ?? ACCURE_DEFAULT_BASE_URL
@@ -94,9 +91,7 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
   const [saving, setSaving] = createSignal(false)
   const [error, setError] = createSignal("")
 
-  // accurecode_change start - credentials-empty check for Bedrock
   const credentialsEmpty = () => !accessKey().trim() && !secretKey().trim()
-  // accurecode_change end
 
   const title = createMemo(() => {
     if (isBedrock()) return "Configure Amazon Bedrock"
@@ -106,14 +101,12 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
 
   function validate(): string | null {
     if (isBedrock()) {
-      // accurecode_change start - model ID required; credentials only validated when provided
       if (!bedrockModelId().trim()) return "Model ID is required"
       if (!credentialsEmpty()) {
         if (!accessKey().trim()) return "AWS Access Key ID is required"
         if (!secretKey().trim()) return "AWS Secret Access Key is required"
       }
       return null
-      // accurecode_change end
     }
     if (isAccureModels()) {
       if (!baseUrl().trim()) return "Base URL is required"
@@ -138,7 +131,7 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
     let key: string | undefined
 
     if (isBedrock()) {
-      // accurecode_change start - always persist the model ID so it survives VS Code restarts
+      
       const customModel = bedrockModelId().trim()
       if (customModel) {
         options[`${mid()}-modelId`] = customModel
@@ -152,7 +145,6 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
         const r = region().trim()
         if (r) options.region = r
       }
-      // accurecode_change end
     } else if (isAccureModels()) {
       options.baseURL = baseUrl().trim()
       options.providerType = providerType().trim()
@@ -181,7 +173,7 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
     action.send(msg as any, {
       onConnected: () => {
         setSaving(false)
-        // accurecode_change - pass the editable model ID for Bedrock
+        
         props.onDone(props.model.providerID, isBedrock() ? (bedrockModelId().trim() || mid()) : props.model.id)
       },
       onError: (m: any) => {
@@ -191,7 +183,6 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
     })
   }
 
-  // accurecode_change - button label: "Select Model" when no credentials, "Save & Connect" otherwise
   const btnLabel = createMemo(() => {
     if (isBedrock() && credentialsEmpty()) return "Select Model"
     return "Save & Connect"
@@ -204,7 +195,6 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
 
         {/* ── Amazon Bedrock ─────────────────────────────────────────────── */}
         <Show when={isBedrock()}>
-          {/* accurecode_change start - Model ID field (editable, shown first) */}
           <TextField
             autofocus
             type="text"
@@ -216,7 +206,6 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
           <div class="accure-provider-config-hint">
             Leave credentials empty to apply only the Model ID (keeps existing keys).
           </div>
-          {/* accurecode_change end */}
           <TextField
             type="password"
             label="AWS Access Key ID"

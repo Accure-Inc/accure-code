@@ -25,7 +25,8 @@ if (!existsSync(cliDistDir)) {
   throw new Error(`CLI dist directory not found: ${cliDistDir}`)
 }
 
-const targets = [
+const targetFilter = process.env.TARGETS ? process.env.TARGETS.split(",").map((t) => t.trim()) : undefined
+const allTargets = [
   { target: "linux-x64", cliDir: "@accurecode/cli-linux-x64", binary: "accure" },
   { target: "linux-arm64", cliDir: "@accurecode/cli-linux-arm64", binary: "accure" },
   { target: "alpine-x64", cliDir: "@accurecode/cli-linux-x64-musl", binary: "accure" },
@@ -35,6 +36,7 @@ const targets = [
   { target: "win32-x64", cliDir: "@accurecode/cli-windows-x64", binary: "accure.exe" },
   { target: "win32-arm64", cliDir: "@accurecode/cli-windows-arm64", binary: "accure.exe" },
 ]
+const targets = allTargets.filter((t) => !targetFilter || targetFilter.includes(t.target))
 
 const binDir = join(import.meta.dir, "..", "bin")
 const distDir = join(import.meta.dir, "..", "dist")
@@ -91,7 +93,10 @@ for (const config of targets) {
   const vsixPath = join(outDir, `accure-vscode-${config.target}.vsix`)
   const args = ["--no-dependencies", "--skip-license", "--target", config.target, "-o", vsixPath]
   if (prerelease) args.push("--pre-release")
-  await $`vsce package ${args}`.env({
+  const vsceBin = existsSync(join(import.meta.dir, "..", "node_modules", ".bin", "vsce"))
+    ? join(import.meta.dir, "..", "node_modules", ".bin", "vsce")
+    : "vsce"
+  await $`${vsceBin} package ${args}`.env({
     ...process.env,
     npm_config_ignore_scripts: "true",
   })

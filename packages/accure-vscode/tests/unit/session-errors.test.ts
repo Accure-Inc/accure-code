@@ -44,4 +44,13 @@ describe("visibleError", () => {
 
     expect(visibleError(messages, () => false)).toBeUndefined()
   })
+
+  it("ignores errors on earlier messages when the turn concluded successfully", () => {
+    const messages = [
+      assistant("message_1", { name: "ContextOverflowError" }),
+      assistant("message_2"),
+    ]
+
+    expect(visibleError(messages, () => false)).toBeUndefined()
+  })
 })

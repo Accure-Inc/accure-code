@@ -1,5 +1,6 @@
 import type { Message, Part } from "../types/messages"
 import { visibleParts, type MessageTurn, type RevertBoundary } from "./session-queue"
+import { visibleError } from "./session-errors"
 
 interface TranscriptMeta {
   turn: string
@@ -183,11 +184,17 @@ export function transcriptRows(
       rows.push({ ...meta, type: "diff", key: `${turn.id}:diff`, message: turn.user, diffs: changes })
     }
 
-    const failed = turn.assistant.find(
-      (msg) => terminal(msg) && msg.error && msg.error.name !== "MessageAbortedError" && opts.hidden?.(msg.id) !== true,
+    const err = visibleError(
+      turn.assistant.filter(terminal),
+      opts.hidden ?? (() => false),
     )
-    if (failed?.error) {
-      rows.push({ ...meta, type: "error", key: `${turn.id}:error:${failed.id}`, message: failed, error: failed.error })
+    const isCompaction = parts(turn.user.id).some((p) => p.type === "compaction")
+    const superseded = turn !== turns.at(-1) && (isCompaction || err?.name === "ContextOverflowError")
+    if (err && !superseded) {
+      const failed = turn.assistant.find((msg) => terminal(msg) && msg.error === err)
+      if (failed) {
+        rows.push({ ...meta, type: "error", key: `${turn.id}:error:${failed.id}`, message: failed, error: err })
+      }
     }
   }
 

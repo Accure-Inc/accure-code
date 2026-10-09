@@ -25,6 +25,14 @@ const OVERFLOW_PATTERNS = [
   /prompt too long; exceeded (?:max )?context length/i, // Ollama explicit overflow error
   /too large for model with \d+ maximum context length/i, // Mistral
   /model_context_window_exceeded/i, // z.ai non-standard finish_reason surfaced as error text
+  // accurecode_change start - expand overflow patterns for Qwen, DashScope, and OpenAI-compatible providers
+  /range of input length should be/i, // Alibaba / DashScope Qwen
+  /supports at most \d+ tokens/i, // Qwen / OpenRouter
+  /input length exceeds/i, // Qwen / generic
+  /maximum context length/i, // Generic context length
+  /token count \(\d+\) exceeds/i, // Generic token count
+  /total number of tokens.*exceeds/i, // Generic
+  // accurecode_change end
 ]
 
 function isOpenAiErrorRetryable(e: APICallError) {
@@ -34,9 +42,8 @@ function isOpenAiErrorRetryable(e: APICallError) {
   return status === 404 || e.isRetryable
 }
 
-// Providers not reliably handled in this function:
-// - z.ai: can accept overflow silently (needs token-count/context-window checks)
-function isOverflow(message: string) {
+// accurecode_change start
+export function isOverflow(message: string) {
   if (OVERFLOW_PATTERNS.some((p) => p.test(message))) return true
 
   // Providers/status patterns handled outside of regex list:
@@ -44,6 +51,19 @@ function isOverflow(message: string) {
   // - Mistral: often returns "400 (no body)" / "413 (no body)"
   return /^4(00|13)\s*(status code)?\s*\(no body\)/i.test(message)
 }
+
+export function parseContextOverflow(message: string) {
+  const context = /maximum context length is (\d+)/i.exec(message)?.[1]
+  const output = /requested (\d+) output tokens/i.exec(message)?.[1]
+  const input = /prompt contains at least (\d+) input tokens/i.exec(message)?.[1]
+  if (!context && !output && !input) return undefined
+  return {
+    context: context ? Number(context) : undefined,
+    output: output ? Number(output) : undefined,
+    input: input ? Number(input) : undefined,
+  }
+}
+// accurecode_change end
 
 function message(providerID: ProviderID, e: APICallError) {
   return iife(() => {

@@ -22,6 +22,7 @@ import { Question } from "@/question"
 import { AccureSessionProcessor, type ReviewTelemetry } from "@/accurecode/session/processor"
 import { AccureSessionOverflow } from "@/accurecode/session/overflow"
 import { Suggestion } from "@/accurecode/suggestion"
+import { ProviderError } from "@/provider/error"
 // accurecode_change end
 import { errorMessage } from "@/util/error"
 import * as Log from "@opencode-ai/core/util/log"
@@ -920,8 +921,14 @@ export const layer = Layer.effect(
         }
         ctx.toolcalls = {}
         ctx.toolmeta = {} // accurecode_change
-        AccureSessionProcessor.guardEmptyToolCalls(ctx.assistantMessage, MessageV2.parts(ctx.assistantMessage.id)) // accurecode_change
-        AccureSessionProcessor.guardEmptyResponse(ctx.assistantMessage, MessageV2.parts(ctx.assistantMessage.id)) // accurecode_change
+        // accurecode_change start - do not mark empty response as error when compaction is pending
+        if (!ctx.needsCompaction) {
+          AccureSessionProcessor.guardEmptyToolCalls(ctx.assistantMessage, MessageV2.parts(ctx.assistantMessage.id))
+          AccureSessionProcessor.guardEmptyResponse(ctx.assistantMessage, MessageV2.parts(ctx.assistantMessage.id))
+        } else {
+          delete ctx.assistantMessage.error
+        }
+        // accurecode_change end
         ctx.assistantMessage.time.completed = Date.now()
         // accurecode_change start - reconcile cost with any subagent propagation written during tool calls (#6321)
         yield* reconcile()
@@ -939,14 +946,16 @@ export const layer = Layer.effect(
         slog.error("process", { error: errorMessage(e), stack: e instanceof Error ? e.stack : undefined })
         const error = parse(e)
 
-        // accurecode_change start
-        ctx.compactionError = MessageV2.ContextOverflowError.isInstance(error) ? error : ctx.compactionError
-        // accurecode_change end
-        if (MessageV2.ContextOverflowError.isInstance(error)) {
+        // accurecode_change start - context overflow triggers internal compaction/healing; do not broadcast error to UI prematurely
+        const overflow = MessageV2.ContextOverflowError.isInstance(error) || ProviderError.isOverflow(errorMessage(e))
+        if (overflow) {
+          ctx.compactionError = MessageV2.ContextOverflowError.isInstance(error)
+            ? error
+            : new MessageV2.ContextOverflowError({ message: errorMessage(e) }).toObject()
           ctx.needsCompaction = true
-          yield* bus.publish(Session.Event.Error, { sessionID: ctx.sessionID, error })
           return
         }
+        // accurecode_change end
         if (!ctx.assistantMessage.summary) {
           // TODO(v2): Temporary dual-write while migrating session messages to v2 events.
           if (flags.experimentalEventSystem) {
@@ -1015,6 +1024,7 @@ export const layer = Layer.effect(
             Effect.retry(
               SessionRetry.policy({
                 provider: input.model.providerID,
+                model: input.model, // accurecode_change
                 parse,
                 // accurecode_change start
                 ...AccureSessionProcessor.retryOpts({ sessionID: ctx.sessionID, abort: ac.signal, set: status.set }),

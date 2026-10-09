@@ -32,8 +32,18 @@ export namespace AccureSessionOverflow {
     return total || tokens.total || 0
   }
 
+  export function threshold(input: { cfg: Config.Info; model: Provider.Model }) {
+    if (typeof input.cfg.compaction?.threshold_percent === "number") {
+      return input.cfg.compaction.threshold_percent
+    }
+    const context = input.model.limit.input || input.model.limit.context
+    if (context <= 0) return undefined
+    if (context <= 65_536) return 70
+    return undefined
+  }
+
   export function limit(input: { cfg: Config.Info; model: Provider.Model; usable: number }) {
-    const percent = input.cfg.compaction?.threshold_percent
+    const percent = threshold(input)
     if (typeof percent !== "number") return input.usable
 
     const context = input.model.limit.input || input.model.limit.context
@@ -77,8 +87,8 @@ export namespace AccureSessionOverflow {
   export function enabled(input: { cfg: Config.Info; model: Provider.Model }) {
     return (
       input.cfg.compaction?.auto !== false &&
-      typeof input.cfg.compaction?.threshold_percent === "number" &&
-      input.model.limit.context !== 0
+      input.model.limit.context !== 0 &&
+      typeof threshold(input) === "number"
     )
   }
 

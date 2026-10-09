@@ -3,6 +3,8 @@ import { Cause, Clock, Duration, Effect, Schedule } from "effect"
 import { MessageV2 } from "./message-v2"
 import { isAccureError } from "@/accurecode/accure-errors" // accurecode_change
 import { SessionNetwork } from "./network" // accurecode_change
+import { AccureLLM } from "@/accurecode/session/llm" // accurecode_change
+import type { Provider } from "@/provider/provider" // accurecode_change
 import { iife } from "@/util/iife"
 import { isRecord } from "@/util/record"
 
@@ -128,6 +130,7 @@ function parseJSON(value: unknown) {
 
 export function policy(opts: {
   provider: string
+  model?: Provider.Model // accurecode_change
   parse: (error: unknown) => Err
   set: (input: { attempt: number; message: string; action?: Retryable["action"]; next: number }) => Effect.Effect<void>
   // accurecode_change start
@@ -144,6 +147,22 @@ export function policy(opts: {
       // accurecode_change end
 
       const error = opts.parse(meta.input)
+      // accurecode_change start - Self-healing retry for context overflow errors when prompt fits in context
+      if (MessageV2.ContextOverflowError.isInstance(error) && meta.attempt === 1 && opts.model) {
+        const msg = error.data.message
+        const heal = AccureLLM.canHealOverflow({ model: opts.model, message: msg })
+        if (heal.healable) {
+          return Effect.gen(function* () {
+            yield* opts.set({
+              attempt: meta.attempt,
+              message: "Adjusting output tokens for model context window",
+              next: Date.now(),
+            })
+            return [meta.attempt, Duration.zero] as [number, Duration.Duration]
+          })
+        }
+      }
+      // accurecode_change end
       const retry = retryable(error, opts.provider)
       if (!retry) return Cause.done(meta.attempt)
       return Effect.gen(function* () {

@@ -228,6 +228,11 @@ const allTargets: {
   },
 ]
 
+// accurecode_change start - support ACCURECODE_BUILD_TARGETS and skip baseline by default
+const targetFilter = process.env.ACCURECODE_BUILD_TARGETS
+  ? process.env.ACCURECODE_BUILD_TARGETS.split(",").map((s) => s.trim())
+  : undefined
+
 const targets = singleFlag
   ? allTargets.filter((item) => {
       if (item.os !== process.platform || item.arch !== process.arch) {
@@ -247,7 +252,22 @@ const targets = singleFlag
 
       return true
     })
-  : allTargets
+  : allTargets.filter((item) => {
+      if (item.avx2 === false && !baselineFlag) {
+        return false
+      }
+      if (targetFilter) {
+        const names = [
+          `${item.os}-${item.arch}`,
+          item.os === "win32" ? `windows-${item.arch}` : undefined,
+          item.abi ? `${item.os}-${item.arch}-${item.abi}` : undefined,
+          item.abi === "musl" ? `alpine-${item.arch}` : undefined,
+        ].filter(Boolean) as string[]
+        return names.some((n) => targetFilter.includes(n))
+      }
+      return true
+    })
+// accurecode_change end
 
 await $`rm -rf dist`
 const accureConsoleDist = await buildAccureConsole() // accurecode_change
@@ -350,6 +370,16 @@ for (const item of targets) {
       } catch {
         console.warn(`patchelf not available, skipping interpreter fix for ${name}`)
       }
+    }
+  }
+
+  if (item.os === "win32") {
+    const bin = path.resolve(dir, `dist/${name}/bin/accure`)
+    const exe = path.resolve(dir, `dist/${name}/bin/accure.exe`)
+    if (fs.existsSync(bin) && !fs.existsSync(exe)) {
+      await fs.promises.copyFile(bin, exe)
+    } else if (fs.existsSync(exe) && !fs.existsSync(bin)) {
+      await fs.promises.copyFile(exe, bin)
     }
   }
   // accurecode_change end
