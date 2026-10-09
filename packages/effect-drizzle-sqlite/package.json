@@ -2,6 +2,7 @@
   "$schema": "https://json.schemastore.org/package.json",
   "version": "7.3.50",
   "name": "@opencode-ai/effect-drizzle-sqlite",
+  "description": "Accure Code Effect Drizzle SQLite adapter",
   "type": "module",
   "license": "MIT",
   "private": true,

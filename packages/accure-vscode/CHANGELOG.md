@@ -13,4 +13,4 @@
 ## 1.1.0
 
 - Initial customized version.
-- Pull in updates from Kilo Code 7.3.50.
+- Upstream stability and feature updates.
