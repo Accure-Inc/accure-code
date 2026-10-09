@@ -196,27 +196,9 @@ const AboutAccureCodeTab: Component<AboutAccureCodeTabProps> = (props) => {
         </div>
       </div>
 
-      {/* Community & Support */}
+      {/* Support */}
       <div style={sectionStyle}>
         <h4 style={headingStyle}>{language.t("settings.aboutAccureCode.community")}</h4>
-        <p
-          style={{
-            "font-size": "var(--accure-font-size-12)",
-            color: "var(--vscode-descriptionForeground)",
-            margin: "0 0 12px 0",
-            "line-height": "1.5",
-          }}
-        >
-          {language.t("settings.aboutAccureCode.feedback.prefix")}{" "}
-          <span style={linkStyle} onClick={() => open("https://github.com/Accure-Inc/accure-code")}>
-            GitHub
-          </span>{" "}
-          {language.t("settings.aboutAccureCode.feedback.or")}{" "}
-          <span style={linkStyle} onClick={() => open("https://github.com/Accure-Inc/accure-code/discussions")}>
-            Discussions
-          </span>
-          .
-        </p>
         <p
           style={{
             "font-size": "var(--accure-font-size-12)",
@@ -231,29 +213,6 @@ const AboutAccureCodeTab: Component<AboutAccureCodeTabProps> = (props) => {
           </span>
           .
         </p>
-      </div>
-
-      {/* Telemetry */}
-      <div style={sectionStyle}>
-        <h4 style={headingStyle}>{language.t("settings.aboutAccureCode.telemetry.title")}</h4>
-        <p
-          style={{
-            "font-size": "var(--accure-font-size-12)",
-            color: "var(--vscode-descriptionForeground)",
-            margin: "0 0 12px 0",
-            "line-height": "1.5",
-          }}
-        >
-          {language.t("settings.aboutAccureCode.telemetry.description")}
-        </p>
-        <Button
-          variant="secondary"
-          size="small"
-          onClick={() => vscode.postMessage({ type: "openVSCodeSettings", query: "telemetry.telemetryLevel" })}
-        >
-          <Icon name="settings-gear" />
-          {language.t("settings.aboutAccureCode.telemetry.openSettings")}
-        </Button>
       </div>
 
       {/* CLI Server */}
@@ -310,35 +269,6 @@ const AboutAccureCodeTab: Component<AboutAccureCodeTabProps> = (props) => {
           </Button>
         </div>
       </div>
-
-      {/* legacy-migration start */}
-      <div style={{ ...sectionStyle, "margin-bottom": "0" }}>
-        <h4 style={headingStyle}>{language.t("settings.aboutAccureCode.legacyMigration.title")}</h4>
-        <p
-          style={{
-            "font-size": "var(--accure-font-size-12)",
-            color: "var(--vscode-descriptionForeground)",
-            margin: "0 0 12px 0",
-            "line-height": "1.5",
-          }}
-        >
-          {language.t("settings.aboutAccureCode.legacyMigration.description")}
-        </p>
-        <div style={{ display: "flex", gap: "8px", "flex-wrap": "wrap" }}>
-          <Button variant="secondary" size="small" onClick={() => props.onMigrationClick?.("legacy")}>
-            {language.t("settings.legacyMigration.link")}
-          </Button>
-          <Button
-            variant="secondary"
-            size="small"
-            onClick={() => props.onMigrationClick?.("roo")}
-            title={language.t("settings.aboutAccureCode.rooImport.description")}
-          >
-            {language.t("settings.aboutAccureCode.rooImport.button")}
-          </Button>
-        </div>
-      </div>
-      {/* legacy-migration end */}
 
       {/* Reset Settings */}
       <div style={sectionStyle}>

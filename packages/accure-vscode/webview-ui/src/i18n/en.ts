@@ -1198,7 +1198,7 @@ export const dict = {
   "settings.aboutAccureCode.versionInfo": "Version Information",
   "settings.aboutAccureCode.version.label": "Version:",
   "settings.aboutAccureCode.extensionName": "Accure Code Extension",
-  "settings.aboutAccureCode.community": "Community & Support",
+  "settings.aboutAccureCode.community": "Support",
   "settings.aboutAccureCode.feedback.prefix": "If you have any questions or feedback, feel free to open an issue on",
   "settings.aboutAccureCode.feedback.or": "or",
   "settings.aboutAccureCode.support.prefix": "For billing or account questions, contact Customer Support at",
