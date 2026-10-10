@@ -215,7 +215,7 @@
     },
     "packages/accure-vscode": {
       "name": "accure-code",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "dependencies": {
         "@accurecode/accure-gateway": "workspace:*",
         "@accurecode/accure-i18n": "workspace:*",
