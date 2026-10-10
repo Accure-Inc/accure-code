@@ -8,14 +8,14 @@ import { ProviderID, ModelID } from "../../src/provider/schema"
 const errMsg =
   "This model's maximum context length is 65000 tokens. However, you requested 32000 output tokens and your prompt contains at least 33001 input tokens, for a total of at least 65001 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (parameter=input_tokens, value=33001)"
 
-const qwenModel: Provider.Model = {
+const qwenModel = ({
   id: ModelID.make("qwen35"),
   providerID: ProviderID.make("vllm"),
   name: "ATM",
   api: { id: "qwen35", npm: "@ai-sdk/openai-compatible" },
   capabilities: { temperature: true },
   limit: { context: 0, output: 0 },
-}
+} as unknown as Provider.Model)
 
 describe("Antigravity-style Self-Healing Context", () => {
   it("classifies all overflow error shapes as ContextOverflowError", () => {
@@ -39,14 +39,14 @@ describe("Antigravity-style Self-Healing Context", () => {
   })
 
   it("safely defaults maxOutputTokens to 4096 when context is 0 on unknown models", () => {
-    const unknownModel: Provider.Model = {
+    const unknownModel = ({
       id: ModelID.make("custom-unknown"),
       providerID: ProviderID.make("custom"),
       name: "Custom",
       api: { id: "custom", npm: "@ai-sdk/openai-compatible" },
       capabilities: {},
       limit: { context: 0, output: 0 },
-    }
+    } as unknown as Provider.Model)
     expect(ProviderTransform.maxOutputTokens(unknownModel)).toBe(4_096)
   })
 

@@ -69,6 +69,32 @@ function lock(filePath: string) {
   return next
 }
 
+// accurecode_change start - post-edit native syntax validator
+async function checkSyntax(targetPath: string): Promise<string | undefined> {
+  const ext = path.extname(targetPath).toLowerCase()
+  if (ext === ".py") {
+    try {
+      const { execFile } = await import("node:child_process")
+      const { promisify } = await import("node:util")
+      await promisify(execFile)("python3", ["-m", "py_compile", targetPath], { timeout: 3000 })
+    } catch (err: any) {
+      const msg = err.stderr || err.stdout || err.message || ""
+      return "Python syntax verification failed:\n" + msg.trim()
+    }
+  } else if (ext === ".js" || ext === ".mjs" || ext === ".cjs") {
+    try {
+      const { execFile } = await import("node:child_process")
+      const { promisify } = await import("node:util")
+      await promisify(execFile)("node", ["--check", targetPath], { timeout: 3000 })
+    } catch (err: any) {
+      const msg = err.stderr || err.stdout || err.message || ""
+      return "JavaScript syntax verification failed:\n" + msg.trim()
+    }
+  }
+  return undefined
+}
+// accurecode_change end
+
 export const Parameters = Schema.Struct({
   filePath: Schema.String.annotate({ description: "The absolute path to the file to modify" }),
   oldString: Schema.String.annotate({ description: "The text to replace" }),
@@ -223,6 +249,12 @@ export const EditTool = Tool.define(
           const block = LSP.Diagnostic.report(filePath, diagnostics[normalizedFilePath] ?? [])
           if (block) output += `\n\nLSP errors detected in this file, please fix:\n${block}`
           output += yield* Effect.promise(() => ConfigValidation.check(filePath)) // accurecode_change
+          // accurecode_change start - surface immediate syntax errors if present
+          const syntaxErr = yield* Effect.promise(() => checkSyntax(filePath))
+          if (syntaxErr) {
+            output += `\n\nSYNTAX ERROR DETECTED, PLEASE FIX IMMEDIATELY:\n${syntaxErr}`
+          }
+          // accurecode_change end
 
           return {
             metadata: {

@@ -22,6 +22,7 @@ const RATIO = 0.6
 const CONCURRENCY = 3
 const DEPTH = 3
 const OUTPUT = 2_048
+const MAX_CHUNKS = 3
 
 export namespace AccureCompactionChunks {
   type Chunk = {
@@ -339,6 +340,14 @@ export namespace AccureCompactionChunks {
       const size = budget({ cfg: input.cfg, model: input.model, outputTokenMax: input.outputTokenMax })
       const chunks = yield* split({ messages: input.messages, model: input.model, size })
       log.info("fallback", { chunks: chunks.length, concurrency: CONCURRENCY })
+
+      if (chunks.length > MAX_CHUNKS) {
+        log.warn("compaction chunk count exceeds threshold, falling back to eviction", {
+          chunks: chunks.length,
+          max: MAX_CHUNKS,
+        })
+        return "compact" as const
+      }
 
       const partial = yield* Effect.forEach(chunks, (chunk) => summarize({ ...input, chunk, total: chunks.length }), {
         concurrency: Math.min(CONCURRENCY, chunks.length),

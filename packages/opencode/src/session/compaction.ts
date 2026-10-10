@@ -438,14 +438,34 @@ export const layer = Layer.effect(
       const current = fresh ?? messages
       const history = compactionPart && current.at(-1)?.info.id === input.parentID ? current.slice(0, -1) : current
       // accurecode_change end
+      const ctx = yield* InstanceState.context
       const prior = completedCompactions(history)
       const hidden = new Set(prior.flatMap((item) => [item.userIndex, item.assistantIndex]))
-      const previousSummary = prior.at(-1)?.summary
+      let previousSummary = prior.at(-1)?.summary
+      if (!previousSummary) {
+        previousSummary = yield* Effect.promise(async () => {
+          try {
+            const fsp = await import("node:fs/promises")
+            const p = await import("node:path")
+            return await fsp.readFile(
+              p.join(ctx.directory, ".accurecode", "sessions", input.sessionID, "summary.md"),
+              "utf-8",
+            )
+          } catch {
+            return undefined
+          }
+        })
+      }
+      // accurecode_change start - additive delta compaction
+      const lastSummaryIndex = prior.length > 0 ? prior.at(-1)!.assistantIndex : -1
+      const uncompacted = lastSummaryIndex >= 0 ? history.slice(lastSummaryIndex + 1) : history
+      const candidateMessages = uncompacted.filter((_, index) => !hidden.has(index))
       const selected = yield* select({
-        messages: history.filter((_, index) => !hidden.has(index)),
+        messages: candidateMessages.length > 0 ? candidateMessages : history.filter((_, index) => !hidden.has(index)),
         cfg,
         model,
       })
+      // accurecode_change end
       // Allow plugins to inject context or replace compaction prompt.
       const compacting = yield* plugin.trigger(
         "experimental.session.compacting",
@@ -460,7 +480,6 @@ export const layer = Layer.effect(
         toolOutputMaxChars: TOOL_OUTPUT_MAX_CHARS,
       })
       const tokens = Token.estimate(JSON.stringify(modelMessages)) // accurecode_change
-      const ctx = yield* InstanceState.context
       const msg: MessageV2.Assistant = {
         id: MessageID.ascending(),
         role: "assistant",
@@ -717,6 +736,22 @@ export const layer = Layer.effect(
         const found = AccureSession.resolveRoot(input.sessionID)
         const root = parent ? (found === input.sessionID ? parent : found) : input.sessionID
         const workspace = yield* InstanceState.context
+        // accurecode_change start - persist working summary to disk for additive compaction and visibility
+        yield* Effect.promise(async () => {
+          try {
+            const fsp = await import("node:fs/promises")
+            const p = await import("node:path")
+            const summaryDir = p.join(workspace.directory, ".accurecode", "sessions", input.sessionID)
+            await fsp.mkdir(summaryDir, { recursive: true })
+            if (summary) {
+              await fsp.writeFile(p.join(summaryDir, "summary.md"), summary, "utf-8")
+              await fsp.writeFile(p.join(workspace.directory, ".accurecode", "context-summary.md"), summary, "utf-8")
+            }
+          } catch (e) {
+            log.warn("failed to persist summary to disk", { error: e })
+          }
+        })
+        // accurecode_change end
         SessionExport.compaction({
           sessionId: input.sessionID,
           rootSessionId: root,
