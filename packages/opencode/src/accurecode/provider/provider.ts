@@ -182,20 +182,33 @@ export function accureCustomLoaders(dep: CustomDep): Record<string, CustomLoader
         options: { headers: DEFAULT_HEADERS },
       }),
 
-    // Accure Models (ATM-3, ATM-4, AVM-3): vLLM-based OpenAI-compatible provider
+    // Accure Models (ATM-3, ATM-4, AVM-3): Routed via AccureIQx API gateway
     "accure-models": Effect.fnUntraced(function* (input: any) {
       const env = yield* dep.env()
       const config = yield* dep.config()
       const auth = yield* dep.auth("accure-models") // accurecode_change
       const opts = config.provider?.["accure-models"]?.options
 
-      const baseURL =
-        env["ACCURE_MODELS_URL"] || opts?.baseURL || "http://jenkins.accure.ai:9006/v1"
+      let baseURL =
+        env["ACCURE_MODELS_URL"] || env["ACCUREIQX_API_URL"] || opts?.baseURL || "https://iqx.accure.ai/api/v1"
+
+      // In Docker workspace containers (e.g. AccureIQx App Builder), localhost:3000 loops back
+      // inside the container. Automatically rewrite to host.docker.internal so it reaches the host.
+      try {
+        const isContainer =
+          typeof process !== "undefined" &&
+          (process.env.APP_DATA_GATEWAY_URL?.includes("host.docker.internal") ||
+            process.env.WORKSPACE_CONTAINER_API_URL !== undefined ||
+            process.env.DOCKER_CONTAINER !== undefined ||
+            require("fs").existsSync("/.dockerenv"))
+        if (isContainer && (baseURL.includes("localhost") || baseURL.includes("127.0.0.1"))) {
+          baseURL = baseURL.replace("localhost", "host.docker.internal").replace("127.0.0.1", "host.docker.internal")
+        }
+      } catch {}
+
       const authKey = auth?.type === "api" ? auth.key : undefined // accurecode_change
-      const isDefaultURL = baseURL.startsWith("http://jenkins.accure.ai:9006") // accurecode_change
-      const defaultKey = isDefaultURL ? "sk-Fs75pLJeP7zb3bqtLSJLYxE__IuC8IJfOOf_EI7_Vy8-v4" : "" // accurecode_change
       const apiKey =
-        env["ACCURE_MODELS_API_KEY"] || authKey || opts?.apiKey || defaultKey // accurecode_change
+        env["ACCURE_MODELS_API_KEY"] || env["ACCUREIQX_API_KEY"] || authKey || opts?.apiKey || "" // accurecode_change
 
       return {
         autoload: true,
@@ -203,9 +216,10 @@ export function accureCustomLoaders(dep: CustomDep): Record<string, CustomLoader
           baseURL: baseURL.endsWith("/") ? baseURL : `${baseURL}/`,
           apiKey,
         },
-        // Pass model ID directly to vLLM — the API handles routing
+        // AccureIQx API gateway handles RBAC and routes model ID to internal backend
         async getModel(sdk: any, modelID: string) {
-          return sdk.languageModel(modelID)
+          const target = opts?.[`${modelID}-modelId`] || opts?.selectedModelId || modelID
+          return sdk.languageModel(target)
         },
       }
     }),

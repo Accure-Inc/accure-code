@@ -22,15 +22,16 @@ interface Props {
   onCancel: () => void
 }
 
-// Per-model default model IDs for vLLM
+// Per-model default model IDs for AccureIQx
 const ACCURE_MODEL_IDS: Record<string, string> = {
-  "atm-3": "nvidia/nemotron-3-super",
-  "atm-4": "accureai/atm-v4",
-  "avm-3": "nvidia/nemotron-3-vision",
+  "atm-3": "ATM-3Q-120B",
+  "atm-4": "ATM V4-0",
+  "avm-3": "accureai/avm-3.1.1",
+  "ATM-3Q-120B": "ATM-3Q-120B",
 }
 
-const ACCURE_DEFAULT_BASE_URL = "http://jenkins.accure.ai:9006/v1"
-const ACCURE_DEFAULT_API_KEY = "sk-Fs75pLJeP7zb3bqtLSJLYxE__IuC8IJfOOf_EI7_Vy8-v4"
+const ACCURE_DEFAULT_BASE_URL = "https://iqx.accure.ai/api/v1"
+const ACCURE_DEFAULT_API_KEY = ""
 
 function genId() {
   return Math.random().toString(36).slice(2)
@@ -109,9 +110,13 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
       return null
     }
     if (isAccureModels()) {
-      if (!baseUrl().trim()) return "Base URL is required"
-      if (!baseUrl().trim().startsWith("http")) return "Base URL must start with http:// or https://"
+      if (!baseUrl().trim()) return "AccureIQx API URL is required"
+      if (!baseUrl().trim().startsWith("http")) return "URL must start with http:// or https://"
       if (!modelId().trim()) return "Model ID is required"
+      const keyTrimmed = apiKey().trim()
+      if (!keyTrimmed && authStates()[pid()] !== "api") {
+        return "AccureIQx User API Key is required"
+      }
       return null
     }
     if (!url().trim()) return "URL is required"
@@ -131,7 +136,7 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
     let key: string | undefined
 
     if (isBedrock()) {
-      
+
       const customModel = bedrockModelId().trim()
       if (customModel) {
         options[`${mid()}-modelId`] = customModel
@@ -146,17 +151,27 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
         if (r) options.region = r
       }
     } else if (isAccureModels()) {
-      options.baseURL = baseUrl().trim()
+      let finalUrl = baseUrl().trim()
+      if (typeof window !== "undefined" && (finalUrl.includes("localhost:3000") || finalUrl.includes("127.0.0.1:3000"))) {
+        finalUrl = finalUrl.replace("localhost:3000", "host.docker.internal:3000").replace("127.0.0.1:3000", "host.docker.internal:3000")
+      }
+      options.baseURL = finalUrl
       options.providerType = providerType().trim()
       // Store per-model ID override so each model can point to a different vLLM model
       options[`${mid()}-modelId`] = modelId().trim()
-      const keyTrimmed = apiKey().trim()
+      let keyTrimmed = apiKey().trim()
+      while (keyTrimmed.toLowerCase().startsWith("bearer ")) {
+        keyTrimmed = keyTrimmed.slice(7).trim()
+      }
       if (keyTrimmed !== "••••••••" && keyTrimmed !== "........") {
         key = keyTrimmed
       }
     } else {
       options.baseURL = url().trim()
-      const keyTrimmed = genericApiKey().trim()
+      let keyTrimmed = genericApiKey().trim()
+      while (keyTrimmed.toLowerCase().startsWith("bearer ")) {
+        keyTrimmed = keyTrimmed.slice(7).trim()
+      }
       if (keyTrimmed !== "••••••••" && keyTrimmed !== "........") {
         key = keyTrimmed
       }
@@ -173,7 +188,7 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
     action.send(msg as any, {
       onConnected: () => {
         setSaving(false)
-        
+
         props.onDone(props.model.providerID, isBedrock() ? (bedrockModelId().trim() || mid()) : props.model.id)
       },
       onError: (m: any) => {
@@ -232,31 +247,27 @@ const AccureProviderConfigDialog: Component<Props> = (props) => {
         {/* ── Accure Models (ATM-3 / ATM-4 / AVM-3) ─────────────────────── */}
         <Show when={isAccureModels()}>
           <TextField
-            type="text"
-            label="Provider"
-            placeholder="vllm"
-            value={providerType()}
-            onChange={setProviderType}
-          />
-          <TextField
             autofocus
             type="text"
             label="Model ID"
-            placeholder="nvidia/nemotron-3-super"
+            placeholder="atm-4"
             value={modelId()}
             onChange={setModelId}
           />
           <TextField
             type="url"
-            label="Base URL"
-            placeholder="http://jenkins.accure.ai:9006/v1"
+            label="AccureIQx API URL"
+            placeholder="https://iq.accure.ai/api/v1"
             value={baseUrl()}
             onChange={setBaseUrl}
           />
+          <div class="accure-provider-config-hint" style={{ "margin-top": "-8px", "margin-bottom": "8px" }}>
+            For local Docker workspaces (App Builder), use <code>http://host.docker.internal:3000/api/v1</code>
+          </div>
           <TextField
             type="password"
-            label="API Key"
-            placeholder="sk-..."
+            label="AccureIQx User API Key"
+            placeholder="ak-..."
             value={apiKey()}
             onChange={setApiKey}
           />

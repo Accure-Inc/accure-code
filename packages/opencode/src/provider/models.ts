@@ -94,11 +94,15 @@ export const layer: Layer.Layer<Service, never, Core.Service | Config.Service | 
         // Accure Models: vLLM-based provider with ATM-3, ATM-4, AVM-3
         // Always injected so models appear in the picker; the dialog collects credentials.
         const accureModelsCfg = cfg.provider?.["accure-models"]?.options
-        const accureBaseUrl = process.env.ACCURE_MODELS_URL || accureModelsCfg?.baseURL || "http://jenkins.accure.ai:9006/v1"
+        const accureBaseUrl =
+          process.env.ACCURE_MODELS_URL ||
+          process.env.ACCUREIQX_API_URL ||
+          accureModelsCfg?.baseURL ||
+          "https://iqx.accure.ai/api/v1"
         providers["accure-models"] = {
           id: "accure-models",
           name: "Accure Models",
-          env: ["ACCURE_MODELS_API_KEY"],
+          env: ["ACCURE_MODELS_API_KEY", "ACCUREIQX_API_KEY"],
           npm: "@ai-sdk/openai-compatible",
           api: accureBaseUrl.endsWith("/") ? accureBaseUrl : `${accureBaseUrl}/`,
           models: {

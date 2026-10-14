@@ -14,7 +14,7 @@ export interface ServerInstance {
   process: ChildProcess
 }
 
-const STARTUP_TIMEOUT_SECONDS = 30
+const STARTUP_TIMEOUT_SECONDS = 60
 
 type WorkspaceFolderLike = { uri: { fsPath: string } }
 type ServerExitListener = (code: number | null) => void
