@@ -10,13 +10,13 @@ import { tui } from "../../../../accurecode/cli/logo"
 // ~ = shadow top only (▀ with fg=shadow)
 const SHADOW_MARKER = /[_^~]/
 
-export function AccureLogo() {
+export function AccureLogo(props: { ink?: RGBA } = {}) {
   const { theme } = useTheme()
-  const yellow = RGBA.fromHex("#F8F675")
+  const color = props.ink ?? RGBA.fromHex("#33C97C")
   const logo = tui()
 
   const renderLine = (line: string): JSX.Element[] => {
-    const shadow = tint(theme.background, yellow, 0.25)
+    const shadow = tint(theme.background, color, 0.25)
     const elements: JSX.Element[] = []
     let i = 0
 
@@ -26,7 +26,7 @@ export function AccureLogo() {
 
       if (markerIndex === -1) {
         elements.push(
-          <text fg={yellow} selectable={false}>
+          <text fg={color} selectable={false}>
             {rest}
           </text>,
         )
@@ -35,7 +35,7 @@ export function AccureLogo() {
 
       if (markerIndex > 0) {
         elements.push(
-          <text fg={yellow} selectable={false}>
+          <text fg={color} selectable={false}>
             {rest.slice(0, markerIndex)}
           </text>,
         )
@@ -45,14 +45,14 @@ export function AccureLogo() {
       switch (marker) {
         case "_":
           elements.push(
-            <text fg={yellow} bg={shadow} selectable={false}>
+            <text fg={color} bg={shadow} selectable={false}>
               {" "}
             </text>,
           )
           break
         case "^":
           elements.push(
-            <text fg={yellow} bg={shadow} selectable={false}>
+            <text fg={color} bg={shadow} selectable={false}>
               ▀
             </text>,
           )

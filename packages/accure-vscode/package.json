@@ -2,7 +2,7 @@
   "name": "accure-code",
   "displayName": "Accure Code: AI Software Engineer",
   "description": "Your autonomous pair programmer. Code at the speed of thought with an open-source agent that edits files, runs terminal commands, and runs browser tests. Switch custom modes or code with fast inline completions. Supports 500+ AI models.",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "icon": "assets/icons/logo-outline-black.png",
   "galleryBanner": {
     "color": "#FFFFFF",

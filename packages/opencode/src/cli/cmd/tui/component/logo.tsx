@@ -553,8 +553,8 @@ function buildIdleState(t: number, ctx: LogoContext): IdleState {
 }
 
 // accurecode_change start
-export function Logo(_props: { shape?: LogoShape; ink?: RGBA; idle?: boolean } = {}) {
-  return <AccureLogo />
+export function Logo(props: { shape?: LogoShape; ink?: RGBA; idle?: boolean } = {}) {
+  return <AccureLogo ink={props.ink} />
 }
 // accurecode_change end
 
