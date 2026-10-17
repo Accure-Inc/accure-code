@@ -52,7 +52,8 @@ const migrations = await Promise.all(
 console.log(`Loaded ${migrations.length} migrations`)
 
 const singleFlag = process.argv.includes("--single")
-const baselineFlag = process.argv.includes("--baseline")
+const baselineFlag = process.argv.includes("--baseline") || Script.release // accurecode_change
+const archiveFlag = process.argv.includes("--archive") || Script.release // accurecode_change
 const skipInstall = process.argv.includes("--skip-install")
 const sourcemapsFlag = process.argv.includes("--sourcemaps")
 const plugin = createSolidTransformPlugin()
@@ -259,9 +260,13 @@ const targets = singleFlag
       if (targetFilter) {
         const names = [
           `${item.os}-${item.arch}`,
+          item.avx2 === false ? `${item.os}-${item.arch}-baseline` : undefined,
           item.os === "win32" ? `windows-${item.arch}` : undefined,
+          item.os === "win32" && item.avx2 === false ? `windows-${item.arch}-baseline` : undefined,
           item.abi ? `${item.os}-${item.arch}-${item.abi}` : undefined,
+          item.abi && item.avx2 === false ? `${item.os}-${item.arch}-${item.abi}-baseline` : undefined,
           item.abi === "musl" ? `alpine-${item.arch}` : undefined,
+          item.abi === "musl" && item.avx2 === false ? `alpine-${item.arch}-baseline` : undefined,
         ].filter(Boolean) as string[]
         return names.some((n) => targetFilter.includes(n))
       }
@@ -425,21 +430,28 @@ for (const item of targets) {
   binaries[name] = Script.version
 }
 
-if (Script.release) {
+if (archiveFlag) {
   const archives: string[] = [] // accurecode_change
   for (const key of Object.keys(binaries)) {
     const archive = key.replace(pkg.name, "accure") // accurecode_change
+    const cliArchive = key.replace(pkg.name, "accure-cli") // accurecode_change
     if (key.includes("linux")) {
       const out = path.resolve("dist", `${archive}.tar.gz`) // accurecode_change
+      const cliOut = path.resolve("dist", `${cliArchive}.tar.gz`) // accurecode_change
       await $`tar -czf ${out} *`.cwd(`dist/${key}/bin`) // accurecode_change
-      archives.push(out) // accurecode_change
+      await fs.promises.copyFile(out, cliOut) // accurecode_change
+      archives.push(out, cliOut) // accurecode_change
     } else {
       const out = path.resolve("dist", `${archive}.zip`) // accurecode_change
+      const cliOut = path.resolve("dist", `${cliArchive}.zip`) // accurecode_change
       await $`zip -r ${out} *`.cwd(`dist/${key}/bin`) // accurecode_change
-      archives.push(out) // accurecode_change
+      await fs.promises.copyFile(out, cliOut) // accurecode_change
+      archives.push(out, cliOut) // accurecode_change
     }
   }
-  await $`gh release upload v${Script.version} ${archives} --clobber` // accurecode_change
+  if (Script.release) {
+    await $`gh release upload v${Script.version} ${archives} --clobber` // accurecode_change
+  }
 }
 
 export { binaries }

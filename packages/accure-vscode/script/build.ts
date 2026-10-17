@@ -27,9 +27,21 @@ if (!existsSync(cliDistDir)) {
 
 const targetFilter = process.env.TARGETS ? process.env.TARGETS.split(",").map((t) => t.trim()) : undefined
 const allTargets = [
-  { target: "linux-x64", cliDir: "@accurecode/cli-linux-x64", binary: "accure" },
+  {
+    target: "linux-x64",
+    cliDir: existsSync(join(cliDistDir, "@accurecode/cli-linux-x64-baseline"))
+      ? "@accurecode/cli-linux-x64-baseline"
+      : "@accurecode/cli-linux-x64",
+    binary: "accure",
+  },
   { target: "linux-arm64", cliDir: "@accurecode/cli-linux-arm64", binary: "accure" },
-  { target: "alpine-x64", cliDir: "@accurecode/cli-linux-x64-musl", binary: "accure" },
+  {
+    target: "alpine-x64",
+    cliDir: existsSync(join(cliDistDir, "@accurecode/cli-linux-x64-baseline-musl"))
+      ? "@accurecode/cli-linux-x64-baseline-musl"
+      : "@accurecode/cli-linux-x64-musl",
+    binary: "accure",
+  },
   { target: "alpine-arm64", cliDir: "@accurecode/cli-linux-arm64-musl", binary: "accure" },
   { target: "darwin-x64", cliDir: "@accurecode/cli-darwin-x64", binary: "accure" },
   { target: "darwin-arm64", cliDir: "@accurecode/cli-darwin-arm64", binary: "accure" },
@@ -57,9 +69,10 @@ console.log("\n🔄 Rebuilding SDK types (ensures dist/ is in sync with server A
 await $`bun run --cwd ${join(import.meta.dir, "..", "..", "sdk", "js")} build`
 
 console.log("\n📦 Compiling extension...")
-await $`bun run check-types`
-await $`bun run lint`
-await $`node ${join(import.meta.dir, "..", "esbuild.js")} --production`
+const root = join(import.meta.dir, "..")
+await $`bun run check-types`.cwd(root)
+await $`bun run lint`.cwd(root)
+await $`node ${join(root, "esbuild.js")} --production`.cwd(root)
 
 for (const config of targets) {
   console.log(`\n🎯 Processing target: ${config.target}`)
@@ -96,7 +109,7 @@ for (const config of targets) {
   const vsceBin = existsSync(join(import.meta.dir, "..", "node_modules", ".bin", "vsce"))
     ? join(import.meta.dir, "..", "node_modules", ".bin", "vsce")
     : "vsce"
-  await $`${vsceBin} package ${args}`.env({
+  await $`${vsceBin} package ${args}`.cwd(root).env({
     ...process.env,
     npm_config_ignore_scripts: "true",
   })
